@@ -5,9 +5,9 @@
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
 // 定制口径（勾选面板契约由条目静态声明，注册期登记到 tsk-customizable 原语）：
-//   · 已勾选可判定项在运行时用 customizationChecked(state, seat, code) 读，不新造状态字段；
-//   · 费用修正有两个读点：customizationEffects.playCost（面板/审计契约）与条目 playCostModifier
-//     （turn-flow.js#playCost 的真实读点，本卡用后者让「-1 费用」真的生效）。
+//   · 已勾选可判定项在运行时用 customizationOptionFullyChecked(state, seat, code, index) 读（勾满才生效）；
+//   · 费用修正只有一条读点：customizationEffects.playCost（turn-flow.js#playCost 的 abilityLayer 汇总线），
+//     不再重复声明条目级 playCostModifier（同一效果只写一次，避免双重减费）。
 // 已实现：Lightweight（-1 费用，真实读点）、Enchanted 的 [[Relic]] 特性授予（add:trait 修正）、
 //         Hexdrinker / Armor of Thorns 的横置反应（窗口 assetHarmPlaced / enemyAttackDamage）。
 // approximation：① Enchanted 的「改占奥秘槽而非身体槽」没有实例级槽位改写读点（槽位只认
@@ -16,10 +16,11 @@
 //   「可承接同地点其他调查员的伤害/恐惧」走条目 passive.assignHarmAtLocation 是**无条件**声明，
 //   无法只对已勾选生效，因此未声明（否则未勾选也会生效）。三项均见
 //   artifacts/migration/tsk/primitive-requests/09021.json。
-import { customizationChecked } from '../../engine/tsk-customizable.js'
+import { customizationOptionFullyChecked } from '../../engine/tsk-customizable.js'
 
 const SOURCE = '09021'
-const isChecked = (state, inv, index) => customizationChecked(state, inv?.seat ?? state.currentSeat, SOURCE).includes(index)
+// 2026-11-16 P2-3：定制选项必须勾满 checks 格才生效（引擎读点 customizationOptionFullyChecked）。
+const isChecked = (state, inv, index) => customizationOptionFullyChecked(state, inv?.seat ?? state.currentSeat, SOURCE, index)
 const armorOf = inv => (inv?.assets || []).find(card => card.code === SOURCE) || null
 
 export default {
@@ -35,9 +36,9 @@ export default {
     { name: 'Armor of Thorns', checks: 3, text: 'After 1 or more damage or horror is assigned to Hunter\'s Armor from an enemy attack, you may exhaust it to deal 1 damage to that enemy.' },
   ],
   customizationEffects: {
-    playCost: checked => (checked || []).filter(index => index === 4).length ? -1 : 0,
+    // Lightweight 需要勾满 2 格才有 -1 费用（P2-3：勾 1 格不能少付经验）。
+    playCost: checked => (checked || []).filter(index => index === 4).length >= 2 ? -1 : 0,
   },
-  playCostModifier: ({ state, inv }) => (isChecked(state, inv, 4) ? -1 : 0),
   modifiers: [
     // Enchanted：运行期授予 [[Relic]] 特性（授予修正只作用于声明它的这张卡）。
     { target: 'add:trait', value: 'Relic', condition: { when: ({ state, inv }) => isChecked(state, inv, 0) } },

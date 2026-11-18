@@ -1381,7 +1381,7 @@
   "sources": [
     {
       "path": "content/registered.js",
-      "sha256": "f3ac7ede6293a0ac8c30ad3a3c1ccb5f69017d5286d49ed02e03ba9e9d892abe"
+      "sha256": "35b871f6a8441fd19201171da7bf2d1f19314cf7a7e0d7fea4a9d746f6510f34"
     },
     {
       "path": "content/registry.js",
@@ -1449,11 +1449,11 @@
     },
     {
       "path": "web/rulebook-data.js",
-      "sha256": "38f5874a92f33cd3b54d94132e392ce5ff42970dccd502f53a936685083e5b59"
+      "sha256": "68884c1ca9bc9b35a8739c9c925ea4bb81e5fe3cab4179ae189d00f8c9d559fb"
     },
     {
       "path": "web/ui-cards.js",
-      "sha256": "bc1c19d5519adf6813deedbed9cbf63f99eb1955032acbef4072ca32a3a235a7"
+      "sha256": "42d7ea914dd6241d4b4ddb33d87bcf92b851301e92ab6cd7c259dd0054b789d0"
     },
     {
       "path": "src/cards/cards-data.js",
@@ -1469,7 +1469,7 @@
     },
     {
       "path": "src/deck/availability.js",
-      "sha256": "3929fd00249c222ded17233647e3ff3435575172d56a141d84877b86a3c44276"
+      "sha256": "e5c3eb69cce3d56c41761d05fa876842ec18db31d44b217a5a058737faa459ad"
     },
     {
       "path": "src/campaign/epilogue-matrix.js",

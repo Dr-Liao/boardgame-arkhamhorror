@@ -596,7 +596,8 @@ test('P6 09118 命运无常：移除 1 毁灭，每位调查员受到 1 直接�
 test('P6 09119 超自然发射器：已解锁形态可切换，轨道射击具象攻击 +1 伤害', () => {
   const state = fixture('01001')
   state.investigators[0].assets = []
-  state.campaign.tsk = { version: 1, customizations: { version: 1, bySeat: { 0: { '09119': [0, 1] } } } }
+  // P2-3：每个形态是 2 格选项，勾满 2 格才解锁（Railshooter=0、Telescanner=1）。
+  state.campaign.tsk = { version: 1, customizations: { version: 1, bySeat: { 0: { '09119': [0, 0, 1, 1] } } } }
   const gun = asset(state, '09119')
   const target = enemy(state, { fight: 1, health: 20, engagedSeat: 0 })
   state.chaosBag = ['0']
@@ -613,7 +614,8 @@ test('P6 09119 超自然发射器：已解锁形态可切换，轨道射击具�
 test('P6 09119 超自然发射器：以太连接（勾选）入场时额外 +2 以太', () => {
   const state = fixture('01001')
   state.investigators[0].assets = []
-  state.campaign.tsk = { version: 1, customizations: { version: 1, bySeat: { 0: { '09119': [5] } } } }
+  // P2-3：Aetheric Link（选项 5）是 4 格选项，勾满 4 格才生效。
+  state.campaign.tsk = { version: 1, customizations: { version: 1, bySeat: { 0: { '09119': [5, 5, 5, 5] } } } }
   const gun = asset(state, '09119')
   const descriptor = registeredEntry('09119').abilities.find(item => item.kind === 'entersPlay')
   runTest(state, draft => executeDescriptor(draft, {

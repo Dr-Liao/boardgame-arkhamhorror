@@ -12,6 +12,9 @@ import { locationAttachmentTotal } from './location-attachments.js'
 import { afterHandDiscard } from './hand-discard-window.js'
 import { vehicleOf } from './vehicles.js'
 import { reactionSource } from './reaction-source.js'
+// 2026-11-16 P2-3/P2-5：《绯红密钥》定制卡的 `customizationEffects.playCost`（-1 费用类）真实读点。
+// 此前只注册不读（费用修正实际未生效）；与条目的 `playCostModifier` 二选一，避免同一效果双重减费。
+import { customizationChecked, customizationPlayCostDelta } from './tsk-customizable.js'
 // 2026-11-13：行动点用尽后的空档期，behavior.fastActions 的 [fast] 行动按条目自带的
 // `actions: 0` 计费（它们不在 behavior.actions() 里，原读点找不到就落到默认 1）。
 import { gapFastActionMoves } from './gap-actions.js'
@@ -481,8 +484,11 @@ export function createTurnFlow(deps) {
       && def.type === 'asset' && (def.traits || []).some(trait => String(trait).toLowerCase() === 'relic') ? 2 : 0
     const charles = itemDiscountAtLocation(state, inv, def)
     // 能力层修正：例如 03142「黑玛瑙扣环」在手牌中时其他手牌 +1 费用（负数为折扣）。
+    // 定制卡（09021/09022/09023/09061 等）的 -1 费用走 tsk-customizable 注册表（勾满才生效），
+    // 与条目级 `playCostModifier` 同一条汇总线；卡牌侧只保留一个声明。
     const abilityLayer = playCostDelta(state, inv, def.code)
       + (registeredEntry(def.code)?.playCostModifier?.({ state, inv, card: def }) || 0)
+      + customizationPlayCostDelta(inv.seat, def.code, customizationChecked(state, inv.seat, def.code) || [])
     // 2026-10-25 第七轮修复 05002：揭示牌的 -2 折扣只通过 fromHunch 路径的 inv.playDiscount 生效，
     // 不再按卡号在 playCost 里减（避免手中同名另一张也吃折扣）。
     return Math.max(0, (def.cost || 0) - discount - firstDiscount - firstAssetDiscount(state, inv, def, registeredEntry)

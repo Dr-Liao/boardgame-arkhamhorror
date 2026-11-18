@@ -29,7 +29,7 @@ import { createTableRegions } from './table-regions.js'
 import { renderTableLog } from './table-timeline.js'
 import { mapGeometry, hunterRouteEdges, MAP_CARD_WIDTH, MAP_CARD_HEIGHT } from './map-layout.js'
 import { createTablePresentation } from './table-presentation.js'
-import { tableIcon, classIcon, cardAttachmentReferences, cardMarkerData, placedCardMarkers } from './table-components.js'
+import { tableIcon, classIcon, cardAttachmentReferences, cardMarkerData, cardCounterMarkerData, placedCardMarkers } from './table-components.js'
 import { choicePresentation, entityMoves, mountCardInteractions, cancelTableGesture, handUnavailableReason, investigatorHoldsCard } from './card-interactions.js'
 import { setReactionEnabled, reactionChoices, reactionView, reactionAutoPlan, reactionState, setReactionState, reactionStates, reactionPrefsSeq, defaultReactionState, hydrateReactionStates } from './reaction-preferences.js'
 import { presentationAttributes, campaignPlaylistId } from './campaign-presentation.js'
@@ -392,6 +392,8 @@ const AH_TYPE_KEYS = { asset: 'card.type.asset', event: 'card.type.event', skill
 const AH_PREY_KEYS = { bearer: 'game.prey.bearer', highestCombat: 'game.prey.highestCombat', lowestHealth: 'game.prey.lowestHealth', mostClues: 'game.prey.mostClues', lowestSanity: 'game.prey.lowestSanity', lowestAgility: 'game.prey.lowestAgility', lowestCombat: 'game.prey.lowestCombat', fewestHand: 'game.prey.fewestHand' }
 const AH_SLOT_KEYS = { hand: 'game.slot.hand', 'hand x2': 'game.slot.handx2', ally: 'game.slot.ally', arcane: 'game.slot.arcane', accessory: 'game.slot.accessory', body: 'game.slot.body', tarot: 'game.slot.tarot' }
 const AH_ACTION_KEYS = { fight: 'game.action.fight', evade: 'game.action.evade', engage: 'game.action.engage', move: 'game.action.move', investigate: 'game.action.investigate', advanceAct: 'game.action.advanceAct', drawCultist: 'game.action.drawCultist', draw: 'game.action.draw', resource: 'game.action.resource', endTurn: 'game.action.endTurn', locationAbility: 'game.action.locationAbility' }
+// 敌人-地点双类型实体：敌人面的 legalMoves 动作集合（地点面仍走 investigate/move/地点能力）。
+const ENEMY_FACE_ACTIONS = new Set(['fight', 'evade', 'engage', 'fightHidden', 'evadeHidden'])
 const ahLabel = (keys, value) => (keys[value] ? t(keys[value]) : value)
 const ahClassLabel = klass => ahLabel(AH_CLASS_KEYS, klass)
 const ahTypeLabel = type => ahLabel(AH_TYPE_KEYS, type)
@@ -843,11 +845,22 @@ function renderLocationDetail(detail) {
     entryEffect?.test ? t('game.location.enterTest', { skill: skillSymbols(entryEffect.test.skill), difficulty: entryEffect.test.difficulty }) : ''].filter(Boolean)
   // loc 是观察投影后的地点：`shroud` 已经含 shroudMod / 迷雾 / 剧本修正 / 皮博迪先生的 -1，
   // 这里不能再叠一次（旧实现重复计算 shroudMod 与 fogMod，皮博迪的 -1 也进不了弹窗）。
+  // 九循环 P4：敌人-地点是同一实体（location.id === enemy.id）的双类型；地点详情同时给出
+  // 地点面（调查/移动/进入）与敌人面（交战/攻击/躲避）的读数与动作，服务端 legalMoves 是唯一事实源。
+  const enemyFace = loc.enemyLocationFace ? st.enemies.find(enemy => enemy.id === loc.id) || null : null
   const counters = [
     ['shroud','eye',t('game.stat.shroud'),loc.revealed ? (loc.shroud ?? 0) : t('game.value.unknown')],
     ['clues','clue',t('game.token.clue'),loc.clues || 0],['doom','doom',t('game.token.doom'),loc.doom || 0],['resources','resource',t('game.token.resource'),loc.resources || 0],
     ...(loc.damage ? [['damage','damage',t('game.stat.damage'),loc.damage]] : []),
     ...(loc.horror ? [['horror','horror',t('game.stat.horror'),loc.horror]] : []),
+    // 地点也可能承载卡上计数（具名计数器 / 脚本标签数组，例如《聚合幻灭》的火盆标记）：
+    // 与牌桌小卡共用同一份展示契约，避免"状态在投影里但界面上看不见"。
+    ...cardCounterMarkerData(loc),
+    ...(enemyFace ? [
+      ['fight','combat',t('game.stat.fight'),enemyFace.fight ?? 0],
+      ['evade','agility',t('game.stat.evade'),enemyFace.evade ?? 0],
+      ['health','health',t('game.enemy.health'),Math.max(0, (enemyFace.health ?? 0) - (enemyFace.damageTaken || 0))],
+    ] : []),
   ]
   // 地点特性/关键字：已揭示显示印刷特性，未揭示只显示效果授予的特性（皮博迪先生的 [[通道]]）。
   const traitPairs = locationTraitPairs(loc)
@@ -856,6 +869,10 @@ function renderLocationDetail(detail) {
     h('div',{},traitPairs.map(pair => h('span',{className:'ah-kw','data-trait':pair.en || pair.zh},locationTraitLabel(pair))))) : null
   const decision = decisionSeatOf(s)
   const moves = !state.busy && !presentation.isBlocking && canAct(s, decision) ? entityMoves(st,'location:' + loc.id) : []
+  // 双类型实体的敌人面动作（交战/攻击/躲避）与地点面动作并列显示，各自按钮带数据属性。
+  const enemyMoves = enemyFace && !state.busy && !presentation.isBlocking && canAct(s, decision)
+    ? entityMoves(st, 'enemy:' + loc.id).filter(move => ENEMY_FACE_ACTIONS.has(move.action)) : []
+  const duelMoves = [...moves.map(move => ({ move, enemyFace: false })), ...enemyMoves.map(move => ({ move, enemyFace: true }))]
   const usedHints = !state.busy && !presentation.isBlocking && canAct(s, decision) ? usedActionHints(st, loc.id) : []
   const people = st.investigators.filter(inv => inv.location === loc.id && !inv.defeated && !inv.resigned)
   const enemies = st.enemies.filter(enemy => enemy.location === loc.id)
@@ -899,7 +916,10 @@ function renderLocationDetail(detail) {
             card.exhausted ? h('span',{className:'ah-attachment-state'},t('game.attachment.exhausted')) : null))) : null,
         h('section',{className:'ah-location-connections'},h('h3',{},t('game.location.connections')),h('div',{},(loc.connections || []).map(id=>st.locations.find(item=>item.id===id)).filter(Boolean).map(other=>
           h('button',{onclick:()=>openCardDetailDef({...other,type:'location'})},'→ '+other.name)))),
-        h('footer',{className:'ah-location-detail-actions'},moves.length ? moves.map(move=>h('button',{className:'ah-action',onclick:()=>{state.cardDetail=null;cardMove(move,s)}},renderChoiceText(h,move.label || (ahActionLabel(move.action) || t('game.action.generic')))))
+        h('footer',{className:'ah-location-detail-actions'},duelMoves.length ? duelMoves.map(({ move, enemyFace: isEnemyFace })=>h('button',{
+          className:'ah-action', 'data-enemy-face-action': isEnemyFace ? 'true' : null,
+          onclick:()=>{state.cardDetail=null;cardMove(move,s)},
+        },renderChoiceText(h,move.label || (ahActionLabel(move.action) || t('game.action.generic')))))
           : entryBlock ? h('button', { className: 'ah-action is-used', disabled: true, title: entryBlock }, entryBlock)
           : usedHints.length ? null : h('span',{},t('game.location.noActions')),
           // 「每场游戏一次」的行动用掉后不再出现在 legalMoves；这里保留一行置灰说明，
@@ -907,6 +927,26 @@ function renderLocationDetail(detail) {
           usedHints.map(hint=>h('button',{className:'ah-action is-used',disabled:true,title:hint.reason || t('game.used.thisGame'),'data-ability-used':'true'},t('game.used.prefix', { label: hint.label })))))),
     detail.loading ? h('p',{className:'ah-location-loading',role:'status'},t('game.location.loading')) : null,
     detail.error ? h('p',{className:'ah-location-loading',role:'status'},t('game.location.loadError')) : null)
+}
+
+function cardDetailCustomizationChecks(session, detail) {
+  if (!session) return null
+  const seat = mySeat(session)
+  const st = session.state
+  const [kind, handSeat] = detail.interactionKey?.split(':') || []
+  const holder = detail.runtime && detail.def.id
+    ? st.investigators?.find(inv => inv.assets?.some(asset => asset.id === detail.def.id))
+    : null
+  const owner = detail.def.ownerSeat ?? (kind === 'hand' ? Number(handSeat) : holder?.seat)
+  if (owner != null && owner !== seat) return null
+
+  const tsk = st.mechanics?.tsk
+  const code = detail.code
+  const card = tsk?.customizationHub?.entries.find(entry => entry.code === code)
+    || tsk?.customizations?.find(entry => entry.code === code)
+  if (card) return card.checked
+  const deck = st.campaign?.investigators?.[seat]?.deck
+  return owner === seat || deck?.includes(code) ? [] : null
 }
 
 function renderCardDetailModal(detail) {
@@ -918,7 +958,8 @@ function renderCardDetailModal(detail) {
   const modal = h('div', { className: 'bg-backdrop ah-carddetail-backdrop' },
     h('div', { className: 'bg-modal ah-carddetail-modal' + (detail.locationId ? ' ah-location-detail' : ''), role: 'dialog', 'aria-modal': 'true', 'aria-label': t('game.detail.aria'), onclick: event => event.stopPropagation(), onkeydown: event => { if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); close() } } },
       h('button', { className: 'ah-carddetail-close', 'aria-label': t('game.detail.closeAria'), onclick: close }, t('common.close')),
-      detail.locationId ? renderLocationDetail(detail) : renderDetailContent(h, detail, renderFullCard, render, viewSession()?.state),
+      detail.locationId ? renderLocationDetail(detail) : renderDetailContent(
+        h, detail, renderFullCard, render, viewSession()?.state, cardDetailCustomizationChecks(state.session, detail)),
       !detail.locationId ? renderRuntimeCardState(detail) : null,
       !detail.locationId ? renderReactionToggle(viewSession(),detail.def.code) : null,
       !detail.locationId && detail.interactionKey && state.session && !presentation.isBlocking && !state.session.state.pendingChoice &&
@@ -1142,8 +1183,12 @@ function handCommitMove(s, index) {
   return (s.state.legalMoves || []).find(move => move.action === 'choose' && move.optionId === String(index)) || null
 }
 
+// 地图/牌桌实体点击提交待决选择：`target` 之外，非玩家卡的「地点/敌人」待决选择
+// （FHV《最长一夜》布置工事/诱饵/陷阱等）同样以实体 id 作为 optionId；面板里这些选项会被
+// card-interactions 的 offer 逻辑隐藏（实体已在桌面上），若这里只放行 target，玩家会软锁。
+const CHOICE_ENTITY_KINDS = new Set(['target', 'location', 'enemy'])
 function choiceTargetMove(s, id) {
-  if (s.state.pendingChoice?.kind !== 'target') return null
+  if (!CHOICE_ENTITY_KINDS.has(s.state.pendingChoice?.kind)) return null
   return (s.state.legalMoves || []).find(move => move.action === 'choose' && move.optionId === String(id)) || null
 }
 

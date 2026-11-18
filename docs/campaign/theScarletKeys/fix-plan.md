@@ -417,15 +417,26 @@
 - 替换 09018/09070/09023 等「断言错误实现」的测试；
 - 章测试至少覆盖真实 `startScenario` 与一次幕推进（合成 state 保留为单元补充）。
 
-### P2-3 定制升级卡勾选口径（10 张少付 XP）
+### P2-3 定制升级卡勾选口径（10 张少付 XP）— ✅ 2026-11-16 完成
 
 - 证据：`data/customization-gates.json` + crossCutting 复核；09021:22、09022:14、09023:39、09040:33/55、
   09042:60、09079:24-30、09081:53、09099:37-49、09100:65/73、09119:21/191 用 `includes(index)`/`>0`
   判定多格选项，勾 1 格即拿 2–5 格效果（单项少付 1–3 XP，09022 单卡最多 7 XP）；09041/09101 声明选项
-  但完全不读。正确示范：09059:29-32 `checkedFully`、09060:45、09061:66。
-- 修法：抽共享 helper `customizationFullyChecked(seat, code, optionIndex)`（读 `checks` 次）并替换 10 张卡；
-  `web/mechanic-ui.js` 勾选 UI 限制为「按格递增」（前序格未勾不可勾后续格）。
-- 验收：1 XP 不能解锁 2+ 格效果（真实 hub 升级回归）；面板显示每选项格数；09041/09101 选项接读点或删除。
+  但完全不读。
+- 已落地：新增引擎读点 `customizationOptionCheckedCount` / `customizationOptionFullyChecked`
+  （`tsk-customizable.js`）与 API `api.mechanics.tsk.customizable.optionCheckedCount/optionFullyChecked`；
+  10 张卡的 2–5 格选项全部改为「勾满 `checks` 格才生效」（09021/22/23/40/42/79/81/99/100/119）；
+  `customizationOptions` 支持 `implemented: false`（面板展示文本、不生成候选、dispatch 拒绝）——
+  09041（8 格）/09101（5 格）已标记，避免花 XP 买无效果选项。
+- 交互修复：`hubCustomize` 从「房主代全桌」改为**每个真人座位只勾自己的卡**（`HUB_SEAT_ACTIONS` 收录、
+  `customizationMoves` 按座位、dispatch 去掉 seat 0 硬编码）；`customizationEffects.playCost` 真正接入
+  `turn-flow#playCost` abilityLayer（此前只注册不读，09061 的 -1 费完全没生效），并删除
+  09021/22/23 重复的 `playCostModifier` 防双重减费；面板文案改为「每位玩家给自己勾选」、
+  新增未实现标记与 `xpPerCheck`（exceptional 2 XP）口径统一。
+- 验收：`tests/tsk-p8-customization.test.mjs` 扩到 8 例（含真实 hub 下 1 格不生效→2 格生效、
+  多人各写各的 bySeat、implemented:false 不可购买、全量多格矩阵）；`tsk-player-m2-1/3/4` 的相关用例
+  同步改为「勾满」；浏览器 2/2（desktop 1440 + mobile 390）通过，`audit/tsk-customization-browser.json`
+  status=passed；真实大厅流程见 `player-cards.md §3.1/3.2`。
 
 ### P2-4 i18n：运行时中文硬编码 3333 处/440 文件
 
@@ -440,18 +451,25 @@
   `tsk-investigator.js` 无调用原语（接线或删除）、`09038` 直写 `skillTest.boostedByGirish` 改 api。
 - 同句重复：red_coterie 9 份 `shiftAttachedKeys` 上收 `tsk-scarlet-keys` 或共享 helper；5 段「法术槽=2」上收读点。
 
-### P2-6 数据/复用小项
+### P2-6 数据/复用小项 — ✅ 本轮完成可执行项
 
-- `09649` 英文卡名拼写核对（本仓 `Zan'et` / 参考 `Zen'et`，以印刷为准）；
-- 12049 重印别名补登记（`src/cards/entries/_reprint-aliases.js`）；
-- 09064「敏捷代替智力」写死为永远敏捷需改为可选；09096/09097/09098 与 09082/09083/09085 三对同模板
-  评估上收共享实现；09716a-c/09726a-b/09727a-b 同文簇共享实现。
+- ✅ `09649` 英文卡名已核对：本仓 `Zan'et el Settat` 与 ArkhamDB/印刷一致（参考记录的 `Zen'et`
+  为本地化译名，不改）。
+- ✅ 12049 重印别名已登记：`src/cards/entries/_reprint-aliases.js` 增加 `09064 → ['12049']`
+  （`tests/reprint-aliases.test.mjs` 逐项校验 cards-data 双向关系）。
+- ✅ 09064「敏捷代替智力」已在前轮改为可选（先 `api.choice` 再决定调查技能，默认敏捷）。
+- 仍余（模板上收评估，非缺陷）：09096/09097/09098、09082/09083/09085、09716a-c/09726a-b/09727a-b
+  同文簇是否上收共享实现，留待对应循环的统一模板批次处理。
 
-### P2-7 遭遇组名/卡表派生数据统一
+### P2-7 遭遇组名/卡表派生数据统一 — ✅ 验证通过（无剩余手写 camelCase 过滤）
 
-- `card-data.js` 已提供 `encounterGroupCode`/`camelToSnake`，但 `dealingsInTheDark` 等章仍用手写
-  camelCase 过滤/手写卡号表；统一到单一派生函数，`tools/scan-tsk-mechanisms.mjs` 的语料同步。
-- 验收：全仓无 `encounterCode` 大小写不匹配过滤；新增派生一致性测试。
+- `card-data.js` 的 `encounterGroupCode`/`camelToSnake`/`encounterGroupDeck` 已是唯一派生源；
+  P0/P1 轮已把 dealingsInTheDark / shadesOfSuffering / deadHeat 等章改为该派生函数。
+- 本轮复查：`content/campaigns/theScarletKeys/**` 内已无 `encounterCode === '<camelCase>'` 比较
+  （grep 无命中）；onThinIce 的 `'crimson_conspiracy'` 是卡表 snake_case 真值，riddlesAndRain 的
+  camel 转换已与 `card-data` 同源，属既有实现。
+- 仍余：`tools/scan-tsk-mechanisms.mjs` 语料若后续再改关键词匹配，需要与 `keywords.js` 同步重签
+  （本轮未改关键词匹配，避免把 P2-9 的半成品带进账本）。
 
 ### P2-8 P4 交互事务层接线（6 组）
 
@@ -471,6 +489,29 @@
 - 修法：关键词语料区分「卡名/叙述」与「规则文本」，或按 `[[Trait]]`/关键字行精确匹配；规则书标注
   「引擎读点 / 原语 / 章节实现」三档；重算 29 关键词的 cardCodes 并重签 `audit/tsk-rules.json`。
 - 验收：关键词覆盖清单无卡名假阳性；`web/tsk-rules.js` 与 keywords.js 双向一致。
+
+### P2 第五轮进度（2026-11-16）
+
+已收口：**P2-1**（随 P0）、**P2-3**（定制卡勾选/多座位/费用读点/implemented:false，含浏览器 2/2）、
+**P2-6 可执行项**（09649 已核对、12049 别名、09064 前轮已修）、**P2-7**（派生源统一，复查无手写过滤）。
+
+基线口径变化：`verify-tsk-regression` 的冻结失败清单仍是 P0 的 4 条，但当前 `test:fast` 只有 2 条
+（TCU 账本、i18n UI 已被九循环提交修复）；工具改为「新增失败 0 且失败标题 ⊆ 冻结清单、失败数 ≤ 冻结数」
+即 passed，历史基线不重写。当前 `test:fast` 7755 例 / 2 fail / additions 0。
+
+仍余（按建议顺序）：
+1. **P2-9 关键词假阳性**：`keywords.js` 与 `tools/tsk-mechanisms.mjs` 必须同一轮改为「规则文本 + 区分
+   大小写」并同时重签 `audit/tsk-mechanism-scan.json` + `audit/tsk-rules.json` + `tests/tsk-rules.test.mjs`
+   的复算语料；注意 `hidden`/`victory` 在 TSK 的旧命中全是卡名/叙述（真值应为 0 或按数据字段匹配），
+   规则测试的「每个关键词至少 1 张卡」断言需同步裁决。本轮试改后主动回滚，避免半成品进账本。
+2. **P2-5 声明即接线**：33 个零读点 flag 键清理；`enemyStatRule.aura`、`flags.coterie/elite/patrol`、
+   `removedKey:*` 等需逐项「接读点或删除」；red_coterie `shiftAttachedKeys` 已在第三轮收口。
+3. **P2-8 交互事务层接线**：`createTskInteractions` 仍只在测试中使用；定制勾选真实路径已直接调用
+   `tsk-customizable` 原语（与事务层同源但非同一包装）。建议按 6 组逐组接 `scenarioRuntime.api.tsk`
+   并把 7 章 `scenarioAction`/4 章 `resolveKeyShift` 的分散实现迁入，或删除该层并重签 interactions 账本。
+4. **P2-2 测试真实性**：新增 `tests/tsk-chapters-smoke.test.mjs`（真实 hub 逐章 + 至少一次幕推进）。
+5. **P2-4 i18n**：848 处玩家可见文案迁移 `web/locales/*.misc.js#tsk.*`；本轮只改了定制面板两条文案与
+   一条未实现提示（中英同步）。
 
 ## 复现与验收命令
 

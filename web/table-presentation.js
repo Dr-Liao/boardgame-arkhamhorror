@@ -55,12 +55,12 @@ export function publicSequence(events) {
   // Scenario setup may reveal its starting location before emitting its opening
   // cards. Keep rule events untouched, but present intro → agenda → location.
   const locationIndex = cues.findIndex(cue => cue.kind === 'location')
-  const introIndex = cues.findIndex(cue => cue.kind === 'story' && cue.intro)
+  const introIndexes = [...cues.keys()].filter(index => cues[index].kind === 'story' && cues[index].intro)
   const agendaIndex = cues.findIndex(cue => cue.kind === 'story' && cue.initialAgenda)
-  const openingIndexes = [introIndex, agendaIndex].filter(index => index >= 0)
+  const openingIndexes = agendaIndex >= 0 ? [...introIndexes, agendaIndex] : introIndexes
   if (locationIndex >= 0 && openingIndexes.length) {
     const anchor = Math.min(locationIndex, ...openingIndexes)
-    const opening = [introIndex, agendaIndex].filter(index => index >= 0).map(index => cues[index])
+    const opening = openingIndexes.map(index => cues[index])
     for (const index of [...openingIndexes].sort((a, b) => b - a)) cues.splice(index, 1)
     const insertAt = anchor - openingIndexes.filter(index => index < anchor).length
     cues.splice(insertAt, 0, ...opening)

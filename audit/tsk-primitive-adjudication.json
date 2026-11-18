@@ -1,0 +1,3901 @@
+{
+  "schemaVersion": 1,
+  "cycle": "tsk",
+  "phase": "P8",
+  "generatedBy": "tools/adjudicate-tsk-primitives.mjs",
+  "reviewer": "P8 main process",
+  "reviewedAt": "2026-11-12",
+  "decision": "accepted-approximation-for-P8",
+  "nextPhase": "P9",
+  "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+  "summary": {
+    "files": 176,
+    "requests": 175,
+    "nonRequestFiles": 1,
+    "pendingBefore": 0,
+    "deferredAfter": 175,
+    "alreadyDeferred": 175,
+    "pendingFiles": [],
+    "categories": {
+      "other": 59,
+      "ui-window": 59,
+      "record-container": 26,
+      "timing-hook": 15,
+      "targeting": 8,
+      "private-info": 5,
+      "keyword-rule": 3
+    },
+    "workers": {
+      "w-m2-1": 14,
+      "w-m2-2": 11,
+      "w-m2-3": 14,
+      "unknown": 17,
+      "w-p7-riddlesAndRain": 4,
+      "w-p7-deadHeat": 9,
+      "w-p7-sanguineShadows": 4,
+      "w-p7-dealingsInTheDark": 9,
+      "w-m3-dancingMad": 3,
+      "w-m3-onThinIce": 11,
+      "w-dogsOfWar": 8,
+      "w-m3-withoutATrace": 5,
+      "w-p7-congressOfTheKeys": 2,
+      "w-p7-shared-a": 35,
+      "w-p7-shared-b": 22,
+      "w-p7-campaign-flow": 3,
+      "w-p7-shadesOfSuffering": 4
+    }
+  },
+  "requests": [
+    {
+      "file": "09021.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09021.json",
+      "stage": "M2-1",
+      "worker": "w-m2-1",
+      "primitive": null,
+      "cards": [
+        "09021"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "b0a15a7b"
+    },
+    {
+      "file": "09023.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09023.json",
+      "stage": "M2-1",
+      "worker": "w-m2-1",
+      "primitive": null,
+      "cards": [
+        "09023"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "5e4c4579"
+    },
+    {
+      "file": "09024.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09024.json",
+      "stage": "M2-1",
+      "worker": "w-m2-1",
+      "primitive": null,
+      "cards": [
+        "09024"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "bd7120b4"
+    },
+    {
+      "file": "09025.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09025.json",
+      "stage": "M2-1",
+      "worker": "w-m2-1",
+      "primitive": null,
+      "cards": [
+        "09025"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "f780dad0"
+    },
+    {
+      "file": "09027.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09027.json",
+      "stage": "M2-1",
+      "worker": "w-m2-1",
+      "primitive": null,
+      "cards": [
+        "09027"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "71427434"
+    },
+    {
+      "file": "09029.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09029.json",
+      "stage": "M2-1",
+      "worker": "w-m2-1",
+      "primitive": null,
+      "cards": [
+        "09029"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "8445ee2c"
+    },
+    {
+      "file": "09032.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09032.json",
+      "stage": "M2-1",
+      "worker": "w-m2-1",
+      "primitive": null,
+      "cards": [
+        "09032"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "4f27d3fe"
+    },
+    {
+      "file": "09035.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09035.json",
+      "stage": "M2-1",
+      "worker": "w-m2-1",
+      "primitive": null,
+      "cards": [
+        "09035"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "dfd6341c"
+    },
+    {
+      "file": "09039.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09039.json",
+      "stage": "M2-1",
+      "worker": "w-m2-1",
+      "primitive": null,
+      "cards": [
+        "09039"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "ae41797f"
+    },
+    {
+      "file": "09040.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09040.json",
+      "stage": "M2-1",
+      "worker": "w-m2-1",
+      "primitive": null,
+      "cards": [
+        "09040"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "1d8f070f"
+    },
+    {
+      "file": "09041.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09041.json",
+      "stage": "M2-1",
+      "worker": "w-m2-1",
+      "primitive": null,
+      "cards": [
+        "09041"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "8c6ab284"
+    },
+    {
+      "file": "09042.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09042.json",
+      "stage": "M2-1",
+      "worker": "w-m2-1",
+      "primitive": null,
+      "cards": [
+        "09042"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "784a94d4"
+    },
+    {
+      "file": "09043.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09043.json",
+      "stage": "M2-1",
+      "worker": "w-m2-1",
+      "primitive": null,
+      "cards": [
+        "09043"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "5b633f09"
+    },
+    {
+      "file": "09045.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09045.json",
+      "stage": "M2-1",
+      "worker": "w-m2-1",
+      "primitive": null,
+      "cards": [
+        "09045"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "dae7f424"
+    },
+    {
+      "file": "09051.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09051.json",
+      "stage": "P6",
+      "worker": "w-m2-2",
+      "primitive": "new.blankCardText",
+      "cards": [
+        "09051"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "71b47024"
+    },
+    {
+      "file": "09055.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09055.json",
+      "stage": "P6",
+      "worker": "w-m2-2",
+      "primitive": "new.cluesSpentWindow",
+      "cards": [
+        "09055"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "a4b98818"
+    },
+    {
+      "file": "09058.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09058.json",
+      "stage": "P6",
+      "worker": "w-m2-2",
+      "primitive": "new.nextHealBonus / new.nextDamageBonus",
+      "cards": [
+        "09058"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "32b90142"
+    },
+    {
+      "file": "09060.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09060.json",
+      "stage": "P6",
+      "worker": "w-m2-2",
+      "primitive": "new.handCardIconGrant + new.playTimingPerCard",
+      "cards": [
+        "09060"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "4d833cfe"
+    },
+    {
+      "file": "09061.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09061.json",
+      "stage": "P6",
+      "worker": "w-m2-2",
+      "primitive": "new.advanceRecordWindow + extend.playConditionContext",
+      "cards": [
+        "09061"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "1b71f719"
+    },
+    {
+      "file": "09063.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09063.json",
+      "stage": "P6",
+      "worker": "w-m2-2",
+      "primitive": "new.assetResources + new.resignOrGameEndWindow + new.nextScenarioStartingResources",
+      "cards": [
+        "09063"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "a4b1b1bd"
+    },
+    {
+      "file": "09065.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09065.json",
+      "stage": "P6",
+      "worker": "w-m2-2",
+      "primitive": "extend.attachmentHostSlot",
+      "cards": [
+        "09065"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "849d6d58"
+    },
+    {
+      "file": "09068.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09068.json",
+      "stage": "P6",
+      "worker": "w-m2-2",
+      "primitive": "extend.enemyEliteData",
+      "cards": [
+        "09068"
+      ],
+      "category": "timing-hook",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "2d5e509b"
+    },
+    {
+      "file": "09071.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09071.json",
+      "stage": "P6",
+      "worker": "w-m2-2",
+      "primitive": "new.resourcesGainedWindow",
+      "cards": [
+        "09071"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "93ed25ef"
+    },
+    {
+      "file": "09072.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09072.json",
+      "stage": "P6",
+      "worker": "w-m2-2",
+      "primitive": "extend.eventResolutionTestBonus",
+      "cards": [
+        "09072"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "07c45bb5"
+    },
+    {
+      "file": "09074.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09074.json",
+      "stage": "P6",
+      "worker": "w-m2-2",
+      "primitive": "new.delayedEventDestination",
+      "cards": [
+        "09074"
+      ],
+      "category": "timing-hook",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "9f481e1e"
+    },
+    {
+      "file": "09076.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09076.json",
+      "stage": "P6",
+      "worker": "w-m2-3",
+      "primitive": "cardAbilityBaseSkillOverride",
+      "cards": [
+        "09076"
+      ],
+      "category": "targeting",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "3fa4a16d"
+    },
+    {
+      "file": "09077.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09077.json",
+      "stage": "P6",
+      "worker": "w-m2-3",
+      "primitive": "marketDeck",
+      "cards": [
+        "09077"
+      ],
+      "category": "timing-hook",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "950a1a40"
+    },
+    {
+      "file": "09079.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09079.json",
+      "stage": "P6",
+      "worker": "w-m2-3",
+      "primitive": "customizationRuntimeChoices",
+      "cards": [
+        "09079"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "561c918f"
+    },
+    {
+      "file": "09080.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09080.json",
+      "stage": "P6",
+      "worker": "w-m2-3",
+      "primitive": "independentAssetLocation",
+      "cards": [
+        "09080"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "74c2b1b6"
+    },
+    {
+      "file": "09081.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09081.json",
+      "stage": "P6",
+      "worker": "w-m2-3",
+      "primitive": "enemyAttachedPlayerCardAction",
+      "cards": [
+        "09081"
+      ],
+      "category": "targeting",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "07247c82"
+    },
+    {
+      "file": "09086.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09086.json",
+      "stage": "P6",
+      "worker": "w-m2-3",
+      "primitive": "slotCapacityReader",
+      "cards": [
+        "09086"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "a89d870e"
+    },
+    {
+      "file": "09087.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09087.json",
+      "stage": "P6",
+      "worker": "w-m2-3",
+      "primitive": "prePlaySlotDiscardWindow",
+      "cards": [
+        "09087"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "0390c683"
+    },
+    {
+      "file": "09088.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09088.json",
+      "stage": "P6",
+      "worker": "w-m2-3",
+      "primitive": "enemyDamageImmunityUntilRound",
+      "cards": [
+        "09088"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "34612028"
+    },
+    {
+      "file": "09090.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09090.json",
+      "stage": "P6",
+      "worker": "w-m2-3",
+      "primitive": "commitSuccessRider",
+      "cards": [
+        "09090"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "1282ad96"
+    },
+    {
+      "file": "09091.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09091.json",
+      "stage": "P6",
+      "worker": "w-m2-3",
+      "primitive": "restrictedExtraAction",
+      "cards": [
+        "09091"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "f3d284a9"
+    },
+    {
+      "file": "09092.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09092.json",
+      "stage": "P6",
+      "worker": "w-m2-3",
+      "primitive": "agendaDoomExclusion",
+      "cards": [
+        "09092"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "8ac123e3"
+    },
+    {
+      "file": "09099.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09099.json",
+      "stage": "P6",
+      "worker": "w-m2-3",
+      "primitive": "crossSeatAbilityAndFailTrigger",
+      "cards": [
+        "09099"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "e5a84c47"
+    },
+    {
+      "file": "09100.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09100.json",
+      "stage": "P6",
+      "worker": "w-m2-3",
+      "primitive": "locationAttachedPlayerEventModifiers",
+      "cards": [
+        "09100"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "aac3eeb6"
+    },
+    {
+      "file": "09101.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09101.json",
+      "stage": "P6",
+      "worker": "w-m2-3",
+      "primitive": "purchaseTraitChoiceAndRiders",
+      "cards": [
+        "09101"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "d449d1d5"
+    },
+    {
+      "file": "09103.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09103.json",
+      "stage": null,
+      "worker": null,
+      "primitive": null,
+      "cards": [
+        "09103"
+      ],
+      "category": "targeting",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "21959e26"
+    },
+    {
+      "file": "09105.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09105.json",
+      "stage": null,
+      "worker": null,
+      "primitive": null,
+      "cards": [
+        "09105"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "87827a46"
+    },
+    {
+      "file": "09106.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09106.json",
+      "stage": null,
+      "worker": null,
+      "primitive": null,
+      "cards": [
+        "09106"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "fda6546c"
+    },
+    {
+      "file": "09107.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09107.json",
+      "stage": null,
+      "worker": null,
+      "primitive": null,
+      "cards": [
+        "09107"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "062548c6"
+    },
+    {
+      "file": "09109.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09109.json",
+      "stage": null,
+      "worker": null,
+      "primitive": null,
+      "cards": [
+        "09109"
+      ],
+      "category": "targeting",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "78ad5fbe"
+    },
+    {
+      "file": "09110.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09110.json",
+      "stage": null,
+      "worker": null,
+      "primitive": null,
+      "cards": [
+        "09110"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "cd9d9afb"
+    },
+    {
+      "file": "09111.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09111.json",
+      "stage": null,
+      "worker": null,
+      "primitive": null,
+      "cards": [
+        "09111"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "c71bbe15"
+    },
+    {
+      "file": "09115.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09115.json",
+      "stage": null,
+      "worker": null,
+      "primitive": null,
+      "cards": [
+        "09115"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "92d1a3de"
+    },
+    {
+      "file": "09118.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09118.json",
+      "stage": null,
+      "worker": null,
+      "primitive": null,
+      "cards": [
+        "09118"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "850bf00f"
+    },
+    {
+      "file": "09119.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09119.json",
+      "stage": null,
+      "worker": null,
+      "primitive": null,
+      "cards": [
+        "09119"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "41d8763e"
+    },
+    {
+      "file": "09120.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09120.json",
+      "stage": null,
+      "worker": null,
+      "primitive": null,
+      "cards": [
+        "09120"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "f074b439"
+    },
+    {
+      "file": "09123.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09123.json",
+      "stage": null,
+      "worker": null,
+      "primitive": null,
+      "cards": [
+        "09123"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "e6e42b42"
+    },
+    {
+      "file": "09124.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09124.json",
+      "stage": null,
+      "worker": null,
+      "primitive": null,
+      "cards": [
+        "09124"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "f1951789"
+    },
+    {
+      "file": "09125.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09125.json",
+      "stage": null,
+      "worker": null,
+      "primitive": null,
+      "cards": [
+        "09125"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "cba5672b"
+    },
+    {
+      "file": "09126.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09126.json",
+      "stage": null,
+      "worker": null,
+      "primitive": null,
+      "cards": [
+        "09126"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "b470c311"
+    },
+    {
+      "file": "09127.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09127.json",
+      "stage": null,
+      "worker": null,
+      "primitive": null,
+      "cards": [
+        "09127"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "d8980d00"
+    },
+    {
+      "file": "09128.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09128.json",
+      "stage": null,
+      "worker": null,
+      "primitive": null,
+      "cards": [
+        "09128"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P6",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P6",
+        "reviewer": "P6 main process",
+        "reviewedAt": "2026-11-11",
+        "reason": "P6 以「逐卡可执行行为 + 近似逐条披露」交付（与 EotE P6 口径一致）；本请求缺的引擎读点不在 P6 范围内实现，登记为 P7/P8 原语 backlog，条目 note 已披露。",
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "f2726378"
+    },
+    {
+      "file": "09511.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09511.json",
+      "stage": "P7-riddlesAndRain",
+      "worker": "w-p7-riddlesAndRain",
+      "primitive": null,
+      "cards": [
+        "09511"
+      ],
+      "category": "private-info",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "a6a1d8bb"
+    },
+    {
+      "file": "09517.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09517.json",
+      "stage": "P7-riddlesAndRain",
+      "worker": "w-p7-riddlesAndRain",
+      "primitive": null,
+      "cards": [
+        "09517"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "0c66ce08"
+    },
+    {
+      "file": "09518.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09518.json",
+      "stage": "P7-riddlesAndRain",
+      "worker": "w-p7-riddlesAndRain",
+      "primitive": null,
+      "cards": [
+        "09518"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "d4662cd6"
+    },
+    {
+      "file": "09519a.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09519a.json",
+      "stage": "P7-riddlesAndRain",
+      "worker": "w-p7-riddlesAndRain",
+      "primitive": null,
+      "cards": [
+        "09519a"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "1aeb2517"
+    },
+    {
+      "file": "09536.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09536.json",
+      "stage": "P7-deadHeat",
+      "worker": "w-p7-deadHeat",
+      "primitive": null,
+      "cards": [
+        "09536"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "bcf5b089"
+    },
+    {
+      "file": "09537.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09537.json",
+      "stage": "P7-deadHeat",
+      "worker": "w-p7-deadHeat",
+      "primitive": null,
+      "cards": [
+        "09537"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "728c778b"
+    },
+    {
+      "file": "09537b.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09537b.json",
+      "stage": "P7-deadHeat",
+      "worker": "w-p7-deadHeat",
+      "primitive": null,
+      "cards": [
+        "09537b"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "f01b76ae"
+    },
+    {
+      "file": "09538.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09538.json",
+      "stage": "P7-deadHeat",
+      "worker": "w-p7-deadHeat",
+      "primitive": null,
+      "cards": [
+        "09538"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "b57ed085"
+    },
+    {
+      "file": "09539.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09539.json",
+      "stage": "P7-deadHeat",
+      "worker": "w-p7-deadHeat",
+      "primitive": null,
+      "cards": [
+        "09539"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "53fbd020"
+    },
+    {
+      "file": "09541.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09541.json",
+      "stage": "P7-deadHeat",
+      "worker": "w-p7-deadHeat",
+      "primitive": null,
+      "cards": [
+        "09541"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "6c6d2c80"
+    },
+    {
+      "file": "09542.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09542.json",
+      "stage": "P7-deadHeat",
+      "worker": "w-p7-deadHeat",
+      "primitive": null,
+      "cards": [
+        "09542"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "5a67e1b1"
+    },
+    {
+      "file": "09544a.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09544a.json",
+      "stage": "P7-deadHeat",
+      "worker": "w-p7-deadHeat",
+      "primitive": null,
+      "cards": [
+        "09544a"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "60be8c3b"
+    },
+    {
+      "file": "09544b.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09544b.json",
+      "stage": "P7-deadHeat",
+      "worker": "w-p7-deadHeat",
+      "primitive": null,
+      "cards": [
+        "09544b"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "7ce72465"
+    },
+    {
+      "file": "09545.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09545.json",
+      "stage": "P7-sanguineShadows",
+      "worker": "w-p7-sanguineShadows",
+      "primitive": null,
+      "cards": [
+        "09545"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "39b5a35e"
+    },
+    {
+      "file": "09557b.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09557b.json",
+      "stage": "P7-sanguineShadows",
+      "worker": "w-p7-sanguineShadows",
+      "primitive": null,
+      "cards": [
+        "09557b"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "a2bf2df0"
+    },
+    {
+      "file": "09558.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09558.json",
+      "stage": "P7-sanguineShadows",
+      "worker": "w-p7-sanguineShadows",
+      "primitive": null,
+      "cards": [
+        "09558"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "9cadb6db"
+    },
+    {
+      "file": "09560.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09560.json",
+      "stage": "P7-sanguineShadows",
+      "worker": "w-p7-sanguineShadows",
+      "primitive": null,
+      "cards": [
+        "09560"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "85857bde"
+    },
+    {
+      "file": "09566.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09566.json",
+      "stage": "P7-dealingsInTheDark",
+      "worker": "w-p7-dealingsInTheDark",
+      "primitive": null,
+      "cards": [
+        "09566"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "0a518e08"
+    },
+    {
+      "file": "09571.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09571.json",
+      "stage": "P7-dealingsInTheDark",
+      "worker": "w-p7-dealingsInTheDark",
+      "primitive": null,
+      "cards": [
+        "09571"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "245b04f0"
+    },
+    {
+      "file": "09571b.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09571b.json",
+      "stage": "P7-dealingsInTheDark",
+      "worker": "w-p7-dealingsInTheDark",
+      "primitive": null,
+      "cards": [
+        "09571b"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "5deb9f07"
+    },
+    {
+      "file": "09572.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09572.json",
+      "stage": "P7-dealingsInTheDark",
+      "worker": "w-p7-dealingsInTheDark",
+      "primitive": null,
+      "cards": [
+        "09572"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "b3005e14"
+    },
+    {
+      "file": "09577.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09577.json",
+      "stage": "P7-dealingsInTheDark",
+      "worker": "w-p7-dealingsInTheDark",
+      "primitive": null,
+      "cards": [
+        "09577"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "935ee77c"
+    },
+    {
+      "file": "09578.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09578.json",
+      "stage": "P7-dealingsInTheDark",
+      "worker": "w-p7-dealingsInTheDark",
+      "primitive": null,
+      "cards": [
+        "09578"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "6182ecd7"
+    },
+    {
+      "file": "09582.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09582.json",
+      "stage": "P7-dealingsInTheDark",
+      "worker": "w-p7-dealingsInTheDark",
+      "primitive": null,
+      "cards": [
+        "09582"
+      ],
+      "category": "timing-hook",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "9c7257fb"
+    },
+    {
+      "file": "09584.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09584.json",
+      "stage": "P7-dealingsInTheDark",
+      "worker": "w-p7-dealingsInTheDark",
+      "primitive": null,
+      "cards": [
+        "09584"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "e94278f9"
+    },
+    {
+      "file": "09590b.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09590b.json",
+      "stage": "P7-dealingsInTheDark",
+      "worker": "w-p7-dealingsInTheDark",
+      "primitive": null,
+      "cards": [
+        "09590b"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "fabd8837"
+    },
+    {
+      "file": "09591.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09591.json",
+      "stage": "M3",
+      "worker": "w-m3-dancingMad",
+      "primitive": null,
+      "cards": [
+        "09591"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "reason": null,
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "d53c9b22"
+    },
+    {
+      "file": "09592.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09592.json",
+      "stage": "M3",
+      "worker": "w-m3-dancingMad",
+      "primitive": null,
+      "cards": [
+        "09592"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "reason": null,
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "7b766e3d"
+    },
+    {
+      "file": "09594.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09594.json",
+      "stage": "M3",
+      "worker": "w-m3-dancingMad",
+      "primitive": null,
+      "cards": [
+        "09594"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "reason": null,
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "3037ec2e"
+    },
+    {
+      "file": "09625a.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09625a.json",
+      "stage": "M3-onThinIce",
+      "worker": "w-m3-onThinIce",
+      "primitive": null,
+      "cards": [
+        "09625a"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "c41e1103"
+    },
+    {
+      "file": "09625b.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09625b.json",
+      "stage": "M3-onThinIce",
+      "worker": "w-m3-onThinIce",
+      "primitive": null,
+      "cards": [
+        "09625b"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "60d2e04a"
+    },
+    {
+      "file": "09626.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09626.json",
+      "stage": "M3-onThinIce",
+      "worker": "w-m3-onThinIce",
+      "primitive": null,
+      "cards": [
+        "09626"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "55fc3c3f"
+    },
+    {
+      "file": "09627.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09627.json",
+      "stage": "M3-onThinIce",
+      "worker": "w-m3-onThinIce",
+      "primitive": null,
+      "cards": [
+        "09627"
+      ],
+      "category": "targeting",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "4acd220e"
+    },
+    {
+      "file": "09629.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09629.json",
+      "stage": "M3-onThinIce",
+      "worker": "w-m3-onThinIce",
+      "primitive": null,
+      "cards": [
+        "09629"
+      ],
+      "category": "timing-hook",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "c7816488"
+    },
+    {
+      "file": "09630.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09630.json",
+      "stage": "M3-onThinIce",
+      "worker": "w-m3-onThinIce",
+      "primitive": null,
+      "cards": [
+        "09630"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "4ab53c78"
+    },
+    {
+      "file": "09631.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09631.json",
+      "stage": "M3-onThinIce",
+      "worker": "w-m3-onThinIce",
+      "primitive": null,
+      "cards": [
+        "09631"
+      ],
+      "category": "timing-hook",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "5ad2586c"
+    },
+    {
+      "file": "09632.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09632.json",
+      "stage": "M3-onThinIce",
+      "worker": "w-m3-onThinIce",
+      "primitive": null,
+      "cards": [
+        "09632"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "0cae31c0"
+    },
+    {
+      "file": "09633.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09633.json",
+      "stage": "M3-onThinIce",
+      "worker": "w-m3-onThinIce",
+      "primitive": null,
+      "cards": [
+        "09633"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "045e6514"
+    },
+    {
+      "file": "09634a.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09634a.json",
+      "stage": "M3-onThinIce",
+      "worker": "w-m3-onThinIce",
+      "primitive": null,
+      "cards": [
+        "09634a"
+      ],
+      "category": "private-info",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "e040379e"
+    },
+    {
+      "file": "09634b.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09634b.json",
+      "stage": "M3-onThinIce",
+      "worker": "w-m3-onThinIce",
+      "primitive": null,
+      "cards": [
+        "09634b"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "0716d59f"
+    },
+    {
+      "file": "09642.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09642.json",
+      "stage": "P7",
+      "worker": "w-dogsOfWar",
+      "primitive": "new.enemyEntryBlock",
+      "cards": [
+        "09642"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "dd9ef4c0"
+    },
+    {
+      "file": "09646.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09646.json",
+      "stage": "P7",
+      "worker": "w-dogsOfWar",
+      "primitive": "new.drawOneReplacementWindow",
+      "cards": [
+        "09646"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "529d1041"
+    },
+    {
+      "file": "09649.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09649.json",
+      "stage": "P7",
+      "worker": "w-dogsOfWar",
+      "primitive": "new.fightTestCostChoice",
+      "cards": [
+        "09649"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "3dafd76b"
+    },
+    {
+      "file": "09653a.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09653a.json",
+      "stage": "P7",
+      "worker": "w-dogsOfWar",
+      "primitive": "new.keyLocusAttackableAsset",
+      "cards": [
+        "09653a",
+        "09653b"
+      ],
+      "category": "targeting",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "0ee9461f"
+    },
+    {
+      "file": "09654b.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09654b.json",
+      "stage": "P7",
+      "worker": "w-dogsOfWar",
+      "primitive": "new.multiControllerStoryAsset",
+      "cards": [
+        "09654b"
+      ],
+      "category": "targeting",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "9a4bdcf5"
+    },
+    {
+      "file": "09658.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09658.json",
+      "stage": "P7",
+      "worker": "w-dogsOfWar",
+      "primitive": "new.attachmentForcedCheck",
+      "cards": [
+        "09658"
+      ],
+      "category": "timing-hook",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "58ba99e4"
+    },
+    {
+      "file": "09659a.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09659a.json",
+      "stage": "P7",
+      "worker": "w-dogsOfWar",
+      "primitive": "extend.keyTokens",
+      "cards": [
+        "09659a",
+        "09659b"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "c548de15"
+    },
+    {
+      "file": "09659b.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09659b.json",
+      "stage": "P7",
+      "worker": "w-dogsOfWar",
+      "primitive": "new.randomDiscardFromHand",
+      "cards": [
+        "09659b"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "964f3adf"
+    },
+    {
+      "file": "09681.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09681.json",
+      "stage": "M3",
+      "worker": "w-m3-withoutATrace",
+      "primitive": null,
+      "cards": [
+        "09681"
+      ],
+      "category": "timing-hook",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "reason": null,
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "f0c37af9"
+    },
+    {
+      "file": "09689.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09689.json",
+      "stage": "M3",
+      "worker": "w-m3-withoutATrace",
+      "primitive": null,
+      "cards": [
+        "09689"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "reason": null,
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "fd97effd"
+    },
+    {
+      "file": "09690.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09690.json",
+      "stage": "M3",
+      "worker": "w-m3-withoutATrace",
+      "primitive": null,
+      "cards": [
+        "09690"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "reason": null,
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "bb04afe9"
+    },
+    {
+      "file": "09691.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09691.json",
+      "stage": "M3",
+      "worker": "w-m3-withoutATrace",
+      "primitive": null,
+      "cards": [
+        "09691"
+      ],
+      "category": "keyword-rule",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "reason": null,
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "c593a550"
+    },
+    {
+      "file": "09692.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09692.json",
+      "stage": "M3",
+      "worker": "w-m3-withoutATrace",
+      "primitive": null,
+      "cards": [
+        "09692"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "pending",
+        "reviewer": null,
+        "reviewedAt": null,
+        "reason": null,
+        "nextPhase": "P7-P8"
+      },
+      "noteSha256": "88d08e53"
+    },
+    {
+      "file": "09694.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09694.json",
+      "stage": "P7-congressOfTheKeys",
+      "worker": "w-p7-congressOfTheKeys",
+      "primitive": null,
+      "cards": [
+        "09694"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "14f128b0"
+    },
+    {
+      "file": "09715.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09715.json",
+      "stage": "P7-congressOfTheKeys",
+      "worker": "w-p7-congressOfTheKeys",
+      "primitive": null,
+      "cards": [
+        "09715"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "16353a77"
+    },
+    {
+      "file": "09716a.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09716a.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09716a"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "0e7b2870"
+    },
+    {
+      "file": "09716b.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09716b.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09716b"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "1ab40264"
+    },
+    {
+      "file": "09716c.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09716c.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09716c"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "c6499583"
+    },
+    {
+      "file": "09717.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09717.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09717"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "7d0fb417"
+    },
+    {
+      "file": "09720.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09720.json",
+      "stage": "P7-shared-B",
+      "worker": "w-p7-shared-b",
+      "primitive": null,
+      "cards": [
+        "09720"
+      ],
+      "category": "private-info",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "02e68998"
+    },
+    {
+      "file": "09721.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09721.json",
+      "stage": "P7-shared-B",
+      "worker": "w-p7-shared-b",
+      "primitive": null,
+      "cards": [
+        "09721"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "3f81e7eb"
+    },
+    {
+      "file": "09722.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09722.json",
+      "stage": "P7-shared-B",
+      "worker": "w-p7-shared-b",
+      "primitive": null,
+      "cards": [
+        "09722"
+      ],
+      "category": "timing-hook",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "57e5187a"
+    },
+    {
+      "file": "09723.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09723.json",
+      "stage": "P7-shared-B",
+      "worker": "w-p7-shared-b",
+      "primitive": null,
+      "cards": [
+        "09723"
+      ],
+      "category": "targeting",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "5ccafdb9"
+    },
+    {
+      "file": "09726a.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09726a.json",
+      "stage": "P7-shared-B",
+      "worker": "w-p7-shared-b",
+      "primitive": null,
+      "cards": [
+        "09726a"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "a4409bc8"
+    },
+    {
+      "file": "09726b.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09726b.json",
+      "stage": "P7-shared-B",
+      "worker": "w-p7-shared-b",
+      "primitive": null,
+      "cards": [
+        "09726b"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "d9a5c531"
+    },
+    {
+      "file": "09727a.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09727a.json",
+      "stage": "P7-shared-B",
+      "worker": "w-p7-shared-b",
+      "primitive": null,
+      "cards": [
+        "09727a"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "d6ee9ea6"
+    },
+    {
+      "file": "09727b.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09727b.json",
+      "stage": "P7-shared-B",
+      "worker": "w-p7-shared-b",
+      "primitive": null,
+      "cards": [
+        "09727b"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "3618d066"
+    },
+    {
+      "file": "09728.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09728.json",
+      "stage": "P7-shared-B",
+      "worker": "w-p7-shared-b",
+      "primitive": null,
+      "cards": [
+        "09728"
+      ],
+      "category": "keyword-rule",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "81be7e27"
+    },
+    {
+      "file": "09729.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09729.json",
+      "stage": "P7-shared-B",
+      "worker": "w-p7-shared-b",
+      "primitive": null,
+      "cards": [
+        "09729"
+      ],
+      "category": "timing-hook",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "ae6cb627"
+    },
+    {
+      "file": "09731.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09731.json",
+      "stage": "P7-shared-B",
+      "worker": "w-p7-shared-b",
+      "primitive": null,
+      "cards": [
+        "09731"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "6315a7bd"
+    },
+    {
+      "file": "09732.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09732.json",
+      "stage": "P7-shared-B",
+      "worker": "w-p7-shared-b",
+      "primitive": null,
+      "cards": [
+        "09732"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "b2d4d91a"
+    },
+    {
+      "file": "09733.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09733.json",
+      "stage": "P7-shared-B",
+      "worker": "w-p7-shared-b",
+      "primitive": null,
+      "cards": [
+        "09733"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "bb7a2284"
+    },
+    {
+      "file": "09735.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09735.json",
+      "stage": "P7-shared-B",
+      "worker": "w-p7-shared-b",
+      "primitive": null,
+      "cards": [
+        "09735"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "fa510e11"
+    },
+    {
+      "file": "09736.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09736.json",
+      "stage": "P7-shared-B",
+      "worker": "w-p7-shared-b",
+      "primitive": null,
+      "cards": [
+        "09736"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "86cc4097"
+    },
+    {
+      "file": "09737.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09737.json",
+      "stage": "P7-shared-B",
+      "worker": "w-p7-shared-b",
+      "primitive": null,
+      "cards": [
+        "09737"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "d8268c04"
+    },
+    {
+      "file": "09738.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09738.json",
+      "stage": "P7-shared-B",
+      "worker": "w-p7-shared-b",
+      "primitive": null,
+      "cards": [
+        "09738"
+      ],
+      "category": "keyword-rule",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "4f6e1613"
+    },
+    {
+      "file": "09739.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09739.json",
+      "stage": "P7-shared-B",
+      "worker": "w-p7-shared-b",
+      "primitive": null,
+      "cards": [
+        "09739"
+      ],
+      "category": "timing-hook",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "76d6f246"
+    },
+    {
+      "file": "09740.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09740.json",
+      "stage": "P7-shared-B",
+      "worker": "w-p7-shared-b",
+      "primitive": null,
+      "cards": [
+        "09740"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "d793f013"
+    },
+    {
+      "file": "09743.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09743.json",
+      "stage": "P7-shared-B",
+      "worker": "w-p7-shared-b",
+      "primitive": null,
+      "cards": [
+        "09743"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "7c75d7e3"
+    },
+    {
+      "file": "09745.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09745.json",
+      "stage": "P7-shared-B",
+      "worker": "w-p7-shared-b",
+      "primitive": null,
+      "cards": [
+        "09745"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "281490c4"
+    },
+    {
+      "file": "09746.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09746.json",
+      "stage": "P7-shared-B",
+      "worker": "w-p7-shared-b",
+      "primitive": null,
+      "cards": [
+        "09746"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "6a6b521f"
+    },
+    {
+      "file": "09747a.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09747a.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09747a"
+      ],
+      "category": "private-info",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "96d25103"
+    },
+    {
+      "file": "09747b.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09747b.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09747b"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "bd5c2464"
+    },
+    {
+      "file": "09747c.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09747c.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09747c"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "32fa81e6"
+    },
+    {
+      "file": "09748a.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09748a.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09748a"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "4ebe5ce4"
+    },
+    {
+      "file": "09748b.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09748b.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09748b"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "49fbe364"
+    },
+    {
+      "file": "09749a.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09749a.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09749a"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "a012f6b2"
+    },
+    {
+      "file": "09749b.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09749b.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09749b"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "d69ba264"
+    },
+    {
+      "file": "09750.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09750.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09750"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "964a66c2"
+    },
+    {
+      "file": "09751.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09751.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09751"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "f78c7fc4"
+    },
+    {
+      "file": "09752.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09752.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09752"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "3b5c3ab8"
+    },
+    {
+      "file": "09753.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09753.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09753"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "97b391e0"
+    },
+    {
+      "file": "09754.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09754.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09754"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "bb8bddbe"
+    },
+    {
+      "file": "09755.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09755.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09755"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "5b624c69"
+    },
+    {
+      "file": "09756.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09756.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09756"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "a2c9d471"
+    },
+    {
+      "file": "09757.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09757.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09757"
+      ],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "7ecedda0"
+    },
+    {
+      "file": "09758.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09758.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09758"
+      ],
+      "category": "timing-hook",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "f82e7c34"
+    },
+    {
+      "file": "09759.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09759.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09759"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "ab5f7ca1"
+    },
+    {
+      "file": "09760.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09760.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09760"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "a3d0f572"
+    },
+    {
+      "file": "09761.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09761.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09761"
+      ],
+      "category": "timing-hook",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "b89101f6"
+    },
+    {
+      "file": "09762.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09762.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09762"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "b792217b"
+    },
+    {
+      "file": "09763.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09763.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09763"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "54b95c3d"
+    },
+    {
+      "file": "09764.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09764.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09764"
+      ],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "67c867f9"
+    },
+    {
+      "file": "09765.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09765.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09765"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "cc197f27"
+    },
+    {
+      "file": "09766.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09766.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09766"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "8bda1240"
+    },
+    {
+      "file": "09767.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09767.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09767"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "bdbb5c2d"
+    },
+    {
+      "file": "09768a.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09768a.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09768a"
+      ],
+      "category": "timing-hook",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "7e30cacd"
+    },
+    {
+      "file": "09768b.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09768b.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09768b"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "58ac2564"
+    },
+    {
+      "file": "09769a.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09769a.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09769a"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "44fb4485"
+    },
+    {
+      "file": "09769b.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09769b.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09769b"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "1fc8f625"
+    },
+    {
+      "file": "09770a.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09770a.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09770a"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "90ad539c"
+    },
+    {
+      "file": "09770b.json",
+      "path": "artifacts/migration/tsk/primitive-requests/09770b.json",
+      "stage": "P7-shared-A",
+      "worker": "w-p7-shared-a",
+      "primitive": null,
+      "cards": [
+        "09770b"
+      ],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "3c42e6bb"
+    },
+    {
+      "file": "campaign-flow-trauma.json",
+      "path": "artifacts/migration/tsk/primitive-requests/campaign-flow-trauma.json",
+      "stage": "P7-campaign-flow",
+      "worker": "w-p7-campaign-flow",
+      "primitive": null,
+      "cards": [],
+      "category": "record-container",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "5b007853"
+    },
+    {
+      "file": "extend-enemy-story-face-flip.json",
+      "path": "artifacts/migration/tsk/primitive-requests/extend-enemy-story-face-flip.json",
+      "stage": "P7-chapter-shadesOfSuffering",
+      "worker": "w-p7-shadesOfSuffering",
+      "primitive": null,
+      "cards": [],
+      "category": "private-info",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "4c45c0f5"
+    },
+    {
+      "file": "extend-scarlet-key-charges.json",
+      "path": "artifacts/migration/tsk/primitive-requests/extend-scarlet-key-charges.json",
+      "stage": "P7-chapter-shadesOfSuffering",
+      "worker": "w-p7-shadesOfSuffering",
+      "primitive": null,
+      "cards": [],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "0461a6f0"
+    },
+    {
+      "file": "key-taken-offscreen.json",
+      "path": "artifacts/migration/tsk/primitive-requests/key-taken-offscreen.json",
+      "stage": "P7-campaign-flow",
+      "worker": "w-p7-campaign-flow",
+      "primitive": null,
+      "cards": [],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "e925924d"
+    },
+    {
+      "file": "map-advance-time.json",
+      "path": "artifacts/migration/tsk/primitive-requests/map-advance-time.json",
+      "stage": "P7-campaign-flow",
+      "worker": "w-p7-campaign-flow",
+      "primitive": null,
+      "cards": [],
+      "category": "other",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "38879508"
+    },
+    {
+      "file": "new-enemy-movement-restriction.json",
+      "path": "artifacts/migration/tsk/primitive-requests/new-enemy-movement-restriction.json",
+      "stage": "P7-chapter-shadesOfSuffering",
+      "worker": "w-p7-shadesOfSuffering",
+      "primitive": null,
+      "cards": [],
+      "category": "timing-hook",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "741eb450"
+    },
+    {
+      "file": "new-scenario-group-clue-cost.json",
+      "path": "artifacts/migration/tsk/primitive-requests/new-scenario-group-clue-cost.json",
+      "stage": "P7-chapter-shadesOfSuffering",
+      "worker": "w-p7-shadesOfSuffering",
+      "primitive": null,
+      "cards": [],
+      "category": "ui-window",
+      "statusBefore": "deferred",
+      "statusAfter": "deferred",
+      "decision": "accepted-approximation-for-P8",
+      "priorAdjudication": {
+        "decision": "accepted-approximation-for-P8",
+        "reviewer": "P8 main process",
+        "reviewedAt": "2026-11-12",
+        "reason": "P8 按「逐卡可执行行为 + 近似逐条披露」口径验收：该请求缺的引擎读点由 P7 章级近似实现并在条目 note/scenarioApproximations 逐条披露；P8 发布验收不实现新原语，统一登记为 P9 原语批次 backlog（§4.6.3 队列）。",
+        "nextPhase": "P9"
+      },
+      "noteSha256": "808cb069"
+    }
+  ],
+  "notes": [
+    {
+      "file": "remaining.json",
+      "kind": "non-request",
+      "keys": [
+        "delivered",
+        "remaining",
+        "requestedAt",
+        "shard",
+        "worker"
+      ]
+    }
+  ]
+}

@@ -8,12 +8,30 @@
 import { createHash } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
 import { queryCatalogView, getCatalogCardView, getLinkedCatalogCardView, getCatalogMeta } from '../cards/card-catalog.js'
+import { CARD_ABILITY_ENTRIES } from '../cards/card-abilities.js'
 import { ALL_ENEMIES } from '../engine/card-lookup.js'
-import { META } from '../cards/cards-data.js'
-import { fetchArkhamDbDeck, resolveArkhamDbDeck } from './arkhamdb.js'
+import { ALL_CARDS, META } from '../cards/cards-data.js'
+import { describeArkhamDbDeck, fetchArkhamDbDeck, resolveArkhamDbDeck } from './arkhamdb.js'
+import { findArkhamDbRecommendation } from './arkhamdb-recommendation.js'
+import recommendedDecks from './recommended-decks.json' with { type: 'json' }
 import { scenarioImageManifest } from './scenario-images.js'
 
 const FILTER_KEYS = Object.freeze(['q', 'code', 'name', 'type', 'klass', 'packCode', 'cost', 'xp', 'campaign', 'sort', 'effectStatus', 'availability', 'offset', 'limit'])
+function customizationPresentation({ code, customizationOptions }) {
+  const textZh = ALL_CARDS[code]?.customizationTextZh || ''
+  const rows = [...textZh.matchAll(/^(□+)[ \t]*([^。\r\n]+)。[ \t]*(.*)$/gm)]
+  // Only use the localized rows when they align with the registered checklist.
+  const aligned = rows.length === customizationOptions.length
+    && customizationOptions.every((option, index) => rows[index][1].length === option.checks)
+  return customizationOptions.map(({ name, checks, text, implemented }, index) => ({
+    name, checks, text, implemented: implemented !== false,
+    ...(aligned ? { nameZh: rows[index][2], textZh: rows[index][3] } : {}),
+  }))
+}
+
+const CUSTOMIZATION_OPTIONS_BY_CODE = Object.fromEntries(CARD_ABILITY_ENTRIES
+  .filter(entry => entry.customizationOptions?.length)
+  .map(entry => [entry.code, customizationPresentation(entry)]))
 // 目录卡面只含印刷值；「每名调查员 +X 生命」这类剧本常驻修正写在 content 里。
 // 图鉴详情补上它，浏览器才能按调查员人数算出有效生命（例如 02058：印刷 7 + 每人 3）。
 const ENEMY_RULES_BY_ORIGINAL = new Map()
@@ -28,6 +46,7 @@ function attachEnemyHealthBonus(card, code) {
 }
 // 资源版本纳入的文件：目录数据、规则差异、展示解析与浏览器展示代码。
 const VERSIONED_FILES = Object.freeze([
+  './recommended-decks.json',
   '../cards/cards-data.js', '../cards/scenarios-data.js', '../cards/card-effects.js', '../cards/card-catalog.js',
   './image-cache.js', './music-cache.js', './scenario-images.js', '../../web/music-player.js',
   '../../presentation/art-rules.js', '../../presentation/images.js',
@@ -45,6 +64,7 @@ let versionPromise
 export function resourceVersion() {
   if (!versionPromise) versionPromise = (async () => {
     const hash = createHash('sha256').update(JSON.stringify(META))
+    hash.update(JSON.stringify(CUSTOMIZATION_OPTIONS_BY_CODE))
     for (const relative of VERSIONED_FILES) {
       hash.update(relative).update(await readFile(new URL(relative, import.meta.url)))
     }
@@ -57,6 +77,19 @@ let metaCache
 function catalogMeta() {
   if (!metaCache) metaCache = getCatalogMeta()
   return metaCache
+}
+
+async function recommendedDeck(code) {
+  let raw
+  try {
+    raw = Object.hasOwn(recommendedDecks, code)
+      ? recommendedDecks[code]
+      : await findArkhamDbRecommendation(code)
+  } catch {
+    return { status: 502, error: '暂时无法从 ArkhamDB 读取推荐卡组，请稍后重试' }
+  }
+  if (!raw) return { status: 404, error: '没有找到符合该调查员循环的 0 XP 推荐卡组' }
+  return { body: { deck: describeArkhamDbDeck(raw, { kind: 'decklist' }) } }
 }
 
 function filterOptions(searchParams) {
@@ -83,6 +116,7 @@ export function handleApi({ path, searchParams }) {
   // ArkhamDB 导入：只读代理公开牌组并规范化卡号，不触碰对局状态；
   // 实际构筑仍须经 hubSetDeck 的服务端校验。
   if (path === 'arkhamdb/resolve') return resolveArkhamDbDeck(searchParams)
+  if (path === 'arkhamdb/recommended') return recommendedDeck(searchParams.get('investigator'))
   if (path.startsWith('arkhamdb/')) {
     const [kind, id, ...extra] = path.slice('arkhamdb/'.length).split('/')
     if (extra.length) return null
@@ -95,7 +129,9 @@ export function handleApi({ path, searchParams }) {
     if (!card) return { status: 404, error: '卡牌不存在' }
     attachEnemyHealthBonus(card, code)
     const linkedCard = getLinkedCatalogCardView(code)
-    return { body: { card, ...(linkedCard ? { linkedCard } : {}) } }
+    const customizationOptions = Object.hasOwn(CUSTOMIZATION_OPTIONS_BY_CODE, code)
+      ? CUSTOMIZATION_OPTIONS_BY_CODE[code] : null
+    return { body: { card, ...(linkedCard ? { linkedCard } : {}), ...(customizationOptions ? { customizationOptions } : {}) } }
   }
   if (path.startsWith('scenarios/') && path.endsWith('/images')) {
     const id = path.slice('scenarios/'.length, -'/images'.length)

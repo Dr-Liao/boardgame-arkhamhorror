@@ -108,7 +108,7 @@
     },
     {
       "path": "audit/tsk-regression.json",
-      "sha256": "e903c8721f787f277c2a502dea3da3d00c487119b6fdf29eae0271ee9c88633b"
+      "sha256": "14e6390e43f65c12000e5901dad806e7c278db7329a95317a8b05f400fca9488"
     },
     {
       "path": "src/engine/tsk-interactions.js",
@@ -116,7 +116,7 @@
     },
     {
       "path": "src/integration/mechanic-view.js",
-      "sha256": "1d3464531ca133f17767ad241a9e1e31661213d6f0afa5e9ab8c9e94afadcbf9"
+      "sha256": "c02e0a7ff61087c73f9c5f96e7f8c28f7a58d572ad357a19fb5d1f86d16db281"
     },
     {
       "path": "tests/tsk-interaction-fixture.mjs",

@@ -99,7 +99,8 @@ export function buildInvestigatorAudit() {
       && playerManifest.cards.every(card => card.rulesImplemented === true),
     originalBaselinePreserved: Boolean(baselineReplaySha) && currentReplaySha === baselineReplaySha,
     replayZeroDrift: regression?.status === 'passed' && regression?.replay?.matches === true,
-    fastNoNewFailures: additions.length === 0 && fastTitles.length === frozen.length
+    // 2026-11-16：允许其它循环把冻结失败修掉（TCU/i18n 已修复），失败数只许 <= 冻结数。
+    fastNoNewFailures: additions.length === 0 && fastTitles.length <= frozen.length
       && fastTitles.every(title => frozen.includes(title)),
     docsPresent: existsSync(join(MOD, 'docs/campaign/theScarletKeys/investigators.md')),
   }

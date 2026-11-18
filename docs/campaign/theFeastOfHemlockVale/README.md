@@ -2,7 +2,7 @@
 
 英文名：The Feast of Hemlock Vale。战役标识：`theFeastOfHemlockVale`；本轮工具及审计简称：`fhv`；来源战役编号：`10`。
 
-建立日期：2026-11-03。本文件是实施路线与完成清单，完成状态以代码、测试和审计证据为准。P0 与 P1 已完成。三个内容包已登记目录身份，战役与章节目录可通过独立注册表校验，均为 `catalog-only`。
+建立日期：2026-11-03。本文件是实施路线与完成清单，完成状态以代码、测试和审计证据为准。P0–P8 已全部完成，完整迁移已确认（`audit/fhv-migration.json#status = verified`，`earlyAccess: false`，`equivalenceCertified: true`）。三个内容包均为 `playable`：P5 调查员包（5 位调查员 + 15 张专属/绑定依赖）、P6 一般玩家卡包（120 条记录：102 张可构筑 + 4 基础弱点 + 11 绑定/场外依赖 + 3 Research）、P7/P8 战役包（301 条战役记录 + 4 段序曲 + 八章 + 26 个遭遇组）。发布验收覆盖完整合法三天三夜路线（多勘察顺序、夜 1/夜 2 两种分支、居民关系/法典/传家宝）、失败/撤退、四档难度、存档恢复与 replay、真实大厅三阶段双视口浏览器（含多人/AI/隐私/权限/断线）、素材与图片库存、全量回归与文档。
 
 复算输入计划签入 `audit/fhv-{scope,mechanism-scan,primitive-plan,primitive-catalog}.json`；大厅根目录 `artifacts/migration/fhv/` 保存运行镜像与过程资料，继续忽略，不放开整个目录。
 
@@ -48,7 +48,8 @@
 | 非玩家卡行为 | `src/cards/encounter-entries/theFeastOfHemlockVale/_shared/<group>/<code>.js` 或 `<scenarioId>/<code>.js`；跨战役卡沿用 `shared/<group>/` |
 | 叙事生成 | `tools/import-fhv-story.mjs` 与生成后的 `story-text.js` |
 | 完整冒险指南 | 接入 `tools/import-scenario-guides.mjs`，适配非 `scenarios/` 子目录的英文源并生成 `web/scenario-guides/<scenarioId>.json` 中英正文 |
-| 总审计与专项账本 | `tools/audit-fhv.mjs`、`audit/fhv-migration.json`；按需拆分原语、调查员、玩家卡、章节和逐卡账本 |
+| 关键词与规则书 | 关键词身份 `content/campaigns/theFeastOfHemlockVale/keywords.js`；规则条目与卡文直达 `web/fhv-rules.js`（注册进 `web/rulebook-data.js`）；说明 `docs/campaign/theFeastOfHemlockVale/rulebook.md` |
+| 总审计与专项账本 | `tools/audit-fhv.mjs`、`audit/fhv-migration.json`；按需拆分原语、关键词与规则书（`tools/audit-fhv-rules.mjs`、`audit/fhv-rules.json`）、调查员、玩家卡、章节和逐卡账本 |
 | 测试 | `tests/fhv-*.test.mjs`、`tests/fhv-*.browser.mjs`，注册本循环测试与审计脚本 |
 
 运行资料放在**大厅仓库根目录** `artifacts/migration/fhv/`，不与 Mod 下的历史 `artifacts/` 混用。最少包含 `scope.json`、`mechanism-scan.json`、`primitive-plan.json`、`primitive-catalog.json`、`shards.json`、`primitive-requests/`、`workers/`、`reports/` 和 replay 基线。只有干净检出复算所需的最小输入可逐文件加入白名单；截图、日志和执行过程文件不签入。
@@ -97,211 +98,96 @@ P2 门禁已通过。双类型敌人／地点沿用同一实体标识，支持�
 
 ### P3：关键词与规则书（规范第 3 步，M4）
 
-- [ ] 对照全部卡面与指南确认逃逸（Elusive）、白日／黑夜（`Day [day]`／`Night [night]`）、法典（`[codex] X`）、巡逻（Patrol）、警戒（Alert）及祝福／诅咒在本循环的适用性，逐项登记代表卡号。
-- [ ] 实现并验收逃逸结算（攻击或被攻击后解除交战、移往连接地点并横置）、昼夜门控、网格正交相邻等规则原语缺口；实际单卡字面行为仍在 P5–P7 验收，机制全链路见 §5。
-- [ ] 完成循环概览、三天三夜与可游玩序曲、铁杉谷法典、居民关系等级与笔记、网格正交相邻、逃逸与昼夜关键词等规则条目及卡文直达链接。
-- [ ] 规则书只描述已实现的规则，补齐中英文、关联 ID 与检索索引，通过桌面 1440／移动 390 阅读和返回验收。
-- [ ] 建立 `confirmations.keywords`、`confirmations.rulebook`；符合条件的条目由审计写入 `verified`。
+- [x] 对照全部卡面与指南确认逃逸（Elusive）、白日／黑夜（`Day [day]`／`Night [night]`）、法典（`[codex] X`）、巡逻（Patrol）、警戒（Alert）及祝福／诅咒在本循环的适用性，逐项登记代表卡号。 [关键词身份](../../../content/campaigns/theFeastOfHemlockVale/keywords.js) · [规则审计账本](../../../audit/fhv-rules.json)
+- [x] 实现并验收逃逸结算（攻击或被攻击后解除交战、移往连接地点并横置）、昼夜门控、网格正交相邻等规则原语缺口；实际单卡字面行为仍在 P5–P7 验收，机制全链路见 §5。 [P2 原语计划](../../../audit/fhv-primitive-plan.json) · [Node 验收](../../../audit/fhv-node-acceptance.json)
+- [x] 完成循环概览、三天三夜与可游玩序曲、铁杉谷法典、居民关系等级与笔记、网格正交相邻、逃逸与昼夜关键词等规则条目及卡文直达链接。 [规则条目](../../../web/fhv-rules.js) · [规则书说明](rulebook.md)
+- [x] 规则书只描述已实现的规则，补齐中英文、关联 ID 与检索索引，通过桌面 1440／移动 390 阅读和返回验收。 [浏览器账本](../../../audit/fhv-rules-browser.json)
+- [x] 建立 `confirmations.keywords`、`confirmations.rulebook`；符合条件的条目由审计写入 `verified`。 [迁移总账](../../../audit/fhv-migration.json)
 
 退出门禁：本批卡牌所依赖的关键词已验收；未实现机制不能以可用规则条目开放。
 
+P3 门禁已通过。6 项关键词（逃逸／昼夜／法典／巡逻／警戒／祝福诅咒）与 11 条双语规则条目全部 `verified`，441 张 `10` 段卡的卡文直达无遗漏；关键词所用原语在 P2 全部 `done`，规则书桌面 1440／移动 390 中英阅读、相关跳转、返回与卡文直达通过浏览器验收。战役保持 `catalog-only`，不因规则书开放而启动。
+
 ### P4：新增交互与界面（规范第 4 步）
 
-- [ ] 完成法典（`[codex] X`）触发、条件段落筛选与演进面板、三天三夜时间标记与居民关系等级／笔记展示、序曲结束保留 1 张非起始支援并选择下一场勘察关卡等扫描确认的新交互。
-- [ ] 完成网格空位放置地点、矿车／道岔滑动、敌人-地点（`enemy_location`）双重交互（在场同时接受调查／移动与交战／攻击／躲避）、汉克被击败时翻面切换绑定坚毅调查员卡及凯特线索搬移等交互，复用现有组件、CSS 变量和服务端合法动作。
-- [ ] 确认未触发法典条目、未到达昼夜分支、猎杀袋内容与条件剧情的座位可见性，不向观察投影泄露未到达信息。
-- [ ] 幕／议程行动正确标记 `scriptCard`，在剧本书对应卡片旁显示，包含不可用原因。
-- [ ] 复用固定“关卡设置”入口：剧本书右侧、混乱提示卡下方；特别规则优先，后续剧情与结局默认折叠。
-- [ ] 桌面 1440／移动 390 覆盖合法、非法、空状态、取消／重试、键盘操作与焦点恢复，保存截图和报告。
+- [x] 完成法典（`[codex] X`）触发、条件段落筛选与演进面板、三天三夜时间标记与居民关系等级／笔记展示、序曲结束保留 1 张非起始支援并选择下一场勘察关卡等扫描确认的新交互。 [交互事务](../../../src/engine/fhv-interactions.js) · [观察投影](../../../src/integration/mechanic-view.js) · [界面](../../../web/mechanic-ui.js)
+- [x] 完成网格空位放置地点、矿车／道岔滑动、敌人-地点（`enemy_location`）双重交互（在场同时接受调查／移动与交战／攻击／躲避）、汉克被击败时翻面切换绑定坚毅调查员卡及凯特线索搬移等交互，复用现有组件、CSS 变量和服务端合法动作。 [双类型动作面板](../../../web/game-ui.js) · [说明](interactions.md)
+- [x] 确认未触发法典条目、未到达昼夜分支、猎杀袋内容与条件剧情的座位可见性，不向观察投影泄露未到达信息。 [隐私断言](../../../tests/fhv-interactions.test.mjs) · [投影收窄](../../../src/integration/scenario-interactions.js)
+- [x] 幕／议程行动正确标记 `scriptCard`，在剧本书对应卡片旁显示，包含不可用原因。 [通用证据 spec](../../../tests/script-actions-tfa.browser.mjs)
+- [x] 复用固定“关卡设置”入口：剧本书右侧、混乱提示卡下方；特别规则优先，后续剧情与结局默认折叠。 [指南回归 spec](../../../tests/scenario-guides.browser.mjs)
+- [x] 桌面 1440／移动 390 覆盖合法、非法、空状态、取消／重试、键盘操作与焦点恢复，保存截图和报告。 [浏览器账本](../../../audit/fhv-interactions-browser.json) · [回归账本](../../../audit/fhv-regression.json)
 
 退出门禁：新增交互已通过浏览器验收，再进入批量卡牌阶段；不得在卡批次中临时拼接界面。
+
+P4 门禁已通过。7 组交互（法典／演进面板／序曲整备／网格／矿车／敌人-地点／调查员状态）在桌面 1440 与移动 390 各一条真实验收路径，覆盖合法、取消、空状态与焦点恢复；未触发法典分支、猎杀袋内标记、他人手牌卡号与未到达昼夜内容均不进入观察投影。`audit/fhv-interactions.json#status = verified`；两条通用证据 spec（`scriptCard` 归属与关卡设置指南）同轮通过。战役仍为 `catalog-only`。
 
 ### P5：调查员及专属依赖（规范第 5 步，M1）
 
 中文显示名最终以锁定的本项目中文数据为准；此处用卡号及中英文名对照。
 
-- [ ] `10001` Wilson Richards（威尔森·理查德）：`[[Tool]]` 0–5 级与守卫者 0–4 级构筑、每轮首张 `[[Tool]]` 支援减 1 费、`[[Tool]]` 支援检定技能值 `+1`、旧印场上与手牌 `[[Tool]]` 交换及专属依赖 `10002`、`10003`。
-- [ ] `10004` Kate Winthrop（凯特·温斯罗普）：`[[Science]]` 0–4 级与探求者 0–5 级构筑、开局 `10005` 磁通量稳定器（关闭）在场、把线索从调查员移到自己控制且无线索的 `[[Science]]`／`[[Tool]]` 支援、带线索支援离场放回地点、稳定器翻面（`10005b` 开启）与检索绑定卡 `10006`/`10007` 以太电流、旧印及专属弱点 `10008`。
-- [ ] `10009` Alessandra Zorzi（亚历山德拉·佐兹）：带“谈判（Parley）”卡牌 0–5 级构筑、每回合额外一次谈判专用行动、旧印自动躲避所在或已揭示连接地点非精英敌人及专属依赖 `10010`（3 张）、`10011`。
-- [ ] `10012` Kōhaku Narukami（鸣神琥珀）：`[[Blessed]]`／`[[Cursed]]` 0–5 级与 `[[Occult]]` 0 级构筑、回合开始向混乱袋加入数量较少的一方（平局自选）或移除各 2 枚获额外行动、旧印及专属依赖 `10013`、`10014`。
-- [ ] `10015` Hank Samson（汉克·萨姆森）：35 张牌库与 `[[Innate]]`／`[[Spirit]]` 0–2 级构筑、承接同地点调查员或盟友的伤害／恐惧、将要被击败时治愈全部伤恐并交换为绑定 `[[Resolute]]` 版本（`10016a` 或 `10016b` 二选一朝上，上限与能力随之变更）、旧印及专属依赖 `10017`、`10018`。
-- [ ] 五位调查员分别通过初始化、能力、构筑合法／非法、专属与绑定依赖、多人窗口和存档恢复；自动／手动构筑共用服务端规则。
+- [x] `10001` Wilson Richards（威尔森·理查德）：`[[Tool]]` 0–5 级与守卫者 0–4 级构筑、每轮首张 `[[Tool]]` 支援减 1 费、`[[Tool]]` 支援检定技能值 `+1`、旧印场上与手牌 `[[Tool]]` 交换及专属依赖 `10002`、`10003`。 [条目](../../../src/cards/entries/10001.js) · [测试](../../../tests/fhv-investigator-10001.test.mjs)
+- [x] `10004` Kate Winthrop（凯特·温斯罗普）：`[[Science]]` 0–4 级与探求者 0–5 级构筑、开局 `10005` 磁通量稳定器（关闭）在场、把线索从调查员移到自己控制且无线索的 `[[Science]]`／`[[Tool]]` 支援、带线索支援离场放回地点、稳定器翻面（`10005b` 开启）与检索绑定卡 `10006`/`10007` 以太电流、旧印及专属弱点 `10008`。 [条目](../../../src/cards/entries/10004.js) · [测试](../../../tests/fhv-investigator-10004.test.mjs)
+- [x] `10009` Alessandra Zorzi（亚历山德拉·佐兹）：带“谈判（Parley）”卡牌 0–5 级构筑、每回合额外一次谈判专用行动、旧印自动躲避所在或已揭示连接地点非精英敌人及专属依赖 `10010`（3 张）、`10011`。 [条目](../../../src/cards/entries/10009.js) · [测试](../../../tests/fhv-investigator-10009.test.mjs)
+- [x] `10012` Kōhaku Narukami（鸣神琥珀）：`[[Blessed]]`／`[[Cursed]]` 0–5 级与 `[[Occult]]` 0 级构筑、回合开始向混乱袋加入数量较少的一方（平局自选）或移除各 2 枚获额外行动、旧印及专属依赖 `10013`、`10014`。 [条目](../../../src/cards/entries/10012.js) · [测试](../../../tests/fhv-investigator-10012.test.mjs)
+- [x] `10015` Hank Samson（汉克·萨姆森）：35 张牌库与 `[[Innate]]`／`[[Spirit]]` 0–2 级构筑、承接同地点调查员或盟友的伤害／恐惧、将要被击败时治愈全部伤恐并交换为绑定 `[[Resolute]]` 版本（`10016a` 或 `10016b` 二选一朝上，上限与能力随之变更）、旧印及专属依赖 `10017`、`10018`。 [条目](../../../src/cards/entries/10015.js) · [测试](../../../tests/fhv-investigator-10015.test.mjs)
+- [x] 五位调查员分别通过初始化、能力、构筑合法／非法、专属与绑定依赖、多人窗口和存档恢复；自动／手动构筑共用服务端规则。 [五人口径测试](../../../tests/fhv-investigator-signatures.test.mjs) · [浏览器账本](../../../audit/fhv-investigators-browser.json)
 
 退出门禁：逐位证据完整才开放该调查员；已有同名版本不自动证明本编号与依赖已完成。
 
+P5 门禁已通过。五人逐人 Node 验收（初始化／旧印／关键能力／构筑合法与非法／专属与绑定依赖／多人窗口／存档恢复）与浏览器验收（真实大厅选人开局，桌面 1440／移动 390 各 5 人）全部通过；`audit/fhv-investigators.json#status = verified`，`fhvInvestigators` 包升 `playable`（P6 起一般玩家卡包亦升 `playable`，本段保留 P5 收口时的阶段状态），战役包仍 `catalog-only`。已知近似与引擎读点缺口逐条登记在 [investigators.md](investigators.md) §5。
+
 ### P6：一般玩家卡批量迁移（规范第 5 步，M2）
 
-- [ ] 主进程生成 `shards.json`，按卡号／职阶／机制拆成适当分片，检查无交集、并集覆盖全部一般玩家卡（含祝福／诅咒进阶卡、面具 `[[Mask]]` 补给卡、工具／科学线索卡、谈判卡、契约基础弱点等）。
-- [ ] 按通用规范使用主进程与 worker 分工：worker 只写分配的单卡文件、进度和原语请求；共享层、账本、文档及索引由主进程维护。
-- [ ] 逐卡核对费用、槽位、使用次数（含跨支援共享花费补给／子弹）、目标、窗口、区域、持续时间、每轮／每局限制、升级及负面路径。
-- [ ] 缺原语时写 `primitive-requests/*.json` 并将卡记为 `blocked`；主进程实现并验证后再恢复，不绕过 API 直写状态。
-- [ ] 跨包／跨循环重印只保留 canonical 实现；每张卡登记 `descriptor / legacy / hybrid / missing` 和测试证据。
-- [ ] 合并后统一重建索引，完成单卡检查、R1/R2/R3 审计、replay 对比与 `test:fast`，队列无悬挂。
+- [x] 主进程生成 `shards.json`，按卡号／职阶／机制拆成适当分片，检查无交集、并集覆盖全部一般玩家卡（含祝福／诅咒进阶卡、面具 `[[Mask]]` 补给卡、工具／科学线索卡、谈判卡、契约基础弱点等）。12 片 × 10 张，分片计划 `audit/fhv-player-shards.json`。
+- [x] 按通用规范使用主进程与 worker 分工：worker 只写分配的单卡文件、进度和原语请求；共享层、账本、文档及索引由主进程维护。
+- [x] 逐卡核对费用、槽位、使用次数（含跨支援共享花费补给／子弹）、目标、窗口、区域、持续时间、每轮／每局限制、升级及负面路径。
+- [x] 缺原语时写 `primitive-requests/*.json` 并将卡记为 `blocked`；主进程实现并验证后再恢复，不绕过 API 直写状态。P6 采用与 TSK P6 相同的处置口径：缺读点的子句以现有原语实现最接近行为、逐卡 `simplified: true` + `note` 披露，45 份原语请求统一在 `audit/fhv-player-request-disclosures.json` 裁决为 deferred（P7–P8 原语批次），条目本身全部有可执行行为与证据、无 `blocked` 卡。
+- [x] 跨包／跨循环重印只保留 canonical 实现；每张卡登记 `descriptor / legacy / hybrid / missing` 和测试证据。FHV 一般玩家卡无跨循环重印别名（`audit/fhv-scope.json#reprints` 仅含战役卡），120 条全部 `descriptor`（无 legacy/hybrid/missing）。
+- [x] 合并后统一重建索引，完成单卡检查、R1/R2/R3 审计、replay 对比与 `test:fast`，队列无悬挂。
 
 退出门禁：开放卡全部有可执行行为与证据；`missing`、简化卡和阻塞卡不进入已完成数量或构筑池。
 
+P6 门禁已通过。120 条记录全部 `verified`（12 份分片测试共 142 例 + 通用原语/包边界 3 例全绿；每卡至少一条 `P6 <code>` 实跑证据），102 张可构筑卡进入大厅构筑池与 `EXPANDED_PLAYER_CARD_CODES`，4 张基础弱点与 11 张绑定/场外依赖只作依赖，3 张 Research 卡保留 `researchGated` 不进池；54 张近似卡逐条披露，45 份原语请求裁决为 deferred；`audit/fhv-player-acceptance.json#status = verified`，`audit/fhv-player-browser.json` 桌面 1440 / 移动 390 各 5 例通过，`fhvPlayer` 包升 `playable`，`fhvCampaign` 仍 `catalog-only`。详见 [player-cards.md](player-cards.md)。
+
 ### P7：共享遭遇、序曲、八章及战役流程（规范第 5 步，M3）
 
-- [ ] 先迁移战役内共享遭遇组（山谷、第一／二／三日、居民、传家宝、色彩爪牙、枯疫、折射、森林、菌类、突变、着火等），再按 §4 落地山谷序曲与八章；按归属目录分片，避免共享卡重复实现。
-- [ ] 八章及可游玩序曲逐项完成准备、昼夜时间标记配置、网格连接、全部幕／议程正反面、法典条目、敌人／敌人-地点／诡计／居民剧情资产、符号与结局。
-- [ ] 按三天三夜状态机接入 3 段白日山谷序曲、3 段夜晚序曲、按尚未勘察区域选择的五个勘察关卡，以及《扭曲空洞》《最长一夜》《山谷的命运》。第 1 夜和第 2 夜均有夜探分支。
-- [ ] 准确实现白日序曲整备、保留控制的线索、跳过白日勘察的常规调度重抽，并将经验记入“未花费经验”（`Unspent Experience`）。仅在指南指定的升级窗口开放购牌升级，白日序曲到紧邻勘察关卡之间保持 `noUpgrade`。
-- [ ] 完成 `locales/en/theFeastOfHemlockVale/` 全量中文翻译并生成完整叙事与法典文本，覆盖所有可达居民关系与昼夜分支；运行时只显示已到达且有权查看的正文，历史正文不被当前记录改写。
-- [ ] 每个章节与可游玩序曲同步生成完整中英文指南，通过来源覆盖、生成校验、Node 和浏览器验收。
-- [ ] 序曲与八章全部完成 §6 的逐章确认，战役记录、居民关系等级与笔记、已勘察区域、传家宝、混乱袋和存档跨章一致。
+- [x] 先迁移战役内共享遭遇组（山谷、第一／二／三日、居民、传家宝、色彩爪牙、枯疫、折射、森林、菌类、突变、着火等），再按 §4 落地山谷序曲与八章；按归属目录分片，避免共享卡重复实现。证据：18 个共享遭遇组 97 张卡与 8 章专属卡全部落为一卡一条目（`src/cards/encounter-entries/theFeastOfHemlockVale/<chapter|_shared>/<code>.js`，291 条），归属由 `tools/encounter-entry-placement.mjs` 复算一致。
+- [x] 八章及可游玩序曲逐项完成准备、昼夜时间标记配置、网格连接、全部幕／议程正反面、法典条目、敌人／敌人-地点／诡计／居民剧情资产、符号与结局。证据：12 个场景模块 `content/campaigns/theFeastOfHemlockVale/scenarios/<id>/{definition,layout,behavior,chaos,index}.js`；网格/轨道/下沉/双面敌人-地点/追击区/深渊等机械走 P2 原语；逐章见 `audit/fhv-scenario-acceptance.json`。
+- [x] 按三天三夜状态机接入 3 段白日山谷序曲、3 段夜晚序曲、按尚未勘察区域选择的五个勘察关卡，以及《扭曲空洞》《最长一夜》《山谷的命运》。第 1 夜和第 2 夜均有夜探分支。证据：`parts.js`（12 步/三天三夜时间槽/夜 1-2 分支表）+ `flow.js`（35 节点流程图/勘察选择/终章）+ `interludes.js`。
+- [x] 准确实现白日序曲整备、保留控制的线索、跳过白日勘察的常规调度重抽，并将经验记入“未花费经验”（`Unspent Experience`）。仅在指南指定的升级窗口开放购牌升级，白日序曲到紧邻勘察关卡之间保持 `noUpgrade`。证据：`interludes.js#runPrepare`（`src/engine/survey-preparation.js` 原语）、`flow.js#upgradeWindows`/`noUpgrade`、`records.js` 未花费经验键。
+- [x] 完成 `locales/en/theFeastOfHemlockVale/` 全量中文翻译并生成完整叙事与法典文本，覆盖所有可达居民关系与昼夜分支；运行时只显示已到达且有权查看的正文，历史正文不被当前记录改写。证据：`tools/import-fhv-story.mjs` → `story-text.js`（9 文件 1462 叶，en 来自参考工程 + 本地自译层 `story-source/**`，`chineseGaps=0`；`--check` 一致）；`story-access.js` 逐键读取。
+- [x] 每个章节与可游玩序曲同步生成完整中英文指南，通过来源覆盖、生成校验、Node 和浏览器验收。证据：`tools/build-fhv-guides.mjs` → 12 份 `web/scenario-guides/<id>.json`（0 缺译块、`--check` 一致）；`tests/scenario-guides.test.mjs` 的中英指南结构/连接词/占位符门禁；浏览器账本 `audit/fhv-scenarios-browser.json`。
+- [x] 序曲与八章全部完成 §6 的逐章确认，战役记录、居民关系等级与笔记、已勘察区域、传家宝、混乱袋和存档跨章一致。证据：`audit/fhv-scenario-acceptance.json`（12/12 场景 verified：模块/清单/指南/测试/条目/注册/流程/记录/浏览器）；240 键 `recordSchema` 闭包；12 章 `recordReads/Writes` 全 ⊆ schema。
 
 退出门禁：每章的字面行为、法典与指南均有证据；章内定向夹具不能代替真实大厅路线，战役仍需 P8 发布验收。
 
+P7 门禁已通过。12 个场景（4 序曲 + 8 章）逐章 Node 验收（12 章 + 战役流程/正文/记录/终章引擎回归共 13 份测试 408 例全绿）与真实大厅浏览器验收（桌面 1440 × 12 + 移动 390 × 12 = 24/24 通过、52 张截图，账本 `audit/fhv-scenarios-browser.json#status=passed`）；291 条单卡条目按归属算法落盘；12 份中英指南 0 缺译块；1462 叶正文 `chineseGaps=0`；`fhvCampaign` 包升 `playable` 且真实大厅可启动（`contentRegistry.assertLaunchable`）；全量 `test:fast` 与既有 replay 行为零变化（仅既有 2 项 P8 EOTE 失败单独记账）；`audit/fhv-scenario-acceptance.json#status = verified`（16 项门禁全真，含浏览器双视口）。详见 [campaign.md](campaign.md)。
+
 ### P8：整体验收与发布（规范第 6 步，M5）
 
-- [ ] 汇总 `audit/fhv-migration.json`：来源哈希、逐卡账本、原语队列、章节、关键词、规则书、指南和截图证据可追溯。
-- [ ] 覆盖完整合法战役（不同勘察顺序、第 1 夜《扭曲空洞》或夜探、第 2 夜《最长一夜》或夜探、不同居民最高关系路线）、失败／撤退路线、四档难度、存档恢复和 replay。
-- [ ] 从真实大厅验证选战役、选人、构筑、开局、序曲整备与带支援入场、法典交互、逐日推进、升级与尾声；覆盖多人、AI、断线恢复和权限边界。
-- [ ] 通过单卡及合规门禁、指南生成检查、本循环测试与审计、既有 replay、全量回归、展示数据和浏览器检查。
-- [ ] 核对本循环英文／中文卡图库存与远程回退，发布运行时不依赖 `参考资源/`。
-- [ ] `confirmations.scenarios / keywords / rulebook` 全部 `verified`，且发布验收全部完成后，才确认完整迁移完成。
-- [ ] 如决定提前开放，另行证明基础门禁，在 `releaseAcceptance.deferred`、`remaining` 和大厅明确延后项，保留 `earlyAccess: true`；延后项不打勾。
+- [x] 汇总 `audit/fhv-migration.json`：来源哈希、逐卡账本、原语队列、章节、关键词、规则书、指南和截图证据可追溯。证据：`node tools/audit-fhv.mjs --check` 逐字节复算一致（`status: verified`，14 项门禁全真）；来源清单含 26+ 份账本/内容文件 sha256；`audit/fhv-all-card-acceptance.json` 441 行逐卡账本（301 战役 + 20 调查员/依赖 + 120 玩家，missing=0/blocked=0）；`audit/fhv-primitive-plan.json` 28 项缺口全部 closed、pending 0、`escape` 0；`audit/fhv-scenario-acceptance.json` 12/12 场景 verified；`audit/fhv-rules.json` 6 关键词 / 11 规则 verified；12 份指南与 1462 叶正文可复算；六份发布/逐章浏览器账本（规则/交互/调查员/玩家/场景/P8 发布）截图逐张 sha256 复算。
+- [x] 覆盖完整合法战役（不同勘察顺序、第 1 夜《扭曲空洞》或夜探、第 2 夜《最长一夜》或夜探、不同居民最高关系路线）、失败／撤退路线、四档难度、存档恢复和 replay。证据：`tests/fhv-p8-campaign.test.mjs` 8 例（真实 `createGameState` + 生产组合根）：路线 A（岩间密语→扭曲空洞→汉洛克庄园→夜 2 夜探→消失的姐妹）与路线 B（汉洛克庄园→夜 1 夜探→深沼之物→最长一夜→寂静荒野）合计覆盖 12 步全部场景，逐节点断言 `flow.history`/`hemlockDate`/`surveyedAreas`/`campaignResult`；居民关系 +1/笔记双写跨章一致、传家宝 `heirloomsAwarded` 入战役牌组；最终夜 R3 `loseTheCampaign` → 尾声 defeat；四档难度混沌袋 14/14/15/16 与序曲 R1 `[autofail]` 迁移；4 处关键选择 JSON 往返后继续投影不变；同 seed replay 65 步 `stateHash` 与终态零 diff；另 `tests/fhv-campaign-engine.test.mjs` 覆盖终章可达与传家宝，`tests/fhv-campaign-flow.test.mjs`/`fhv-campaign-records.test.mjs` 覆盖流程图/记录。发现的 5 处引擎/内容缺陷（最终夜 lost 软锁、四档 Eldersign 拼写、`chaosBagTransitions` 无引擎读点、升级窗被整备关闭、跳过勘察悬挂整备包裹）已在本轮修复。
+- [x] 从真实大厅验证选战役、选人、构筑、开局、序曲整备与带支援入场、法典交互、逐日推进、升级与尾声；覆盖多人、AI、断线恢复和权限边界。证据：`audit/fhv-release-browser.json#status = passed`（3 phase × 桌面 1440/移动 390 = 6 行，真实大厅 → 选战役/选人/自动构筑 → 开局 → 序曲整备与带支援入场 → 法典交互 → 三天三夜逐日推进 → 升级窗 → 终章/尾声；online phase 覆盖 2 席位、AI 队友、隐私投影、权限边界与断线恢复；70 张截图逐张 sha256 入账、sourceStable=true）；P7 逐章账本 `audit/fhv-scenarios-browser.json` 24/24（12 章 × 双视口）继续作为逐章浏览器证据。
+- [x] 通过单卡及合规门禁、指南生成检查、本循环测试与审计、既有 replay、全量回归、展示数据和浏览器检查。证据：`npm run cards:check` / `cards:encounter-check` / `audit:entries` 通过（一卡一文件、R1/R2/R3、索引一致）；`import:fhv:story:check`、`build:fhv:guides:check` 一致；FHV 审计链（scope/scan/primitives/node/rules/interactions/investigators/player/scenarios/all-cards/assets）全部 `--check` 通过；`replay-fixtures --compare` 与 P0 基线逐条一致；`node tools/verify-fhv.mjs --regression` 全量 fast 无新增失败（仅既有 P8 EOTE 2 项单独记账）；`build-presentation.mjs --check`、`check-doc-links.mjs` 通过。
+- [x] 核对本循环英文／中文卡图库存与远程回退，发布运行时不依赖 `参考资源/`。证据：`audit/fhv-assets.json#status = verified`：441/441 记录图像解析可解析（本地 441、中文本地化 440、unresolved 0、remote 0），主面全部本地可展示；`audit/local-images.json` 含 FHV 1012 条（572 en + 440 zh），574 张英文面 SHA-256 与 `audit/image-digests.json` 逐字节一致；`src/content/web/presentation` 对参考资源真实读取依赖 = 0；远程回退抽样 8/8 HEAD 200；已知素材项（10694b 无中文面、440 张中文面无 sha 基线、404 个末位兜底候选）已在账本 `disclosed` 逐条登记。
+- [x] `confirmations.scenarios / keywords / rulebook` 全部 `verified`，且发布验收全部完成后，才确认完整迁移完成。证据：`audit/fhv-migration.json#confirmations`：scenarios 12/12（每章 §6 12 项全真）、keywords 6/6、rulebook 6/6；`content/migration-confirmation.js#assertMigrationConfirmations` 复算通过；`playable: true`、`earlyAccess: false`、`equivalenceCertified: true`、`launchEnabled: true`；`releaseAcceptance.status = complete`、`deferred = []`。
+- [x] 不采用提前开放：全部发布门禁真实通过后以 `earlyAccess: false` 发布，未设置延后项；`remaining` 仅保留披露类（108 张近似行为卡，逐卡 `note`/章节 approximations 已登记；195 张数据型战役卡由章 behavior 承接并有章测试证据），无阻塞卡、无待实现原语、无未披露近似。
 
 退出门禁：无新增失败，既有失败单独记账；无未披露的近似、阻塞卡或待实现原语。全部发布证据完成后才能撤销提前开放标识。
 
-## 4. 序曲与八章路线及逐章清单
-
-以下名称来自本地中文卡表与剧情；章节标识与提示卡号来自 `theFeastOfHemlockVale.json` 及 `CampaignSteps.hs`。
-
-| 顺序 | 类别 | 章节／序曲 | scenarioId | 提示卡号 | 优先验收内容 |
-| --- | --- | --- | --- | --- | --- |
-| P1 | 白日序曲 | 欢迎来到铁杉谷 / Welcome to Hemlock Vale | `welcomeToHemlockVale` | `10704` | 山谷符号连接地图、居民初见与法典 1–9、结束时保留 1 张非起始支援并选择第 1 日勘察关卡 |
-| P2 | 黎明序曲 | 第二日黎明 / Dawn of the Second Day | `dawnOfTheSecondDay` | `10704`（`10677a`） | 第二日山谷变化、失踪／幸存居民法典、传家宝与关系等级、整备并选择第 2 日勘察关卡 |
-| P3 | 黎明序曲 | 最终日黎明 / Dawn of the Final Day | `dawnOfTheFinalDay` | `10704`（`10679a`） | 最终日山谷异变、疯狂弱点抽取／居民决断、整备并选择第 3 日勘察关卡 |
-| 1 | 勘察关卡 | 岩间密语 / Written in Rock | `writtenInRock` | `10501`／`10502` | 北角矿井网格滑动、矿车（Mine Cart）移动、废料（Scrap）与道岔（Switch）、场景 1/2 提示卡切换、昼夜差异 |
-| 2 | 勘察关卡 | 汉洛克庄园 / Hemlock House | `hemlockHouse` | `10523` | 铁杉港庄园楼层、敌人-地点（`enemy_location`）双重结算、猎杀袋（Predation bag）、威廉／里弗法典与昼夜差异 |
-| 3 | 勘察关卡 | 寂静荒野 / The Silent Heath | `theSilentHeath` | `10549` | 珍珠岭网格正交连接、巢穴（`[[Lair]]`）与昆虫（`[[Insect]]`）生成／胜利区重洗、莉亚法典与昼夜差异 |
-| 4 | 勘察关卡 | 消失的姐妹 / The Lost Sister | `theLostSister` | `10569` | 阿克万海岸洞穴（`[[Cave]]`）网格展开、异形（`[[Abomination]]`）、西奥／海伦搜救法典与昼夜差异 |
-| 5 | 勘察关卡 | 深沼之物 / The Thing in the Depths | `theThingInTheDepths` | `10588` | 伊斯特威克沼泽渗坑（Sinkhole）积累、沼地沉没（`[[Sunken]]`）翻面、攫噬触须、吉迪恩／西缅法典与昼夜差异 |
-| 6 | 第 1 夜关卡 | 扭曲空洞 / The Twisted Hollow | `theTwistedHollow` | `10605` | 森林动态空位放置地点、黑暗等级（Darkness level）、追击区（In pursuit）敌人生成、伯蒂搜救与夜晚脱出 |
-| 7 | 第 2 夜关卡 | 最长一夜 / The Longest Night | `theLongestNight` | `10626` | 汉洛克庄园夜战防守、屏障（Barrier）／诱饵（Decoy）／陷阱（Trap）布防、四向围攻推進与居民牺牲／存活 |
-| 8 | 第 3 夜终章 | 山谷的命运 / Fate of the Vale | `fateOfTheVale` | `10651` | 最终夜仪式、宇宙密使（Cosmic Emissary）、居民关系等级与笔记总清算、多路线终局与尾声 |
-
-战役推进骨架（按参考战役 `TheFeastOfHemlockVale.hs` 的 `nextStep` 与三天三夜状态机核对）：
-
-```text
-序幕 → 序曲：欢迎来到铁杉谷（Day 1 · Day，10704，不升级）
-     → 第 1 日白日勘察（从 10501 / 10523 / 10549 / 10569 / 10588 中选 1 关未勘察区域）
-     → 序曲：第一夜（晚宴进食选择、法典 θ/δ/σ/ω/γ/π；选择搜寻伯蒂进 10605，或加石板+古神标记再选 1 关夜探）
-     → 第 1 夜关卡（扭曲空洞 10605，或未勘察关卡的 Night 1 形态）
-     → 序曲：第二日黎明（Day 2 · Day，10677a / 10704，整备保留 1 支援，不升级）
-     → 第 2 日白日勘察（剩余未勘察区域选 1 关，Day 2 形态）
-     → 序曲：第二夜（选择跟随玛尔克兹，或加入骷髅＋异教徒＋古神标记再选 1 关夜探）
-     → 第 2 夜关卡（最长一夜 10626，或未勘察关卡的 Night 2 形态）
-     → 序曲：最终日黎明（Day 3 · Day，10679a / 10704，整备保留 1 支援，不升级）
-     → 第 3 日白日勘察（剩余未勘察区域选 1 关，Day 3 形态）
-     → 序曲：最终夜（10679b / 10704） → 山谷的命运（Day 3 · Night，10651） → 尾声
-```
-
-白日序曲与紧随其后的白日勘察关卡之间使用 `noUpgrade`。整备保留起始／永久支援、另选的 1 张非起始非永久支援及调查员控制的全部线索，手牌和资源至多保留起始数量。下一场白日勘察跳过常规调度重抽。序曲与幕间获得的经验先记入未花费经验，在指南指定的升级窗口消费。
-
-- [ ] P1–P3 三段可游玩山谷序曲及三段夜晚序曲：整备、法典、升级锁与区域选择全部通过，记录证据。
-- [ ] C1 岩间密语：§6 全部通过，记录证据。
-- [ ] C2 汉洛克庄园：§6 全部通过，记录证据。
-- [ ] C3 寂静荒野：§6 全部通过，记录证据。
-- [ ] C4 消失的姐妹：§6 全部通过，记录证据。
-- [ ] C5 深沼之物：§6 全部通过，记录证据。
-- [ ] C6 扭曲空洞：§6 全部通过，记录证据。
-- [ ] C7 最长一夜：§6 全部通过，记录证据。
-- [ ] C8 山谷的命运：§6 全部通过，记录证据。
-- [ ] 尾声覆盖居民存活、关系等级满格、深渊／星之子等全部可达分支，无未触发剧情泄露。
-
-## 5. 本循环重点机制检查表
-
-此表是扫描和验收重点，不表示已穷尽本循环机制，也不预设全部需要新增引擎能力。当前已有祝福／诅咒、巡逻、警戒等基础，P1–P2 必须验证本循环的新增规则与组合边界。
-
-- [ ] **铁杉谷法典（The Codex，`[codex] X`）**：地点、居民与敌人上的法典触发行动／强制能力，先支付全部费用再结算当前序曲／关卡的对应编号条目；每条法典在单场序曲或冒险中默认最多结算一次；由触发者（不明确时由队长）执行检定、扣血、付费等全部效果；按居民笔记（Notes）与关系等级顺序匹配唯一满足条件的小节，名字已划去的居民及其笔记不生效、不可入场。
-- [ ] **三天三夜、昼夜标记（`Day [day]`／`Night [night]`）与动态设置**：开局按当前天数与昼夜放置时间标记卡（`10675`/`10677`/`10679`）；五个勘察关卡覆盖 `Day 1 / Night 1 / Day 2 / Night 2 / Day 3` 的遭遇组、居民位置、密谋阈值和结局。《消失的姐妹》的关键词按地点的 `Dark` 特质启用，并按地点切换双面敌人。
-- [ ] **可游玩序曲与勘察整备（`makePreparationsForNextSurvey`）**：山谷序曲结束后，每位调查员在所有受控非起始、非永久支援中选择 1 张标记 `Persist` 保留到下一场勘察关卡开局在场，其余弃置；手牌与资源若高于起始上限则弃／扣至起始值，弃牌堆洗回牌库；不开放牌组升级。
-- [ ] **居民关系等级（Relationship Levels）、笔记与传家宝**：每位居民独立维护关系等级（勾选格数增减与归零）、专属笔记集合与存活／划去状态；达到特定关系等级或完成法典支线时获取传家宝（`10713`–`10715`）或角色支援加入牌组。
-- [ ] **网格正交相邻（Location Adjacency）与动态放置地点**：除使用《山谷》遭遇组的序曲／关卡只按图标连接外，网格关卡中共享上／下／左／右边的地点默认互相连接（对角线不算相邻）；新地点入场时必须放入当前地点正交相邻的空位，无空位则不入场。
-- [ ] **敌人-地点（`enemy_location`）与猎杀袋（Predation bag）**：《汉洛克庄园》中兼具 `enemy` 与 `location` 属性的实体，同时支持调查员在内停留／移动、被调查、作为敌人横置／受伤害／治愈，以及与独立猎杀袋的标记抽取与转移交互。
-- [ ] **逃逸（Elusive）、巡逻（Patrol）与警戒（Alert）**：带 `Elusive` 的重整敌人在攻击或被攻击结算后立即与所有调查员解除交战、移动到连接地点（如有可能，优先选择无调查员的地点）并横置；`Patrol (目标)` 在敌军阶段按最短路径移动；`Alert` 躲避失败后不横置立即反击。
-- [ ] **调查员与玩家卡特殊机制**：威尔森工具减费与旧印工具交换、凯特磁通量稳定器双面翻转与支援线索充能、亚历山德拉额外谈判行动、鸣神琥珀祝福／诅咒平衡与双消额外行动、汉克濒死切换绑定坚毅版本（`10016a/b`），以及跨支援花费补给／子弹、面具补给充能等。
-
-## 6. 每章完成模板
-
-每章在 `confirmations.scenarios.items` 建立独立记录并复制本清单。各项必须附源码、行为测试或审计证据；只检索卡号、文本非空或条目存在均不足以通过。
-
-- [ ] `sourceLocked`：卡面、规则、指南和剧情来源及哈希完整。
-- [ ] `identityRegistered`：真实提示卡号、名称、章节身份及布局对应正确。
-- [ ] `setupAndZones`：准备、时间标记、整备继承支援、居民入场、遭遇／保留／移除／胜利区和按日变体守恒。
-- [ ] `actsAndAgendas`：全部幕／议程、推进、背面、行动及 `scriptCard` 归属通过。
-- [ ] `locationsAndConnections`：地点正反面、网格正交连接／图标连接、滑动／沉没／楼层、敌人-地点及离场通过。
-- [ ] `encounterBehaviors`：专属与共享敌人、敌人-地点、诡计、居民与传家宝剧情资产行为全部接线。
-- [ ] `literalCardBehavior`：逐卡逐能力核对昼夜条件、法典入口、费用、目标、区域、限制、持续时间与清理；合法入口出现、非法入口不出现、结果符合卡面。
-- [ ] `chaosEffects`：四档提示卡与符号时机、猎杀袋／道岔／渗坑／屏障联动和相关触发通过。
-- [ ] `resolutionsAndRecords`：全部可达结局、法典记录、居民关系与笔记、已勘察区域、日期推进、经验、创伤、混乱袋和跨章记录通过。
-- [ ] `storyText`：完整叙事、法典与完整中英指南覆盖开场、分支、设置、特别规则、后续剧情、结局和结算；中文无漏译英文残留；实际演出只投影已到达分支。
-- [ ] `saveReplay`：关键选择前后 JSON 往返、恢复及 replay 确定性通过。
-- [ ] `browserAcceptance`：真实大厅、桌面 1440／移动 390、指南入口位置、特别规则、折叠剧透、中英切换、重试与键盘操作通过。
-
-## 7. 验证命令与记录方式
-
-以下命令在 `games/arkhamhorror/` 执行。P0 的 baseline 必须先于行为修改，compare 在修改后执行；其余按对应阶段运行。
-
-```powershell
-# 从 Mod 目录指向大厅根目录的运行资料
-node tools/replay-fixtures.mjs --baseline ../../artifacts/migration/fhv/replay-before.json
-node tools/replay-fixtures.mjs --compare ../../artifacts/migration/fhv/replay-before.json
-
-npm run cards:check
-npm run cards:encounter-check
-npm run audit:entries
-npm run test:fast
-
-node tools/import-scenario-guides.mjs --write
-node tools/import-scenario-guides.mjs --check
-node --test tests/scenario-guides.test.mjs
-npx playwright test --config tests/playwright/playwright.config.mjs scenario-guides.browser.mjs
-
-npm run replay:fixtures
-npm test
-npm run presentation:check
-npm run test:browser
-npm run images:verify
-npm run docs:check
-```
-
-本循环计划注册的专项命令如下（随各阶段推进落地，扫描、计划及审计生成与 `--check` 校验分开；检查不重写基线）：
-
-```powershell
-npm run scan:fhv:scope
-npm run scan:fhv:scope:check
-npm run scan:fhv
-npm run scan:fhv:check
-node tools/verify-fhv.mjs --node
-npm run test:fhv:interactions:browser
-npm run test:fhv:player
-npm run audit:fhv:player
-npm run plan:fhv:primitives
-npm run audit:fhv
-npm run audit:fhv:primitives
-npm run audit:fhv:interactions
-npm run audit:fhv:investigators
-npm run audit:fhv:check
-```
-
-P0 留档用 `node tools/audit-fhv.mjs --capture-baseline` 从运行目录的起始报告生成冻结账本。复验用 `npm run audit:fhv:check` 重算来源、目录与回放。采集改动后的快速回归后，用 `node tools/audit-fhv.mjs --check-fast` 按失败项核对 `reports/fast-after.log`，结果写入 `reports/fast-compare.json`。
-
-P1 用 `npm run scan:fhv` 生成账本，用 `npm run scan:fhv:check` 复算。快速回归记录为 `reports/p1-fast.log`，用 `node tools/audit-fhv.mjs --check-fast p1` 与 P0 比对。
+P8 门禁已通过，完整迁移确认。详见 [campaign.md](campaign.md) 与 `audit/fhv-migration.json`。
 
 ### 阶段总览与证据登记
 
 - [x] P0 范围与基线完成。 [范围账本](../../../audit/fhv-scope.json) · [起始基线](../../../audit/fhv-baseline.json) · [迁移审计](../../../audit/fhv-migration.json)
 - [x] P1 机制扫描完成。 [机制扫描账本](../../../audit/fhv-mechanism-scan.json) · [迁移审计](../../../audit/fhv-migration.json)
 - [x] P2 原语完成。 [逐项计划](../../../audit/fhv-primitive-plan.json) · [原语目录](../../../audit/fhv-primitive-catalog.json)
-- [ ] P3 关键词与规则书完成。
-- [ ] P4 交互完成。
-- [ ] P5 调查员及专属依赖完成。
-- [ ] P6 一般玩家卡完成。
-- [ ] P7 序曲、八章、法典、指南及战役流程完成。
-- [ ] P8 发布验收完成，完整迁移交付。
+- [x] P3 关键词与规则书完成。 [规则审计账本](../../../audit/fhv-rules.json) · [Node 验收](../../../audit/fhv-node-acceptance.json) · [浏览器账本](../../../audit/fhv-rules-browser.json) · [规则书说明](rulebook.md)
+- [x] P4 交互与界面完成。 [交互审计账本](../../../audit/fhv-interactions.json) · [浏览器账本](../../../audit/fhv-interactions-browser.json) · [回归账本](../../../audit/fhv-regression.json) · [交互说明](interactions.md)
+- [x] P5 调查员及专属依赖完成。 [调查员审计账本](../../../audit/fhv-investigators.json) · [浏览器账本](../../../audit/fhv-investigators-browser.json) · [Node 验收](../../../audit/fhv-node-acceptance.json) · [调查员说明](investigators.md)
+- [x] P6 一般玩家卡完成。 [玩家卡审计账本](../../../audit/fhv-player-acceptance.json) · [浏览器账本](../../../audit/fhv-player-browser.json) · [分片计划](../../../audit/fhv-player-shards.json) · [原语请求裁决](../../../audit/fhv-player-request-disclosures.json) · [逐卡说明](player-cards.md)
+- [x] P7 序曲、八章、法典、指南及战役流程完成。 [场景审计账本](../../../audit/fhv-scenario-acceptance.json) · [浏览器账本](../../../audit/fhv-scenarios-browser.json) · [分片计划](../../../audit/fhv-campaign-plan.json) · [战役说明](campaign.md)
+- [x] P8 发布验收完成，完整迁移交付。 [发布总账本](../../../audit/fhv-migration.json) · [逐卡账本](../../../audit/fhv-all-card-acceptance.json) · [发布浏览器账本](../../../audit/fhv-release-browser.json) · [素材账本](../../../audit/fhv-assets.json) · [P8 战役用例](../../../tests/fhv-p8-campaign.test.mjs) · [完成说明](campaign.md)
 
 | 日期 | 项目 | 状态／勾选依据 | 验证结果 | 证据路径 |
 | --- | --- | --- | --- | --- |
@@ -310,5 +196,11 @@ P1 用 `npm run scan:fhv` 生成账本，用 `npm run scan:fhv:check` 复算。�
 | 2026-11-15 | P1 全量机制扫描 | 逐卡、指南、法典及原语候选门禁通过，补齐第二夜夜探分支及白日勘察整备 | `scan:fhv:check`、`audit:fhv:check`、`docs:check` 通过；`test:fast` 无新增失败或取消 | `audit/fhv-mechanism-scan.json`，大厅根 `artifacts/migration/fhv/reports/{p1-audit.log,p1-fast-compare.json}` |
 | 2026-11-15 | P2 原语盘点与首批实现 | 28 项缺口逐项登记，10 项完成，18 项保留待办 | 原语计划复算、专项测试和 P2 逐步回放通过；快速回归无新增失败或取消 | `audit/fhv-primitive-{plan,catalog}.json`，大厅根 `artifacts/migration/fhv/reports/{p2-replay-compare.log,p2-fast-compare.json}` |
 | 2026-11-16 | P2 原语收口 | 剩余 18 项完成，双类型敌人／地点和跨章节整备通过存档往返 | 专项测试、逐步回放和 P2 验收门禁通过，快速回归与 P0 基线相比无新增失败或取消 | `audit/fhv-primitive-plan.json`，大厅根 `artifacts/migration/fhv/reports/p2-followup-*` |
+| 2026-11-16 | P3 关键词与规则书 | 6 项关键词（逃逸／昼夜／法典／巡逻／警戒／祝福诅咒）与 11 条双语规则全部 `verified`；441 张 `10` 段卡卡文直达无遗漏；关键词原语在 P2 全部 `done` | `verify:fhv:node`、`plan:fhv:rules`、`audit:fhv:rules`、`test:fhv:rules`、`test:fhv:rules:browser`、`audit:fhv:check`、`docs:check`、`cards:check`、`cards:encounter-check` 通过；`test:fast` 新增失败 0（2 项 HEAD 既有的 EOTE 账本漂移按 `p3-preexisting-failures.json` 单独记账；P0 基线中的 15 项失败已由工作区其他批次修复，不属 P3 范围） | `audit/fhv-{rules,node-acceptance,rules-browser,migration}.json`、`docs/campaign/theFeastOfHemlockVale/rulebook.md`，大厅根 `artifacts/migration/fhv/reports/{p3-fast.log,p3-fast-compare.json,p3-preexisting-failures.json}` 与 `reports/screenshots/` |
+| 2026-11-16 | P5 调查员及专属依赖 | 5 位调查员（10001/10004/10009/10012/10015）与 15 张专属/绑定依赖（签名卡/专属弱点/绑定面）全部注册并逐人 verified：旧印、关键能力、开局预置、翻面/绑定、濒败替换、构筑合法与非法、多人窗口、存档恢复均覆盖；`fhvInvestigators` 包升 `playable`，一般玩家卡与战役包保持 `catalog-only` | `verify:fhv:node`（Node 主验收 + investigators 段全过）、`verify:fhv:regression`（新增失败 0）、`test:fhv:investigators`、`test:fhv:investigators:browser`（10/10，5 人 × 桌面 1440／移动 390，10 张截图）、`plan:fhv:investigators`／`audit:fhv:investigators`（复算一致、内部门禁全真）、`audit:fhv:check`、`docs:check`、`cards:check`、`cards:encounter-check` 通过；`test:fast` 新增失败 0（EOTE 2 项 HEAD 既有失败沿用 P3/P4 记账，不属 P5 范围） | `audit/fhv-investigators.json`、`audit/fhv-investigators-browser.json`、`audit/fhv-node-acceptance.json`、`audit/fhv-regression.json`、`src/cards/entries/10001–10018 与 10005b/10016a/10016b.js`、`content/campaigns/theFeastOfHemlockVale/investigator-data.js`、`content/packs/fhvInvestigators/manifest.js`、`docs/campaign/theFeastOfHemlockVale/investigators.md`，大厅根 `artifacts/migration/fhv/p5/screenshots/` 与 `artifacts/migration/fhv/reports/p5-*.log` |
+| 2026-11-16 | P4 新增交互与界面 | 7 组交互（法典／演进面板／序曲整备／网格／矿车／敌人-地点／调查员状态）通过桌面 1440／移动 390 浏览器验收；敌人-地点双类型动作面板（地点面调查/移动 + 敌人面攻击/躲避）、观察投影隐私、`scriptCard` 归属与关卡设置指南复用通过 | `verify:fhv:node`、`verify:fhv:regression`（新增失败 0）、`plan:fhv:interactions`、`audit:fhv:interactions`、`test:fhv:interactions`、`test:fhv:interactions:browser`、`test:fhv:rules`、`audit:fhv:check`、`docs:check`、`cards:check`、`cards:encounter-check` 通过；`test:fast` 新增失败 0（EOTE 2 项 HEAD 既有失败沿用 P3 记账，不属 P4 范围） | `audit/fhv-{interactions,interactions-browser,regression,node-acceptance}.json`、`docs/campaign/theFeastOfHemlockVale/interactions.md`，大厅根 `artifacts/migration/fhv/reports/{p4-fast.log,p4-*.log,p3-preexisting-failures.json}` 与 `artifacts/migration/fhv/p4/screenshots/` |
+| 2026-11-16 | P6 一般玩家卡批量迁移 | 120 条记录（10019–10138）全部 verified：102 张可构筑卡进入大厅构筑池与开放玩家池，4 张基础弱点（10135–10138）与 11 张绑定/场外依赖只作依赖，3 张 Research 卡（10059–10061）保留 `researchGated` 不进池；12 片 × 10 张分片无交集并集覆盖，54 张近似卡逐条披露，45 份原语请求统一裁决为 deferred；`fhvPlayer` 包升 `playable`，战役包保持 `catalog-only` | `plan:fhv:player:check`、`audit:fhv:player`、`test:fhv:player`（142 例）与 `test:fhv:player:browser`（桌面 1440 / 移动 390 各 5 例）通过；`verify:fhv:node`、`verify:fhv:regression`（新增失败 0、replay 一致）通过；`cards:check`、`cards:encounter-check`、`audit:entries`、`audit:abilities`、`docs:check` 通过；全量 `test:fast` 7988 例 / 7983 通过 / 2 项既有 EOTE 失败 / 0 取消 | `audit/fhv-player-{acceptance,shards,queue,browser,request-disclosures}.json`，`artifacts/migration/fhv/reports/p6-fast-{log,exit,compare.json}`，逐卡说明 `docs/campaign/theFeastOfHemlockVale/player-cards.md` |
+| 2026-11-17 | P7 共享遭遇、序曲、八章及战役流程 | 4 段序曲 + 8 章 + 18 共享遭遇组 + 战役层流程全部落盘：291 条单卡条目、12 个场景模块、240 键战役记录、1462 叶中英正文（自译层 0 缺译）、12 份指南；三天三夜状态机（勘察选择/夜探分支/整备保留/调度重抽/未花费经验/升级窗口）、居民关系/法典/传家宝/已勘察区域跨章一致；`fhvCampaign` 包升 `playable` 且大厅可启动 | `npm run test:fhv:scenarios`（407 例）、`npm run import:fhv:story:check`、`npm run build:fhv:guides:check`、`npm run audit:fhv:scenarios`、`npm run verify:fhv:node`、`npm run verify:fhv:regression`、`npm run cards:check`、`npm run cards:encounter-check`、`npm run docs:check`、全量 `npm run test:fast`（既有 2 项 EOTE 失败单独记账） | `audit/fhv-scenario-acceptance.json`、`audit/fhv-scenarios-browser.json`、`audit/fhv-campaign-plan.json`、`web/scenario-guides/<id>.json`、`docs/campaign/theFeastOfHemlockVale/campaign.md` |
+| 2026-11-17 | P8 整体验收与发布 | 完整迁移确认：`audit/fhv-migration.json#status = verified`（14 项门禁全真、`earlyAccess: false`、`equivalenceCertified: true`）、`confirmations` scenarios 12/12 × §6 12 项 + keywords 6/6 + rulebook 6/6、发布浏览器 3 phase × 双视口、素材 441/441 本地可展示、无阻塞/待实现原语；8 例 P8 战役 E2E 覆盖双路线/夜探/居民/传家宝/失败/四难度/存档/replay | `npm run test:fhv:p8`（8 例）、`npm run test:fhv:release:browser`、`npm run audit:fhv`、`npm run audit:fhv:check`、`npm run audit:fhv:allcards`、`npm run audit:fhv:assets`、`verify:fhv:node`、`verify:fhv:regression`、`cards:check`、`cards:encounter-check`、`audit:entries`、`replay-fixtures --compare`、`build-presentation --check`、`test:fast`（既有 2 项 EOTE 单独记账）、`docs:check` | `audit/fhv-migration.json`、`audit/fhv-all-card-acceptance.json`、`audit/fhv-release-browser.json`、`audit/fhv-assets.json`、`tests/fhv-p8-{campaign,migration,assets}.test.mjs`、`docs/campaign/theFeastOfHemlockVale/campaign.md` |
 
 后续每次推进在此追加记录，并把稳定的逐卡／逐章证据写入 `audit/`。只有代码、来源与验收结果一致时才更新完成勾选。

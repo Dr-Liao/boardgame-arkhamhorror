@@ -9,16 +9,16 @@
 // approximation（已写 primitive-request/09101.json）：
 //   · 「购买时记录两个特性」没有构筑期选择读点。这里用占位的所选特性
 //     ['Monster','Humanoid']（TSK 最常见敌人特性），并以此计算双百搭图标。
-//   · Nemesis / Mythos-Hardened / Always Prepared 三个勾选项需要「成功后附属敌人」
-//     「与诡计一起加入胜利区」「弃牌堆回手」的条目级读点，未实现（逐项 note）。
+//   · 5 个定制勾选格规则均未接读点（Nemesis / Mythos-Hardened / Always Prepared 等），
+//     2026-11-16 P2-3 起显式标记 `implemented: false`：面板展示文本、不生成可购买候选。
 import { ALL_CARDS } from '../../cards/cards-data.js'
 
 const CUSTOM_CHECKS = Object.freeze([
-  { name: 'Specialist', checks: 1, text: 'Choose another trait: _____' },
-  { name: 'Specialist', checks: 2, text: 'Choose another trait: _____' },
-  { name: 'Nemesis', checks: 3, text: 'If this is a skill test on or against an enemy with a chosen trait and the test is successful, you may attach Grizzled to that enemy. Reduce the difficulty of tests on or against the attached enemy by 1.' },
-  { name: 'Mythos-Hardened', checks: 4, text: 'If this skill test is on a treachery with a chosen trait and the test is successful, you may add both Grizzled and that treachery to the victory display.' },
-  { name: 'Always Prepared', checks: 5, text: 'After you draw an encounter card with a chosen trait, return one copy of Grizzled from your discard pile to your hand. (Max once per round.)' },
+  { name: 'Specialist', checks: 1, implemented: false, text: 'Choose another trait: _____' },
+  { name: 'Specialist', checks: 2, implemented: false, text: 'Choose another trait: _____' },
+  { name: 'Nemesis', checks: 3, implemented: false, text: 'If this is a skill test on or against an enemy with a chosen trait and the test is successful, you may attach Grizzled to that enemy. Reduce the difficulty of tests on or against the attached enemy by 1.' },
+  { name: 'Mythos-Hardened', checks: 4, implemented: false, text: 'If this skill test is on a treachery with a chosen trait and the test is successful, you may add both Grizzled and that treachery to the victory display.' },
+  { name: 'Always Prepared', checks: 5, implemented: false, text: 'After you draw an encounter card with a chosen trait, return one copy of Grizzled from your discard pile to your hand. (Max once per round.)' },
 ])
 
 // 占位的购买时所选特性（见文件头 approximation）。
@@ -39,7 +39,7 @@ const encounterTraits = (state) => {
 export default {
   code: '09101',
   simplified: true,
-  note: 'approximation: 见 primitive-request/09101.json（购买时所选特性用占位 Monster/Humanoid；Nemesis/Mythos-Hardened/Always Prepared 未实现）',
+  note: 'approximation: 见 primitive-request/09101.json（购买时所选特性用占位 Monster/Humanoid；5 个定制勾选格规则未接读点，已标记 implemented:false（展示文本、不可购买））',
   customizationOptions: CUSTOM_CHECKS,
   abilities: [
     {

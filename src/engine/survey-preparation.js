@@ -75,6 +75,19 @@ export function surveyForDestination(state, id) {
   return survey?.destinations.includes(id) ? survey : null
 }
 
+// P4：序曲结束时全队选择下一场勘察关卡。选择写入整备包裹，由战役流程（P7）在开局时消费；
+// 候选由内容层按「尚未勘察区域 + 当前日/时段」给出，引擎只校验目标在本次可选列表内。
+export function chooseSurveyDestination(state, seat, destination) {
+  const parcel = state.campaign?.surveyPreparation
+  if (!parcel) return false
+  if (!Number.isSafeInteger(seat) || !state.investigators?.[seat]) throw new RangeError('无效勘察选择座位')
+  if (typeof destination !== 'string' || !parcel.destinations.includes(destination)) return false
+  parcel.chosenDestination = destination
+  parcel.chosenBySeat = seat
+  validateSurveyPreparation(state, parcel)
+  return destination
+}
+
 export function surveyForInvestigator(state, inv, survey) {
   const parcel = survey?.seats[inv.seat]
   const record = state.campaign.investigators[inv.seat]
@@ -106,9 +119,15 @@ export function restoreSurveyInvestigator(inv, parcel, round) {
 
 export function validateSurveyPreparation(state, parcel = state.campaign?.surveyPreparation) {
   if (parcel == null) return
-  assertFields(parcel, ['version', 'source', 'destinations', 'seats'])
+  assertFields(parcel, ['version', 'source', 'destinations', 'seats', 'chosenDestination', 'chosenBySeat'])
   if (parcel.version !== 1 || !validId(parcel.source)) throw new TypeError('无效勘察整备存档')
   normalizeSurveyPreparation({ destinations: parcel.destinations })
+  if (parcel.chosenDestination != null) {
+    if (!parcel.destinations.includes(parcel.chosenDestination)) throw new TypeError('无效下一场勘察选择')
+    if (!Number.isSafeInteger(parcel.chosenBySeat) || !state.investigators?.[parcel.chosenBySeat]) throw new TypeError('无效勘察选择人')
+  } else if (parcel.chosenBySeat != null) {
+    throw new TypeError('下一场勘察选择缺少目的地')
+  }
   if (!parcel.seats || typeof parcel.seats !== 'object' || Array.isArray(parcel.seats)) throw new TypeError('无效勘察整备座位')
   const assetIds = new Set()
   for (const [seat, snapshot] of Object.entries(parcel.seats)) {

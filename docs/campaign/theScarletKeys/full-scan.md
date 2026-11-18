@@ -172,6 +172,29 @@ P1 **17/17 组主体已落代码**（逐组状态与剩余「引擎原语级」�
 > `audit/tsk-migration.json#status = verified`、`test:fast` 7720 例 / 4 fail（additions 0）、
 > TSK replay 13 局逐条一致、`docs:check` 链接全部可解析。
 
+### 0.4 第五轮：P2-3 定制卡玩家交互（2026-11-16）
+
+本轮先回答「定制卡玩家交互是否存在问题」，再把问题与 P2-3 一起修掉；真实流程与边界见
+[`player-cards.md §3`](player-cards.md)。
+
+- **当前流程**：构筑期/关间由 `mechanic-view#customizationHub`（按 observer 座位）投影 → web
+  `customizationPanel` 逐选项显示「已勾/总格」与「下一格」按钮 → `hubCustomize` 合法动作（cost=1，
+  exceptional=2）→ dispatch 校验 → `upgradeCustomization` 写 `campaign.tsk.customizations.bySeat` 并扣 XP；
+  运行时条目用 `customizationOptionFullyChecked` 读点，减费经 `turn-flow#playCost` 的
+  `customizationEffects.playCost`。
+- **发现并修复的交互问题**：① 多座位硬编码房主（其他玩家永远无法勾自己的卡）→ 每个真人座位各勾各的；
+  ② 10 张卡多格选项勾 1 格即整项生效（少付 1–3 XP）→ 勾满 `checks` 格才生效，新增引擎读点与 API；
+  ③ `customizationEffects.playCost` 只注册不读（09061 Impulse Control -1 费完全没生效）且 09021/22/23
+  重复声明 `playCostModifier` → 统一单一声明并接入真实读点，修双重减费；④ 09041/09101 可购买但无效果
+  → `implemented: false` 展示文本、不可勾选；⑤ 面板文案过时/缺未实现标记 → 中英文案与 CSS 修复。
+- **验收**：`tests/tsk-p8-customization.test.mjs` 8 例（真实 hub 1 格不生效→2 格生效、多座位 bySeat 隔离、
+  implemented:false、全量多格矩阵）；浏览器 customization 2/2（desktop 1440 + mobile 390，12 张截图，
+  `audit/tsk-customization-browser.json` status=passed）；TSK 测试 637 例全绿（含 4 条账本复算）；
+  `test:fast` 7755 例 / 2 fail（additions 0；冻结清单仍 4 条，其中 TCU 账本与 i18n UI 两条已被九循环
+  提交修复，`verify-tsk-regression` 的口径相应放宽为「失败 ⊆ 冻结清单且不超过冻结数」，见工具注释）。
+- **仍余**：09041/09101 需补读点后才能勾选；AI 座位不自动定制；P2-8 事务层未接 hub 路径；
+  P2-2/P2-4/P2-5/P2-9 见 fix-plan「P2 第五轮进度」。
+
 > 第二轮结论（保留）：14/14 门禁、617/617 TSK 测试、`migration verified`、`test:fast additions=0`；
 > 见下方「第二轮」原文与 fix-plan 历史。
 

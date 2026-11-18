@@ -42,6 +42,38 @@
 > `tests/tcu-p0-regressions.test.mjs`、`tests/tcu-p1-regressions.test.mjs`、
 > `tests/tcu-chapters-smoke.test.mjs`；钩子级测试共用区域 API 替身 `tests/tcu-zone-api.mjs`。
 
+## 3.1 关间升级窗与调查纪事排序（2026-11-17 用户实测修复）
+
+**用户报告**：第 2 关《巫异时刻》（序章之后的下一关）结算后直接跳到第 3 关《死亡门前》的准备页，
+没有升级（经验花不出去）；调查纪事默认展开的又是序章私密故事「杰罗姆·戴维斯的命运」，故事引导不对。
+
+**规则口径**（参考实现 `Campaigns/TheCircleUndone.hs` 的 `nextStep`）：
+
+| 流程节点 | 参考实现 | 升级窗 |
+| --- | --- | --- |
+| 序章 → 巫异时刻 | `ChooseDecksStep <$> continueNoUpgrade TheWitchingHour` | 无（序章不给经验） |
+| 巫异时刻 → 死亡门前 | `continue AtDeathsDoorstep` | 有 |
+| 死亡门前 → 隐秘之名 | `continue TheSecretName`（逃出时先读幕间二） | 有（幕间二读完后再升级） |
+| 隐秘之名 → 恶罪报应 | `continue TheWagesOfSin` | 有 |
+| 恶罪报应 → 崇高利益 | `continue ForTheGreaterGood` | 有 |
+| 崇高利益 → 聚合幻灭 | `continue UnionAndDisillusion`（入职时先读幕间三） | 有（幕间三读完后再升级） |
+| 聚合幻灭 → 混沌魔掌 | `continue InTheClutchesOfChaos` | 有 |
+| 混沌魔掌 → 黑色王座 | 先读幕间四，再 `continue BeforeTheBlackThrone` | 有（幕间四读完后再升级） |
+| 黑色王座 → 尾声 | `continue EpilogueStep` | 无 |
+
+**修复**：`manifest.flow` 新增 7 个无正文的 `interlude` 关间升级窗（`restAfterWitchingHour`、
+`restBeforeTheSecretName`、`restBeforeTheWagesOfSin`、`restBeforeForTheGreaterGood`、
+`restBeforeUnionAndDisillusion`、`restBeforeInTheClutchesOfChaos`、`restBeforeBlackThrone`），
+并把幕间二/三/四改成 `upgrades: false` 的叙事停顿窗（读完正文/回答选择后才在下一关前升级，这样
+幕间里发的经验也能在同一个关间花掉）。调查纪事侧：私密故事写入时记录流程位置（`nodeId` + `visit`），
+观察投影把它排回实际发生的章节（序章导入之后、序章结算之前）；旧存档的 `tcuPrologue*` 按
+《暮色庄园失踪事件》回填，结算页默认展开本关结算、准备页默认展开下一关导入。
+
+**证据**：`tests/tcu-interlude-windows.test.mjs`（真实 hub 流程：巫异时刻结算 → 关间升级 → 死亡门前；
+死亡门前 r1/r2 两条出口的升级窗）、`tests/tcu-story.test.mjs`（flow 契约 + 私密故事排序），
+`node --test tests/tcu-chapters-smoke.test.mjs`（九章真实引擎冒烟）与 `node tools/audit-tcu.mjs --check`
+（flow 节点 41、剧情测试 19/19）。
+
 ## 4. 相关规范
 
 - [架构说明](../../../ARCHITECTURE.md)

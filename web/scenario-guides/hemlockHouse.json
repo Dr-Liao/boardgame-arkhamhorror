@@ -1,0 +1,703 @@
+{
+  "id": "hemlockHouse",
+  "campaignId": "theFeastOfHemlockVale",
+  "sourceKind": "reference-en-locale + local zh supplement",
+  "officialChinese": false,
+  "chineseStatus": "generated",
+  "chineseGaps": [],
+  "sectionCount": 88,
+  "guideKeyCount": 8,
+  "sources": [
+    {
+      "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/base.json",
+      "sha256": "6fb4afb11123b42d75044687d1066bd3fcbc1f50602ae28d0f9b17d50e6593f1",
+      "chinesePaths": [
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/base.part1.json",
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/base.part2.json",
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/base.part3.json",
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/base.part4.json",
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/base.part5.json"
+      ]
+    },
+    {
+      "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/fateOfTheVale.json",
+      "sha256": "49f2645e5704b401523e4d302cc289457e9cab55864339ba2b04b5464533be8a",
+      "chinesePaths": [
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/fateOfTheVale.json"
+      ]
+    },
+    {
+      "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/hemlockHouse.json",
+      "sha256": "230f5a9723a0c8ea77c4a0a50c79c9b5a438cfbe49de9e1cdf30aeed721a8337",
+      "chinesePaths": [
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/hemlockHouse.json"
+      ]
+    },
+    {
+      "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/theLongestNight.json",
+      "sha256": "eb966daf341b12dd044d0ab5d66fc4ecf7c7cecd57bff426e08ff2edbb8651e3",
+      "chinesePaths": [
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/theLongestNight.json"
+      ]
+    },
+    {
+      "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/theLostSister.json",
+      "sha256": "9cd54f3bd58af2c16e3671888e4e3f182781ebc97f506324f2d2d1e057b49b08",
+      "chinesePaths": [
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/theLostSister.json"
+      ]
+    },
+    {
+      "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/theSilentHeath.json",
+      "sha256": "dd54052fb47347610a2c306a51340b44e60923145176b1797c3baed7445d748d",
+      "chinesePaths": [
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/theSilentHeath.json"
+      ]
+    },
+    {
+      "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/theThingInTheDepths.json",
+      "sha256": "7e3082d6f92bfb2e7dabafa0ca215eb9fe1b99c14e7453f89848a85a66e2f629",
+      "chinesePaths": [
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/theThingInTheDepths.json"
+      ]
+    },
+    {
+      "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/theTwistedHollow.json",
+      "sha256": "5686d37e8fb12f686c7f506e5cae9f56f2aeb613aade22c39111b748123b43eb",
+      "chinesePaths": [
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/theTwistedHollow.json"
+      ]
+    },
+    {
+      "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/writtenInRock.json",
+      "sha256": "3afd0cccd87e419b398893f8b59c8a45d7c98a988033416fcdb7d645b43745dd",
+      "chinesePaths": [
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/writtenInRock.json"
+      ]
+    }
+  ],
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "title": "关卡：汉洛克庄园",
+          "children": [
+            {
+              "text": "查看你的战役日志。"
+            },
+            {
+              "text": "如果当前是 第一夜 或 第二夜，跳到 开场 4。否则："
+            },
+            {
+              "text": "如果当前是 第一日，前往 开场 1。"
+            },
+            {
+              "text": "如果当前是 第二日，跳到 开场 2。"
+            },
+            {
+              "text": "如果当前是 第三日，跳到 开场 3。"
+            },
+            {
+              "title": "开场 1",
+              "children": [
+                {
+                  "text": "开场 1：“哦，拜托，这屋子可没闹鬼。”希奥一边漫不经心地笑着，一边把卡车停在眼前那座高耸的木瓦风格庄园前。“老基甸对这地方说过一大堆话。可老基甸还相信水下有座满是鱼人的王国呢，”他笑了起来。“我肯定这儿有点名堂。传闻说里面闹了某种虫害。大概是老鼠吧。说不定还有从林子里躲进来的野兽。毕竟是栋老房子嘛，你知道的？墙里到处都是缝隙，正适合它们藏身。威廉弟兄让帕克女士找出并修好那些缝，把藏在墙里的东西清干净，可她到现在还没腾出手来。我卡车上还堆着那些材料，你要是有心帮忙就尽管拿。”\n\n你从希奥的卡车后斗卸下几块木板、一箱工具，还有一桶气味刺鼻的化学混合物。他开车离开后，你仰头望着这座残破的庄园。窗户的排布、复折式屋顶的倾斜角度，都透着一股歪斜而令人不安的味道。这栋房子昔日的宏伟与周围的景致并不相容，也许是地基上有了裂缝——又或者，如果传闻属实，是因为在它墙内栖居的某样东西。\n\n前往 关卡设置。"
+                }
+              ]
+            },
+            {
+              "title": "开场 2",
+              "children": [
+                {
+                  "text": "开场 2：希奥的卡车后轮碾起泥浆，突突地朝海岬驶去，那座木瓦风格的庄园就在一座破败的山丘顶上高耸着。“就在那儿，”希奥指着庄园的轮廓说，它在猛砸挡风玻璃的暴雨中几乎看不清。“老基甸对这地方说过一大堆话。可老基甸还相信水下有座满是鱼人的王国呢，”他笑了起来。“我肯定这儿有点名堂。传闻说里面闹了某种虫害。大概是老鼠吧。说不定还有从林子里躲进来的野兽。毕竟是栋老房子嘛，你知道的？墙里到处都是缝隙，正适合它们藏身。遇上这么大的雨，只会更糟。”\n\n你亲眼见过栖居在铁杉岛上的那些恐怖之物，所以不会天真地以为这栋房子里的其他住户不过是老鼠或浣熊。你问希奥，汉洛克先生想把这地方怎么办，他短促地笑了一声。“他让帕克女士来修缮这地方，把藏在墙里的东西清干净。他们俩现在应该都在里面，你要是想帮忙或者跟他们聊聊，尽管去。真不敢信他还觉得这地方有救，不过嘛，我哪好意思评判。”\n\n希奥把你放在那座残破庄园的门前，免得你在泥里雨里跋涉。你抬头瞥了一眼它歪斜的骨架，不由得打了个寒战。窗户的排布和复折式屋顶的倾斜角度，都透着一种深深令人不安的味道。这栋房子在它前世里或许有过的宏伟早已荡然无存。它只剩下先前自己的一具空壳——而你怀疑，那肇因仍栖居在它的墙内。\n\n前往 关卡设置。"
+                }
+              ]
+            },
+            {
+              "title": "开场 3",
+              "children": [
+                {
+                  "text": "开场 3：“想想威廉弟兄昨晚在舞会上絮叨的那些话？是啊，也许这屋子真闹鬼。我说不准。”希奥叹了口气，把卡车停在那座高耸的木瓦风格庄园前。乌云压着它的复折式屋顶，房子的骨架歪斜变形。它的阁楼桁架几乎烧到了骨架，外墙也因为大面积的火灾而暴露在风雨里。“老基甸对这地方说过一大堆话。可老基甸还相信水下有座满是鱼人的王国呢。不过……”希奥叹了口气，摇了摇头。“也许这里头真有点名堂。我本以为要是有虫害，那大概是老鼠，你知道的吧？说不定还有从林子里躲进来的野兽。可威廉弟兄昨天回到镇上时，那副样子简直吓坏了。谁知道呢？”\n\n你问希奥，汉洛克先生来这儿做什么——也许你能帮忙弄明白这地方出了什么岔子。“我上次问的时候，他让帕克女士来修缮这地方，把藏在墙里的东西清干净。那是好几天前的事了。帕克女士现在还在这儿，但经过昨天，我看威廉弟兄在清理干净之前是不会再靠近这地方一步了。”\n\n你把火灾的痕迹指给希奥看，他吹了声口哨。“是啊，那是新添的。昨晚那场暴风雨里我确实听见雷声离得很近。要说是闪电劈的，我一点也不意外。幸亏雨水大概把火浇灭了。”你琢磨着，究竟是运气让这座老庄园还立着，还是完全另有原因。仿佛在回应你的思量，有什么东西在阁楼裸露的地板上一闪而过，扭动着滑出了你的视线。你问希奥有没有看见，他只是耸了耸肩。“看见什么？你该不会打算上去吧？小心点。这地方在暴风雨之前就已经破得不成样子了。”他关掉引擎，从卡车上下来，到庄园前廊的遮雨棚下与你并肩站着。“我跟你一起进去，行吗？我不会一直爬到上面去，但万一出了什么事，我就在这儿。”\n\n你点了点头。你亲眼见过栖居在铁杉岛上的那些恐怖之物，所以不会天真地以为这栋房子里的其他住户不过是老鼠或浣熊。有希奥和他的卡车守在外面，随时能迅速撤离，倒也不错。你深吸一口气，又瞥了一眼庄园歪斜的骨架。窗户的排布和屋顶的倾斜角度，都透着一种深深令人不安的味道。这栋房子在它前世里或许有过的宏伟早已荡然无存。它只剩下先前自己的一具空壳——而你怀疑，那肇因仍栖居在它的墙内。\n\n走进屋子后，你立刻顺着屋内的楼梯爬上阁楼，把希奥留在楼下。这间残破的卧室被火灾烧得伤痕累累，部分还透着风，却看不出你在下面见到的那种生物的半点踪迹。你每走一步，这栋老楼就摇摇欲坠地呻吟一声。你不由得琢磨，那声音会不会其实只是空肚子的咕咕作响……\n\n前往 关卡设置。"
+                }
+              ]
+            },
+            {
+              "title": "开场 4",
+              "children": [
+                {
+                  "text": "开场 4：希奥的卡车缓缓停下，你到了那座高耸的木瓦风格庄园前。据你听到的说法，老汉洛克庄园里闹着某种东西——究竟是什么，众说纷纭。把卡车借给你过夜之前，希奥提到墙里有老鼠，或者有从林子里躲进来的野兽，更别提天边正酝酿着一场暴风雨。可你并不那么确定。毕竟，你亲眼见过栖居在铁杉岛上的那些恐怖之物——不会天真地以为问题不过是几只老鼠或浣熊。\n\n走近这座残破的庄园，你发现入口附近堆着一批材料：几块木板、一箱工具，还有一桶气味刺鼻的化学混合物。按希奥的说法，汉洛克先生请朱迪斯试着把这地方修缮好，把墙里滋生的东西清干净。看来她还没什么进展。你抬头望着房子歪斜的骨架，背后是乌云压顶的天幕。窗户的排布和复折式屋顶的倾斜角度，都透着一种深深令人不安的味道。这栋房子在它前世里或许有过的宏伟早已荡然无存。它只剩下先前自己的一具空壳——而你怀疑，那肇因仍栖居在它的墙内。\n\n前往 关卡设置。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "text": "收集下列遭遇组的所有卡牌：汉洛克庄园、色彩爪牙、枯疫、着火了！、变形、上锁的门与老鼠。"
+        },
+        {
+          "text": "此外，查看你的战役日志，确认当前是第几日，并收集与之对应的第一日、第二日或最终日遭遇组。"
+        },
+        {
+          "text": "查看你的战役日志，确认当前的日期与时段。将时间标记卡以其对应的 （白日 [day]） 或 （黑夜 [night]） 面放入游戏。"
+        },
+        {
+          "text": "将幕 2a：对抗庄园 放置一旁，置于游戏外。"
+        },
+        {
+          "text": "如果当前是 第一日／第一夜 或 第三日，将议程 2a：庄园动了（版本二） 移出游戏。"
+        },
+        {
+          "text": "否则，将议程 2a：庄园动了（版本一） 移出游戏。"
+        },
+        {
+          "text": "收集全部 13 个地点。将 失形地窖 地点与随机 1 张 卧室 地点放置一旁，置于游戏外。按照第 15 页的“地点摆放”图示，将其余每个地点以 沉寂 面朝上放入游戏。"
+        },
+        {
+          "text": "将 客厅、门厅 与 餐厅 排成一行，与图示完全一致。这是第 1 层。"
+        },
+        {
+          "text": "将其余每个地点洗混，并将其中 6 个地点分两排放入游戏，位于第 1 层上方。"
+        },
+        {
+          "text": "将放置一旁的 卧室 地点放入游戏，置于第 4 层的中间列。"
+        },
+        {
+          "text": "将其余每个地点移出游戏。"
+        },
+        {
+          "text": "如果当前是 第一日／第一夜 或 第二日／第二夜，每位调查员从门厅开始游戏。"
+        },
+        {
+          "text": "如果当前是 第三日，每位调查员从第 4 层的卧室开始游戏。"
+        },
+        {
+          "text": "如果当前是 （白日 [day]），收集居民遭遇组中的每张剧情支援。该"
+        },
+        {
+          "text": "如果当前是 第一日，将 基甸·米兹拉克 放入游戏，置于客厅。将 小西尔维 剧情支援放入游戏，置于最低层的一个卧室地点。"
+        },
+        {
+          "text": "如果当前是 第一日 或 第二日，将 威廉·汉洛克 放入游戏，置于第 4 层的卧室地点。"
+        },
+        {
+          "text": "如果当前是 第二日 或 第三日，将 朱迪斯·帕克 放入游戏，置于客厅。"
+        },
+        {
+          "text": "如果当前是 第三日，将 希奥·彼得斯 放入游戏，置于门厅。"
+        },
+        {
+          "text": "将居民遭遇组中其余的卡牌移出游戏。"
+        },
+        {
+          "text": "将双面的 猎杀之屋 剧情卡放置一旁，置于游戏外。这张剧情卡的另一面是另一张剧本参考卡，并会在本关卡进行期间进入游戏。"
+        },
+        {
+          "text": "将全部五张 着火了！ 诡计与所有 墙外奇物 和 拖离正道 诡计放置一旁，置于游戏外。"
+        },
+        {
+          "text": "将其余的遭遇卡洗混，组建遭遇牌库。"
+        }
+      ],
+      "specialRules": [
+        {
+          "text": "从你所在地点移除 1 枚封印"
+        },
+        {
+          "title": "敌人-地点",
+          "children": [
+            {
+              "text": "敌人-地点\n\n本关卡引入一种全新的卡牌类型：敌人-地点。敌人-地点既是敌人也是地点，且该敌人被视为位于该地点。调查员可以攻击、躲避和调查敌人-地点。"
+            },
+            {
+              "text": "敌人-地点不能被卡牌效果移动。"
+            },
+            {
+              "text": "当接到将某个地点翻至其敌人-地点面（或反之）的指示时，保留该地点上的所有调查员、敌人、附属卡与标记。"
+            },
+            {
+              "text": "其上放有封印的地点被视为“已封印”，不能因猎杀检定而翻至其敌人-地点面。"
+            },
+            {
+              "text": "未封印的地点是指其上没有封印的地点。"
+            },
+            {
+              "text": "当敌人-地点被击败时，将它加入胜利区，并留下一个空格。然后，同时将同一列中位于它上方的每个地点向下移动一层，以填满该空格。将位于被击败的敌人-地点的每名调查员、每张剧情支援与每个敌人放置到新移动到的地点。"
+            },
+            {
+              "text": "如果该列中空格上方没有任何地点，选择一个与该空格相邻的地点，并将每名调查员、每张剧情支援与每个敌人放置到所选地点。"
+            },
+            {
+              "text": "如果整条中间列都被移除，则将整条左列向右移动一格，使剩下的两列彼此相邻。（它们仍分别是左列与右列；不存在中间列。）"
+            }
+          ]
+        },
+        {
+          "title": "猎杀检定",
+          "children": [
+            {
+              "text": "将此标记放置一旁。"
+            },
+            {
+              "text": "每个敌人-地点对位于该地点的每名调查员各执行一次攻击。如果此效果未造成任何攻击，由队长抽取遭遇牌库顶的 1 张卡牌。将此标记与每枚放置一旁的标记放回猎杀袋。"
+            },
+            {
+              "text": "将此标记放置一旁。找到距离队长最近的、处于 沉寂 面的未封印地点。将该地点翻至其敌人-地点面。"
+            },
+            {
+              "text": "从猎杀袋中抽到了一枚未知标记。"
+            }
+          ]
+        },
+        {
+          "title": "敌人-地点",
+          "children": [
+            {
+              "text": "本关卡引入一种全新的卡牌类型：敌人-地点。敌人-地点既是敌人也是地点，且该敌人被视为位于该地点。调查员可以攻击、躲避和调查敌人-地点。\n\n• 敌人-地点不能被卡牌效果移动。\n\n• 当接到将某个地点翻至其敌人-地点面（或反之）的指示时，保留该地点上的所有调查员、敌人、附属卡与标记。\n\n• 其上放有封印的地点被视为“已封印”，不能因猎杀检定而翻至其敌人-地点面。\n• 未封印的地点是指其上没有封印的地点。\n\n• 当敌人-地点被击败时，将它加入胜利区，并留下一个空格。然后，同时将同一列中位于它上方的每个地点向下移动一层，以填满该空格。将位于被击败的敌人-地点的每名调查员、每张剧情支援与每个敌人放置到新移动到的地点。\n• 如果该列中空格上方没有任何地点，选择一个与该空格相邻的地点，并将每名调查员、每张剧情支援与每个敌人放置到所选地点。\n\n• 如果整条中间列都被移除，则将整条左列向右移动一格，使剩下的两列彼此相邻。（它们仍分别是左列与右列；不存在中间列。）"
+            }
+          ]
+        }
+      ],
+      "story": [
+        {
+          "text": "朱迪斯说得对。这里没有任何值得挽救的东西。"
+        },
+        {
+          "text": "这是威廉的家。我们应当尊重他的意愿。"
+        },
+        {
+          "title": "[codex] 法典 4：威廉·汉洛克",
+          "children": [
+            {
+              "text": "如果当前是第一日，且某位调查员控制着“小西尔维”剧情支援：\n\n“等等！那个娃娃——她就在那儿！”威廉伸手去抓那个娃娃，眼里涌出了泪水。他盯着娃娃那双死寂的眼睛，笑容温和而怀旧。“我母亲一直最喜欢这一个。大家都说它长得像她。”你问威廉，既然找回了它，他打算怎么办。“嗯，它只是个娃娃，可……它也是个象征，”他解释道。“是我血脉的象征。是我来的地方。只要我能让母亲想起来……也许我们就能重建。让我们的传承重新开始。”他用力握了握你的手。“谢谢你找到它。我真心感激。”\n\n控制威廉·汉洛克。记录你“找到了小西尔维”。提高威廉·汉洛克的关系等级。每位调查员获得 1 点奖励经验。"
+            },
+            {
+              "text": "否则，如果当前是第一日：\n\n你问威廉，他家老宅里有没有什么该当心的东西。“这栋房子里到处都是旧家族的琐碎摆设和值钱物件。其中有一件我特别想找到，一个旧娃娃。”你本以为会是某件值钱的珠宝或传家宝，没想到是个娃娃。威廉似乎很快就明白了。“我一直喜欢玩娃娃。但我母亲比我还喜欢。”他惆怅地叹了口气。“我记得她有个特别的娃娃，总放在身边。我在想……要是我把它拿给她看，她会想起来吗？她会变回从前的样子吗……？”\n\n每位调查员获得 1 条线索（从标记池中）。在本关卡余下的时间里，小西尔维剧情支援获得“[action]：控制小西尔维。”控制小西尔维的调查员可以再次触发本条目。"
+            },
+            {
+              "text": "如果当前是第二日，且威廉·汉洛克与朱迪斯·帕克位于同一地点：\n\n“总算来了，”你走进房间时威廉说道，朱迪斯抱臂站在那里。“你去哪儿了？我雇你是因为需要你的帮助，不是让你在我儿时的家里闷头跺来跺去。”两人对峙起来，空气里的紧张几乎凝成了实质……\n\n前往 法典 Σ：争执。"
+            },
+            {
+              "text": "否则，如果当前是第二日：\n\n威廉来回踱步，老房子每响一声吱呀，他就缩一下脖子。你问他一切都还好吗，这位郁郁寡欢的继承人深深叹了口气。“哦，是的，一切都好得很。朱迪斯跑了，把我一个人丢在这儿，我母亲的娃娃到处都找不到，我儿时的家就在我眼前一点点垮掉，”他苦涩地说。“帮我找到朱迪斯，好吗？那个母老虎本该护着我、帮我收拾这地方的。”他紧跟在你身后，眼睛在阴影之间来回扫视，而房子在愤怒地低声咆哮。\n\n控制威廉·汉洛克。如果威廉·汉洛克与朱迪斯·帕克位于同一地点，你可以再次触发本条目。"
+            }
+          ]
+        },
+        {
+          "title": "[codex] 法典 6：基甸·米兹拉克",
+          "children": [
+            {
+              "text": "如果“你正在帮基甸”：\n\n你从一本书里抽出一张泛黄的老地图，举到基甸面前。“对！”他叫道，一把从你手里拿过去细看。“这正是我要找的东西。多谢您啦！”\n\n提高基甸·米兹拉克的关系等级。每位调查员获得 1 点奖励经验。"
+            },
+            {
+              "text": "否则：\n\n你走近时，基甸正埋头读一本发霉的书，几乎没抬眼。“我猜你没听过 黛利拉号 的故事？”你说没有，不过你觉得自己马上就要听到了。他笑了。“黛利拉号是一艘渔船，多年前测绘了这座岛。”他又抓起另一本书，絮絮叨叨地讲起来，不只是黛利拉号，还扯上了另外三个不相干的故事。最后你总算听明白：这老头正在客厅某处找一张地图。\n\n你可以取消接下来将要发生的一次猎杀。记录“你正在帮基甸”。任意一名调查员可以再次触发本条目。"
+            }
+          ]
+        },
+        {
+          "title": "[codex] 法典 7：朱迪斯·帕克",
+          "children": [
+            {
+              "text": "如果当前是第二日，且威廉·汉洛克与朱迪斯·帕克位于同一地点：\n\n“你在这儿啊，”朱迪斯扭着腰走到威廉发呆的地方。他回过神时，她的手指已经点在他胸口。“你说这地方有老鼠，不是什么……不是什么 这玩意，”她含含糊糊地比划了一下。两人对峙起来，空气里的紧张几乎凝成了实质……\n\n前往 法典 Σ：争执。"
+            },
+            {
+              "text": "否则，如果当前是第二日：\n\n你问她在这儿做什么，朱迪斯翻了个白眼。“威廉昨天来过，可他吓坏了，所以让我今天陪他过来，好看着他。然后他跑上楼去‘思忖他的遗产’、‘追念他的先祖’，反正就是那一类胡话。”她摇了摇头。“我说，你我都清楚，这地方就是一堆破烂。我们找到威廉，我去跟他谈，然后任这地方烂掉。你跟我一起吗？”\n\n控制朱迪斯·帕克。如果威廉·汉洛克与朱迪斯·帕克位于同一地点，你可以再次触发本条目。"
+            },
+            {
+              "text": "如果当前是第三日：\n\n“老鼠。他说是‘老鼠’！”朱迪斯嗤笑道。“老鼠，呸……”她嘟囔着没了声，然后板着脸转向你。“这地方就是个粪坑。墙里有东西，我发誓它在跟着我。”她心里的恐惧似乎已经沉淀成了怒火。“难怪他今天不肯跟我一起来。这儿没有什么‘遗产’。只有一堆难看的家具，还有某个已经住进来的东西。”你问她觉得该怎么办。“就这么放着太危险了。”她也许说得对——这肯定会让威廉不高兴，但照这样下去，这栋房子对他、对铁杉岛其余的人也都是个危险。\n\n控制朱迪斯·帕克。记录“朱迪斯正在改造”。"
+            }
+          ]
+        },
+        {
+          "title": "[codex] 法典 8：希奥·彼得斯",
+          "children": [
+            {
+              "text": "“不不不不不！”你早在看见那个年轻人之前就听见了他的尖叫，他正沿着走廊狂奔。他一头撞上你，差点把你撞倒。“哇哦。我还以为你是——”他朝自己肩后看去。走廊里死一般寂静。“看样子你可能需要点保护。嗯，别担心。我能，呃，保护你，”他一边把你扶起来，一边装出一副趾高气扬的样子。\n\n控制希奥·彼得斯。"
+            }
+          ]
+        },
+        {
+          "title": "[codex] 法典 Θ：罗莎·马奎兹博士",
+          "children": [
+            {
+              "text": "“我讨厌这一切，”马奎兹博士打量着书架。“刚才我在藏书室里，它活了过来。有什么东西几乎……让那些死掉的木头重新动了起来。我本该说这不可能，可现在什么都不再像不可能了，”她干笑了一声。\n\n抽 3 张卡牌。选择场上的一个敌人-地点，对其造成 1 点伤害。"
+            }
+          ]
+        },
+        {
+          "title": "[codex] 法典 Σ：争执",
+          "children": [
+            {
+              "text": "争执 1：“听我说，威廉，这地方就是个垃圾场。到处都是破烂。又脏又破，而且不管住在墙里的是什么，反正绝不可能是老鼠，”朱迪斯解释道。\n\n威廉皱起脸。“这个‘垃圾场’是我儿时的家。是我家族延续至今的遗产。”\n\n“如果这是我家的遗产，我宁可改姓。总得有人把这地方拆了，”朱迪斯反唇相讥。\n\n“我 决不 拆这栋房子！”威廉吼道。“那简直毫无天理！”两人继续争吵，愈吵愈烈，直到你意识到这场争执不会自己收场。你走上前，说出自己的想法……\n\n结算本条目法典的调查员必须做出决定（选择一项）。"
+            }
+          ]
+        },
+        {
+          "title": "[codex] 争执 2",
+          "children": [
+            {
+              "text": "争执 2：威廉的目光猛地转向你，眼里满是恳求。也许他终于认清了真相。也许他根本不在乎。“那好吧，”他几乎是在耳语。“随你们。汉洛克家族的遗产已成碎片，看来谁都不在乎。你又何必在乎？”他低下头离开了。\n\n将威廉·汉洛克移出游戏。每位调查员可以抽 1 张卡牌。提高朱迪斯·帕克的关系等级。每位调查员获得 1 点奖励经验。"
+            }
+          ]
+        },
+        {
+          "title": "[codex] 争执 3",
+          "children": [
+            {
+              "text": "争执 3：朱迪斯瞪着你。“真的？你也这样？”她揉了揉眼睛，低声咒骂。“行吧。你们爱在这儿办整场盛宴就办。但等这地方塌下来，别来求我帮忙。或者更糟的事。”她收拾起自己的东西，朝门口走去。\n\n将朱迪斯·帕克移出游戏。每位调查员可以抽 1 张卡牌。提高威廉·汉洛克的关系等级。每位调查员获得 1 点奖励经验。"
+            }
+          ]
+        },
+        {
+          "text": "奖励经验"
+        }
+      ],
+      "resolutions": [
+        {
+          "title": "无结局",
+          "children": [
+            {
+              "text": "无结局：房子里回荡起一阵可怕的喧响，墙壁向内挤压，眼看就要坍塌——要把你当作猎物吞下去。你惊恐万分，夺门而出，撒腿逃离。\n\n跳到 结局 2。"
+            }
+          ]
+        },
+        {
+          "title": "结局 1",
+          "children": [
+            {
+              "text": "结局 1：汉洛克庄园的恐怖终于被你甩在身后。你只能指望这栋房子的“虫害”已经消失了。\n\n前往 结局 2。"
+            }
+          ]
+        },
+        {
+          "title": "结局 2",
+          "children": [
+            {
+              "text": "结局 2：“密斯卡托尼克大学勘察队，1926 年 6 月。成员：马奎兹、马斯格雷夫等。汉洛克庄园勘察完毕。该生物体超出理解范围。八足类与腹足类物种的群落侵占了整栋房子。生物体似乎是在这栋房子内部演化出来的。需要进一步观察。”\n\n• 从猎杀袋中移除 1 枚 [elder_thing] 标记。在本战役余下的时间里，将猎杀袋中所有剩余的 [elder_thing] 标记放回混乱袋。\n\n• 如果调查员们“找到了 小西尔维”，任意一名调查员可以将 小西尔维 剧情支援加入自己的牌组。它不计入该调查员的牌组张数。\n\n• 每位调查员获得等同于胜利区中每张卡牌胜利 X 值的经验。奖励经验的数量根据关卡结束时的封印数量与胜利区中的敌人-地点数量发放。\n\n• 在战役日志的“已勘察区域”部分勾选 铁杉港。"
+            }
+          ]
+        },
+        {
+          "text": "奖励经验"
+        },
+        {
+          "text": "因封印庄园"
+        },
+        {
+          "text": "因驯服掠食者"
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "title": "Scenario: Hemlock House",
+          "children": [
+            {
+              "text": "Check your Campaign Log."
+            },
+            {
+              "text": "If it is Night 1 or Night 2, skip to Intro 4. Otherwise:"
+            },
+            {
+              "text": "If it is Day 1, proceed to Intro 1."
+            },
+            {
+              "text": "If it is Day 2, skip to Intro 2."
+            },
+            {
+              "text": "If it is Day 3, skip to Intro 3."
+            },
+            {
+              "title": "Intro 1",
+              "children": [
+                {
+                  "text": "Intro 1: “Oh, please, it’s not haunted.” Theo smiles nonchalantly as he pulls his truck to a stop in front of the towering, shingle style manor. “Old Gideon says a lot of things about this place. But old Gideon also believes in underwater kingdoms filled with fish people,” he laughs. “I’m sure there’s something to it. Rumor is, there’s some kinda infestation in there. Rats, probably. Maybe even some wild animals taking refuge from the woods. It’s an old house, y’know? Lots of nooks in the walls, places for them to hide. Brother William asked Ms. Park to find and repair ’em, clear out whatever’s hiding in the walls, but she hasn’t gotten around to it yet. I still got all those supplies in my truck, if you feel like helping out.”\n\nYou unload several planks of wood, a box of tools, and a bucket of some foul-smelling chemical mixture from the back of Theo’s truck. As he drives off, you stare up at the crumbling manor. There is something crooked and unsettling in the arrangement of its windows, the slant of its gambrel roofs. The house’s previous grandeur has not set right with the landscape, perhaps by some crack in its foundation—or, if the rumors are right, whatever lives within its walls.\n\nProceed to Setup."
+                }
+              ]
+            },
+            {
+              "title": "Intro 2",
+              "children": [
+                {
+                  "text": "Intro 2: The rear wheels of Theo’s truck spit up mud as it putters toward the cape, where the shingle style manor towers atop a ruinous hill. “There it is,” Theo says, pointing at the silhouette of the manor, barely visible through the torrent of rain beating down on the windshield. “Old Gideon says a lot of things about this place. But old Gideon also believes in underwater kingdoms filled with fish people,” he laughs. “I’m sure there’s something to it. Rumor is, there’s some kinda infestation in there. Rats, probably. Maybe even some wild animals taking refuge from the woods. It’s an old house, y’know? Lots of nooks in the walls, places for them to hide. Gotta be even worse with all this rain.”\n\nHaving seen firsthand the kinds of terrors that dwell on Hemlock Isle, you know better than to assume the house’s other inhabitants to be mere rats or raccoons. You ask Theo what Mr. Hemlock wants done to the place, which elicits a brief chuckle. “He asked Ms. Park to repair the place and clear out whatever’s hiding in the walls. They’re both there right now, I think, if you wanna help out or chat with them. Can’t believe he still thinks the place is salvageable, but hey, who am I to judge?”\n\nTheo drops you off in front of the crumbling manor so you don’t have to plod through mud and rain. You shudder as you glance up at its crooked frame. There is something deeply unsettling about the arrangement of its windows and the slant of its gambrel roofs. Whatever grandeur this house may have had in its past life is long gone. It is but a shell of its former self—and you suspect the cause still dwells within its walls.\n\nProceed to Setup."
+                }
+              ]
+            },
+            {
+              "title": "Intro 3",
+              "children": [
+                {
+                  "text": "Intro 3: “Considering what Brother William was prattling on about last night at the dance? Yeah, maybe it is haunted. I dunno.” Theo sighs as his truck pulls to a stop in front of the towering, shingle style manor. Dark clouds loom over its gambrel roofs, its frame crooked and misshapen. Its attic truss is burnt almost to the frame, its outer wall exposed to the elements by extensive fire damage. “Old Gideon says a lot of things about this place. But old Gideon also believes in underwater kingdoms filled with fish people. Still…” Theo sighs, shaking his head. “Maybe there is something to it all. I thought if there was an infestation, it was probably rats, y’know? Maybe even some wild animals taking refuge from the woods. But Brother William looked downright terrified when he came back into town yesterday. Who knows?”\n\nYou ask Theo what Mr. Hemlock was doing here—perhaps you can help figure out what’s wrong with the place. “Last I checked, he asked Ms. Park to repair the place and clear out whatever’s hiding in the walls. That was a couple days ago. Ms. Park’s still here, but after yesterday I don’t think Brother William’s gonna be venturing anywhere near this place until it’s cleaned up.”\n\nYou point the fire damage out to Theo, who gives a whistle in response. “Yeah, that’s new. I did hear some pretty close thunder during that storm last night. Wouldn’t be surprised if that was from lightning. Lucky the rain must’ve put the fire out.” You wonder if it was in fact fortune that kept the old manor standing, or something else entirely. As if in response to your ruminations, something slithers just out of view from the exposed floor of the attic. You ask Theo if he saw it, but he only shrugs. “Saw what? You don’t plan on heading up there, do you? Be careful. This place was decrepit even before the storm.” He turns the ignition off and gets out of the truck, joining you under the awning of the manor’s front porch. “I’ll come with, ok? I won’t go all the way up there, but just in case something happens, I’ll be here.”\n\nYou nod. Having seen firsthand the kinds of terrors that dwell on Hemlock Isle, you know better than to assume the house’s other inhabitants to be mere rats or raccoons. It might be nice having Theo and his truck on hand for a swift exit. Taking in a deep breath, you glance once more at the manor’s crooked frame. There is something deeply unsettling about the arrangement of its windows and the slant of its roofs. Whatever grandeur this house may have had in its past life is long gone. It is but a shell of its former self—and you suspect the cause still dwells within its walls.\n\nUpon entering the house, you immediately climb its inner staircase up to the attic, leaving Theo downstairs. Scarred by fire damage and partially exposed to the wind, the decrepit bedroom bears no trace of whatever creature you saw from below. With each of your steps, the old building groans precariously. You cannot help but wonder if it is in fact the rumbling of an empty stomach…\n\nProceed to Setup."
+                }
+              ]
+            },
+            {
+              "title": "Intro 4",
+              "children": [
+                {
+                  "text": "Intro 4: Theo’s truck slows to a halt as you pull up in front of the towering, shingle style manor. From what you’ve been told, the old Hemlock House is infested with something or other—what exactly is a matter of some debate. Before lending you his truck for the night, Theo made mention of rats in the walls, or potentially wild animals taking refuge from the woods, not to mention the storm brewing on the horizon. But you’re not so sure. After all, you’ve already seen firsthand the kinds of terrors that dwell on Hemlock Isle—you know better than to assume mere rats or raccoons to be the issue.\n\nApproaching the crumbling manor, you find a stockpile of supplies tucked away near its entrance: several planks of wood, a box of tools, and a bucket of some foul-smelling chemical mixture. According to Theo, Mr. Hemlock had asked Judith to try to fix the place up and clear out whatever was infesting its walls. Seems like she hasn’t gotten very far yet. You look up at the house’s crooked frame, set against a backdrop of dark stormclouds. There is something deeply unsettling about the arrangement of its windows and the slant of its gambrel roofs. Whatever grandeur this house may have had in its past life is long gone. It is but a shell of its former self—and you suspect the cause still dwells within its walls.\n\nProceed to Setup."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "text": "Gather all cards from the following encounter sets: Hemlock House, Agents of the Colour, Blight, Fire!, Transfiguration, Locked Doors, and Rats."
+        },
+        {
+          "text": "In addition, check the Campaign Log for the current day and gather its corresponding encounter set for The First Day, The Second Day, or The Final Day."
+        },
+        {
+          "text": "Check your Campaign Log for the current day and time. Put the Time Marker card into play on its corresponding (Day [day]) or (Night [night]) side."
+        },
+        {
+          "text": "Set Act 2a: Against the House aside, out of play."
+        },
+        {
+          "text": "If it is Day/Night 1 or Day 3, remove Agenda 2a: The House Stirs (v.II) from the game."
+        },
+        {
+          "text": "Otherwise, remove Agenda 2a: The House Stirs (v.I) from the game."
+        },
+        {
+          "text": "Gather all 13 locations. Set the Shapeless Cellar location and one random copy of the Bedroom location aside, out of play. Put each remaining location into play, Dormant side faceup, according to the Location Placement diagram on page 15."
+        },
+        {
+          "text": "Place the Parlor, Foyer, and Dining Room in a row exactly as shown. This is the 1st Floor."
+        },
+        {
+          "text": "Shuffle each remaining location and place six of these locations into play in two rows above the 1st Floor."
+        },
+        {
+          "text": "Put the set-aside Bedroom location into play in the middle column on the 4th Floor."
+        },
+        {
+          "text": "Remove each remaining location from the game."
+        },
+        {
+          "text": "If it is Day/Night 1 or Day/Night 2, each investigator begins play at the Foyer."
+        },
+        {
+          "text": "If it is Day 3, each investigator begins play at the Bedroom on the 4th floor."
+        },
+        {
+          "text": "If it is (Day [day]), gather each story asset from the Residents encounter set. This set is indicated by the following icon:"
+        },
+        {
+          "text": "If it is Day 1, put Gideon Mizrah into play at the Parlor location. Put the Little Sylvie story asset into play at a Bedroom location on the lowest floor."
+        },
+        {
+          "text": "If it is Day 1 or Day 2, put William Hemlock into play at the Bedroom location on the 4th Floor."
+        },
+        {
+          "text": "If it is Day 2 or Day 3, put Judith Park into play at the Parlor location."
+        },
+        {
+          "text": "If it is Day 3, put Theo Peters into play at the Foyer location."
+        },
+        {
+          "text": "Remove the rest of the Residents encounter set from the game."
+        },
+        {
+          "text": "Set the double-sided The Predatory House story card aside, out of play. This story card has a different scenario reference card on its other side and will enter play during the scenario."
+        },
+        {
+          "text": "Set all five Fire! treacheries and all copies of the Out of the Walls and Pulled In treacheries aside, out of play."
+        },
+        {
+          "text": "Shuffle the remaining encounter cards to build the encounter deck."
+        }
+      ],
+      "specialRules": [
+        {
+          "text": "Remove a seal from your location"
+        },
+        {
+          "title": "Enemy-Locations",
+          "children": [
+            {
+              "text": "Enemy-Locations\n\nThis scenario introduces a new cardtype: enemy-location. An enemy-location is both an enemy and a location, and that enemy is considered to be at that location. Investigators may fight, evade, and investigate enemy-locations."
+            },
+            {
+              "text": "Enemy-locations cannot be moved by card effects."
+            },
+            {
+              "text": "When instructed to flip a location to its enemy-location side or vice versa, keep all investigators, enemies, attachments, and tokens on that location."
+            },
+            {
+              "text": "Locations with a seal on them are considered “sealed” and cannot be flipped to their enemy-location side by a predation test."
+            },
+            {
+              "text": "An unsealed location is a location with no seals on it."
+            },
+            {
+              "text": "When an enemy-location is defeated, add it to the victory display, leaving behind an empty space. Then, simultaneously slide each location that was above it in its column down one floor to fill that empty space. Place each investigator, story asset, and enemy that was at the defeated enemy-location at the newly-moved location."
+            },
+            {
+              "text": "If there are no locations above the empty space in its column, choose a location adjacent to the empty space and place each investigator, story asset, and enemy in the chosen location."
+            },
+            {
+              "text": "If the entire middle column is removed, slide the entire left column one step to the right, so that the two remaining columns are adjacent. (They remain the left and right columns, respectively; there is no middle column.)"
+            }
+          ]
+        },
+        {
+          "title": "Predation Test",
+          "children": [
+            {
+              "text": "Set this token aside."
+            },
+            {
+              "text": "Each enemy-location attacks each investigator at that location. If no attack was made by this effect, the lead investigator draws the top card of the encounter deck. Return this token and each set-aside token to the predation bag."
+            },
+            {
+              "text": "Set this token aside. Find the unsealed, Dormant location nearest to the lead investigator. Flip that location to its enemy-location side."
+            },
+            {
+              "text": "An unknown token was drawn from the predation bag."
+            }
+          ]
+        },
+        {
+          "title": "Enemy-Locations",
+          "children": [
+            {
+              "text": "This scenario introduces a new cardtype: enemy-location. An enemy-location is both an enemy and a location, and that enemy is considered to be at that location. Investigators may fight, evade, and investigate enemy-locations.\n\n• Enemy-locations cannot be moved by card effects.\n\n• When instructed to flip a location to its enemy-location side or vice versa, keep all investigators, enemies, attachments, and tokens on that location.\n\n• Locations with a seal on them are considered “sealed” and cannot be flipped to their enemy-location side by a predation test.\n• An unsealed location is a location with no seals on it.\n\n• When an enemy-location is defeated, add it to the victory display, leaving behind an empty space. Then, simultaneously slide each location that was above it in its column down one floor to fill that empty space. Place each investigator, story asset, and enemy that was at the defeated enemy-location at the newly-moved location.\n• If there are no locations above the empty space in its column, choose a location adjacent to the empty space and place each investigator, story asset, and enemy in the chosen location.\n\n• If the entire middle column is removed, slide the entire left column one step to the right, so that the two remaining columns are adjacent. (They remain the left and right columns, respectively; there is no middle column.)"
+            }
+          ]
+        }
+      ],
+      "story": [
+        {
+          "text": "Judith is right. There’s nothing here to salvage."
+        },
+        {
+          "text": "It is William’s home. We should respect his wishes."
+        },
+        {
+          "title": "[codex] Codex 4: William Hemlock",
+          "children": [
+            {
+              "text": "If it is Day 1 and an investigator controls the Little Sylvie story asset:\n\n“Wait! That doll—there she is!” William reaches for the doll, tears welling in his eyes. He stares into the doll’s dead eyes, his smile gentle, nostalgic. “My mother always loved this one. People said it looked like her.” You ask William what he intends to do now that he’s recovered it. “Well, it’s just a doll, but…it’s also a symbol,” he explains. “A symbol of my heritage. Where I came from. If I can just get mother to remember…perhaps we can rebuild. Start our legacy anew.” He shakes your hand vigorously. “Thank you for finding this. I truly appreciate it.”\n\nTake control of William Hemlock. Remember that you “found Little Sylvie.” Increase William Hemlock’s Relationship Level. Each investigator earns 1 bonus experience."
+            },
+            {
+              "text": "Otherwise, if it is Day 1:\n\nYou ask William if there’s anything from his old home you should be watching out for. “This house is filled with old family trinkets and valuables. There’s one in particular I’d love to find, an old doll.” You had expected perhaps a valuable piece of jewelry or an heirloom, not a doll. William seems to catch on quickly. “I always liked playing with dolls. But my mother loved them even more.” He sighs wistfully. “I remember she had a special doll, one she always kept nearby. I wonder…if I show it to her, will she remember? Will she become her old self again…?”\n\nEach investigator gains 1 clue (from the token pool). For the rest of the scenario, the Little Sylvie story asset gains “[action]: Take control of Little Sylvie.” The investigator who controls Little Sylvie may trigger this codex again."
+            },
+            {
+              "text": "If it is Day 2 and both William Hemlock and Judith Park are at the same location:\n\n“Finally,” William says as you enter the room where Judith stands, arms crossed. “Where have you been? I hired you because I needed your help, not to stomp around my childhood home brooding.” The two square off, tension thick in the air…\n\nProceed to Codex Σ: The Argument."
+            },
+            {
+              "text": "Otherwise, if it is Day 2:\n\nWilliam paces back and forth, wincing at every creak of the old house. You ask him if everything is ok, eliciting a deep sigh from the melancholy heir. “Oh, yes, everything is jake. Judith has run off and left me here alone, I can’t find my mother’s doll anywhere, and my childhood home is crumbling before my very eyes,” he says bitterly. “Help me find Judith, won’t you? That bearcat is supposed to be protecting me and helping me clean this place up.” He follows you close behind, eyes darting from shadow to shadow as the house growls angrily.\n\nTake control of William Hemlock. You may trigger this codex again if both William Hemlock and Judith Park are at the same location."
+            }
+          ]
+        },
+        {
+          "title": "[codex] Codex 6: Gideon Mizrah",
+          "children": [
+            {
+              "text": "If “you are helping Gideon”:\n\nYou pull an old, yellowed map from a book and hold it up to Gideon. “Yes!” He exclaims, taking it from your hands and looking it over. “This is exactly what I was looking for. Thankee kindly!”\n\nIncrease Gideon Mizrah’s Relationship Level. Each investigator earns 1 bonus experience."
+            },
+            {
+              "text": "Otherwise:\n\nGideon barely looks up from a musty book as you approach. “I don’t suppose ye’ve ever heard the story of the Delilah?” You tell him no, but you think you’re about to. He laughs. “The Delilah was a fishing vessel that mapped this island years ago.” He grabs another book as he rambles on about not only the Delilah, but also three other tangential stories. At length, you glean that the old man is looking for a map somewhere in the parlor.\n\nYou may cancel the next predation that would take place. Remember “you are helping Gideon.” An investigator may trigger this codex again."
+            }
+          ]
+        },
+        {
+          "title": "[codex] Codex 7: Judith Park",
+          "children": [
+            {
+              "text": "If it is Day 2 and both William Hemlock and Judith Park are at the same location:\n\n“There you are,” Judith struts to where William stands daydreaming. He snaps out of his reverie as she approaches, finger pointed at his chest. “You said this place had a rat problem, not…not this,” she says, gesturing vaguely. The two square off, tension thick in the air…\n\nProceed to Codex Σ: The Argument."
+            },
+            {
+              "text": "Otherwise, if it is Day 2:\n\nJudith rolls her eyes as you ask her what she’s doing here. “William was here yesterday, but he got creeped out, so he asked me to come with him today to babysit him. Then he ran upstairs to ‘ponder his legacy’ and ‘ruminate upon his forebears’ or whatever nonsense.” She shakes her head. “Look, between you and me, this place is a wreck. Let’s find William, I’ll talk to him, and leave this place to rot. You with me?”\n\nTake control of Judith Park. You may trigger this codex again if both William Hemlock and Judith Park are at the same location."
+            },
+            {
+              "text": "If it is Day 3:\n\n“Rats. ‘Rats,’ he said!” Judith scoffs. “Rats, my ass…” she trails off into grumbles, then faces you with a stern expression. “This place is a cesspool. There’s something in the walls that I swear is following me.” Any fear within her seems to have settled into anger. “It’s no wonder he didn’t want to come back with me today. There’s no ‘legacy’ here. Just a bunch of ugly furniture, and whatever creature has taken up residence.” You ask what she thinks should be done. “It’s too dangerous to be left alone as it is.” She may be right—it would surely upset William, but left as is, this house is a danger to him and the rest of Hemlock Isle.\n\nTake control of Judith Park. Remember that “Judith is remodeling.”"
+            }
+          ]
+        },
+        {
+          "title": "[codex] Codex 8: Theo Peters",
+          "children": [
+            {
+              "text": "“No no no no no!” You hear Theo’s scream long before you see the young man running down the hallway. He barrels into you, nearly knocking you over. “Woah. I thought you were—” he looks over his shoulder. The hallway is dead silent. “You look like you might need some protection. Well, don’t worry. I can, uh. Protect you,” he puts on a fake swagger as he helps you to your feet.\n\nTake control of Theo Peters."
+            }
+          ]
+        },
+        {
+          "title": "[codex] Codex Θ: Dr. Rosa Marquez",
+          "children": [
+            {
+              "text": "“I hate all of this,” Dr. Marquez inspects a bookshelf. “Earlier, I was in the library and it came alive. There’s something almost…reanimating the dead wood. I’d say it was impossible, but nothing feels impossible anymore,” she laughs emptily.\n\nDraw 3 cards. Choose an enemy-location in play and deal it 1 damage."
+            }
+          ]
+        },
+        {
+          "title": "[codex] Codex Σ: The Argument",
+          "children": [
+            {
+              "text": "The Argument 1: “Look, William, this place is a dump. There’s junk everywhere. It’s filthy, it’s rundown, and whatever is living in the walls, it sure as hell isn’t rats,” Judith explains.\n\nWilliam scowls. “This ‘dump’ is my childhood home. My family’s enduring legacy.”\n\n“If this was my family’s legacy, I’d change my name. Someone needs to tear this place down,” Judith retorts.\n\n“I am not tearing this house down!” William shouts. “That is absolutely unconscionable!” The two continue arguing, getting more and more heated, until you realize this argument won’t resolve itself on its own. You step in, voicing your thoughts…\n\nThe investigator resolving this codex must decide (choose one)."
+            }
+          ]
+        },
+        {
+          "title": "[codex] The Argument 2",
+          "children": [
+            {
+              "text": "The Argument 2: William’s gaze snaps to you, eyes pleading. Maybe he’s finally realized the truth. Perhaps he doesn’t care. “Alright, then,” he almost whispers. “Do as you will. The legacy of the Hemlocks is in tatters, and nobody seems to care. Why should you?” He departs, head hung low.\n\nRemove William Hemlock from the game. Each investigator may draw 1 card. Increase Judith Park’s Relationship Level. Each investigator earns 1 bonus experience."
+            }
+          ]
+        },
+        {
+          "title": "[codex] The Argument 3",
+          "children": [
+            {
+              "text": "The Argument 3: Judith glares at you. “Really? You too?” She rubs her eyes and swears under her breath. “Fine. Hold the whole festival here for all I care. But don’t come asking me for help when the place falls down. Or worse.” She gathers her things and makes for the door.\n\nRemove Judith Park from the game. Each investigator may draw 1 card. Increase William Hemlock’s Relationship Level. Each investigator earns 1 bonus experience."
+            }
+          ]
+        },
+        {
+          "text": "Bonus experience"
+        }
+      ],
+      "resolutions": [
+        {
+          "title": "No Resolution",
+          "children": [
+            {
+              "text": "No Resolution: An awful clamor resounds through the house as the walls close in, threatening to collapse—to consume you like prey. Terrified, you burst through the front door and flee.\n\nSkip to Resolution 2."
+            }
+          ]
+        },
+        {
+          "title": "Resolution 1",
+          "children": [
+            {
+              "text": "Resolution 1: At long last, the horrors of Hemlock House are behind you. You can only hope the house’s “infestation” is gone.\n\nProceed to Resolution 2."
+            }
+          ]
+        },
+        {
+          "title": "Resolution 2",
+          "children": [
+            {
+              "text": "Resolution 2: “Miskatonic Survey, June 1926. Members Marquez, Musgrave, et alii. Survey of Hemlock House complete. Organism defies comprehension. Colony of octopodial and gastropodial species infested the entire house. Creature(s) appear to have evolved in the house proper. Further observation needed.”\n\n• Remove 1 [elder_thing] token from the predation bag. Return any remaining [elder_thing] tokens in the predation bag to the chaos bag for the remainder of the campaign.\n\n• If the investigators “found Little Sylvie,” an investigator may add the Little Sylvie story asset to their deck. It does not count toward that investigator’s deck size.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display. Bonus experience is awarded based on the number of seals in play and the number of enemy-locations in the victory display when the scenario ended.\n\n• In the “Areas Surveyed” section of your Campaign Log, check off Hemlock Harbor."
+            }
+          ]
+        },
+        {
+          "text": "Bonus experience"
+        },
+        {
+          "text": "for sealing the house"
+        },
+        {
+          "text": "for taming the predators"
+        }
+      ]
+    }
+  }
+}

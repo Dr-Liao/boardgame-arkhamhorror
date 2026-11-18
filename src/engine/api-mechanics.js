@@ -46,6 +46,8 @@ import * as tskInvestigator from './tsk-investigator.js'
 import { tskStateSummary } from './tsk-primitives.js'
 // 八循环 P4：TSK 交互事务（规则侧选择事务；只在 interactions.tsk 命名空间提供）。
 import { createTskInteractions } from './tsk-interactions.js'
+// 九循环 P4：FHV 交互事务（法典 / 序曲整备 / 网格与矿车 / 猎杀袋 / 调查员状态）。
+import { createFhvInteractions } from './fhv-interactions.js'
 import { canResolveCodex, resolveCodex, scenarioDate, scenarioPeriod, setScenarioDate } from './scenario-calendar.js'
 import { placeLocationDefense } from './location-defenses.js'
 import { advanceRailVehicle, configureRailGrid, convertRailMarkers, endRailGrid, steerRailVehicle } from './rail-grid.js'
@@ -64,7 +66,7 @@ export function createMechanicsApi(state, deps = {}) {
   return {
     // 七循环 P4：EotE 待决选择事务。`eote` 命名空间完整暴露（keys 等与既有交互同名者只在此处）；
     // 其余不冲突的分组在顶层再给一次，供内容层简写调用。
-    interactions: { ...createMechanicChoices(state, deps), ...eoteInteractionGroups(state, deps), eote: createEoteInteractions(state, deps), tsk: createTskInteractions(state, deps) },
+    interactions: { ...createMechanicChoices(state, deps), ...eoteInteractionGroups(state, deps), eote: createEoteInteractions(state, deps), tsk: createTskInteractions(state, deps), fhv: createFhvInteractions(state, deps) },
     scenarioDecks: deck,
     calendar: {
       current: () => scenarioDate(state),
@@ -433,6 +435,9 @@ export function createMechanicsApi(state, deps = {}) {
             xpCost: (checked, options) => tskCustomizable.customizationXpCost(checked, options),
             upgrade: spec => tskCustomizable.upgradeCustomization(state, spec),
             checked: (seat, code) => tskCustomizable.customizationChecked(state, seat, code),
+            // 2026-11-16 P2-3：选项级读点（勾满才生效）。卡条目优先用这两个，不要自己 includes(index)。
+            optionCheckedCount: (seat, code, optionIndex) => tskCustomizable.customizationOptionCheckedCount(state, seat, code, optionIndex),
+            optionFullyChecked: (seat, code, optionIndex) => tskCustomizable.customizationOptionFullyChecked(state, seat, code, optionIndex),
             ofSeat: seat => tskCustomizable.customizationsOfSeat(state, seat),
             playCostDelta: (seat, code, checked) => tskCustomizable.customizationPlayCostDelta(seat, code, checked),
             registrySize: () => tskCustomizable.customizationRegistrySize(),

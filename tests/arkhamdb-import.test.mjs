@@ -2,10 +2,13 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { parseArkhamDbInput, loadArkhamDbDeck, planArkhamDbImport } from '../web/arkhamdb-import.js'
 import { describeArkhamDbDeck, fetchArkhamDbDeck, resolveArkhamDbDeck, clearArkhamDbCache, canonicalCode } from '../src/integration/arkhamdb.js'
+import { findArkhamDbRecommendation } from '../src/integration/arkhamdb-recommendation.js'
 import { handleApi } from '../src/integration/web-api.js'
 import { buildDeck, buildDeckFromList, deckBuilderData } from '../src/deck/deckbuilding.js'
 import { ALL_CARDS, INVESTIGATORS } from '../src/cards/cards-data.js'
-import { PLAYER_CARD_CODES } from '../src/deck/availability.js'
+import { PLAYER_CARD_CODES, isCardAvailable } from '../src/deck/availability.js'
+import { cardCycle, factionSelectErrors } from '../web/deck-rules.js'
+import recommendedDecks from '../src/integration/recommended-decks.json' with { type: 'json' }
 
 const data = deckBuilderData()
 const roland = INVESTIGATORS['01001']
@@ -46,7 +49,7 @@ test('重印卡号回到原版，签名卡与基础弱点自动处理，可构�
 
 test('牌组含未实现卡牌时整副拒绝导入', () => {
   const missing = Object.values(ALL_CARDS).find(card => ['asset', 'event', 'skill'].includes(card.type) && !card.subtype && !card.signatureFor
-    && !PLAYER_CARD_CODES.includes(card.code) && !card.duplicateOfCode)
+    && !PLAYER_CARD_CODES.includes(card.code) && !card.duplicateOfCode && !isCardAvailable(card.code))
   const result = plan(describeArkhamDbDeck(arkhamDbJson({ [missing.code]: 1, '99999': 2 })))
   assert.equal(result.ready, false)
   assert.deepEqual(result.blocked.map(item => item.reason).sort(), ['图鉴中不存在该卡', '尚未实现'].sort())
@@ -96,4 +99,67 @@ test('粘贴的 JSON 经 resolve 接口离线规范化', async () => {
   assert.equal(deck.name, '罗兰测试')
   assert.equal(plan(deck).ready, true)
   assert.throws(() => resolveArkhamDbDeck(new URLSearchParams('investigator=01001&slots=01030:x')), RangeError)
+})
+
+test('预置推荐卡组可离线读取，且为所属循环内的合法 ArkhamDB 0 XP 构筑', async (t) => {
+  const selectable = data.investigators.map(({ code }) => code)
+  assert.deepEqual(Object.keys(recommendedDecks).filter(code => !selectable.includes(code)), [])
+  // 09008 still needs a published 0 XP list using only the numbered cycles.
+  assert.deepEqual(selectable.filter(code => code !== '09008' && !Object.hasOwn(recommendedDecks, code)), [])
+  const fetch = t.mock.method(globalThis, 'fetch', () => {
+    throw new Error('Offline recommendation attempted a network request')
+  })
+  for (const [code, raw] of Object.entries(recommendedDecks)) {
+    const result = await handleApi({ path: 'arkhamdb/recommended', searchParams: new URLSearchParams({ investigator: code }) })
+    const { deck } = result.body
+    assert.equal(deck.url, 'https://arkhamdb.com/decklist/view/' + raw.id)
+    assert.equal(deck.investigatorCode, code)
+    assert.equal(deck.xp, 0)
+    assert.ok(deck.entries.every(entry => cardCycle(entry.code) && cardCycle(entry.code) <= cardCycle(code)))
+    const importPlan = plan(deck, code)
+    assert.equal(importPlan.ready && !importPlan.mismatch, true)
+    assert.deepEqual(importPlan.errors, [])
+    assert.deepEqual(buildDeckFromList(INVESTIGATORS[code], importPlan.codes, { playerPool: data.cardPool }).errors, [])
+  }
+  assert.equal(fetch.mock.callCount(), 0)
+})
+
+test('在线推荐按调查员的循环搜索并跳过升级牌组和越界卡牌', async () => {
+  const starter = recommendedDecks['03001']
+  const packs = [
+    { id: 1, code: 'core', chapter: 1, cycle_position: 1 },
+    { id: 2, code: 'dwl', chapter: 1, cycle_position: 2 },
+    { id: 12, code: 'ptc', chapter: 1, cycle_position: 3 },
+    { id: 20, code: 'tfa', chapter: 1, cycle_position: 4 },
+  ]
+  const candidates = {
+    1: { ...starter, xp: 2 },
+    2: { ...starter, slots: { ...starter.slots, '04021': 1 } },
+    3: { ...starter, xp: null, meta: '{"cus_09060":"1|1"}' },
+    4: { ...starter, xp: null, meta: '{"cus_09060":"0|0|Item,1|0"}' },
+  }
+  const deck = await findArkhamDbRecommendation('03001', { fetchImpl: async url => {
+    if (url.pathname.endsWith('/packs/')) return Response.json(packs)
+    if (url.pathname === '/decklists/find/1') {
+      assert.equal(url.searchParams.get('investigator'), '03001')
+      assert.deepEqual(url.searchParams.getAll('packs[]'), ['1', '2', '12'])
+      return new Response(Object.keys(candidates).map(id => `<a class="decklist-name" href="/decklist/view/${id}/starter">`).join(''))
+    }
+    return Response.json(candidates[url.pathname.split('/').at(-1)])
+  } })
+  assert.equal(deck.id, '4')
+  assert.equal(deck.xp, 0)
+  assert.deepEqual(deck.slots, starter.slots)
+})
+
+test('查理的盟友牌独立于两项职阶选择，双职阶牌可使用已选职阶', () => {
+  const investigator = INVESTIGATORS['09018']
+  const cards = [
+    { klass: 'guardian', type: 'asset', xp: 0 },
+    { klass: 'mystic', type: 'asset', xp: 0 },
+    { factions: ['mystic', 'seeker'], type: 'asset', xp: 0 },
+    { klass: 'rogue', traits: ['Ally'], type: 'asset', xp: 0 },
+  ]
+  assert.deepEqual(factionSelectErrors(investigator, cards), [])
+  assert.equal(factionSelectErrors(investigator, [...cards, { klass: 'rogue', type: 'asset', xp: 0 }]).length, 1)
 })

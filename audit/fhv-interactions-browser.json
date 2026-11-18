@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "tools/playwright-fhv-p4-reporter.mjs",
+  "status": "passed",
+  "specs": [
+    "tests/fhv-interactions.browser.mjs",
+    "tests/scenario-guides.browser.mjs",
+    "tests/script-actions-tfa.browser.mjs"
+  ],
+  "tests": [
+    {
+      "file": "tests/fhv-interactions.browser.mjs",
+      "title": "P4 desktop 三天三夜与居民演进面板",
+      "status": "passed",
+      "durationMs": 1255
+    },
+    {
+      "file": "tests/fhv-interactions.browser.mjs",
+      "title": "P4 desktop 坚毅形态与线索搬移",
+      "status": "passed",
+      "durationMs": 2357
+    },
+    {
+      "file": "tests/fhv-interactions.browser.mjs",
+      "title": "P4 desktop 序曲整备与下一次勘察",
+      "status": "passed",
+      "durationMs": 3223
+    },
+    {
+      "file": "tests/fhv-interactions.browser.mjs",
+      "title": "P4 desktop 敌人-地点双重交互与猎杀袋",
+      "status": "passed",
+      "durationMs": 2645
+    },
+    {
+      "file": "tests/fhv-interactions.browser.mjs",
+      "title": "P4 desktop 法典触读与条件段落",
+      "status": "passed",
+      "durationMs": 4108
+    },
+    {
+      "file": "tests/fhv-interactions.browser.mjs",
+      "title": "P4 desktop 矿车前进与道岔转向",
+      "status": "passed",
+      "durationMs": 2394
+    },
+    {
+      "file": "tests/fhv-interactions.browser.mjs",
+      "title": "P4 desktop 网格空位放置与地点滑动",
+      "status": "passed",
+      "durationMs": 2835
+    },
+    {
+      "file": "tests/fhv-interactions.browser.mjs",
+      "title": "P4 mobile 三天三夜与居民演进面板",
+      "status": "passed",
+      "durationMs": 1067
+    },
+    {
+      "file": "tests/fhv-interactions.browser.mjs",
+      "title": "P4 mobile 坚毅形态与线索搬移",
+      "status": "passed",
+      "durationMs": 2220
+    },
+    {
+      "file": "tests/fhv-interactions.browser.mjs",
+      "title": "P4 mobile 序曲整备与下一次勘察",
+      "status": "passed",
+      "durationMs": 2999
+    },
+    {
+      "file": "tests/fhv-interactions.browser.mjs",
+      "title": "P4 mobile 敌人-地点双重交互与猎杀袋",
+      "status": "passed",
+      "durationMs": 4074
+    },
+    {
+      "file": "tests/fhv-interactions.browser.mjs",
+      "title": "P4 mobile 法典触读与条件段落",
+      "status": "passed",
+      "durationMs": 2388
+    },
+    {
+      "file": "tests/fhv-interactions.browser.mjs",
+      "title": "P4 mobile 矿车前进与道岔转向",
+      "status": "passed",
+      "durationMs": 2163
+    },
+    {
+      "file": "tests/fhv-interactions.browser.mjs",
+      "title": "P4 mobile 网格空位放置与地点滑动",
+      "status": "passed",
+      "durationMs": 2737
+    },
+    {
+      "file": "tests/scenario-guides.browser.mjs",
+      "title": "完整指南按需加载，入口位于剧本右侧提示卡下方；桌面与手机可阅读",
+      "status": "passed",
+      "durationMs": 2239
+    },
+    {
+      "file": "tests/scenario-guides.browser.mjs",
+      "title": "指南加载失败可重试，键盘可进入折叠的结局说明",
+      "status": "passed",
+      "durationMs": 1201
+    },
+    {
+      "file": "tests/script-actions-tfa.browser.mjs",
+      "title": "剧本行动归属：失落的时代探索显示在密谋卡旁（desktop）",
+      "status": "passed",
+      "durationMs": 4975
+    },
+    {
+      "file": "tests/script-actions-tfa.browser.mjs",
+      "title": "剧本行动归属：失落的时代探索显示在密谋卡旁（mobile）",
+      "status": "passed",
+      "durationMs": 5047
+    }
+  ],
+  "screenshots": [
+    "artifacts/migration/fhv/p4/screenshots/desktop-codex.png",
+    "artifacts/migration/fhv/p4/screenshots/desktop-enemy-location.png",
+    "artifacts/migration/fhv/p4/screenshots/desktop-evolution.png",
+    "artifacts/migration/fhv/p4/screenshots/desktop-grid.png",
+    "artifacts/migration/fhv/p4/screenshots/desktop-investigator-state.png",
+    "artifacts/migration/fhv/p4/screenshots/desktop-rail.png",
+    "artifacts/migration/fhv/p4/screenshots/desktop-survey.png",
+    "artifacts/migration/fhv/p4/screenshots/mobile-codex.png",
+    "artifacts/migration/fhv/p4/screenshots/mobile-enemy-location.png",
+    "artifacts/migration/fhv/p4/screenshots/mobile-evolution.png",
+    "artifacts/migration/fhv/p4/screenshots/mobile-grid.png",
+    "artifacts/migration/fhv/p4/screenshots/mobile-investigator-state.png",
+    "artifacts/migration/fhv/p4/screenshots/mobile-rail.png",
+    "artifacts/migration/fhv/p4/screenshots/mobile-survey.png"
+  ]
+}

@@ -316,7 +316,7 @@
   "sources": [
     {
       "path": "audit/tsk-baseline.json",
-      "sha256": "9fb0beb031f3a5c0e63bdd8a895a4bb120ba9a845ef10ef2fe7eae7dda47cfd0"
+      "sha256": "af551c9ccdb846a311ce7e7dda63fe43359ba3efed931e204e6c9f7d7d6b1f5f"
     },
     {
       "path": "audit/tsk-investigators-browser.json",
@@ -328,7 +328,7 @@
     },
     {
       "path": "audit/tsk-regression.json",
-      "sha256": "e903c8721f787f277c2a502dea3da3d00c487119b6fdf29eae0271ee9c88633b"
+      "sha256": "14e6390e43f65c12000e5901dad806e7c278db7329a95317a8b05f400fca9488"
     },
     {
       "path": "content/campaigns/theScarletKeys/investigator-data.js",
@@ -428,7 +428,7 @@
     },
     {
       "path": "web/deck-rules.js",
-      "sha256": "dc3fc8f88567c342b5fc2aa1c9762828424b71c9106e49cbfef807020985eeb2"
+      "sha256": "794b8043f1a8032eb101c7f816b48979392a3977e70e60da9805b3c137230e08"
     }
   ],
   "evidence": [

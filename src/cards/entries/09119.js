@@ -15,7 +15,7 @@
 //     api.playCardFromHandFree 与 api.cardsInPlayTreacheries + api.discardCardInPlay。
 // approximation: ①「当前形态」用持续效果记账（缺实例级形态字段）；②定位变换的位移在躲避检定之后结算
 //   （印刷为之前或之后均可）；③「注能配置」的 +2 只加在本次具象检定的技能值上。
-import { customizationChecked } from '../../engine/tsk-customizable.js'
+import { customizationOptionFullyChecked } from '../../engine/tsk-customizable.js'
 import { ALL_CARDS } from '../../cards/cards-data.js'
 
 const code = '09119'
@@ -29,8 +29,9 @@ const FORMS = [
 ]
 const SKILLS = [['willpower', '意志'], ['intellect', '智力'], ['combat', '战斗'], ['agility', '敏捷']]
 
-const checkedOf = (state, inv) => customizationChecked(state, inv?.seat ?? state.currentSeat, code)
-const hasOption = (state, inv, index) => checkedOf(state, inv).includes(index)
+// 2026-11-16 P2-3：形态（各 2 格）与 Aetheric Link/Empowered Configuration（各 4 格）必须勾满才生效。
+const hasOption = (state, inv, index) =>
+  customizationOptionFullyChecked(state, inv?.seat ?? state.currentSeat, code, index)
 const isEmpowered = (state, inv) => hasOption(state, inv, 6)
 const currentForm = (state, source) => {
   const rows = (state.effects || []).filter(effect => effect.sourceInstanceId === source?.id
@@ -200,9 +201,9 @@ export default {
       kind: 'action',
       label: '[fast] 横置：改变形态（已解锁的形态）',
       cost: { action: false, exhaust: true },
-      criteria: [({ state, inv }) => checkedOf(state, inv).filter(index => index < FORMS.length).length > 0],
+      criteria: [({ state, inv }) => FORMS.some((_, index) => hasOption(state, inv, index))],
       resolve: ({ state, inv, source, api }) => {
-        const unlocked = [...new Set(checkedOf(state, inv).filter(index => index < FORMS.length))]
+        const unlocked = FORMS.map((_, index) => index).filter(index => hasOption(state, inv, index))
         const current = currentForm(state, source)
         const options = unlocked.filter(index => FORMS[index].name !== current)
           .map(index => ({ id: String(index), label: FORMS[index].label }))

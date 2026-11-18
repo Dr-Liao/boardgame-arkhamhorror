@@ -1,0 +1,5404 @@
+{
+  "schemaVersion": 1,
+  "cycle": "fhv",
+  "phase": "P6",
+  "generatedBy": "tools/audit-fhv-player.mjs",
+  "profile": {
+    "id": "fhv-player-p6",
+    "basis": "原始印刷卡文、本地锁定参考实现（参考资源 Arkham/Card 定义）与八份分片测试的实跑逐卡行为证据；不声称穷举跨循环组合。verified 仅表示有逐卡测试证据，条目自述的近似逐条计入 simplified/simplification，不声称与印刷文本等价。"
+  },
+  "status": "verified",
+  "gates": {
+    "batchTestsPassed": true,
+    "everyCardVerified": true,
+    "classificationComplete": true,
+    "simplificationDisclosed": true,
+    "shardsExact": true,
+    "primitiveRequestsAdjudicated": true,
+    "browserDesktopAndMobile": true,
+    "replayZeroDrift": true,
+    "replayFastClean": true,
+    "packBoundary": true,
+    "docsPresent": true
+  },
+  "summary": {
+    "total": 120,
+    "verified": 120,
+    "missing": 0,
+    "simplified": 54,
+    "simplifiedDisclosed": 54,
+    "buildable": 102,
+    "dependencyOnly": 11,
+    "basicWeaknesses": 4,
+    "researched": 3,
+    "testsPassed": 142,
+    "primitiveRequests": 45,
+    "deferredRequests": 45
+  },
+  "shards": [
+    {
+      "id": "M2-1",
+      "worker": "w-m2-1",
+      "codes": [
+        "10019",
+        "10020",
+        "10021",
+        "10022",
+        "10023",
+        "10024",
+        "10025",
+        "10026",
+        "10027",
+        "10028"
+      ],
+      "testFile": "tests/fhv-player-m2-1.test.mjs"
+    },
+    {
+      "id": "M2-2",
+      "worker": "w-m2-2",
+      "codes": [
+        "10029",
+        "10030",
+        "10031",
+        "10032",
+        "10033",
+        "10034",
+        "10035",
+        "10036",
+        "10037",
+        "10038"
+      ],
+      "testFile": "tests/fhv-player-m2-2.test.mjs"
+    },
+    {
+      "id": "M2-3",
+      "worker": "w-m2-3",
+      "codes": [
+        "10039",
+        "10040",
+        "10041",
+        "10042",
+        "10043",
+        "10044",
+        "10045",
+        "10046",
+        "10047",
+        "10048"
+      ],
+      "testFile": "tests/fhv-player-m2-3.test.mjs"
+    },
+    {
+      "id": "M2-4",
+      "worker": "w-m2-4",
+      "codes": [
+        "10049",
+        "10050",
+        "10051",
+        "10052",
+        "10053",
+        "10054",
+        "10055",
+        "10056",
+        "10057",
+        "10058"
+      ],
+      "testFile": "tests/fhv-player-m2-4.test.mjs"
+    },
+    {
+      "id": "M2-5",
+      "worker": "w-m2-5",
+      "codes": [
+        "10059",
+        "10060",
+        "10061",
+        "10062",
+        "10063",
+        "10064",
+        "10065",
+        "10066",
+        "10067",
+        "10068"
+      ],
+      "testFile": "tests/fhv-player-m2-5.test.mjs"
+    },
+    {
+      "id": "M2-6",
+      "worker": "w-m2-6",
+      "codes": [
+        "10069",
+        "10070",
+        "10071",
+        "10072",
+        "10073",
+        "10074",
+        "10075",
+        "10076",
+        "10077",
+        "10078"
+      ],
+      "testFile": "tests/fhv-player-m2-6.test.mjs"
+    },
+    {
+      "id": "M2-7",
+      "worker": "w-m2-7",
+      "codes": [
+        "10079",
+        "10080",
+        "10081",
+        "10082",
+        "10083",
+        "10084",
+        "10085",
+        "10086",
+        "10087",
+        "10088"
+      ],
+      "testFile": "tests/fhv-player-m2-7.test.mjs"
+    },
+    {
+      "id": "M2-8",
+      "worker": "w-m2-8",
+      "codes": [
+        "10089",
+        "10090",
+        "10091",
+        "10092",
+        "10093",
+        "10094",
+        "10095",
+        "10096",
+        "10097",
+        "10098"
+      ],
+      "testFile": "tests/fhv-player-m2-8.test.mjs"
+    },
+    {
+      "id": "M2-9",
+      "worker": "w-m2-9",
+      "codes": [
+        "10099",
+        "10100",
+        "10101",
+        "10102",
+        "10103",
+        "10104",
+        "10105",
+        "10106",
+        "10107",
+        "10108"
+      ],
+      "testFile": "tests/fhv-player-m2-9.test.mjs"
+    },
+    {
+      "id": "M2-10",
+      "worker": "w-m2-10",
+      "codes": [
+        "10109",
+        "10110",
+        "10111",
+        "10112",
+        "10113",
+        "10114",
+        "10115",
+        "10116",
+        "10117",
+        "10118"
+      ],
+      "testFile": "tests/fhv-player-m2-10.test.mjs"
+    },
+    {
+      "id": "M2-11",
+      "worker": "w-m2-11",
+      "codes": [
+        "10119",
+        "10120",
+        "10121",
+        "10122",
+        "10123",
+        "10124",
+        "10125",
+        "10126",
+        "10127",
+        "10128"
+      ],
+      "testFile": "tests/fhv-player-m2-11.test.mjs"
+    },
+    {
+      "id": "M2-12",
+      "worker": "w-m2-12",
+      "codes": [
+        "10129",
+        "10130",
+        "10131",
+        "10132",
+        "10133",
+        "10134",
+        "10135",
+        "10136",
+        "10137",
+        "10138"
+      ],
+      "testFile": "tests/fhv-player-m2-12.test.mjs"
+    }
+  ],
+  "queue": {
+    "path": "audit/fhv-player-queue.json",
+    "total": 120,
+    "verified": 120,
+    "blockedRequests": [],
+    "deferredRequests": [
+      "10028",
+      "10035",
+      "10036",
+      "10039",
+      "10043",
+      "10050",
+      "10054",
+      "10059",
+      "10063",
+      "10065",
+      "10070",
+      "10072",
+      "10075",
+      "10079",
+      "10082",
+      "10085",
+      "10086",
+      "10087",
+      "10088",
+      "10089",
+      "10090",
+      "10092",
+      "10093",
+      "10094",
+      "10096",
+      "10098",
+      "10099",
+      "10100",
+      "10101",
+      "10102",
+      "10103",
+      "10105",
+      "10106",
+      "10107",
+      "10109",
+      "10110",
+      "10117",
+      "10118",
+      "10123",
+      "10126",
+      "10129",
+      "10132",
+      "10133",
+      "10134",
+      "10135"
+    ]
+  },
+  "primitiveBacklog": [
+    "10028",
+    "10035",
+    "10036",
+    "10039",
+    "10043",
+    "10050",
+    "10054",
+    "10059",
+    "10063",
+    "10065",
+    "10070",
+    "10072",
+    "10075",
+    "10079",
+    "10082",
+    "10085",
+    "10086",
+    "10087",
+    "10088",
+    "10089",
+    "10090",
+    "10092",
+    "10093",
+    "10094",
+    "10096",
+    "10098",
+    "10099",
+    "10100",
+    "10101",
+    "10102",
+    "10103",
+    "10105",
+    "10106",
+    "10107",
+    "10109",
+    "10110",
+    "10117",
+    "10118",
+    "10123",
+    "10126",
+    "10129",
+    "10132",
+    "10133",
+    "10134",
+    "10135"
+  ],
+  "implementationFiles": [
+    {
+      "path": "src/cards/entries/10019.js",
+      "sha256": "a3eaedc5786fffa8f31782a77e4c185065a38aa3458a391cd1b31b70d687bf6a"
+    },
+    {
+      "path": "src/cards/entries/10020.js",
+      "sha256": "c6ba75dfbd1632312939baa4239d19ec7a794295f5d1ac2fc62e0a303a823f8e"
+    },
+    {
+      "path": "src/cards/entries/10021.js",
+      "sha256": "a169a5901b95010b88119dd851b58c6a653ecf8914f0ef5d1b26e49789fba7d9"
+    },
+    {
+      "path": "src/cards/entries/10022.js",
+      "sha256": "589685f8a13484a54ad4ecc4c3390532e62b7458881b069ab5c4639efe15295a"
+    },
+    {
+      "path": "src/cards/entries/10023.js",
+      "sha256": "bc697beb475eb6b140ca42656538648beb8a76d7051169e709f5da8598bfae92"
+    },
+    {
+      "path": "src/cards/entries/10024.js",
+      "sha256": "59f4399c8ebdbf9c9b45f2740fa96271ebb587d59f74c9710b4695a274bd9124"
+    },
+    {
+      "path": "src/cards/entries/10025.js",
+      "sha256": "491b1cb209ec6cef60d4f809e53e17b5776df06af6d7438918890099f8486ef0"
+    },
+    {
+      "path": "src/cards/entries/10026.js",
+      "sha256": "6bda050e37617050aa64c09ffd0a53ee7cebb70c26d43a84ad6f47a2d6e8b59c"
+    },
+    {
+      "path": "src/cards/entries/10027.js",
+      "sha256": "bd6e1d8216d84b601585e9814bbc6764a75c7c683edb4a42e53571dec97dad82"
+    },
+    {
+      "path": "src/cards/entries/10028.js",
+      "sha256": "a07967aacb2206ee78dd01241bd5ae7851089394f19b8e2a8942c1de4c9e0db7"
+    },
+    {
+      "path": "src/cards/entries/10029.js",
+      "sha256": "8ef5570da588a0cc7f48e43c07f40d4ab8224d56ebe40df0e8b484ac202b2326"
+    },
+    {
+      "path": "src/cards/entries/10030.js",
+      "sha256": "d6f1ad614ecf54a1e03e1f26c855fe712ce8da82459f1a904aef1ab27e876424"
+    },
+    {
+      "path": "src/cards/entries/10031.js",
+      "sha256": "79a2e7978842dfd5430a2a015bd88204acf77bfc332eebe6c3eb4c2cc481bca6"
+    },
+    {
+      "path": "src/cards/entries/10032.js",
+      "sha256": "801da8d16507ed04b4f9f39f9e25532f123eb2d88401638bb57d03defdce9fd1"
+    },
+    {
+      "path": "src/cards/entries/10033.js",
+      "sha256": "44090e1d81bc3da1ebe684afae957f75972cb723d596e86820f17e7efc7c5604"
+    },
+    {
+      "path": "src/cards/entries/10034.js",
+      "sha256": "826716eab763f3dfc56edef97d57097a33f88e4567b8f4d79ba4b44183dd47e4"
+    },
+    {
+      "path": "src/cards/entries/10035.js",
+      "sha256": "c687b2fc07ad3385b4a3271fb5757a49974510a5c40b0fecf37eb3aa8e67536b"
+    },
+    {
+      "path": "src/cards/entries/10036.js",
+      "sha256": "3447cddb3bc6bf1b77e6118b1891f79ca421a75aaabbd5608e181807804d06c6"
+    },
+    {
+      "path": "src/cards/entries/10037.js",
+      "sha256": "7fd67dfef3361c83f030c2c2b142b7dc5d2ce1c167af5c2143628c1af0be43e3"
+    },
+    {
+      "path": "src/cards/entries/10038.js",
+      "sha256": "74300c4de714c0ea141f754d09940c7dc5298ed3cc0e72f13efa67758e80007a"
+    },
+    {
+      "path": "src/cards/entries/10039.js",
+      "sha256": "c0159c89ccf6b7c36fbf2770eb6581d6930ca9a7fdbd847c0a7ff53332e6f2d3"
+    },
+    {
+      "path": "src/cards/entries/10040.js",
+      "sha256": "285c5cfc0f577abb5cd27a83d8201408fc5a5709cfb77560496c2ee89a92f271"
+    },
+    {
+      "path": "src/cards/entries/10041.js",
+      "sha256": "ca3b08f042e6619d3f99dacd9d8e360a3994ba419995fa9b8841f57301952952"
+    },
+    {
+      "path": "src/cards/entries/10042.js",
+      "sha256": "be813601771f7ea7f4f7100b8e8a3e56d672b0fbb9bddb5003aac13c41a3f8f4"
+    },
+    {
+      "path": "src/cards/entries/10043.js",
+      "sha256": "7bbd62ad8a73a1664749a63ddb1978ff8bf76b0fcc3814deb280d8fb294de852"
+    },
+    {
+      "path": "src/cards/entries/10044.js",
+      "sha256": "ff8c22af7a7efa96e243387490ea32ae164d25a1895f747dcf17f43cccbb9947"
+    },
+    {
+      "path": "src/cards/entries/10045.js",
+      "sha256": "2a05de84f5366e72360577a96e555678a0a7112291444eebdf6168d922c51ff8"
+    },
+    {
+      "path": "src/cards/entries/10046.js",
+      "sha256": "c4c30ffc998e9b2ae99a168908cab47093e5602131a205bd2494e1d374759041"
+    },
+    {
+      "path": "src/cards/entries/10047.js",
+      "sha256": "f0af9db2f588f4693d4d401b5e9df723058a4b2f135cf701452357a6484dac30"
+    },
+    {
+      "path": "src/cards/entries/10048.js",
+      "sha256": "6f69cc7cbe012dd69dc453fadffcd067e859fc6bab5f56fa74829cd85a1049b4"
+    },
+    {
+      "path": "src/cards/entries/10049.js",
+      "sha256": "b28b936f6e26d24fd0289d1adf64d86919fa64cb36f8af13eca810ac067ffc44"
+    },
+    {
+      "path": "src/cards/entries/10050.js",
+      "sha256": "418be41ea09d7f4b7f47be4b44596420678fbcd419cc6c9d17743c7fbffd2be9"
+    },
+    {
+      "path": "src/cards/entries/10051.js",
+      "sha256": "bd1abf2a460b0c9d7e0de779532b640de515a7d31a06f13fe20dbdb4a6ba00ef"
+    },
+    {
+      "path": "src/cards/entries/10052.js",
+      "sha256": "d4ca2e03d566151de4a951bca53383b9b668812d45b223f2b90ac1a13b4cf8e9"
+    },
+    {
+      "path": "src/cards/entries/10053.js",
+      "sha256": "839d9ff6e8967f04e6e6bdb06aa48a11d566d82232dcb1e99cef61eb9eb36174"
+    },
+    {
+      "path": "src/cards/entries/10054.js",
+      "sha256": "a47ce44566263186a3e83995b34a32c7c4907d224edb315511e489e535c7dc60"
+    },
+    {
+      "path": "src/cards/entries/10055.js",
+      "sha256": "2a64be8e3c600fcc179fa51639ce7c201f79ae3747f843d4503d2f25c345f8b9"
+    },
+    {
+      "path": "src/cards/entries/10056.js",
+      "sha256": "bc02853a4355d81199d72da355c1b044c95dffb3a0e33ca72aa22606e452fcf0"
+    },
+    {
+      "path": "src/cards/entries/10057.js",
+      "sha256": "d1916cc691bc78c75f5e25605618097ead9d504ced4b54868c2cc7171b1652e3"
+    },
+    {
+      "path": "src/cards/entries/10058.js",
+      "sha256": "1278679e9d804616dfb15df9c7fd2531de010fcaaeecdc5b44c76ebbde1e468e"
+    },
+    {
+      "path": "src/cards/entries/10059.js",
+      "sha256": "bd381bc3d4ef1a955095dc6b9460f46353173e519ee5fb0d8caad694cb9dbf77"
+    },
+    {
+      "path": "src/cards/entries/10060.js",
+      "sha256": "49bb9721d68c71556853703e1a21ab251a5023cdf264aa6ab3170cc061cc1857"
+    },
+    {
+      "path": "src/cards/entries/10061.js",
+      "sha256": "2ea085024ee3bb5519aa7a4443035a934f50e0d7c29be9292525dfd1e989a039"
+    },
+    {
+      "path": "src/cards/entries/10062.js",
+      "sha256": "f3b138970474f724a009723f5259a0737be77784a9397dc65bd14964c979398c"
+    },
+    {
+      "path": "src/cards/entries/10063.js",
+      "sha256": "6eba64cb7e2202532971554a69319fa199fc5ad82c6b304426b6ec75443b8fcc"
+    },
+    {
+      "path": "src/cards/entries/10064.js",
+      "sha256": "60a3084b6ec9d90187628c9ab76c87705b63a61ff77aedcca9c36a9633dae5b8"
+    },
+    {
+      "path": "src/cards/entries/10065.js",
+      "sha256": "860eda7f7345fabf12a0f3a6d1243d9ece8cb489edfbff9aaf27139be7569938"
+    },
+    {
+      "path": "src/cards/entries/10066.js",
+      "sha256": "1277ca738e9e2a90b5fc939e93518fcf3f9b359babba34497af2278fafdf64a1"
+    },
+    {
+      "path": "src/cards/entries/10067.js",
+      "sha256": "1649d28b8c7139c1b4c983154ab6c51fd30f90aa0d5ee7d69a22b810ce80544a"
+    },
+    {
+      "path": "src/cards/entries/10068.js",
+      "sha256": "fd8e6cb82e8ed7ba6f52259801392435e288ee758c1e11f58970175825512486"
+    },
+    {
+      "path": "src/cards/entries/10069.js",
+      "sha256": "20b3212425a9c9e8bc67fbd48f86bff3a8dc50c9d374873019ff808584c5b822"
+    },
+    {
+      "path": "src/cards/entries/10070.js",
+      "sha256": "2dbbbbd5c13d9a11e41d01bc818af60a47c6dfc8d1489041b3398365fd97494a"
+    },
+    {
+      "path": "src/cards/entries/10071.js",
+      "sha256": "c6566d10f9ae8378b5ed3542466b4396d1eae4d155d1527c67e56491c56bd5e1"
+    },
+    {
+      "path": "src/cards/entries/10072.js",
+      "sha256": "5e7a62182f2e36c54cbd1045f9c83890f9dd15401a94ea38488a8d37aaee88fc"
+    },
+    {
+      "path": "src/cards/entries/10073.js",
+      "sha256": "14a2bf301979fb5e99d1c3b38f2be1bba272b62ff8737d93313b5dd1b9fce042"
+    },
+    {
+      "path": "src/cards/entries/10074.js",
+      "sha256": "4f9f544f280c481a8a8665724a86a561d62c0c81c88d21174e56d9a749cfc73e"
+    },
+    {
+      "path": "src/cards/entries/10075.js",
+      "sha256": "8be9a7cd59decd52b79a883d6d7d5b0e6a1c88c295b7c5a05cf10c3272e89a8b"
+    },
+    {
+      "path": "src/cards/entries/10076.js",
+      "sha256": "28bf1e40ee2af608c1412dc4fef48adece448f6ba780835b84b10a2c806f1273"
+    },
+    {
+      "path": "src/cards/entries/10077.js",
+      "sha256": "b01c4f2ed8152a1bd97330458aba375d06eba53a6ba193d824e6b7e79524f14e"
+    },
+    {
+      "path": "src/cards/entries/10078.js",
+      "sha256": "3092f9065e11d6318255fad2d5e0aa91c6f7da88426f4fc11c69f3750ebe9b3f"
+    },
+    {
+      "path": "src/cards/entries/10079.js",
+      "sha256": "d1cc2dfa8f2623201baad5ac5ffda83c734e4d46f94413ece8e3bbc8b50362ca"
+    },
+    {
+      "path": "src/cards/entries/10080.js",
+      "sha256": "6798aad9765daf057b4c7fc54787e3fb2ff4845579d79cb4bb240767eb171098"
+    },
+    {
+      "path": "src/cards/entries/10081.js",
+      "sha256": "05ea778515b4673831a150d1e0f92b5c7145cf6ac743f28f311b6ba377f6f95f"
+    },
+    {
+      "path": "src/cards/entries/10082.js",
+      "sha256": "4dace70380292e80579716a8e36fd48b2aa4b83f3c0e78f61da90c34ef7bbf24"
+    },
+    {
+      "path": "src/cards/entries/10083.js",
+      "sha256": "339b352fbebaad621e0c83ffefcb3e110e2805c78083117bf45736e7702b6fcc"
+    },
+    {
+      "path": "src/cards/entries/10084.js",
+      "sha256": "91df88f1fea947d96de53b3386a66cbdb78267c37d5a3eaefc05568f7e78e65e"
+    },
+    {
+      "path": "src/cards/entries/10085.js",
+      "sha256": "bc0c14ed43af8a988517727b370dfc7b7c986e1f66f2b01d7100e64f8471452a"
+    },
+    {
+      "path": "src/cards/entries/10086.js",
+      "sha256": "83fbc50552f408dd04c9c970e836e370ba031cfded419e6a19be86832a6b46c9"
+    },
+    {
+      "path": "src/cards/entries/10087.js",
+      "sha256": "2f5504b7e55ee4aa992b507729c02f81d6f7f2ea0b4ab71c9f0f2c8bf3397acf"
+    },
+    {
+      "path": "src/cards/entries/10088.js",
+      "sha256": "94eb1c76e1c82e5a360f176e23d699456e63f59935a8c3491392cf8e4e58750c"
+    },
+    {
+      "path": "src/cards/entries/10089.js",
+      "sha256": "216addc0ede225111affa18d2afb18b0170ace68ed922908e02b34c855bc56fd"
+    },
+    {
+      "path": "src/cards/entries/10090.js",
+      "sha256": "caa6ab8126ab49f123f0db1404367aa511440f4032851aa2d287afa26acf1ed7"
+    },
+    {
+      "path": "src/cards/entries/10091.js",
+      "sha256": "3704b15313cfa3f1a7fdb9afdbd58988c385c4edc9e3497b890ed19aec79b366"
+    },
+    {
+      "path": "src/cards/entries/10092.js",
+      "sha256": "2b7530fedc6c6b1cf34a58298dd142f82041f9d178702e2b914a3940fe222854"
+    },
+    {
+      "path": "src/cards/entries/10093.js",
+      "sha256": "59822115180589e10ca884fca1c0c44595b975fd3eae4200fc6ca87c89e2e94c"
+    },
+    {
+      "path": "src/cards/entries/10094.js",
+      "sha256": "05802a72cbbe5c1ffb4178ea5fb4054f115d2f59a3fda0fdbe53eed3ea44df8c"
+    },
+    {
+      "path": "src/cards/entries/10095.js",
+      "sha256": "a57b23c18710c311806ada7e56b835829b3aaa6ef450dcb78eec7d95cd5cbb68"
+    },
+    {
+      "path": "src/cards/entries/10096.js",
+      "sha256": "f597c1132c4e4aba2137a693a4b4f3c9b6d5bd7ec5b9d8f6d4b89acd771d40d3"
+    },
+    {
+      "path": "src/cards/entries/10097.js",
+      "sha256": "8f7e46ef529d5467e051991694ba63afcd2dfcf552cce0b198b31ec15aaf2405"
+    },
+    {
+      "path": "src/cards/entries/10098.js",
+      "sha256": "e65811537dc69e28073929b1b0834e39a3697053fa23c7ec35c13551846771b7"
+    },
+    {
+      "path": "src/cards/entries/10099.js",
+      "sha256": "ea573ec2caf447485f981766e63f297b0ee3ec23615c8769946f474401e7f500"
+    },
+    {
+      "path": "src/cards/entries/10100.js",
+      "sha256": "fcc101cf4008995496726d4bdb82a21ed8d47e44f372b9513afae66a92bcb370"
+    },
+    {
+      "path": "src/cards/entries/10101.js",
+      "sha256": "b2f765ea93605de026eabef76baf8e22e668c068f279d47bf53e7a4f5402bba3"
+    },
+    {
+      "path": "src/cards/entries/10102.js",
+      "sha256": "10a1a5cde304076b22ad2469136389c570092b256bd5cd2fd6eb659cb7a9122f"
+    },
+    {
+      "path": "src/cards/entries/10103.js",
+      "sha256": "3ebae4b66e2bc8e6c979ee2bdd825142954aff84eaf01a46d5e68402c4fb5620"
+    },
+    {
+      "path": "src/cards/entries/10104.js",
+      "sha256": "dcde64e087c75ce123ae7843a3b8ddc04afe7ee367fdec29f8337194e5f72d2e"
+    },
+    {
+      "path": "src/cards/entries/10105.js",
+      "sha256": "7320e137788fd8d1ce755d49ba2ad59645b3748dd2cf317fbbbd3c55287f2398"
+    },
+    {
+      "path": "src/cards/entries/10106.js",
+      "sha256": "122a359241b9040472088ac86bef118ef62631cd96c716b6bb1e5869325f8886"
+    },
+    {
+      "path": "src/cards/entries/10107.js",
+      "sha256": "aaebb30e107722abac7daf1a22c346b5d3910f708e510b783cea57d1d29e4e0a"
+    },
+    {
+      "path": "src/cards/entries/10108.js",
+      "sha256": "4eb151cd276e4bd9b9b8542fd0e87d3320ffcf010bc9abf2fc7a3303c15e6150"
+    },
+    {
+      "path": "src/cards/entries/10109.js",
+      "sha256": "e76be91acb6052a4b7f692eb124a55fe7ddc0e10914c66279059a0ad8a048ee5"
+    },
+    {
+      "path": "src/cards/entries/10110.js",
+      "sha256": "2e0415501d6a10cce1ad9d5f09b717bd9eeafb5251f4a6c86a6b06d0a892263c"
+    },
+    {
+      "path": "src/cards/entries/10111.js",
+      "sha256": "97ad8d3b5a50ac6c2d97f2566b33e1a26296de63eacd8893d17bc62691f562ef"
+    },
+    {
+      "path": "src/cards/entries/10112.js",
+      "sha256": "8ba9b41dcfbcabc140b4460788b4ae005caae8d517f46951e89a971dd3b866c7"
+    },
+    {
+      "path": "src/cards/entries/10113.js",
+      "sha256": "3d431399981eb6d18b3374527ff4ad75d5b4ff3250a2f3175832a554e7b5c30d"
+    },
+    {
+      "path": "src/cards/entries/10114.js",
+      "sha256": "383d4391201e4915ea4cfddbcb735a857286c8ec8348925c76f0c9cf48d4e461"
+    },
+    {
+      "path": "src/cards/entries/10115.js",
+      "sha256": "e7b2e172721f507e3a8ba493042791bc8f4ea52eaf7f7f164782e3124efe16bb"
+    },
+    {
+      "path": "src/cards/entries/10116.js",
+      "sha256": "4b62c983222cbc1c8221d87c5f1f42a95dd93f302bd83931a4fcd7aa7cce47eb"
+    },
+    {
+      "path": "src/cards/entries/10117.js",
+      "sha256": "6c9e1ecceb3eb24e39572a66806a810b7eb41d566e78d098d15c38fc43688c1c"
+    },
+    {
+      "path": "src/cards/entries/10118.js",
+      "sha256": "e85aa0a47dd41f85a9d5d9aaf3abfe55b84e32cee462fbb697e7767d239ba0ef"
+    },
+    {
+      "path": "src/cards/entries/10119.js",
+      "sha256": "4264617688aa7c168d3b1d9e40744b04764dbffb159416cb23c7037ee253e3f1"
+    },
+    {
+      "path": "src/cards/entries/10120.js",
+      "sha256": "e40050ec0176bcbeaead50a508bbb6587b9847ad0fc6b593c9dbb83537e6642d"
+    },
+    {
+      "path": "src/cards/entries/10121.js",
+      "sha256": "26eb9f436a14066b2265592a7506895f1e18f2a8bca3a87a604d34fe4f6ff939"
+    },
+    {
+      "path": "src/cards/entries/10122.js",
+      "sha256": "df37fa45fac89879e3bc7178ce89edf19f1852f46eaf8a822f8f2823ad57e8c4"
+    },
+    {
+      "path": "src/cards/entries/10123.js",
+      "sha256": "85de830a38f5becaa044d07168cb8cb521a16b169d973ac457318188ec5a769d"
+    },
+    {
+      "path": "src/cards/entries/10124.js",
+      "sha256": "9ccf110d8edc1c16c0f405a33e49af15949b49b3d1e46f3962e026781ef0e6a3"
+    },
+    {
+      "path": "src/cards/entries/10125.js",
+      "sha256": "7a7455aedbcfb2168bce24c6bf861cd6a5258c0d94864cec77858a36a86ec3fc"
+    },
+    {
+      "path": "src/cards/entries/10126.js",
+      "sha256": "eff8bbf9da01f79552c77908f6fe5bca3bcb0dfe537c1765c91190da8785e65c"
+    },
+    {
+      "path": "src/cards/entries/10127.js",
+      "sha256": "e2c11b5bd977929094cea287021ce0a22b6cdb78572f3b9219642a23a4df0abd"
+    },
+    {
+      "path": "src/cards/entries/10128.js",
+      "sha256": "7c1e7bbee8f49d379442a08868d4ec08a6c5d44b33bdf75a33047e07c880fe98"
+    },
+    {
+      "path": "src/cards/entries/10129.js",
+      "sha256": "67e71a7f45066dfff58bc4dd83351f58dcc0f6f8aa594e099c0899d0f893ffec"
+    },
+    {
+      "path": "src/cards/entries/10130.js",
+      "sha256": "a8860742e25bae9798b563f156b0e3b1870e091d6eb4e9250374d162d7ffcbe5"
+    },
+    {
+      "path": "src/cards/entries/10131.js",
+      "sha256": "0318d55ff3e69220caa689beed49ac1e2b8b69667f70857e4d2631df103fa537"
+    },
+    {
+      "path": "src/cards/entries/10132.js",
+      "sha256": "a82eb50ac80a87138ffff5753eb9ccff458ec1d5c03d2a82c5f7bc4ba991a1e0"
+    },
+    {
+      "path": "src/cards/entries/10133.js",
+      "sha256": "c23b3d9c0c59972ba41998e65a2f5f20c026e08627cf64c52097bdf44c73c054"
+    },
+    {
+      "path": "src/cards/entries/10134.js",
+      "sha256": "631a02f2237c15e9bf84e244a4c4fb7bbce6c27d7378c5fff6182e27cecfeaed"
+    },
+    {
+      "path": "src/cards/entries/10135.js",
+      "sha256": "2787b57df649507f29cc2badd0135daa252b444632817f67a37b3876bf24fe99"
+    },
+    {
+      "path": "src/cards/entries/10136.js",
+      "sha256": "c1d96d70752c8e21cbfc20a2e0fab1d03a091e6353acce94a97327d3d60023dd"
+    },
+    {
+      "path": "src/cards/entries/10137.js",
+      "sha256": "deae095d25a4b6ab0655e40f42037401a84e257eb650bae7380e68a425188c42"
+    },
+    {
+      "path": "src/cards/entries/10138.js",
+      "sha256": "37f5dc3dbb3af3127b46b3053fbb957f30b09e7607f9c6a62ae3b0d15399d957"
+    }
+  ],
+  "entries": [
+    {
+      "code": "10019",
+      "name": "御守",
+      "type": "asset",
+      "klass": "guardian",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "a3eaedc5786fffa8f31782a77e4c185065a38aa3458a391cd1b31b70d687bf6a",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-1.test.mjs",
+          "line": 42,
+          "test": "P6 10019 御守 击败敌人后横置，按印刷生命加入祝福标记（上限 5）"
+        }
+      ]
+    },
+    {
+      "code": "10020",
+      "name": "清理工具套装",
+      "type": "asset",
+      "klass": "guardian",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "c6ba75dfbd1632312939baa4239d19ec7a794295f5d1ac2fc62e0a303a823f8e",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-1.test.mjs",
+          "line": 67,
+          "test": "P6 10020 清理工具套装 3 补给可当作自己支援的子弹支付"
+        }
+      ]
+    },
+    {
+      "code": "10021",
+      "name": "武士刀",
+      "type": "asset",
+      "klass": "guardian",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "a169a5901b95010b88119dd851b58c6a653ecf8914f0ef5d1b26e49789fba7d9",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-1.test.mjs",
+          "line": 86,
+          "test": "P6 10021 武士刀 攻击 +2[combat]；正好成功 2 点时可横置 +2 伤害；[fast] 改用敏捷"
+        }
+      ]
+    },
+    {
+      "code": "10022",
+      "name": "御札",
+      "type": "asset",
+      "klass": "guardian",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "589685f8a13484a54ad4ecc4c3390532e62b7458881b069ab5c4639efe15295a",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-1.test.mjs",
+          "line": 143,
+          "test": "P6 10022 御札 地点首次揭示祝福补满充能（每轮一次）；非精英敌人失去四关键词"
+        }
+      ]
+    },
+    {
+      "code": "10023",
+      "name": "狼面具",
+      "type": "asset",
+      "klass": "guardian",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "bc697beb475eb6b140ca42656538648beb8a76d7051169e709f5da8598bfae92",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-1.test.mjs",
+          "line": 186,
+          "test": "P6 10023 狼面具 每个人限 1 张[[面具]]；交战后补满贡品；花贡品使战斗检定 +2"
+        }
+      ]
+    },
+    {
+      "code": "10024",
+      "name": "赦免",
+      "type": "event",
+      "klass": "guardian",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "59f4399c8ebdbf9c9b45f2740fa96271ebb587d59f74c9710b4695a274bd9124",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-1.test.mjs",
+          "line": 231,
+          "test": "P6 10024 赦免 X 费揭示 3+X 个标记：非符号标记转祝福；祝福治愈恐惧"
+        }
+      ]
+    },
+    {
+      "code": "10025",
+      "name": "信仰指引",
+      "type": "event",
+      "klass": "guardian",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "491b1cb209ec6cef60d4f809e53e17b5776df06af6d7438918890099f8486ef0",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-1.test.mjs",
+          "line": 257,
+          "test": "P6 10025 信仰指引 意志代替智力调查；揭示前 +2 祝福；揭示祝福额外 1 线索"
+        }
+      ]
+    },
+    {
+      "code": "10026",
+      "name": "举起手来",
+      "type": "event",
+      "klass": "guardian",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "6bda050e37617050aa64c09ffd0a53ee7cebb70c26d43a84ad6f47a2d6e8b59c",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-1.test.mjs",
+          "line": 293,
+          "test": "P6 10026 举起手来 谈判攻击不造成伤害；成功以 -成功点数费用打出手牌[[道具]]支援"
+        }
+      ]
+    },
+    {
+      "code": "10027",
+      "name": "特遣队",
+      "type": "event",
+      "klass": "guardian",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "bd6e1d8216d84b601585e9814bbc6764a75c7c683edb4a42e53571dec97dad82",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-1.test.mjs",
+          "line": 330,
+          "test": "P6 10027 特遣队 Double 额外花 1 行动；同地点调查员免行动费结算[action]能力、发现线索、移动"
+        }
+      ]
+    },
+    {
+      "code": "10028",
+      "name": "修修补补",
+      "type": "event",
+      "klass": "guardian",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 双手[[工具]]宿主只支持整格豁免（会少算 2 格而不是 1 格）；缺「按格数减少占用」原语，见 primitive-requests/10028.json。"
+          },
+          {
+            "source": "comment",
+            "line": 16,
+            "detail": "approximation 该原语只能**整格**豁免（hand / accessory），没有「Hand x2 只少 1 格」的"
+          }
+        ]
+      },
+      "implementation": "a07967aacb2206ee78dd01241bd5ae7851089394f19b8e2a8942c1de4c9e0db7",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-1.test.mjs",
+          "line": 368,
+          "test": "P6 10028 修修补补 快速附属于[[工具]]支援，宿主少占 1 个饰品槽位"
+        }
+      ]
+    },
+    {
+      "code": "10029",
+      "name": "净化",
+      "type": "skill",
+      "klass": "guardian",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "8ef5570da588a0cc7f48e43c07f40d4ab8224d56ebe40df0e8b484ac202b2326",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-2.test.mjs",
+          "line": 114,
+          "test": "P6 10029 净化：可投入任意检定，成功后按超出难度点数加入祝福标记（每次检定最多 1 张）"
+        }
+      ]
+    },
+    {
+      "code": "10030",
+      "name": "手眼协调",
+      "type": "event",
+      "klass": "guardian",
+      "xp": 1,
+      "level": 1,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "d6f1ad614ecf54a1e03e1f26c855fe712ce8da82459f1a904aef1ab27e876424",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-2.test.mjs",
+          "line": 141,
+          "test": "P6 10030 手眼协调：不支付[action]费用结算[[工具]]支援上的[action]能力"
+        }
+      ]
+    },
+    {
+      "code": "10031",
+      "name": "膂力过人",
+      "type": "skill",
+      "klass": "guardian",
+      "xp": 1,
+      "level": 1,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "79a2e7978842dfd5430a2a015bd88204acf77bfc332eebe6c3eb4c2cc481bca6",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-2.test.mjs",
+          "line": 168,
+          "test": "P6 10031 膂力过人：投入近战支援的攻击 +1 伤害；揭示后受伤可取消标记并重抽"
+        }
+      ]
+    },
+    {
+      "code": "10032",
+      "name": "恢复元气",
+      "type": "event",
+      "klass": "guardian",
+      "xp": 2,
+      "level": 2,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "801da8d16507ed04b4f9f39f9e25532f123eb2d88401638bb57d03defdce9fd1",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-2.test.mjs",
+          "line": 223,
+          "test": "P6 10032 恢复元气：第一个行动才可打出，本轮抽到诡计则改为治愈 3 点"
+        }
+      ]
+    },
+    {
+      "code": "10033",
+      "name": "清理工具套装",
+      "type": "asset",
+      "klass": "guardian",
+      "xp": 3,
+      "level": 3,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "field",
+          "flag"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 补给在费用阶段被花掉时检定尚未开始（窗口里没有 state.skillTest），此时 +2 写 inv.testBonus（下一次检定），而不是 state.skillTest.pendingBonus。"
+          }
+        ]
+      },
+      "implementation": "44090e1d81bc3da1ebe684afae957f75972cb723d596e86820f17e7efc7c5604",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-2.test.mjs",
+          "line": 243,
+          "test": "P6 10033 清理工具套装：补给可代付弹药，花费时横置使本次检定 +2 技能值"
+        }
+      ]
+    },
+    {
+      "code": "10034",
+      "name": "蒙福之刃",
+      "type": "asset",
+      "klass": "guardian",
+      "xp": 4,
+      "level": 4,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "826716eab763f3dfc56edef97d57097a33f88e4567b8f4d79ba4b44183dd47e4",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-2.test.mjs",
+          "line": 289,
+          "test": "P6 10034 蒙福之刃：战斗 +2、成功 +1 伤害，揭示的祝福返回混乱袋，可横置预加 2 祝福"
+        }
+      ]
+    },
+    {
+      "code": "10035",
+      "name": "瓦卢西亚之瞳",
+      "type": "asset",
+      "klass": "guardian",
+      "xp": 4,
+      "level": 4,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: ① 缺「绑定卡就地交换」原语，用检索绑定卡入场 + 原卡返回手牌近似（原卡可再次打出）；② 本轮 +1 技能值用 audience:here 的 skill:* 修正近似，无法限定「对所选敌人」。"
+          },
+          {
+            "source": "comment",
+            "line": 17,
+            "detail": "approximation （逐条披露，缺读点见 artifacts/migration/fhv/primitive-requests/10035.json）："
+          }
+        ]
+      },
+      "implementation": "c687b2fc07ad3385b4a3271fb5757a49974510a5c40b0fecf37eb3aa8e67536b",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-2.test.mjs",
+          "line": 321,
+          "test": "P6 10035 瓦卢西亚之瞳：谈判放置充能并给同地点调查员本轮 +1 技能值；快速交换到幽嘶之刃"
+        }
+      ]
+    },
+    {
+      "code": "10036",
+      "name": "幽嘶之刃",
+      "type": "asset",
+      "klass": "guardian",
+      "xp": null,
+      "level": null,
+      "basicWeakness": false,
+      "dependencyOnly": true,
+      "researched": false,
+      "buildable": false,
+      "deckLimit": 0,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: ① 花费 1-3 充能用 cost.uses:1 + 结算内追加花费近似（费用表达式不能先问再付）；② 缺「绑定卡就地交换」原语，交换以「瓦卢西亚之瞳从手牌入场 + 幽嘶之刃返回手牌」近似。"
+          },
+          {
+            "source": "comment",
+            "line": 14,
+            "detail": "approximation （缺读点见 artifacts/migration/fhv/primitive-requests/10036.json）："
+          }
+        ]
+      },
+      "implementation": "3447cddb3bc6bf1b77e6118b1891f79ca421a75aaabbd5608e181807804d06c6",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-2.test.mjs",
+          "line": 349,
+          "test": "P6 10036 幽嘶之刃：花费 1-3 充能攻击，每点 +2 技能值 / +1 伤害，可用意志代替战斗"
+        }
+      ]
+    },
+    {
+      "code": "10037",
+      "name": "旋风连击",
+      "type": "event",
+      "klass": "guardian",
+      "xp": 5,
+      "level": 5,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "7fd67dfef3361c83f030c2c2b142b7dc5d2ce1c167af5c2143628c1af0be43e3",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-2.test.mjs",
+          "line": 380,
+          "test": "P6 10037 旋风连击：Double 额外花费 1 行动，用近战支援连续攻击并结束回合"
+        }
+      ]
+    },
+    {
+      "code": "10038",
+      "name": "奇迹祝愿",
+      "type": "event",
+      "klass": "guardian",
+      "xp": 5,
+      "level": 5,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "74300c4de714c0ea141f754d09940c7dc5298ed3cc0e72f13efa67758e80007a",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-2.test.mjs",
+          "line": 414,
+          "test": "P6 10038 奇迹祝愿：祝福揭示后快速打出，转瞬为神入场并按揭示数放置祝愿"
+        }
+      ]
+    },
+    {
+      "code": "10039",
+      "name": "转瞬为神",
+      "type": "asset",
+      "klass": "guardian",
+      "xp": null,
+      "level": null,
+      "basicWeakness": false,
+      "dependencyOnly": true,
+      "researched": false,
+      "buildable": false,
+      "deckLimit": 0,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 「结算该调查员的 [elder_sign] 效果」缺少能力面读点，按 investigator.elderSign 的数值修正并入本次检定（旧印附带的文字效果不结算）；见 primitive-requests/10039.json。"
+          },
+          {
+            "source": "comment",
+            "line": 25,
+            "detail": "approximation （simplified）："
+          }
+        ]
+      },
+      "implementation": "c0159c89ccf6b7c36fbf2770eb6581d6930ca9a7fdbd847c0a7ff53332e6f2d3",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-3.test.mjs",
+          "line": 72,
+          "test": "P6 10039 转瞬为神：花费 1 祝愿并横置结算旧印数值，祝愿用尽后放在场外"
+        }
+      ]
+    },
+    {
+      "code": "10040",
+      "name": "化学品套装",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "285c5cfc0f577abb5cd27a83d8201408fc5a5709cfb77560496c2ee89a92f271",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-3.test.mjs",
+          "line": 101,
+          "test": "P6 10040 化学品套装：横置调查，成功差值 2 抽 1 张；失败差值 2 弃掉本卡"
+        }
+      ]
+    },
+    {
+      "code": "10041",
+      "name": "查尔斯·威斯特三世博士",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "ca3b08f042e6619d3f99dacd9d8e360a3994ba419995fa9b8841f57301952952",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-3.test.mjs",
+          "line": 127,
+          "test": "P6 10041 查尔斯·威斯特三世博士：额外手槽只放[[工具]]；成功调查差值 1/3 后横置造成 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "10042",
+      "name": "显微镜",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "be813601771f7ea7f4f7100b8e8a3e56d672b0fbb9bddb5003aac13c41a3f8f4",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-3.test.mjs",
+          "line": 159,
+          "test": "P6 10042 显微镜：敌人被击败后放证据；[action][action] 调查按证据 +智识，成功后花证据换额外线索"
+        }
+      ]
+    },
+    {
+      "code": "10043",
+      "name": "鼠面具",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 「揭示地点后补满贡品」缺描述子窗口读点（locationRevealed 只走旧式 triggerReaction），当前只在新地点入场（locationPlaced）时补满；+2 意志/智识按本次检定 +2 结算。见 primitive-requests/10043.json。"
+          },
+          {
+            "source": "comment",
+            "line": 20,
+            "detail": "approximation （simplified）："
+          }
+        ]
+      },
+      "implementation": "7bbd62ad8a73a1664749a63ddb1978ff8bf76b0fcc3814deb280d8fb294de852",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-3.test.mjs",
+          "line": 190,
+          "test": "P6 10043 鼠面具：[[面具]]上限 1；新地点入场补满 1 贡品；[fast] 花 1 贡品本次检定 +2"
+        }
+      ]
+    },
+    {
+      "code": "10044",
+      "name": "饥饿霉菌",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 1,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "ff8c22af7a7efa96e243387490ea32ae164d25a1895f747dcf17f43cccbb9947",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-3.test.mjs",
+          "line": 221,
+          "test": "P6 10044 饥饿霉菌：查找绑定卡加入手牌；3 个生长换成资源并记录「识别了新物种」"
+        }
+      ]
+    },
+    {
+      "code": "10045",
+      "name": "诡异疯长",
+      "type": "event",
+      "klass": "seeker",
+      "xp": null,
+      "level": null,
+      "basicWeakness": false,
+      "dependencyOnly": true,
+      "researched": false,
+      "buildable": false,
+      "deckLimit": 0,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "2a05de84f5366e72360577a96e555678a0a7112291444eebdf6168d922c51ff8",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-3.test.mjs",
+          "line": 245,
+          "test": "P6 10045 诡异疯长：成功后按差值在饥饿霉菌上放生长并放在场外，失败返回手牌"
+        }
+      ]
+    },
+    {
+      "code": "10046",
+      "name": "控制变量",
+      "type": "event",
+      "klass": "seeker",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "c4c30ffc998e9b2ae99a168908cab47093e5602131a205bd2494e1d374759041",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-3.test.mjs",
+          "line": 269,
+          "test": "P6 10046 控制变量：技能检定揭示[诅咒]标记后快速打出，发现 1 个线索"
+        }
+      ]
+    },
+    {
+      "code": "10047",
+      "name": "冲刺实验",
+      "type": "event",
+      "klass": "seeker",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "f0af9db2f588f4693d4d401b5e9df723058a4b2f135cf701452357a6484dac30",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-3.test.mjs",
+          "line": 303,
+          "test": "P6 10047 冲刺实验：额外花 1 行动，按隐藏值升序调查并在地点调查失败后停止"
+        }
+      ]
+    },
+    {
+      "code": "10048",
+      "name": "刨根问底",
+      "type": "event",
+      "klass": "seeker",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "6f69cc7cbe012dd69dc453fadffcd067e859fc6bab5f56fa74829cd85a1049b4",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-3.test.mjs",
+          "line": 330,
+          "test": "P6 10048 刨根问底：额外花 1 行动，同地点调查员共抽 5 张（由你分配）"
+        }
+      ]
+    },
+    {
+      "code": "10049",
+      "name": "“用书砸它！”",
+      "type": "event",
+      "klass": "seeker",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "b28b936f6e26d24fd0289d1adf64d86919fa64cb36f8af13eca810ac067ffc44",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-4.test.mjs",
+          "line": 107,
+          "test": "P6 10049 用书砸它：用[[书籍]]攻击得到 +X[战斗]（X=印刷费用），成功后结算书籍上的 [action] 能力"
+        },
+        {
+          "file": "fhv-player-m2-4.test.mjs",
+          "line": 125,
+          "test": "P6 10049 用书砸它：成功后也可以改为自动躲避被攻击的敌人"
+        },
+        {
+          "file": "fhv-player-m2-4.test.mjs",
+          "line": 142,
+          "test": "P6 10049 用书砸它：检定失败时既不躲避也不结算书籍能力"
+        }
+      ]
+    },
+    {
+      "code": "10050",
+      "name": "原型惊变",
+      "type": "event",
+      "klass": "seeker",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "field",
+          "flag"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 只实现「智力替代的躲避 + 成功后附属到非精英敌人」；所附属敌人的「庞大/不能移动」与「躲避本敌人后发现 1 线索（每轮一次）」缺引擎读点（primitive-requests/10050.json）。"
+          }
+        ]
+      },
+      "implementation": "418be41ea09d7f4b7f47be4b44596420678fbcd419cc6c9d17743c7fbffd2be9",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-4.test.mjs",
+          "line": 164,
+          "test": "P6 10050 原型惊变：可用[智力]代替[敏捷]躲避，成功后附属到非精英敌人并留在场上"
+        },
+        {
+          "file": "fhv-player-m2-4.test.mjs",
+          "line": 183,
+          "test": "P6 10050 原型惊变：检定失败时不附属，事件进入弃牌堆"
+        }
+      ]
+    },
+    {
+      "code": "10051",
+      "name": "资金充裕",
+      "type": "skill",
+      "klass": "seeker",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "bd1abf2a460b0c9d7e0de779532b640de515a7d31a06f13fe20dbdb4a6ba00ef",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-4.test.mjs",
+          "line": 203,
+          "test": "P6 10051 资金充裕：控制[[科学]]/[[工具]]支援时获得[wild]，3 个以上改为 2 个[wild]"
+        }
+      ]
+    },
+    {
+      "code": "10052",
+      "name": "加布里埃尔·卡里洛",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 1,
+      "level": 1,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "d4ca2e03d566151de4a951bca53383b9b668812d45b223f2b90ac1a13b4cf8e9",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-4.test.mjs",
+          "line": 219,
+          "test": "P6 10052 加布里埃尔·卡里洛：回合开始加入 1 个[curse]并抽 1 张，+1[智力]"
+        },
+        {
+          "file": "fhv-player-m2-4.test.mjs",
+          "line": 244,
+          "test": "P6 10052 加布里埃尔·卡里洛：混乱袋已满 10 个[curse]时不提供反应"
+        }
+      ]
+    },
+    {
+      "code": "10053",
+      "name": "手法稳当",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 1,
+      "level": 1,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "field"
+        ],
+        "count": 1,
+        "disclosures": [
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 「少 1 点」只在原本成功且超过难度 ≥1 点时提供（避免把将要成功的检定变成失败）；治疗判定用 endOfTest 效果标记，只对触发过本卡的检定生效。"
+          }
+        ]
+      },
+      "implementation": "839d9ff6e8967f04e6e6bdb06aa48a11d566d82232dcb1e99cef61eb9eb36174",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-4.test.mjs",
+          "line": 281,
+          "test": "P6 10053 手法稳当：检定将要成功时横置，成功点数多 1 点，正好差值 2 时治愈 1 点恐惧"
+        },
+        {
+          "file": "fhv-player-m2-4.test.mjs",
+          "line": 297,
+          "test": "P6 10053 手法稳当：也可以选择成功点数少 1 点（治愈不触发）"
+        }
+      ]
+    },
+    {
+      "code": "10054",
+      "name": "精准调配",
+      "type": "event",
+      "klass": "seeker",
+      "xp": 1,
+      "level": 1,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "field"
+        ],
+        "count": 1,
+        "disclosures": [
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 线索窗口齐备，但引擎只在旧式 cost.exhaust / api.exhaust 派发 assetExhausted；描述子 cost.exhaust（多数支援 [action] 的横置费用）尚不派发，已列 primitive-requests/10054.json。"
+          }
+        ]
+      },
+      "implementation": "a47ce44566263186a3e83995b34a32c7c4907d224edb315511e489e535c7dc60",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-4.test.mjs",
+          "line": 325,
+          "test": "P6 10054 精准调配：附属到[[工具]]支援，事件留在场上"
+        },
+        {
+          "file": "fhv-player-m2-4.test.mjs",
+          "line": 340,
+          "test": "P6 10054 精准调配：所附属支援横置后，横置自身并重整该支援"
+        }
+      ]
+    },
+    {
+      "code": "10055",
+      "name": "绝密手段",
+      "type": "skill",
+      "klass": "seeker",
+      "xp": 1,
+      "level": 1,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "2a64be8e3c600fcc179fa51639ce7c201f79ae3747f843d4503d2f25c345f8b9",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-4.test.mjs",
+          "line": 371,
+          "test": "P6 10055 绝密手段：检定结束后按成功差值在混乱袋加入[curse]"
+        },
+        {
+          "file": "fhv-player-m2-4.test.mjs",
+          "line": 385,
+          "test": "P6 10055 绝密手段：检定失败时按失败差值加入[curse]"
+        }
+      ]
+    },
+    {
+      "code": "10056",
+      "name": "棱相眼镜",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 2,
+      "level": 2,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "bc02853a4355d81199d72da355c1b044c95dffb3a0e33ca72aa22606e452fcf0",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-4.test.mjs",
+          "line": 402,
+          "test": "P6 10056 棱相眼镜：行动费用加入[curse]，调查 +2；揭示了[curse]时横置并额外发现 1 个线索"
+        },
+        {
+          "file": "fhv-player-m2-4.test.mjs",
+          "line": 421,
+          "test": "P6 10056 棱相眼镜：没有揭示[curse]时不提供额外线索"
+        }
+      ]
+    },
+    {
+      "code": "10057",
+      "name": "云山雾罩",
+      "type": "event",
+      "klass": "seeker",
+      "xp": 3,
+      "level": 3,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "field"
+        ],
+        "count": 1,
+        "disclosures": [
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 目标只按「所在地点敌人」过滤；玩家事件没有实体，故不读 cannot:parley / capability:parley 的实体规则。"
+          }
+        ]
+      },
+      "implementation": "d1916cc691bc78c75f5e25605618097ead9d504ced4b54868c2cc7171b1652e3",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-4.test.mjs",
+          "line": 441,
+          "test": "P6 10057 云山雾罩：智识(X=敌人躲避值)检定成功，发现 2 线索并自动躲避非精英敌人（下个补给阶段不重整）"
+        },
+        {
+          "file": "fhv-player-m2-4.test.mjs",
+          "line": 458,
+          "test": "P6 10057 云山雾罩：精英敌人仍发现线索，但不会被自动躲避"
+        }
+      ]
+    },
+    {
+      "code": "10058",
+      "name": "显微镜",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 4,
+      "level": 4,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "field"
+        ],
+        "count": 1,
+        "disclosures": [
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 证据用实例 uses/usesType 计数（引擎没有通用的「在任意卡上放资源」写入口，与 08086/09059 同一口径）；累计与花费行为一致。"
+          }
+        ]
+      },
+      "implementation": "1278679e9d804616dfb15df9c7fd2531de010fcaaeecdc5b44c76ebbde1e468e",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-4.test.mjs",
+          "line": 477,
+          "test": "P6 10058 显微镜：你所在地点的敌人被击败后放置 1 资源作为证据"
+        },
+        {
+          "file": "fhv-player-m2-4.test.mjs",
+          "line": 499,
+          "test": "P6 10058 显微镜：[action][action] 调查每证据 +2[智力]（最多 +6），成功后花证据额外发现线索"
+        },
+        {
+          "file": "fhv-player-m2-4.test.mjs",
+          "line": 516,
+          "test": "P6 10058 显微镜：不在你所在地点的敌人被躲避时不放置证据"
+        }
+      ]
+    },
+    {
+      "code": "10059",
+      "name": "饥饿霉菌",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 4,
+      "level": 4,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": true,
+      "buildable": false,
+      "deckLimit": 1,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: encounterDrawn 条件里的「隐藏值」用地点 shroud + shroudMod 计算；地点附属/章节钩子给的有效隐藏值需在条件阶段读 api.locationShroud（当前没有 helper），见 primitive-requests/10059.json。"
+          },
+          {
+            "source": "comment",
+            "line": 21,
+            "detail": "approximation （逐条披露，见 artifacts/migration/fhv/primitive-requests/10059.json）："
+          }
+        ]
+      },
+      "implementation": "bd381bc3d4ef1a955095dc6b9460f46353173e519ee5fb0d8caad694cb9dbf77",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-5.test.mjs",
+          "line": 86,
+          "test": "P6 10059 饥饿霉菌 检索绑定卡每轮一次；隐藏值不大于生长数时取消非弱点诡计并清空生长"
+        }
+      ]
+    },
+    {
+      "code": "10060",
+      "name": "饥饿霉菌",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 4,
+      "level": 4,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": true,
+      "buildable": false,
+      "deckLimit": 1,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "49bb9721d68c71556853703e1a21ab251a5023cdf264aa6ab3170cc061cc1857",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-5.test.mjs",
+          "line": 116,
+          "test": "P6 10060 饥饿霉菌 剩余生命值不超过生长数的非精英敌人被击败并清空生长"
+        }
+      ]
+    },
+    {
+      "code": "10061",
+      "name": "饥饿霉菌",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 4,
+      "level": 4,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": true,
+      "buildable": false,
+      "deckLimit": 1,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "2ea085024ee3bb5519aa7a4443035a934f50e0d7c29be9292525dfd1e989a039",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-5.test.mjs",
+          "line": 137,
+          "test": "P6 10061 饥饿霉菌 移除全部生长：治愈自身等量伤恐，或把同地点调查员的伤恐移上来"
+        }
+      ]
+    },
+    {
+      "code": "10062",
+      "name": "“咪咪”比安卡",
+      "type": "asset",
+      "klass": "rogue",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 1,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "f3b138970474f724a009723f5259a0737be77784a9397dc65bd14964c979398c",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-5.test.mjs",
+          "line": 167,
+          "test": "P6 10062 “咪咪”比安卡 借出 X 资源并检定[敏捷](X)；失败记欠款、生成敌人并移出游戏"
+        }
+      ]
+    },
+    {
+      "code": "10063",
+      "name": "“咪咪”比安卡",
+      "type": "enemy",
+      "klass": "neutral",
+      "xp": null,
+      "level": null,
+      "basicWeakness": false,
+      "dependencyOnly": true,
+      "researched": false,
+      "buildable": false,
+      "deckLimit": 0,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "field",
+          "flag"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 「强制 - 离场时洗入你的牌库」只覆盖被击败路径（enemyWeakness.shuffleIntoDeckOnDefeat）；removeEnemy/放逐等其它离场路径没有敌人离场窗口，见 primitive-requests/10063.json。"
+          }
+        ]
+      },
+      "implementation": "6eba64cb7e2202532971554a69319fa199fc5ad82c6b304426b6ec75443b8fcc",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-5.test.mjs",
+          "line": 203,
+          "test": "P6 10063 “咪咪”比安卡 欠款时花 X 资源谈判加入胜利区；无欠款不可谈判"
+        }
+      ]
+    },
+    {
+      "code": "10064",
+      "name": "敲诈文件",
+      "type": "asset",
+      "klass": "rogue",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "60a3084b6ec9d90187628c9ab76c87705b63a61ff77aedcca9c36a9633dae5b8",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-5.test.mjs",
+          "line": 235,
+          "test": "P6 10064 敲诈文件 谈判检定[意志](印刷生命值)；成功解除交战并获得冷漠直到本轮结束"
+        }
+      ]
+    },
+    {
+      "code": "10065",
+      "name": "不列颠斗牛犬左轮手枪",
+      "type": "asset",
+      "klass": "rogue",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: skillTestFail 窗口 context 不带 actionKind；「与敌人谈判时」只能读 state.skillTest.actionKind（由 api.test 显式传 parley 的检定），countsAs:parley 的 played 描述子发起的检定不触发，见 primitive-requests/10065.json。"
+          },
+          {
+            "source": "comment",
+            "line": 17,
+            "detail": "approximation （逐条披露，见 artifacts/migration/fhv/primitive-requests/10065.json）："
+          }
+        ]
+      },
+      "implementation": "860eda7f7345fabf12a0f3a6d1243d9ece8cb489edfbff9aaf27139be7569938",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-5.test.mjs",
+          "line": 259,
+          "test": "P6 10065 不列颠斗牛犬左轮手枪 花 1 子弹用[敏捷]攻击 +1 伤害；谈判失败后从手牌入场"
+        }
+      ]
+    },
+    {
+      "code": "10066",
+      "name": "假证",
+      "type": "asset",
+      "klass": "rogue",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "1277ca738e9e2a90b5fc939e93518fcf3f9b359babba34497af2278fafdf64a1",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-5.test.mjs",
+          "line": 299,
+          "test": "P6 10066 假证 谈判成功发现线索并放置疑点（难度随之 +1）；失败让所选敌人攻击"
+        }
+      ]
+    },
+    {
+      "code": "10067",
+      "name": "狐面具",
+      "type": "asset",
+      "klass": "rogue",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "1649d28b8c7139c1b4c983154ab6c51fd30f90aa0d5ee7d69a22b810ce80544a",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-5.test.mjs",
+          "line": 344,
+          "test": "P6 10067 狐面具 每位调查员限 1 张[[面具]]；花 1 贡品本次检定 +2；离开有敌人的地点补 1 贡品"
+        }
+      ]
+    },
+    {
+      "code": "10068",
+      "name": "贝壳护符",
+      "type": "asset",
+      "klass": "rogue",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "fd8e6cb82e8ed7ba6f52259801392435e288ee758c1e11f58970175825512486",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-5.test.mjs",
+          "line": 387,
+          "test": "P6 10068 贝壳护符 横置加入 1-3 个[诅咒]标记：获得 1 资源，每加入 1 个再获得 1 资源"
+        }
+      ]
+    },
+    {
+      "code": "10069",
+      "name": "银行劫案",
+      "type": "event",
+      "klass": "rogue",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "20b3212425a9c9e8bc67fbd48f86bff3a8dc50c9d374873019ff808584c5b822",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-6.test.mjs",
+          "line": 84,
+          "test": "P6 10069 银行劫案：额外花费 1 行动，同地点调查员共获得 8 资源且可自由分配"
+        }
+      ]
+    },
+    {
+      "code": "10070",
+      "name": "诈降",
+      "type": "event",
+      "klass": "rogue",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "field",
+          "flag"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 「用该武器攻击」走 api.fight(assetId, skill:agility, noSpend) —— 不激活武器自身的攻击能力，因此不花费其弹药/充能、也不复刻其能力内写死的伤害/技能修正；替代技能激活支援能力的入口见 primitive-requests/10070.json。"
+          }
+        ]
+      },
+      "implementation": "2dbbbbd5c13d9a11e41d01bc818af60a47c6dfc8d1489041b3398365fd97494a",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-6.test.mjs",
+          "line": 98,
+          "test": "P6 10070 诈降：谈判打出手牌[[武器]]（费用 -1），并以[敏捷]用该武器攻击所选敌人"
+        }
+      ]
+    },
+    {
+      "code": "10071",
+      "name": "诱骗",
+      "type": "event",
+      "klass": "rogue",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "c6566d10f9ae8378b5ed3542466b4396d1eae4d155d1527c67e56491c56bd5e1",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-6.test.mjs",
+          "line": 116,
+          "test": "P6 10071 诱骗：谈判[敏捷](0) 成功按超过点数获得资源（最多 6），失败则敌人攻击"
+        }
+      ]
+    },
+    {
+      "code": "10072",
+      "name": "“我肯定还！”",
+      "type": "event",
+      "klass": "rogue",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "field",
+          "flag"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 引擎没有「移动资源」原语，本期用 loseResources + gainResources 等价实现（失去资源的替代/防止会生效）；轮末返还通过 returnToHandAfterPlay + 手牌 forced(roundEnds) 结算，期间本卡留在手牌（playCondition 挡住重复打出）；目标座位记在 endOfRound effect 的 sourc"
+          }
+        ]
+      },
+      "implementation": "5e7a62182f2e36c54cbd1045f9c83890f9dd15401a94ea38488a8d37aaee88fc",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-6.test.mjs",
+          "line": 135,
+          "test": "P6 10072 “我肯定还！”：快速借走同地点调查员全部资源，轮末自动归还并弃卡"
+        }
+      ]
+    },
+    {
+      "code": "10073",
+      "name": "把水搅浑",
+      "type": "event",
+      "klass": "rogue",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "14a2bf301979fb5e99d1c3b38f2be1bba272b62ff8737d93313b5dd1b9fce042",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-6.test.mjs",
+          "line": 156,
+          "test": "P6 10073 把水搅浑：谈判[智力](X=伤害+恐惧)，成功后对同地点每个敌人造成 2 伤害并可解除交战移动"
+        }
+      ]
+    },
+    {
+      "code": "10074",
+      "name": "自由表演",
+      "type": "event",
+      "klass": "rogue",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "4f9f544f280c481a8a8665724a86a561d62c0c81c88d21174e56d9a749cfc73e",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-6.test.mjs",
+          "line": 180,
+          "test": "P6 10074 自由表演：谈判检定任意技能(3)，按所选技能结算（战斗 2 伤害 / 意志移除毁灭）"
+        }
+      ]
+    },
+    {
+      "code": "10075",
+      "name": "福倚祸伏",
+      "type": "skill",
+      "klass": "rogue",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "field",
+          "flag"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 揭示诅咒标记后才投入的卡没有 ST.3 图标读点；用 endOfTest 效果 + testWouldFail/wouldSucceedTest 的 context.testBonus 补「卡面获得的 3 个[万能]图标」价值（印刷的 1 个[万能]由 api.commitCards 计入）。autofail 标记不会触发本卡（不是诅咒），因此该缺口不影响本卡；见 p"
+          }
+        ]
+      },
+      "implementation": "8be9a7cd59decd52b79a883d6d7d5b0e6a1c88c295b7c5a05cf10c3272e89a8b",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-6.test.mjs",
+          "line": 200,
+          "test": "P6 10075 福倚祸伏：揭示[诅咒]标记时从手牌投入，并获得 3 个[万能]图标的价值"
+        }
+      ]
+    },
+    {
+      "code": "10076",
+      "name": "脚步轻盈",
+      "type": "skill",
+      "klass": "rogue",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "28bf1e40ee2af608c1412dc4fef48adece448f6ba780835b84b10a2c806f1273",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-6.test.mjs",
+          "line": 240,
+          "test": "P6 10076 脚步轻盈：躲避检定成功后自动躲避所在地点的另一个敌人"
+        }
+      ]
+    },
+    {
+      "code": "10077",
+      "name": "不列颠斗牛犬左轮手枪",
+      "type": "asset",
+      "klass": "rogue",
+      "xp": 2,
+      "level": 2,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "b01c4f2ed8152a1bd97330458aba375d06eba53a6ba193d824e6b7e79524f14e",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-6.test.mjs",
+          "line": 256,
+          "test": "P6 10077 不列颠斗牛犬左轮手枪：花 1 子弹以[敏捷]攻击（+2 技能值/+1 伤害）；谈判检定失败后从手牌入场"
+        }
+      ]
+    },
+    {
+      "code": "10078",
+      "name": "告密",
+      "type": "event",
+      "klass": "rogue",
+      "xp": 2,
+      "level": 2,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "3092f9065e11d6318255fad2d5e0aa91c6f7da88426f4fc11c69f3750ebe9b3f",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-6.test.mjs",
+          "line": 293,
+          "test": "P6 10078 告密：快速在谈判检定成功后打出，从所在地点与连接地点共发现 2 个线索"
+        }
+      ]
+    },
+    {
+      "code": "10079",
+      "name": "摄魂抓魄",
+      "type": "asset",
+      "klass": "rogue",
+      "xp": 3,
+      "level": 3,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 1,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "field",
+          "flag"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "simplified: 附属牌存 host.attachments（引擎无「正面朝下压在支援下」的独立区域，界面可见且会被当作能力来源）；第二模式用 topDeckCodes + moveCard 代替 searchTop（缺同名/卡号筛选参数），未开查找窗口、不走抽牌管线；见 primitive-requests/10079.json"
+          }
+        ]
+      },
+      "implementation": "d1cc2dfa8f2623201baad5ac5ffda83c734e4d46f94413ece8e3bbc8b50362ca",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-7.test.mjs",
+          "line": 94,
+          "test": "P6 10079 摄魂抓魄：开局自身查找并附属 3 张不同[[技巧]]卡牌，交战时抽回 1 张"
+        },
+        {
+          "file": "fhv-player-m2-7.test.mjs",
+          "line": 124,
+          "test": "P6 10079 摄魂抓魄：交战反应也可查找牌库顶 9 张的同名卡牌并抽取"
+        }
+      ]
+    },
+    {
+      "code": "10080",
+      "name": "脏活",
+      "type": "event",
+      "klass": "rogue",
+      "xp": 3,
+      "level": 3,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "6798aad9765daf057b4c7fc54787e3fb2ff4845579d79cb4bb240767eb171098",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-7.test.mjs",
+          "line": 150,
+          "test": "P6 10080 脏活：额外花费 1 行动检索[[违法]]支援付费打出，并忽略费用结算它的[action]"
+        }
+      ]
+    },
+    {
+      "code": "10081",
+      "name": "自由表演",
+      "type": "event",
+      "klass": "rogue",
+      "xp": 3,
+      "level": 3,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "05ea778515b4673831a150d1e0f92b5c7145cf6ac743f28f311b6ba377f6f95f",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-7.test.mjs",
+          "line": 180,
+          "test": "P6 10081 自由表演：依次检定所选技能，成功分别移除毁灭/发现线索/造成伤害/自动躲避并移动"
+        }
+      ]
+    },
+    {
+      "code": "10082",
+      "name": "假证",
+      "type": "asset",
+      "klass": "rogue",
+      "xp": 4,
+      "level": 4,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "field",
+          "flag"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "simplified: 「疑点」（印刷为卡上的资源）暂存在卡实例 uses 上——引擎的 counter.card 只白名单 bounty/evidence/hollow，且没有「在支援上放资源」的能力面 API；难度计算与放置/读取都走 api.addUses，见 primitive-requests/10082.json"
+          }
+        ]
+      },
+      "implementation": "4dace70380292e80579716a8e36fd48b2aa4b83f3c0e78f61da90c34ef7bbf24",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-7.test.mjs",
+          "line": 207,
+          "test": "P6 10082 假证：谈判检定难度 = 疑点数，成功发现线索，未超出 2 点则放置疑点"
+        },
+        {
+          "file": "fhv-player-m2-7.test.mjs",
+          "line": 222,
+          "test": "P6 10082 假证：检定失败时假证返回手牌"
+        }
+      ]
+    },
+    {
+      "code": "10083",
+      "name": "把水搅浑",
+      "type": "event",
+      "klass": "rogue",
+      "xp": 5,
+      "level": 5,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "339b352fbebaad621e0c83ffefcb3e110e2805c78083117bf45736e7702b6fcc",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-7.test.mjs",
+          "line": 236,
+          "test": "P6 10083 把水搅浑：X = 敌人伤害+恐惧，成功对同地点每个敌人造成 X 伤害并可解除交战移动"
+        }
+      ]
+    },
+    {
+      "code": "10084",
+      "name": "猫面具",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "91df88f1fea947d96de53b3386a66cbdb78267c37d5a3eaefc05568f7e78e65e",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-7.test.mjs",
+          "line": 260,
+          "test": "P6 10084 猫面具：每位调查员仅限 1 张[[面具]]；[fast] 花 1 贡品 +2；无毁灭卡放毁灭后补满贡品"
+        }
+      ]
+    },
+    {
+      "code": "10085",
+      "name": "卡纳玛戈斯之杖",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 1,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "simplified: [[腐烂]]的三条被动力挂在「杖」条目的 ROT_RULES 上（玩家卡附敌不是窗口来源；entry 不 import ability.js 以避开聚合循环）；「不能攻击」只覆盖杖控制者被攻击的窗口；「离场放一边」只结算被击败路径；绑定集合已存在时取副本会洗一次牌库。见 primitive-requests/10086.json / 10087.json / 10088.j"
+          },
+          {
+            "source": "comment",
+            "line": 26,
+            "detail": "primitive-request s/10086.json / 10087.json / 10088.json）："
+          }
+        ]
+      },
+      "implementation": "bc0c14ed43af8a988517727b370dfc7b7c986e1f66f2b01d7100e64f8471452a",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-7.test.mjs",
+          "line": 285,
+          "test": "P6 10085 卡纳玛戈斯之杖：横置选任意地点非精英敌人，揭示 5 枚标记；有[诅咒]则随机附属一张[[腐烂]]"
+        }
+      ]
+    },
+    {
+      "code": "10086",
+      "name": "深渊腐烂",
+      "type": "event",
+      "klass": "mystic",
+      "xp": null,
+      "level": null,
+      "basicWeakness": false,
+      "dependencyOnly": true,
+      "researched": false,
+      "buildable": false,
+      "deckLimit": 0,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "field",
+          "flag"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "simplified: 「所附属的敌人不能攻击」与「离场时放到一边」由 10085 的 ROT_RULES 代算（玩家卡附敌不是窗口来源，无实例级 cannot:attack 写入口）；「离场」只覆盖被击败路径，杖离场后被动力失效；本条的 zoneReplacement 是「放到一边」的引擎读点；见 primitive-requests/10086.json"
+          }
+        ]
+      },
+      "implementation": "83fbc50552f408dd04c9c970e836e370ba031cfded419e6a19be86832a6b46c9",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-7.test.mjs",
+          "line": 310,
+          "test": "P6 10086 深渊腐烂：经杖附属后，所附属的敌人不能攻击"
+        }
+      ]
+    },
+    {
+      "code": "10087",
+      "name": "琥珀腐烂",
+      "type": "event",
+      "klass": "mystic",
+      "xp": null,
+      "level": null,
+      "basicWeakness": false,
+      "dependencyOnly": true,
+      "researched": false,
+      "buildable": false,
+      "deckLimit": 0,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "field",
+          "flag"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "simplified: 「附敌被击败获得资源（印刷生命值，≤5）」与「离场时放到一边」由 10085 的 ROT_RULES 代算（玩家卡附敌不是窗口来源）；数值取 min(5, enemy.health)，「离场」只覆盖被击败路径；本条的 zoneReplacement 是「放到一边」的引擎读点；见 primitive-requests/10087.json"
+          }
+        ]
+      },
+      "implementation": "2f5504b7e55ee4aa992b507729c02f81d6f7f2ea0b4ab71c9f0f2c8bf3397acf",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-7.test.mjs",
+          "line": 328,
+          "test": "P6 10087 琥珀腐烂：附属敌人被击败时按印刷生命值获得资源（最多 5），并放到一边"
+        }
+      ]
+    },
+    {
+      "code": "10088",
+      "name": "流脓腐烂",
+      "type": "event",
+      "klass": "mystic",
+      "xp": null,
+      "level": null,
+      "basicWeakness": false,
+      "dependencyOnly": true,
+      "researched": false,
+      "buildable": false,
+      "deckLimit": 0,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "field",
+          "flag"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "simplified: 「-1 攻击/-1 躲避」由 10085 在附属时按 ROT_RULES 写 api.addEnemyStatModifier（持久修正，不随附属移除撤销）；「离场时放到一边」只在被击败路径结算；本条的 zoneReplacement 是「放到一边」的引擎读点；见 primitive-requests/10088.json"
+          }
+        ]
+      },
+      "implementation": "94eb1c76e1c82e5a360f176e23d699456e63f59935a8c3491392cf8e4e58750c",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-7.test.mjs",
+          "line": 348,
+          "test": "P6 10088 流脓腐烂：附属敌人得到 -1 攻击值和 -1 躲避值"
+        }
+      ]
+    },
+    {
+      "code": "10089",
+      "name": "猩红腐烂",
+      "type": "event",
+      "klass": "mystic",
+      "xp": null,
+      "level": null,
+      "basicWeakness": false,
+      "dependencyOnly": true,
+      "researched": false,
+      "buildable": false,
+      "deckLimit": 0,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 5,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "simplified: 「轮末 1 点伤害」由持杖者（10098/10085）读本条的 treacheryRule.rotRule.roundEndDamage 结算（玩家卡附敌不是窗口来源）；本轮分片只接到 10098，等级 0 的 10085（M2-7 分片）需要主进程补同一分支；「离场放在一边」走 zoneReplacement.discard=bonded，只覆盖被击败路径；杖离场后轮末伤"
+          },
+          {
+            "source": "comment",
+            "line": 22,
+            "detail": "近似 披露（simplified）：「轮末伤害」挂在持杖者上而不是本条目自己的 forced 描述子（见"
+          },
+          {
+            "source": "comment",
+            "line": 23,
+            "detail": "primitive-request s/10089.json）；「放在一边」只覆盖\"被击败\"这一条离场路径（其它离场没有玩家卡窗口）；"
+          }
+        ]
+      },
+      "implementation": "216addc0ede225111affa18d2afb18b0170ace68ed922908e02b34c855bc56fd",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-8.test.mjs",
+          "line": 146,
+          "test": "P6 10089 猩红腐烂：被法杖附属后，每轮结束对所附属敌人造成 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "10090",
+      "name": "霉绿腐烂",
+      "type": "event",
+      "klass": "mystic",
+      "xp": null,
+      "level": null,
+      "basicWeakness": false,
+      "dependencyOnly": true,
+      "researched": false,
+      "buildable": false,
+      "deckLimit": 0,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "simplified: 「所附属敌人不能移动」未接线——引擎的移动拦截只有 enemy.immobile，且 enemy.attachments 不是实体规则/修正来源（entityModifierRows 不扫敌人附属）；缺通用原语「敌人附属卡规则读点」（primitive-requests/10090.json）。「离场放在一边」走 zoneReplacement.discard=bonded"
+          },
+          {
+            "source": "comment",
+            "line": 27,
+            "detail": "近似 披露（simplified）：「所附属敌人不能移动」尚未接线（缺敌人附属的实体规则读点）；"
+          }
+        ]
+      },
+      "implementation": "caa6ab8126ab49f123f0db1404367aa511440f4032851aa2d287afa26acf1ed7",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-8.test.mjs",
+          "line": 168,
+          "test": "P6 10090 霉绿腐烂：被法杖附属到敌人；被击败时放到一边（场外绑定集合）"
+        }
+      ]
+    },
+    {
+      "code": "10091",
+      "name": "通灵术",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "3704b15313cfa3f1a7fdb9afdbd58988c385c4edc9e3497b890ed19aec79b366",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-8.test.mjs",
+          "line": 206,
+          "test": "P6 10091 通灵术：花费任意数量贡品，揭示等量标记；有骷髅则把弃牌堆的[[法术]]事件返回手牌"
+        },
+        {
+          "file": "fhv-player-m2-8.test.mjs",
+          "line": 226,
+          "test": "P6 10091 通灵术：没有揭示骷髅/诅咒时事件留在弃牌堆（负面路径）"
+        }
+      ]
+    },
+    {
+      "code": "10092",
+      "name": "邪恶祭祀刀",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "simplified: 「击败敌人」用剩余生命 ≤ 本次攻击伤害（1+damageBonus）预估，不含后续窗口追加伤害；补满固定 +1，不校验支援印刷上限（条目层无最大 uses 读点，见 primitive-requests/10092.json）。"
+          },
+          {
+            "source": "comment",
+            "line": 18,
+            "detail": "近似 披露（simplified）："
+          }
+        ]
+      },
+      "implementation": "2b7530fedc6c6b1cf34a58298dd142f82041f9d178702e2b914a3940fe222854",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-8.test.mjs",
+          "line": 244,
+          "test": "P6 10092 邪恶祭祀刀：加入 1-3 个诅咒（每个 +2 战斗），击败敌人后补满 1 充能"
+        },
+        {
+          "file": "fhv-player-m2-8.test.mjs",
+          "line": 263,
+          "test": "P6 10092 邪恶祭祀刀：未击败敌人时不补满（负面路径）"
+        }
+      ]
+    },
+    {
+      "code": "10093",
+      "name": "洪荒赞歌",
+      "type": "event",
+      "klass": "mystic",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "simplified: 「其余卡牌以任意顺序放回牌库顶」按原顺序放回（未提供任意排序选择）；其余（额外行动费、逐张加诅咒换放底、牌库顶/底搬运）都走既有原语。"
+          },
+          {
+            "source": "comment",
+            "line": 19,
+            "detail": "近似 披露（simplified）：「将其余卡牌以任意顺序放回遭遇牌库顶」按原顺序放回（不提供任意排序界面）；"
+          }
+        ]
+      },
+      "implementation": "59822115180589e10ca884fca1c0c44595b975fd3eae4200fc6ca87c89e2e94c",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-8.test.mjs",
+          "line": 285,
+          "test": "P6 10093 洪荒赞歌：额外花 1 行动；揭示遭遇牌库顶 5 张，加诅咒放牌库底，其余放回牌库顶"
+        },
+        {
+          "file": "fhv-player-m2-8.test.mjs",
+          "line": 307,
+          "test": "P6 10093 洪荒赞歌：全部放回牌库顶时牌库顺序不变（负面路径）"
+        }
+      ]
+    },
+    {
+      "code": "10094",
+      "name": "精华汲取",
+      "type": "event",
+      "klass": "mystic",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "simplified: 「移动伤害到敌人」用 api.scenario.healDamage（原始扣减）+ api.damageEnemy 两步合成，不是原子转移（敌人免疫/来源限制会让第二步无效而第一步已扣）；缺的原语见 primitive-requests/10094.json。"
+          },
+          {
+            "source": "comment",
+            "line": 20,
+            "detail": "近似 披露（simplified）：「移动 1/最多 2 点伤害」由「扣调查员伤害 + 对敌人造成伤害」两步合成"
+          }
+        ]
+      },
+      "implementation": "05802a72cbbe5c1ffb4178ea5fb4054f115d2f59a3fda0fdbe53eed3ea44df8c",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-8.test.mjs",
+          "line": 320,
+          "test": "P6 10094 精华汲取：谈判检定意志(X=敌人攻击值)，成功把 2 点伤害（非精英）移到敌人"
+        },
+        {
+          "file": "fhv-player-m2-8.test.mjs",
+          "line": 339,
+          "test": "P6 10094 精华汲取：精英敌人最多移动 1 点伤害（负面路径）"
+        }
+      ]
+    },
+    {
+      "code": "10095",
+      "name": "身受诅咒",
+      "type": "skill",
+      "klass": "mystic",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "a57b23c18710c311806ada7e56b835829b3aaa6ef450dcb78eec7d95cd5cbb68",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-8.test.mjs",
+          "line": 355,
+          "test": "P6 10095 身受诅咒：投入后本次检定的诅咒标记修正视为 0（-2 → 0）"
+        },
+        {
+          "file": "fhv-player-m2-8.test.mjs",
+          "line": 380,
+          "test": "P6 10095 身受诅咒：投入时可加入至多 3 个诅咒标记"
+        }
+      ]
+    },
+    {
+      "code": "10096",
+      "name": "催眠作用",
+      "type": "skill",
+      "klass": "mystic",
+      "xp": 1,
+      "level": 1,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "simplified: 投入检定提供意志+万能图标已接线（commit 描述子）；「本次检定期间可忽略所有关键词与地点效果」无读点（location-effect-scope 只服务 investigate 的 mayIgnoreLocationEffects，ignore:* 是常驻修正），见 primitive-requests/10096.json。"
+          },
+          {
+            "source": "comment",
+            "line": 21,
+            "detail": "近似 披露（simplified）：本卡当前只有「投入技能检定提供意志/万能图标」这一条真实行为；"
+          }
+        ]
+      },
+      "implementation": "f597c1132c4e4aba2137a693a4b4f3c9b6d5bd7ec5b9d8f6d4b89acd771d40d3",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-8.test.mjs",
+          "line": 400,
+          "test": "P6 10096 催眠作用：投入技能检定提供意志+万能图标；「忽略效果」缺读点已披露"
+        }
+      ]
+    },
+    {
+      "code": "10097",
+      "name": "奥利芙·麦克布莱德",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": 2,
+      "level": 2,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "8f7e46ef529d5467e051991694ba63afcd2dfcf552cce0b198b31ec15aaf2405",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-8.test.mjs",
+          "line": 422,
+          "test": "P6 10097 奥利芙·麦克布莱德：横置后改为揭示 4 个标记并选择 2 个结算，其余归还"
+        }
+      ]
+    },
+    {
+      "code": "10098",
+      "name": "卡纳玛戈斯之杖",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": 2,
+      "level": 2,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "simplified: [[腐烂]]的被动/强制效果挂在「杖」条目上（玩家卡附敌不是窗口来源，见 primitive-requests/10089.json / 10090.json / 10098.json）；杖离场后这些效果失效；「离场放到一边」只覆盖被击败路径；从场外绑定集合取副本会洗一次牌库。"
+          },
+          {
+            "source": "comment",
+            "line": 33,
+            "detail": "近似 披露（simplified）：[[腐烂]]的三个被动力与 10089 的轮末伤害挂在「杖」上而不是腐烂卡上"
+          }
+        ]
+      },
+      "implementation": "e65811537dc69e28073929b1b0834e39a3697053fa23c7ec35c13551846771b7",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-8.test.mjs",
+          "line": 111,
+          "test": "P6 10098 卡纳玛戈斯之杖：每揭示 1 个诅咒就查找并附魔一张[[腐烂]]事件；无诅咒不附属"
+        }
+      ]
+    },
+    {
+      "code": "10099",
+      "name": "呼唤彼端",
+      "type": "event",
+      "klass": "mystic",
+      "xp": 2,
+      "level": 2,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: ①「补满所有充能/秘密」只认条目级印刷上限（registeredEntry(code).uses），未迁移的支援读不到上限时只提示不补满；②打出条件只要求「控制带使用（充能/秘密）的支援」，没有再加「未满 或 有可结算能力」的附加判定（此时结算不会发生任何事）。见 primitive-requests/10099.json。"
+          },
+          {
+            "source": "comment",
+            "line": 23,
+            "detail": "近似 披露（simplified）："
+          }
+        ]
+      },
+      "implementation": "ea573ec2caf447485f981766e63f297b0ee3ec23615c8769946f474401e7f500",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-9.test.mjs",
+          "line": 113,
+          "test": "P6 10099 呼唤彼端：额外加入 3 个诅咒，补满所选充能支援并可免行动费结算其能力"
+        }
+      ]
+    },
+    {
+      "code": "10100",
+      "name": "缥缈灵体",
+      "type": "event",
+      "klass": "mystic",
+      "xp": 2,
+      "level": 2,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 「当你回合结束时返回手牌」没有事件卡延迟去向读点（09074 同一缺口），按「结算后立即返回手牌」近似；见 primitive-requests/10100.json。"
+          },
+          {
+            "source": "comment",
+            "line": 24,
+            "detail": "近似 披露（simplified）：「当你回合结束时返回手牌」——引擎没有「事件卡延迟去向」读点"
+          }
+        ]
+      },
+      "implementation": "fcc101cf4008995496726d4bdb82a21ed8d47e44f372b9513afae66a92bcb370",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-9.test.mjs",
+          "line": 143,
+          "test": "P6 10100 缥缈灵体：意志躲避成功后解除交战并化为无形；揭示符号则返回手牌"
+        }
+      ]
+    },
+    {
+      "code": "10101",
+      "name": "解读秘符",
+      "type": "event",
+      "klass": "mystic",
+      "xp": 2,
+      "level": 2,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 「当你回合结束时返回手牌」没有事件卡延迟去向读点（09074 同一缺口），按「结算后立即返回手牌」近似；见 primitive-requests/10101.json。"
+          },
+          {
+            "source": "comment",
+            "line": 21,
+            "detail": "近似 披露（simplified）：「当你回合结束时返回手牌」没有事件卡延迟去向读点（09074 同一缺口），"
+          }
+        ]
+      },
+      "implementation": "b2f765ea93605de026eabef76baf8e22e668c068f279d47bf53e7a4f5402bba3",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-9.test.mjs",
+          "line": 189,
+          "test": "P6 10101 解读秘符：意志加入调查、成功额外 1 线索；揭示符号则返回手牌"
+        }
+      ]
+    },
+    {
+      "code": "10102",
+      "name": "幽灵利刃",
+      "type": "event",
+      "klass": "mystic",
+      "xp": 2,
+      "level": 2,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 「当你回合结束时返回手牌」没有事件卡延迟去向读点（09074 同一缺口），按「结算后立即返回手牌」近似；见 primitive-requests/10102.json。"
+          },
+          {
+            "source": "comment",
+            "line": 20,
+            "detail": "近似 披露（simplified）：「当你回合结束时返回手牌」没有事件卡延迟去向读点（09074 同一缺口），"
+          }
+        ]
+      },
+      "implementation": "10a1a5cde304076b22ad2469136389c570092b256bd5cd2fd6eb659cb7a9122f",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-9.test.mjs",
+          "line": 227,
+          "test": "P6 10102 幽灵利刃：意志加入攻击，非精英 +2 伤害 / 精英 +1；揭示符号返回手牌"
+        }
+      ]
+    },
+    {
+      "code": "10103",
+      "name": "超凡织造",
+      "type": "event",
+      "klass": "mystic",
+      "xp": 3,
+      "level": 3,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 「结算这些事件时技能值 +2」用「下一次技能检定 +N」（inv.testBonus）近似，没有只作用于所结算事件的作用域读点；事件不发起检定时 +2 会留到下一次检定。见 primitive-requests/10103.json。"
+          },
+          {
+            "source": "comment",
+            "line": 19,
+            "detail": "近似 披露（simplified）："
+          }
+        ]
+      },
+      "implementation": "3ebae4b66e2bc8e6c979ee2bdd825142954aff84eaf01a46d5e68402c4fb5620",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-9.test.mjs",
+          "line": 272,
+          "test": "P6 10103 超凡织造：Double 额外花 1 行动；依次打出两张[[法术]]事件（各减 1 费、结算时 +2）"
+        }
+      ]
+    },
+    {
+      "code": "10104",
+      "name": "所罗门之钥",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": 4,
+      "level": 4,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "dcde64e087c75ce123ae7843a3b8ddc04afe7ee367fdec29f8337194e5f72d2e",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-9.test.mjs",
+          "line": 311,
+          "test": "P6 10104 所罗门之钥：祝福多于诅咒时移除祝福治愈 2 点；诅咒多于祝福时移除诅咒获得 2 资源"
+        }
+      ]
+    },
+    {
+      "code": "10105",
+      "name": "上古封印",
+      "type": "event",
+      "klass": "mystic",
+      "xp": 5,
+      "level": 5,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 「查找绑定卡牌并放置入场」只能经 api.bonded.shuffleCopyIntoDeck + api.takeDeckCard + api.scenario.giveAsset（会洗一次牌库）近似，卡面不洗牌；见 primitive-requests/10105.json。"
+          },
+          {
+            "source": "comment",
+            "line": 24,
+            "detail": "近似 披露（simplified）：「查找绑定卡牌」的既有原语只能经由牌库搬运（shuffleCopyIntoDeck 会洗一次牌库，"
+          }
+        ]
+      },
+      "implementation": "7320e137788fd8d1ce755d49ba2ad59645b3748dd2cf317fbbbd3c55287f2398",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-9.test.mjs",
+          "line": 359,
+          "test": "P6 10105 上古封印：检定结束揭示 2 诅咒/2 祝福后，把对应绑定召唤物放置入场并移出游戏"
+        }
+      ]
+    },
+    {
+      "code": "10106",
+      "name": "钥匙看管者",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": null,
+      "level": null,
+      "basicWeakness": false,
+      "dependencyOnly": true,
+      "researched": false,
+      "buildable": false,
+      "deckLimit": 0,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 5,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 「放在一边，位于场外」经 zoneReplacement.discard=bonded + leavesPlay 收回绑定集合；引擎在支援被击败/弃置时还会另外 push 一次弃牌堆，弃牌堆里会多留一张同号副本（不影响再检索）。见 primitive-requests/10106.json。"
+          },
+          {
+            "source": "comment",
+            "line": 27,
+            "detail": "近似 披露（simplified）：支援被击败/被弃置时引擎在 leavesPlay 钩子之后还会直接 push 一次弃牌堆，"
+          },
+          {
+            "source": "comment",
+            "line": 29,
+            "detail": "primitive-request s/10106.json。"
+          }
+        ]
+      },
+      "implementation": "122a359241b9040472088ac86bef118ef62631cd96c716b6bb1e5869325f8886",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-9.test.mjs",
+          "line": 397,
+          "test": "P6 10106 钥匙看管者：祝福揭示时受 1 恐惧并发现 1 线索；离场时收回场外绑定集合"
+        }
+      ]
+    },
+    {
+      "code": "10107",
+      "name": "黄铜仆从",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": null,
+      "level": null,
+      "basicWeakness": false,
+      "dependencyOnly": true,
+      "researched": false,
+      "buildable": false,
+      "deckLimit": 0,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 5,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 「放在一边，位于场外」经 zoneReplacement.discard=bonded + leavesPlay 收回绑定集合；引擎在支援被击败/弃置时还会另外 push 一次弃牌堆，弃牌堆里会多留一张同号副本（不影响再检索）。见 primitive-requests/10107.json。"
+          },
+          {
+            "source": "comment",
+            "line": 25,
+            "detail": "近似 披露（simplified）：支援被击败/被弃置时引擎在 leavesPlay 钩子之后还会直接 push 一次弃牌堆，"
+          },
+          {
+            "source": "comment",
+            "line": 27,
+            "detail": "primitive-request s/10107.json。"
+          }
+        ]
+      },
+      "implementation": "aaebb30e107722abac7daf1a22c346b5d3910f708e510b783cea57d1d29e4e0a",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-9.test.mjs",
+          "line": 441,
+          "test": "P6 10107 黄铜仆从：诅咒揭示时受 1 伤害并对你地点/连接地点的敌人造成 2 伤害"
+        }
+      ]
+    },
+    {
+      "code": "10108",
+      "name": "火柴盒",
+      "type": "asset",
+      "klass": "survivor",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "4eb151cd276e4bd9b9b8542fd0e87d3320ffcf010bc9abf2fc7a3303c15e6150",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-9.test.mjs",
+          "line": 472,
+          "test": "P6 10108 火柴盒：使用（3 补给）；快速横置花 1 补给使你地点本回合隐蔽值 -1，用尽弃掉"
+        }
+      ]
+    },
+    {
+      "code": "10109",
+      "name": "毛皮货",
+      "type": "asset",
+      "klass": "survivor",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "field",
+          "flag"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation / blocked read point: (1) 手牌上限 -3 已按声明式修正 target:handSize + condition.sourceInHand 写入修正管线，但 stats.js#handSize 尚未读取 modifierTotal(...,'handSize')，实际手牌上限暂不变化；(2) 「游戏结束/撤退时仍在手牌 → 下一张新购卡经验 -"
+          }
+        ]
+      },
+      "implementation": "e76be91acb6052a4b7f692eb124a55fe7ddc0e10914c66279059a0ad8a048ee5",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-10.test.mjs",
+          "line": 52,
+          "test": "P6 10109 毛皮货 在手牌中时手牌上限修正 -3，离开手牌即失效（缺 stats.handSize 读点已在 note/请求登记）"
+        }
+      ]
+    },
+    {
+      "code": "10110",
+      "name": "草叉",
+      "type": "asset",
+      "klass": "survivor",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "field",
+          "flag"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 成功后的「附属到你所在地点」用 attachSelfToLocation 实现（ownerSeat:null 让任意调查员都能取回）；「控制草叉」由引擎的 detachLocationAttachment 行动结算（1 行动、新建实例），日志文案是「解除……并放回游戏区域」。地点离场时该玩家附属不会走 discardHostedAssets（会随地点消失）。见 pri"
+          }
+        ]
+      },
+      "implementation": "2e0415501d6a10cce1ad9d5f09b717bd9eeafb5251f4a6c86a6b06d0a892263c",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-10.test.mjs",
+          "line": 70,
+          "test": "P6 10110 草叉 攻击 +1[战斗]/+2 伤害；成功后附属到所在地点，任意调查员可花 1 行动控制"
+        }
+      ]
+    },
+    {
+      "code": "10111",
+      "name": "雀面具",
+      "type": "asset",
+      "klass": "survivor",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "97ad8d3b5a50ac6c2d97f2566b33e1a26296de63eacd8893d17bc62691f562ef",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-10.test.mjs",
+          "line": 113,
+          "test": "P6 10111 雀面具 每人限 1 张[[面具]]；受伤后补 1 贡品"
+        },
+        {
+          "file": "fhv-player-m2-10.test.mjs",
+          "line": 130,
+          "test": "P6 10111 雀面具 [fast] 花 1 贡品：本次[敏捷]检定 +2，每次检定仅限一次"
+        }
+      ]
+    },
+    {
+      "code": "10112",
+      "name": "围魏救赵",
+      "type": "event",
+      "klass": "survivor",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "8ba9b41dcfbcabc140b4460788b4ae005caae8d517f46951e89a971dd3b866c7",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-10.test.mjs",
+          "line": 159,
+          "test": "P6 10112 围魏救赵 Double 额外花费 1 行动；所在地点非精英自动躲避、连接地点精英改为 1 伤害"
+        }
+      ]
+    },
+    {
+      "code": "10113",
+      "name": "破釜沉舟",
+      "type": "event",
+      "klass": "survivor",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "3d431399981eb6d18b3374527ff4ad75d5b4ff3250a2f3175832a554e7b5c30d",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-10.test.mjs",
+          "line": 199,
+          "test": "P6 10113 破釜沉舟 忽略所有费用（含[action]与弹药）结算弃牌堆武器的[action]能力，然后洗回牌库"
+        }
+      ]
+    },
+    {
+      "code": "10114",
+      "name": "缓兵之计",
+      "type": "event",
+      "klass": "survivor",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "383d4391201e4915ea4cfddbcb735a857286c8ec8348925c76f0c9cf48d4e461",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-10.test.mjs",
+          "line": 228,
+          "test": "P6 10114 缓兵之计 谈判检定[意志]（较低的战斗/躲避）；成功横置且非精英下次补给不重整，失败返回手牌"
+        }
+      ]
+    },
+    {
+      "code": "10115",
+      "name": "阴差阳错",
+      "type": "event",
+      "klass": "survivor",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "e7b2e172721f507e3a8ba493042791bc8f4ea52eaf7f7f164782e3124efe16bb",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-10.test.mjs",
+          "line": 273,
+          "test": "P6 10115 阴差阳错 Double 额外 1 行动；移动最多 5 点伤害/恐惧，每击败一个支援抽 1 张，然后移出游戏"
+        }
+      ]
+    },
+    {
+      "code": "10116",
+      "name": "出奇制胜",
+      "type": "skill",
+      "klass": "survivor",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "4b62c983222cbc1c8221d87c5f1f42a95dd93f302bd83931a4fcd7aa7cce47eb",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-10.test.mjs",
+          "line": 315,
+          "test": "P6 10116 出奇制胜 只能投入对所在地点/连接地点敌人的攻击或躲避检定；成功后对该敌人造成 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "10117",
+      "name": "飞斧",
+      "type": "asset",
+      "klass": "survivor",
+      "xp": 1,
+      "level": 1,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "field",
+          "flag"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 「附属敌人被击败时控制飞斧」缺读点——玩家卡不是非玩家能力来源（enemy.attachments 不参与窗口枚举），敌人离场时引擎把 hosted 玩家附属弃到控制者弃牌堆（hosted-assets.js#discardHostedAssets），而不是让任意调查员取回。攻击加敏捷、+1 伤害、击败即弃、否则附属到敌人均已按印刷实现。见 primitive-req"
+          }
+        ]
+      },
+      "implementation": "6c9e1ecceb3eb24e39572a66806a810b7eb41d566e78d098d15c38fc43688c1c",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-10.test.mjs",
+          "line": 349,
+          "test": "P6 10117 飞斧 把[敏捷]加入技能值、伤害 +1；未击败则附属到敌人，击败则弃掉飞斧"
+        }
+      ]
+    },
+    {
+      "code": "10118",
+      "name": "百折不挠",
+      "type": "skill",
+      "klass": "survivor",
+      "xp": 1,
+      "level": 1,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "field",
+          "flag"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "blocked read point: 引擎没有「弃牌堆技能牌可投入」的候选通道（play-channels 的 commit 通道只有 beneath/playCommit/attachedCommit/deckTopCommit；tests.js#commitCandidates 只扫手牌 + 这些通道），也没有投入后「洗回牌库」的档案字段，因此「从弃牌堆投入 + 检定后洗回牌库」两半都未实现"
+          }
+        ]
+      },
+      "implementation": "e85aa0a47dd41f85a9d5d9aaf3abfe55b84e32cee462fbb697e7767d239ba0ef",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-10.test.mjs",
+          "line": 387,
+          "test": "P6 10118 百折不挠 手牌投入按[wild]图标正常结算；弃牌堆投入缺引擎读点（note/请求已登记）"
+        }
+      ]
+    },
+    {
+      "code": "10119",
+      "name": "“恶魔”",
+      "type": "asset",
+      "klass": "survivor",
+      "xp": 2,
+      "level": 2,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "field"
+        ],
+        "count": 1,
+        "disclosures": [
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "回合开始把伤害移动到自己身上时，assetDefeated 窗口在能力窗口内被引擎的嵌套保护吞掉，所以该路径在移动后按同一条规则补一次死亡反噬；普通伤害分配路径仍由 assetDefeated 强制能力结算。"
+          }
+        ]
+      },
+      "implementation": "4264617688aa7c168d3b1d9e40744b04764dbffb159416cb23c7037ee253e3f1",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-11.test.mjs",
+          "line": 59,
+          "test": "P6 10119 “恶魔” 回合开始移动 1 点伤害；被击败时对地点每个敌人与调查员各造成 2 点伤害"
+        },
+        {
+          "file": "fhv-player-m2-11.test.mjs",
+          "line": 75,
+          "test": "P6 10119 “恶魔” 被普通伤害分配击败时，assetDefeated 窗口同样结算死亡反噬"
+        }
+      ]
+    },
+    {
+      "code": "10120",
+      "name": "消防斧",
+      "type": "asset",
+      "klass": "survivor",
+      "xp": 2,
+      "level": 2,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "e40050ec0176bcbeaead50a508bbb6587b9847ad0fc6b593c9dbb83537e6642d",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-11.test.mjs",
+          "line": 93,
+          "test": "P6 10120 消防斧 资源池为空时攻击 +1 伤害；[fast] 花资源 +2[combat]（每次攻击限三次）"
+        }
+      ]
+    },
+    {
+      "code": "10121",
+      "name": "猎装",
+      "type": "asset",
+      "klass": "survivor",
+      "xp": 2,
+      "level": 2,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "26eb9f436a14066b2265592a7506895f1e18f2a8bca3a87a604d34fe4f6ff939",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-11.test.mjs",
+          "line": 150,
+          "test": "P6 10121 猎装 [fast] 横置附属手牌（最多 3 张，每张 +1 资源）；被击败时抽回全部附属"
+        }
+      ]
+    },
+    {
+      "code": "10122",
+      "name": "水手的罗盘",
+      "type": "asset",
+      "klass": "survivor",
+      "xp": 2,
+      "level": 2,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "df37fa45fac89879e3bc7178ce89edf19f1852f46eaf8a822f8f2823ad57e8c4",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-11.test.mjs",
+          "line": 187,
+          "test": "P6 10122 水手的罗盘 无资源调查成功额外发现 1 线索；失败重整；[fast] 花资源 +1[intellect]"
+        }
+      ]
+    },
+    {
+      "code": "10123",
+      "name": "求生技术",
+      "type": "asset",
+      "klass": "survivor",
+      "xp": 2,
+      "level": 2,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "field",
+          "flag"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "simplified: 模式 1（选择附属在你地点且归你所有的卡牌并加入手牌）缺「地点附属 → 手牌」原语（playerLocationAttachments 无取回写入口），暂未实现；模式 2（地点/地点附属诡计检定 +2 技能值）完整实现。原语请求见 primitive-requests/10123.json"
+          }
+        ]
+      },
+      "implementation": "85de830a38f5becaa044d07168cb8cb521a16b169d973ac457318188ec5a769d",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-11.test.mjs",
+          "line": 235,
+          "test": "P6 10123 求生技术 地点上的检定 +2 技能值；敌人检定不提供（模式 1 为简化项）"
+        }
+      ]
+    },
+    {
+      "code": "10124",
+      "name": "坚守信念",
+      "type": "event",
+      "klass": "survivor",
+      "xp": 2,
+      "level": 2,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "9ccf110d8edc1c16c0f405a33e49af15949b49b3d1e46f3962e026781ef0e6a3",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-11.test.mjs",
+          "line": 270,
+          "test": "P6 10124 坚守信念 快速（不花行动）加入 4 个祝福标记，受实体标记池上限限制"
+        }
+      ]
+    },
+    {
+      "code": "10125",
+      "name": "天命护佑",
+      "type": "skill",
+      "klass": "survivor",
+      "xp": 2,
+      "level": 2,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "7a7455aedbcfb2168bce24c6bf861cd6a5258c0d94864cec77858a36a86ec3fc",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-11.test.mjs",
+          "line": 293,
+          "test": "P6 10125 天命护佑 检定成功时按伤害/恐惧较少者加入祝福标记"
+        }
+      ]
+    },
+    {
+      "code": "10126",
+      "name": "宗教信物",
+      "type": "asset",
+      "klass": "survivor",
+      "xp": 3,
+      "level": 3,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "field",
+          "flag"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "simplified: 「失败后可再次尝试该检定」用 api.retryTest 重跑技能/难度/来源，但不重放原检定的 resolve 效果（引擎未保存 lastTestResult 的 resolve）；转祝福与池上限完整实现。原语请求见 primitive-requests/10126.json"
+          }
+        ]
+      },
+      "implementation": "eff8bbf9da01f79552c77908f6fe5bca3bcb0dfe537c1765c91190da8785e65c",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-11.test.mjs",
+          "line": 319,
+          "test": "P6 10126 宗教信物 检定结束后把诅咒转为祝福；失败后可由执行者再次尝试"
+        }
+      ]
+    },
+    {
+      "code": "10127",
+      "name": "黑马",
+      "type": "asset",
+      "klass": "survivor",
+      "xp": 5,
+      "level": 5,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 1,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "e2c11b5bd977929094cea287021ce0a22b6cdb78572f3b9219642a23a4df0abd",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-11.test.mjs",
+          "line": 351,
+          "test": "P6 10127 黑马 无资源时四项技能 +1；补给阶段可以选择不获得资源"
+        }
+      ]
+    },
+    {
+      "code": "10128",
+      "name": "惊世巧舌",
+      "type": "asset",
+      "klass": "neutral",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "7c1e7bbee8f49d379442a08868d4ec08a6c5d44b33bdf75a33047e07c880fe98",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-11.test.mjs",
+          "line": 380,
+          "test": "P6 10128 惊世巧舌 从弃牌堆打出带谈判的事件，花 1 充能并移出游戏"
+        }
+      ]
+    },
+    {
+      "code": "10129",
+      "name": "静候时机",
+      "type": "event",
+      "klass": "neutral",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 「下个回合可以额外进行两次行动」用 api.grantExtraActionNextTurn 近似为额外 1 次行动（引擎该读点是布尔值，beginInvestigationPhase 固定 +1）；计数式「下回合 +N 行动」原语见 primitive-requests/10129.json。"
+          },
+          {
+            "source": "comment",
+            "line": 15,
+            "detail": "approximation （逐条披露，缺读点见 artifacts/migration/fhv/primitive-requests/10129.json）："
+          }
+        ]
+      },
+      "implementation": "67e71a7f45066dfff58bc4dd83351f58dcc0f6f8aa594e099c0899d0f893ffec",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-12.test.mjs",
+          "line": 54,
+          "test": "P6 10129 静候时机 Double 额外花 1 行动；下个回合获得额外行动"
+        }
+      ]
+    },
+    {
+      "code": "10130",
+      "name": "盛装出席",
+      "type": "skill",
+      "klass": "neutral",
+      "xp": 0,
+      "level": 0,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "a8860742e25bae9798b563f156b0e3b1870e091d6eb4e9250374d162d7ffcbe5",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-12.test.mjs",
+          "line": 122,
+          "test": "P6 10130 盛装出席 谈判检定期间投入时获得[wild][wild][wild]（印刷 1 + 3）"
+        }
+      ]
+    },
+    {
+      "code": "10131",
+      "name": "黎明之星",
+      "type": "event",
+      "klass": "neutral",
+      "xp": 1,
+      "level": 1,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 2,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "field",
+          "flag"
+        ],
+        "count": 3,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 多个敌人时只询问一次目标，全部「每 1 个[诅咒]标记 1 点伤害」都分配给同一个敌人；印刷允许伤害分别指向同地点的任意敌人。"
+          }
+        ]
+      },
+      "implementation": "0318d55ff3e69220caa689beed49ac1e2b8b69667f70857e4d2631df103fa537",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-12.test.mjs",
+          "line": 139,
+          "test": "P6 10131 黎明之星 快速打出：忽略[诅咒]标记的修正值，并按个数造成伤害"
+        }
+      ]
+    },
+    {
+      "code": "10132",
+      "name": "密教珍藏",
+      "type": "asset",
+      "klass": "neutral",
+      "xp": 3,
+      "level": 3,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 1,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 「额外 1 个手部、饰品或法术槽位」用 restrictedSlots 三条声明近似（三个槽位各 1 格，只能放[[祝福]]/[[诅咒萦绕]]支援）；引擎没有「三选一」灵活槽原语，因此比印刷最多多出 2 格容量，见 primitive-requests/10132.json。"
+          },
+          {
+            "source": "comment",
+            "line": 17,
+            "detail": "approximation （缺读点见 artifacts/migration/fhv/primitive-requests/10132.json）："
+          }
+        ]
+      },
+      "implementation": "a82eb50ac80a87138ffff5753eb9ccff458ec1d5c03d2a82c5f7bc4ba991a1e0",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-12.test.mjs",
+          "line": 163,
+          "test": "P6 10132 密教珍藏 额外槽只给[[祝福]]/[[诅咒萦绕]]支援，占用满时仍可装备"
+        }
+      ]
+    },
+    {
+      "code": "10133",
+      "name": "破碎冠冕",
+      "type": "asset",
+      "klass": "neutral",
+      "xp": 5,
+      "level": 5,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 1,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 缺「绑定卡就地交换」原语，交换 = 检索绑定卡（暮光冠冕）放置入场 + 贡品转移 + 破碎冠冕返回手牌（可按费用再次打出，而不是回到场外绑定集合），见 primitive-requests/10133.json。"
+          },
+          {
+            "source": "comment",
+            "line": 21,
+            "detail": "approximation （逐条披露，缺读点见 artifacts/migration/fhv/primitive-requests/10133.json）："
+          }
+        ]
+      },
+      "implementation": "c23b3d9c0c59972ba41998e65a2f5f20c026e08627cf64c52097bdf44c73c054",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-12.test.mjs",
+          "line": 205,
+          "test": "P6 10133 破碎冠冕 同检定揭示祝福与诅咒后放贡品；满 3 个与暮光冠冕交换"
+        }
+      ]
+    },
+    {
+      "code": "10134",
+      "name": "暮光冠冕",
+      "type": "asset",
+      "klass": "neutral",
+      "xp": null,
+      "level": null,
+      "basicWeakness": false,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": true,
+      "deckLimit": 1,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: 缺「绑定卡就地交换」原语，反向交换要求破碎冠冕在手牌（10133 交换时放入），放置入场后本卡返回手牌而不是场外绑定集合，见 primitive-requests/10134.json。"
+          },
+          {
+            "source": "comment",
+            "line": 24,
+            "detail": "approximation （逐条披露，缺读点见 artifacts/migration/fhv/primitive-requests/10134.json）："
+          }
+        ]
+      },
+      "implementation": "631a02f2237c15e9bf84e244a4c4fb7bbce6c27d7378c5fff6182e27cecfeaed",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-12.test.mjs",
+          "line": 235,
+          "test": "P6 10134 暮光冠冕 揭示[诅咒]时花 1 贡品横置改为[elder_sign]；没有贡品则换回破碎冠冕"
+        }
+      ]
+    },
+    {
+      "code": "10135",
+      "name": "手部残疾",
+      "type": "asset",
+      "klass": "neutral",
+      "xp": null,
+      "level": null,
+      "basicWeakness": true,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": false,
+      "deckLimit": 1,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: ①「除上述[action][action]能力外不能离场」没有威胁区读点（引擎只有 threatCannotLeaveWhileCounters 按计数拦截），其它效果弃置威胁卡时仍会离场；②1 点伤害按普通伤害分配（可被支援承接），见 primitive-requests/10135.json。"
+          },
+          {
+            "source": "comment",
+            "line": 24,
+            "detail": "approximation （逐条披露，缺读点见 artifacts/migration/fhv/primitive-requests/10135.json）："
+          }
+        ]
+      },
+      "implementation": "2787b57df649507f29cc2badd0135daa252b444632817f67a37b3876bf24fe99",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-12.test.mjs",
+          "line": 257,
+          "test": "P6 10135 手部残疾 显现二选一进威胁区并-1生命；花 2 行动弃掉"
+        }
+      ]
+    },
+    {
+      "code": "10136",
+      "name": "背伤",
+      "type": "asset",
+      "klass": "neutral",
+      "xp": null,
+      "level": null,
+      "basicWeakness": true,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": false,
+      "deckLimit": 1,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: ①「除上述[action][action]能力外不能离场」没有威胁区读点（引擎只有 threatCannotLeaveWhileCounters 按计数拦截）；②1 点伤害按普通伤害分配（可被支援承接），与 10135 同一模板，见 primitive-requests/10135.json。"
+          },
+          {
+            "source": "comment",
+            "line": 17,
+            "detail": "approximation （缺读点见 artifacts/migration/fhv/primitive-requests/10135.json，"
+          }
+        ]
+      },
+      "implementation": "c1d96d70752c8e21cbfc20a2e0fab1d03a091e6353acce94a97327d3d60023dd",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-12.test.mjs",
+          "line": 284,
+          "test": "P6 10136 背伤 显现可选：受到 1 点伤害并洗回牌库"
+        }
+      ]
+    },
+    {
+      "code": "10137",
+      "name": "银蛾",
+      "type": "asset",
+      "klass": "neutral",
+      "xp": null,
+      "level": null,
+      "basicWeakness": true,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": false,
+      "deckLimit": 1,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: ①「除上述[action][action]能力外不能离场」没有威胁区读点（引擎只有 threatCannotLeaveWhileCounters 按计数拦截）；②1 点恐惧按普通恐惧分配（可被支援承接），与 10135 同一模板，见 primitive-requests/10135.json。"
+          },
+          {
+            "source": "comment",
+            "line": 19,
+            "detail": "approximation （缺读点见 artifacts/migration/fhv/primitive-requests/10135.json，"
+          }
+        ]
+      },
+      "implementation": "deae095d25a4b6ab0655e40f42037401a84e257eb650bae7380e68a425188c42",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-12.test.mjs",
+          "line": 305,
+          "test": "P6 10137 银蛾 显现进威胁区并-1神智；2 行动弃掉"
+        }
+      ]
+    },
+    {
+      "code": "10138",
+      "name": "德兹特里奇之誓",
+      "type": "asset",
+      "klass": "neutral",
+      "xp": null,
+      "level": null,
+      "basicWeakness": true,
+      "dependencyOnly": false,
+      "researched": false,
+      "buildable": false,
+      "deckLimit": 1,
+      "status": "verified",
+      "channel": "descriptor",
+      "simplified": true,
+      "simplification": {
+        "kinds": [
+          "comment",
+          "field",
+          "flag"
+        ],
+        "count": 4,
+        "disclosures": [
+          {
+            "source": "flag",
+            "path": "entry.simplified",
+            "detail": "entry.simplified=true"
+          },
+          {
+            "source": "flag",
+            "path": "simplified",
+            "detail": "simplified=true"
+          },
+          {
+            "source": "field",
+            "path": "note",
+            "detail": "approximation: ①「除上述[action][action]能力外不能离场」没有威胁区读点（引擎只有 threatCannotLeaveWhileCounters 按计数拦截）；②1 点恐惧按普通恐惧分配（可被支援承接），与 10135 同一模板，见 primitive-requests/10135.json。"
+          },
+          {
+            "source": "comment",
+            "line": 17,
+            "detail": "approximation （缺读点见 artifacts/migration/fhv/primitive-requests/10135.json，"
+          }
+        ]
+      },
+      "implementation": "37f5dc3dbb3af3127b46b3053fbb957f30b09e7607f9c6a62ae3b0d15399d957",
+      "evidence": [
+        {
+          "file": "fhv-player-m2-12.test.mjs",
+          "line": 326,
+          "test": "P6 10138 德兹特里奇之誓 显现二选一；威胁区-1神智，或 1 恐惧洗回牌库"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "path": "audit/fhv-player-browser.json",
+      "sha256": "18a1cbf3eb9af666d981fdaead562e8610d4977842a9a64bb3ffb14e37669c99"
+    },
+    {
+      "path": "audit/fhv-player-queue.json",
+      "sha256": "b5fd220a84a356473ea696f4cd3ccf7643b886d9e9e2539d02f48c13d03e3adf"
+    },
+    {
+      "path": "audit/fhv-player-shards.json",
+      "sha256": "0f540fd2041c64f553555aecaf422f335ef612228ebbc395ae5d69a85028dc38"
+    },
+    {
+      "path": "audit/fhv-regression.json",
+      "sha256": "be58f5ca62a90030812d810ad5748cc841df7c612815fafaa98a5f9d83ab7f1c"
+    },
+    {
+      "path": "content/packs/fhvPlayer/manifest.js",
+      "sha256": "67bd9cb341c5a9b09fcae266777643cf97352d5bb2dd0e1ef70418a44c934228"
+    },
+    {
+      "path": "tests/fhv-player-m2-1.test.mjs",
+      "sha256": "0133ea21562f6da12f3881db64e5453fa4b13b36d5f0bda45c706ac8ff24aa6e"
+    },
+    {
+      "path": "tests/fhv-player-m2-10.test.mjs",
+      "sha256": "267e84e4201af115822f08a61de0fa7171a07bf5cae859dd6addf2b3cb085e07"
+    },
+    {
+      "path": "tests/fhv-player-m2-11.test.mjs",
+      "sha256": "033cd720e63298017c47fdb287740848865002dbf3f2ce69e2263a98e2f55829"
+    },
+    {
+      "path": "tests/fhv-player-m2-12.test.mjs",
+      "sha256": "589e3b22ec381e53429b3c209c85fba2aac55f19d4e21ba4cc5c8c145819aee2"
+    },
+    {
+      "path": "tests/fhv-player-m2-2.test.mjs",
+      "sha256": "4f3dd2780e3c00cae1c549d711d11a89ec2740df43e8f1826e58b643081b1ea4"
+    },
+    {
+      "path": "tests/fhv-player-m2-3.test.mjs",
+      "sha256": "087e3c842cdbec4acafec77595994bf7855cfdd9a880ce35ae7b55d0666be046"
+    },
+    {
+      "path": "tests/fhv-player-m2-4.test.mjs",
+      "sha256": "4f3832d8757b6538ddf9347a908d364504970331c542d295eef7af8af8441038"
+    },
+    {
+      "path": "tests/fhv-player-m2-5.test.mjs",
+      "sha256": "e3c9544d66843da656e9432545760e4a04b5072dd1298a6e202490bae3e2e503"
+    },
+    {
+      "path": "tests/fhv-player-m2-6.test.mjs",
+      "sha256": "f24cc9ffb9570160ed5d46758ea2ae4f93933b06862dc11096ee689b72715229"
+    },
+    {
+      "path": "tests/fhv-player-m2-7.test.mjs",
+      "sha256": "bf1d854922604bb474b2ed8abd35b67a93ad1ee22fd229e609283ae4ace98884"
+    },
+    {
+      "path": "tests/fhv-player-m2-8.test.mjs",
+      "sha256": "4b0bcbb5cdcc074b09956b8168feae189061bad71ee43bd450500cd9ae8886ca"
+    },
+    {
+      "path": "tests/fhv-player-m2-9.test.mjs",
+      "sha256": "d9c2559d7a11ca8cdcd750d636da65f581f2b24f225ae88e37f2a9ba5335ab74"
+    }
+  ],
+  "evidence": [
+    "tests/fhv-player-m2-1.test.mjs",
+    "tests/fhv-player-m2-2.test.mjs",
+    "tests/fhv-player-m2-3.test.mjs",
+    "tests/fhv-player-m2-4.test.mjs",
+    "tests/fhv-player-m2-5.test.mjs",
+    "tests/fhv-player-m2-6.test.mjs",
+    "tests/fhv-player-m2-7.test.mjs",
+    "tests/fhv-player-m2-8.test.mjs",
+    "tests/fhv-player-m2-9.test.mjs",
+    "tests/fhv-player-m2-10.test.mjs",
+    "tests/fhv-player-m2-11.test.mjs",
+    "tests/fhv-player-m2-12.test.mjs",
+    "audit/fhv-player-shards.json",
+    "audit/fhv-player-queue.json",
+    "audit/fhv-player-browser.json",
+    "audit/fhv-player-request-disclosures.json"
+  ]
+}

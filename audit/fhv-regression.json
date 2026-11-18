@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "cycle": "fhv",
+  "campaignId": "theFeastOfHemlockVale",
+  "milestone": "P4",
+  "command": "node tools/verify-fhv.mjs --regression",
+  "generatedBy": "tools/verify-fhv.mjs",
+  "baselineNote": "P4 快速回归基线 = P3 收口时的既有失败清单（artifacts/migration/fhv/reports/p3-preexisting-failures.json）；P4 只要求不新增失败。",
+  "fast": {
+    "command": "node --test tests/suite-manifest.test.mjs + FAST_TESTS",
+    "excludedEvidenceSelfChecks": [
+      "fhv-rules-ledger.test.mjs",
+      "fhv-interactions-ledger.test.mjs"
+    ],
+    "exitCode": 1,
+    "totals": {
+      "tests": 8391,
+      "pass": 8386,
+      "fail": 2,
+      "cancelled": 0,
+      "skipped": 3
+    },
+    "titles": [
+      "P8 eote all-cards 两次构建一致且与账本一致",
+      "P8 eote migration ledger · 确定性：导出 builder 两次深相等且与签入账本一致"
+    ],
+    "newFailures": []
+  },
+  "knownFailures": [
+    {
+      "title": "P8 eote all-cards 两次构建一致且与账本一致",
+      "reason": "HEAD 中《地球边缘》Part1 场景模块与 audit/eote-scenario-acceptance.json 记录的哈希不一致；EOTE 账本构建器据此把该章 sourceLocked 判为 false，导致 eote migration / all-cards 两个账本无法逐字节复算。"
+    },
+    {
+      "title": "P8 eote migration ledger · 确定性：导出 builder 两次深相等且与签入账本一致",
+      "reason": "HEAD 中《地球边缘》Part1 场景模块与 audit/eote-scenario-acceptance.json 记录的哈希不一致；EOTE 账本构建器据此把该章 sourceLocked 判为 false，导致 eote migration / all-cards 两个账本无法逐字节复算。"
+    }
+  ],
+  "replay": {
+    "baseline": "tests/fixtures/replay/golden-replays.json",
+    "baselineSha256": "19e63fcba8a5428123dd3f74404208e9e324ad06550999387028bdab65eac688",
+    "exitCode": 0,
+    "matches": true
+  },
+  "gates": {
+    "fastNoNewFailures": true,
+    "replayNoDrift": true
+  },
+  "status": "passed"
+}

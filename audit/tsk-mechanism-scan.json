@@ -7,7 +7,7 @@
   "generatedBy": "tools/scan-tsk-mechanisms.mjs",
   "docs": "docs/campaign/theScarletKeys/README.md",
   "status": "catalog-only",
-  "scopeSha256": "0aa528c359df3bd458a68e78d39e35cf390d14b6839639e894c1cd437d37ca68",
+  "scopeSha256": "78fd6d2f4f1243cdb93af19df3246b2f90a8f7544e4e1157063b30ab07e969ed",
   "guideLayers": [
     "heading",
     "tokens",

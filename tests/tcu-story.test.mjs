@@ -730,6 +730,14 @@ test('TCU manifest.flow 覆盖序章、九章、三幕间与尾声且通过图�
   for (const id of ['interludeTwo', 'interludeThree', 'interludeFour']) {
     assert.equal(nodes[id]?.type, 'interlude', `${id} 应为 interlude 节点`)
   }
+  // 每场冒险后的关间升级窗（无正文 interlude）：巫异时刻、隐秘之名、恶罪报应、聚合幻灭之后，
+  // 以及三处叙事幕间/分支的汇合出口。
+  for (const id of ['restAfterWitchingHour', 'restBeforeTheSecretName', 'restBeforeTheWagesOfSin',
+    'restBeforeForTheGreaterGood', 'restBeforeUnionAndDisillusion', 'restBeforeInTheClutchesOfChaos',
+    'restBeforeBlackThrone']) {
+    assert.equal(nodes[id]?.type, 'interlude', `${id} 应为关间升级窗`)
+    assert.notEqual(nodes[id].upgrades, false, `${id} 必须允许关间升级`)
+  }
   // 三个幕间节点都挂了结算效果（正文展开由 tcuFlowStory/effects 负责）。
   assert.ok(nodes.interludeTwo, 'interludeTwo')
   assert.ok(nodes.interludeFour.effects.some(effect => effect.type === 'twistOfFate'), '幕间四缺 twistOfFate 效果')
@@ -742,20 +750,48 @@ test('TCU manifest.flow 覆盖序章、九章、三幕间与尾声且通过图�
 
 test('TCU manifest.flow 的分支条件与 next 链按契约接线', () => {
   const nextOf = id => flowNode(id).next
-  // 序章 → 9 章的主干顺序。
+  // 序章 → 9 章的主干顺序；每场冒险结算后、下一场冒险前都有关间升级窗（序章后除外，
+  // 参考实现 `continueNoUpgrade TheWitchingHour`：《巫异时刻》前没有升级步骤）。
   assert.equal(nextOf('prologue'), 'disappearanceAtTheTwilightEstate')
   assert.equal(nextOf('disappearanceAtTheTwilightEstate'), 'theWitchingHour')
-  assert.equal(nextOf('theWitchingHour'), 'atDeathsDoorstep')
+  assert.equal(nextOf('theWitchingHour'), 'restAfterWitchingHour')
+  assert.equal(flowNode('restAfterWitchingHour').type, 'interlude')
+  assert.notEqual(flowNode('restAfterWitchingHour').upgrades, false, '巫异时刻之后必须有升级窗')
+  assert.equal(nextOf('restAfterWitchingHour'), 'atDeathsDoorstep')
   assert.equal(nextOf('atDeathsDoorstep'), 'interludeTwoGate')
-  assert.equal(nextOf('theSecretName'), 'theWagesOfSin')
-  assert.equal(nextOf('theWagesOfSin'), 'forTheGreaterGood')
+  assert.equal(nextOf('theSecretName'), 'restBeforeTheWagesOfSin')
+  assert.equal(flowNode('restBeforeTheWagesOfSin').type, 'interlude')
+  assert.equal(nextOf('restBeforeTheWagesOfSin'), 'theWagesOfSin')
+  assert.equal(nextOf('theWagesOfSin'), 'restBeforeForTheGreaterGood')
+  assert.equal(flowNode('restBeforeForTheGreaterGood').type, 'interlude')
+  assert.equal(nextOf('restBeforeForTheGreaterGood'), 'forTheGreaterGood')
   assert.equal(nextOf('forTheGreaterGood'), 'interludeThreeGate')
   assert.equal(nextOf('unionAndDisillusion'), 'unionEndingGate')
   assert.equal(nextOf('inTheClutchesOfChaos'), 'interludeFour')
   assert.equal(nextOf('beforeTheBlackThrone'), 'epilogue')
   assert.equal(nextOf('epilogue'), 'end')
+  // 图谱契约：除《巫异时刻》（序章后无经验、无升级窗）外，每个 scenario 节点都只能从
+  // 允许升级的 interlude 节点进入；升级窗与剧情停顿分开声明（升级窗 upgrades !== false）。
+  const allNodes = Object.entries(flow().nodes)
+  const predecessors = scenarioId => allNodes.filter(([, node]) => node.next === scenarioId
+    || (node.options || []).some(option => option.next === scenarioId)).map(([id]) => id)
+  for (const [id, node] of allNodes) {
+    // 序章本体从 prologue 剧情节点进入、序章后到《巫异时刻》是 continueNoUpgrade，均无升级窗。
+    if (node.type !== 'scenario'
+      || ['disappearanceAtTheTwilightEstate', 'theWitchingHour'].includes(node.scenarioId)) continue
+    const entries = predecessors(id)
+    assert.ok(entries.length > 0, `${id} 没有入口节点`)
+    for (const entry of entries) {
+      assert.equal(flowNode(entry).type, 'interlude', `${id} 的入口 ${entry} 必须是 interlude 升级窗`)
+      assert.notEqual(flowNode(entry).upgrades, false, `${id} 的入口 ${entry} 不能关闭升级`)
+    }
+  }
+  // 叙事幕间只做阅读停顿，升级窗放在下一场冒险之前。
+  for (const id of ['interludeTwo', 'interludeThree', 'interludeFour']) {
+    assert.equal(flowNode(id).upgrades, false, `${id} 是叙事停顿窗，不应在幕间开头开升级`)
+  }
 
-  // 死亡门前后：r1 逃出 → 幕间二；否则直接《隐秘之名》。
+  // 死亡门前后：r1 逃出 → 幕间二；否则直接进入《隐秘之名》前的升级窗。
   assert.equal(flowNode('interludeTwoGate').type, 'branch')
   assert.deepEqual(nodeOptionIds('interludeTwoGate'), ['escaped', 'skipped'])
   assert.deepEqual(matchingOptions('interludeTwoGate',
@@ -763,9 +799,12 @@ test('TCU manifest.flow 的分支条件与 next 链按契约接线', () => {
   assert.deepEqual(matchingOptions('interludeTwoGate',
     graphCampaign({}, [{ scenarioId: 'atDeathsDoorstep', resolution: 'r2' }])), ['skipped'])
   assert.equal(flowNode('interludeTwoGate').options.find(option => option.id === 'escaped').next, 'interludeTwo')
-  assert.equal(flowNode('interludeTwoGate').options.find(option => option.id === 'skipped').next, 'theSecretName')
+  assert.equal(flowNode('interludeTwoGate').options.find(option => option.id === 'skipped').next, 'restBeforeTheSecretName')
+  // 幕间二所有出口先汇合到升级窗，再进入《隐秘之名》。
+  assert.equal(nextOf('restBeforeTheSecretName'), 'theSecretName')
+  assert.equal(flowNode('restBeforeTheSecretName').type, 'interlude')
 
-  // 幕间二：命运分支 → 三选一邀请 → 回到《隐秘之名》。
+  // 幕间二：命运分支 → 三选一邀请 → 升级窗 → 《隐秘之名》。
   assert.equal(nextOf('interludeTwo'), 'interludeTwoFate')
   assert.equal(flowNode('interludeTwoFate').type, 'branch')
   assert.deepEqual(nodeOptionIds('interludeTwoFate'), ['alive', 'gone', 'rescued'])
@@ -776,7 +815,7 @@ test('TCU manifest.flow 的分支条件与 next 链按契约接线', () => {
   assert.equal(flowNode('interludeTwoFate').options.find(option => option.id === 'rescued').next, 'interludeTwoRescued')
   assert.equal(flowNode('interludeTwoFate').options.find(option => option.id === 'alive').next, 'interludeTwoAlive')
   for (const id of ['interludeTwoGone', 'interludeTwoRescued', 'interludeTwoAlive']) {
-    const target = id === 'interludeTwoGone' ? 'theSecretName' : 'interludeTwoDecision'
+    const target = id === 'interludeTwoGone' ? 'restBeforeTheSecretName' : 'interludeTwoDecision'
     assert.equal(nextOf(id), target, `${id} 的 next`)
   }
   const decision = flowNode('interludeTwoDecision')
@@ -786,7 +825,7 @@ test('TCU manifest.flow 的分支条件与 next 链按契约接线', () => {
   assert.equal(decision.options.find(option => option.id === 'agree').next, 'interludeTwoAgreed')
   assert.equal(decision.options.find(option => option.id === 'lie').next, 'interludeTwoLied')
   for (const id of ['interludeTwoRefused', 'interludeTwoAgreed', 'interludeTwoLied']) {
-    assert.equal(nextOf(id), 'theSecretName', `${id} 之后回到隐秘之名`)
+    assert.equal(nextOf(id), 'restBeforeTheSecretName', `${id} 之后先进入升级窗`)
   }
   // 幕间二节点的效果声明（供 walkCampaign 结算）。
   const refuseEffects = decision.options.find(option => option.id === 'refuse').effects
@@ -804,7 +843,7 @@ test('TCU manifest.flow 的分支条件与 next 链按契约接线', () => {
   assert.ok(flowNode('interludeTwoAlive').effects.some(effect => effect.type === 'record'
     && effect.key === 'josefIsAliveAndWell' && effect.value === true))
 
-  // 崇高利益后：r1 入职 → 幕间三；否则直接《聚合幻灭》。
+  // 崇高利益后：r1 入职 → 幕间三；否则直接进入《聚合幻灭》前的升级窗。
   assert.equal(flowNode('interludeThreeGate').type, 'branch')
   assert.deepEqual(nodeOptionIds('interludeThreeGate'), ['inducted', 'skipped'])
   assert.deepEqual(matchingOptions('interludeThreeGate',
@@ -812,9 +851,11 @@ test('TCU manifest.flow 的分支条件与 next 链按契约接线', () => {
   assert.deepEqual(matchingOptions('interludeThreeGate',
     graphCampaign({}, [{ scenarioId: 'forTheGreaterGood', resolution: 'r2' }])), ['skipped'])
   assert.equal(flowNode('interludeThreeGate').options.find(option => option.id === 'inducted').next, 'interludeThree')
-  assert.equal(flowNode('interludeThreeGate').options.find(option => option.id === 'skipped').next, 'unionAndDisillusion')
+  assert.equal(flowNode('interludeThreeGate').options.find(option => option.id === 'skipped').next, 'restBeforeUnionAndDisillusion')
+  assert.equal(nextOf('restBeforeUnionAndDisillusion'), 'unionAndDisillusion')
+  assert.equal(flowNode('restBeforeUnionAndDisillusion').type, 'interlude')
 
-  // 幕间三：真相 / 谎言两条路径。
+  // 幕间三：真相 / 谎言两条路径，出口先汇合到升级窗。
   assert.equal(nextOf('interludeThree'), 'interludeThreeDecision')
   const threeDecision = flowNode('interludeThreeDecision')
   assert.equal(threeDecision.type, 'choice')
@@ -822,7 +863,7 @@ test('TCU manifest.flow 的分支条件与 next 链按契约接线', () => {
   assert.equal(threeDecision.options.find(option => option.id === 'truth').next, 'interludeThreeTruth')
   assert.equal(threeDecision.options.find(option => option.id === 'lie').next, 'interludeThreeLie')
   assert.equal(nextOf('interludeThreeTruth'), 'interludeThreeTruthGate')
-  assert.equal(nextOf('interludeThreeLie'), 'unionAndDisillusion')
+  assert.equal(nextOf('interludeThreeLie'), 'restBeforeUnionAndDisillusion')
   assert.ok(flowNode('interludeThreeLie').effects.some(effect => effect.type === 'record'
     && effect.key === 'theInvestigatorsKeptsTheirMementosHidden' && effect.value === true))
   // 交底后：救出约瑟夫 + 告知秘社 → 进入核心圈，否则只读普通段落。
@@ -839,8 +880,8 @@ test('TCU manifest.flow 的分支条件与 next 链按契约接线', () => {
   assert.equal(flowNode('interludeThreeTruthGate').options.find(option => option.id === 'otherwise').next,
     'interludeThreeNotInducted')
   assert.equal(nextOf('interludeThreeInnerCircle'), 'interludeThreeInducted')
-  assert.equal(nextOf('interludeThreeInducted'), 'unionAndDisillusion')
-  assert.equal(nextOf('interludeThreeNotInducted'), 'unionAndDisillusion')
+  assert.equal(nextOf('interludeThreeInducted'), 'restBeforeUnionAndDisillusion')
+  assert.equal(nextOf('interludeThreeNotInducted'), 'restBeforeUnionAndDisillusion')
   assert.ok(flowNode('interludeThreeInducted').effects.some(effect => effect.type === 'record'
     && effect.key === 'theInvestigatorsWereInductedIntoTheInnerCircle' && effect.value === true))
   // 核心圈提问：最多 3 次、选项来自 6 段问答。
@@ -860,11 +901,15 @@ test('TCU manifest.flow 的分支条件与 next 链按契约接线', () => {
   assert.deepEqual(matchingOptions('unionEndingGate',
     graphCampaign({}, [{ scenarioId: 'unionAndDisillusion', resolution: 'r1' }])), ['continued'])
   assert.equal(flowNode('unionEndingGate').options.find(option => option.id === 'ended').next, 'end')
-  assert.equal(flowNode('unionEndingGate').options.find(option => option.id === 'continued').next, 'inTheClutchesOfChaos')
+  assert.equal(flowNode('unionEndingGate').options.find(option => option.id === 'continued').next, 'restBeforeInTheClutchesOfChaos')
+  assert.equal(nextOf('restBeforeInTheClutchesOfChaos'), 'inTheClutchesOfChaos')
+  assert.equal(flowNode('restBeforeInTheClutchesOfChaos').type, 'interlude')
 
-  // 幕间四（扭转命运）→ 尾声。
+  // 幕间四（扭转命运）→ 升级窗 → 尾声之前的《黑色王座》。
   assert.equal(nextOf('interludeFour'), 'interludeFourOutro')
-  assert.equal(nextOf('interludeFourOutro'), 'beforeTheBlackThrone')
+  assert.equal(nextOf('interludeFourOutro'), 'restBeforeBlackThrone')
+  assert.equal(nextOf('restBeforeBlackThrone'), 'beforeTheBlackThrone')
+  assert.equal(flowNode('restBeforeBlackThrone').type, 'interlude')
 
   // 交互节点的正文来自导入段落（未触发的互斥分支不在节点里）。
   const assertNodeText = (nodeId, paragraphs) => {
@@ -899,7 +944,7 @@ test('TCU manifest.flow 的分支条件与 next 链按契约接线', () => {
 test('TCU 幕间流程按记录与结局分支，不泄露未触发分支', () => {
   const resolved = (scenarioId, resolution) => [{ scenarioId, resolution }]
 
-  // 死亡门前 r1（逃出）→ 幕间二 → 亡于迷雾 →《隐秘之名》。
+  // 死亡门前 r1（逃出）→ 幕间二（阅读停顿）→ 升级窗 →《隐秘之名》。
   const escaped = flowState('atDeathsDoorstep', {
     scenarioResults: resolved('atDeathsDoorstep', 'r1'),
     records: { josefDisappearedIntoTheMist: true },
@@ -907,6 +952,9 @@ test('TCU 幕间流程按记录与结局分支，不泄露未触发分支', () =
   const gone = walkTo(escaped, 'atDeathsDoorstep', reached => reached.id === 'theSecretName')
   assert.equal(gone.reached.id, 'theSecretName')
   assert.ok(gone.visited.includes('interludeTwo'), '逃出后进入幕间二')
+  assert.ok(gone.visited.includes('restBeforeTheSecretName'), '幕间二读完后进入关间升级窗')
+  assert.ok(gone.visited.indexOf('restBeforeTheSecretName') > gone.visited.indexOf('interludeTwo'),
+    '升级窗在幕间二之后')
   // 「消失 / 救出 / 存活」是 story 节点，walkCampaign 会连续走完，因此按访问历史断言命中分支。
   const gonePath = escaped.campaign.flow.history.map(entry => entry.nodeId)
   assert.ok(gonePath.includes('interludeTwoGone'), '约瑟夫消失 → 幕间二「消失」分支')
@@ -914,14 +962,14 @@ test('TCU 幕间流程按记录与结局分支，不泄露未触发分支', () =
   assert.equal(gonePath.includes('interludeTwoAlive'), false)
   assert.equal(escaped.campaign.records.theInvestigatorsAreEnemiesOfTheLodge, true, '消失分支写敌视记录')
 
-  // 死亡门前 r2 → 跳过幕间二，直接《隐秘之名》。
+  // 死亡门前 r2 → 跳过幕间二，先进入《隐秘之名》前的升级窗。
   const skipped = flowState('atDeathsDoorstep', { scenarioResults: resolved('atDeathsDoorstep', 'r2') })
   const direct = walkTo(skipped, 'atDeathsDoorstep', reached => reached.id === 'theSecretName')
   assert.equal(direct.reached.id, 'theSecretName')
   assert.equal(direct.visited.includes('interludeTwo'), false, '未逃出不应进入幕间二')
-  assert.deepEqual(direct.visited, ['atDeathsDoorstep', 'theSecretName'])
+  assert.deepEqual(direct.visited, ['atDeathsDoorstep', 'restBeforeTheSecretName', 'theSecretName'])
 
-  // 崇高利益 r1 → 幕间三；r2 → 直接《聚合幻灭》。
+  // 崇高利益 r1 → 幕间三；r2 → 升级窗后才《聚合幻灭》。
   const inducted = flowState('forTheGreaterGood', { scenarioResults: resolved('forTheGreaterGood', 'r1') })
   const interlude = walkTo(inducted, 'forTheGreaterGood', reached => reached.id === 'interludeThree')
   assert.equal(interlude.reached.id, 'interludeThree')
@@ -930,6 +978,7 @@ test('TCU 幕间流程按记录与结局分支，不泄露未触发分支', () =
   const union = walkTo(skippedThree, 'forTheGreaterGood', reached => reached.id === 'unionAndDisillusion')
   assert.equal(union.reached.id, 'unionAndDisillusion')
   assert.equal(union.visited.includes('interludeThree'), false, '未入职不应进入幕间三')
+  assert.deepEqual(union.visited, ['forTheGreaterGood', 'restBeforeUnionAndDisillusion', 'unionAndDisillusion'])
 
   // 聚合幻灭 r9 → 直接 end（跳过混沌魔掌与幕间四）。
   const ended = flowState('unionAndDisillusion', { scenarioResults: resolved('unionAndDisillusion', 'r9') })
@@ -1159,4 +1208,79 @@ test('TCU 尾声按记录组装，只包含命中的片段与结局标签', () =
     uiState: 'campaignResult',
   }, contentRegistry, 0).entries.filter(entry => entry.id.startsWith('private:'))
   assert.equal(ownPrivate.length, 1, '本人能看到自己的私密尾声故事')
+})
+
+// ===========================================================================
+// 19. 私密故事的纪事排序（2026-11-17 用户实测：序章私密故事跑到《巫异时刻》之后）
+// ===========================================================================
+
+test('TCU 序章私密故事排在序章导入之后、结算之前，不再占据纪事末尾/默认选中', () => {
+  const scenarioResult = (scenarioId, scenarioIndex, resolution) => ({
+    scenarioId, scenarioIndex, visitId: `${scenarioId}:1`, resolution, storyResolution: resolution,
+    victory: 1, rounds: 3, recordsBefore: {}, recordsAfter: {}, investigators: [],
+  })
+  const privateStory = (id, title, placement) => ({
+    id, title, text: `${title}正文。`, audienceInvestigatorIds: ['inv-0'], ...placement,
+  })
+  const placement = { nodeId: 'disappearanceAtTheTwilightEstate', visit: 1 }
+  const makeCampaign = privateStories => campaignFixture({
+    scenarioResults: [
+      scenarioResult('disappearanceAtTheTwilightEstate', 0, 'noResolution'),
+      scenarioResult('theWitchingHour', 1, 'resolution2'),
+    ],
+    flow: {
+      nodeId: 'theWitchingHour',
+      history: [
+        { nodeId: 'prologue', visit: 1 },
+        { nodeId: 'disappearanceAtTheTwilightEstate', visit: 1 },
+        { nodeId: 'theWitchingHour', visit: 1 },
+      ],
+      visits: { prologue: 1, disappearanceAtTheTwilightEstate: 1, theWitchingHour: 1 },
+    },
+    privateStories,
+  })
+  const ids = journal => journal.entries.map(entry => entry.id)
+  for (const [label, stories] of [
+    ['新存档（写入时带位置）', [
+      privateStory('tcuPrologueIntro:05047', '杰罗姆·戴维斯的引言', placement),
+      privateStory('tcuPrologueTarot:0', '杰罗姆·戴维斯的命运', placement),
+    ]],
+    // 修复前的存档没有位置字段：万象无终序章的私密故事按《暮色庄园失踪事件》回填。
+    ['旧存档（无位置字段）', [
+      privateStory('tcuPrologueIntro:05047', '杰罗姆·戴维斯的引言'),
+      privateStory('tcuPrologueTarot:0', '杰罗姆·戴维斯的命运'),
+    ]],
+  ]) {
+    const campaign = makeCampaign(stories)
+    const journal = campaignStory({ campaign, chaosBag: [], uiState: 'scenarioResult' }, contentRegistry, 0)
+    assert.deepEqual(ids(journal), [
+      'disappearanceAtTheTwilightEstate:1:intro',
+      'private:tcuPrologueIntro:05047:0',
+      'private:tcuPrologueTarot:0:1',
+      'disappearanceAtTheTwilightEstate:1:result',
+      'theWitchingHour:1:intro',
+      'theWitchingHour:1:result',
+    ], `${label}：私密故事应排在序章导入之后、序章结算之前`)
+    assert.equal(journal.currentId, 'theWitchingHour:1:result',
+      `${label}：结算页默认展开的应是刚结束的《巫异时刻》结算`)
+    // 其他座位看不到别人的私密故事，公开纪事（大厅/观战）同样不含。
+    assert.equal(campaignStory({ campaign, chaosBag: [], uiState: 'scenarioResult' }, contentRegistry, 1)
+      .entries.some(entry => entry.id.startsWith('private:')), false)
+    assert.equal(campaignStory({ campaign, chaosBag: [], uiState: 'scenarioResult' }, contentRegistry)
+      .entries.some(entry => entry.id.startsWith('private:')), false)
+  }
+
+  // 进入下一关准备：故事引导默认展开下一关导入（《死亡门前》），而不是任何私密/旧条目。
+  const campaign = makeCampaign([
+    privateStory('tcuPrologueIntro:05047', '杰罗姆·戴维斯的引言', placement),
+    privateStory('tcuPrologueTarot:0', '杰罗姆·戴维斯的命运', placement),
+  ])
+  campaign.flow.nodeId = 'atDeathsDoorstep'
+  campaign.flow.history.push({ nodeId: 'atDeathsDoorstep', visit: 1 })
+  campaign.flow.visits.atDeathsDoorstep = 1
+  const journal = campaignStory({
+    campaign, chaosBag: [], uiState: 'scenarioSetup', hubSelectedScenarioId: 'atDeathsDoorstep',
+  }, contentRegistry, 0)
+  assert.equal(journal.currentId, 'current:atDeathsDoorstep')
+  assert.equal(journal.entries.at(-1).id, 'current:atDeathsDoorstep', '当前/下一关导入应排在纪事末尾')
 })

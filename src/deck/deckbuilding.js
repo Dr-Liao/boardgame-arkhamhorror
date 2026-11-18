@@ -1,4 +1,4 @@
-import { deckRules, matchesCardRule, deckCardLimit, validateDeckRules, optionExcluded } from './deck-rules.js'
+import { deckRules, matchesCardRule, matchesFixedDeckOption, deckCardLimit, validateDeckRules, optionExcluded } from './deck-rules.js'
 import { TSK_BONUS_XP } from '../../content/campaigns/theScarletKeys/investigator-data.js'
 // 诡镇奇谈：卡牌版（Arkham Horror LCG）· 牌组构筑引擎
 //
@@ -30,6 +30,7 @@ import {
   TIC_PLAYER_BUILDABLE_CODES,
   EOTE_PLAYER_BUILDABLE_CODES,
   TSK_PLAYER_BUILDABLE_CODES,
+  FHV_PLAYER_BUILDABLE_CODES,
   canSelectInvestigator, isCardAvailable,
 } from './availability.js'
 
@@ -70,7 +71,13 @@ const TSK_DECK_CARD_CODES = Object.freeze(TSK_PLAYER_BUILDABLE_CODES.filter(code
   const card = ALL_CARDS[code]
   return Boolean(card) && cardLimit(card) > 0
 }))
-export const EXPANDED_PLAYER_CARD_CODES = Object.freeze([...PLAYER_CARD_CODES, ...TFA_DECK_CARD_CODES, ...TCU_DECK_CARD_CODES, ...TDE_DECK_CARD_CODES, ...TIC_PLAYER_BUILDABLE_CODES, ...EOTE_DECK_CARD_CODES, ...TSK_DECK_CARD_CODES])
+// P6（M2 铁杉谷盛宴）：102 张可构筑玩家卡进入开放玩家池（4 张基础弱点/11 张绑定依赖/3 张 Research 不进）。
+// 默认池 PLAYER_CARD_CODES 不变：既有循环自动牌组产出保持基线。
+const FHV_DECK_CARD_CODES = Object.freeze(FHV_PLAYER_BUILDABLE_CODES.filter(code => {
+  const card = ALL_CARDS[code]
+  return Boolean(card) && cardLimit(card) > 0
+}))
+export const EXPANDED_PLAYER_CARD_CODES = Object.freeze([...PLAYER_CARD_CODES, ...TFA_DECK_CARD_CODES, ...TCU_DECK_CARD_CODES, ...TDE_DECK_CARD_CODES, ...TIC_PLAYER_BUILDABLE_CODES, ...EOTE_DECK_CARD_CODES, ...TSK_DECK_CARD_CODES, ...FHV_DECK_CARD_CODES])
 // 关间升级候选/普通卡判定 = 全部已开放玩家卡 + 核心包仅升级卡（`CORE_UPGRADE_CODES`）。
 // 与 `web/deck-rules.js` 的 `cardPoolScope` 口径一致：跨循环可见性由开局设置
 // （全部 / 渐进式）在 `filterCardCodes(context)` 一层统一收窄，不再按调查员所属循环硬编码。
@@ -333,6 +340,7 @@ function classChoiceBlocked(invDef, card, plan) {
   }
   for (const group of groups.values()) {
     if (!group.rules.some(rule => matchesCardRule(card, rule, invDef))) continue
+    if (matchesFixedDeckOption(card, invDef)) continue
     const chosen = plan[group.key] || []
     const factions = [...new Set([...(card.factions || []), card.klass, card.klass2, card.klass3]
       .filter(Boolean).map(value => String(value).toLowerCase()))]
@@ -592,6 +600,7 @@ export function deckBuilderData() {
     pack: c.pack || null, campaignCode: c.campaignCode || null,
     cost: c.cost, xp: c.xp ?? 0, icons: c.icons || {}, slot: c.slot || null, slots: c.slots || [],
     traits: c.traits || [], traitsZh: c.traitsZh || [],
+    textEn: c.text || '',
     text: c.textZh || c.text || '', flavor: c.flavorZh || c.flavor || '',
     subname: c.subnameZh || c.subname || '',
     permanent: !!c.permanent, ignoreDeckLimit: !!c.ignoreDeckLimit, factions: c.factions || [c.klass, c.klass2, c.klass3].filter(Boolean),

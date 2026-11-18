@@ -12,7 +12,7 @@ import { scriptCardOwner } from './script-cards.js'
 import { enemyIgnoresInvestigator } from './trait-passives.js'
 import { locationEntryNotice } from './location-facts.js'
 import { all as matchAll } from './matcher.js'
-import { descriptorOfKind } from './ability.js'
+import { descriptorOfKind, playedActionCost } from './ability.js'
 import { actionEntityById, entityActionDescriptors, entityAbilityInRange, parleyMovesFor, parleyTargetError, isParleyDescriptor } from './parley.js'
 // 第 5 步 P6：法术专用额外行动的算术（与 dispatch 共用同一份读点）。
 // P6（食梦者）：受限行动的 kind 由 table-decisions 的 restrictedKindOfMove 统一判定。
@@ -321,6 +321,9 @@ export function createMoves(deps) {
       continue
     }
     const cost = playCost(state, inv, def)
+    // P6（九循环）：Double 特质的「作为额外费用，花费 1 个行动」——没有行动额度时不出候选。
+    const extraActionCost = playedActionCost(code)
+    if (extraActionCost && actionsAvailable(inv) < extraActionCost + 1) continue
     const potentialReduction = potentialPlayReduction(state, inv, code, def)
     const timings = playTimingCandidates(state, inv, def).filter(item => availableResources(inv) >= cost - potentialReduction - (item.spec.discount || 0))
     const ordinary = availableResources(inv) >= cost - potentialReduction || charlesPayCandidate(state, inv, cost, def)
@@ -780,6 +783,10 @@ export function createMoves(deps) {
       if (cannotPlayTypes(inv).has(def.type)) return '当前禁止打出该类型卡牌'
       // 预览 = 校验 = 扣费同源：基础费用 - 如同手牌通道折扣 - 潜在减费（campaign/条目/场上 provider）。
       const channelDiscount = channelCandidate ? playChannels.discountOf(channelCandidate) : 0
+      // P6（九循环）：Double 特质的额外行动费用（费用声明在 played 描述子 cost.action）。
+      const extraActionCost = playedActionCost(move.copyCode || move.cardId)
+      const extraActionBase = move.fastSourceId ? 0 : 1
+      if (extraActionCost && actionsAvailable(inv) < extraActionCost + extraActionBase) return '行动不足'
       if (availableResources(inv) < playCost(state, inv, def) - channelDiscount - potentialPlayReduction(state, inv, move.cardId, def) - (fastSource?.spec.discount || 0)
         && !charlesPayCandidate(state, inv, playCost(state, inv, def), def)) return '资源不足'
       if (def.unique && state.investigators.some(item => item.assets.some(asset => cardDef(asset.code)?.name === def.name))) return '唯一资产已经在场'

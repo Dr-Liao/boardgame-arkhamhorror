@@ -8,6 +8,7 @@ import { validateEnemyLocations } from './enemy-location.js'
 import { validateEnemyKeywords } from './enemy-keyword-movement.js'
 import { validateHostedAssets } from './hosted-assets.js'
 import { normalizeSurveyPreparation, validateSurveyPreparation } from './survey-preparation.js'
+import { normalizeResidentList } from './resident-record.js'
 // Optional JSON extension inside the existing scenarioFlags store. Reads never initialize it.
 export function mechanicState(state, create = false) {
   if (!create) return state.scenarioFlags?.mechanics || null
@@ -34,9 +35,10 @@ export function assertFields(value, allowed) {
 }
 export function normalizeScenarioMechanics(spec) {
   if (spec == null) return null
-  assertFields(spec, ['water', 'keys', 'vehicles', 'calendar', 'codex', 'defenses', 'survey', 'noEncounterDeck', 'protectInvestigators'])
+  assertFields(spec, ['water', 'keys', 'vehicles', 'calendar', 'codex', 'residents', 'defenses', 'survey', 'noEncounterDeck', 'protectInvestigators'])
   normalizeScenarioCalendar(spec.calendar)
   normalizeCodex(spec.codex)
+  normalizeResidentList(spec.residents)
   normalizeSurveyPreparation(spec.survey)
   if (spec.water != null) {
     assertFields(spec.water, ['air', 'damage'])

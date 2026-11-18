@@ -1043,6 +1043,146 @@ import e09125 from './09125.js'
 import e09126 from './09126.js'
 import e09127 from './09127.js'
 import e09128 from './09128.js'
+import e10001 from './10001.js'
+import e10002 from './10002.js'
+import e10003 from './10003.js'
+import e10004 from './10004.js'
+import e10005 from './10005.js'
+import e10005b from './10005b.js'
+import e10006 from './10006.js'
+import e10007 from './10007.js'
+import e10008 from './10008.js'
+import e10009 from './10009.js'
+import e10010 from './10010.js'
+import e10011 from './10011.js'
+import e10012 from './10012.js'
+import e10013 from './10013.js'
+import e10014 from './10014.js'
+import e10015 from './10015.js'
+import e10016a from './10016a.js'
+import e10016b from './10016b.js'
+import e10017 from './10017.js'
+import e10018 from './10018.js'
+import e10019 from './10019.js'
+import e10020 from './10020.js'
+import e10021 from './10021.js'
+import e10022 from './10022.js'
+import e10023 from './10023.js'
+import e10024 from './10024.js'
+import e10025 from './10025.js'
+import e10026 from './10026.js'
+import e10027 from './10027.js'
+import e10028 from './10028.js'
+import e10029 from './10029.js'
+import e10030 from './10030.js'
+import e10031 from './10031.js'
+import e10032 from './10032.js'
+import e10033 from './10033.js'
+import e10034 from './10034.js'
+import e10035 from './10035.js'
+import e10036 from './10036.js'
+import e10037 from './10037.js'
+import e10038 from './10038.js'
+import e10039 from './10039.js'
+import e10040 from './10040.js'
+import e10041 from './10041.js'
+import e10042 from './10042.js'
+import e10043 from './10043.js'
+import e10044 from './10044.js'
+import e10045 from './10045.js'
+import e10046 from './10046.js'
+import e10047 from './10047.js'
+import e10048 from './10048.js'
+import e10049 from './10049.js'
+import e10050 from './10050.js'
+import e10051 from './10051.js'
+import e10052 from './10052.js'
+import e10053 from './10053.js'
+import e10054 from './10054.js'
+import e10055 from './10055.js'
+import e10056 from './10056.js'
+import e10057 from './10057.js'
+import e10058 from './10058.js'
+import e10059 from './10059.js'
+import e10060 from './10060.js'
+import e10061 from './10061.js'
+import e10062 from './10062.js'
+import e10063 from './10063.js'
+import e10064 from './10064.js'
+import e10065 from './10065.js'
+import e10066 from './10066.js'
+import e10067 from './10067.js'
+import e10068 from './10068.js'
+import e10069 from './10069.js'
+import e10070 from './10070.js'
+import e10071 from './10071.js'
+import e10072 from './10072.js'
+import e10073 from './10073.js'
+import e10074 from './10074.js'
+import e10075 from './10075.js'
+import e10076 from './10076.js'
+import e10077 from './10077.js'
+import e10078 from './10078.js'
+import e10079 from './10079.js'
+import e10080 from './10080.js'
+import e10081 from './10081.js'
+import e10082 from './10082.js'
+import e10083 from './10083.js'
+import e10084 from './10084.js'
+import e10085 from './10085.js'
+import e10086 from './10086.js'
+import e10087 from './10087.js'
+import e10088 from './10088.js'
+import e10089 from './10089.js'
+import e10090 from './10090.js'
+import e10091 from './10091.js'
+import e10092 from './10092.js'
+import e10093 from './10093.js'
+import e10094 from './10094.js'
+import e10095 from './10095.js'
+import e10096 from './10096.js'
+import e10097 from './10097.js'
+import e10098 from './10098.js'
+import e10099 from './10099.js'
+import e10100 from './10100.js'
+import e10101 from './10101.js'
+import e10102 from './10102.js'
+import e10103 from './10103.js'
+import e10104 from './10104.js'
+import e10105 from './10105.js'
+import e10106 from './10106.js'
+import e10107 from './10107.js'
+import e10108 from './10108.js'
+import e10109 from './10109.js'
+import e10110 from './10110.js'
+import e10111 from './10111.js'
+import e10112 from './10112.js'
+import e10113 from './10113.js'
+import e10114 from './10114.js'
+import e10115 from './10115.js'
+import e10116 from './10116.js'
+import e10117 from './10117.js'
+import e10118 from './10118.js'
+import e10129 from './10129.js'
+import e10130 from './10130.js'
+import e10131 from './10131.js'
+import e10132 from './10132.js'
+import e10133 from './10133.js'
+import e10134 from './10134.js'
+import e10135 from './10135.js'
+import e10136 from './10136.js'
+import e10119 from './10119.js'
+import e10120 from './10120.js'
+import e10121 from './10121.js'
+import e10122 from './10122.js'
+import e10137 from './10137.js'
+import e10138 from './10138.js'
+import e10123 from './10123.js'
+import e10124 from './10124.js'
+import e10125 from './10125.js'
+import e10126 from './10126.js'
+import e10127 from './10127.js'
+import e10128 from './10128.js'
 
 export const CARD_ENTRY_LIST = [
   e01001,
@@ -2087,6 +2227,146 @@ export const CARD_ENTRY_LIST = [
   e09126,
   e09127,
   e09128,
+  e10001,
+  e10002,
+  e10003,
+  e10004,
+  e10005,
+  e10005b,
+  e10006,
+  e10007,
+  e10008,
+  e10009,
+  e10010,
+  e10011,
+  e10012,
+  e10013,
+  e10014,
+  e10015,
+  e10016a,
+  e10016b,
+  e10017,
+  e10018,
+  e10019,
+  e10020,
+  e10021,
+  e10022,
+  e10023,
+  e10024,
+  e10025,
+  e10026,
+  e10027,
+  e10028,
+  e10029,
+  e10030,
+  e10031,
+  e10032,
+  e10033,
+  e10034,
+  e10035,
+  e10036,
+  e10037,
+  e10038,
+  e10039,
+  e10040,
+  e10041,
+  e10042,
+  e10043,
+  e10044,
+  e10045,
+  e10046,
+  e10047,
+  e10048,
+  e10049,
+  e10050,
+  e10051,
+  e10052,
+  e10053,
+  e10054,
+  e10055,
+  e10056,
+  e10057,
+  e10058,
+  e10059,
+  e10060,
+  e10061,
+  e10062,
+  e10063,
+  e10064,
+  e10065,
+  e10066,
+  e10067,
+  e10068,
+  e10069,
+  e10070,
+  e10071,
+  e10072,
+  e10073,
+  e10074,
+  e10075,
+  e10076,
+  e10077,
+  e10078,
+  e10079,
+  e10080,
+  e10081,
+  e10082,
+  e10083,
+  e10084,
+  e10085,
+  e10086,
+  e10087,
+  e10088,
+  e10089,
+  e10090,
+  e10091,
+  e10092,
+  e10093,
+  e10094,
+  e10095,
+  e10096,
+  e10097,
+  e10098,
+  e10099,
+  e10100,
+  e10101,
+  e10102,
+  e10103,
+  e10104,
+  e10105,
+  e10106,
+  e10107,
+  e10108,
+  e10109,
+  e10110,
+  e10111,
+  e10112,
+  e10113,
+  e10114,
+  e10115,
+  e10116,
+  e10117,
+  e10118,
+  e10129,
+  e10130,
+  e10131,
+  e10132,
+  e10133,
+  e10134,
+  e10135,
+  e10136,
+  e10119,
+  e10120,
+  e10121,
+  e10122,
+  e10137,
+  e10138,
+  e10123,
+  e10124,
+  e10125,
+  e10126,
+  e10127,
+  e10128,
 ]
 
 export const CARD_ENTRY_BY_CODE = new Map(CARD_ENTRY_LIST.map(entry => [entry.code, entry]))

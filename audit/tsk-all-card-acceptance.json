@@ -261,7 +261,7 @@
     "inputs": [
       {
         "file": "audit/tsk-scope.json",
-        "sha256": "0aa528c359df3bd458a68e78d39e35cf390d14b6839639e894c1cd437d37ca68"
+        "sha256": "78fd6d2f4f1243cdb93af19df3246b2f90a8f7544e4e1157063b30ab07e969ed"
       },
       {
         "file": "audit/tsk-scenario-acceptance.json",
@@ -269,11 +269,11 @@
       },
       {
         "file": "audit/tsk-player-acceptance.json",
-        "sha256": "c8b9b7fce37146f8e7f95182cc3d2883ab3db7117f31c08bb7b1e175aeba4b6a"
+        "sha256": "72b78cca6de9c54a400f677d265c3bc7e1e016ce17c0ee3881b2def1bfcbc807"
       },
       {
         "file": "audit/tsk-investigators.json",
-        "sha256": "4327f887b45918f95b04d538a33d0e405934056f62e46844c201ae7bdba28d49"
+        "sha256": "b7578a11c1ebbf8d3d64804eb72e41941c09c9205e0da7050506bb93d0894636"
       },
       {
         "file": "audit/tsk-campaign-plan.json",
@@ -381,7 +381,7 @@
       },
       {
         "file": "tests/tsk-shared-encounters-a.test.mjs",
-        "sha256": "1bf9dd6130f34079999b5903ffaaeb9133d3bc362227e46e67c6b991f03047a6",
+        "sha256": "55b9d956584e3b77069606a9a33ab8d055576c4c7fffeaf27c92a43d6e5bd8fc",
         "passed": 40,
         "failed": 0,
         "spawnExit": 0,
@@ -1663,7 +1663,7 @@
       "scenarioId": null,
       "partition": "tskPlayer",
       "entryPath": "src/cards/entries/09021.js",
-      "entrySha256": "9ccb1cacf0cdfc4f1b595cd58622c37b7abd26af78419593b5e73b146008e1d2",
+      "entrySha256": "4ccbf7d83bb03af1f264104b929f4632cc5203d923ec48b2c27d00701b9820c8",
       "entryFlags": {
         "source": "player-entry",
         "implemented": true,
@@ -1675,8 +1675,7 @@
           "abilities",
           "modifiers",
           "customizationOptions",
-          "customizationEffects",
-          "playCostModifier"
+          "customizationEffects"
         ],
         "abilities": 2
       },
@@ -1687,7 +1686,7 @@
         "//   card-defs 的印刷 slots），只实现特性授予；② Durable/Hallowed 的「+2 生命 / +2 神智」没有",
         "//   支援实例生命/神智修正读点（assetCapacityValue 只读 cardDef），未实现；③ Protective Runes 的"
       ],
-      "implementation": "9ccb1cacf0cdfc4f1b595cd58622c37b7abd26af78419593b5e73b146008e1d2",
+      "implementation": "4ccbf7d83bb03af1f264104b929f4632cc5203d923ec48b2c27d00701b9820c8",
       "evidence": [
         {
           "source": "player-ledger",
@@ -1713,7 +1712,7 @@
       "scenarioId": null,
       "partition": "tskPlayer",
       "entryPath": "src/cards/entries/09022.js",
-      "entrySha256": "9efbd397b36e6e1706861dff2f702ffbf6798dadc91f8109dbda7cf458c1c701",
+      "entrySha256": "1c3d25c9c3de498a6b07fe0e4b64a89f1aec7ea1d6063621dff26245067677be",
       "entryFlags": {
         "source": "player-entry",
         "implemented": true,
@@ -1725,8 +1724,7 @@
           "abilities",
           "modifiers",
           "customizationOptions",
-          "customizationEffects",
-          "playCostModifier"
+          "customizationEffects"
         ],
         "abilities": 2
       },
@@ -1734,13 +1732,13 @@
       "disclosures": [
         "// approximation：Glory 的「治愈 1 点伤害/恐惧」由 api.healDamage/healHorror 结算（目标限定自己，"
       ],
-      "implementation": "9efbd397b36e6e1706861dff2f702ffbf6798dadc91f8109dbda7cf458c1c701",
+      "implementation": "1c3d25c9c3de498a6b07fe0e4b64a89f1aec7ea1d6063621dff26245067677be",
       "evidence": [
         {
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 163,
+          "line": 166,
           "test": "P6 09022 符文斧 攻击 +1[combat]；花 1 充能灌注精准再 +2；每轮开始补满 1 充能",
           "titleMatched": true
         }
@@ -1760,7 +1758,7 @@
       "scenarioId": null,
       "partition": "tskPlayer",
       "entryPath": "src/cards/entries/09023.js",
-      "entrySha256": "8fae030cd55bba32a99d8eb4c0571fd52cb37cbff88b5664e3b2876ca88081bf",
+      "entrySha256": "d58c5272acb0a5a4a15cbc368ece0126268383ae7681ebcd373ba214e3e19299",
       "entryFlags": {
         "source": "player-entry",
         "implemented": true,
@@ -1771,8 +1769,7 @@
         "behaviorKeys": [
           "abilities",
           "customizationOptions",
-          "customizationEffects",
-          "playCostModifier"
+          "customizationEffects"
         ],
         "abilities": 2
       },
@@ -1787,13 +1784,13 @@
         "//     ⑤ Extended Magazine（其他事件花/加弹药后补 1 弹药）缺弹药花费窗口，未实现；",
         "//     ⑥ Quicksilver Bullets（成功 ≥3 时 +1 伤害）需要在攻击结算中途写伤害，未实现。"
       ],
-      "implementation": "8fae030cd55bba32a99d8eb4c0571fd52cb37cbff88b5664e3b2876ca88081bf",
+      "implementation": "d58c5272acb0a5a4a15cbc368ece0126268383ae7681ebcd373ba214e3e19299",
       "evidence": [
         {
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 188,
+          "line": 191,
           "test": "P6 09023 定制改良 附属到[[枪械]]支援；攻击时揭示标记可取消并重抽",
           "titleMatched": true
         }
@@ -1834,7 +1831,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 209,
+          "line": 212,
           "test": "P6 09024 黑曜石手串 同地点其他调查员的伤害可以分配给本卡",
           "titleMatched": true
         }
@@ -1879,7 +1876,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 223,
+          "line": 226,
           "test": "P6 09025 绊脚索 用[combat]躲避；成功且非精英时附属，敌人躲避值 -1 且横置",
           "titleMatched": true
         }
@@ -1919,7 +1916,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 244,
+          "line": 247,
           "test": "P6 09026 强势破门 检定[combat](1)：成功附属到地点，超难度每点放 1 迹象并使隐藏值 -1",
           "titleMatched": true
         }
@@ -1963,7 +1960,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 259,
+          "line": 262,
           "test": "P6 09027 深度伤痛 附属到非精英敌人；轮末对附属敌人造成 1 点伤害",
           "titleMatched": true
         }
@@ -2006,7 +2003,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 274,
+          "line": 277,
           "test": "P6 09028 励志演讲 谈判：同地点一位调查员以 -3 费用从手牌打出[[盟友]]支援",
           "titleMatched": true
         }
@@ -2050,7 +2047,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 288,
+          "line": 291,
           "test": "P6 09029 还剩一枪 给打空弹药的[[枪械]]补 1 发；本轮攻击 +3 技能值",
           "titleMatched": true
         }
@@ -2090,7 +2087,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 303,
+          "line": 306,
           "test": "P6 09030 战斗课程 只能投入攻击/躲避检定；任意地点调查员的检定可投入",
           "titleMatched": true
         }
@@ -2130,7 +2127,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 317,
+          "line": 320,
           "test": "P6 09031 援助之手 可投入任意检定且每次限 1 张；其他投入卡的图标翻倍",
           "titleMatched": true
         }
@@ -2174,7 +2171,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 338,
+          "line": 341,
           "test": "P6 09032 鼓舞决心 技能检定开始时花 1 充能：把一张非弱点手牌投入检定（图标视为[wild]）",
           "titleMatched": true
         }
@@ -2215,7 +2212,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 357,
+          "line": 360,
           "test": "P6 09033 外勤特工 +1[智力]；横置并受 1 点恐惧：发现所在地点 1 个线索",
           "titleMatched": true
         }
@@ -2255,7 +2252,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 372,
+          "line": 375,
           "test": "P6 09034 看门狗 横置与同地点敌人交战并让它攻击你；受攻击伤害后反咬 1 点",
           "titleMatched": true
         }
@@ -2299,7 +2296,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 388,
+          "line": 391,
           "test": "P6 09035 手铐 用[combat]躲避[[类人]]敌人：成功清空其毁灭并附属，非精英不能重整",
           "titleMatched": true
         }
@@ -2339,7 +2336,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 407,
+          "line": 410,
           "test": "P6 09036 最坏的打算 从牌库顶 9 张找出[[武器]]支援加入手牌并混洗牌库",
           "titleMatched": true
         }
@@ -2380,7 +2377,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 420,
+          "line": 423,
           "test": "P6 09037 殉道者护臂 显现结算时 +1 技能值；把同地点队友抽到的非险境遭遇改由你结算",
           "titleMatched": true
         }
@@ -2420,7 +2417,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 436,
+          "line": 439,
           "test": "P6 09038 吉里什·卡达贾 承接同地点他人的伤害；横置令本次检定 +2，成功治愈自身 1 点",
           "titleMatched": true
         }
@@ -2463,7 +2460,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 453,
+          "line": 456,
           "test": "P6 09039 时刻警惕 依次以 -1 费用打出最多 4 张手牌支援",
           "titleMatched": true
         }
@@ -2483,7 +2480,7 @@
       "scenarioId": null,
       "partition": "tskPlayer",
       "entryPath": "src/cards/entries/09040.js",
-      "entrySha256": "52598ad156f3daeac2241b39df915d03add1ce65b10aad2863714388b72219da",
+      "entrySha256": "8ce534d6c73bae10b8b86494c24f5995190795a4427de9d0256f103c7b740396",
       "entryFlags": {
         "source": "player-entry",
         "implemented": true,
@@ -2502,13 +2499,13 @@
         "approximation: Enlightening 的「充能或秘密」按充能结算（api.addUses(asset,1)），秘密类支援不区分标记类型",
         "// 未实现：Enlightening 的「充能或秘密」二选一按充能处理（api.addUses(asset,1)），见 note。"
       ],
-      "implementation": "52598ad156f3daeac2241b39df915d03add1ce65b10aad2863714388b72219da",
+      "implementation": "8ce534d6c73bae10b8b86494c24f5995190795a4427de9d0256f103c7b740396",
       "evidence": [
         {
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 468,
+          "line": 471,
           "test": "P6 09040 炼金蒸馏 花 1 补给：检定[智力](1) 成功让调查员抽 2 张；精炼入场 +2 补给",
           "titleMatched": true
         }
@@ -2528,7 +2525,7 @@
       "scenarioId": null,
       "partition": "tskPlayer",
       "entryPath": "src/cards/entries/09041.js",
-      "entrySha256": "21d0e1cf8c837e99a7e7d1097f062755037284896bb793be5f2999467566ed62",
+      "entrySha256": "19a14c154e00baba6e3b7681cb7d5ebaef3cfc0ae9aacb14cbfde1db2a8e85f6",
       "entryFlags": {
         "source": "player-entry",
         "implemented": true,
@@ -2542,18 +2539,18 @@
         ],
         "abilities": 4
       },
-      "note": "approximation: 只实现两项印刷判据（失败 ≥2 / 成功 ≥3）与「花 1 证据抽 1」；四项定制判据、Peer Review/Research Grant/Irrefutable Proof/Alternative Hypothesis 未实现（见 primitive-requests/09041.json）",
+      "note": "approximation: 只实现两项印刷判据（失败 ≥2 / 成功 ≥3）与「花 1 证据抽 1」；8 个定制勾选格规则未接读点，已标记 implemented:false（展示文本、不可购买，避免无效 XP 支出）；见 primitive-requests/09041.json",
       "disclosures": [
-        "approximation: 只实现两项印刷判据（失败 ≥2 / 成功 ≥3）与「花 1 证据抽 1」；四项定制判据、Peer Review/Research Grant/Irrefutable Proof/Alternative Hypothesis 未实现（见 primitive-requests/09041.json）",
+        "approximation: 只实现两项印刷判据（失败 ≥2 / 成功 ≥3）与「花 1 证据抽 1」；8 个定制勾选格规则未接读点，已标记 implemented:false（展示文本、不可购买，避免无效 XP 支出）；见 primitive-requests/09041.json",
         "// approximation：自定义判据（Pessimistic Outlook 等 4 项）与 Peer Review / Research Grant /"
       ],
-      "implementation": "21d0e1cf8c837e99a7e7d1097f062755037284896bb793be5f2999467566ed62",
+      "implementation": "19a14c154e00baba6e3b7681cb7d5ebaef3cfc0ae9aacb14cbfde1db2a8e85f6",
       "evidence": [
         {
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 490,
+          "line": 497,
           "test": "P6 09041 实证假设 回合开始选判据；达成判据横置加 1 证据；花 1 证据抽 1 张",
           "titleMatched": true
         }
@@ -2573,7 +2570,7 @@
       "scenarioId": null,
       "partition": "tskPlayer",
       "entryPath": "src/cards/entries/09042.js",
-      "entrySha256": "a962c201cd640a456ca8aa46bde03defd89e29968dbf0adaeaae9b3725a2d6da",
+      "entrySha256": "20f64f6f1cc2add8514258bf10b52c50003854d14baf502399805ea36b8e4cca",
       "entryFlags": {
         "source": "player-entry",
         "implemented": true,
@@ -2594,13 +2591,13 @@
         "//   （campaign-flow 的 XP 计算），本条目未实现；Living Quill / Spectral Binding / Mystic Vane /",
         "//   Interwoven Ink / Supernatural Record 缺「按勾选条件改槽位/改检定值/改触发」的读点，未实现。"
       ],
-      "implementation": "a962c201cd640a456ca8aa46bde03defd89e29968dbf0adaeaae9b3725a2d6da",
+      "implementation": "20f64f6f1cc2add8514258bf10b52c50003854d14baf502399805ea36b8e4cca",
       "evidence": [
         {
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 512,
+          "line": 519,
           "test": "P6 09042 鸦翎羽毛笔 附属到你控制的[[书籍]]支援；墨力汲取把 1 充能移给所附属支援",
           "titleMatched": true
         }
@@ -2646,7 +2643,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 530,
+          "line": 537,
           "test": "P6 09043 解剖工具 同地点敌人被击败后放 1 证据；1/2 证据分别 +1[敏捷]/+1[战斗]",
           "titleMatched": true
         }
@@ -2686,7 +2683,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 550,
+          "line": 557,
           "test": "P6 09044 凄惨传略 花 1 秘密调查 +2[智力]；成功超过 2 点抽 1 张",
           "titleMatched": true
         }
@@ -2730,7 +2727,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 569,
+          "line": 576,
           "test": "P6 09045 研究笔记 检定[智力](0)：成功每超出 1 点可花 1 证据发现 1 个线索",
           "titleMatched": true
         }
@@ -2770,7 +2767,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 586,
+          "line": 593,
           "test": "P6 09046 诡异诊断 把 1 个线索放到所在地点，然后治愈同地点调查员 3 点伤害",
           "titleMatched": true
         }
@@ -2810,7 +2807,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
-          "line": 599,
+          "line": 606,
           "test": "P6 09047 震撼发现 查找牌库顶 6 张：放 1 个线索从查找牌里取 2 张入手并混洗",
           "titleMatched": true
         }
@@ -4158,7 +4155,7 @@
       "scenarioId": null,
       "partition": "tskPlayer",
       "entryPath": "src/cards/entries/09079.js",
-      "entrySha256": "692d2f44bef2f353615dc5b65ad2a6f6a3ca58b378442546cb15fcb227cea65e",
+      "entrySha256": "29902ee0a23f7ace9acd8b108131c7687e752644c477e98c6c7bc075398dfd54",
       "entryFlags": {
         "source": "player-entry",
         "implemented": true,
@@ -4182,7 +4179,7 @@
         "//     当前字段是静态布尔，未实现（note）。",
         "//   · Imbued Ink 的「改为占用法术槽」没有实例级槽位覆盖读点，仅实现额外 2 充能（note）。"
       ],
-      "implementation": "692d2f44bef2f353615dc5b65ad2a6f6a3ca58b378442546cb15fcb227cea65e",
+      "implementation": "29902ee0a23f7ace9acd8b108131c7687e752644c477e98c6c7bc075398dfd54",
       "evidence": [
         {
           "source": "player-ledger",
@@ -4257,7 +4254,7 @@
       "scenarioId": null,
       "partition": "tskPlayer",
       "entryPath": "src/cards/entries/09081.js",
-      "entrySha256": "bed3f1f6e433f46aff9bde4c1fb7d6e7b431d12303feb614b60312ccf780ea27",
+      "entrySha256": "50eb59b9ea001e73a16c2f15a326375868e3bddaa9e34c3bfa5eefdec385bd98",
       "entryFlags": {
         "source": "player-entry",
         "implemented": true,
@@ -4278,7 +4275,7 @@
         "approximation: 见 primitive-request/09081.json（不真正附属到敌人：打出时对所选非精英敌人一次性下命令；持续谈判与 Greater Control/Bonded/Thrice Spoken 未实现）",
         "// approximation（已写 primitive-request/09081.json）："
       ],
-      "implementation": "bed3f1f6e433f46aff9bde4c1fb7d6e7b431d12303feb614b60312ccf780ea27",
+      "implementation": "50eb59b9ea001e73a16c2f15a326375868e3bddaa9e34c3bfa5eefdec385bd98",
       "evidence": [
         {
           "source": "player-ledger",
@@ -5028,7 +5025,7 @@
       "scenarioId": null,
       "partition": "tskPlayer",
       "entryPath": "src/cards/entries/09099.js",
-      "entrySha256": "0142f421ec6eb272e47f55539ed4cc5689b9956f980a08d2da3b0fcdfbb41e06",
+      "entrySha256": "76b87cc881c52bf6bb8c2a16876abd24019b27f83efe6df0e310a35e1ae7271b",
       "entryFlags": {
         "source": "player-entry",
         "implemented": true,
@@ -5049,7 +5046,7 @@
         "approximation: 见 primitive-request/09099.json（Detachable 跨座位使用与 Spring-Loaded 的失败时点改写未实现，其余勾选项已实现）",
         "// approximation（已写 primitive-request/09099.json）："
       ],
-      "implementation": "0142f421ec6eb272e47f55539ed4cc5689b9956f980a08d2da3b0fcdfbb41e06",
+      "implementation": "76b87cc881c52bf6bb8c2a16876abd24019b27f83efe6df0e310a35e1ae7271b",
       "evidence": [
         {
           "source": "player-ledger",
@@ -5075,7 +5072,7 @@
       "scenarioId": null,
       "partition": "tskPlayer",
       "entryPath": "src/cards/entries/09100.js",
-      "entrySha256": "c376e33861ff7f88e21e4c7b9b5c18e5537e025b858d0058b883e99c15548918",
+      "entrySha256": "d325a82edfbf9ccdcbc91ba9f5dc49ed08d6394884c6339206688294c95bedd2",
       "entryFlags": {
         "source": "player-entry",
         "implemented": true,
@@ -5097,13 +5094,13 @@
         "//     当作随你移动的场上卡，「附属地点敌人 -1 攻击/-1 躲避」与远程布置/束网未实现（note）。",
         "//   · Simple（获得快速）是静态关键字，定制项无法在运行期开关，未实现。"
       ],
-      "implementation": "c376e33861ff7f88e21e4c7b9b5c18e5537e025b858d0058b883e99c15548918",
+      "implementation": "d325a82edfbf9ccdcbc91ba9f5dc49ed08d6394884c6339206688294c95bedd2",
       "evidence": [
         {
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-3.test.mjs",
-          "line": 676,
+          "line": 677,
           "test": "P6 09100 简易陷阱：以 2 计时入场，每轮结束移除 1 计时，耗尽后弃掉",
           "titleMatched": true
         }
@@ -5123,7 +5120,7 @@
       "scenarioId": null,
       "partition": "tskPlayer",
       "entryPath": "src/cards/entries/09101.js",
-      "entrySha256": "654b5444d447aa841521bc9cb270ad7431843ae4865b053ec70b6f55d33487bb",
+      "entrySha256": "b3a5f6d4a26fe59304dfc839648295961d8d177f34d0c8fa8a35e4bba1929cbb",
       "entryFlags": {
         "source": "player-entry",
         "implemented": true,
@@ -5137,21 +5134,20 @@
         ],
         "abilities": 1
       },
-      "note": "approximation: 见 primitive-request/09101.json（购买时所选特性用占位 Monster/Humanoid；Nemesis/Mythos-Hardened/Always Prepared 未实现）",
+      "note": "approximation: 见 primitive-request/09101.json（购买时所选特性用占位 Monster/Humanoid；5 个定制勾选格规则未接读点，已标记 implemented:false（展示文本、不可购买））",
       "disclosures": [
         "entry.simplified=true",
-        "approximation: 见 primitive-request/09101.json（购买时所选特性用占位 Monster/Humanoid；Nemesis/Mythos-Hardened/Always Prepared 未实现）",
+        "approximation: 见 primitive-request/09101.json（购买时所选特性用占位 Monster/Humanoid；5 个定制勾选格规则未接读点，已标记 implemented:false（展示文本、不可购买））",
         "// approximation（已写 primitive-request/09101.json）：",
-        "//     「与诡计一起加入胜利区」「弃牌堆回手」的条目级读点，未实现（逐项 note）。",
         "// 占位的购买时所选特性（见文件头 approximation）。"
       ],
-      "implementation": "654b5444d447aa841521bc9cb270ad7431843ae4865b053ec70b6f55d33487bb",
+      "implementation": "b3a5f6d4a26fe59304dfc839648295961d8d177f34d0c8fa8a35e4bba1929cbb",
       "evidence": [
         {
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-3.test.mjs",
-          "line": 693,
+          "line": 694,
           "test": "P6 09101 饱经风霜：对遭遇卡的检定每个匹配的所选特性获得双百搭图标",
           "titleMatched": true
         }
@@ -5989,7 +5985,7 @@
       "scenarioId": null,
       "partition": "tskPlayer",
       "entryPath": "src/cards/entries/09119.js",
-      "entrySha256": "c6c21bf453ec486e2eff324dae9bf4929fd5fbc4c9f1c81b2dd84fff373874d3",
+      "entrySha256": "1e927147c9cb20b036ae89991e2edc754cdf32c1a30e4e2b48f5b12ba3a3f937",
       "entryFlags": {
         "source": "player-entry",
         "implemented": true,
@@ -6008,7 +6004,7 @@
         "approximation: 当前形态用 untilLeavesPlay 持续效果记账（缺实例级形态字段）；定位变换的位移在躲避检定后结算；注能配置只加在具象检定的技能值上。",
         "// approximation: ①「当前形态」用持续效果记账（缺实例级形态字段）；②定位变换的位移在躲避检定之后结算"
       ],
-      "implementation": "c6c21bf453ec486e2eff324dae9bf4929fd5fbc4c9f1c81b2dd84fff373874d3",
+      "implementation": "1e927147c9cb20b036ae89991e2edc754cdf32c1a30e4e2b48f5b12ba3a3f937",
       "evidence": [
         {
           "source": "player-ledger",
@@ -6022,7 +6018,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
-          "line": 613,
+          "line": 614,
           "test": "P6 09119 超自然发射器：以太连接（勾选）入场时额外 +2 以太",
           "titleMatched": true
         }
@@ -6068,7 +6064,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
-          "line": 632,
+          "line": 634,
           "test": "P6 09120 工具带：附属的[[工具]]支援不占用槽位",
           "titleMatched": true
         }
@@ -6109,7 +6105,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
-          "line": 649,
+          "line": 651,
           "test": "P6 09121 精益求精：额外花 1 行动，立刻勾选定制卡的一个方框",
           "titleMatched": true
         }
@@ -6149,7 +6145,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
-          "line": 669,
+          "line": 671,
           "test": "P6 09122 手电筒：调查检定开始时花费 1 补给，难度 -2",
           "titleMatched": true
         },
@@ -6157,7 +6153,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
-          "line": 680,
+          "line": 682,
           "test": "P6 09122 手电筒：非调查/躲避检定不提供反应",
           "titleMatched": true
         }
@@ -6201,7 +6197,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
-          "line": 698,
+          "line": 700,
           "test": "P6 09123 灵魂封圣：检定期间花费 1 贡品，本次检定 +2 技能值",
           "titleMatched": true
         }
@@ -6246,7 +6242,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
-          "line": 714,
+          "line": 716,
           "test": "P6 09124 暗处潜伏者：显现时在任意连接地点生成，猎手关键词生效",
           "titleMatched": true
         },
@@ -6254,7 +6250,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
-          "line": 732,
+          "line": 734,
           "test": "P6 09124 暗处潜伏者：只能被武器支援/策略事件攻击（徒手攻击被来源限制阻止）",
           "titleMatched": true
         }
@@ -6300,7 +6296,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
-          "line": 758,
+          "line": 760,
           "test": "P6 09125 量子悖论：弱点留在手中，回合结束时揭示并受到 1 点恐惧",
           "titleMatched": true
         },
@@ -6308,7 +6304,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
-          "line": 772,
+          "line": 774,
           "test": "P6 09125 量子悖论：手牌 ≥5 时可打出并额外弃 4 张",
           "titleMatched": true
         }
@@ -6354,7 +6350,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
-          "line": 793,
+          "line": 795,
           "test": "P6 09126 该付账了：用额外行动把 10 费降到 0 后打出",
           "titleMatched": true
         },
@@ -6362,7 +6358,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
-          "line": 808,
+          "line": 810,
           "test": "P6 09126 该付账了：回合结束时若在手牌，揭示并受到 1 点伤害",
           "titleMatched": true
         }
@@ -6407,7 +6403,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
-          "line": 823,
+          "line": 825,
           "test": "P6 09127 恐怖异灵：弱点在本地点生成并交战，空法术槽额外揭示标记",
           "titleMatched": true
         },
@@ -6415,7 +6411,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
-          "line": 841,
+          "line": 843,
           "test": "P6 09127 恐怖异灵：没有空法术槽时不额外揭示",
           "titleMatched": true
         }
@@ -6463,7 +6459,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
-          "line": 860,
+          "line": 862,
           "test": "P6 09128 准备不足：只有这一张手牌且恰好 1 资源时才能打出",
           "titleMatched": true
         },
@@ -6471,7 +6467,7 @@
           "source": "player-ledger",
           "evidenceFile": "audit/tsk-player-acceptance.json",
           "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
-          "line": 874,
+          "line": 876,
           "test": "P6 09128 准备不足：支付 1 资源打出以弃掉它",
           "titleMatched": true
         }

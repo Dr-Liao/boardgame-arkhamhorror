@@ -213,64 +213,64 @@
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "customization",
-      "bytes": 283646,
-      "sha256": "537f6606f01c78222a059fd6b10e37b7a574215e8c45b2530885cf9abd72d600"
+      "bytes": 305359,
+      "sha256": "e1ddde3405efecb8d2b99569cb5a44032a525e534e2e500f06d1ecd862a51ec9"
     },
     {
       "path": "artifacts/migration/tsk/p8/screenshots/custom-departure-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "customization",
-      "bytes": 108490,
-      "sha256": "7b52d543ce1651869603b754ccb1928aff2b33e206c427e37d08922384eaee04"
+      "bytes": 106381,
+      "sha256": "5b616c5dbbb0e02cdfefa92c222794d3e9cf355cf94c9dc3b999aa43364dbb64"
     },
     {
       "path": "artifacts/migration/tsk/p8/screenshots/custom-initial-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "customization",
-      "bytes": 431096,
-      "sha256": "34d6883fc01961ccdd9859a4b1518b8c503788bea0ae83821493e72b371bbb9e"
+      "bytes": 428522,
+      "sha256": "e319a0885153c833d464aa38ad8be8ee668500f452a44fee22e310382bac64e4"
     },
     {
       "path": "artifacts/migration/tsk/p8/screenshots/custom-initial-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "customization",
-      "bytes": 178936,
-      "sha256": "6c506a8b9cb617930a1facd7c967aec753061cf62bfcf2441aa95c06aaee5fb6"
+      "bytes": 178854,
+      "sha256": "3afe1a431d3e31215b8daa46f8121df742d77273317d4c2955315be5ad4545c1"
     },
     {
       "path": "artifacts/migration/tsk/p8/screenshots/custom-interlude-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "customization",
-      "bytes": 530211,
-      "sha256": "81ead4b40ace8506262b7e1f60eceb0c97da58cc2b9e4b9e11be18447623fabb"
+      "bytes": 530907,
+      "sha256": "78434f74819426ed4edc77cb19961848eb1d85375017383b60a70c35811136c8"
     },
     {
       "path": "artifacts/migration/tsk/p8/screenshots/custom-interlude-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "customization",
-      "bytes": 227025,
-      "sha256": "c51766fe388aaaaf8659ae6f628b1f8821e14dabedcf53fccfad8e6d8dd4c9c4"
+      "bytes": 224446,
+      "sha256": "edc956afada3a2b8d95d36501af97afa89cd5b722d48022ce1af3e1cf244db49"
     },
     {
       "path": "artifacts/migration/tsk/p8/screenshots/custom-interlude-upgraded-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "customization",
-      "bytes": 520049,
-      "sha256": "8ec32531879e7d31763be519fa10ecb7cd02e846d224759e5523fcdc999e6ccd"
+      "bytes": 519467,
+      "sha256": "f2f66ac6e36193bd35d715aa186f05c0e993a9e5d1fe3bf519d00fd9f3a7f7bb"
     },
     {
       "path": "artifacts/migration/tsk/p8/screenshots/custom-interlude-upgraded-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "customization",
-      "bytes": 225720,
-      "sha256": "b85d3074c3d80b6cb591a8c2b85ad0df73584375175095fed8d6f75070746246"
+      "bytes": 225603,
+      "sha256": "cad9f3944f91985f9e887740eef32b68b61332e108e1889f455565f61aa0109d"
     },
     {
       "path": "artifacts/migration/tsk/p8/screenshots/custom-lobby-desktop.png",
@@ -293,49 +293,49 @@
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "customization",
-      "bytes": 520049,
-      "sha256": "8ec32531879e7d31763be519fa10ecb7cd02e846d224759e5523fcdc999e6ccd"
+      "bytes": 519467,
+      "sha256": "f2f66ac6e36193bd35d715aa186f05c0e993a9e5d1fe3bf519d00fd9f3a7f7bb"
     },
     {
       "path": "artifacts/migration/tsk/p8/screenshots/custom-refresh-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "customization",
-      "bytes": 225720,
-      "sha256": "b85d3074c3d80b6cb591a8c2b85ad0df73584375175095fed8d6f75070746246"
+      "bytes": 225603,
+      "sha256": "cad9f3944f91985f9e887740eef32b68b61332e108e1889f455565f61aa0109d"
     }
   ],
   "screenshotsMissing": [],
   "sourceFiles": [
     {
       "path": "src/campaign/campaign.js",
-      "sha256": "36c735c581a73f7696c309b2539d2a8877dc02d080875f6e6bbfdd194541a6d2",
-      "bytes": 26030
+      "sha256": "4290b9f42565e59adf985ef83364e5afb1efd218132e69800cecedc96dc3ea29",
+      "bytes": 25959
     },
     {
       "path": "src/engine/dispatch.js",
-      "sha256": "4dcab5e4ef1d7073261e420742a49c18abe556af9f23c81476da5524bee3173f",
-      "bytes": 56994
+      "sha256": "4a657c7001ad25b7862711aef4de8facc5229475ac62aee926ea3513c8a409d4",
+      "bytes": 62172
     },
     {
       "path": "src/engine/hub.js",
-      "sha256": "b50bd3c1506e3b45a197aeb3d3725cff307947aa38582fde4941b5d5fd03bd28",
-      "bytes": 33744
+      "sha256": "684579ff29b7118c325e57c62514437e7968359f8e94ae77ef8bc88a96e49968",
+      "bytes": 35023
     },
     {
       "path": "src/engine/table-decisions.js",
-      "sha256": "73df43c69185f50b054593b259d582042fb18e83a0128771f2a7e37d2ca61bf3",
-      "bytes": 28499
+      "sha256": "9bbbb88532d5dc0afd7a4dadb98caabe88b215d3bc67db9606879240d5a55eec",
+      "bytes": 28968
     },
     {
       "path": "src/engine/tsk-customizable.js",
-      "sha256": "941cdd9ba30dec77a1b13344df1647a98fad2d05314b8af7119a7cf06e9ab4a9",
-      "bytes": 9810
+      "sha256": "c110ee26859ddeed8360551364788da3b6aad97f30e57e74fa0f5ab3779156f9",
+      "bytes": 11557
     },
     {
       "path": "src/integration/mechanic-view.js",
-      "sha256": "017ee8c1ae6daa697c615e2a8f0bee4f641c6331ede9989cfb4dce745f5c463e",
-      "bytes": 18476
+      "sha256": "c02e0a7ff61087c73f9c5f96e7f8c28f7a58d572ad357a19fb5d1f86d16db281",
+      "bytes": 20483
     },
     {
       "path": "tests/playwright/playwright.tsk-customization.config.mjs",
@@ -354,8 +354,8 @@
     },
     {
       "path": "tests/tsk-p8-customization.test.mjs",
-      "sha256": "aeb8c572d8f7e57b678535545ac54f8ef5c140dccc4df78367681bed96051126",
-      "bytes": 18740
+      "sha256": "3df7ecc5b51753ebaca0a7a4496a461f6fb8ea1bb1db04f82cce6d8039b37411",
+      "bytes": 29591
     },
     {
       "path": "tools/playwright-tsk-customization-reporter.mjs",
@@ -369,23 +369,23 @@
     },
     {
       "path": "web/campaign-experience.css",
-      "sha256": "ceaa60633e364373c4eb3c4fe36e78520b4860028317113a8f3f214894adbdca",
-      "bytes": 27656
+      "sha256": "19b9957532f3b95aee261d4d57a5dae89e234aa7b0b734dd8d1dcece2559c32a",
+      "bytes": 29185
     },
     {
       "path": "web/hub.js",
-      "sha256": "8cfed99f98a37c51335b7df1458cd15bf30274a5dd31cbe508e509e21eba801b",
-      "bytes": 166776
+      "sha256": "d6027b5d01ba8e9dfffd2a41e7f4e25419821fc83d62b8b94538e18dffdf3082",
+      "bytes": 167973
     },
     {
       "path": "web/locales/en.core.js",
-      "sha256": "994b630ab2c3b0ddf4629d3015d2b2444de2e44f2571335aeddfad4e57a58ce4",
-      "bytes": 9187
+      "sha256": "dfb1f8afe7347a9283b46413746fe042ba6f4fbc4e6ce46a243802ef894e96de",
+      "bytes": 9271
     },
     {
       "path": "web/locales/zh-CN.core.js",
-      "sha256": "4fdbc9834298de270fa02633707f549154dacca525a0938ca7911c6da4c43a72",
-      "bytes": 9047
+      "sha256": "eb73b018b5ef374e8b68b7eb9ff3da25dd84f028429bfcbbf8e4f7516fcebf82",
+      "bytes": 9132
     }
   ],
   "sourceFilesMissing": []

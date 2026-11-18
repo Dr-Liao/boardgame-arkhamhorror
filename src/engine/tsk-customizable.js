@@ -6,8 +6,10 @@
 //   · extend.costDiscount     —— 已勾选条目对打出费用的修正（经 modifiers.js 的外部修正源读点）
 //
 // 数据口径（P1 已逐卡记录 customizationText）：
-//   · 选项由内容层注册：`registerCustomizationOptions({ [code]: [{ name, checks, text }] })`；
+//   · 选项由内容层注册：`registerCustomizationOptions({ [code]: [{ name, checks, text, implemented? }] })`；
 //     引擎不解析卡文、不认卡号列表，只保存「该卡有哪些勾选格」的契约。
+//     2026-11-16 P2-3：`implemented: false` 表示该勾选格的行为尚未接读点（近似条目）——面板仍展示
+//     卡面文本，但**不生成可购买候选**、dispatch 拒绝勾选，避免玩家花 XP 买到无效果选项。
 //   · 勾选状态存 `campaign.tsk.customizations = { version: 1, bySeat: { [seat]: { [code]: number[] } } }`
 //     （值 = 已勾选选项下标数组；同一选项的多次勾选用重复下标表达）。
 //   · 等级 = ceil(勾选总格数 / 2)；每个勾选格消耗 1 点经验（exceptional 卡按规则双倍经验由调用方传入 costPerCheck）。
@@ -30,10 +32,14 @@ export function registerCustomizationOptions(table) {
     if (!Array.isArray(options) || !options.length) throw new TypeError(`卡 ${code} 的定制选项必须是非空数组`)
     optionRegistry.set(code, options.map(option => {
       assertTskObject(option, '定制选项')
-      assertTskFields(option, ['name', 'checks', 'text'], '定制选项')
+      assertTskFields(option, ['name', 'checks', 'text', 'implemented'], '定制选项')
       if (typeof option.name !== 'string' || !option.name) throw new TypeError('定制选项名无效')
       if (!Number.isSafeInteger(option.checks) || option.checks < 1) throw new TypeError('定制选项勾选格数必须是正整数')
-      return Object.freeze({ name: option.name, checks: option.checks, text: option.text ?? null })
+      if (option.implemented != null && typeof option.implemented !== 'boolean') throw new TypeError('定制选项 implemented 必须是布尔值')
+      return Object.freeze({
+        name: option.name, checks: option.checks, text: option.text ?? null,
+        implemented: option.implemented !== false,
+      })
     }))
   }
   return optionRegistry.size
@@ -96,6 +102,27 @@ export function customizationCheckedError(code, checked) {
 /** 勾选总格数。 */
 export function customizationCheckedCount(checked) {
   return Array.isArray(checked) ? checked.length : 0
+}
+
+/**
+ * 2026-11-16 P2-3：某一张定制卡的某个选项「已勾选格数」的权威读点。
+ * 契约：勾选是逐格累计的，前缀合法但**只有勾满该选项的 checks 格，该选项的效果才生效**。
+ * 卡条目不得自己 `includes(index)` 判定（会把「勾 1 格」误当成「整项已解锁」）。
+ * 不存在容器 / 未勾选 / 未注册时返回 0（纯读，不初始化容器）。
+ */
+export function customizationOptionCheckedCount(state, seat, code, optionIndex) {
+  if (!Number.isSafeInteger(seat) || !Number.isSafeInteger(optionIndex) || optionIndex < 0) return 0
+  const container = customizationState(state)
+  const checked = container?.bySeat?.[seat]?.[code]
+  if (!Array.isArray(checked)) return 0
+  return checked.filter(index => index === optionIndex).length
+}
+
+/** 2026-11-16 P2-3：该选项是否已勾满（勾满才生效；未注册的卡一律 false）。 */
+export function customizationOptionFullyChecked(state, seat, code, optionIndex) {
+  const options = optionRegistry.get(code)
+  if (!options || !Number.isSafeInteger(optionIndex) || optionIndex >= options.length) return false
+  return customizationOptionCheckedCount(state, seat, code, optionIndex) >= options[optionIndex].checks
 }
 
 /** 等级 = ceil(勾选总格数 / 2)（Customizable 规则；未勾选为 0 级）。 */

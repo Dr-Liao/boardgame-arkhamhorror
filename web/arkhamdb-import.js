@@ -56,6 +56,10 @@ export function loadArkhamDbDeck(parsed, { fetchImpl = globalThis.fetch.bind(glo
   return request(`${parsed.kind}/${encodeURIComponent(parsed.id)}`, fetchImpl)
 }
 
+export function loadRecommendedDeck(investigatorCode) {
+  return request('recommended?' + new URLSearchParams({ investigator: investigatorCode }), globalThis.fetch.bind(globalThis))
+}
+
 const typeOrder = { asset: 0, event: 1, skill: 2 }
 
 /**

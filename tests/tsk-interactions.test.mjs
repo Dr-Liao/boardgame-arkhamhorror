@@ -90,7 +90,8 @@ test('P4 机制操作表：既有 10 + EotE 9 项保持不变，追加 TSK 6 项
     'commitOrigin', 'returnCommitment',
     'eoteFrost', 'eotePartner', 'eoteSeal', 'eoteKey', 'eoteTekeli', 'eoteDeckTop', 'eoteCrossSeat', 'eoteDiscipline', 'eoteSupply',
   ])
-  assert.deepEqual([...MECHANIC_OPERATIONS.slice(19)],
+  // 九循环 FHV P4 继续在末尾追加 7 项（下标 25–31），不影响 TSK 6 项的顺序。
+  assert.deepEqual([...MECHANIC_OPERATIONS.slice(19, 25)],
     ['tskConcealed', 'tskKey', 'tskHollow', 'tskMap', 'tskCustomizable', 'tskCrossSeat'])
   assert.equal(new Set(MECHANIC_OPERATIONS).size, MECHANIC_OPERATIONS.length)
   // P1 扫描的交互机制必须都能对上一个已登记操作。

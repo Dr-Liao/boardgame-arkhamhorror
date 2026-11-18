@@ -669,6 +669,33 @@ export function resolutionStory(sc, key, snapshot = null, context = null) {
   return { version: 3, title, paragraphs: paragraphList }
 }
 
+// 私密故事（`campaign.privateStories`）在纪事里的位置：写入时记录了当时的流程位置
+// （`nodeId` + `visit`，见 campaign-effects#privateStory 与 TCU 序章 behavior），这里把它折算成
+// 与公开条目一致的排序键——关卡内发生的私密故事排在「导入」之后、「结算」之前；剧情节点内发生的
+// 排在节点正文之后。旧存档没有位置字段：万象无终序章的 `tcuPrologue*` 按《暮色庄园失踪事件》
+// 回填，其余保持旧行为（排在纪事末尾），不改变已发布战役的观感。
+function privateStoryOrder(story, campaign, history, counters, fallback) {
+  let nodeId = typeof story.nodeId === 'string' ? story.nodeId : null
+  let visit = Number.isInteger(story.visit) ? story.visit : null
+  if (!nodeId || visit == null) {
+    const legacy = campaign.id === 'theCircleUndone' && /^tcuPrologue/.test(String(story.id))
+      ? (campaign.scenarioResults || []).find(result => result.scenarioId === 'disappearanceAtTheTwilightEstate')
+      : null
+    const match = /^([^:]+):(\d+)$/.exec(String(legacy?.visitId || ''))
+    if (match) { nodeId = match[1]; visit = Number(match[2]) }
+  }
+  const visitIndex = nodeId == null ? -1
+    : history.findIndex(entry => entry.nodeId === nodeId && entry.visit === visit)
+  if (visitIndex < 0) return fallback
+  const key = `${nodeId}:${visit}`
+  const sequence = counters.get(key) || 0
+  counters.set(key, sequence + 1)
+  const base = visitIndex * 3
+  const inScenario = (campaign.scenarioResults || []).some(result => result.visitId === key)
+  // 关卡内：base(导入) < base+0.5+…(私密) < base+1(结算)；剧情节点内：紧跟该节点正文。
+  return (inScenario ? base + 0.5 : base - 0.5) + sequence * 0.01
+}
+
 export function campaignStory(state, registry, observerSeat = null) {
   const campaign = state.campaign, entries = [], history = campaign.flow?.history || []
   const campaignManifest = registry.getCampaign(campaign.id)
@@ -712,10 +739,11 @@ export function campaignStory(state, registry, observerSeat = null) {
       .find(record => record.seat === observerSeat)?.id
     : null
   if (observerId) {
+    const counters = new Map()
     for (const [index, story] of (campaign.privateStories || []).entries()) {
       if (!story.audienceInvestigatorIds?.includes(observerId)) continue
       entries.push({
-        _order: history.length * 3 + index,
+        _order: privateStoryOrder(story, campaign, history, counters, history.length * 3 + index),
         id: `private:${story.id}:${index}`,
         kind: 'interlude',
         title: story.title || '秘密故事',
@@ -737,7 +765,8 @@ export function campaignStory(state, registry, observerSeat = null) {
       const snapshot = ['inScenario',undefined].includes(state.uiState) && state.scenario?.id === id ? state.scenarioIntro : null
       current = { id: `current:${id}`, kind: 'intro', scenarioId: id,
         ...savedIntroduction(snapshot, sc, campaign.records, state) }
-      entries.push(current)
+      // 当前/下一关的导入永远排最后：它是「故事引导」里最该被默认展开的条目。
+      entries.push({ ...current, _order: Number.MAX_SAFE_INTEGER })
     }
   }
   return { entries, currentId: current?.id || entries.at(-1)?.id || null }

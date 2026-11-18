@@ -23,7 +23,43 @@ test('不可变清单固定核心五人、58玩家卡及完整依赖，严格模
   assert.equal(getAvailability('03020').availability, 'strict')
   // P5：绯红密钥六位调查员与专属依赖已开放（strict）；未开放循环仍 catalog-only。
   for (const code of ['09002', '09010']) assert.equal(getAvailability(code).availability, 'strict')
-  for (const code of ['10001', 'unknown']) assert.equal(getAvailability(code).availability, 'catalog-only')
+  // P5（九循环）：铁杉谷盛宴五位调查员与 15 张专属/绑定依赖已开放（strict），调查员可选、依赖只作依赖；
+  // P6：一般玩家卡 120 条开放 strict（102 张可构筑、4 基础弱点/11 绑定依赖只作依赖、3 张 Research 不进池）；
+  // 战役包（10501+）仍 catalog-only（P7–P8）。
+  for (const code of ['10001', '10004', '10009', '10012', '10015']) {
+    assert.equal(getAvailability(code).availability, 'strict', `${code} 应开放严格验收`)
+    assert.equal(getAvailability(code).selectable, true, `${code} 应可由真人选择`)
+    assert.equal(getAvailability(code).deckbuilding, false, `${code} 调查员卡不可构筑`)
+  }
+  for (const code of ['10002', '10003', '10005b', '10006', '10016a']) {
+    assert.equal(getAvailability(code).availability, 'strict', `${code} 依赖应开放严格验收`)
+    assert.equal(getAvailability(code).dependencyOnly, true, `${code} 应为依赖卡`)
+    assert.equal(getAvailability(code).deckbuilding, false, `${code} 依赖不得进入一般构筑池`)
+  }
+  for (const code of ['10019', '10027', '10109', '10129']) {
+    assert.equal(getAvailability(code).availability, 'strict', `${code} 玩家卡应开放严格验收`)
+    assert.equal(getAvailability(code).deckbuilding, true, `${code} 玩家卡应进入构筑池`)
+  }
+  for (const code of ['10063', '10106']) {
+    assert.equal(getAvailability(code).availability, 'strict', `${code} 绑定/场外依赖应开放严格验收`)
+    assert.equal(getAvailability(code).dependencyOnly, true, `${code} 只作依赖`)
+    assert.equal(getAvailability(code).deckbuilding, false, `${code} 不进构筑池`)
+  }
+  for (const code of ['10135', '10138']) {
+    assert.equal(getAvailability(code).dependencyOnly, true, `${code} 基础弱点只作随机基础弱点依赖`)
+    assert.equal(getAvailability(code).deckbuilding, false, `${code} 不进构筑池`)
+  }
+  for (const code of ['10059', '10060', '10061']) {
+    assert.equal(getAvailability(code).availability, 'strict', `${code} Research 卡本身开放验收`)
+    assert.equal(getAvailability(code).deckbuilding, false, `${code} Research 卡在 P7 战役日志读点前不进构筑池`)
+  }
+  // P7：战役卡开放 strict（只作战役内容，不进构筑/选人池）。
+  for (const code of ['10501', '10651', '10704']) {
+    assert.equal(getAvailability(code).availability, 'strict', `${code} 战役卡应开放严格验收`)
+    assert.equal(getAvailability(code).deckbuilding, false, `${code} 战役卡不得进入构筑池`)
+    assert.equal(getAvailability(code).selectable, false, `${code} 战役卡不可选为调查员`)
+  }
+  assert.equal(getAvailability('unknown').availability, 'catalog-only')
   // P6 开放一般玩家卡（strict + 可构筑）；P7 开放绯红密钥战役卡（strict，不进入构筑/选人池）。
   for (const code of ['09021', '09064', '09128']) assert.equal(getAvailability(code).availability, 'strict')
   assert.equal(getAvailability('09021').deckbuilding, true)
@@ -140,13 +176,15 @@ test('界面构筑元数据与服务端清单一致', () => {
   // M2（失落的时代）：补齐 86 张 04 可入牌组的卡（此前只接进 04 记录的升级池、漏了构筑界面）。
   // 升级界面复用同一张卡表：这里还要带上 22 张核心包仅升级卡，否则升级候选会归到「未标注来源」。
   assert.deepEqual(data.cardPool.map(card => card.code), [...EXPANDED_PLAYER_CARD_CODES, ...CORE_UPGRADE_CODES])
-  assert.equal(EXPANDED_PLAYER_CARD_CODES.length, PLAYER_CARD_CODES.length + 86 + 83 + 72 + 90 + 111 + 103)
+  // P6（九循环 M2）：再加 102 张 10 段可入牌组的卡（4 基础弱点/11 绑定依赖/3 Research 不进池）。
+  assert.equal(EXPANDED_PLAYER_CARD_CODES.length, PLAYER_CARD_CODES.length + 86 + 83 + 72 + 90 + 111 + 103 + 102)
   assert.equal(data.cardPool.filter(card => card.code.startsWith('04')).length, 86)
   assert.equal(data.cardPool.filter(card => card.code.startsWith('05')).length, 83)
   assert.equal(data.cardPool.filter(card => card.code.startsWith('06')).length, 72)
   assert.equal(data.cardPool.filter(card => card.code.startsWith('07')).length, 90)
   assert.equal(data.cardPool.filter(card => card.code.startsWith('08')).length, 111)
   assert.equal(data.cardPool.filter(card => card.code.startsWith('09')).length, 103)
+  assert.equal(data.cardPool.filter(card => card.code.startsWith('10')).length, 102)
   assert.ok(data.cardPool.every(card => card.deckLimit > 0), '构筑卡池不得包含 deckLimit=0 的场外绑定副本')
   assert.ok(data.cardPool.every(card => card.pack), '每张卡都必须带来源扩展包，否则升级筛选会归到「未标注来源」')
   for (const code of CORE_UPGRADE_CODES) assert.ok(data.cardPool.some(card => card.code === code && card.xp > 0), `核心升级卡 ${code} 必须有关间升级所需的元数据`)

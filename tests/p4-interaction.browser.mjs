@@ -223,7 +223,7 @@ test('P4 实际 Edge 浏览器牌桌验收截图', async ({ page, request }) => 
   const sessionId = (await (await started).json()).session.sessionId
   await page.getByRole('button', { name: '选择调查员', exact: true }).click()
   await page.getByRole('button', { name: /选择调查员：罗兰/ }).first().click()
-  await page.getByRole('button', { name: /自动构筑/ }).first().click()
+  await page.getByRole('button', { name: /使用推荐卡组/ }).first().click()
   await page.getByRole('button', { name: '确认准备', exact: true }).first().click()
   await page.getByRole('button', { name: '开始当前关卡' }).first().click()
   await page.getByRole('button', { name: '跳过演出' }).click()

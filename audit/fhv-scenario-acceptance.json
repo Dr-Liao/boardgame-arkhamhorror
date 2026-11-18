@@ -1,0 +1,1232 @@
+{
+  "schemaVersion": 1,
+  "cycle": "fhv",
+  "phase": "P7",
+  "campaignId": "theFeastOfHemlockVale",
+  "generatedBy": "tools/audit-fhv-scenarios.mjs",
+  "status": "verified",
+  "gates": {
+    "scenarioTestsPassed": true,
+    "scenariosAllVerified": true,
+    "chapterCardsAssigned": true,
+    "guidesCoverage": true,
+    "guideChineseMarked": true,
+    "guideChineseComplete": true,
+    "encounterCardsCovered": true,
+    "sharedGroupsRegistered": true,
+    "campaignRegisteredPlayable": true,
+    "campaignFlowDeclared": true,
+    "recordsDeclared": true,
+    "campaignFlowTestsPassed": true,
+    "browserDesktopAndMobile": true,
+    "storyGenerationRecomputable": true,
+    "guidesRecomputable": true,
+    "docsPresent": true
+  },
+  "summary": {
+    "scenarios": 12,
+    "chapters": 8,
+    "preludes": 4,
+    "verified": 12,
+    "pending": [],
+    "campaignCards": 301,
+    "assignableCards": 291,
+    "expectedEntries": 291,
+    "coveredEntries": 291,
+    "missingEntries": 0,
+    "scenarioTestPassed": 381,
+    "campaignTestPassed": 26,
+    "guides": 12,
+    "guidesWithChineseGaps": 0,
+    "sharedGroups": 18,
+    "storyCheck": "ok"
+  },
+  "scenarios": [
+    {
+      "id": "welcomeToHemlockVale",
+      "kind": "prelude",
+      "name": "欢迎来到铁杉谷",
+      "referenceCode": "10704",
+      "modulePath": "content/campaigns/theFeastOfHemlockVale/scenarios/welcomeToHemlockVale/index.js",
+      "cards": [],
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "cardEntries": true,
+        "guide": true,
+        "guideReproducible": true,
+        "guideChineseMarked": true,
+        "tests": true
+      },
+      "status": "verified",
+      "guide": {
+        "path": "web/scenario-guides/welcomeToHemlockVale.json",
+        "exists": true,
+        "guideKeyCount": 15,
+        "chineseGaps": 0,
+        "reproducible": true
+      },
+      "tests": {
+        "count": 20,
+        "titles": [
+          "P7 welcomeToHemlockVale 章节结构：提示卡 10704、8 处地点、1 幕 1 议程与 16 条法典",
+          "P7 welcomeToHemlockVale 引擎机制声明：日历/法典/居民/勘察/无遭遇牌库/保护调查员",
+          "P7 welcomeToHemlockVale 手册正文：8 条布置步骤、结局 1 与 16 条法典正文",
+          "P7 welcomeToHemlockVale 遭遇组：三组 gather + Residents 整组放一边，无遭遇牌库",
+          "P7 welcomeToHemlockVale 布置：8 处 Day 面地点、起始十字路口、毁灭 = 人数",
+          "P7 welcomeToHemlockVale 地点连接：只按印刷图标相连且双向对称",
+          "P7 welcomeToHemlockVale 时间标记：Day One 入场、第 1 日白天与日历原语",
+          "P7 welcomeToHemlockVale 开场：勘察加 [tablet]、赴宴加 [elder_thing]（幂等）",
+          "P7 welcomeToHemlockVale 法典：地点条目把居民放入场并按印刷效果结算",
+          "P7 welcomeToHemlockVale 法典：14 号塔德杂货店对每位调查员各可结算一次",
+          "P7 welcomeToHemlockVale 居民访问：地点法典放入居民，谈判成功后读居民法典",
+          "P7 welcomeToHemlockVale 老磨坊：发现线索后的反应读法典 12 并让莉亚入场",
+          "P7 welcomeToHemlockVale 幕背面「光辉」：每位调查员 1 点奖励经验且不结束序曲",
+          "P7 welcomeToHemlockVale 议程背面：所有调查员撤退 → 结局 1 与战役记录",
+          "P7 welcomeToHemlockVale 全员撤退：直接进入结局 1（不落到无结局）",
+          "P7 welcomeToHemlockVale 混乱标记：四档取值、手牌阈值与谈判追加效果",
+          "P7 welcomeToHemlockVale 混乱标记结算：谈判自动成功落到 applyTokenEffect",
+          "P7 welcomeToHemlockVale 存档往返：布置/法典/关系/日期都按 JSON 还原",
+          "P7 welcomeToHemlockVale 行动：八处地点的法典与三处特殊地点行动、十字路口快速移动",
+          "P7 welcomeToHemlockVale 共享组互操作：法典编号/检索参数/谈判规格都读条目的 flags"
+        ]
+      }
+    },
+    {
+      "id": "writtenInRock",
+      "kind": "chapter",
+      "name": "岩间密语",
+      "referenceCode": "10501",
+      "modulePath": "content/campaigns/theFeastOfHemlockVale/scenarios/writtenInRock/index.js",
+      "cards": [
+        "10503",
+        "10504",
+        "10505",
+        "10506",
+        "10507",
+        "10508",
+        "10509",
+        "10510a",
+        "10510b",
+        "10511a",
+        "10511b",
+        "10512",
+        "10513",
+        "10514",
+        "10515",
+        "10516",
+        "10517",
+        "10518",
+        "10519",
+        "10520",
+        "10521",
+        "10522"
+      ],
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "cardEntries": true,
+        "guide": true,
+        "guideReproducible": true,
+        "guideChineseMarked": true,
+        "tests": true
+      },
+      "status": "verified",
+      "guide": {
+        "path": "web/scenario-guides/writtenInRock.json",
+        "exists": true,
+        "guideKeyCount": 16,
+        "chineseGaps": 0,
+        "reproducible": true
+      },
+      "tests": {
+        "count": 33,
+        "titles": [
+          "P7 writtenInRock 章节结构：22 张单卡条目、5+3 个 gather 组、6 洞穴 + 16 轨道地点",
+          "P7 writtenInRock 单卡条目：22 个 scope/实现标记与关键 flags",
+          "P7 writtenInRock 遭遇牌库：固定 20 张 + 当日组 3 张，Written in Rock 敌人先放一边",
+          "P7 writtenInRock 布置分区：白天移出地下野兽，夜晚保留放一边",
+          "P7 writtenInRock 幕 1 布置：4 张洞穴占列 1–4、控制站在 (5,1)、每处 1 个碎片",
+          "P7 writtenInRock 居民：第 1 日瑞玟在列 3，席米恩放一边；第 3 日莉亚放一边；夜晚不收集",
+          "P7 writtenInRock 塌方：幕 1 背面移除洞穴、留 2 线索、跳议程 2a、碎片转道岔、15 轨道地点入场",
+          "P7 writtenInRock 塌方（夜晚）：地下野兽在控制站横置，其余 Written in Rock 卡洗入",
+          "P7 writtenInRock 矿车：沿对齐轨道移动、全员随车、进入后揭示；脱轨击败全员并给肉体创伤",
+          "P7 writtenInRock 道岔：花费 1 个道岔取消移动 / 再移动一次（团队每阶段最多 2 次）",
+          "P7 writtenInRock 地下野兽：准备中与矿车同处时矿车不能移动；+3/人生命；耗线索横置",
+          "P7 writtenInRock 轨道连接：只连「互为对方方向」的相邻地点，未对齐不连",
+          "P7 writtenInRock 滑动/交换：空格限定 5×4、轨道出口不可动、带剧情资产的地点不可动",
+          "P7 writtenInRock 幕 2 行动：快滑/快换、付费滑动、取棱柱碎片、控制站交换",
+          "P7 writtenInRock 幕 1 议程行动：勘察把所在地点的碎片移到参考卡",
+          "P7 writtenInRock 左/右转弯：A 面 [action][action] 交换、B 面 [action] 花 2 资源滑动（各每局一次）",
+          "P7 writtenInRock 幕 1 目标：轮末全员在控制站 → 推进幕 1 并进入塌方",
+          "P7 writtenInRock 议程 1 背面（塌方）：2 伤害、失去全部线索、存活者到控制站、推进幕 1",
+          "P7 writtenInRock 议程 2 背面（彻底崩塌）：每位存活调查员被击败并承受 1 点肉体创伤",
+          "P7 writtenInRock 幕 2 背面：按席米恩/莉亚的控制权进入结局 1–5",
+          "P7 writtenInRock 混乱标记：[skull] 取列号（困难 ×2），幕 1/2 的其余符号数值",
+          "P7 writtenInRock 混乱标记效果：cultist 放碎片/道岔、tablet 移除碎片/移动矿车、elderthing 伤害/移除道岔",
+          "P7 writtenInRock 发狂矿工：战斗/躲避 = 列号；攻击后同地点其他调查员与居民各 1 伤害",
+          "P7 writtenInRock 深掘混种：入场后滑动矿车朝向的地点；无空格时与其相邻地点交换",
+          "P7 writtenInRock 塌方诡计：附属到矿车朝向地点；矿车将进入时取消移动并造成 2 伤害",
+          "P7 writtenInRock 急速狂飙：敏捷（5）失败进入威胁区；矿车移动时结算并弃掉",
+          "P7 writtenInRock 沉没隧道/扭曲隧道：揭示时弃牌到敌人；矿车进入扭曲隧道后再移动一次",
+          "P7 writtenInRock 轮末地点：碱性轨道恐惧、轨道岔路移除道岔、轨道桥梁帷幕与道岔行动",
+          "P7 writtenInRock 法典：莉亚/席米恩控制权与道岔、罗莎·马奎兹（幕 2 交换）",
+          "P7 writtenInRock 结局 1–5：剧本日志、关系等级、奖励经验与结局 6 结算",
+          "P7 writtenInRock 结局 6：帮助瑞玟（控制 + 至少 2/人线索）、棱柱碎片入牌库",
+          "P7 writtenInRock 无结局：白天 1/2 → 结局 3，白天 3 → 结局 4，夜晚 → 结局 6 并划掉席米恩",
+          "P7 writtenInRock JSON 往返：塌方后存储，恢复后继续移动矿车与结算"
+        ]
+      }
+    },
+    {
+      "id": "hemlockHouse",
+      "kind": "chapter",
+      "name": "汉姆洛克庄园",
+      "referenceCode": "10523",
+      "modulePath": "content/campaigns/theFeastOfHemlockVale/scenarios/hemlockHouse/index.js",
+      "cards": [
+        "10524",
+        "10524b",
+        "10525",
+        "10526",
+        "10527",
+        "10528",
+        "10529",
+        "10530",
+        "10531",
+        "10532",
+        "10532b",
+        "10533",
+        "10533b",
+        "10534",
+        "10534b",
+        "10535",
+        "10535b",
+        "10536",
+        "10536b",
+        "10537",
+        "10537b",
+        "10538",
+        "10538b",
+        "10539",
+        "10539b",
+        "10540",
+        "10540b",
+        "10541",
+        "10541b",
+        "10542",
+        "10542b",
+        "10543",
+        "10543b",
+        "10544",
+        "10545",
+        "10546",
+        "10547",
+        "10548"
+      ],
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "cardEntries": true,
+        "guide": true,
+        "guideReproducible": true,
+        "guideChineseMarked": true,
+        "tests": true
+      },
+      "status": "verified",
+      "guide": {
+        "path": "web/scenario-guides/hemlockHouse.json",
+        "exists": true,
+        "guideKeyCount": 8,
+        "chineseGaps": 0,
+        "reproducible": true
+      },
+      "tests": {
+        "count": 22,
+        "titles": [
+          "P7 hemlockHouse 章节结构：38 条卡、7 个 gather 组 + 当日组、13 个地点与 38 个单卡条目",
+          "P7 hemlockHouse 遭遇牌库与放一边：19 张基础牌、当日组 3 张、5 张 Fire! 与 6 张洗入牌放一边",
+          "P7 hemlockHouse 布置：第一层固定三间、随机 6 间上两层、四层中列卧室、2 间移出游戏",
+          "P7 hemlockHouse 地点连接：第一层走廊印刷固定、其余按网格正交相邻且双向对称",
+          "P7 hemlockHouse 敌人在场与双面敌人：地点翻到敌人-地点面并生成同名 id 的敌人，翻回保留伤害",
+          "P7 hemlockHouse 敌人-地点背面揭示：强制攻击/放毁灭，紧锢孽种按楼层加生命与夜间报复",
+          "P7 hemlockHouse 掠食袋：基础 3 枚 + 当日 cultist（Day1 +2 / Day2 +1 / Day3 0）",
+          "P7 hemlockHouse 掠食检定：cultist 放到一边、tablet 敌人-地点攻击后归还、elder_thing 翻面地点",
+          "P7 hemlockHouse 掠食检定取消与印记：基甸法典取消下一次掠食；[tablet] 治愈最近的敌人-地点",
+          "P7 hemlockHouse 幕 1 目标与背面：7 处封印/胜利区推进；封印较多→地窖 + 庄园之心",
+          "P7 hemlockHouse 幕 1 背面分支：胜利区敌人-地点多于封印→幕 2a「对抗庄园」",
+          "P7 hemlockHouse 幕与地点限制：无人地点不能发现线索、庄园之心把被敌人-地点攻击者送入地窖",
+          "P7 hemlockHouse 幕 2 背面：庄园之心翻回所有敌人-地点 + 每处未封印地点放封印；对抗庄园直接结局 1",
+          "P7 hemlockHouse 议程 1b/2b/3b：洗入放一边诡计、放掠食袋、翻面地点、Fire! 附属、全员被击败",
+          "P7 hemlockHouse 议程 2a/3a 正面：神话阶段结束时进行掠食检定",
+          "P7 hemlockHouse 混乱符号：[skull] 按楼层取值，其余三档的数值与失败/成功追加效果",
+          "P7 hemlockHouse 混乱标记追加效果：[elder_thing] 在议程 2a/3a 把标记移入掠食袋",
+          "P7 hemlockHouse 行动：封印行动共同支付线索、议程 2a 的 [fast] 翻面、门厅快速移动与盥洗室搬线索",
+          "P7 hemlockHouse 诡计：墙外奇物失败三分支、拖离正道失败移动并按差值攻击",
+          "P7 hemlockHouse 结局与记录：No Resolution / 结局 1 都进入结局 2，写封印/敌人-地点/奖励经验",
+          "P7 hemlockHouse 居民与法典：白天按日入场、基甸法典取消掠食、威廉/朱迪斯争论移出游戏",
+          "P7 hemlockHouse JSON 往返：存储后继续翻面、掠食检定与结局记录"
+        ]
+      }
+    },
+    {
+      "id": "theSilentHeath",
+      "kind": "chapter",
+      "name": "寂静荒野",
+      "referenceCode": "10549",
+      "modulePath": "content/campaigns/theFeastOfHemlockVale/scenarios/theSilentHeath/index.js",
+      "cards": [
+        "10550",
+        "10551",
+        "10552",
+        "10553",
+        "10554",
+        "10555",
+        "10556",
+        "10557",
+        "10558",
+        "10559",
+        "10560",
+        "10561",
+        "10562",
+        "10563",
+        "10564",
+        "10565",
+        "10566",
+        "10567",
+        "10568"
+      ],
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "cardEntries": true,
+        "guide": true,
+        "guideReproducible": true,
+        "guideChineseMarked": true,
+        "tests": true
+      },
+      "status": "verified",
+      "guide": {
+        "path": "web/scenario-guides/theSilentHeath.json",
+        "exists": true,
+        "guideKeyCount": 4,
+        "chineseGaps": 0,
+        "reproducible": true
+      },
+      "tests": {
+        "count": 28,
+        "titles": [
+          "P7 theSilentHeath 章节结构：19 张条目、12 地点、2 幕、3 议程与 playable manifest",
+          "P7 theSilentHeath 遭遇牌库：固定 38 张 + 当日 3 张，虫后/水晶寄生虫/残骸/地点不进牌库",
+          "P7 theSilentHeath 放一边：虫后 + 水晶寄生虫 ×2 + 水晶残骸 ×3 + 洞穴地点 ×3 + 岩中恐怖 6",
+          "P7 theSilentHeath 岩中恐怖独立牌库：6 张洗牌，3 张放一边 / 3 张移出游戏且不重复",
+          "P7 theSilentHeath 地点连接：三个起始地点两两图标相连，正交相邻由网格补足",
+          "P7 theSilentHeath 引擎布置入口：preScenarioSetup / setupLocations / modifyDeck 与网格写入",
+          "P7 theSilentHeath 昼夜：第 1 日荒芜 v.I，其余日 v.II；时间标记与白日居民",
+          "P7 theSilentHeath 荒芜关键词：v.I 失去冷漠，v.II 再加猎手；虫后光环覆盖所在地点",
+          "P7 theSilentHeath 幕 1 背面：3 张岩中恐怖地点未揭示入场，6 个地点各 1 张暗牌",
+          "P7 theSilentHeath 洞穴揭示：法典 Ψ/Ω/Φ 生成 1 残骸 + 2 遭遇卡的 3 张暗堆；幼虫隧道先搜幼虫",
+          "P7 theSilentHeath 法典：母亲瑞秋加关系与奖励经验、莉亚记录与线索、罗莎按幕两次",
+          "P7 theSilentHeath 法典 Σ：生成族群虫后并把胜利区的昆虫敌人拉回场上",
+          "P7 theSilentHeath 幕 2：所有未败退调查员撤退且胜利区有残骸时推进，背面按残骸数进入结局 1/2",
+          "P7 theSilentHeath 议程 1：正面放置毁灭时按胜利区昆虫揭示标记，[skull] 生成虫后",
+          "P7 theSilentHeath 议程 1 背面：弃到昆虫敌人由队长抽取，遭遇弃牌堆洗回牌库",
+          "P7 theSilentHeath 议程 2 背面：每位调查员 1 点肉体创伤并被击败",
+          "P7 theSilentHeath 混乱标记：四档取值与追加效果",
+          "P7 theSilentHeath 混乱标记追加效果：[cultist] 洗回胜利区敌人、[tablet] 昆虫攻击/敌军阶段、[elder_thing] 再揭示",
+          "P7 theSilentHeath 族群兵虫：重整时所在地点 +2 隐藏值；巡逻目标为有线索的洞穴",
+          "P7 theSilentHeath 无彩幼虫攻击后自灭；族群虫后 +1 攻击/每其他昆虫、生命随天数",
+          "P7 theSilentHeath 水晶残骸：回合开始伤害/恐惧，水晶果园献纳，击败后成 3 张暗堆",
+          "P7 theSilentHeath 珀尔庄园撤退：把受控水晶残骸全部加入胜利区",
+          "P7 theSilentHeath 幕 2 暗堆行动：无线索时抽取顶牌；[fast] 查看顶牌并放底",
+          "P7 theSilentHeath 结局：无结局按残骸张数分流到结局 1/2/4 并写战役记录",
+          "P7 theSilentHeath 开场分支与前言：Day 1/2/3 与夜晚取不同 Intro；指南正文完整",
+          "P7 theSilentHeath JSON 往返：存档后继续幕 1 背面、法典与结局",
+          "P7 theSilentHeath 诡计显现事件：号令共振失败逐项结算、保卫虫巢失败放毁灭",
+          "P7 theSilentHeath 惨白斜坡：揭示时敏捷(4)失败受 2 伤害"
+        ]
+      }
+    },
+    {
+      "id": "theLostSister",
+      "kind": "chapter",
+      "name": "消失的姐妹",
+      "referenceCode": "10569",
+      "modulePath": "content/campaigns/theFeastOfHemlockVale/scenarios/theLostSister/index.js",
+      "cards": [
+        "10570",
+        "10571",
+        "10572",
+        "10573",
+        "10574",
+        "10575",
+        "10576",
+        "10577",
+        "10578",
+        "10579",
+        "10580",
+        "10581",
+        "10582",
+        "10583a",
+        "10583b",
+        "10584a",
+        "10584b",
+        "10585",
+        "10586",
+        "10587"
+      ],
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "cardEntries": true,
+        "guide": true,
+        "guideReproducible": true,
+        "guideChineseMarked": true,
+        "tests": true
+      },
+      "status": "verified",
+      "guide": {
+        "path": "web/scenario-guides/theLostSister.json",
+        "exists": true,
+        "guideKeyCount": 7,
+        "chineseGaps": 0,
+        "reproducible": true
+      },
+      "tests": {
+        "count": 25,
+        "titles": [
+          "P7 theLostSister 章节结构：20 条实施条目、3 幕 2 议程、16 个地点、5 个 gather 组",
+          "P7 theLostSister 指南正文：开场四分支、20 步设置、两条特别规则、四个结局",
+          "P7 theLostSister 遭遇牌库：26 张固定 + 当日组；放一边 6 张；双面敌人不进牌库",
+          "P7 theLostSister modifyDeck：按当前天数把当日组并入遭遇牌库",
+          "P7 theLostSister 岩穴牌库：12 张、移出 2 张岩中恐怖、顶 3 张未揭示入场、余 9 张",
+          "P7 theLostSister 地点连接：阿克望与三个初始岩穴正交相连、双向对称、扩图补到 4 条",
+          "P7 theLostSister 黑暗地点：未揭示岩穴恒为黑暗，揭示后按印刷特性；露天洞穴可熄暗",
+          "P7 theLostSister 双面敌人：黑暗地点翻到黑夜面、非黑暗翻回白日面并保留标记",
+          "P7 theLostSister 双面敌人：翻面强制（鳖类受到 1/人伤害、虾类对每位调查员 1 伤害）",
+          "P7 theLostSister 双面敌人数值：鳖类 +3/人生命、虾类 +天数生命、荧光增生 +1 攻击/伤害",
+          "P7 theLostSister 幕 1：两个 Remembered 齐备立即推进；背面放入真菌洞穴并补满连接",
+          "P7 theLostSister 幕 2/3：进入真菌洞穴推进；幕 2 背面生成鳖类、移除海伦、读法典 Σ",
+          "P7 theLostSister 议程 1 背面：生成虾类混种、黑暗地点随机弃牌、按天数在议程 2 放毁灭",
+          "P7 theLostSister 议程 2 背面：未撤退的调查员全部被击败并承受 1 点精神创伤",
+          "P7 theLostSister 混乱符号：skull 按已揭示洞穴数、tablet 按是否在洞穴",
+          "P7 theLostSister 混乱符号：[cultist] 治愈、[elder_thing] 再抽/自动失败",
+          "P7 theLostSister 混乱标记追加效果：cultist 治愈恐惧、elder_thing 自动失败/再抽",
+          "P7 theLostSister 地点行动：隐蔽海湾/地下水池的团队付款 Remembered、悬墓每场一次扩图",
+          "P7 theLostSister 幕 2/3 行动：花费 1/人线索把相邻黑暗地点的敌人拉过来",
+          "P7 theLostSister 法典：威廉/吉迪恩/希奥/龙虾畸体/罗莎·马尔克斯",
+          "P7 theLostSister 结局 1–4：分支、记录、经验与勘察勾选",
+          "P7 theLostSister 遭遇事件（10586 重属自然）：白日失败二选一、黑夜让敌人治愈",
+          "P7 theLostSister 居民与开场分支：预赛布置按天数/昼夜放入居民",
+          "P7 theLostSister JSON 往返：存档后继续扩图、翻面与结局",
+          "P7 theLostSister 敌人定义读点：放一边与牌库敌人的印刷数值来自卡表"
+        ]
+      }
+    },
+    {
+      "id": "theThingInTheDepths",
+      "kind": "chapter",
+      "name": "深淖之物",
+      "referenceCode": "10588",
+      "modulePath": "content/campaigns/theFeastOfHemlockVale/scenarios/theThingInTheDepths/index.js",
+      "cards": [
+        "10589",
+        "10590",
+        "10591",
+        "10592",
+        "10593a",
+        "10593b",
+        "10594a",
+        "10594b",
+        "10595a",
+        "10595b",
+        "10596a",
+        "10596b",
+        "10597a",
+        "10597b",
+        "10598a",
+        "10598b",
+        "10599a",
+        "10599b",
+        "10600",
+        "10601",
+        "10602",
+        "10603",
+        "10604"
+      ],
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "cardEntries": true,
+        "guide": true,
+        "guideReproducible": true,
+        "guideChineseMarked": true,
+        "tests": true
+      },
+      "status": "verified",
+      "guide": {
+        "path": "web/scenario-guides/theThingInTheDepths.json",
+        "exists": true,
+        "guideKeyCount": 6,
+        "chineseGaps": 0,
+        "reproducible": true
+      },
+      "tests": {
+        "count": 18,
+        "titles": [
+          "P7 theThingInTheDepths 章节结构：23 张单卡条目、10 个双面地点、6 个结局与 manifest",
+          "P7 theThingInTheDepths 独立牌库：4 个固定组 26 张、当日组运行时洗入、放一边 7 张",
+          "P7 theThingInTheDepths 地点连接：参考摆法 3×3 正交邻接、双向对称、双面身份",
+          "P7 theThingInTheDepths 网格布置：10 张洗混随机移出 1 张、9 张按槽位入场、起始地点/北岸运行时改写",
+          "P7 theThingInTheDepths 渗坑下沉：回合结束放渗坑（1–2 人 2 个）、3 个渗坑翻面并保留线索/遭遇附属",
+          "P7 theThingInTheDepths 议程背面：中央地点翻沉没（弃全部标记）+ 深沼之物生成；议程 2 全员被击败",
+          "P7 theThingInTheDepths 幕：幕 1 背面生成鳄龟混种/触须并洗回其余；幕 2 背面按日期进结局 1/2",
+          "P7 theThingInTheDepths 幕目标与撤退：幕 1 轮末共同支付线索、幕 2 鳄龟混种在起始地点、议程 1 可撤退",
+          "P7 theThingInTheDepths 混乱符号：[skull] 沉没地点数一半/全数，cultist/tablet/elder_thing 四档",
+          "P7 theThingInTheDepths 混乱符号追加效果：移渗坑/放渗坑/查找触须；困难 cultist 成功时结算",
+          "P7 theThingInTheDepths 诡计显现：地层扰动逐失败点二选一、泥泞下沉沉没/沼地分支",
+          "P7 theThingInTheDepths 地点规则：腐臭池塘帷幕、纠葛灌丛额外行动、泛滥道路/废弃棚屋快速行动",
+          "P7 theThingInTheDepths 地点触发：沉没面进入抽牌、腐烂码头发现线索后敏捷检定、廊桥符号标记抽牌",
+          "P7 theThingInTheDepths 敌人：深沼之物健康/连通/不能趁机攻击，鳄龟混种巡逻与不可移动，触须按日健康",
+          "P7 theThingInTheDepths 引入分支：Judith 关系/旧怨、Day 2 二选一、居民按日期放置",
+          "P7 theThingInTheDepths 结局与记录：结局 1–5/无结局、胜利区经验、勘察记录、居民关系",
+          "P7 theThingInTheDepths 法典：5 河·霍桑 / 7 朱迪丝·帕克 / Θ 马奎兹博士",
+          "P7 theThingInTheDepths JSON 往返：存档后继续渗坑下沉、幕目标与结局记录"
+        ]
+      }
+    },
+    {
+      "id": "theTwistedHollow",
+      "kind": "chapter",
+      "name": "扭曲空洞",
+      "referenceCode": "10605",
+      "modulePath": "content/campaigns/theFeastOfHemlockVale/scenarios/theTwistedHollow/index.js",
+      "cards": [
+        "10606",
+        "10607a",
+        "10607b",
+        "10608",
+        "10609",
+        "10610a",
+        "10610b",
+        "10611a",
+        "10611b",
+        "10612",
+        "10613",
+        "10614",
+        "10615",
+        "10616",
+        "10617",
+        "10618",
+        "10619",
+        "10620",
+        "10621",
+        "10622",
+        "10623",
+        "10624",
+        "10625"
+      ],
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "cardEntries": true,
+        "guide": true,
+        "guideReproducible": true,
+        "guideChineseMarked": true,
+        "tests": true
+      },
+      "status": "verified",
+      "guide": {
+        "path": "web/scenario-guides/theTwistedHollow.json",
+        "exists": true,
+        "guideKeyCount": 6,
+        "chineseGaps": 0,
+        "reproducible": true
+      },
+      "tests": {
+        "count": 28,
+        "titles": [
+          "P7 theTwistedHollow 章节结构：23 条单卡条目、15 张西部树林、4 个 gather 组与 manifest",
+          "P7 theTwistedHollow 单卡条目：scope/flags 与 implementedEntryFlags 一致，诡计经 events 分派",
+          "P7 theTwistedHollow 遭遇牌库：28 张、类熊混种与提灯不在牌库",
+          "P7 theTwistedHollow 树林牌库：母亲瑞秋指路分支（1–2 人：移出 2、牌库 7）",
+          "P7 theTwistedHollow 树林牌库：迷失方向分支（随机西部树林开场、荧光草地进牌库）",
+          "P7 theTwistedHollow 树林牌库：3–4 人局只移出 1 张、牌库 8",
+          "P7 theTwistedHollow 引言：说实话/说谎写战役记录与混乱标记，并切换布置分支",
+          "P7 theTwistedHollow 地点连接：网格相邻即相连、双向对称、无对角线",
+          "P7 theTwistedHollow 网格扩张：议程 1 正面「地点揭示后」在四方向铺树林牌库顶",
+          "P7 theTwistedHollow 黑暗等级：初始 1、议程背面 +1、6 时上限且全员被击败",
+          "P7 theTwistedHollow 混乱标记：骷髅 = -黑暗等级 / 困难面两倍，其余标记按印刷",
+          "P7 theTwistedHollow 混乱标记结算：[cultist] 治愈、[tablet] 生成追击敌人、[elder_thing] 恐惧",
+          "P7 theTwistedHollow 毒沼：揭示时二选一（直接伤害 / 每个盟友支援各 1 点伤害）",
+          "P7 theTwistedHollow 地点揭示：尸林恐惧、熊穴抽遭遇、枯疫空地生成最低攻击追击敌人",
+          "P7 theTwistedHollow 地点帷幕：扭曲小路 = 黑暗等级、茂盛灌丛 -X、蘑菇园非黑暗 +2",
+          "P7 theTwistedHollow 幕 1 目标：轮末、全员同一巢穴、共同支付 3/人线索",
+          "P7 theTwistedHollow 幕 1 背面：Codex Σ（无居民→母亲瑞秋干预；有朱迪丝→入场并 2 点伤害）",
+          "P7 theTwistedHollow 幕 2：正面[fast]查看相邻地点；背面才出虎口（伯蒂/追击/重铺/特殊议程）",
+          "P7 theTwistedHollow 特殊议程：全员撤退 → 结局 1；背面 6+ → 结局 2；否则追击敌人再入场",
+          "P7 theTwistedHollow 议程 1 背面：黑暗 +1、已揭示无人黑暗地点翻面、翻回议程 1a",
+          "P7 theTwistedHollow 类熊混种：幕 2 期间被击败 → 治愈并进入追击区域（不进胜利区）",
+          "P7 theTwistedHollow 猎踪混种：生命值 = 黑暗等级、攻击后提灯翻面并落在你的地点",
+          "P7 theTwistedHollow 幕 1 正面：没有生成指示的敌人从遭遇牌库抽出时进入追击区域",
+          "P7 theTwistedHollow 诡计：暗影深深/惊惧潜伏的黑暗难度与二选一失败分支",
+          "P7 theTwistedHollow 光明遭窃：放毁灭或把提灯放到最远空地点（险境）",
+          "P7 theTwistedHollow 结局：1/2/3/无结局/单人模式的记录与经验",
+          "P7 theTwistedHollow 全员撤退：特殊议程在场 → 结局 1；否则无结局",
+          "P7 theTwistedHollow JSON 往返：存档后继续树林扩张、幕推进与结局"
+        ]
+      }
+    },
+    {
+      "id": "dawnOfTheSecondDay",
+      "kind": "prelude",
+      "name": "第二日黎明",
+      "referenceCode": "10704",
+      "modulePath": "content/campaigns/theFeastOfHemlockVale/scenarios/dawnOfTheSecondDay/index.js",
+      "cards": [],
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "cardEntries": true,
+        "guide": true,
+        "guideReproducible": true,
+        "guideChineseMarked": true,
+        "tests": true
+      },
+      "status": "verified",
+      "guide": {
+        "path": "web/scenario-guides/dawnOfTheSecondDay.json",
+        "exists": true,
+        "guideKeyCount": 14,
+        "chineseGaps": 0,
+        "reproducible": true
+      },
+      "tests": {
+        "count": 44,
+        "titles": [
+          "P7 dawnOfTheSecondDay 章节结构：0 张单卡条目、8 地点、1 幕 1 议程、4 个 gather 组",
+          "P7 dawnOfTheSecondDay manifest：playable、四个 gather 组、放一边/在场与记录键",
+          "P7 dawnOfTheSecondDay The Vale 地图：印刷图标连接 + 3×3 正交相邻单独导出",
+          "P7 dawnOfTheSecondDay 放一边/在场：Residents 整组、Hemlock Curse、Downpour、Judith 在场",
+          "P7 dawnOfTheSecondDay 布置：8 地点入场、时间标记、Judith、按人数放毁灭",
+          "P7 dawnOfTheSecondDay 布置：被划掉的居民移出游戏、不入场也不放一边",
+          "P7 dawnOfTheSecondDay 时间推进：第 2 日白天写入日历与战役记录",
+          "P7 dawnOfTheSecondDay 疲劳：两个非符号标记永久降低 1，且只结算一次",
+          "P7 dawnOfTheSecondDay 开场：finished their meal → 毒堇诅咒；其他人 → 1 点肉体创伤",
+          "P7 dawnOfTheSecondDay 混乱 [skull]：简单/普通 -天数，困难/专家 -(天数+1)",
+          "P7 dawnOfTheSecondDay 混乱 [tablet]：按难度与手牌数取印刷值",
+          "P7 dawnOfTheSecondDay 混乱 [cultist]：谈判自动成功 / 困难改为 +1",
+          "P7 dawnOfTheSecondDay 混乱 [elder_thing]：-1/-3，谈判再揭示一个",
+          "P7 dawnOfTheSecondDay 混乱钩子：behavior.resolveChaosToken 识别谈判并写自动成功",
+          "P7 dawnOfTheSecondDay 法典 1 母亲瑞秋：intervened → Corn Husk Doll；否则抽 1 + 免费 Charm/Spell",
+          "P7 dawnOfTheSecondDay 法典 3 席米恩：hatched a plan → 笔记；否则抽 1 + 找战术/诡计",
+          "P7 dawnOfTheSecondDay 法典 4/5 汉洛克兄妹：笔记、关系增减、经验与资源",
+          "P7 dawnOfTheSecondDay 法典 6 基甸：told the story → 笔记 + 抽 3",
+          "P7 dawnOfTheSecondDay 法典 7 朱迪斯：救过 → 二选一；没救过 → 抽 1 + 免费武器",
+          "P7 dawnOfTheSecondDay 法典 8 希奥：distracted the bear → 关系 +1 且可移动；否则只可移动",
+          "P7 dawnOfTheSecondDay 法典 9 旅舍：三选一（移动/席米恩/基甸）且可重复触发",
+          "P7 dawnOfTheSecondDay 法典 10 十字路口：抽 1 并记住 running an errand",
+          "P7 dawnOfTheSecondDay 法典 11/15：教堂放母亲瑞秋、学校放希奥",
+          "P7 dawnOfTheSecondDay 法典 12 老磨坊：发现线索后抽 3",
+          "P7 dawnOfTheSecondDay 法典 13 阿特伍德宅：关系门槛与「让他们打」",
+          "P7 dawnOfTheSecondDay 法典 14 Tad 杂货店：running an errand → 莉亚 +1；否则花 3 资源买 Item",
+          "P7 dawnOfTheSecondDay 法典 16 集会厅：移除 Item 剧情资产 → 低关系居民 +1",
+          "P7 dawnOfTheSecondDay 法典 17 The Curse：加入弱点；已在牌组时改为检索到手；本人 2 点经验",
+          "P7 dawnOfTheSecondDay 法典事件回派：共享居民条目的事件约定都能命中",
+          "P7 dawnOfTheSecondDay 法典限次与居民笔记：引擎 mechanics.codex 分支与一次性",
+          "P7 dawnOfTheSecondDay 地点能力：法典动作、快速移动、法术/书检索与每场一次",
+          "P7 dawnOfTheSecondDay 幕：read 3 codex → 推进幕 → 背面阅读法典 17",
+          "P7 dawnOfTheSecondDay 议程背面：Bertie 获救 → 结局 1，否则结局 2，两者都链到结局 3",
+          "P7 dawnOfTheSecondDay 议程正面强制：取消抽到的弱点并弃掉（内容层读点已备，待引擎接线）",
+          "P7 dawnOfTheSecondDay 结局 3：不记胜利点、记录结局、整备与勘察候选",
+          "P7 dawnOfTheSecondDay Areas Surveyed：兼容对象/数组/平铺记录并过滤候选",
+          "P7 dawnOfTheSecondDay 下一次勘察整备：保留 1 支援/弃手牌/资源上限/线索保留/不重抽",
+          "P7 dawnOfTheSecondDay 居民记录：关系等级 0–5、笔记去重、划掉标记",
+          "P7 dawnOfTheSecondDay 只读投影：summary 汇总天数/法典/关系/时间标记/勘察候选",
+          "P7 dawnOfTheSecondDay 存档往返：JSON 克隆后记录/法典/居民状态不丢",
+          "P7 dawnOfTheSecondDay 指南文本：intro/setup/codex/结局齐全，中文缺失已披露",
+          "P7 dawnOfTheSecondDay 法典条目：16 条（1/3–17）、每条有分支、地点映射完整",
+          "P7 dawnOfTheSecondDay 近似逐条披露：approximations 覆盖已知简化",
+          "P7 dawnOfTheSecondDay 行为钩子完整性：引擎需要的读点都存在"
+        ]
+      }
+    },
+    {
+      "id": "theLongestNight",
+      "kind": "chapter",
+      "name": "最长一夜",
+      "referenceCode": "10626",
+      "modulePath": "content/campaigns/theFeastOfHemlockVale/scenarios/theLongestNight/index.js",
+      "cards": [
+        "10627",
+        "10628",
+        "10629",
+        "10630",
+        "10631",
+        "10632",
+        "10633",
+        "10634",
+        "10635",
+        "10636",
+        "10637",
+        "10638",
+        "10639",
+        "10640",
+        "10641",
+        "10642",
+        "10643",
+        "10644a",
+        "10644b",
+        "10644c",
+        "10645a",
+        "10645b",
+        "10645c",
+        "10646",
+        "10647a",
+        "10647b",
+        "10647c",
+        "10648",
+        "10649",
+        "10650"
+      ],
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "cardEntries": true,
+        "guide": true,
+        "guideReproducible": true,
+        "guideChineseMarked": true,
+        "tests": true
+      },
+      "status": "verified",
+      "guide": {
+        "path": "web/scenario-guides/theLongestNight.json",
+        "exists": true,
+        "guideKeyCount": 9,
+        "chineseGaps": 0,
+        "reproducible": true
+      },
+      "tests": {
+        "count": 43,
+        "titles": [
+          "P7 theLongestNight 章节结构：31 张卡 / 30 个条目 / 单幕单议程 / 4 个结局",
+          "P7 theLongestNight 单卡条目：input.entryPaths 的 30 个文件全部注册且 scope 正确",
+          "P7 theLongestNight 印刷文本：序章/设置/四条特别规则/九个法典/结局来自 story-access",
+          "P7 theLongestNight 遭遇牌库：33 张、8 个 gather 组、Fire! 与敌人不进牌库",
+          "P7 theLongestNight 敌人牌库与放一边：15 张红背敌人、14 张进牌库、乌尔辛开局在场",
+          "P7 theLongestNight 地点连接：18 条边、双向对称、农庄连四向、坐标十字格",
+          "P7 theLongestNight 布置：10 处地点入场、病俘在农庄、乌尔辛在西面外围农田",
+          "P7 theLongestNight 布置：独自面对时每人 3 线索；熊受伤则 2×人数伤害并横置",
+          "P7 theLongestNight 序章：当面质问 +1[tablet]、躲藏 +1[skull]、共舞分支决定标记与记录",
+          "P7 theLongestNight 屏障：放在两个连接地点之间、计数与相邻读点",
+          "P7 theLongestNight 诱饵/陷阱：每地点限 1、农庄禁止、牛奶房改放相邻地点",
+          "P7 theLongestNight 工事：初始 1 诱饵 / 1 陷阱 / 1 屏障，引擎 defenses 机制已声明",
+          "P7 theLongestNight 敌人牌库：议程放毁灭后按玩家顺序每人抽 1 张",
+          "P7 theLongestNight 敌人牌库：耗尽时把弃牌堆洗回、弃置路由到敌人弃牌堆",
+          "P7 theLongestNight 敌人牌库：吉迪恩法典让下一次抽牌改为弃掉",
+          "P7 theLongestNight 敌人生成方向：外围农田四向 + 敌人最少/最多",
+          "P7 theLongestNight 敌人修正：乌尔辛 +3/人生命、鸡笼 +1 战斗/躲避、谷仓 +1 伤害、伤害封顶",
+          "P7 theLongestNight 敌人关键词：忽略工事、巡逻农庄、乌尔辛田野互连",
+          "P7 theLongestNight 敌人：狼形攻击后自愈 1 点、葡萄园进入时自愈 1 点",
+          "P7 theLongestNight 敌军阶段：农庄里重整且未交战的敌人攻击病俘（恐惧也变伤害）",
+          "P7 theLongestNight 病俘：击败时进入结局 3（引擎 finish 读点）",
+          "P7 theLongestNight 幕 1 背面：病俘 ≤4 伤害 → 结局 1，否则结局 2",
+          "P7 theLongestNight 议程 1 背面：精神创伤或牺牲居民，然后推进幕",
+          "P7 theLongestNight 议程正面：卡牌效果的毁灭改放病俘，神话阶段的毁灭留在议程",
+          "P7 theLongestNight 混乱标记：[skull] 半毁灭向上取整 / 困难为全毁灭",
+          "P7 theLongestNight 混乱标记：四档数值与 onDraw/onFail 追加效果",
+          "P7 theLongestNight 混乱标记追加效果：[cultist] 放屏障、[tablet] 最近敌人攻击、[elder_thing] 移除工事",
+          "P7 theLongestNight 混乱标记：[cultist] 困难/专家只在检定成功时放屏障",
+          "P7 theLongestNight 农庄：获得线索行动（团队每轮一次）与快速移动（1/人资源）",
+          "P7 theLongestNight 牧场/葡萄园：陷阱时快速移动、快速交战每回合一次",
+          "P7 theLongestNight Fire!：牛奶房/鸡笼抽 1 张放在一边的 Fire! 并把另 1 张洗入遭遇牌库",
+          "P7 theLongestNight 外围农田：查看敌人牌库顶、发现最后线索的反应、移动敌人",
+          "P7 theLongestNight 谷仓：揭示时埃阿斯入场并由队长控制（codex Ω）",
+          "P7 theLongestNight 无尽夜晚：三选一（移除毁灭 / 病俘 2 伤害 / 3+3）",
+          "P7 theLongestNight 入侵：检定[敏捷] X=半毁灭，失败点数逐个重整最近的[[突变]]敌人",
+          "P7 theLongestNight 结局 1：病俘伤害决定奖励经验 + 结局 4 记录",
+          "P7 theLongestNight 结局 2：5–9 点伤害给予 3/2/1 经验并记录许多病俘遇难",
+          "P7 theLongestNight 结局 3：全员撤退/无结局 → 结局 3，每人为随机基础疯狂弱点",
+          "P7 theLongestNight 结局 4：胜利区经验、埃阿斯与马奎兹入牌组记录",
+          "P7 theLongestNight 调查员败北：被击败的调查员被吞噬，其余人继续结算",
+          "P7 theLongestNight 法典 2–8：记录「站在你这边」并结算各自效果",
+          "P7 theLongestNight JSON 往返：工事、敌人牌库、病俘与记录都能继续结算",
+          "P7 theLongestNight 披露：无法表达的子句集中声明（随机移除/开场揭示/居民与法典触发）"
+        ]
+      }
+    },
+    {
+      "id": "dawnOfTheFinalDay",
+      "kind": "prelude",
+      "name": "最终日黎明",
+      "referenceCode": "10704",
+      "modulePath": "content/campaigns/theFeastOfHemlockVale/scenarios/dawnOfTheFinalDay/index.js",
+      "cards": [],
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "cardEntries": true,
+        "guide": true,
+        "guideReproducible": true,
+        "guideChineseMarked": true,
+        "tests": true
+      },
+      "status": "verified",
+      "guide": {
+        "path": "web/scenario-guides/dawnOfTheFinalDay.json",
+        "exists": true,
+        "guideKeyCount": 14,
+        "chineseGaps": 0,
+        "reproducible": true
+      },
+      "tests": {
+        "count": 36,
+        "titles": [
+          "P7 dawnOfTheFinalDay 章节结构：序曲、8 地点、1 幕 1 议程、3 结局与 playable manifest",
+          "P7 dawnOfTheFinalDay 卡号与遭遇定义：时间标记/幕/议程/居民/放一边组齐全",
+          "P7 dawnOfTheFinalDay 地点：图标连接对称、十字路口连 6 处、坐标来自页 6 地图",
+          "P7 dawnOfTheFinalDay 布置：gather 5 组、8 地点入场、时间标记、居民入场与放一边",
+          "P7 dawnOfTheFinalDay 布置：被划掉的居民整张移出游戏，不放一边也不入场",
+          "P7 dawnOfTheFinalDay 引擎布置入口：preScenarioSetup / setupLocations / afterDeckSetup",
+          "P7 dawnOfTheFinalDay 时间推进：第 3 日白昼、日期记录与时间标记",
+          "P7 dawnOfTheFinalDay 疲劳：战役层 fatiguePending 的 2 枚非符号标记降 1 点并清零",
+          "P7 dawnOfTheFinalDay 疲劳：api.mechanics.chaosTokens.replaceCampaignNumeric 优先",
+          "P7 dawnOfTheFinalDay 开场支援：被击败调查员的替补经验为原经验一半（向上取整）",
+          "P7 dawnOfTheFinalDay 开场：Dr. Marquez has a plan → Intro 1，否则 Intro 2，Intro 3 恒读",
+          "P7 dawnOfTheFinalDay 混乱标记：四档 skull/cultist/tablet/elder_thing 取值",
+          "P7 dawnOfTheFinalDay 混乱标记结算：谈判自动成功与再揭示一枚",
+          "P7 dawnOfTheFinalDay 法典元数据：14 条（1/2/4/5/6/7/8/9/10/11/13/14/15/16）与印刷编号",
+          "P7 dawnOfTheFinalDay 法典可用性：居民必须在场、一次性条目结算后不再可用",
+          "P7 dawnOfTheFinalDay 法典 1 蕾切尔嬷嬷：未勘察南方田野无法接近，勘察后二选一",
+          "P7 dawnOfTheFinalDay 法典 2 莉亚：席米恩被划掉 → +1/1XP，否则 +2/2XP",
+          "P7 dawnOfTheFinalDay 法典 4 威廉：stood by you → William 2，took heart → 记录 is resolved",
+          "P7 dawnOfTheFinalDay 法典 5/6 河流与基甸：满足笔记记录给关系与经验，否则给资源/抽牌",
+          "P7 dawnOfTheFinalDay 法典 7 朱迪斯：生成瘴气之影；站队成功则取得控制权并记录",
+          "P7 dawnOfTheFinalDay 法典 8 希奥：stood by you → 记录 second thoughts；否则记住包裹",
+          "P7 dawnOfTheFinalDay 法典 9 旅舍：把放一边的居民放到工作地点，可反复触发",
+          "P7 dawnOfTheFinalDay 法典 10 十字路口：The plan is underway 时战斗/敏捷(3)藏烟花",
+          "P7 dawnOfTheFinalDay 法典 11 教堂：无论是否藏烟花先放基甸，2 敏捷成功记 tally",
+          "P7 dawnOfTheFinalDay 法典 13/14/15：阿特伍德宅放莉亚、杂货店卖物品、学校抽牌/资源",
+          "P7 dawnOfTheFinalDay 法典 16 集会厅：交还传家宝换取关系 ≤2 居民 +1 与全队经验",
+          "P7 dawnOfTheFinalDay 法典 16：delivering 包裹分支给希奥关系；无传家宝则只结算一次",
+          "P7 dawnOfTheFinalDay 幕 1 背面 The Bliss：精神创伤或随机基础疯狂弱点 + 2 奖励经验",
+          "P7 dawnOfTheFinalDay 议程 1 背面 Bertie’s Choice：Bertie 有顿悟 → R2，否则 R1",
+          "P7 dawnOfTheFinalDay 行动：地点法典与居民谈判按所在位置列出并带费用原因",
+          "P7 dawnOfTheFinalDay 行动：法典事件桥供共享卡经 resolveScenarioEvent 复用",
+          "P7 dawnOfTheFinalDay 结局 1：记录 Dr. Marquez has a hunch 并收敛到 Resolution 2",
+          "P7 dawnOfTheFinalDay 结局 2：烟花 tally ≥ 调查员人数记录 The Vale is full of fireworks",
+          "P7 dawnOfTheFinalDay 烟花 tally 兼容战役层 schema：布尔复选框与 Simeon 笔记都折算 1 道",
+          "P7 dawnOfTheFinalDay 勘察：Areas Surveyed 四种历史写法都可读，候选只留未勘察区域",
+          "P7 dawnOfTheFinalDay 记录与存档：关系/笔记/Remember 的键与 JSON 往返"
+        ]
+      }
+    },
+    {
+      "id": "preludeTheFinalEvening",
+      "kind": "prelude",
+      "name": "最终之夜",
+      "referenceCode": "10704",
+      "modulePath": "content/campaigns/theFeastOfHemlockVale/scenarios/preludeTheFinalEvening/index.js",
+      "cards": [],
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "cardEntries": true,
+        "guide": true,
+        "guideReproducible": true,
+        "guideChineseMarked": true,
+        "tests": true
+      },
+      "status": "verified",
+      "guide": {
+        "path": "web/scenario-guides/preludeTheFinalEvening.json",
+        "exists": true,
+        "guideKeyCount": 12,
+        "chineseGaps": 0,
+        "reproducible": true
+      },
+      "tests": {
+        "count": 52,
+        "titles": [
+          "P7 preludeTheFinalEvening 章节结构：序曲、8 处地点、单幕单议程、4 个结局、无遭遇牌库",
+          "P7 preludeTheFinalEvening 印刷正文：序章/11 条布置/5 条战役规则/18 条法典/5 段结局来自 story-access",
+          "P7 preludeTheFinalEvening 地图：6×3 印刷符号格、8 个符号各占两格、坐标取中点",
+          "P7 preludeTheFinalEvening 连接：只按印刷图标连接（十字路口连全部、共 11 对）",
+          "P7 preludeTheFinalEvening 地点数值：帷幕来自印刷，老磨坊 1 线索/人、其余 0",
+          "P7 preludeTheFinalEvening 居民：11 位双面卡、9 个敌人面、5 个关系等级上限",
+          "P7 preludeTheFinalEvening 放一边：整组 Residents 20 面 + 特别议程，序曲牌库为空",
+          "P7 preludeTheFinalEvening 序章：没有「马奎兹有计划」直接 Intro 5 → [tablet]+[elder_thing]",
+          "P7 preludeTheFinalEvening 序章：有计划 + 关系等级 3 → 三个选项；真话移除马奎兹并记录",
+          "P7 preludeTheFinalEvening 序章：关系等级不足时不给「你没有任何错」；谎话加 [cultist]+[elder_thing]",
+          "P7 preludeTheFinalEvening 布置：8 处地点入场，老磨坊 1 线索/人、其余 0",
+          "P7 preludeTheFinalEvening 布置：关系等级默认 0 → 五位居民以敌人面进场，蕾切尔仍是资产",
+          "P7 preludeTheFinalEvening 布置：关系等级高于阈值 → 资产面；蕾切尔不受阈值影响",
+          "P7 preludeTheFinalEvening 布置：阈值边界（等于阈值即翻面）与 3 人时第二张狂乱的赴宴者",
+          "P7 preludeTheFinalEvening 布置：北角矿井未勘察 → 划掉莉亚并移出游戏",
+          "P7 preludeTheFinalEvening 布置：伯蒂显灵 → 敌人在十字路口；被打断 → 马奎兹归调查员",
+          "P7 preludeTheFinalEvening 布置：时间指示卡（第三夜）、初始毁灭 = 人数、日历记录",
+          "P7 preludeTheFinalEvening 布置：开场地点随「盛宴被打断」切换（引擎 startLocation 读点）",
+          "P7 preludeTheFinalEvening 关系等级：增减一格、上限 5、双写引擎读点",
+          "P7 preludeTheFinalEvening 笔记与划掉：笔记集合、划掉后笔记作废且关系不再变",
+          "P7 preludeTheFinalEvening 道别：在场居民可被取得控制权，不在场的不可",
+          "P7 preludeTheFinalEvening 法典声明：18 条、引擎 normalizeCodex 形状、限次与居民记录键",
+          "P7 preludeTheFinalEvening 法典分支：相信/撒谎/否则 与 烟花/笔记条件",
+          "P7 preludeTheFinalEvening 法典 1：撒谎 → 蕾切尔翻面并受 2 点伤害；否则 → 只翻面",
+          "P7 preludeTheFinalEvening 法典 1（相信）：其余居民翻面、放一边居民以敌人面进场、换议程",
+          "P7 preludeTheFinalEvening 法典 2：见过矿井 → 问出来关系归零 / 不问则招募",
+          "P7 preludeTheFinalEvening 法典 2/3/6/7：否则分支各 +1 关系与 +1 奖励经验",
+          "P7 preludeTheFinalEvening 法典 6/7：吉迪恩的传说 + 宝藏 → 记录完成；朱迪思被支持 → 白打武器",
+          "P7 preludeTheFinalEvening 法典 4/5：一位赫姆洛克入主，另一位关系归零并在阿特伍德宅翻面",
+          "P7 preludeTheFinalEvening 法典 8：西奥两种记录 → +2 经验；否则只取得控制权",
+          "P7 preludeTheFinalEvening 法典 9–16：抽牌/资源、敌人搬家、躲避居民、移动加行动",
+          "P7 preludeTheFinalEvening 法典 Θ/Ω：抽 5 张指定调查员；弃 3 张并记录伯蒂遇难",
+          "P7 preludeTheFinalEvening 法典屏障：划掉的居民读不到、已读不再触发",
+          "P7 preludeTheFinalEvening 传家宝：本序曲不发放 Heirlooms（10713–10715 留给白天序曲）",
+          "P7 preludeTheFinalEvening 法典 13（遗产选择）：站在里弗一边 → 里弗在阿特伍德宅资产面进场",
+          "P7 preludeTheFinalEvening 法典 13：站在威廉一边需要「威廉已释怀」；两支都没记录时只能让他们打",
+          "P7 preludeTheFinalEvening 法典 13：有记录时「让他们打」→ 记住一决胜负，再读一次走停战",
+          "P7 preludeTheFinalEvening 时间推进：第三日夜、日历记录、下一段《山谷的命运》",
+          "P7 preludeTheFinalEvening 结局链：无结局 → 相信了走 R2→R3，否则直接 R4",
+          "P7 preludeTheFinalEvening 结局 1 → 结局 4：蕾切尔被击败后直接走到 R4 并记录经验",
+          "P7 preludeTheFinalEvening 结局 3：选择输掉战役 → 全员死亡并记录",
+          "P7 preludeTheFinalEvening 结局 4 经验：胜利区 X + 本序曲奖励经验（按人记录）",
+          "P7 preludeTheFinalEvening 无结局：全员撤退 → noResolution，按是否相信决定下一段",
+          "P7 preludeTheFinalEvening 议程目标：待宰羔羊需要 1 + 1/人 张居民在胜利区",
+          "P7 preludeTheFinalEvening 待宰羔羊：不能触发法典；未达目标翻面 → 全员撤退无结局",
+          "P7 preludeTheFinalEvening 议程背面：每位调查员被击败并承受 1 点创伤 → 无结局",
+          "P7 preludeTheFinalEvening 混乱标记：[skull] 当前天数（3）/ 困难天数 +1（4）",
+          "P7 preludeTheFinalEvening 混乱标记：[cultist] 简单/普通 +1 且谈判自动成功；困难 -1 / 谈判 +1",
+          "P7 preludeTheFinalEvening 混乱标记：[tablet] 手牌阈值；[elder_thing] 谈判再揭示",
+          "P7 preludeTheFinalEvening 混乱标记追加效果：[cultist] 谈判把 skillTest 置为自动成功",
+          "P7 preludeTheFinalEvening JSON 往返：地点、居民、法典、日历与结局都能继续结算",
+          "P7 preludeTheFinalEvening 披露：无法表达的子句集中声明，命名导出与 behavior 表同一份"
+        ]
+      }
+    },
+    {
+      "id": "fateOfTheVale",
+      "kind": "chapter",
+      "name": "山谷的命运",
+      "referenceCode": "10651",
+      "modulePath": "content/campaigns/theFeastOfHemlockVale/scenarios/fateOfTheVale/index.js",
+      "cards": [
+        "10652",
+        "10653",
+        "10654",
+        "10655",
+        "10656",
+        "10657",
+        "10658",
+        "10659",
+        "10660",
+        "10661",
+        "10661b",
+        "10662a",
+        "10662b",
+        "10663a",
+        "10663b",
+        "10664a",
+        "10664b",
+        "10665a",
+        "10665b",
+        "10666",
+        "10667",
+        "10668",
+        "10669",
+        "10670",
+        "10670b",
+        "10671",
+        "10672",
+        "10673",
+        "10674"
+      ],
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "cardEntries": true,
+        "guide": true,
+        "guideReproducible": true,
+        "guideChineseMarked": true,
+        "tests": true
+      },
+      "status": "verified",
+      "guide": {
+        "path": "web/scenario-guides/fateOfTheVale.json",
+        "exists": true,
+        "guideKeyCount": 8,
+        "chineseGaps": 0,
+        "reproducible": true
+      },
+      "tests": {
+        "count": 32,
+        "titles": [
+          "P7 fateOfTheVale 章节结构：30 个卡条目、10 个 gather 组、4 个镜巢与深渊",
+          "P7 fateOfTheVale 正文与特殊规则：英文印刷文本 + 三条规则 + 六个结局",
+          "P7 fateOfTheVale 遭遇牌库：28 张、密使/水晶仿体/狂乱的赴宴者不在牌库",
+          "P7 fateOfTheVale 地点连接：四个镜巢围成环、双向对称、坐标取阵法网格",
+          "P7 fateOfTheVale 布置：四个镜巢未揭示、四个密使以星之彩面入场、起始镜巢互不相同",
+          "P7 fateOfTheVale 镜巢洗牌：随机源打乱位置→卡号并写回地点定义",
+          "P7 fateOfTheVale 破碎自我：换卡、手牌上限 -3、技能 = 手牌数、旧印 +2",
+          "P7 fateOfTheVale 深渊：五类结算卡片、从底部抽遭遇卡、其余放回顶部",
+          "P7 fateOfTheVale 深渊：居民翻到敌人面攻击后弃掉、地点在镜巢旁入场并相连",
+          "P7 fateOfTheVale 深渊翻到地点面：与每个镜巢相连；进入深渊时深渊有牌即阵亡",
+          "P7 fateOfTheVale 宇宙密使：正面无生命值不能受伤、成功攻击/躲避后本轮不攻击",
+          "P7 fateOfTheVale 破阵：密使翻到破碎面，深渊密使移到深渊、其余留在原镜巢",
+          "P7 fateOfTheVale 镜巢回合末：未成功攻击时二选一、10669 总是随机弃牌",
+          "P7 fateOfTheVale 查找深渊：7/人 线索、团队每幕一次",
+          "P7 fateOfTheVale 幕：1a/2a 与议程 1a/2a/3a，幕 3a 有四个版本",
+          "P7 fateOfTheVale 幕 1 背面：地点补线索、蕾切尔嬷嬷划掉、居民与洞穴洗入深渊",
+          "P7 fateOfTheVale 幕间：四个选项按战役记录开放，选择决定幕 3a 版本",
+          "P7 fateOfTheVale 幕间 1/2/5：马奎兹与深渊翻面、黑夜山谷与居民、密使在村庄",
+          "P7 fateOfTheVale 幕 3a v.I 背面：让马奎兹执行计划 → 结局 1；有棱柱碎片可自己动手 → 结局 2",
+          "P7 fateOfTheVale 幕 3a v.II/v.III/v.IV 背面：结局 3/4/5",
+          "P7 fateOfTheVale v.III 引线与火势：放引线到隐藏值、点燃抽「着火了！」、5 张推进",
+          "P7 fateOfTheVale v.IV 撤退：记录条件 ≥5 才能撤退，全员撤退推进到结局 5",
+          "P7 fateOfTheVale 议程背面：议程 1/2 检定失败改伤害或洗牌入深渊、议程 3 全员阵亡",
+          "P7 fateOfTheVale 混乱符号：[skull] 随幕号/星之彩敌人、其余符号的追加效果",
+          "P7 fateOfTheVale 混乱符号对密使：简单再揭示一个标记、困难自动失败",
+          "P7 fateOfTheVale 破碎密使的标记反应：在该地点揭示指定标记时二选一",
+          "P7 fateOfTheVale 诡计显现：狂喜二选一、碎裂最高费支援、升华按失败点数弃手牌",
+          "P7 fateOfTheVale 结局 1–5：剧本日志、创伤、奖励经验与划线居民",
+          "P7 fateOfTheVale 结局 3 划线：只看胜利区里的居民",
+          "P7 fateOfTheVale 无结局：全员被吞噬、战役失败、记录写入",
+          "P7 fateOfTheVale 声明即接线：议程/密使/镜巢/水晶仿体/深渊故事卡的 flags 都有读点",
+          "P7 fateOfTheVale JSON 往返：深渊/破碎自我/幕指针/记录都能存档复原"
+        ]
+      }
+    }
+  ],
+  "sharedGroups": [
+    {
+      "id": "the_first_day",
+      "cards": 2,
+      "missing": 0
+    },
+    {
+      "id": "the_second_day",
+      "cards": 2,
+      "missing": 0
+    },
+    {
+      "id": "the_final_day",
+      "cards": 2,
+      "missing": 0
+    },
+    {
+      "id": "day_of_rest",
+      "cards": 2,
+      "missing": 0
+    },
+    {
+      "id": "day_of_rain",
+      "cards": 3,
+      "missing": 0
+    },
+    {
+      "id": "day_of_the_feast",
+      "cards": 9,
+      "missing": 0
+    },
+    {
+      "id": "residents",
+      "cards": 20,
+      "missing": 0
+    },
+    {
+      "id": "the_vale",
+      "cards": 16,
+      "missing": 0
+    },
+    {
+      "id": "heirlooms",
+      "cards": 3,
+      "missing": 0
+    },
+    {
+      "id": "horrors_in_the_rock",
+      "cards": 8,
+      "missing": 0
+    },
+    {
+      "id": "agents_of_the_colour",
+      "cards": 2,
+      "missing": 0
+    },
+    {
+      "id": "transfiguration",
+      "cards": 2,
+      "missing": 0
+    },
+    {
+      "id": "blight",
+      "cards": 2,
+      "missing": 0
+    },
+    {
+      "id": "refractions",
+      "cards": 2,
+      "missing": 0
+    },
+    {
+      "id": "the_forest",
+      "cards": 6,
+      "missing": 0
+    },
+    {
+      "id": "myconids",
+      "cards": 3,
+      "missing": 0
+    },
+    {
+      "id": "mutations",
+      "cards": 2,
+      "missing": 0
+    },
+    {
+      "id": "fire",
+      "cards": 1,
+      "missing": 0
+    }
+  ],
+  "flow": [
+    {
+      "file": "content/campaigns/theFeastOfHemlockVale/flow.js",
+      "exists": true
+    },
+    {
+      "file": "content/campaigns/theFeastOfHemlockVale/prologue.js",
+      "exists": true
+    },
+    {
+      "file": "content/campaigns/theFeastOfHemlockVale/interludes.js",
+      "exists": true
+    },
+    {
+      "file": "content/campaigns/theFeastOfHemlockVale/epilogue.js",
+      "exists": true
+    },
+    {
+      "file": "content/campaigns/theFeastOfHemlockVale/records.js",
+      "exists": true
+    },
+    {
+      "file": "content/campaigns/theFeastOfHemlockVale/parts.js",
+      "exists": true
+    }
+  ],
+  "plan": {
+    "path": "audit/fhv-campaign-plan.json",
+    "status": "planned",
+    "gates": {
+      "chapterCount": true,
+      "preludeCount": true,
+      "scenarioReferenceCards": true,
+      "noOverlap": true,
+      "coversAssignableCards": true,
+      "noUnassigned": true,
+      "entriesCovered": true,
+      "scenariosComplete": true,
+      "chapterTestsPresent": true,
+      "guidesPresent": true,
+      "storyReadable": true
+    }
+  },
+  "evidence": [
+    "tests/fhv-scenario-<scenarioId>.test.mjs",
+    "tests/fhv-campaign-flow.test.mjs",
+    "tests/fhv-story.test.mjs",
+    "tests/fhv-campaign-records.test.mjs",
+    "audit/fhv-campaign-plan.json",
+    "audit/fhv-scenarios-browser.json",
+    "web/scenario-guides/<scenarioId>.json",
+    "content/campaigns/theFeastOfHemlockVale/story-text.js",
+    "docs/campaign/theFeastOfHemlockVale/p7-worker-contract.md",
+    "docs/campaign/theFeastOfHemlockVale/p7-translation-contract.md"
+  ],
+  "sources": [
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/manifest.js",
+      "sha256": "79095ebc49fc865a44a283e31e3e2cd31aba6eed7003d8fb6dfcc2df17c6488a"
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/records.js",
+      "sha256": "82978295986c0272fa3c435ec1475be8078dbe8f1fa50c2849989c04183ebb22"
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/flow.js",
+      "sha256": "4ee2fed6b503fa95bb636c72a6b03fd7c6430186820c8ed482e686db2f14784b"
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/card-data.js",
+      "sha256": "e554f8f21c9e5e1a3c9e09923904ddce67e25871eb9a306c9e6ef2bb020a583c"
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/story-access.js",
+      "sha256": "08be1a02e6053bc252d02b85dc091117be7d6b2d98079d4e989c15160740b260"
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/scenarios/index.js",
+      "sha256": "4d3f509810ec4c0faf4a0ab27c2cf3918fed56d19cb0519dab52bb65c0d1b36f"
+    },
+    {
+      "path": "tools/import-fhv-story.mjs",
+      "sha256": "e70ed83e21ea60906a707c6bd16ff3b90fa01629fbb6d6c1e468d7eed7f47b6c"
+    },
+    {
+      "path": "tools/build-fhv-guides.mjs",
+      "sha256": "fb5c7361f8e3d5ae91df026e1e60b7bd61ccc30c07d303b8f67f7516a7a6e791"
+    },
+    {
+      "path": "tools/plan-fhv-campaign.mjs",
+      "sha256": "c89cc245087573b36f1aa870f9fd4293f006054d8dd17feb1b24024e2bb7d7a7"
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/scenarios/welcomeToHemlockVale/index.js",
+      "sha256": "6e1676b01a38f5a367d5135291f7ce4236c107109e26370196d21036edd97a53"
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/scenarios/writtenInRock/index.js",
+      "sha256": "66cc081224390ab18df2130226a7dfc2a01d97c9eba6aabb9e60cc44621ad756"
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/scenarios/hemlockHouse/index.js",
+      "sha256": "a832b7fca0172d1bd5b4a8af13c1ce354c4f6ed3bb6400571a7c2bf58c775527"
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/scenarios/theSilentHeath/index.js",
+      "sha256": "d1c521e69a8573bc14fe428a54b16ed93eaf60c2a734580f542f2718f706ad95"
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/scenarios/theLostSister/index.js",
+      "sha256": "1e09a3a90ee01eae5bd01938083bf966332dfaa20c7541e2b7536906df7f57cc"
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/scenarios/theThingInTheDepths/index.js",
+      "sha256": "456b1290989857e61f0e4a5e0995c3d523f57f6c22b46010129e0f7eddafce63"
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/scenarios/theTwistedHollow/index.js",
+      "sha256": "054d08fe06be23c4d441e562d0939399d24345adf45dd8d642e615a6d031e22d"
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/scenarios/dawnOfTheSecondDay/index.js",
+      "sha256": "12a401d5888f41beed3cac6ebe44c8352ccb7825821d2ddebf132bcf749ebb02"
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/scenarios/theLongestNight/index.js",
+      "sha256": "e417a6cf8cf8458f5a674a5bbb8b5d91e93d5298b1e0c807d8c95f0d0fff5e6b"
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/scenarios/dawnOfTheFinalDay/index.js",
+      "sha256": "ee9b59f0bec3692d8c35529e2e44bcb54c505cda297b8ec94d33ee92dd498d34"
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/scenarios/preludeTheFinalEvening/index.js",
+      "sha256": "f98823a33a8814fbadc20d749c80539000350bbd7c27ea1af6e6b4cd444e25b2"
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/scenarios/fateOfTheVale/index.js",
+      "sha256": "3b81fabc86f1630fa9bb7bcc9f7461f4097b3e84ad7e69bf0a6b4983606adce2"
+    }
+  ]
+}

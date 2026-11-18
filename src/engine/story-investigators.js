@@ -17,6 +17,9 @@
 //   · 无牌组由 `prepareStoryInvestigator` 落实（deck/hand/discard 清空 + `storyInvestigator: true`），
 //     引擎的抽牌与起手、换牌读 `isStoryInvestigator` 直接跳过；
 //   · 专属设置卡在进入剧本时直接入场，不占 30 张牌库。
+//   · 换回时机：场景结算后进入第一个战役节点时由 campaign-flow.progressCampaign 统一调用
+//     `restoreStoryInvestigators`（关间/出发准备窗口显示真实调查员）；setup.js 里「下一关没有
+//     声明 storyInvestigators 就换回」的分支保留为旧存档兜底。
 // 一次性规则（例如某位调查员的特殊能力）仍写在章节里，不塞进本模块。
 
 function fail(origin, message) {

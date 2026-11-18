@@ -780,11 +780,15 @@ export function applyCampaignEffect(state, effect, log) {
       ? state.campaign.records[effect.audienceRecord] || []
       : effect.audienceInvestigatorIds || []
     state.campaign.privateStories ||= []
+    // 记录写入时的流程位置，观察投影据此把私密故事排到它实际发生的章节后面，而不是永远排在
+    // 纪事末尾（2026-11-17：万象无终序章的引言/命运跑到《巫异时刻》结算之后，成为默认选中项）。
+    const visit = state.campaign.flow?.history?.at(-1) || null
     state.campaign.privateStories.push({
       id: effect.id,
       title: effect.title,
       text: effect.text,
       audienceInvestigatorIds: [...new Set(audience)],
+      ...(visit ? { nodeId: visit.nodeId, visit: visit.visit } : {}),
     })
   } else if (effect.type === 'campaignWeakness') {
     const code = effect.code

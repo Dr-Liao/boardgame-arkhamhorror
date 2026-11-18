@@ -23,20 +23,20 @@ const CUSTOM_CHECKS = Object.freeze([
   { name: 'Vibrancy', checks: 3, text: 'Living Ink grants an additional +1 to the chosen skills and -1 to each other skill.' },
 ])
 
-const checkedIndexes = (state, inv) => {
-  const list = state?.campaign?.tsk?.customizations?.bySeat?.[inv?.seat]?.['09079']
-  return Array.isArray(list) ? list : []
-}
-const checkedCount = (state, inv, index) => checkedIndexes(state, inv).filter(value => value === index).length
+// 2026-11-16 P2-3：Imbued Ink/Eldritch Ink/Macabre Depiction/Vibrancy 都是多格选项，必须勾满才生效。
+import { customizationOptionFullyChecked } from '../../engine/tsk-customizable.js'
+
+const fullyChecked = (state, inv, index) =>
+  customizationOptionFullyChecked(state, inv?.seat, '09079', index)
 const chosenSkills = (state, inv) => {
   const chosen = new Set(['willpower'])
-  if (checkedCount(state, inv, 3) > 0) chosen.add('intellect')
-  if (checkedCount(state, inv, 4) > 0) chosen.add('combat')
+  if (fullyChecked(state, inv, 3)) chosen.add('intellect')
+  if (fullyChecked(state, inv, 4)) chosen.add('combat')
   return chosen
 }
 const skillAmount = (state, inv, skill) => {
   const chosen = chosenSkills(state, inv).has(skill)
-  const vibrancy = checkedCount(state, inv, 6) > 0
+  const vibrancy = fullyChecked(state, inv, 6)
   return (chosen ? 1 : 0) + (vibrancy ? (chosen ? 1 : -1) : 0)
 }
 
@@ -54,7 +54,7 @@ export default {
       label: '灌墨：额外 2 充能（法术槽替换由 primitive-request 跟踪）',
       resolve: ({ state, inv, source, api }) => {
         if (!source) return
-        if (checkedCount(state, inv, 2) > 0) {
+        if (fullyChecked(state, inv, 2)) {
           api.addUses(source, 2)
           api.info('🖋️ 「传神佳墨」以额外 2 充能入场（灌墨）。')
         }
@@ -67,7 +67,7 @@ export default {
       criteria: [({ inv, context }) => context?.seat === inv.seat],
       resolve: ({ state, inv, source, api }) => {
         if (!source) return
-        if (checkedCount(state, inv, 1) > 0) {
+        if (fullyChecked(state, inv, 1)) {
           const answer = api.choice({
             kind: 'reaction', source: '09079', seat: inv.seat, canSkip: true,
             prompt: '暗纹：是否选择不移除 1 充能，并在本轮忽略传神佳墨的能力？',
@@ -94,7 +94,7 @@ export default {
       trigger: 'symbolRevealed',
       label: '冥纹：揭示符号标记后，横置并放置 1 充能',
       cost: { exhaust: true },
-      criteria: [({ state, inv, context }) => checkedCount(state, inv, 5) > 0
+      criteria: [({ state, inv, context }) => fullyChecked(state, inv, 5)
         && (context?.seat == null || context.seat === inv.seat)],
       resolve: ({ source, api }) => {
         if (!source) return

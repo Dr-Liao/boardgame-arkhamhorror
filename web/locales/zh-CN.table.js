@@ -100,6 +100,17 @@ export default {
   'table.marker.damage': '伤害',
   'table.marker.uses': '剩余使用次数',
   'table.marker.counter': '标记',
+  // 卡上计数展示契约（table-components.js#cardCounterMarkerData）：具名计数器 +
+  // 使用标记类型（秘密/充能/光辉）+ 脚本标签计数（疯长/窃魂/火盆）。
+  'table.marker.evidence': '证据',
+  'table.marker.bounty': '赏金',
+  'table.marker.beneath': '下方',
+  'table.marker.secret': '秘密',
+  'table.marker.charge': '充能',
+  'table.marker.brilliance': '光辉',
+  'table.marker.overgrowth': '疯长',
+  'table.marker.stolenSoul': '窃魂',
+  'table.marker.brazier': '火盆',
   'table.marker.attached': '附属卡',
   'table.marker.cardAria': '卡牌上的标记',
 

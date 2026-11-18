@@ -1404,6 +1404,16 @@ export function weaknessDescriptor(code) {
   return descriptorOfKind(code, 'weakness')
 }
 
+// P6（九循环）：Double 特质卡片的「作为额外费用，花费 1 个行动」统一读点。
+// 打印文本写在卡面（`As an additional cost to play X, spend an action.`），条目在 played
+// 描述子上声明 `cost: { action: 1 }`；legalMoves/validateMove/doPlay 共用本函数，
+// 保证「预览 = 校验 = 扣费」同源。非事件/无声明时返回 0。
+export function playedActionCost(code) {
+  const played = descriptorOfKind(code, 'played')
+  const amount = Number(played?.cost?.action)
+  return Number.isFinite(amount) && amount > 0 ? amount : 0
+}
+
 // P2-4「快速事件统一通道」的唯一候选视图：把两种合法写法归一成同一份形状。
 //   · 旧写法：`kind:'played', fast:true, trigger:[...], effect|resolve`（47 张 A 支卡，日志/指纹已锁）
 //   · 新写法：`kind:'reaction', fromHand:true, quickEvent:true, trigger:[...], criteria, effect|resolve`

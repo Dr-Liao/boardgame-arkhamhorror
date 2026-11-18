@@ -14,15 +14,15 @@
 //     荣耀/长者/追猎/狂怒（定制项 1–4）；Ancient Power（5）允许同一铭文灌注至多 3 次；
 //     Scriptweaver（7）让每 1 充能灌注最多 2 个不同铭文；
 //   · Spellweaver/Saga 的补满数：Saga（6）→ 每轮补 2；Saga 的「改为 2」由 checked 判定；
-//   · Heirloom（0）的 -1 费用：customizationEffects.playCost（面板契约）+ 条目
-//     playCostModifier（turn-flow.js#playCost 的真实读点）；[[Relic]] 特性用 add:trait 修正。
+//   · Heirloom（0）的 -1 费用：customizationEffects.playCost（turn-flow.js#playCost 的 abilityLayer
+//     真实读点，勾满才生效）；[[Relic]] 特性用 add:trait 修正。卡牌不再重复声明 playCostModifier。
 // approximation：Glory 的「治愈 1 点伤害/恐惧」由 api.healDamage/healHorror 结算（目标限定自己，
 //   与卡面一致）；Elders 的「超过难度值 ≥ 隐藏值」用 api.locationShroud 读当前地点隐藏值。
-import { customizationChecked } from '../../engine/tsk-customizable.js'
+import { customizationOptionFullyChecked } from '../../engine/tsk-customizable.js'
 
 const SOURCE = '09022'
-const checked = (state, inv) => customizationChecked(state, inv?.seat ?? state.currentSeat, SOURCE)
-const isChecked = (state, inv, index) => checked(state, inv).includes(index)
+// 2026-11-16 P2-3：多格选项（Ancient Power/Saga/Scriptweaver 均为 3–4 格）必须勾满才生效。
+const isChecked = (state, inv, index) => customizationOptionFullyChecked(state, inv?.seat ?? state.currentSeat, SOURCE, index)
 const MAX_CHARGES = 4
 const INSCRIPTIONS = [
   { id: 'accuracy', label: '精准：本次攻击额外 +2[combat]' },
@@ -44,7 +44,6 @@ export default {
   code: '09022',
   uses: MAX_CHARGES,
   usesType: 'charges',
-  playCostModifier: ({ state, inv }) => (isChecked(state, inv, 0) ? -1 : 0),
   customizationEffects: {
     playCost: checkedCounts => ((checkedCounts || []).filter(index => index === 0).length ? -1 : 0),
   },

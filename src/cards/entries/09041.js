@@ -14,21 +14,23 @@
 //   · [fast] 花费 1 证据抽 1：criteria 要求证据 ≥1，resolve 扣 1 证据 + api.drawCards。
 // approximation：自定义判据（Pessimistic Outlook 等 4 项）与 Peer Review / Research Grant /
 //   Irrefutable Proof / Alternative Hypothesis 未接线；见 primitive-requests/09041.json。
+//   2026-11-16 P2-3：这些勾选格显式标记 `implemented: false`——定制面板仍展示卡面文本，但不再
+//   生成可购买候选（dispatch 也拒绝），避免玩家花 XP 买到无效果选项。
 const SOURCE = '09041'
 const FLAG = 'tskEmpiricalHypothesisCriteria'
 const evidenceOf = card => Number(card?.markers?.evidence || 0)
 export default {
   code: '09041',
-  note: 'approximation: 只实现两项印刷判据（失败 ≥2 / 成功 ≥3）与「花 1 证据抽 1」；四项定制判据、Peer Review/Research Grant/Irrefutable Proof/Alternative Hypothesis 未实现（见 primitive-requests/09041.json）',
+  note: 'approximation: 只实现两项印刷判据（失败 ≥2 / 成功 ≥3）与「花 1 证据抽 1」；8 个定制勾选格规则未接读点，已标记 implemented:false（展示文本、不可购买，避免无效 XP 支出）；见 primitive-requests/09041.json',
   customizationOptions: [
-    { name: 'Pessimistic Outlook', checks: 1, text: 'Add the following criteria: "you run out of cards in your hand."' },
-    { name: 'Trial and Error', checks: 1, text: 'Add the following criteria: "you are dealt damage or horror."' },
-    { name: 'Independent Variable', checks: 1, text: 'Add the following criteria: "you discard a treachery or enemy from play."' },
-    { name: 'Field Research', checks: 1, text: 'Add the following criteria: "you enter a location with 3 or more shroud."' },
-    { name: 'Peer Review', checks: 2, text: 'The chosen criteria is met if any investigator at your location meets it, instead of only you. Other investigators at your location may trigger [fast] abilities on Empirical Hypothesis.' },
-    { name: 'Research Grant', checks: 2, text: 'Empirical Hypothesis gains: "[fast] Spend 2 evidence: Reduce the cost of the next card you play by 3."' },
-    { name: 'Irrefutable Proof', checks: 3, text: 'Empirical Hypothesis gains: "[fast] Spend 3 evidence: Discover 1 clue at your location."' },
-    { name: 'Alternative Hypothesis', checks: 4, text: 'After you exhaust Empirical Hypothesis, you may resolve its forced effect, choosing a criteria you have not chosen this round. Then, ready it.' },
+    { name: 'Pessimistic Outlook', checks: 1, implemented: false, text: 'Add the following criteria: "you run out of cards in your hand."' },
+    { name: 'Trial and Error', checks: 1, implemented: false, text: 'Add the following criteria: "you are dealt damage or horror."' },
+    { name: 'Independent Variable', checks: 1, implemented: false, text: 'Add the following criteria: "you discard a treachery or enemy from play."' },
+    { name: 'Field Research', checks: 1, implemented: false, text: 'Add the following criteria: "you enter a location with 3 or more shroud."' },
+    { name: 'Peer Review', checks: 2, implemented: false, text: 'The chosen criteria is met if any investigator at your location meets it, instead of only you. Other investigators at your location may trigger [fast] abilities on Empirical Hypothesis.' },
+    { name: 'Research Grant', checks: 2, implemented: false, text: 'Empirical Hypothesis gains: "[fast] Spend 2 evidence: Reduce the cost of the next card you play by 3."' },
+    { name: 'Irrefutable Proof', checks: 3, implemented: false, text: 'Empirical Hypothesis gains: "[fast] Spend 3 evidence: Discover 1 clue at your location."' },
+    { name: 'Alternative Hypothesis', checks: 4, implemented: false, text: 'After you exhaust Empirical Hypothesis, you may resolve its forced effect, choosing a criteria you have not chosen this round. Then, ready it.' },
   ],
   abilities: [
     {

@@ -1,405 +1,1660 @@
 {
   "schemaVersion": 1,
+  "cycle": "fhv",
+  "cycleName": "The Feast of Hemlock Vale",
+  "cycleNameZh": "铁杉谷盛宴",
   "campaignId": "theFeastOfHemlockVale",
-  "status": "catalog-only",
-  "playable": false,
+  "milestone": "M5",
+  "stage": "P8",
+  "generatedBy": "tools/audit-fhv.mjs",
+  "docs": [
+    "docs/campaign/theFeastOfHemlockVale/README.md#P8",
+    "docs/campaign/theFeastOfHemlockVale/campaign.md",
+    "docs/arkham-content-migration.md"
+  ],
+  "status": "verified",
+  "playable": true,
+  "launchEnabled": true,
   "earlyAccess": false,
-  "evidence": {
-    "scope": "audit/fhv-scope.json",
-    "baseline": "audit/fhv-baseline.json",
-    "mechanisms": "audit/fhv-mechanism-scan.json",
-    "reports": "artifacts/migration/fhv/reports/"
-  },
-  "mechanismScan": {
-    "complete": true,
-    "counts": {
-      "cards": 441,
-      "ruleUnits": 1195,
-      "mechanisms": 69,
-      "byType": {
-        "primitive": 41,
-        "keyword": 6,
-        "rulebook": 3,
-        "interaction": 4,
-        "scenario": 12,
-        "content": 3
+  "equivalenceCertified": true,
+  "gates": {
+    "registration": {
+      "pass": true,
+      "registered": {
+        "campaign": {
+          "launchable": true,
+          "status": "playable",
+          "error": null
+        },
+        "lobby": {
+          "visible": true,
+          "status": "playable",
+          "earlyAccess": false,
+          "scenarios": [
+            "welcomeToHemlockVale",
+            "writtenInRock",
+            "hemlockHouse",
+            "theSilentHeath",
+            "theLostSister",
+            "theThingInTheDepths",
+            "theTwistedHollow",
+            "dawnOfTheSecondDay",
+            "theLongestNight",
+            "dawnOfTheFinalDay",
+            "preludeTheFinalEvening",
+            "fateOfTheVale"
+          ]
+        },
+        "scenarios": [
+          {
+            "id": "welcomeToHemlockVale",
+            "status": "playable",
+            "campaignId": "theFeastOfHemlockVale"
+          },
+          {
+            "id": "writtenInRock",
+            "status": "playable",
+            "campaignId": "theFeastOfHemlockVale"
+          },
+          {
+            "id": "hemlockHouse",
+            "status": "playable",
+            "campaignId": "theFeastOfHemlockVale"
+          },
+          {
+            "id": "theSilentHeath",
+            "status": "playable",
+            "campaignId": "theFeastOfHemlockVale"
+          },
+          {
+            "id": "theLostSister",
+            "status": "playable",
+            "campaignId": "theFeastOfHemlockVale"
+          },
+          {
+            "id": "theThingInTheDepths",
+            "status": "playable",
+            "campaignId": "theFeastOfHemlockVale"
+          },
+          {
+            "id": "theTwistedHollow",
+            "status": "playable",
+            "campaignId": "theFeastOfHemlockVale"
+          },
+          {
+            "id": "dawnOfTheSecondDay",
+            "status": "playable",
+            "campaignId": "theFeastOfHemlockVale"
+          },
+          {
+            "id": "theLongestNight",
+            "status": "playable",
+            "campaignId": "theFeastOfHemlockVale"
+          },
+          {
+            "id": "dawnOfTheFinalDay",
+            "status": "playable",
+            "campaignId": "theFeastOfHemlockVale"
+          },
+          {
+            "id": "preludeTheFinalEvening",
+            "status": "playable",
+            "campaignId": "theFeastOfHemlockVale"
+          },
+          {
+            "id": "fateOfTheVale",
+            "status": "playable",
+            "campaignId": "theFeastOfHemlockVale"
+          }
+        ],
+        "packs": [
+          {
+            "id": "fhvCampaign",
+            "status": "playable",
+            "cards": 301,
+            "expectedCards": 301,
+            "rulesImplemented": true,
+            "deckbuilding": 0,
+            "codesMatch": true
+          },
+          {
+            "id": "fhvInvestigators",
+            "status": "playable",
+            "cards": 20,
+            "expectedCards": 20,
+            "rulesImplemented": true,
+            "deckbuilding": 0,
+            "codesMatch": true
+          },
+          {
+            "id": "fhvPlayer",
+            "status": "playable",
+            "cards": 120,
+            "expectedCards": 120,
+            "rulesImplemented": true,
+            "deckbuilding": 102,
+            "codesMatch": true
+          }
+        ],
+        "availability": {
+          "campaignCardsStrict": true,
+          "playerBuildable": 102,
+          "investigatorSelectable": 5
+        }
       },
-      "guides": 12,
+      "availability": {
+        "campaignCardsStrict": true,
+        "playerBuildable": 102,
+        "investigatorSelectable": 5
+      }
+    },
+    "ledgers": {
+      "pass": true,
+      "checks": {
+        "scope": {
+          "pass": true,
+          "command": "node tools/scan-fhv-scope.mjs --check",
+          "exitCode": 0,
+          "tail": "fhv scope --check: 441 条卡表记录，12 个场景身份，568 个来源文件\n",
+          "path": "audit/fhv-scope.json",
+          "sha256": "1b24039f96b0403c66f60651ab8c0631c642b0ea18de5c72ff8dfe1c41c3b34a",
+          "records": 441,
+          "status": "catalog-only"
+        },
+        "scan": {
+          "pass": true,
+          "command": "node tools/scan-fhv-mechanisms.mjs --check",
+          "exitCode": 0,
+          "tail": "fhv mechanism scan --check: 441 cards, 69 mechanisms, 28 P2 gaps, 1462 guide leaves, 0 blocked\n",
+          "path": "audit/fhv-mechanism-scan.json",
+          "sha256": "b50a3644a7aa6368127941ac3d423ca43d9353f97173b11781d2131740e736f1",
+          "gates": {
+            "allCardsClassified": true,
+            "allCardsHaveBackendEvidence": true,
+            "sixTypesCovered": true,
+            "allCandidatesKnown": true,
+            "allPrimitiveGapsQueued": true,
+            "noUnknownMechanisms": true,
+            "guidesComplete": true
+          },
+          "status": "catalog-only"
+        },
+        "primitivePlan": {
+          "pass": true,
+          "command": "node tools/plan-fhv-primitives.mjs --check",
+          "exitCode": 0,
+          "tail": "fhv primitives: 28 gaps reviewed, 28 closed, 0 open\n",
+          "path": "audit/fhv-primitive-plan.json",
+          "sha256": "8c412ad16c06505c1621e52547bd8e1d0a8b7a29ed1926ca38bd4af7224da040",
+          "status": "done",
+          "pending": 0
+        }
+      },
+      "commands": {
+        "nodeAcceptance": {
+          "pass": true,
+          "command": "node tools/verify-fhv.mjs --node --check",
+          "exitCode": 0,
+          "tail": "fhv node 证据：一致（45/45 pass，replay exit 0）\n"
+        },
+        "rules": {
+          "pass": true,
+          "command": "node tools/audit-fhv-rules.mjs --check",
+          "exitCode": 0,
+          "tail": "fhv rules: 复算一致（关键词 6 项 / 规则 11 条）\n"
+        },
+        "interactions": {
+          "pass": true,
+          "command": "node tools/audit-fhv-interactions.mjs --check",
+          "exitCode": 0,
+          "tail": "fhv interactions: verified（覆盖 7 组 × 2 视口：{\"desktop\":{\"codex\":true,\"evolution\":true,\"survey\":true,\"grid\":true,\"rail\":true,\"enemyLocation\":true,\"investigatorState\":true},\"mobile\":{\"codex\":true,\"evolution\":true,\"survey\":true,\"grid\":true,\"rail\":true,\"enemyLocation\":true,\"investigatorState\":true}}）\n"
+        },
+        "investigators": {
+          "pass": true,
+          "command": "node tools/audit-fhv-investigators.mjs --check",
+          "exitCode": 0,
+          "tail": "fhv investigators: 复算一致\n"
+        },
+        "player": {
+          "pass": true,
+          "command": "node tools/audit-fhv-player.mjs --check",
+          "exitCode": 0,
+          "tail": "fhv player: 复算一致（verified 120/120）\n"
+        },
+        "scenarios": {
+          "pass": true,
+          "command": "node tools/audit-fhv-scenarios.mjs --check",
+          "exitCode": 0,
+          "tail": "fhv scenarios: 复算一致\n"
+        },
+        "campaignPlan": {
+          "pass": true,
+          "command": "node tools/plan-fhv-campaign.mjs --check",
+          "exitCode": 0,
+          "tail": "fhv campaign plan: 复算一致（status=planned，缺条目 0）\n"
+        },
+        "story": {
+          "pass": true,
+          "command": "node tools/import-fhv-story.mjs --check",
+          "exitCode": 0,
+          "tail": "fhv story: 复算一致（中文缺译 0）\n"
+        },
+        "guides": {
+          "pass": true,
+          "command": "node tools/build-fhv-guides.mjs --check",
+          "exitCode": 0,
+          "tail": "fhv guides: 复算一致（12 份，中文缺译块 0）\n"
+        },
+        "allCardsTool": {
+          "pass": true,
+          "command": "node tools/audit-fhv-all-cards.mjs --check",
+          "exitCode": 0,
+          "tail": "fhv all-cards: 复算一致（441 条）\n"
+        }
+      },
+      "evidence": {
+        "baseline": [
+          "AI chat sends defeat awareness and identity to the model while preserving post-defeat discussion",
+          "AI HTTP: model selects and builds, retries invalid deck, persists plans, masks private rationale",
+          "N4 真实HTTP合法败退进入关间：购买、重复提交、只读恢复与下关牌组继承",
+          "关卡入口检查点可由队长创建精确分支，且原时间线保持不变",
+          "应答座位优先于 currentSeat，初始人类待决不调用 AI",
+          "非法版本、越权、校验及执行异常均拒绝且完整快照不变",
+          "模型非法输出走确定合法兜底，重复版本拒绝，人类待决立即暂停",
+          "旧棋盘 Mod 无需版本参数仍正常运行：ox",
+          "旧棋盘 Mod 无需版本参数仍正常运行：gobang",
+          "模型等待期间 move/reset/leave 有并发锁，GET 可安全刷新 busy 快照",
+          "异步模型结果过时后不重试、不提交：revision",
+          "N3 大厅通用决策协议：真实 HTTP、模型与旧 Mod 回归",
+          "异步模型结果过时后不重试、不提交：seat",
+          "本地卡组库：保存、覆盖、列出、删除，与存档目录分离",
+          "本地卡组库拒绝无效数据、跨站请求与非 JSON 写入",
+          "P0 边界：未加载 Arkham Mod 时大厅仍提供其他游戏",
+          "Arkham hub 开局：静态表首份带信封、命中省略、hydrate 逐字节一致，字节 >50% 下降"
+        ],
+        "nodeAcceptance": {
+          "testsPassed": true,
+          "investigatorsPassed": true,
+          "playerPassed": true,
+          "campaignPassed": true,
+          "replayNoDrift": true
+        },
+        "rules": {
+          "scanPassed": true,
+          "planGatesPassed": true,
+          "keywordSetMatchesScan": true,
+          "ruleSetMatchesData": true,
+          "allKeywordsVerified": true,
+          "allRulesVerified": true,
+          "cardLinksComplete": true,
+          "relatedResolved": true,
+          "noImplementationProse": true,
+          "nodeAcceptance": true,
+          "browserAcceptance": true,
+          "sourcesStable": true,
+          "keywordPrimitivesDone": true
+        },
+        "interactions": "verified",
+        "investigators": "verified",
+        "player": "verified",
+        "scenarios": "verified",
+        "campaignPlan": "planned"
+      }
+    },
+    "allCards": {
+      "pass": true,
+      "path": "audit/fhv-all-card-acceptance.json",
+      "sha256": "f521960396360d4e3939ecc4db8c4f99696a4bcedc7d906be00ed442c554dcc4",
+      "status": "verified",
+      "summary": {
+        "total": 441,
+        "expectedTotal": 441,
+        "campaign": 301,
+        "campaignCards": 301,
+        "scenarioReference": 10,
+        "scenarioData": 185,
+        "campaignBehaviorVerified": 52,
+        "campaignSimplified": 54,
+        "investigators": 20,
+        "investigatorVerified": 20,
+        "player": 120,
+        "playerVerified": 120,
+        "playerSimplified": 54,
+        "missing": [],
+        "blocked": [],
+        "gateComplete": true,
+        "strictComplete": false,
+        "partitions": {
+          "fhvCampaign": 301,
+          "fhvInvestigators": 20,
+          "fhvPlayer": 120
+        },
+        "testsPassed": 674,
+        "testFiles": 38,
+        "playerShardRuns": 12,
+        "gatePolicy": "gateComplete = missing 为空且 total=441；verified/simplified/scenarioData/scenarioReference 均算通过（近似只披露，不改写为 verified）。",
+        "strictPolicy": "strictComplete = verified + scenarioReference = total（不含近似披露与数据型承接），P8 预期 false。"
+      },
+      "total": 441,
+      "rows": 441,
+      "missing": 0
+    },
+    "campaignE2E": {
+      "pass": true,
+      "command": "node --test tests/fhv-p8-campaign.test.mjs tests/fhv-campaign-flow.test.mjs tests/fhv-campaign-engine.test.mjs tests/fhv-campaign-records.test.mjs",
+      "exitCode": 0,
+      "tests": 28,
+      "passCount": 28,
+      "fail": 0,
+      "coverage": {
+        "survey": true,
+        "night": true,
+        "difficulty": true,
+        "save": true,
+        "replay": true,
+        "retreat": true,
+        "residents": true
+      },
+      "markerCount": 7,
+      "p8Titles": 8,
+      "failedTitles": [],
+      "missing": [],
+      "tail": []
+    },
+    "releaseBrowser": {
+      "pass": true,
+      "path": "audit/fhv-release-browser.json",
+      "sha256": "e27194277aeb90416d9684849ad5fd013d70674ddcb2048f7eb88019d03aba10",
+      "status": "passed",
+      "complete": true,
+      "sourceStable": true,
+      "tests": 6,
+      "viewports": [
+        "desktop",
+        "mobile"
+      ],
+      "checks": {
+        "release": {
+          "desktop": true,
+          "mobile": true
+        },
+        "progression": {
+          "desktop": true,
+          "mobile": true
+        },
+        "online": {
+          "desktop": true,
+          "mobile": true
+        },
+        "privacy": {
+          "desktop": true,
+          "mobile": true
+        },
+        "permissionBoundary": true,
+        "disconnectRecovery": true
+      },
+      "requiredChecks": true,
+      "requiredFlags": true,
+      "screenshots": 70,
+      "screenshotsOk": true,
+      "screenshotMissing": [],
+      "screenshotMismatch": []
+    },
+    "regression": {
+      "pass": true,
+      "path": "audit/fhv-regression.json",
+      "sha256": "be58f5ca62a90030812d810ad5748cc841df7c612815fafaa98a5f9d83ab7f1c",
+      "status": "passed",
+      "fast": {
+        "command": "node --test tests/suite-manifest.test.mjs + FAST_TESTS",
+        "excludedEvidenceSelfChecks": [
+          "fhv-rules-ledger.test.mjs",
+          "fhv-interactions-ledger.test.mjs"
+        ],
+        "exitCode": 1,
+        "totals": {
+          "tests": 8391,
+          "pass": 8386,
+          "fail": 2,
+          "cancelled": 0,
+          "skipped": 3
+        },
+        "titles": [
+          "P8 eote all-cards 两次构建一致且与账本一致",
+          "P8 eote migration ledger · 确定性：导出 builder 两次深相等且与签入账本一致"
+        ],
+        "newFailures": []
+      },
+      "knownFailures": 2,
+      "knownFailuresOk": true,
+      "replay": {
+        "baseline": "tests/fixtures/replay/golden-replays.json",
+        "baselineSha256": "19e63fcba8a5428123dd3f74404208e9e324ad06550999387028bdab65eac688",
+        "exitCode": 0,
+        "matches": true
+      }
+    },
+    "replay": {
+      "pass": true,
+      "command": "node tools/replay-fixtures.mjs --compare tests/fixtures/replay/golden-replays.json",
+      "exitCode": 0,
+      "tail": "    12 步  ce4065ca7ab2\n  ✔ carcosa-curtain-call-hub             70 步  b9286661156b\n  ✔ carcosa-curtain-call-only            30 步  af783b46e48e\n  ✔ dunwich-extracurricular-hub         122 步  ee98b4c4a921\n  ✔ tfa-untamed-wilds-hub                70 步  2f4107971829\n  ✔ tfa-untamed-wilds-only               30 步  5b2d71dc5b0e\n  ✔ notz-strict-random-3p                80 步  d899191cfff7\n✔ 与基线逐条一致（行为零变化）\n",
+      "baseline": "tests/fixtures/replay/golden-replays.json",
+      "sha256": "19e63fcba8a5428123dd3f74404208e9e324ad06550999387028bdab65eac688"
+    },
+    "guards": {
+      "pass": true,
+      "tests": {
+        "command": "node --test tests/architecture-guard.test.mjs tests/suite-manifest.test.mjs tests/card-entries.test.mjs tests/encounter-entries.test.mjs tests/scenario-guides.test.mjs",
+        "tests": 48,
+        "pass": 48,
+        "fail": 0,
+        "failedTitles": []
+      },
+      "commands": {
+        "cardIndex": {
+          "pass": true,
+          "command": "node tools/build-card-index.mjs --check",
+          "exitCode": 0,
+          "tail": "✔ entries/index.js 与目录一致（1182 张卡）\n"
+        },
+        "encounterIndex": {
+          "pass": true,
+          "command": "node tools/build-encounter-index.mjs --check",
+          "exitCode": 0,
+          "tail": "✔ encounter-entries/index.js 与目录一致（2166 个条目）\n"
+        },
+        "compliance": {
+          "pass": true,
+          "command": "node tools/audit-card-entry-compliance.mjs --check",
+          "exitCode": 0,
+          "tail": "卡条目合规审计通过（无基线外新增违规）\n{\n \"directStateWrite\": 112,\n \"singleCardField\": 21,\n \"reprintDuplicate\": 0,\n \"playConditionGap\": 0,\n \"testWrapper\": 24,\n \"revelationTestCards\": 108,\n \"selfCodeInstanceLookup\": 21\n}\n"
+        },
+        "presentation": {
+          "pass": true,
+          "command": "node tools/build-presentation.mjs --check",
+          "exitCode": 0,
+          "tail": " \"resolvedDescriptors\": 5930,\n \"unresolved\": 0,\n \"localizedFrontCandidates\": 5211,\n \"cardsWithBackArt\": 2592,\n \"genericBacks\": {\n  \"encounter\": 1635,\n  \"player\": 1703\n },\n \"localizedArtEntries\": 6493,\n \"localImagesCopied\": 0,\n \"remoteManifestEntries\": 30895,\n \"referenceLocalMediaFiles\": 230,\n \"presentationVersion\": \"e34723c7516840eccdceecb1e6b2ef39ba1e589be5c421cd1a2b1fb0bdf59782\",\n \"drift\": []\n}\n"
+        },
+        "docs": {
+          "pass": true,
+          "command": "node tools/check-doc-links.mjs",
+          "exitCode": 0,
+          "tail": "文档链接体检：73 个文件、363 条本地链接全部可解析\n"
+        }
+      }
+    },
+    "assets": {
+      "pass": true,
+      "path": "audit/fhv-assets.json",
+      "sha256": "cc39aef94a5e18b3f4a6652f51d1691dd8469d80831ea8bb097f67650d574eaf",
+      "status": "verified",
+      "images": {
+        "total": 441,
+        "local": 441,
+        "remote": 0,
+        "localized": 440,
+        "unresolved": 0,
+        "faces": {
+          "backArt": 221,
+          "backFaces": 441,
+          "frontFaces": 441,
+          "genericBack": 220,
+          "localizedMissingOnDisk": [],
+          "optionalRemoteCandidates": {
+            "bySource": {
+              "bare-code-fallback": 58,
+              "reference-alt-front": 346
+            },
+            "count": 404
+          },
+          "primaryNotLocal": [],
+          "remoteOnlyFaces": []
+        }
+      },
+      "runtimeReferenceHits": [],
+      "disclosed": 5
+    },
+    "confirmations": {
+      "pass": true,
+      "error": null,
+      "scenarios": "verified",
+      "keywords": "verified",
+      "rulebook": "verified",
+      "scenarioBrowser": "passed",
+      "keywordItems": 6,
+      "rulebookItems": 11
+    },
+    "storyGuides": {
+      "pass": true,
       "files": 9,
-      "guideLeaves": 1462,
-      "codexGroups": 132,
-      "codexLeaves": 447,
-      "primitiveGaps": 28,
-      "blocked": 0
+      "leaves": 1462,
+      "chineseGaps": 0,
+      "storyCommand": {
+        "pass": true,
+        "command": "node tools/import-fhv-story.mjs --check",
+        "exitCode": 0,
+        "tail": "fhv story: 复算一致（中文缺译 0）\n"
+      },
+      "guidesCommand": {
+        "pass": true,
+        "command": "node tools/build-fhv-guides.mjs --check",
+        "exitCode": 0,
+        "tail": "fhv guides: 复算一致（12 份，中文缺译块 0）\n"
+      }
+    },
+    "flowDeclared": {
+      "pass": true,
+      "start": "prologue",
+      "flowNodes": 35,
+      "recordKeys": 240,
+      "flowRecordKeys": 240
+    },
+    "docs": {
+      "pass": true,
+      "p8Items": [
+        {
+          "checked": true,
+          "text": "汇总 `audit/fhv-migration.json`：来源哈希、逐卡账本、原语队列、章节、关键词、规则书、指南和截图证据可追溯。证据：`node tools/audit-fhv.mjs --check` 逐字节复算一致（`status: verified`，14 项门禁全真）；来源清单含 26+ 份账本/内容文件 sha256；`audit/fhv-all-card-acceptance.json` 441 行逐卡账本（301 战役 + 20 调查员/依赖 + 120 玩家，missing=0/blocked=0）；`audit/fhv-primitive-plan.json` 28 项缺口全部 closed、pending 0、`escape` 0；`audit/fhv-scenario-acceptance.json` 12/12 场景 verified；`audit/fhv-rules.json` 6 关键词 / 11 规则 verified；12 份指南与 1462 叶正文可复算；六份发布/逐章浏览器账本（规则/交互/调查员/玩家/场景/P8 发布）截图逐张 sha256 复算。"
+        },
+        {
+          "checked": true,
+          "text": "覆盖完整合法战役（不同勘察顺序、第 1 夜《扭曲空洞》或夜探、第 2 夜《最长一夜》或夜探、不同居民最高关系路线）、失败／撤退路线、四档难度、存档恢复和 replay。证据：`tests/fhv-p8-campaign.test.mjs` 8 例（真实 `createGameState` + 生产组合根）：路线 A（岩间密语→扭曲空洞→汉洛克庄园→夜 2 夜探→消失的姐妹）与路线 B（汉洛克庄园→夜 1 夜探→深沼之物→最长一夜→寂静荒野）合计覆盖 12 步全部场景，逐节点断言 `flow.history`/`hemlockDate`/`surveyedAreas`/`campaignResult`；居民关系 +1/笔记双写跨章一致、传家宝 `heirloomsAwarded` 入战役牌组；最终夜 R3 `loseTheCampaign` → 尾声 defeat；四档难度混沌袋 14/14/15/16 与序曲 R1 `[autofail]` 迁移；4 处关键选择 JSON 往返后继续投影不变；同 seed replay 65 步 `stateHash` 与终态零 diff；另 `tests/fhv-campaign-engine.test.mjs` 覆盖终章可达与传家宝，`tests/fhv-campaign-flow.test.mjs`/`fhv-campaign-records.test.mjs` 覆盖流程图/记录。发现的 5 处引擎/内容缺陷（最终夜 lost 软锁、四档 Eldersign 拼写、`chaosBagTransitions` 无引擎读点、升级窗被整备关闭、跳过勘察悬挂整备包裹）已在本轮修复。"
+        },
+        {
+          "checked": true,
+          "text": "从真实大厅验证选战役、选人、构筑、开局、序曲整备与带支援入场、法典交互、逐日推进、升级与尾声；覆盖多人、AI、断线恢复和权限边界。证据：`audit/fhv-release-browser.json#status = passed`（3 phase × 桌面 1440/移动 390 = 6 行，真实大厅 → 选战役/选人/自动构筑 → 开局 → 序曲整备与带支援入场 → 法典交互 → 三天三夜逐日推进 → 升级窗 → 终章/尾声；online phase 覆盖 2 席位、AI 队友、隐私投影、权限边界与断线恢复；70 张截图逐张 sha256 入账、sourceStable=true）；P7 逐章账本 `audit/fhv-scenarios-browser.json` 24/24（12 章 × 双视口）继续作为逐章浏览器证据。"
+        },
+        {
+          "checked": true,
+          "text": "通过单卡及合规门禁、指南生成检查、本循环测试与审计、既有 replay、全量回归、展示数据和浏览器检查。证据：`npm run cards:check` / `cards:encounter-check` / `audit:entries` 通过（一卡一文件、R1/R2/R3、索引一致）；`import:fhv:story:check`、`build:fhv:guides:check` 一致；FHV 审计链（scope/scan/primitives/node/rules/interactions/investigators/player/scenarios/all-cards/assets）全部 `--check` 通过；`replay-fixtures --compare` 与 P0 基线逐条一致；`node tools/verify-fhv.mjs --regression` 全量 fast 无新增失败（仅既有 P8 EOTE 2 项单独记账）；`build-presentation.mjs --check`、`check-doc-links.mjs` 通过。"
+        },
+        {
+          "checked": true,
+          "text": "核对本循环英文／中文卡图库存与远程回退，发布运行时不依赖 `参考资源/`。证据：`audit/fhv-assets.json#status = verified`：441/441 记录图像解析可解析（本地 441、中文本地化 440、unresolved 0、remote 0），主面全部本地可展示；`audit/local-images.json` 含 FHV 1012 条（572 en + 440 zh），574 张英文面 SHA-256 与 `audit/image-digests.json` 逐字节一致；`src/content/web/presentation` 对参考资源真实读取依赖 = 0；远程回退抽样 8/8 HEAD 200；已知素材项（10694b 无中文面、440 张中文面无 sha 基线、404 个末位兜底候选）已在账本 `disclosed` 逐条登记。"
+        },
+        {
+          "checked": true,
+          "text": "`confirmations.scenarios / keywords / rulebook` 全部 `verified`，且发布验收全部完成后，才确认完整迁移完成。证据：`audit/fhv-migration.json#confirmations`：scenarios 12/12（每章 §6 12 项全真）、keywords 6/6、rulebook 6/6；`content/migration-confirmation.js#assertMigrationConfirmations` 复算通过；`playable: true`、`earlyAccess: false`、`equivalenceCertified: true`、`launchEnabled: true`；`releaseAcceptance.status = complete`、`deferred = []`。"
+        },
+        {
+          "checked": true,
+          "text": "不采用提前开放：全部发布门禁真实通过后以 `earlyAccess: false` 发布，未设置延后项；`remaining` 仅保留披露类（108 张近似行为卡，逐卡 `note`/章节 approximations 已登记；195 张数据型战役卡由章 behavior 承接并有章测试证据），无阻塞卡、无待实现原语、无未披露近似。"
+        }
+      ],
+      "overviewChecked": true,
+      "evidenceRow": "2026-11-17",
+      "docsCommandExit": 0
+    },
+    "scripts": {
+      "pass": true,
+      "missing": []
     }
   },
-  "primitivePlan": {
-    "file": "audit/fhv-primitive-plan.json",
-    "status": "done",
-    "pending": []
+  "registered": {
+    "campaign": {
+      "launchable": true,
+      "status": "playable",
+      "error": null
+    },
+    "lobby": {
+      "visible": true,
+      "status": "playable",
+      "earlyAccess": false,
+      "scenarios": [
+        "welcomeToHemlockVale",
+        "writtenInRock",
+        "hemlockHouse",
+        "theSilentHeath",
+        "theLostSister",
+        "theThingInTheDepths",
+        "theTwistedHollow",
+        "dawnOfTheSecondDay",
+        "theLongestNight",
+        "dawnOfTheFinalDay",
+        "preludeTheFinalEvening",
+        "fateOfTheVale"
+      ]
+    },
+    "scenarios": [
+      {
+        "id": "welcomeToHemlockVale",
+        "status": "playable",
+        "campaignId": "theFeastOfHemlockVale"
+      },
+      {
+        "id": "writtenInRock",
+        "status": "playable",
+        "campaignId": "theFeastOfHemlockVale"
+      },
+      {
+        "id": "hemlockHouse",
+        "status": "playable",
+        "campaignId": "theFeastOfHemlockVale"
+      },
+      {
+        "id": "theSilentHeath",
+        "status": "playable",
+        "campaignId": "theFeastOfHemlockVale"
+      },
+      {
+        "id": "theLostSister",
+        "status": "playable",
+        "campaignId": "theFeastOfHemlockVale"
+      },
+      {
+        "id": "theThingInTheDepths",
+        "status": "playable",
+        "campaignId": "theFeastOfHemlockVale"
+      },
+      {
+        "id": "theTwistedHollow",
+        "status": "playable",
+        "campaignId": "theFeastOfHemlockVale"
+      },
+      {
+        "id": "dawnOfTheSecondDay",
+        "status": "playable",
+        "campaignId": "theFeastOfHemlockVale"
+      },
+      {
+        "id": "theLongestNight",
+        "status": "playable",
+        "campaignId": "theFeastOfHemlockVale"
+      },
+      {
+        "id": "dawnOfTheFinalDay",
+        "status": "playable",
+        "campaignId": "theFeastOfHemlockVale"
+      },
+      {
+        "id": "preludeTheFinalEvening",
+        "status": "playable",
+        "campaignId": "theFeastOfHemlockVale"
+      },
+      {
+        "id": "fateOfTheVale",
+        "status": "playable",
+        "campaignId": "theFeastOfHemlockVale"
+      }
+    ],
+    "packs": [
+      {
+        "id": "fhvCampaign",
+        "status": "playable",
+        "cards": 301,
+        "expectedCards": 301,
+        "rulesImplemented": true,
+        "deckbuilding": 0,
+        "codesMatch": true
+      },
+      {
+        "id": "fhvInvestigators",
+        "status": "playable",
+        "cards": 20,
+        "expectedCards": 20,
+        "rulesImplemented": true,
+        "deckbuilding": 0,
+        "codesMatch": true
+      },
+      {
+        "id": "fhvPlayer",
+        "status": "playable",
+        "cards": 120,
+        "expectedCards": 120,
+        "rulesImplemented": true,
+        "deckbuilding": 102,
+        "codesMatch": true
+      }
+    ],
+    "availability": {
+      "campaignCardsStrict": true,
+      "playerBuildable": 102,
+      "investigatorSelectable": 5
+    }
+  },
+  "counts": {
+    "campaignCards": 301,
+    "investigatorCards": 20,
+    "playerCards": 120,
+    "total": 441,
+    "chapters": 12,
+    "encounterGroups": 26,
+    "sharedEncounterGroups": 18,
+    "keys": 6,
+    "flowNodes": 35,
+    "recordKeys": 240,
+    "chaosBags": 4,
+    "storyLeaves": 1462
   },
   "confirmations": {
     "scenarios": {
-      "status": "pending",
+      "status": "verified",
+      "checks": [
+        "sourceLocked",
+        "identityRegistered",
+        "setupAndZones",
+        "actsAndAgendas",
+        "locationsAndConnections",
+        "encounterBehaviors",
+        "literalCardBehavior",
+        "chaosEffects",
+        "resolutionsAndRecords",
+        "storyText",
+        "saveReplay",
+        "browserAcceptance"
+      ],
       "items": [
         {
           "id": "welcomeToHemlockVale",
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
-            "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
-            "storyText": false,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
-            "audit/fhv-scope.json"
+            "audit/fhv-scenario-acceptance.json",
+            "tests/fhv-scenario-welcomeToHemlockVale.test.mjs",
+            "audit/fhv-scenarios-browser.json",
+            "audit/fhv-all-card-acceptance.json",
+            "audit/fhv-release-browser.json"
           ]
         },
         {
           "id": "writtenInRock",
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
-            "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
-            "storyText": false,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
-            "audit/fhv-scope.json"
+            "audit/fhv-scenario-acceptance.json",
+            "tests/fhv-scenario-writtenInRock.test.mjs",
+            "audit/fhv-scenarios-browser.json",
+            "audit/fhv-all-card-acceptance.json",
+            "audit/fhv-release-browser.json"
           ]
         },
         {
           "id": "hemlockHouse",
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
-            "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
-            "storyText": false,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
-            "audit/fhv-scope.json"
+            "audit/fhv-scenario-acceptance.json",
+            "tests/fhv-scenario-hemlockHouse.test.mjs",
+            "audit/fhv-scenarios-browser.json",
+            "audit/fhv-all-card-acceptance.json",
+            "audit/fhv-release-browser.json"
           ]
         },
         {
           "id": "theSilentHeath",
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
-            "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
-            "storyText": false,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
-            "audit/fhv-scope.json"
+            "audit/fhv-scenario-acceptance.json",
+            "tests/fhv-scenario-theSilentHeath.test.mjs",
+            "audit/fhv-scenarios-browser.json",
+            "audit/fhv-all-card-acceptance.json",
+            "audit/fhv-release-browser.json"
           ]
         },
         {
           "id": "theLostSister",
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
-            "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
-            "storyText": false,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
-            "audit/fhv-scope.json"
+            "audit/fhv-scenario-acceptance.json",
+            "tests/fhv-scenario-theLostSister.test.mjs",
+            "audit/fhv-scenarios-browser.json",
+            "audit/fhv-all-card-acceptance.json",
+            "audit/fhv-release-browser.json"
           ]
         },
         {
           "id": "theThingInTheDepths",
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
-            "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
-            "storyText": false,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
-            "audit/fhv-scope.json"
+            "audit/fhv-scenario-acceptance.json",
+            "tests/fhv-scenario-theThingInTheDepths.test.mjs",
+            "audit/fhv-scenarios-browser.json",
+            "audit/fhv-all-card-acceptance.json",
+            "audit/fhv-release-browser.json"
           ]
         },
         {
           "id": "theTwistedHollow",
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
-            "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
-            "storyText": false,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
-            "audit/fhv-scope.json"
+            "audit/fhv-scenario-acceptance.json",
+            "tests/fhv-scenario-theTwistedHollow.test.mjs",
+            "audit/fhv-scenarios-browser.json",
+            "audit/fhv-all-card-acceptance.json",
+            "audit/fhv-release-browser.json"
           ]
         },
         {
           "id": "dawnOfTheSecondDay",
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
-            "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
-            "storyText": false,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
-            "audit/fhv-scope.json"
+            "audit/fhv-scenario-acceptance.json",
+            "tests/fhv-scenario-dawnOfTheSecondDay.test.mjs",
+            "audit/fhv-scenarios-browser.json",
+            "audit/fhv-all-card-acceptance.json",
+            "audit/fhv-release-browser.json"
           ]
         },
         {
           "id": "theLongestNight",
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
-            "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
-            "storyText": false,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
-            "audit/fhv-scope.json"
+            "audit/fhv-scenario-acceptance.json",
+            "tests/fhv-scenario-theLongestNight.test.mjs",
+            "audit/fhv-scenarios-browser.json",
+            "audit/fhv-all-card-acceptance.json",
+            "audit/fhv-release-browser.json"
           ]
         },
         {
           "id": "dawnOfTheFinalDay",
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
-            "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
-            "storyText": false,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
-            "audit/fhv-scope.json"
+            "audit/fhv-scenario-acceptance.json",
+            "tests/fhv-scenario-dawnOfTheFinalDay.test.mjs",
+            "audit/fhv-scenarios-browser.json",
+            "audit/fhv-all-card-acceptance.json",
+            "audit/fhv-release-browser.json"
           ]
         },
         {
           "id": "preludeTheFinalEvening",
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
-            "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
-            "storyText": false,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
-            "audit/fhv-scope.json"
+            "audit/fhv-scenario-acceptance.json",
+            "tests/fhv-scenario-preludeTheFinalEvening.test.mjs",
+            "audit/fhv-scenarios-browser.json",
+            "audit/fhv-all-card-acceptance.json",
+            "audit/fhv-release-browser.json"
           ]
         },
         {
           "id": "fateOfTheVale",
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
-            "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
-            "storyText": false,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
-            "audit/fhv-scope.json"
+            "audit/fhv-scenario-acceptance.json",
+            "tests/fhv-scenario-fateOfTheVale.test.mjs",
+            "audit/fhv-scenarios-browser.json",
+            "audit/fhv-all-card-acceptance.json",
+            "audit/fhv-release-browser.json"
           ]
         }
       ]
     },
     "keywords": {
-      "status": "pending",
+      "status": "verified",
+      "checked": 6,
+      "total": 6,
+      "checks": [
+        "sourceInventoried",
+        "engineBehavior",
+        "nodeAcceptance",
+        "rulebookEntry",
+        "cardLinks"
+      ],
       "items": [
         {
           "id": "elusive",
-          "status": "pending",
+          "ruleId": "fhvElusive",
+          "origin": "new",
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
-            "rulebookEntry": false,
-            "cardLinks": false
+            "rulebookEntry": true,
+            "cardLinks": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true
           },
+          "status": "verified",
           "evidence": [
-            "audit/fhv-mechanism-scan.json"
+            "audit/fhv-mechanism-scan.json",
+            "audit/fhv-primitive-plan.json",
+            "audit/fhv-node-acceptance.json",
+            "content/campaigns/theFeastOfHemlockVale/keywords.js",
+            "web/fhv-rules.js"
           ]
         },
         {
           "id": "dayNight",
-          "status": "pending",
+          "ruleId": "fhvDayNight",
+          "origin": "new",
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
-            "rulebookEntry": false,
-            "cardLinks": false
+            "rulebookEntry": true,
+            "cardLinks": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true
           },
+          "status": "verified",
           "evidence": [
-            "audit/fhv-mechanism-scan.json"
+            "audit/fhv-mechanism-scan.json",
+            "audit/fhv-primitive-plan.json",
+            "audit/fhv-node-acceptance.json",
+            "content/campaigns/theFeastOfHemlockVale/keywords.js",
+            "web/fhv-rules.js"
           ]
         },
         {
           "id": "codex",
-          "status": "pending",
+          "ruleId": "fhvCodex",
+          "origin": "new",
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
-            "rulebookEntry": false,
-            "cardLinks": false
+            "rulebookEntry": true,
+            "cardLinks": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true
           },
+          "status": "verified",
           "evidence": [
-            "audit/fhv-mechanism-scan.json"
+            "audit/fhv-mechanism-scan.json",
+            "audit/fhv-primitive-plan.json",
+            "audit/fhv-node-acceptance.json",
+            "content/campaigns/theFeastOfHemlockVale/keywords.js",
+            "web/fhv-rules.js"
           ]
         },
         {
           "id": "patrol",
-          "status": "pending",
+          "ruleId": "tskPatrol",
+          "origin": "existing",
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
-            "rulebookEntry": false,
-            "cardLinks": false
+            "rulebookEntry": true,
+            "cardLinks": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true
           },
+          "status": "verified",
           "evidence": [
-            "audit/fhv-mechanism-scan.json"
+            "audit/fhv-mechanism-scan.json",
+            "audit/fhv-primitive-plan.json",
+            "audit/fhv-node-acceptance.json",
+            "content/campaigns/theFeastOfHemlockVale/keywords.js",
+            "web/fhv-rules.js"
           ]
         },
         {
           "id": "alert",
-          "status": "pending",
+          "ruleId": "alert",
+          "origin": "existing",
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
-            "rulebookEntry": false,
-            "cardLinks": false
+            "rulebookEntry": true,
+            "cardLinks": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true
           },
+          "status": "verified",
           "evidence": [
-            "audit/fhv-mechanism-scan.json"
+            "audit/fhv-mechanism-scan.json",
+            "audit/fhv-primitive-plan.json",
+            "audit/fhv-node-acceptance.json",
+            "content/campaigns/theFeastOfHemlockVale/keywords.js",
+            "web/fhv-rules.js"
           ]
         },
         {
           "id": "blessCurse",
-          "status": "pending",
+          "ruleId": "fhvBlessCurse",
+          "origin": "existing",
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
-            "rulebookEntry": false,
-            "cardLinks": false
+            "rulebookEntry": true,
+            "cardLinks": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true
           },
+          "status": "verified",
           "evidence": [
-            "audit/fhv-mechanism-scan.json"
+            "audit/fhv-mechanism-scan.json",
+            "audit/fhv-primitive-plan.json",
+            "audit/fhv-node-acceptance.json",
+            "content/campaigns/theFeastOfHemlockVale/keywords.js",
+            "web/fhv-rules.js"
           ]
         }
       ]
     },
     "rulebook": {
-      "status": "pending",
+      "status": "verified",
       "checks": {
-        "campaignOverview": false,
-        "scenarioMechanics": false,
-        "keywordEntries": false,
-        "cardLinks": false,
-        "desktopBrowser": false,
-        "mobileBrowser": false
+        "campaignOverview": true,
+        "scenarioMechanics": true,
+        "keywordEntries": true,
+        "cardLinks": true,
+        "desktopBrowser": true,
+        "mobileBrowser": true
       },
-      "evidence": []
+      "entries": 11,
+      "evidence": [
+        "audit/fhv-rules.json",
+        "audit/fhv-rules-browser.json",
+        "web/fhv-rules.js",
+        "web/rulebook-data.js"
+      ]
+    },
+    "selfCheck": {
+      "pass": true,
+      "error": null
     }
   },
+  "primitives": {
+    "status": "done",
+    "pending": 0,
+    "new": 27,
+    "reuse": 14,
+    "escape": 0,
+    "nextPhase": "P9",
+    "backlog": 0,
+    "ledger": {
+      "path": "audit/fhv-primitive-plan.json",
+      "sha256": "8c412ad16c06505c1621e52547bd8e1d0a8b7a29ed1926ca38bd4af7224da040"
+    }
+  },
+  "evidence": {
+    "node": {
+      "path": "audit/fhv-node-acceptance.json",
+      "sha256": "171220294c1912d02bc7b50804ab1e5732b23f3d9635e0eb3ff3165b9e06b08c",
+      "pass": true,
+      "command": "node tools/verify-fhv.mjs --node --check",
+      "exitCode": 0,
+      "tail": "fhv node 证据：一致（45/45 pass，replay exit 0）\n",
+      "gates": {
+        "testsPassed": true,
+        "investigatorsPassed": true,
+        "playerPassed": true,
+        "campaignPassed": true,
+        "replayNoDrift": true
+      },
+      "totals": {
+        "tests": 45,
+        "pass": 45,
+        "fail": 0
+      }
+    },
+    "rules": {
+      "path": "audit/fhv-rules.json",
+      "sha256": "4de1db708d7b1b6236fd617b08366643bac98927d75d9e7a9d63e511e9444b69",
+      "pass": true,
+      "command": "node tools/audit-fhv-rules.mjs --check",
+      "exitCode": 0,
+      "tail": "fhv rules: 复算一致（关键词 6 项 / 规则 11 条）\n",
+      "gates": {
+        "scanPassed": true,
+        "planGatesPassed": true,
+        "keywordSetMatchesScan": true,
+        "ruleSetMatchesData": true,
+        "allKeywordsVerified": true,
+        "allRulesVerified": true,
+        "cardLinksComplete": true,
+        "relatedResolved": true,
+        "noImplementationProse": true,
+        "nodeAcceptance": true,
+        "browserAcceptance": true,
+        "sourcesStable": true,
+        "keywordPrimitivesDone": true
+      }
+    },
+    "interactions": {
+      "path": "audit/fhv-interactions.json",
+      "sha256": "95c6b7aa0bf18b336cc992ea0e07cb379d3f5a0aa83e5f47407a3534ef3aefdf",
+      "pass": true,
+      "command": "node tools/audit-fhv-interactions.mjs --check",
+      "exitCode": 0,
+      "tail": "fhv interactions: verified（覆盖 7 组 × 2 视口：{\"desktop\":{\"codex\":true,\"evolution\":true,\"survey\":true,\"grid\":true,\"rail\":true,\"enemyLocation\":true,\"investigatorState\":true},\"mobile\":{\"codex\":true,\"evolution\":true,\"survey\":true,\"grid\":true,\"rail\":true,\"enemyLocation\":true,\"investigatorState\":true}}）\n",
+      "gates": {
+        "nodeAcceptance": true,
+        "sourceStable": true,
+        "desktopAndMobile": true,
+        "scriptOwnership": true,
+        "guidePlacementAndPrivacy": true,
+        "guideFailureRetryAndKeyboard": true,
+        "fastNoNewFailures": true,
+        "replayBaselineStable": true,
+        "replayExact": true
+      }
+    },
+    "investigators": {
+      "path": "audit/fhv-investigators.json",
+      "sha256": "92b04b7edd59b52d47a4126ab88b3637554151ceea62aec157b23e4ec162f111",
+      "pass": true,
+      "command": "node tools/audit-fhv-investigators.mjs --check",
+      "exitCode": 0,
+      "tail": "fhv investigators: 复算一致\n",
+      "gates": {
+        "nodeAcceptance": true,
+        "browserAcceptance": true,
+        "investigatorsAllVerified": true,
+        "packBoundary": true,
+        "otherPacksCatalogOnly": true,
+        "originalBaselinePreserved": true,
+        "replayZeroDrift": true,
+        "fastNoNewFailures": true,
+        "docsPresent": true
+      }
+    },
+    "player": {
+      "path": "audit/fhv-player-acceptance.json",
+      "sha256": "64a004506b6769b3ed11340cecbfa804aec9c9e6e453c146144accf518aee10e",
+      "pass": true,
+      "command": "node tools/audit-fhv-player.mjs --check",
+      "exitCode": 0,
+      "tail": "fhv player: 复算一致（verified 120/120）\n",
+      "gates": {
+        "batchTestsPassed": true,
+        "everyCardVerified": true,
+        "classificationComplete": true,
+        "simplificationDisclosed": true,
+        "shardsExact": true,
+        "primitiveRequestsAdjudicated": true,
+        "browserDesktopAndMobile": true,
+        "replayZeroDrift": true,
+        "replayFastClean": true,
+        "packBoundary": true,
+        "docsPresent": true
+      }
+    },
+    "scenarios": {
+      "path": "audit/fhv-scenario-acceptance.json",
+      "sha256": "22ab4d286c9ea54b66e6c7c78a6445e1b725bbf5be92ca20e46e1865d6b1b01f",
+      "pass": true,
+      "command": "node tools/audit-fhv-scenarios.mjs --check",
+      "exitCode": 0,
+      "tail": "fhv scenarios: 复算一致\n",
+      "gates": {
+        "scenarioTestsPassed": true,
+        "scenariosAllVerified": true,
+        "chapterCardsAssigned": true,
+        "guidesCoverage": true,
+        "guideChineseMarked": true,
+        "guideChineseComplete": true,
+        "encounterCardsCovered": true,
+        "sharedGroupsRegistered": true,
+        "campaignRegisteredPlayable": true,
+        "campaignFlowDeclared": true,
+        "recordsDeclared": true,
+        "campaignFlowTestsPassed": true,
+        "browserDesktopAndMobile": true,
+        "storyGenerationRecomputable": true,
+        "guidesRecomputable": true,
+        "docsPresent": true
+      }
+    },
+    "allCards": {
+      "path": "audit/fhv-all-card-acceptance.json",
+      "sha256": "f521960396360d4e3939ecc4db8c4f99696a4bcedc7d906be00ed442c554dcc4",
+      "summary": {
+        "total": 441,
+        "expectedTotal": 441,
+        "campaign": 301,
+        "campaignCards": 301,
+        "scenarioReference": 10,
+        "scenarioData": 185,
+        "campaignBehaviorVerified": 52,
+        "campaignSimplified": 54,
+        "investigators": 20,
+        "investigatorVerified": 20,
+        "player": 120,
+        "playerVerified": 120,
+        "playerSimplified": 54,
+        "missing": [],
+        "blocked": [],
+        "gateComplete": true,
+        "strictComplete": false,
+        "partitions": {
+          "fhvCampaign": 301,
+          "fhvInvestigators": 20,
+          "fhvPlayer": 120
+        },
+        "testsPassed": 674,
+        "testFiles": 38,
+        "playerShardRuns": 12,
+        "gatePolicy": "gateComplete = missing 为空且 total=441；verified/simplified/scenarioData/scenarioReference 均算通过（近似只披露，不改写为 verified）。",
+        "strictPolicy": "strictComplete = verified + scenarioReference = total（不含近似披露与数据型承接），P8 预期 false。"
+      }
+    },
+    "campaignE2E": {
+      "command": "node --test tests/fhv-p8-campaign.test.mjs tests/fhv-campaign-flow.test.mjs tests/fhv-campaign-engine.test.mjs tests/fhv-campaign-records.test.mjs",
+      "exitCode": 0,
+      "tests": 28,
+      "pass": 28,
+      "fail": 0,
+      "coverage": {
+        "survey": true,
+        "night": true,
+        "difficulty": true,
+        "save": true,
+        "replay": true,
+        "retreat": true,
+        "residents": true
+      },
+      "p8Titles": 8,
+      "missing": []
+    },
+    "releaseBrowser": {
+      "path": "audit/fhv-release-browser.json",
+      "sha256": "e27194277aeb90416d9684849ad5fd013d70674ddcb2048f7eb88019d03aba10",
+      "checks": {
+        "release": {
+          "desktop": true,
+          "mobile": true
+        },
+        "progression": {
+          "desktop": true,
+          "mobile": true
+        },
+        "online": {
+          "desktop": true,
+          "mobile": true
+        },
+        "privacy": {
+          "desktop": true,
+          "mobile": true
+        },
+        "permissionBoundary": true,
+        "disconnectRecovery": true
+      },
+      "tests": 6,
+      "screenshots": 70
+    },
+    "images": {
+      "total": 441,
+      "local": 441,
+      "remote": 0,
+      "localized": 440,
+      "unresolved": 0,
+      "faces": {
+        "backArt": 221,
+        "backFaces": 441,
+        "frontFaces": 441,
+        "genericBack": 220,
+        "localizedMissingOnDisk": [],
+        "optionalRemoteCandidates": {
+          "bySource": {
+            "bare-code-fallback": 58,
+            "reference-alt-front": 346
+          },
+          "count": 404
+        },
+        "primaryNotLocal": [],
+        "remoteOnlyFaces": []
+      }
+    },
+    "guides": {
+      "pass": true,
+      "command": "node tools/build-fhv-guides.mjs --check",
+      "exitCode": 0,
+      "tail": "fhv guides: 复算一致（12 份，中文缺译块 0）\n"
+    },
+    "story": {
+      "pass": true,
+      "command": "node tools/import-fhv-story.mjs --check",
+      "exitCode": 0,
+      "tail": "fhv story: 复算一致（中文缺译 0）\n",
+      "files": 9,
+      "leaves": 1462,
+      "chineseGaps": 0
+    },
+    "guards": {
+      "tests": {
+        "command": "node --test tests/architecture-guard.test.mjs tests/suite-manifest.test.mjs tests/card-entries.test.mjs tests/encounter-entries.test.mjs tests/scenario-guides.test.mjs",
+        "tests": 48,
+        "pass": 48,
+        "fail": 0,
+        "failedTitles": []
+      },
+      "commands": {
+        "cardIndex": {
+          "pass": true,
+          "command": "node tools/build-card-index.mjs --check",
+          "exitCode": 0,
+          "tail": "✔ entries/index.js 与目录一致（1182 张卡）\n"
+        },
+        "encounterIndex": {
+          "pass": true,
+          "command": "node tools/build-encounter-index.mjs --check",
+          "exitCode": 0,
+          "tail": "✔ encounter-entries/index.js 与目录一致（2166 个条目）\n"
+        },
+        "compliance": {
+          "pass": true,
+          "command": "node tools/audit-card-entry-compliance.mjs --check",
+          "exitCode": 0,
+          "tail": "卡条目合规审计通过（无基线外新增违规）\n{\n \"directStateWrite\": 112,\n \"singleCardField\": 21,\n \"reprintDuplicate\": 0,\n \"playConditionGap\": 0,\n \"testWrapper\": 24,\n \"revelationTestCards\": 108,\n \"selfCodeInstanceLookup\": 21\n}\n"
+        },
+        "presentation": {
+          "pass": true,
+          "command": "node tools/build-presentation.mjs --check",
+          "exitCode": 0,
+          "tail": " \"resolvedDescriptors\": 5930,\n \"unresolved\": 0,\n \"localizedFrontCandidates\": 5211,\n \"cardsWithBackArt\": 2592,\n \"genericBacks\": {\n  \"encounter\": 1635,\n  \"player\": 1703\n },\n \"localizedArtEntries\": 6493,\n \"localImagesCopied\": 0,\n \"remoteManifestEntries\": 30895,\n \"referenceLocalMediaFiles\": 230,\n \"presentationVersion\": \"e34723c7516840eccdceecb1e6b2ef39ba1e589be5c421cd1a2b1fb0bdf59782\",\n \"drift\": []\n}\n"
+        },
+        "docs": {
+          "pass": true,
+          "command": "node tools/check-doc-links.mjs",
+          "exitCode": 0,
+          "tail": "文档链接体检：73 个文件、363 条本地链接全部可解析\n"
+        }
+      }
+    }
+  },
+  "sources": [
+    {
+      "path": "audit/fhv-scope.json",
+      "sha256": "1b24039f96b0403c66f60651ab8c0631c642b0ea18de5c72ff8dfe1c41c3b34a"
+    },
+    {
+      "path": "audit/fhv-baseline.json",
+      "sha256": "e665681cfb8fc9b1f8761db668e9db041829de2b439e90106bd54d8ee2f0f677"
+    },
+    {
+      "path": "audit/fhv-mechanism-scan.json",
+      "sha256": "b50a3644a7aa6368127941ac3d423ca43d9353f97173b11781d2131740e736f1"
+    },
+    {
+      "path": "audit/fhv-primitive-plan.json",
+      "sha256": "8c412ad16c06505c1621e52547bd8e1d0a8b7a29ed1926ca38bd4af7224da040"
+    },
+    {
+      "path": "audit/fhv-primitive-catalog.json",
+      "sha256": "bf76a4862d455cbe92ab449f73d10c5d66729cad273c80ec9c9aea705d236cd2"
+    },
+    {
+      "path": "audit/fhv-rules.json",
+      "sha256": "4de1db708d7b1b6236fd617b08366643bac98927d75d9e7a9d63e511e9444b69"
+    },
+    {
+      "path": "audit/fhv-rules-browser.json",
+      "sha256": "93b0c1f619129b87cee726ad9499c54955967c93b43481198bd306bbb1f03a63"
+    },
+    {
+      "path": "audit/fhv-interactions.json",
+      "sha256": "95c6b7aa0bf18b336cc992ea0e07cb379d3f5a0aa83e5f47407a3534ef3aefdf"
+    },
+    {
+      "path": "audit/fhv-interactions-browser.json",
+      "sha256": "55853ca810b24bd2f6cfb9949c7843168fd53ec086b9a1c9453c88d2f8ec7cd3"
+    },
+    {
+      "path": "audit/fhv-investigators.json",
+      "sha256": "92b04b7edd59b52d47a4126ab88b3637554151ceea62aec157b23e4ec162f111"
+    },
+    {
+      "path": "audit/fhv-investigators-browser.json",
+      "sha256": "9501cef2d6383342d0be37c6c735a6753f6376e0442c90e254a593937d0b850e"
+    },
+    {
+      "path": "audit/fhv-player-acceptance.json",
+      "sha256": "64a004506b6769b3ed11340cecbfa804aec9c9e6e453c146144accf518aee10e"
+    },
+    {
+      "path": "audit/fhv-player-browser.json",
+      "sha256": "18a1cbf3eb9af666d981fdaead562e8610d4977842a9a64bb3ffb14e37669c99"
+    },
+    {
+      "path": "audit/fhv-player-shards.json",
+      "sha256": "0f540fd2041c64f553555aecaf422f335ef612228ebbc395ae5d69a85028dc38"
+    },
+    {
+      "path": "audit/fhv-campaign-plan.json",
+      "sha256": "a89c503ef7d9a7e24c29d83537486a953bff8ed6bb6b1041cdd4b3cd5a1a3a42"
+    },
+    {
+      "path": "audit/fhv-scenario-acceptance.json",
+      "sha256": "22ab4d286c9ea54b66e6c7c78a6445e1b725bbf5be92ca20e46e1865d6b1b01f"
+    },
+    {
+      "path": "audit/fhv-scenarios-browser.json",
+      "sha256": "1cae9f87a2e0eade3b21010e1081205960ee466bb42fed517865eff7ab8b7ca1"
+    },
+    {
+      "path": "audit/fhv-node-acceptance.json",
+      "sha256": "171220294c1912d02bc7b50804ab1e5732b23f3d9635e0eb3ff3165b9e06b08c"
+    },
+    {
+      "path": "audit/fhv-regression.json",
+      "sha256": "be58f5ca62a90030812d810ad5748cc841df7c612815fafaa98a5f9d83ab7f1c"
+    },
+    {
+      "path": "audit/fhv-all-card-acceptance.json",
+      "sha256": "f521960396360d4e3939ecc4db8c4f99696a4bcedc7d906be00ed442c554dcc4"
+    },
+    {
+      "path": "audit/fhv-release-browser.json",
+      "sha256": "e27194277aeb90416d9684849ad5fd013d70674ddcb2048f7eb88019d03aba10"
+    },
+    {
+      "path": "audit/fhv-assets.json",
+      "sha256": "cc39aef94a5e18b3f4a6652f51d1691dd8469d80831ea8bb097f67650d574eaf"
+    },
+    {
+      "path": "tests/fixtures/replay/golden-replays.json",
+      "sha256": "19e63fcba8a5428123dd3f74404208e9e324ad06550999387028bdab65eac688"
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/story-text.js",
+      "sha256": "c14ab4c416c91696033f8031833e48cb1c3ad3b7583817a8171e0153e7d4ce1a"
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/manifest.js",
+      "sha256": "79095ebc49fc865a44a283e31e3e2cd31aba6eed7003d8fb6dfcc2df17c6488a"
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/flow.js",
+      "sha256": "4ee2fed6b503fa95bb636c72a6b03fd7c6430186820c8ed482e686db2f14784b"
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/shared.js",
+      "sha256": "ef5daa947a67b0a4fd7d1fdf2814398c34f5ab14ddea44d04cd1a03cd696d47e"
+    },
+    {
+      "path": "content/registered.js",
+      "sha256": "35b871f6a8441fd19201171da7bf2d1f19314cf7a7e0d7fea4a9d746f6510f34"
+    }
+  ],
+  "remaining": [
+    {
+      "kind": "disclosed-approximation",
+      "count": 108,
+      "playerSimplified": 54,
+      "campaignSimplified": 54,
+      "note": "近似披露的行为卡（player 54 + campaign 54，逐条 note/章节 approximations 登记；只披露，不改写为 verified）；发布验收完成（M5/P8，14 项门禁全真）"
+    },
+    {
+      "kind": "scenario-data",
+      "count": 185,
+      "note": "地点/幕/议程/剧情资产等数据型战役卡：行为由章 behavior 承接并有章测试证据；逐卡字面验收保留到后续批次"
+    },
+    {
+      "kind": "scenario-reference",
+      "count": 10,
+      "note": "各章桌面的剧本参考提示卡：只做身份/来源登记，行为由场景模块与指南承接"
+    }
+  ],
   "releaseAcceptance": {
-    "status": "pending",
-    "deferred": []
+    "status": "complete",
+    "deferred": [],
+    "note": "不采用提前开放；earlyAccess:false"
+  },
+  "gate": {
+    "registration": true,
+    "ledgers": true,
+    "allCards": true,
+    "campaignE2E": true,
+    "releaseBrowser": true,
+    "regression": true,
+    "replay": true,
+    "guards": true,
+    "assets": true,
+    "confirmations": true,
+    "storyGuides": true,
+    "flowDeclared": true,
+    "docs": true,
+    "scripts": true
   }
 }

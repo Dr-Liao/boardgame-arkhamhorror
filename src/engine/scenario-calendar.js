@@ -101,6 +101,16 @@ function codexSelection(state, entryId) {
 
 export const canResolveCodex = (state, entryId) => codexSelection(state, entryId) != null
 
+// P4：只读查询（投影与交互事务用）：当前战役记录下该条目的合格分支与一次性键，不写状态。
+export function codexSelectionFor(state, entryId) {
+  return codexSelection(state, entryId)
+}
+
+// P4：已结算的一次性键（scenario / act 限次）。投影只给「已读/未读」，不给条目正文。
+export function resolvedCodexKeys(state) {
+  return [...(mechanicState(state)?.resolvedCodex || [])]
+}
+
 export function resolveCodex(state, entryId, seat, resolve) {
   const selection = codexSelection(state, entryId)
   if (!selection) return false

@@ -160,7 +160,13 @@ function pushProloguePrivateStory(state, { id, title, text, audienceInvestigator
   if (!campaign) return null
   campaign.privateStories ||= []
   if (campaign.privateStories.some(entry => entry.id === id)) return null
-  const story = { id, title, text, audienceInvestigatorIds: [...new Set(audienceInvestigatorIds)] }
+  // 与 campaign-effects#privateStory 同一口径：记下写入时的流程位置，观察投影据此把私密故事
+  // 排进序章的纪事位置（否则会永远排在纪事末尾并被当成「当前故事」）。
+  const visit = campaign.flow?.history?.at(-1) || null
+  const story = {
+    id, title, text, audienceInvestigatorIds: [...new Set(audienceInvestigatorIds)],
+    ...(visit ? { nodeId: visit.nodeId, visit: visit.visit } : {}),
+  }
   campaign.privateStories.push(story)
   return story
 }

@@ -14,7 +14,7 @@
 [`tests/tsk-p0-regressions.test.mjs`](../../../tests/tsk-p0-regressions.test.mjs)）：
 《不留痕迹》真实开局不再崩溃、09126/09128 抽到留手、`to:'deck'` 目标区归一、5 章 `ChoicePause`
 事务恢复、终章全灭走 `noResolution`、09720/09721 已注册、六章遭遇牌库按印刷补齐。
-验收：**14/14 个 TSK 冻结门禁通过、633/633 个 TSK 测试通过、`audit/tsk-migration.json#status = verified`**；
+验收：**14/14 个 TSK 冻结门禁通过、637/637 个 TSK 测试通过、`audit/tsk-migration.json#status = verified`**；
 十章均可在真实引擎进入（`probe.mjs`）。P1/P2 清单仍见 `fix-plan.md`。
 
 **P1 修复进度（2026-11-13 第二轮 → 第三轮完成 17/17 组主体）**：第二轮完成 13 组主体（两个 TSK 时机

@@ -61,7 +61,7 @@ test('真实四人流程：三个队友自动组牌与准备，玩家点击开�
   const hub = page.locator('.ah-hub')
   await hub.getByRole('button', { name: '选择调查员', exact: true }).click()
   await hub.getByRole('button', { name: /选择调查员：罗兰/ }).click()
-  await hub.getByRole('button', { name: /自动构筑/ }).click()
+  await hub.getByRole('button', { name: /使用推荐卡组/ }).click()
   let release, submissions=0
   const gate=new Promise(resolve=>{release=resolve})
   await page.route('**/api/move',async route=>{

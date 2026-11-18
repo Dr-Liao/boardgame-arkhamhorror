@@ -20,6 +20,7 @@ import { parleyDiscardProvider } from './play-channels.js'
 import { notePromiseEvent } from './turn-promises.js'
 import { payTokenCost, tokenCostAvailable } from './token-cost.js'
 import { playTimingSource } from './play-timing.js'
+import { actionsAvailable, consumeAction } from './restricted-actions.js'
 export function createActions(deps) {
   const {
     campaignState,
@@ -115,6 +116,14 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
   let removedThreatCard = null
   let chosenVariableCost = null
   if (!def) return
+  // P6（九循环）：Double 特质的「作为额外费用，花费 1 个行动」。
+  // 费用声明在 played 描述子 `cost: { action: N }`；不足时不开始结算（不产生任何写入）。
+  const playedExtraAction = def.type === 'event'
+    ? (Number(descriptorOfKind(copiedDef?.code || cardId, 'played')?.cost?.action) || 0) : 0
+  if (playedExtraAction > 0 && actionsAvailable(inv) < playedExtraAction) {
+    info(state, events, `${inv.name} 没有足够的行动来支付「${cardName(cardId)}」的额外费用。`)
+    return
+  }
   const timingSource = fastSourceId ? playTimingSource(state, inv, def, fastSourceId) : null
   if (fastSourceId && !timingSource) return
   if (!tokenCostAvailable(state, inv, registeredEntry(cardId)?.additionalTokenCost)) return
@@ -296,7 +305,9 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     }
     consumePlayThreatResources(state, inv, events)
     if (usesLolaDiscount) delete inv.lolaDiscount
-    info(state, events, `🃏 ${inv.name} 打出「${cardName(cardId)}」（花费 ${cost} 资源，剩余 ${inv.resources}）。`, { kind: 'play', seat: inv.seat, code: cardId })
+    // P6（九循环）：Double 特质的额外行动费用在资源费用成功后一次性扣减（与打印文本同一时机）。
+    if (playedExtraAction > 0) consumeAction(inv, playedExtraAction)
+    info(state, events, `🃏 ${inv.name} 打出「${cardName(cardId)}」（花费 ${cost} 资源${playedExtraAction ? ` 与 ${playedExtraAction} 行动` : ''}，剩余 ${inv.resources}）。`, { kind: 'play', seat: inv.seat, code: cardId })
     return { ok: true, cost, playCostContext: playCostWindow }
   }
 

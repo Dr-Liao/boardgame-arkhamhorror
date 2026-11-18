@@ -1,0 +1,726 @@
+{
+  "schemaVersion": 1,
+  "cycle": "fhv",
+  "campaignId": "theFeastOfHemlockVale",
+  "milestone": "P3",
+  "step": "P3 关键词与规则书",
+  "generatedBy": "tools/audit-fhv-rules.mjs",
+  "docs": "docs/campaign/theFeastOfHemlockVale/rulebook.md",
+  "sources": [
+    {
+      "path": "audit/fhv-mechanism-scan.json",
+      "sha256": "b50a3644a7aa6368127941ac3d423ca43d9353f97173b11781d2131740e736f1"
+    },
+    {
+      "path": "audit/fhv-primitive-plan.json",
+      "sha256": "8c412ad16c06505c1621e52547bd8e1d0a8b7a29ed1926ca38bd4af7224da040"
+    },
+    {
+      "path": "web/fhv-rules.js",
+      "sha256": "5a9562285e5046b8c83fbf2c87b28dd7863cb149194070ab9cde9045997a2b97"
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/keywords.js",
+      "sha256": "bae7ce0567faeedd3dc4a710e56c250f07220eaa586cf9824a1c69dc6b89dc11"
+    },
+    {
+      "path": "audit/fhv-node-acceptance.json",
+      "sha256": "171220294c1912d02bc7b50804ab1e5732b23f3d9635e0eb3ff3165b9e06b08c"
+    },
+    {
+      "path": "audit/fhv-rules-browser.json",
+      "sha256": "93b0c1f619129b87cee726ad9499c54955967c93b43481198bd306bbb1f03a63"
+    }
+  ],
+  "confirmations": {
+    "keywords": {
+      "status": "verified",
+      "checked": 6,
+      "total": 6,
+      "checks": [
+        "sourceInventoried",
+        "engineBehavior",
+        "nodeAcceptance",
+        "rulebookEntry",
+        "cardLinks"
+      ],
+      "coverage": {
+        "scanned": [
+          "keyword.elusive",
+          "keyword.dayNight",
+          "keyword.patrol",
+          "keyword.alert",
+          "keyword.blessCurse"
+        ],
+        "rulebookMechanisms": [
+          "rulebook.codex",
+          "rulebook.survey",
+          "rulebook.locationAdjacency"
+        ],
+        "confirmed": [
+          "keyword.elusive",
+          "keyword.dayNight",
+          "rulebook.codex",
+          "keyword.patrol",
+          "keyword.alert",
+          "keyword.blessCurse"
+        ],
+        "excluded": [
+          {
+            "mechanismId": "keyword.bonded",
+            "reason": "绑定是既有关键词，P3 清单（§3 P3）未要求本循环独立条目；由 P5 调查员与 P6 玩家卡批次逐卡验收其本循环卡面行为。"
+          }
+        ]
+      },
+      "items": [
+        {
+          "id": "elusive",
+          "zh": "逃逸",
+          "ruleId": "fhvElusive",
+          "kind": "keyword",
+          "origin": "new",
+          "mechanismId": "keyword.elusive",
+          "cards": [
+            "10011",
+            "10014",
+            "10018",
+            "10022",
+            "10583a",
+            "10584a",
+            "10600",
+            "10601",
+            "10665b",
+            "10671",
+            "10695b",
+            "10696b",
+            "10700b",
+            "10724",
+            "10733",
+            "10734"
+          ],
+          "primitives": [
+            "enemies.elusive"
+          ],
+          "checks": {
+            "sourceInventoried": true,
+            "rulebookEntry": true,
+            "cardLinks": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/fhv-mechanism-scan.json",
+            "audit/fhv-primitive-plan.json",
+            "audit/fhv-node-acceptance.json",
+            "content/campaigns/theFeastOfHemlockVale/keywords.js",
+            "web/fhv-rules.js"
+          ]
+        },
+        {
+          "id": "dayNight",
+          "zh": "昼夜标记",
+          "ruleId": "fhvDayNight",
+          "kind": "keyword",
+          "origin": "new",
+          "mechanismId": "keyword.dayNight",
+          "cards": [
+            "10544",
+            "10570",
+            "10571",
+            "10581",
+            "10586",
+            "10602",
+            "10703",
+            "10715",
+            "10716",
+            "10721",
+            "10724",
+            "10730",
+            "10732",
+            "10733",
+            "10734",
+            "10736",
+            "10738",
+            "10739"
+          ],
+          "primitives": [
+            "campaign.time",
+            "cards.bondedFaces"
+          ],
+          "checks": {
+            "sourceInventoried": true,
+            "rulebookEntry": true,
+            "cardLinks": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/fhv-mechanism-scan.json",
+            "audit/fhv-primitive-plan.json",
+            "audit/fhv-node-acceptance.json",
+            "content/campaigns/theFeastOfHemlockVale/keywords.js",
+            "web/fhv-rules.js"
+          ]
+        },
+        {
+          "id": "codex",
+          "zh": "铁杉谷法典",
+          "ruleId": "fhvCodex",
+          "kind": "keyword",
+          "origin": "new",
+          "mechanismId": "rulebook.codex",
+          "cards": [
+            "10558",
+            "10559",
+            "10560",
+            "10565",
+            "10573",
+            "10607b",
+            "10634",
+            "10655",
+            "10684",
+            "10689",
+            "10690a",
+            "10691b",
+            "10693",
+            "10694",
+            "10695",
+            "10696",
+            "10697",
+            "10698",
+            "10699",
+            "10700",
+            "10701",
+            "10701b",
+            "10702",
+            "10705a",
+            "10706a",
+            "10707a",
+            "10708a",
+            "10709a",
+            "10710a",
+            "10711a",
+            "10712a"
+          ],
+          "primitives": [
+            "campaign.codex",
+            "campaign.residents"
+          ],
+          "checks": {
+            "sourceInventoried": true,
+            "rulebookEntry": true,
+            "cardLinks": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/fhv-mechanism-scan.json",
+            "audit/fhv-primitive-plan.json",
+            "audit/fhv-node-acceptance.json",
+            "content/campaigns/theFeastOfHemlockVale/keywords.js",
+            "web/fhv-rules.js"
+          ]
+        },
+        {
+          "id": "patrol",
+          "zh": "巡逻",
+          "ruleId": "tskPatrol",
+          "kind": "keyword",
+          "origin": "existing",
+          "mechanismId": "keyword.patrol",
+          "cards": [
+            "10552",
+            "10564",
+            "10592",
+            "10601",
+            "10644a",
+            "10644b",
+            "10644c",
+            "10645a",
+            "10645b",
+            "10645c",
+            "10646",
+            "10647a",
+            "10647b",
+            "10647c",
+            "10648",
+            "10701b"
+          ],
+          "primitives": [
+            "enemies.patrol"
+          ],
+          "checks": {
+            "sourceInventoried": true,
+            "rulebookEntry": true,
+            "cardLinks": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/fhv-mechanism-scan.json",
+            "audit/fhv-primitive-plan.json",
+            "audit/fhv-node-acceptance.json",
+            "content/campaigns/theFeastOfHemlockVale/keywords.js",
+            "web/fhv-rules.js"
+          ]
+        },
+        {
+          "id": "alert",
+          "zh": "警戒",
+          "ruleId": "alert",
+          "kind": "keyword",
+          "origin": "existing",
+          "mechanismId": "keyword.alert",
+          "cards": [
+            "10022",
+            "10565",
+            "10625",
+            "10646",
+            "10664a",
+            "10664b",
+            "10700b",
+            "10739"
+          ],
+          "primitives": [
+            "enemies.alert"
+          ],
+          "checks": {
+            "sourceInventoried": true,
+            "rulebookEntry": true,
+            "cardLinks": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/fhv-mechanism-scan.json",
+            "audit/fhv-primitive-plan.json",
+            "audit/fhv-node-acceptance.json",
+            "content/campaigns/theFeastOfHemlockVale/keywords.js",
+            "web/fhv-rules.js"
+          ]
+        },
+        {
+          "id": "blessCurse",
+          "zh": "祝福／诅咒",
+          "ruleId": "fhvBlessCurse",
+          "kind": "token",
+          "origin": "existing",
+          "mechanismId": "keyword.blessCurse",
+          "cards": [
+            "10012",
+            "10013",
+            "10014",
+            "10019",
+            "10022",
+            "10024",
+            "10025",
+            "10029",
+            "10034",
+            "10038",
+            "10046",
+            "10052",
+            "10055",
+            "10056",
+            "10068",
+            "10075",
+            "10085",
+            "10091",
+            "10092",
+            "10093",
+            "10095",
+            "10098",
+            "10099",
+            "10104",
+            "10105",
+            "10106",
+            "10107",
+            "10124",
+            "10125",
+            "10126",
+            "10131",
+            "10133",
+            "10134"
+          ],
+          "primitives": [
+            "chaos.blessCurse"
+          ],
+          "checks": {
+            "sourceInventoried": true,
+            "rulebookEntry": true,
+            "cardLinks": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true
+          },
+          "status": "verified",
+          "evidence": [
+            "audit/fhv-mechanism-scan.json",
+            "audit/fhv-primitive-plan.json",
+            "audit/fhv-node-acceptance.json",
+            "content/campaigns/theFeastOfHemlockVale/keywords.js",
+            "web/fhv-rules.js"
+          ]
+        }
+      ]
+    },
+    "rulebook": {
+      "status": "verified",
+      "entries": 11,
+      "requiredRuleIds": [
+        "fhvCampaign",
+        "fhvTime",
+        "fhvDayNight",
+        "fhvSurvey",
+        "fhvCodex",
+        "fhvResidents",
+        "fhvGrid",
+        "fhvElusive",
+        "fhvBlessCurse",
+        "fhvFatigue",
+        "fhvChaos"
+      ],
+      "items": [
+        {
+          "id": "fhvCampaign",
+          "title": "《铁杉谷盛宴》战役概览",
+          "titleEn": "The Feast of Hemlock Vale: campaign overview",
+          "group": "铁杉谷盛宴",
+          "cards": 0,
+          "checks": {
+            "entryPresent": true,
+            "bilingual": true,
+            "grouped": true,
+            "aliases": true,
+            "sortKey": true,
+            "relatedResolved": true,
+            "searchable": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "web/fhv-rules.js",
+            "web/rulebook-data.js",
+            "tests/fhv-rules.test.mjs"
+          ]
+        },
+        {
+          "id": "fhvTime",
+          "title": "三天三夜与时间标记",
+          "titleEn": "Three days, three nights and time markers",
+          "group": "铁杉谷盛宴",
+          "cards": 3,
+          "checks": {
+            "entryPresent": true,
+            "bilingual": true,
+            "grouped": true,
+            "aliases": true,
+            "sortKey": true,
+            "relatedResolved": true,
+            "searchable": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "web/fhv-rules.js",
+            "web/rulebook-data.js",
+            "tests/fhv-rules.test.mjs"
+          ]
+        },
+        {
+          "id": "fhvDayNight",
+          "title": "昼夜关键词（Day／Night）",
+          "titleEn": "Day {day} and Night {night}",
+          "group": "铁杉谷盛宴",
+          "cards": 42,
+          "checks": {
+            "entryPresent": true,
+            "bilingual": true,
+            "grouped": true,
+            "aliases": true,
+            "sortKey": true,
+            "relatedResolved": true,
+            "searchable": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "web/fhv-rules.js",
+            "web/rulebook-data.js",
+            "tests/fhv-rules.test.mjs"
+          ]
+        },
+        {
+          "id": "fhvSurvey",
+          "title": "可游玩序曲与勘察整备",
+          "titleEn": "Playable preludes and survey preparation",
+          "group": "铁杉谷盛宴",
+          "cards": 0,
+          "checks": {
+            "entryPresent": true,
+            "bilingual": true,
+            "grouped": true,
+            "aliases": true,
+            "sortKey": true,
+            "relatedResolved": true,
+            "searchable": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "web/fhv-rules.js",
+            "web/rulebook-data.js",
+            "tests/fhv-rules.test.mjs"
+          ]
+        },
+        {
+          "id": "fhvCodex",
+          "title": "铁杉谷法典（The Codex）",
+          "titleEn": "The Codex",
+          "group": "铁杉谷盛宴",
+          "cards": 31,
+          "checks": {
+            "entryPresent": true,
+            "bilingual": true,
+            "grouped": true,
+            "aliases": true,
+            "sortKey": true,
+            "relatedResolved": true,
+            "searchable": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "web/fhv-rules.js",
+            "web/rulebook-data.js",
+            "tests/fhv-rules.test.mjs"
+          ]
+        },
+        {
+          "id": "fhvResidents",
+          "title": "居民关系等级与笔记",
+          "titleEn": "Residents, Relationship Levels and Notes",
+          "group": "铁杉谷盛宴",
+          "cards": 10,
+          "checks": {
+            "entryPresent": true,
+            "bilingual": true,
+            "grouped": true,
+            "aliases": true,
+            "sortKey": true,
+            "relatedResolved": true,
+            "searchable": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "web/fhv-rules.js",
+            "web/rulebook-data.js",
+            "tests/fhv-rules.test.mjs"
+          ]
+        },
+        {
+          "id": "fhvGrid",
+          "title": "网格正交相邻",
+          "titleEn": "Location adjacency in this campaign",
+          "group": "铁杉谷盛宴",
+          "cards": 4,
+          "checks": {
+            "entryPresent": true,
+            "bilingual": true,
+            "grouped": true,
+            "aliases": true,
+            "sortKey": true,
+            "relatedResolved": true,
+            "searchable": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "web/fhv-rules.js",
+            "web/rulebook-data.js",
+            "tests/fhv-rules.test.mjs"
+          ]
+        },
+        {
+          "id": "fhvElusive",
+          "title": "逃逸（Elusive）",
+          "titleEn": "Elusive",
+          "group": "铁杉谷盛宴",
+          "cards": 16,
+          "checks": {
+            "entryPresent": true,
+            "bilingual": true,
+            "grouped": true,
+            "aliases": true,
+            "sortKey": true,
+            "relatedResolved": true,
+            "searchable": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "web/fhv-rules.js",
+            "web/rulebook-data.js",
+            "tests/fhv-rules.test.mjs"
+          ]
+        },
+        {
+          "id": "fhvBlessCurse",
+          "title": "祝福与诅咒标记",
+          "titleEn": "Bless and curse tokens",
+          "group": "铁杉谷盛宴",
+          "cards": 33,
+          "checks": {
+            "entryPresent": true,
+            "bilingual": true,
+            "grouped": true,
+            "aliases": true,
+            "sortKey": true,
+            "relatedResolved": true,
+            "searchable": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "web/fhv-rules.js",
+            "web/rulebook-data.js",
+            "tests/fhv-rules.test.mjs"
+          ]
+        },
+        {
+          "id": "fhvFatigue",
+          "title": "战役疲劳",
+          "titleEn": "Campaign fatigue",
+          "group": "铁杉谷盛宴",
+          "cards": 1,
+          "checks": {
+            "entryPresent": true,
+            "bilingual": true,
+            "grouped": true,
+            "aliases": true,
+            "sortKey": true,
+            "relatedResolved": true,
+            "searchable": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "web/fhv-rules.js",
+            "web/rulebook-data.js",
+            "tests/fhv-rules.test.mjs"
+          ]
+        },
+        {
+          "id": "fhvChaos",
+          "title": "混乱袋与符号",
+          "titleEn": "Chaos bag and symbols",
+          "group": "铁杉谷盛宴",
+          "cards": 52,
+          "checks": {
+            "entryPresent": true,
+            "bilingual": true,
+            "grouped": true,
+            "aliases": true,
+            "sortKey": true,
+            "relatedResolved": true,
+            "searchable": true,
+            "cardLinks": true
+          },
+          "status": "verified",
+          "evidence": [
+            "web/fhv-rules.js",
+            "web/rulebook-data.js",
+            "tests/fhv-rules.test.mjs"
+          ]
+        }
+      ],
+      "checks": {
+        "campaignOverview": true,
+        "scenarioMechanics": true,
+        "keywordEntries": true,
+        "cardLinks": true,
+        "desktopBrowser": true,
+        "mobileBrowser": true
+      },
+      "campaignOverview": {
+        "entryPresent": true,
+        "ruleId": "fhvCampaign",
+        "listsEveryChapter": true,
+        "listsThreeDaysThreeNights": true,
+        "listsPlayablePreludes": true,
+        "listsSurveyAreas": true,
+        "listsCampaignLog": true,
+        "listsResidentsAndRecords": true,
+        "statesScenarioOrder": true,
+        "relatedRulesExist": true
+      },
+      "scenarioMechanics": {
+        "requiredRuleEntries": 11,
+        "entriesPresent": true,
+        "entriesInGroup": true,
+        "relatedResolved": true,
+        "keywordEntriesPresent": true,
+        "scenarioReferenceCards": true,
+        "scenarioCardsLinkCampaignRule": true
+      },
+      "keywordEntries": {
+        "total": 6,
+        "verified": 6,
+        "status": "verified"
+      },
+      "cardLinks": {
+        "total": 441,
+        "linked": 441,
+        "unlinked": [],
+        "keywordLinkTargets": true
+      },
+      "desktopBrowser": true,
+      "mobileBrowser": true,
+      "chineseText": true,
+      "englishText": true,
+      "evidence": [
+        "web/rulebook-data.js",
+        "web/fhv-rules.js",
+        "content/campaigns/theFeastOfHemlockVale/keywords.js",
+        "tests/fhv-rules.test.mjs",
+        "audit/fhv-mechanism-scan.json",
+        "audit/fhv-primitive-plan.json",
+        "audit/fhv-node-acceptance.json",
+        "audit/fhv-rules-browser.json"
+      ]
+    }
+  },
+  "deferredPrimitives": {
+    "p3": [],
+    "p4": []
+  },
+  "deliveredPrimitives": [
+    "campaign.codex",
+    "campaign.residents",
+    "campaign.time",
+    "cards.bondedFaces",
+    "chaos.blessCurse",
+    "enemies.alert",
+    "enemies.elusive",
+    "enemies.patrol"
+  ],
+  "gates": {
+    "scanPassed": true,
+    "planGatesPassed": true,
+    "keywordSetMatchesScan": true,
+    "ruleSetMatchesData": true,
+    "allKeywordsVerified": true,
+    "allRulesVerified": true,
+    "cardLinksComplete": true,
+    "relatedResolved": true,
+    "noImplementationProse": true,
+    "nodeAcceptance": true,
+    "browserAcceptance": true,
+    "sourcesStable": true,
+    "keywordPrimitivesDone": true
+  }
+}

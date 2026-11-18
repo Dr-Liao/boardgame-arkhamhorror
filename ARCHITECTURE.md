@@ -188,6 +188,17 @@ games/arkhamhorror/
 [`docs/card-model.md`](docs/card-model.md) §7.1 登记；否则症状是读档后卡名退化成卡号，
 或牌在桌上却没有任何可点的动作（回归见 `tests/cards-under-ui.test.mjs` / `tests/cards-under.browser.mjs`）。
 
+**卡上计数**（牌桌小卡、卡牌详情与地点档案里的数量角标）同属这条边界，且有三种不同载体：
+具名计数器 `card.markers`（对象形，引擎 `src/engine/card-counters.js#CARD_COUNTER_IDS`）、
+多类型使用标记 `card.useTokens`（`api.placeUse` / `api.mechanics.useTokens`）、
+脚本标签计数 `card.markers`（数组形，`api.scenario.addMarker`）。三者都随实例投影到达浏览器，
+必须经 `web/table-components.js#cardCounterMarkerData` 的同一份展示契约渲染
+（登记表 `NAMED_COUNTER_DISPLAY` / `USE_TOKEN_DISPLAY` / `LABEL_MARKER_DISPLAY`）。
+**新增计数器 id、使用标记类型或内容标签时，同轮补展示登记 + 中英词典**；未登记项运行时按原 id
+兜底显示（fail-visible，不再静默消失），`tests/state-presentation.test.mjs` 的展示契约用例会扫描
+`src/cards` 与 `content` 的写入点并点名未登记项。牌桌小卡、卡牌详情「当前卡牌状态」、地点详情计数区
+共用这份读数，不要各自再写一套。
+
 ## 4. 依赖方向
 
 ```mermaid

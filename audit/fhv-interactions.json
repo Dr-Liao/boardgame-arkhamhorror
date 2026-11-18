@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "cycle": "fhv",
+  "campaignId": "theFeastOfHemlockVale",
+  "milestone": "P4",
+  "step": "P4 新增交互与界面",
+  "generatedBy": "tools/audit-fhv-interactions.mjs",
+  "docs": "docs/campaign/theFeastOfHemlockVale/interactions.md",
+  "status": "verified",
+  "coverage": {
+    "desktop": {
+      "codex": true,
+      "evolution": true,
+      "survey": true,
+      "grid": true,
+      "rail": true,
+      "enemyLocation": true,
+      "investigatorState": true
+    },
+    "mobile": {
+      "codex": true,
+      "evolution": true,
+      "survey": true,
+      "grid": true,
+      "rail": true,
+      "enemyLocation": true,
+      "investigatorState": true
+    }
+  },
+  "checks": {
+    "nodeAcceptance": true,
+    "sourceStable": true,
+    "desktopAndMobile": true,
+    "scriptOwnership": true,
+    "guidePlacementAndPrivacy": true,
+    "guideFailureRetryAndKeyboard": true,
+    "fastNoNewFailures": true,
+    "replayBaselineStable": true,
+    "replayExact": true
+  },
+  "gates": {
+    "nodeAcceptance": true,
+    "sourceStable": true,
+    "desktopAndMobile": true,
+    "scriptOwnership": true,
+    "guidePlacementAndPrivacy": true,
+    "guideFailureRetryAndKeyboard": true,
+    "fastNoNewFailures": true,
+    "replayBaselineStable": true,
+    "replayExact": true
+  },
+  "knownFailures": [
+    {
+      "title": "P8 eote all-cards 两次构建一致且与账本一致",
+      "reason": "HEAD 中《地球边缘》Part1 场景模块与 audit/eote-scenario-acceptance.json 记录的哈希不一致；EOTE 账本构建器据此把该章 sourceLocked 判为 false，导致 eote migration / all-cards 两个账本无法逐字节复算。"
+    },
+    {
+      "title": "P8 eote migration ledger · 确定性：导出 builder 两次深相等且与签入账本一致",
+      "reason": "HEAD 中《地球边缘》Part1 场景模块与 audit/eote-scenario-acceptance.json 记录的哈希不一致；EOTE 账本构建器据此把该章 sourceLocked 判为 false，导致 eote migration / all-cards 两个账本无法逐字节复算。"
+    }
+  ],
+  "deliveredPrimitives": [
+    "assets.clueTransfer",
+    "campaign.codex",
+    "campaign.deckProgression",
+    "campaign.persist",
+    "campaign.residents",
+    "campaign.time",
+    "chaos.predationBag",
+    "investigators.harmAndForm",
+    "locations.enemyLocation",
+    "locations.grid",
+    "scenario.rail"
+  ],
+  "browser": {
+    "present": true,
+    "status": "passed",
+    "specs": [
+      "tests/fhv-interactions.browser.mjs",
+      "tests/scenario-guides.browser.mjs",
+      "tests/script-actions-tfa.browser.mjs"
+    ],
+    "tests": 18,
+    "passed": 18,
+    "screenshots": 14
+  },
+  "contract": {
+    "actions": "Only server legalMoves and requestChoice/selectMechanic; the browser submits opaque pick/confirm/cancel moves and never computes rules.",
+    "privacy": "Codex entries expose id/available/used only (no branch conditions or text for untriggered entries); the time marker exposes the current day/period only; the predation bag exposes a remaining count and never its tokens; survey preparation exposes hand counts, kept assets and controlled clues but never hand card codes; grid/rail/enemy-location/form data are table-public.",
+    "cancellation": "Optional choices can be cancelled before any write; mandatory choices have no cancel. Empty mandatory candidate sets return false before requestChoice, so no soft lock is left.",
+    "realEntry": "campaign-flow.js already routes survey-preparation choices through the fhvSurvey mechanic operation; card/scenario abilities in P5–P7 call api.interactions.fhv.* instead of hand-built panels.",
+    "guide": "The fixed setup/reference entry and scriptCard ownership are reused; full FHV scenario guides remain P7.",
+    "release": "The seed/fixture is test-only and confined to tools/tests. P4 opens no content: the campaign, investigators and player cards remain catalog-only.",
+    "fast": "The P4 regression baseline is the failure list recorded at the end of P3; P4 only requires no new failures and every known failure to be disclosed with a reason."
+  },
+  "evidence": [
+    "audit/fhv-interactions-browser.json",
+    "audit/fhv-node-acceptance.json",
+    "audit/fhv-regression.json",
+    "src/engine/fhv-interactions.js",
+    "src/integration/mechanic-view.js",
+    "tests/fhv-interaction-fixture.mjs",
+    "tests/fhv-interactions.browser.mjs",
+    "tests/fhv-interactions.test.mjs",
+    "web/mechanic-ui.js",
+    "web/locales/zh-CN.misc.js",
+    "web/locales/en.misc.js"
+  ],
+  "sources": [
+    {
+      "path": "audit/fhv-interactions-browser.json",
+      "sha256": "55853ca810b24bd2f6cfb9949c7843168fd53ec086b9a1c9453c88d2f8ec7cd3"
+    },
+    {
+      "path": "audit/fhv-node-acceptance.json",
+      "sha256": "171220294c1912d02bc7b50804ab1e5732b23f3d9635e0eb3ff3165b9e06b08c"
+    },
+    {
+      "path": "audit/fhv-regression.json",
+      "sha256": "be58f5ca62a90030812d810ad5748cc841df7c612815fafaa98a5f9d83ab7f1c"
+    },
+    {
+      "path": "src/engine/campaign-flow.js",
+      "sha256": "960d6764b4c5c88bea098d035f871fd5fb407255a50149d3e4669f6ec29ac377"
+    },
+    {
+      "path": "src/engine/fhv-interactions.js",
+      "sha256": "a025c678c9a0d5712ce51ee104ffc69fdc0ab0dfc5548e678498d7b4e0e54f05"
+    },
+    {
+      "path": "src/engine/mechanic-choices.js",
+      "sha256": "80865a0df19a4dc7a1d6bc54a416839c91e1e617ca24f1726d00f150449d5681"
+    },
+    {
+      "path": "src/integration/mechanic-view.js",
+      "sha256": "66ed6398ef8fc2f53bf098c331626b836ed98e2183830e5dc290a0f21ea24df5"
+    },
+    {
+      "path": "tests/fhv-interaction-fixture.mjs",
+      "sha256": "5fe0f76ca30ed6da6d902069892bf3ec33e021508994aa1d9243f7a680aa3f86"
+    },
+    {
+      "path": "tests/fhv-interactions.browser.mjs",
+      "sha256": "01f77873fbe984badd9ee64ffdd41c01176e94e86b74e631754872b47970c6e6"
+    },
+    {
+      "path": "tests/fhv-interactions.test.mjs",
+      "sha256": "dee48745e8537ca3f81f497c58c4cb88406116683bc2b187924e4269a3920781"
+    },
+    {
+      "path": "web/mechanic-ui.js",
+      "sha256": "7e8d7c9461dfb7e363d70fff301044ddb86a0edcf605ac1c58e948af016c554c"
+    }
+  ]
+}

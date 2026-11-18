@@ -1,0 +1,353 @@
+{
+  "schemaVersion": 1,
+  "cycle": "fhv",
+  "phase": "P6",
+  "generatedBy": "tools/plan-fhv-player.mjs",
+  "status": "planned",
+  "summary": {
+    "total": 120,
+    "shards": [
+      {
+        "id": "M2-1",
+        "worker": "w-m2-1",
+        "count": 10,
+        "testFile": "tests/fhv-player-m2-1.test.mjs"
+      },
+      {
+        "id": "M2-2",
+        "worker": "w-m2-2",
+        "count": 10,
+        "testFile": "tests/fhv-player-m2-2.test.mjs"
+      },
+      {
+        "id": "M2-3",
+        "worker": "w-m2-3",
+        "count": 10,
+        "testFile": "tests/fhv-player-m2-3.test.mjs"
+      },
+      {
+        "id": "M2-4",
+        "worker": "w-m2-4",
+        "count": 10,
+        "testFile": "tests/fhv-player-m2-4.test.mjs"
+      },
+      {
+        "id": "M2-5",
+        "worker": "w-m2-5",
+        "count": 10,
+        "testFile": "tests/fhv-player-m2-5.test.mjs"
+      },
+      {
+        "id": "M2-6",
+        "worker": "w-m2-6",
+        "count": 10,
+        "testFile": "tests/fhv-player-m2-6.test.mjs"
+      },
+      {
+        "id": "M2-7",
+        "worker": "w-m2-7",
+        "count": 10,
+        "testFile": "tests/fhv-player-m2-7.test.mjs"
+      },
+      {
+        "id": "M2-8",
+        "worker": "w-m2-8",
+        "count": 10,
+        "testFile": "tests/fhv-player-m2-8.test.mjs"
+      },
+      {
+        "id": "M2-9",
+        "worker": "w-m2-9",
+        "count": 10,
+        "testFile": "tests/fhv-player-m2-9.test.mjs"
+      },
+      {
+        "id": "M2-10",
+        "worker": "w-m2-10",
+        "count": 10,
+        "testFile": "tests/fhv-player-m2-10.test.mjs"
+      },
+      {
+        "id": "M2-11",
+        "worker": "w-m2-11",
+        "count": 10,
+        "testFile": "tests/fhv-player-m2-11.test.mjs"
+      },
+      {
+        "id": "M2-12",
+        "worker": "w-m2-12",
+        "count": 10,
+        "testFile": "tests/fhv-player-m2-12.test.mjs"
+      }
+    ],
+    "buildable": 102,
+    "basicWeaknesses": 4,
+    "dependencyOnly": 11,
+    "researched": 3,
+    "byClass": {
+      "guardian": 21,
+      "mystic": 24,
+      "neutral": 12,
+      "rogue": 21,
+      "seeker": 22,
+      "survivor": 20
+    },
+    "byType": {
+      "asset": 60,
+      "enemy": 1,
+      "event": 47,
+      "skill": 12
+    },
+    "byXp": {
+      "0": 71,
+      "1": 10,
+      "2": 17,
+      "3": 8,
+      "4": 8,
+      "5": 6
+    },
+    "tests": [
+      "tests/fhv-player-m2-1.test.mjs",
+      "tests/fhv-player-m2-2.test.mjs",
+      "tests/fhv-player-m2-3.test.mjs",
+      "tests/fhv-player-m2-4.test.mjs",
+      "tests/fhv-player-m2-5.test.mjs",
+      "tests/fhv-player-m2-6.test.mjs",
+      "tests/fhv-player-m2-7.test.mjs",
+      "tests/fhv-player-m2-8.test.mjs",
+      "tests/fhv-player-m2-9.test.mjs",
+      "tests/fhv-player-m2-10.test.mjs",
+      "tests/fhv-player-m2-11.test.mjs",
+      "tests/fhv-player-m2-12.test.mjs"
+    ]
+  },
+  "gates": {
+    "scopePartition": true,
+    "shardsExact": true,
+    "noOverlapNoGap": true,
+    "mechanismClassified": true,
+    "referenceLocated": true,
+    "basicWeaknessesClassified": true,
+    "dependencyClassified": true,
+    "researchedClassified": true,
+    "testFilesDeclared": true
+  },
+  "shards": [
+    {
+      "id": "M2-1",
+      "worker": "w-m2-1",
+      "name": "玩家卡 M2-1：10019–10028（10 张）",
+      "testFile": "tests/fhv-player-m2-1.test.mjs",
+      "codes": [
+        "10019",
+        "10020",
+        "10021",
+        "10022",
+        "10023",
+        "10024",
+        "10025",
+        "10026",
+        "10027",
+        "10028"
+      ]
+    },
+    {
+      "id": "M2-2",
+      "worker": "w-m2-2",
+      "name": "玩家卡 M2-2：10029–10038（10 张）",
+      "testFile": "tests/fhv-player-m2-2.test.mjs",
+      "codes": [
+        "10029",
+        "10030",
+        "10031",
+        "10032",
+        "10033",
+        "10034",
+        "10035",
+        "10036",
+        "10037",
+        "10038"
+      ]
+    },
+    {
+      "id": "M2-3",
+      "worker": "w-m2-3",
+      "name": "玩家卡 M2-3：10039–10048（10 张）",
+      "testFile": "tests/fhv-player-m2-3.test.mjs",
+      "codes": [
+        "10039",
+        "10040",
+        "10041",
+        "10042",
+        "10043",
+        "10044",
+        "10045",
+        "10046",
+        "10047",
+        "10048"
+      ]
+    },
+    {
+      "id": "M2-4",
+      "worker": "w-m2-4",
+      "name": "玩家卡 M2-4：10049–10058（10 张）",
+      "testFile": "tests/fhv-player-m2-4.test.mjs",
+      "codes": [
+        "10049",
+        "10050",
+        "10051",
+        "10052",
+        "10053",
+        "10054",
+        "10055",
+        "10056",
+        "10057",
+        "10058"
+      ]
+    },
+    {
+      "id": "M2-5",
+      "worker": "w-m2-5",
+      "name": "玩家卡 M2-5：10059–10068（10 张）",
+      "testFile": "tests/fhv-player-m2-5.test.mjs",
+      "codes": [
+        "10059",
+        "10060",
+        "10061",
+        "10062",
+        "10063",
+        "10064",
+        "10065",
+        "10066",
+        "10067",
+        "10068"
+      ]
+    },
+    {
+      "id": "M2-6",
+      "worker": "w-m2-6",
+      "name": "玩家卡 M2-6：10069–10078（10 张）",
+      "testFile": "tests/fhv-player-m2-6.test.mjs",
+      "codes": [
+        "10069",
+        "10070",
+        "10071",
+        "10072",
+        "10073",
+        "10074",
+        "10075",
+        "10076",
+        "10077",
+        "10078"
+      ]
+    },
+    {
+      "id": "M2-7",
+      "worker": "w-m2-7",
+      "name": "玩家卡 M2-7：10079–10088（10 张）",
+      "testFile": "tests/fhv-player-m2-7.test.mjs",
+      "codes": [
+        "10079",
+        "10080",
+        "10081",
+        "10082",
+        "10083",
+        "10084",
+        "10085",
+        "10086",
+        "10087",
+        "10088"
+      ]
+    },
+    {
+      "id": "M2-8",
+      "worker": "w-m2-8",
+      "name": "玩家卡 M2-8：10089–10098（10 张）",
+      "testFile": "tests/fhv-player-m2-8.test.mjs",
+      "codes": [
+        "10089",
+        "10090",
+        "10091",
+        "10092",
+        "10093",
+        "10094",
+        "10095",
+        "10096",
+        "10097",
+        "10098"
+      ]
+    },
+    {
+      "id": "M2-9",
+      "worker": "w-m2-9",
+      "name": "玩家卡 M2-9：10099–10108（10 张）",
+      "testFile": "tests/fhv-player-m2-9.test.mjs",
+      "codes": [
+        "10099",
+        "10100",
+        "10101",
+        "10102",
+        "10103",
+        "10104",
+        "10105",
+        "10106",
+        "10107",
+        "10108"
+      ]
+    },
+    {
+      "id": "M2-10",
+      "worker": "w-m2-10",
+      "name": "玩家卡 M2-10：10109–10118（10 张）",
+      "testFile": "tests/fhv-player-m2-10.test.mjs",
+      "codes": [
+        "10109",
+        "10110",
+        "10111",
+        "10112",
+        "10113",
+        "10114",
+        "10115",
+        "10116",
+        "10117",
+        "10118"
+      ]
+    },
+    {
+      "id": "M2-11",
+      "worker": "w-m2-11",
+      "name": "玩家卡 M2-11：10119–10128（10 张）",
+      "testFile": "tests/fhv-player-m2-11.test.mjs",
+      "codes": [
+        "10119",
+        "10120",
+        "10121",
+        "10122",
+        "10123",
+        "10124",
+        "10125",
+        "10126",
+        "10127",
+        "10128"
+      ]
+    },
+    {
+      "id": "M2-12",
+      "worker": "w-m2-12",
+      "name": "玩家卡 M2-12：10129–10138（10 张）",
+      "testFile": "tests/fhv-player-m2-12.test.mjs",
+      "codes": [
+        "10129",
+        "10130",
+        "10131",
+        "10132",
+        "10133",
+        "10134",
+        "10135",
+        "10136",
+        "10137",
+        "10138"
+      ]
+    }
+  ]
+}

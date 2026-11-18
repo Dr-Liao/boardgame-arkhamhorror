@@ -14,7 +14,9 @@
 // 内容层通过 scenarioRuntime 的 `breach/removeBreach/locationFlag/setLocationFlag` 调用；
 // 公开投影在 `src/cards/campaign-view.js` 的 `locations` 字段（只含有标记的地点、只给公开值）。
 
-export const LOCATION_FLAGS = Object.freeze(['brazier'])
+// P7 九循环：slot/symbol 是铁杉谷关卡布局元数据（值不是布尔：slot 为格位名、symbol 为连接符号）。
+// 标记值随存档往返；locationFlagOf 仍按布尔口径读，locationFlagsOf/公开投影按原值投影。
+export const LOCATION_FLAGS = Object.freeze(['brazier', 'slot', 'symbol'])
 export const BREACH_LIMIT = 3
 
 function fail(message) {
@@ -73,7 +75,10 @@ export function locationFlagOf(location, flag) {
 
 export function locationFlagsOf(location) {
   const out = {}
-  for (const flag of LOCATION_FLAGS) if (location?.flags?.[flag] === true) out[flag] = true
+  for (const flag of LOCATION_FLAGS) {
+    const value = location?.flags?.[flag]
+    if (value !== undefined) out[flag] = value
+  }
   return out
 }
 
@@ -87,9 +92,12 @@ export function setLocationFlag(state, locationId, flag, value = true) {
     if (value) location.markers.push('brazier')
     location.litBrazier = Boolean(value)
   }
-  if (value) location.flags[key] = true
-  else delete location.flags[key]
-  return locationFlagOf(location, key)
+  // 布尔标记：true 写 flags、false/null 清除；标量标记（slot/symbol）：保留原值供公开投影。
+  if (value === true) location.flags[key] = true
+  else if (value === false || value === null || value === undefined || value === '') delete location.flags[key]
+  else location.flags[key] = value
+  // 返回当前值：brazier 为布尔；值标记返回标量（清除后 false）。
+  return location.flags?.[key] ?? false
 }
 
 // 公开投影：只含有裂口/标记的地点；都是桌面公开信息。

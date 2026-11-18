@@ -452,7 +452,20 @@ function refreshStateResources(state) {
 function unknownCardCodes(state) {
   if (state.campaign?.id) registerCampaignScenarios(state.campaign.id)
   const missing = new Set()
-  const check = value => { if (typeof value === 'string' && CARD_CODE.test(value) && !cardDef(value)) missing.add(value) }
+  // P8：场景 StepCode（如《铁杉谷盛宴》10677a/10679a/10704 这类双面时间/参考卡）是内容身份，
+  // 不是玩家牌组卡号。存档的 scenario.stepCode / timeMarker.stepCode / storyFaces[].code 会出现
+  // 这些合法内容卡号；它们不在 ALL_CARDS 里，若按「未知卡号」处理会把战役进行中的持久存档误判
+  // 为不可读（P8 发布浏览器验收实测：第二日黎明存档读取按钮禁用）。这里按当前关卡内容身份放行。
+  const contentCodes = new Set()
+  const scenario = state.scenario || {}
+  const registerContentCode = value => { if (value) contentCodes.add(String(value)) }
+  registerContentCode(scenario.stepCode)
+  registerContentCode(scenario.timeMarker?.stepCode)
+  for (const face of Object.values(scenario.storyFaces || {})) registerContentCode(face?.code)
+  registerContentCode(state.campaign?.flow?.stepCode)
+  const check = value => {
+    if (typeof value === 'string' && CARD_CODE.test(value) && !cardDef(value) && !contentCodes.has(value)) missing.add(value)
+  }
   const walk = (value, depth) => {
     if (!value || typeof value !== 'object' || depth > 64) return
     if (Array.isArray(value)) { for (const item of value) typeof item === 'object' ? walk(item, depth + 1) : check(item); return }
@@ -784,7 +797,9 @@ function startScenario(state, index, events) {
       })
     }
   } else if (state.storyInvestigators) {
-    // 换回原本的调查员：职业/技能按 originals 快照恢复；旧存档没有快照时用卡面定义兜底。
+    // 换回原本的调查员：正常路径已在 scenarioResult→关间准备时由 campaign-flow.progressCampaign
+    // 换回（关间窗口显示真实调查员）；这里是旧存档（还停在故事调查员状态的准备页）的兜底：
+    // 职业/技能按 originals 快照恢复；更老的存档没有快照时用卡面定义兜底。
     restoreStoryInvestigators(state, { cardInfo: code => ALL_INVESTIGATORS[code] || null })
     info(state, events, '📜 故事调查员退场，队伍换回原本的调查员。')
   }
@@ -841,7 +856,8 @@ function startScenario(state, index, events) {
   // 否则故事导入拍脸没有卡面。aside 是拍脸右侧那张，黑星升起用来亮出「c」密谋。
   const illustrated = scenarioBehavior(state).introSplash?.(state) || null
   const actCard = sc.acts?.[0]
-  if (!scenarioBehavior(state).suppressIntroPresentation?.(state)) info(state, events, introText, { kind: 'story', title: '故事导入', scenarioId: sc.id,
+  if (scenarioBehavior(state).presentsIntroDuringSetup) info(state, events, introText)
+  else if (!scenarioBehavior(state).suppressIntroPresentation?.(state)) info(state, events, introText, { kind: 'story', title: '故事导入', scenarioId: sc.id,
     code: illustrated?.code || actCard?.originalCode || actCard?.code,
     name: actCard?.name || sc.name,
     ...(illustrated?.artName ? { artName: illustrated.artName } : {}),

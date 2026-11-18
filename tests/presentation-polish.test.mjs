@@ -127,12 +127,13 @@ test('scenario opening presents introduction, agenda, then setup location reveal
   const events = [
     { seq: 4, type: 'info', presentation: { kind: 'location', title: '地点揭示' } },
     { seq: 5, type: 'info', presentation: { kind: 'story', title: '故事导入', intro: true } },
-    { seq: 6, type: 'info', presentation: { kind: 'story', title: '密谋揭示', initialAgenda: true } },
-    { seq: 7, type: 'presentation', kind: 'test', success: true },
+    { seq: 6, type: 'presentation', kind: 'story', title: '分支剧情', intro: true },
+    { seq: 7, type: 'info', presentation: { kind: 'story', title: '密谋揭示', initialAgenda: true } },
+    { seq: 8, type: 'presentation', kind: 'test', success: true },
   ]
   const sequence = publicSequence(events)
-  assert.deepEqual(sequence.map(cue => cue.title || cue.kind), ['故事导入', '密谋揭示', '地点揭示', 'test'])
-  assert.deepEqual(sequence.map(cue => cue.eventSeq), [5, 6, 4, 7])
+  assert.deepEqual(sequence.map(cue => cue.title || cue.kind), ['故事导入', '分支剧情', '密谋揭示', '地点揭示', 'test'])
+  assert.deepEqual(sequence.map(cue => cue.eventSeq), [5, 6, 7, 4, 8])
 })
 
 test('engagement alerts occur on entry including massive enemies, never every repaint',()=>{

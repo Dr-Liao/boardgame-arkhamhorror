@@ -425,7 +425,35 @@ function runtimeCardStats(def) {
   return Object.keys(stats).length ? stats : null
 }
 
-export function renderDetailContent(h, detail, renderTextCard, onChange, gameState) {
+function renderCustomizationOptions(h, options, checked) {
+  if (!options?.length) return null
+  const chinese = currentLanguage() !== 'en'
+  const counts = new Map()
+  for (const index of checked || []) counts.set(index, (counts.get(index) || 0) + 1)
+  return h('section', { className: 'ah-runtime-text ah-detail-customization', 'aria-label': t('detail.customization.title') },
+    h('h3', {}, t('detail.customization.title')),
+    h('ul', {}, options.map((option, index) => {
+      const filled = counts.get(index) || 0
+      const progress = checked == null
+        ? t('detail.customization.boxes', { checks: option.checks })
+        : t('detail.customization.progress', { checked: filled, checks: option.checks })
+      const status = option.implemented === false ? t('detail.customization.unimplemented')
+        : filled >= option.checks ? t('detail.customization.unlocked') : null
+      const name = (chinese && option.nameZh) || option.name
+      const text = (chinese && option.textZh) || option.text
+      return h('li', { 'data-customization-option': String(index) },
+        h('header', {},
+          h('span', { className: 'ah-customization-boxes', role: 'img', 'aria-label': progress },
+            Array.from({ length: option.checks }, (_, box) =>
+              h('span', { className: 'ah-customization-box', 'aria-hidden': 'true' },
+                box < filled ? '✓' : ''))),
+          h('strong', {}, name),
+          status ? h('span', { className: 'ah-kw' }, status) : null),
+        text ? h('p', {}, renderRulesText(h, text)) : null)
+    })))
+}
+
+export function renderDetailContent(h, detail, renderTextCard, onChange, gameState, customizationChecks = null) {
   const entry = detail.entry
   const side = detail.side || 'front'
   const base = entry?.card || detail.def
@@ -446,6 +474,7 @@ export function renderDetailContent(h, detail, renderTextCard, onChange, gameSta
     h('div', { className: 'ah-detail-layout' },
       renderImage(h, entry?.images || card.images, side, { artId: detail.def.artId }),
       h('div', null, renderTextCard(face),
+        side === 'front' ? renderCustomizationOptions(h, entry?.customizationOptions, customizationChecks) : null,
         h('nav', {className:'ah-card-rule-links','aria-label':t('detail.rules.links')},
           // 卡号级映射优先：`card` 是已加载的卡面（含 text/textZh/traits/slot），只传 `detail.def`
           // 会让 `^04`/`^05` 这类「按卡文判定」的条目丢失，只剩通用条目占满 10 个名额。

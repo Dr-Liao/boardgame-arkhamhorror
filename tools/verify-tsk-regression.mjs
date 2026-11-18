@@ -70,6 +70,9 @@ function buildRegression() {
   const frozenFiles = [...(baseline.preExistingFailures?.files || [])].sort()
   const frozenCount = frozenTitles.length
   const additions = fast.parsed.titles.filter(title => !frozenTitles.includes(title))
+  // 通过口径：无新增失败（标题 ⊆ 冻结清单）+ 失败数不超过冻结数（允许其它循环把既有失败修掉，
+  // 例如 2026-11-16 九循环提交修复了 TCU 账本与 i18n 两条冻结失败；TSK 仍冻结 2 条 EotE 旧失败）。
+  const frozenFailuresStillAllowed = fast.parsed.fail <= frozenCount
   return {
     schemaVersion: 1,
     cycle: 'tsk',
@@ -78,8 +81,8 @@ function buildRegression() {
       fast: FAST_COMMAND,
       replay: `node tools/replay-fixtures.mjs --compare ${baseline.replayFile}`,
     },
-    status: (fast.exitCode ?? 1) === 1 && additions.length === 0
-      && fast.parsed.fail === frozenCount && replay.matches ? 'passed' : 'failed',
+    status: (fast.exitCode === 0 || fast.exitCode === 1) && additions.length === 0
+      && frozenFailuresStillAllowed && replay.matches ? 'passed' : 'failed',
     fast: {
       exitCode: fast.exitCode,
       outputSha256: fast.outputSha256,
@@ -107,9 +110,11 @@ if (check) {
   const disk = readJson(EVIDENCE_PATH)
   const baseline = readJson(BASELINE_PATH)
   const frozen = [...(baseline.fastFailures || [])].sort()
+  // 允许冻结失败被其它循环修复：当前失败数只能 <= 冻结数，且失败标题必须 ⊆ 冻结清单。
   const ok = disk.status === 'passed'
     && disk.fast.additionsSinceInitialBaseline.length === 0
-    && disk.fast.totals.fail === frozen.length
+    && disk.fast.totals.fail <= frozen.length
+    && disk.fast.titles.every(title => frozen.includes(title))
     && JSON.stringify(disk.fast.frozenTitles) === JSON.stringify(frozen)
     && disk.replay.matches === true
     && disk.replay.actualSha256 === disk.replay.expectedSha256

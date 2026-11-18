@@ -127,6 +127,20 @@ import * as tskDogsOfWar from './campaigns/theScarletKeys/scenarios/dogsOfWar/in
 import * as tskShadesOfSuffering from './campaigns/theScarletKeys/scenarios/shadesOfSuffering/index.js'
 import * as tskWithoutATrace from './campaigns/theScarletKeys/scenarios/withoutATrace/index.js'
 import * as tskCongressOfTheKeys from './campaigns/theScarletKeys/scenarios/congressOfTheKeys/index.js'
+// P7（九循环 M3）：《铁杉谷盛宴》战役 + 12 个场景单元（4 序曲 + 8 章）逐章验收后进生产组合根（playable）。
+import { manifest as fhvCampaignManifest } from './campaigns/theFeastOfHemlockVale/manifest.js'
+import * as fhvWelcomeToHemlockVale from './campaigns/theFeastOfHemlockVale/scenarios/welcomeToHemlockVale/index.js'
+import * as fhvWrittenInRock from './campaigns/theFeastOfHemlockVale/scenarios/writtenInRock/index.js'
+import * as fhvHemlockHouse from './campaigns/theFeastOfHemlockVale/scenarios/hemlockHouse/index.js'
+import * as fhvTheSilentHeath from './campaigns/theFeastOfHemlockVale/scenarios/theSilentHeath/index.js'
+import * as fhvTheLostSister from './campaigns/theFeastOfHemlockVale/scenarios/theLostSister/index.js'
+import * as fhvTheThingInTheDepths from './campaigns/theFeastOfHemlockVale/scenarios/theThingInTheDepths/index.js'
+import * as fhvTheTwistedHollow from './campaigns/theFeastOfHemlockVale/scenarios/theTwistedHollow/index.js'
+import * as fhvDawnOfTheSecondDay from './campaigns/theFeastOfHemlockVale/scenarios/dawnOfTheSecondDay/index.js'
+import * as fhvTheLongestNight from './campaigns/theFeastOfHemlockVale/scenarios/theLongestNight/index.js'
+import * as fhvDawnOfTheFinalDay from './campaigns/theFeastOfHemlockVale/scenarios/dawnOfTheFinalDay/index.js'
+import * as fhvPreludeTheFinalEvening from './campaigns/theFeastOfHemlockVale/scenarios/preludeTheFinalEvening/index.js'
+import * as fhvFateOfTheVale from './campaigns/theFeastOfHemlockVale/scenarios/fateOfTheVale/index.js'
 
 let bundle = {
   packs: [...packs, ...expansionBundles.map(entry => entry.manifest), dunwichCampaignPack, dunwichInvestigators,
@@ -135,7 +149,7 @@ let bundle = {
     ticCampaignPack, ticInvestigators, ticPlayer, eoteCampaignPack, eoteInvestigators, eotePlayer,
     tskCampaignPack, tskInvestigators, tskPlayer],
   campaigns: [nightOfTheZealot, theDunwichLegacy, thePathToCarcosa, theForgottenAge, theCircleUndone,
-    theDreamEaters, theInnsmouthConspiracy, eoteCampaignManifest, tskCampaignManifest],
+    theDreamEaters, theInnsmouthConspiracy, eoteCampaignManifest, tskCampaignManifest, fhvCampaignManifest],
   scenarios: [gathering, masks, devourer, extracurricularActivity, theHouseAlwaysWins, theMiskatonicMuseum,
     theEssexCountyExpress, bloodOnTheAltar, undimensionedAndUnseen, whereDoomAwaits, lostInTimeAndSpace,
     curtainCall, theLastKing, echoesOfThePast, theUnspeakableOath, aPhantomOfTruth, thePallidMask,
@@ -151,7 +165,10 @@ let bundle = {
     ticALightInTheFog, ticTheLairOfDagon, ticIntoTheMaelstrom,
     eoteIceAndDeathPart1, eoteIceAndDeathPart2, eoteIceAndDeathPart3, eoteFatalMirage, eoteToTheForbiddenPeaks, eoteCityOfTheElderThings, eoteTheHeartOfMadnessPart1, eoteTheHeartOfMadnessPart2,
     tskRiddlesAndRain, tskDeadHeat, tskSanguineShadows, tskDealingsInTheDark, tskDancingMad,
-    tskOnThinIce, tskDogsOfWar, tskShadesOfSuffering, tskWithoutATrace, tskCongressOfTheKeys],
+    tskOnThinIce, tskDogsOfWar, tskShadesOfSuffering, tskWithoutATrace, tskCongressOfTheKeys,
+    fhvWelcomeToHemlockVale, fhvWrittenInRock, fhvHemlockHouse, fhvTheSilentHeath, fhvTheLostSister,
+    fhvTheThingInTheDepths, fhvTheTwistedHollow, fhvDawnOfTheSecondDay, fhvTheLongestNight,
+    fhvDawnOfTheFinalDay, fhvPreludeTheFinalEvening, fhvFateOfTheVale],
 }
 export let contentRegistry = createContentRegistry(bundle)
 

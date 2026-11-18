@@ -239,6 +239,8 @@ body:has(.ah-table):not(:has(.ah-db-modal,.ah-carddetail-modal)) .ah-rulebook-la
   padding: 6px 8px; border-top: 1px solid #8f7b4d33; }
 .ah-hub-customize-option span { font-size: 13px; line-height: 1.55; overflow-wrap: anywhere; }
 .ah-hub-customize-option .bg-btn { max-width: 100%; white-space: normal; text-align: left; }
+/* P2-3：规则尚未实现的定制勾选格——展示卡面文本但不可购买。 */
+.ah-hub-customize-unimplemented { font-size: 12px; line-height: 1.4; color: #8a6d3b; font-style: italic; }
 @media (max-width: 900px) {
   .ah-hub-customization { width: calc(100% - 24px); padding: 13px 12px; scroll-margin-top: 265px; }
   .ah-hub-customization-card { padding: 10px; }

@@ -94,7 +94,7 @@ test('Arkham second player can prepare own investigator and see own deck', async
   hostOnline = true
   await expect(options.first()).toBeEnabled()
   await options.first().click()
-  await guest.getByRole('button', { name: '自动构筑合法牌组', exact: true }).click()
+  await guest.getByRole('button', { name: '使用推荐卡组', exact: true }).click()
   await guest.getByRole('button', { name: '卡组构筑', exact: true }).click()
   await expect(guest.locator('.ah-deck-inspect').first()).toBeVisible()
   const session = (await api(1, 'status')).session

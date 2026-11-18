@@ -15,6 +15,8 @@ import { assignSeatPart, campaignPartsManifest, laneBalance, modeOptions } from 
 import { embarkOptions, forcedDestination, mapTime, statusReportState } from './tsk-map.js'
 // P8：定制升级卡（Customizable）的关间勾选候选（勾选/经验结算仍走 tsk-customizable 原语）。
 import { customizationOptions, customizationsOfSeat } from './tsk-customizable.js'
+// 2026-11-16 P2-3：exceptional 定制卡每格 2 XP（与 mechanic-view 的 xpPerCheck 同口径）。
+import { cardDef } from './card-lookup.js'
 // 2026-11-13 P1-17：战役禁用卡（02310 等）与存在抹除名单必须参与升级池过滤；
 // 名单来自战役扩展 `campaign.tsk.invalidCards` + `erased`（tsk-hollow 的唯一读点）。
 import { invalidCampaignCards } from './tsk-hollow.js'
@@ -439,9 +441,12 @@ function seatPartMoves(state) {
 //   · 关间（interlude，且战役允许升级、座位没有未保存的升级草稿）逐选项给候选；
 //   · 初始构筑期（首章前的 scenarioSetup）只在「初始可用经验 > 0」时给候选（P8 口径：初始为 0 格，
 //     不伪造经验）；正常情况下不产生候选，面板只展示 0 勾选。
-//   · 定制升级由房主代全桌执行（与 hubEmbark/hubContinue 的房主口径一致）；非房主不产生候选。
+//   · 2026-11-16 P2-3：定制勾选和 hubPurchase 一样是**座位自己的决定**——每个真人座位给自己的
+//     `record` 勾选（老实现硬编码 seat 0，多人局里其他玩家永远无法升级自己的定制卡）；AI 席位不产生
+//     候选（由自动升级路径处理）。
 function customizationMoves(state, seat, record) {
-  if (seat !== 0 || !record || record.status !== 'active') return []
+  if (!record || record.status !== 'active') return []
+  if (!(state.humanSeats || [0]).includes(seat)) return []
   const uiState = state.uiState
   const initial = uiState === 'scenarioSetup' && !state.campaign.scenarioResults?.length
   const interlude = uiState === 'interlude'
@@ -464,11 +469,14 @@ function customizationMoves(state, seat, record) {
     for (const [optionIndex, option] of optionList.entries()) {
       const filled = counts.get(optionIndex) || 0
       if (filled >= option.checks) continue
-      const label = `定制：${cardName(code)} · ${option.name}（第 ${filled + 1} 格 / 1 XP）`
+      // P2-3：近似条目声明 implemented:false 的勾选格不可购买（面板仍可展示文本）。
+      if (option.implemented === false) continue
+      const costPerCheck = cardDef(code)?.exceptional === true ? 2 : 1
+      const label = `定制：${cardName(code)} · ${option.name}（第 ${filled + 1} 格 / ${costPerCheck} XP）`
       const explanation = `${option.name}：已勾选 ${filled}/${option.checks} 格；剩余 ${availableXp} XP。`
       moves.push(initial
         ? { action: 'hubCustomize', code, optionIndex, initial: true, label, explanation }
-        : { action: 'hubCustomize', code, optionIndex, cost: 1, availableXp, label, explanation })
+        : { action: 'hubCustomize', code, optionIndex, cost: costPerCheck, costPerCheck, availableXp, label, explanation })
     }
   }
   return moves

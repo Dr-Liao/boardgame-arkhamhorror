@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "tools/playwright-fhv-p6-reporter.mjs",
+  "status": "passed",
+  "specs": [
+    "tests/fhv-player.browser.mjs"
+  ],
+  "checks": {
+    "desktop": true,
+    "mobile": true
+  },
+  "tests": [
+    {
+      "file": "tests/fhv-player.browser.mjs",
+      "title": "P6 desktop 构筑池开放：FHV 可构筑卡在大厅玩家池",
+      "status": "passed",
+      "durationMs": 1515
+    },
+    {
+      "file": "tests/fhv-player.browser.mjs",
+      "title": "P6 desktop 事件卡真实打出（Double 额外行动）",
+      "status": "passed",
+      "durationMs": 4337
+    },
+    {
+      "file": "tests/fhv-player.browser.mjs",
+      "title": "P6 desktop 资产卡装备与发动",
+      "status": "passed",
+      "durationMs": 8016
+    },
+    {
+      "file": "tests/fhv-player.browser.mjs",
+      "title": "P6 desktop 技能卡投入检定",
+      "status": "passed",
+      "durationMs": 2151
+    },
+    {
+      "file": "tests/fhv-player.browser.mjs",
+      "title": "P6 desktop 基础弱点显现进入威胁区",
+      "status": "passed",
+      "durationMs": 3622
+    },
+    {
+      "file": "tests/fhv-player.browser.mjs",
+      "title": "P6 mobile 构筑池开放：FHV 可构筑卡在大厅玩家池",
+      "status": "passed",
+      "durationMs": 995
+    },
+    {
+      "file": "tests/fhv-player.browser.mjs",
+      "title": "P6 mobile 事件卡真实打出（Double 额外行动）",
+      "status": "passed",
+      "durationMs": 3746
+    },
+    {
+      "file": "tests/fhv-player.browser.mjs",
+      "title": "P6 mobile 资产卡装备与发动",
+      "status": "passed",
+      "durationMs": 7651
+    },
+    {
+      "file": "tests/fhv-player.browser.mjs",
+      "title": "P6 mobile 技能卡投入检定",
+      "status": "passed",
+      "durationMs": 1896
+    },
+    {
+      "file": "tests/fhv-player.browser.mjs",
+      "title": "P6 mobile 基础弱点显现进入威胁区",
+      "status": "passed",
+      "durationMs": 4170
+    }
+  ],
+  "screenshots": [
+    "artifacts/migration/fhv/p6/screenshots/desktop-asset.png",
+    "artifacts/migration/fhv/p6/screenshots/desktop-build-pool.png",
+    "artifacts/migration/fhv/p6/screenshots/desktop-event.png",
+    "artifacts/migration/fhv/p6/screenshots/desktop-skill.png",
+    "artifacts/migration/fhv/p6/screenshots/desktop-weakness.png",
+    "artifacts/migration/fhv/p6/screenshots/mobile-asset.png",
+    "artifacts/migration/fhv/p6/screenshots/mobile-build-pool.png",
+    "artifacts/migration/fhv/p6/screenshots/mobile-event.png",
+    "artifacts/migration/fhv/p6/screenshots/mobile-skill.png",
+    "artifacts/migration/fhv/p6/screenshots/mobile-weakness.png"
+  ]
+}

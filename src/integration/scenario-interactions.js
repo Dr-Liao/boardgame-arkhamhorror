@@ -38,13 +38,12 @@ export function scenarioInteractionsView(state, observerSeat = null) {
   })
   if (swarm.length) view.swarm = swarm
 
-  if (state.tokenBags && typeof state.tokenBags === 'object') {
-    const bags = Object.keys(state.tokenBags).map(id => {
-      const info = tokenBagInfo(state, id)
-      return { id, count: info.count, revealed: info.revealed }
-    })
+  if (state.tokenBags && typeof state.tokenBags === 'object' && state.tokenBags[INFESTATION_BAG_ID]) {
+    // 食梦者的「滋生袋」专题条只投影滋生袋本身。其它循环的独立 token 袋（例如铁杉谷的猎杀袋）
+    // 有自己的 P4 投影口径（只给张数），不得复用滋生袋面板把已揭示标记面拼进观察投影。
+    const info = tokenBagInfo(state, INFESTATION_BAG_ID)
     view.tokenBag = {
-      bags,
+      bags: [{ id: INFESTATION_BAG_ID, count: info.count, revealed: info.revealed }],
       infested: Array.isArray(state.infestedLocations) ? [...state.infestedLocations] : [],
       infestedCount: infestedCount(state),
       infestationId: INFESTATION_BAG_ID,

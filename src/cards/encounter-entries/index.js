@@ -1877,6 +1877,298 @@ import e09686 from './theScarletKeys/withoutATrace/09686.js'
 import e09687 from './theScarletKeys/withoutATrace/09687.js'
 import e09688 from './theScarletKeys/withoutATrace/09688.js'
 import e09689 from './theScarletKeys/withoutATrace/09689.js'
+import e10651 from './theFeastOfHemlockVale/fateOfTheVale/10651.js'
+import e10652 from './theFeastOfHemlockVale/fateOfTheVale/10652.js'
+import e10653 from './theFeastOfHemlockVale/fateOfTheVale/10653.js'
+import e10654 from './theFeastOfHemlockVale/fateOfTheVale/10654.js'
+import e10655 from './theFeastOfHemlockVale/fateOfTheVale/10655.js'
+import e10656 from './theFeastOfHemlockVale/fateOfTheVale/10656.js'
+import e10657 from './theFeastOfHemlockVale/fateOfTheVale/10657.js'
+import e10658 from './theFeastOfHemlockVale/fateOfTheVale/10658.js'
+import e10659 from './theFeastOfHemlockVale/fateOfTheVale/10659.js'
+import e10660 from './theFeastOfHemlockVale/fateOfTheVale/10660.js'
+import e10661 from './theFeastOfHemlockVale/fateOfTheVale/10661.js'
+import e10661b from './theFeastOfHemlockVale/fateOfTheVale/10661b.js'
+import e10662a from './theFeastOfHemlockVale/fateOfTheVale/10662a.js'
+import e10662b from './theFeastOfHemlockVale/fateOfTheVale/10662b.js'
+import e10663a from './theFeastOfHemlockVale/fateOfTheVale/10663a.js'
+import e10663b from './theFeastOfHemlockVale/fateOfTheVale/10663b.js'
+import e10664a from './theFeastOfHemlockVale/fateOfTheVale/10664a.js'
+import e10664b from './theFeastOfHemlockVale/fateOfTheVale/10664b.js'
+import e10665a from './theFeastOfHemlockVale/fateOfTheVale/10665a.js'
+import e10665b from './theFeastOfHemlockVale/fateOfTheVale/10665b.js'
+import e10666 from './theFeastOfHemlockVale/fateOfTheVale/10666.js'
+import e10667 from './theFeastOfHemlockVale/fateOfTheVale/10667.js'
+import e10668 from './theFeastOfHemlockVale/fateOfTheVale/10668.js'
+import e10669 from './theFeastOfHemlockVale/fateOfTheVale/10669.js'
+import e10670 from './theFeastOfHemlockVale/fateOfTheVale/10670.js'
+import e10670b from './theFeastOfHemlockVale/fateOfTheVale/10670b.js'
+import e10671 from './theFeastOfHemlockVale/fateOfTheVale/10671.js'
+import e10672 from './theFeastOfHemlockVale/fateOfTheVale/10672.js'
+import e10673 from './theFeastOfHemlockVale/fateOfTheVale/10673.js'
+import e10674 from './theFeastOfHemlockVale/fateOfTheVale/10674.js'
+import e10524 from './theFeastOfHemlockVale/hemlockHouse/10524.js'
+import e10524b from './theFeastOfHemlockVale/hemlockHouse/10524b.js'
+import e10525 from './theFeastOfHemlockVale/hemlockHouse/10525.js'
+import e10526 from './theFeastOfHemlockVale/hemlockHouse/10526.js'
+import e10527 from './theFeastOfHemlockVale/hemlockHouse/10527.js'
+import e10528 from './theFeastOfHemlockVale/hemlockHouse/10528.js'
+import e10529 from './theFeastOfHemlockVale/hemlockHouse/10529.js'
+import e10530 from './theFeastOfHemlockVale/hemlockHouse/10530.js'
+import e10531 from './theFeastOfHemlockVale/hemlockHouse/10531.js'
+import e10532 from './theFeastOfHemlockVale/hemlockHouse/10532.js'
+import e10532b from './theFeastOfHemlockVale/hemlockHouse/10532b.js'
+import e10533 from './theFeastOfHemlockVale/hemlockHouse/10533.js'
+import e10533b from './theFeastOfHemlockVale/hemlockHouse/10533b.js'
+import e10534 from './theFeastOfHemlockVale/hemlockHouse/10534.js'
+import e10534b from './theFeastOfHemlockVale/hemlockHouse/10534b.js'
+import e10535 from './theFeastOfHemlockVale/hemlockHouse/10535.js'
+import e10535b from './theFeastOfHemlockVale/hemlockHouse/10535b.js'
+import e10536 from './theFeastOfHemlockVale/hemlockHouse/10536.js'
+import e10536b from './theFeastOfHemlockVale/hemlockHouse/10536b.js'
+import e10537 from './theFeastOfHemlockVale/hemlockHouse/10537.js'
+import e10537b from './theFeastOfHemlockVale/hemlockHouse/10537b.js'
+import e10538 from './theFeastOfHemlockVale/hemlockHouse/10538.js'
+import e10538b from './theFeastOfHemlockVale/hemlockHouse/10538b.js'
+import e10539 from './theFeastOfHemlockVale/hemlockHouse/10539.js'
+import e10539b from './theFeastOfHemlockVale/hemlockHouse/10539b.js'
+import e10540 from './theFeastOfHemlockVale/hemlockHouse/10540.js'
+import e10540b from './theFeastOfHemlockVale/hemlockHouse/10540b.js'
+import e10541 from './theFeastOfHemlockVale/hemlockHouse/10541.js'
+import e10541b from './theFeastOfHemlockVale/hemlockHouse/10541b.js'
+import e10542 from './theFeastOfHemlockVale/hemlockHouse/10542.js'
+import e10542b from './theFeastOfHemlockVale/hemlockHouse/10542b.js'
+import e10543 from './theFeastOfHemlockVale/hemlockHouse/10543.js'
+import e10543b from './theFeastOfHemlockVale/hemlockHouse/10543b.js'
+import e10544 from './theFeastOfHemlockVale/hemlockHouse/10544.js'
+import e10545 from './theFeastOfHemlockVale/hemlockHouse/10545.js'
+import e10546 from './theFeastOfHemlockVale/hemlockHouse/10546.js'
+import e10547 from './theFeastOfHemlockVale/hemlockHouse/10547.js'
+import e10548 from './theFeastOfHemlockVale/hemlockHouse/10548.js'
+import e10627 from './theFeastOfHemlockVale/theLongestNight/10627.js'
+import e10628 from './theFeastOfHemlockVale/theLongestNight/10628.js'
+import e10629 from './theFeastOfHemlockVale/theLongestNight/10629.js'
+import e10630 from './theFeastOfHemlockVale/theLongestNight/10630.js'
+import e10631 from './theFeastOfHemlockVale/theLongestNight/10631.js'
+import e10632 from './theFeastOfHemlockVale/theLongestNight/10632.js'
+import e10633 from './theFeastOfHemlockVale/theLongestNight/10633.js'
+import e10634 from './theFeastOfHemlockVale/theLongestNight/10634.js'
+import e10635 from './theFeastOfHemlockVale/theLongestNight/10635.js'
+import e10636 from './theFeastOfHemlockVale/theLongestNight/10636.js'
+import e10637 from './theFeastOfHemlockVale/theLongestNight/10637.js'
+import e10638 from './theFeastOfHemlockVale/theLongestNight/10638.js'
+import e10639 from './theFeastOfHemlockVale/theLongestNight/10639.js'
+import e10640 from './theFeastOfHemlockVale/theLongestNight/10640.js'
+import e10641 from './theFeastOfHemlockVale/theLongestNight/10641.js'
+import e10642 from './theFeastOfHemlockVale/theLongestNight/10642.js'
+import e10643 from './theFeastOfHemlockVale/theLongestNight/10643.js'
+import e10644a from './theFeastOfHemlockVale/theLongestNight/10644a.js'
+import e10644b from './theFeastOfHemlockVale/theLongestNight/10644b.js'
+import e10644c from './theFeastOfHemlockVale/theLongestNight/10644c.js'
+import e10645a from './theFeastOfHemlockVale/theLongestNight/10645a.js'
+import e10645b from './theFeastOfHemlockVale/theLongestNight/10645b.js'
+import e10645c from './theFeastOfHemlockVale/theLongestNight/10645c.js'
+import e10646 from './theFeastOfHemlockVale/theLongestNight/10646.js'
+import e10647a from './theFeastOfHemlockVale/theLongestNight/10647a.js'
+import e10647b from './theFeastOfHemlockVale/theLongestNight/10647b.js'
+import e10647c from './theFeastOfHemlockVale/theLongestNight/10647c.js'
+import e10648 from './theFeastOfHemlockVale/theLongestNight/10648.js'
+import e10649 from './theFeastOfHemlockVale/theLongestNight/10649.js'
+import e10650 from './theFeastOfHemlockVale/theLongestNight/10650.js'
+import e10570 from './theFeastOfHemlockVale/theLostSister/10570.js'
+import e10571 from './theFeastOfHemlockVale/theLostSister/10571.js'
+import e10572 from './theFeastOfHemlockVale/theLostSister/10572.js'
+import e10573 from './theFeastOfHemlockVale/theLostSister/10573.js'
+import e10574 from './theFeastOfHemlockVale/theLostSister/10574.js'
+import e10575 from './theFeastOfHemlockVale/theLostSister/10575.js'
+import e10576 from './theFeastOfHemlockVale/theLostSister/10576.js'
+import e10577 from './theFeastOfHemlockVale/theLostSister/10577.js'
+import e10578 from './theFeastOfHemlockVale/theLostSister/10578.js'
+import e10579 from './theFeastOfHemlockVale/theLostSister/10579.js'
+import e10580 from './theFeastOfHemlockVale/theLostSister/10580.js'
+import e10581 from './theFeastOfHemlockVale/theLostSister/10581.js'
+import e10582 from './theFeastOfHemlockVale/theLostSister/10582.js'
+import e10583a from './theFeastOfHemlockVale/theLostSister/10583a.js'
+import e10583b from './theFeastOfHemlockVale/theLostSister/10583b.js'
+import e10584a from './theFeastOfHemlockVale/theLostSister/10584a.js'
+import e10584b from './theFeastOfHemlockVale/theLostSister/10584b.js'
+import e10585 from './theFeastOfHemlockVale/theLostSister/10585.js'
+import e10586 from './theFeastOfHemlockVale/theLostSister/10586.js'
+import e10587 from './theFeastOfHemlockVale/theLostSister/10587.js'
+import e10550 from './theFeastOfHemlockVale/theSilentHeath/10550.js'
+import e10551 from './theFeastOfHemlockVale/theSilentHeath/10551.js'
+import e10552 from './theFeastOfHemlockVale/theSilentHeath/10552.js'
+import e10553 from './theFeastOfHemlockVale/theSilentHeath/10553.js'
+import e10554 from './theFeastOfHemlockVale/theSilentHeath/10554.js'
+import e10555 from './theFeastOfHemlockVale/theSilentHeath/10555.js'
+import e10556 from './theFeastOfHemlockVale/theSilentHeath/10556.js'
+import e10557 from './theFeastOfHemlockVale/theSilentHeath/10557.js'
+import e10558 from './theFeastOfHemlockVale/theSilentHeath/10558.js'
+import e10559 from './theFeastOfHemlockVale/theSilentHeath/10559.js'
+import e10560 from './theFeastOfHemlockVale/theSilentHeath/10560.js'
+import e10561 from './theFeastOfHemlockVale/theSilentHeath/10561.js'
+import e10562 from './theFeastOfHemlockVale/theSilentHeath/10562.js'
+import e10563 from './theFeastOfHemlockVale/theSilentHeath/10563.js'
+import e10564 from './theFeastOfHemlockVale/theSilentHeath/10564.js'
+import e10565 from './theFeastOfHemlockVale/theSilentHeath/10565.js'
+import e10566 from './theFeastOfHemlockVale/theSilentHeath/10566.js'
+import e10567 from './theFeastOfHemlockVale/theSilentHeath/10567.js'
+import e10568 from './theFeastOfHemlockVale/theSilentHeath/10568.js'
+import e10589 from './theFeastOfHemlockVale/theThingInTheDepths/10589.js'
+import e10590 from './theFeastOfHemlockVale/theThingInTheDepths/10590.js'
+import e10591 from './theFeastOfHemlockVale/theThingInTheDepths/10591.js'
+import e10592 from './theFeastOfHemlockVale/theThingInTheDepths/10592.js'
+import e10593a from './theFeastOfHemlockVale/theThingInTheDepths/10593a.js'
+import e10593b from './theFeastOfHemlockVale/theThingInTheDepths/10593b.js'
+import e10594a from './theFeastOfHemlockVale/theThingInTheDepths/10594a.js'
+import e10594b from './theFeastOfHemlockVale/theThingInTheDepths/10594b.js'
+import e10595a from './theFeastOfHemlockVale/theThingInTheDepths/10595a.js'
+import e10595b from './theFeastOfHemlockVale/theThingInTheDepths/10595b.js'
+import e10596a from './theFeastOfHemlockVale/theThingInTheDepths/10596a.js'
+import e10596b from './theFeastOfHemlockVale/theThingInTheDepths/10596b.js'
+import e10597a from './theFeastOfHemlockVale/theThingInTheDepths/10597a.js'
+import e10597b from './theFeastOfHemlockVale/theThingInTheDepths/10597b.js'
+import e10598a from './theFeastOfHemlockVale/theThingInTheDepths/10598a.js'
+import e10598b from './theFeastOfHemlockVale/theThingInTheDepths/10598b.js'
+import e10599a from './theFeastOfHemlockVale/theThingInTheDepths/10599a.js'
+import e10599b from './theFeastOfHemlockVale/theThingInTheDepths/10599b.js'
+import e10600 from './theFeastOfHemlockVale/theThingInTheDepths/10600.js'
+import e10601 from './theFeastOfHemlockVale/theThingInTheDepths/10601.js'
+import e10602 from './theFeastOfHemlockVale/theThingInTheDepths/10602.js'
+import e10603 from './theFeastOfHemlockVale/theThingInTheDepths/10603.js'
+import e10604 from './theFeastOfHemlockVale/theThingInTheDepths/10604.js'
+import e10606 from './theFeastOfHemlockVale/theTwistedHollow/10606.js'
+import e10607a from './theFeastOfHemlockVale/theTwistedHollow/10607a.js'
+import e10607b from './theFeastOfHemlockVale/theTwistedHollow/10607b.js'
+import e10608 from './theFeastOfHemlockVale/theTwistedHollow/10608.js'
+import e10609 from './theFeastOfHemlockVale/theTwistedHollow/10609.js'
+import e10610a from './theFeastOfHemlockVale/theTwistedHollow/10610a.js'
+import e10610b from './theFeastOfHemlockVale/theTwistedHollow/10610b.js'
+import e10611a from './theFeastOfHemlockVale/theTwistedHollow/10611a.js'
+import e10611b from './theFeastOfHemlockVale/theTwistedHollow/10611b.js'
+import e10612 from './theFeastOfHemlockVale/theTwistedHollow/10612.js'
+import e10613 from './theFeastOfHemlockVale/theTwistedHollow/10613.js'
+import e10614 from './theFeastOfHemlockVale/theTwistedHollow/10614.js'
+import e10615 from './theFeastOfHemlockVale/theTwistedHollow/10615.js'
+import e10616 from './theFeastOfHemlockVale/theTwistedHollow/10616.js'
+import e10617 from './theFeastOfHemlockVale/theTwistedHollow/10617.js'
+import e10618 from './theFeastOfHemlockVale/theTwistedHollow/10618.js'
+import e10619 from './theFeastOfHemlockVale/theTwistedHollow/10619.js'
+import e10620 from './theFeastOfHemlockVale/theTwistedHollow/10620.js'
+import e10621 from './theFeastOfHemlockVale/theTwistedHollow/10621.js'
+import e10622 from './theFeastOfHemlockVale/theTwistedHollow/10622.js'
+import e10623 from './theFeastOfHemlockVale/theTwistedHollow/10623.js'
+import e10624 from './theFeastOfHemlockVale/theTwistedHollow/10624.js'
+import e10625 from './theFeastOfHemlockVale/theTwistedHollow/10625.js'
+import e10503 from './theFeastOfHemlockVale/writtenInRock/10503.js'
+import e10504 from './theFeastOfHemlockVale/writtenInRock/10504.js'
+import e10505 from './theFeastOfHemlockVale/writtenInRock/10505.js'
+import e10506 from './theFeastOfHemlockVale/writtenInRock/10506.js'
+import e10507 from './theFeastOfHemlockVale/writtenInRock/10507.js'
+import e10508 from './theFeastOfHemlockVale/writtenInRock/10508.js'
+import e10509 from './theFeastOfHemlockVale/writtenInRock/10509.js'
+import e10510a from './theFeastOfHemlockVale/writtenInRock/10510a.js'
+import e10510b from './theFeastOfHemlockVale/writtenInRock/10510b.js'
+import e10511a from './theFeastOfHemlockVale/writtenInRock/10511a.js'
+import e10511b from './theFeastOfHemlockVale/writtenInRock/10511b.js'
+import e10512 from './theFeastOfHemlockVale/writtenInRock/10512.js'
+import e10513 from './theFeastOfHemlockVale/writtenInRock/10513.js'
+import e10514 from './theFeastOfHemlockVale/writtenInRock/10514.js'
+import e10515 from './theFeastOfHemlockVale/writtenInRock/10515.js'
+import e10516 from './theFeastOfHemlockVale/writtenInRock/10516.js'
+import e10517 from './theFeastOfHemlockVale/writtenInRock/10517.js'
+import e10518 from './theFeastOfHemlockVale/writtenInRock/10518.js'
+import e10519 from './theFeastOfHemlockVale/writtenInRock/10519.js'
+import e10520 from './theFeastOfHemlockVale/writtenInRock/10520.js'
+import e10521 from './theFeastOfHemlockVale/writtenInRock/10521.js'
+import e10522 from './theFeastOfHemlockVale/writtenInRock/10522.js'
+import e10683 from './theFeastOfHemlockVale/_shared/day_of_rain/10683.js'
+import e10684 from './theFeastOfHemlockVale/_shared/day_of_rain/10684.js'
+import e10685 from './theFeastOfHemlockVale/_shared/day_of_rain/10685.js'
+import e10681 from './theFeastOfHemlockVale/_shared/day_of_rest/10681.js'
+import e10682 from './theFeastOfHemlockVale/_shared/day_of_rest/10682.js'
+import e10686 from './theFeastOfHemlockVale/_shared/day_of_the_feast/10686.js'
+import e10687 from './theFeastOfHemlockVale/_shared/day_of_the_feast/10687.js'
+import e10688 from './theFeastOfHemlockVale/_shared/day_of_the_feast/10688.js'
+import e10689 from './theFeastOfHemlockVale/_shared/day_of_the_feast/10689.js'
+import e10690a from './theFeastOfHemlockVale/_shared/day_of_the_feast/10690a.js'
+import e10690b from './theFeastOfHemlockVale/_shared/day_of_the_feast/10690b.js'
+import e10691a from './theFeastOfHemlockVale/_shared/day_of_the_feast/10691a.js'
+import e10691b from './theFeastOfHemlockVale/_shared/day_of_the_feast/10691b.js'
+import e10692 from './theFeastOfHemlockVale/_shared/day_of_the_feast/10692.js'
+import e10743 from './theFeastOfHemlockVale/_shared/fire/10743.js'
+import e10713 from './theFeastOfHemlockVale/_shared/heirlooms/10713.js'
+import e10714 from './theFeastOfHemlockVale/_shared/heirlooms/10714.js'
+import e10715 from './theFeastOfHemlockVale/_shared/heirlooms/10715.js'
+import e10741 from './theFeastOfHemlockVale/_shared/mutations/10741.js'
+import e10742 from './theFeastOfHemlockVale/_shared/mutations/10742.js'
+import e10738 from './theFeastOfHemlockVale/_shared/myconids/10738.js'
+import e10739 from './theFeastOfHemlockVale/_shared/myconids/10739.js'
+import e10740 from './theFeastOfHemlockVale/_shared/myconids/10740.js'
+import e10693 from './theFeastOfHemlockVale/_shared/residents/10693.js'
+import e10693b from './theFeastOfHemlockVale/_shared/residents/10693b.js'
+import e10694 from './theFeastOfHemlockVale/_shared/residents/10694.js'
+import e10694b from './theFeastOfHemlockVale/_shared/residents/10694b.js'
+import e10695 from './theFeastOfHemlockVale/_shared/residents/10695.js'
+import e10695b from './theFeastOfHemlockVale/_shared/residents/10695b.js'
+import e10696 from './theFeastOfHemlockVale/_shared/residents/10696.js'
+import e10696b from './theFeastOfHemlockVale/_shared/residents/10696b.js'
+import e10697 from './theFeastOfHemlockVale/_shared/residents/10697.js'
+import e10697b from './theFeastOfHemlockVale/_shared/residents/10697b.js'
+import e10698 from './theFeastOfHemlockVale/_shared/residents/10698.js'
+import e10698b from './theFeastOfHemlockVale/_shared/residents/10698b.js'
+import e10699 from './theFeastOfHemlockVale/_shared/residents/10699.js'
+import e10699b from './theFeastOfHemlockVale/_shared/residents/10699b.js'
+import e10700 from './theFeastOfHemlockVale/_shared/residents/10700.js'
+import e10700b from './theFeastOfHemlockVale/_shared/residents/10700b.js'
+import e10701 from './theFeastOfHemlockVale/_shared/residents/10701.js'
+import e10701b from './theFeastOfHemlockVale/_shared/residents/10701b.js'
+import e10702 from './theFeastOfHemlockVale/_shared/residents/10702.js'
+import e10703 from './theFeastOfHemlockVale/_shared/residents/10703.js'
+import e10679 from './theFeastOfHemlockVale/_shared/the_final_day/10679.js'
+import e10680 from './theFeastOfHemlockVale/_shared/the_final_day/10680.js'
+import e10675 from './theFeastOfHemlockVale/_shared/the_first_day/10675.js'
+import e10676 from './theFeastOfHemlockVale/_shared/the_first_day/10676.js'
+import e10732 from './theFeastOfHemlockVale/_shared/the_forest/10732.js'
+import e10733 from './theFeastOfHemlockVale/_shared/the_forest/10733.js'
+import e10734 from './theFeastOfHemlockVale/_shared/the_forest/10734.js'
+import e10735 from './theFeastOfHemlockVale/_shared/the_forest/10735.js'
+import e10736 from './theFeastOfHemlockVale/_shared/the_forest/10736.js'
+import e10737 from './theFeastOfHemlockVale/_shared/the_forest/10737.js'
+import e10677 from './theFeastOfHemlockVale/_shared/the_second_day/10677.js'
+import e10678 from './theFeastOfHemlockVale/_shared/the_second_day/10678.js'
+import e10705a from './theFeastOfHemlockVale/_shared/the_vale/10705a.js'
+import e10705b from './theFeastOfHemlockVale/_shared/the_vale/10705b.js'
+import e10706a from './theFeastOfHemlockVale/_shared/the_vale/10706a.js'
+import e10706b from './theFeastOfHemlockVale/_shared/the_vale/10706b.js'
+import e10707a from './theFeastOfHemlockVale/_shared/the_vale/10707a.js'
+import e10707b from './theFeastOfHemlockVale/_shared/the_vale/10707b.js'
+import e10708a from './theFeastOfHemlockVale/_shared/the_vale/10708a.js'
+import e10708b from './theFeastOfHemlockVale/_shared/the_vale/10708b.js'
+import e10709a from './theFeastOfHemlockVale/_shared/the_vale/10709a.js'
+import e10709b from './theFeastOfHemlockVale/_shared/the_vale/10709b.js'
+import e10710a from './theFeastOfHemlockVale/_shared/the_vale/10710a.js'
+import e10710b from './theFeastOfHemlockVale/_shared/the_vale/10710b.js'
+import e10711a from './theFeastOfHemlockVale/_shared/the_vale/10711a.js'
+import e10711b from './theFeastOfHemlockVale/_shared/the_vale/10711b.js'
+import e10712a from './theFeastOfHemlockVale/_shared/the_vale/10712a.js'
+import e10712b from './theFeastOfHemlockVale/_shared/the_vale/10712b.js'
+import e10724 from './theFeastOfHemlockVale/_shared/agents_of_the_colour/10724.js'
+import e10725 from './theFeastOfHemlockVale/_shared/agents_of_the_colour/10725.js'
+import e10728 from './theFeastOfHemlockVale/_shared/blight/10728.js'
+import e10729 from './theFeastOfHemlockVale/_shared/blight/10729.js'
+import e10716 from './theFeastOfHemlockVale/_shared/horrors_in_the_rock/10716.js'
+import e10717 from './theFeastOfHemlockVale/_shared/horrors_in_the_rock/10717.js'
+import e10718 from './theFeastOfHemlockVale/_shared/horrors_in_the_rock/10718.js'
+import e10719 from './theFeastOfHemlockVale/_shared/horrors_in_the_rock/10719.js'
+import e10720 from './theFeastOfHemlockVale/_shared/horrors_in_the_rock/10720.js'
+import e10721 from './theFeastOfHemlockVale/_shared/horrors_in_the_rock/10721.js'
+import e10722 from './theFeastOfHemlockVale/_shared/horrors_in_the_rock/10722.js'
+import e10723 from './theFeastOfHemlockVale/_shared/horrors_in_the_rock/10723.js'
+import e10730 from './theFeastOfHemlockVale/_shared/refractions/10730.js'
+import e10731 from './theFeastOfHemlockVale/_shared/refractions/10731.js'
+import e10726 from './theFeastOfHemlockVale/_shared/transfiguration/10726.js'
+import e10727 from './theFeastOfHemlockVale/_shared/transfiguration/10727.js'
 
 export const NON_PLAYER_ENTRY_LIST = [
   ewolfManDrew,
@@ -3753,6 +4045,298 @@ export const NON_PLAYER_ENTRY_LIST = [
   e09687,
   e09688,
   e09689,
+  e10651,
+  e10652,
+  e10653,
+  e10654,
+  e10655,
+  e10656,
+  e10657,
+  e10658,
+  e10659,
+  e10660,
+  e10661,
+  e10661b,
+  e10662a,
+  e10662b,
+  e10663a,
+  e10663b,
+  e10664a,
+  e10664b,
+  e10665a,
+  e10665b,
+  e10666,
+  e10667,
+  e10668,
+  e10669,
+  e10670,
+  e10670b,
+  e10671,
+  e10672,
+  e10673,
+  e10674,
+  e10524,
+  e10524b,
+  e10525,
+  e10526,
+  e10527,
+  e10528,
+  e10529,
+  e10530,
+  e10531,
+  e10532,
+  e10532b,
+  e10533,
+  e10533b,
+  e10534,
+  e10534b,
+  e10535,
+  e10535b,
+  e10536,
+  e10536b,
+  e10537,
+  e10537b,
+  e10538,
+  e10538b,
+  e10539,
+  e10539b,
+  e10540,
+  e10540b,
+  e10541,
+  e10541b,
+  e10542,
+  e10542b,
+  e10543,
+  e10543b,
+  e10544,
+  e10545,
+  e10546,
+  e10547,
+  e10548,
+  e10627,
+  e10628,
+  e10629,
+  e10630,
+  e10631,
+  e10632,
+  e10633,
+  e10634,
+  e10635,
+  e10636,
+  e10637,
+  e10638,
+  e10639,
+  e10640,
+  e10641,
+  e10642,
+  e10643,
+  e10644a,
+  e10644b,
+  e10644c,
+  e10645a,
+  e10645b,
+  e10645c,
+  e10646,
+  e10647a,
+  e10647b,
+  e10647c,
+  e10648,
+  e10649,
+  e10650,
+  e10570,
+  e10571,
+  e10572,
+  e10573,
+  e10574,
+  e10575,
+  e10576,
+  e10577,
+  e10578,
+  e10579,
+  e10580,
+  e10581,
+  e10582,
+  e10583a,
+  e10583b,
+  e10584a,
+  e10584b,
+  e10585,
+  e10586,
+  e10587,
+  e10550,
+  e10551,
+  e10552,
+  e10553,
+  e10554,
+  e10555,
+  e10556,
+  e10557,
+  e10558,
+  e10559,
+  e10560,
+  e10561,
+  e10562,
+  e10563,
+  e10564,
+  e10565,
+  e10566,
+  e10567,
+  e10568,
+  e10589,
+  e10590,
+  e10591,
+  e10592,
+  e10593a,
+  e10593b,
+  e10594a,
+  e10594b,
+  e10595a,
+  e10595b,
+  e10596a,
+  e10596b,
+  e10597a,
+  e10597b,
+  e10598a,
+  e10598b,
+  e10599a,
+  e10599b,
+  e10600,
+  e10601,
+  e10602,
+  e10603,
+  e10604,
+  e10606,
+  e10607a,
+  e10607b,
+  e10608,
+  e10609,
+  e10610a,
+  e10610b,
+  e10611a,
+  e10611b,
+  e10612,
+  e10613,
+  e10614,
+  e10615,
+  e10616,
+  e10617,
+  e10618,
+  e10619,
+  e10620,
+  e10621,
+  e10622,
+  e10623,
+  e10624,
+  e10625,
+  e10503,
+  e10504,
+  e10505,
+  e10506,
+  e10507,
+  e10508,
+  e10509,
+  e10510a,
+  e10510b,
+  e10511a,
+  e10511b,
+  e10512,
+  e10513,
+  e10514,
+  e10515,
+  e10516,
+  e10517,
+  e10518,
+  e10519,
+  e10520,
+  e10521,
+  e10522,
+  e10683,
+  e10684,
+  e10685,
+  e10681,
+  e10682,
+  e10686,
+  e10687,
+  e10688,
+  e10689,
+  e10690a,
+  e10690b,
+  e10691a,
+  e10691b,
+  e10692,
+  e10743,
+  e10713,
+  e10714,
+  e10715,
+  e10741,
+  e10742,
+  e10738,
+  e10739,
+  e10740,
+  e10693,
+  e10693b,
+  e10694,
+  e10694b,
+  e10695,
+  e10695b,
+  e10696,
+  e10696b,
+  e10697,
+  e10697b,
+  e10698,
+  e10698b,
+  e10699,
+  e10699b,
+  e10700,
+  e10700b,
+  e10701,
+  e10701b,
+  e10702,
+  e10703,
+  e10679,
+  e10680,
+  e10675,
+  e10676,
+  e10732,
+  e10733,
+  e10734,
+  e10735,
+  e10736,
+  e10737,
+  e10677,
+  e10678,
+  e10705a,
+  e10705b,
+  e10706a,
+  e10706b,
+  e10707a,
+  e10707b,
+  e10708a,
+  e10708b,
+  e10709a,
+  e10709b,
+  e10710a,
+  e10710b,
+  e10711a,
+  e10711b,
+  e10712a,
+  e10712b,
+  e10724,
+  e10725,
+  e10728,
+  e10729,
+  e10716,
+  e10717,
+  e10718,
+  e10719,
+  e10720,
+  e10721,
+  e10722,
+  e10723,
+  e10730,
+  e10731,
+  e10726,
+  e10727,
 ]
 
 registerNonPlayerEntries(NON_PLAYER_ENTRY_LIST)

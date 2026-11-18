@@ -1,0 +1,89 @@
+{
+  "prologue": {
+    "title": "逆天而行",
+    "body": "<p>“那只是来自太空的一抹色彩——一个可怕的信使，来自我们所知自然之外的、未成形的无限领域；那些领域的存在本身便足以震慑大脑，并以它在我们狂乱的眼前豁然敞开的黑色宇宙外深渊令我们麻木。”</p><p class='basic right'>——H.P.洛夫克拉夫特，《星之彩》</p>"
+  },
+  "campaignLog": {
+    "residents": {
+      "relationshipLevel": "关系等级",
+      "notes": "笔记"
+    },
+    "areasSurveyed": {
+      "refHeader": "编号"
+    },
+    "dayTime": {
+      "title": "日 / 时间"
+    },
+    "map": {
+      "title": "地图",
+      "body": "<div class='hemlock-vale-map'><img alt='铁杉岛地图' src='{setImgPath}/../extra/the-feast-of-hemlock-vale/map.jpg' /></div>"
+    }
+  },
+  "fatigue": {
+    "title": "战役疲劳",
+    "body": "漫长一夜带来的疲惫追上了你。随机抽出的 2 枚非符号标记，将在本战役余下的时间里被替换为数值低 1 的混乱标记："
+  },
+  "headings": {
+    "preludeTheFirstEvening": "序曲：第一夜",
+    "preludeTheSecondEvening": "序曲：第二夜",
+    "preludeTheFinalEvening": "序曲：最后的夜晚"
+  },
+  "remembered": {
+    "youAreRunningAnErrand": "你正在“跑腿”",
+    "youAreDeliveringAPackage": "你正在送包裹"
+  },
+  "label": {
+    "calcification": {
+      "pay": "受到 1 点直接伤害以使本次检定自动成功"
+    },
+    "psychotropicSpores": {
+      "pay": "受到 1 点直接恐惧以使本次检定自动成功"
+    },
+    "chooseAssetToKeepForNextSurvey": "选择 1 张支援保留至下一场关卡。你游戏区中其他每张非起始支援都将被弃掉。",
+    "reclaimedByNature": {
+      "nearestEnemyAttacks": "选择最近的敌人。该敌人攻击你",
+      "enemiesHeal": "你所在地点和每个连接地点的每个敌人各治愈 1 点伤害"
+    },
+    "theOnslaught": {
+      "eachUndefeatedInvestigatorSuffersMentalTrauma": "每位未被击败的调查员承受 1 点精神创伤",
+      "chooseResidentToSacrifice": "选择一位居民作为牺牲"
+    },
+    "dawnOfTheFinalDay": {
+      "searchForRandomBasicMadnessWeakness": "从收藏中搜寻 1 张随机基础疯狂弱点，并将其加入你的牌组"
+    }
+  },
+  "tooltips": {
+    "hemlockChapel": {
+      "day": {
+        "codex": "{'{'}action{'}'}：你走向山丘顶端掩埋在植被之下的教堂（{'{'}codex{'}'}11）。",
+        "search": "{'{'}action{'}'} 查找你牌库顶 9 张卡牌，找出一张_法术_卡牌并将其抽取。混洗你的牌库。（每场游戏仅限一次。）"
+      }
+    },
+    "valeSchoolhouse": {
+      "day": {
+        "codex": "{'{'}action{'}'}：你在学校的图书馆里仔细翻阅（{'{'}codex{'}'}15）。",
+        "search": "{'{'}action{'}'} 查找你的牌库，找出一张_书籍_支援并将其抽取。混洗你的牌库。（每场游戏仅限一次。）"
+      }
+    },
+    "boardingHouse": {
+      "day": {
+        "codex": "{'{'}action{'}'}：你在山谷中四处询问（{'{'}codex{'}'}9）。",
+        "heal": "{'{'}action{'}'} 治愈 1 点伤害或 1 点恐惧。（每场游戏仅限一次。）"
+      }
+    }
+  },
+  "tokens": {
+    "easyStandard": {
+      "skull": "-X。X 为当前天数。",
+      "cultist": "+1。如果是谈判尝试，你自动成功。",
+      "tablet": "-2。如果你的手牌少于 3 张，改为将本标记的修正值视为 0。",
+      "elderThing": "-1。如果是谈判尝试，再揭示一个标记。"
+    },
+    "hardExpert": {
+      "skull": "-X。X 为当前天数加 1。",
+      "cultist": "-1。如果是谈判尝试，改为将本标记的修正值视为 +1。",
+      "tablet": "-4。如果你的手牌少于 2 张，改为将本标记的修正值视为 -2。",
+      "elderThing": "-3。如果是谈判尝试，再揭示一个标记。"
+    }
+  }
+}

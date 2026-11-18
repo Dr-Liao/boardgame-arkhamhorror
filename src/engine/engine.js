@@ -957,7 +957,7 @@ function spendAction(state, inv) {
 
 /** Seats allowed to submit now; per-seat hub preparation is simultaneous. */
 
-const HUB_SEAT_ACTIONS = new Set(['hubDraftRefill', 'hubResumeDraft', 'hubDraftPick', 'hubDraftBuy', 'hubDraftRefresh', 'hubDraftLock', 'hubSelectInvestigator', 'hubAutoDeck', 'hubSetDeck', 'hubPurchase',
+const HUB_SEAT_ACTIONS = new Set(['hubDraftRefill', 'hubResumeDraft', 'hubDraftPick', 'hubDraftBuy', 'hubDraftRefresh', 'hubDraftLock', 'hubSelectInvestigator', 'hubAutoDeck', 'hubSetDeck', 'hubPurchase', 'hubCustomize',
   'hubConfirmUpgrades', 'hubCancelUpgrades', 'hubAutoUpgrade', 'hubDoneSeat'])
 
 /** Seat preparation only touches the submitting seat, so it may follow a teammate's newer revision. */
@@ -2153,6 +2153,7 @@ let campaignFlowImpl = null
 function campaignFlowApi() {
   campaignFlowImpl ||= createCampaignFlow({
   ...commonDeps,
+  ALL_INVESTIGATORS,
   CHAOS_BAGS,
   pallidMaskCode,
   ScenarioRestarted,

@@ -30,6 +30,11 @@ const paths = {
   eye: 'M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12Zm15 0a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z',
   gear: 'M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm7.1-3.5c0-.44-.05-.87-.13-1.3l2.02-1.57-2-3.46-2.38.96a7 7 0 0 0-2.25-1.3L14 2h-4l-.36 2.33a7 7 0 0 0-2.25 1.3l-2.38-.96-2 3.46 2.02 1.57A7 7 0 0 0 4.9 12c0 .44.05.87.13 1.3L3 14.87l2 3.46 2.38-.96a7 7 0 0 0 2.25 1.3L10 22h4l.36-2.33a7 7 0 0 0 2.25-1.3l2.38.96 2-3.46-2.02-1.57c.08-.43.13-.86.13-1.3Z',
 }
+// tableIcon() 可渲染的图标名；展示契约测试用它校验新登记的计数器图标不会静默退化成默认星形。
+export const TABLE_ICON_NAMES = Object.freeze([...new Set([
+  ...Object.keys(FILLED_ICONS), ...Object.keys(CARD_GLYPHS), ...Object.keys(paths), ...Object.keys(SYMBOL_ALIASES),
+])].sort())
+
 export function tableIcon(name) {
   name = SYMBOL_ALIASES[name] || name
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
@@ -94,6 +99,101 @@ export function cardAttachmentReferences(card = {}) {
   return references
 }
 
+// ---- 卡上计数展示契约（引擎原语 → 界面）----
+//
+// 同一张牌桌上的卡可能带三种「计数」状态，数据形状不同，但都会随实例投影到达浏览器：
+//   1. 具名计数器：`card.markers = { evidence: 2 }` —— 引擎 src/engine/card-counters.js 的
+//      CARD_COUNTER_IDS 白名单；09015/09016/09017/09041/09043/09045 的证据、
+//      06003/06010–06012 的赏金、09089「束敌宝罐」的罐底数（引擎借 hollow 记账，展示为「下方」）。
+//   2. 多类型使用标记：`card.useTokens = { brilliance: 3 }` —— api.placeUse 与
+//      api.mechanics.useTokens.move/spend 写出的非主类型计数（10722 着彩枯疫的「光辉」等）。
+//   3. 脚本标签计数：`card.markers = ['overgrowth', 'overgrowth']` —— api.scenario.addMarker
+//      写出的参考标签（10732 毒花的「疯长」、05239 看守人的「窃魂」等；与第 1 种共用 markers 字段）。
+//
+// 约定：
+//   · 新增计数器 id / 使用标记类型 / 标签必须在本表登记（文案进 web/locales 词典），
+//     tests/state-presentation.test.mjs 的展示契约用例会扫描 src|content 的写入点并点名未登记项；
+//   · 未登记的 id 按原样兜底显示（fail-visible），不会静默从界面上消失；
+//   · 牌桌小卡、卡牌详情「当前卡牌状态」、地点详情计数区共用这一份读数，不要各自再写一套。
+export const NAMED_COUNTER_DISPLAY = Object.freeze({
+  evidence: Object.freeze({ icon: 'eye', labelKey: 'table.marker.evidence' }),
+  bounty: Object.freeze({ icon: 'star', labelKey: 'table.marker.bounty' }),
+  hollow: Object.freeze({ icon: 'lock', labelKey: 'table.marker.beneath' }),
+})
+export const USE_TOKEN_DISPLAY = Object.freeze({
+  secret: Object.freeze({ icon: 'arcane', labelKey: 'table.marker.secret' }),
+  charge: Object.freeze({ icon: 'star', labelKey: 'table.marker.charge' }),
+  brilliance: Object.freeze({ icon: 'eye', labelKey: 'table.marker.brilliance' }),
+})
+export const LABEL_MARKER_DISPLAY = Object.freeze({
+  overgrowth: Object.freeze({ icon: 'leaf', labelKey: 'table.marker.overgrowth' }),
+  stolenSoul: Object.freeze({ icon: 'sanity', labelKey: 'table.marker.stolenSoul' }),
+  brazier: Object.freeze({ icon: 'star', labelKey: 'table.marker.brazier' }),
+  // api.scenario.addMarker 的默认标签。
+  resource: Object.freeze({ icon: 'resource', labelKey: 'table.marker.resource' }),
+})
+// flipMarker 写的 `doomToClue:N` 是「毁灭翻至线索面」的记账标签：毁灭/线索数值本身已有显示，
+// 不重复渲染；以后新增纯记账标签也登记在这里。
+export const INTERNAL_LABEL_MARKERS = Object.freeze(['doomToClue'])
+
+const isCounterMap = value => Boolean(value) && typeof value === 'object' && !Array.isArray(value)
+const isInternalLabel = label => INTERNAL_LABEL_MARKERS.some(prefix => label === prefix || label.startsWith(prefix + ':'))
+// 已登记项按登记表顺序在前，未登记项按字母序兜底在后，保证渲染顺序稳定。
+function orderedCounterIds(ids, registry) {
+  return [
+    ...Object.keys(registry).filter(id => ids.includes(id)),
+    ...ids.filter(id => !Object.hasOwn(registry, id)).sort(),
+  ]
+}
+function counterDisplay(registry, id) {
+  const entry = registry[id]
+  return entry ? { icon: entry.icon, label: t(entry.labelKey) } : { icon: 'star', label: String(id) }
+}
+function positiveCounterIds(map, registry) {
+  return orderedCounterIds(Object.keys(map), registry)
+    .filter(id => Number.isFinite(map[id]) && map[id] > 0)
+}
+
+/** 具名计数器（对象形 markers）→ 标记行 [kind, icon, label, value]。 */
+export function namedCounterMarkers(card) {
+  const counters = card?.markers
+  if (!isCounterMap(counters)) return []
+  return positiveCounterIds(counters, NAMED_COUNTER_DISPLAY).map(id => {
+    const display = counterDisplay(NAMED_COUNTER_DISPLAY, id)
+    return [id, display.icon, display.label, counters[id]]
+  })
+}
+
+/** 多类型使用标记（useTokens）→ 标记行；kind 加 `token-` 前缀避免与主 `uses` 混淆。 */
+export function useTokenMarkers(card) {
+  const tokens = card?.useTokens
+  if (!isCounterMap(tokens)) return []
+  return positiveCounterIds(tokens, USE_TOKEN_DISPLAY).map(id => {
+    const display = counterDisplay(USE_TOKEN_DISPLAY, id)
+    return ['token-' + id, display.icon, display.label, tokens[id]]
+  })
+}
+
+/** 脚本标签计数（数组形 markers）→ 按标签聚合的标记行；kind 加 `marker-` 前缀。 */
+export function labelMarkerMarkers(card) {
+  const labels = card?.markers
+  if (!Array.isArray(labels)) return []
+  const counts = new Map()
+  for (const label of labels) {
+    if (typeof label !== 'string' || !label || isInternalLabel(label)) continue
+    counts.set(label, (counts.get(label) || 0) + 1)
+  }
+  return orderedCounterIds([...counts.keys()], LABEL_MARKER_DISPLAY).map(id => {
+    const display = counterDisplay(LABEL_MARKER_DISPLAY, id)
+    return ['marker-' + id, display.icon, display.label, counts.get(id)]
+  })
+}
+
+/** 三种卡上计数载体的统一标记行（卡牌详情/地点详情等界面复用）。 */
+export function cardCounterMarkerData(card) {
+  return [...namedCounterMarkers(card), ...useTokenMarkers(card), ...labelMarkerMarkers(card)]
+}
+
 // Enemy damage is its attack value; only damageTaken is a token on that card.
 export function cardMarkerData(card, { enemy = false, attachmentCount } = {}) {
   const counterType = {
@@ -110,6 +210,7 @@ export function cardMarkerData(card, { enemy = false, attachmentCount } = {}) {
     ['resources', 'resource', t('table.marker.resource'), card.resources],
     ['uses', 'supply', t('table.marker.uses'), card.uses],
     ['counters', counterType?.[0] || 'star', counterType?.[1] || t('table.marker.counter'), card.counters],
+    ...cardCounterMarkerData(card),
     ['attached', 'book', t('table.marker.attached'), attached],
   ].filter(([, , , value]) => Number.isFinite(value) && value > 0)
 }

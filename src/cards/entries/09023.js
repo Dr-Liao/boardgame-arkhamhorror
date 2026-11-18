@@ -24,9 +24,8 @@
 //     ④ Leather Grip 的「获得快速」无法按勾选条件改条目 fast 字段，只实现 -1 费用；
 //     ⑤ Extended Magazine（其他事件花/加弹药后补 1 弹药）缺弹药花费窗口，未实现；
 //     ⑥ Quicksilver Bullets（成功 ≥3 时 +1 伤害）需要在攻击结算中途写伤害，未实现。
-import { customizationChecked } from '../../engine/tsk-customizable.js'
-
 const SOURCE = '09023'
+// Leather Grip 是 3 格选项：勾满 3 格才 -1 费用（P2-3）；读点是 customizationEffects.playCost。
 // 与 api.playerTools.testAssetSource() 同源（criteria 期无 api，不能调用；三段落顺序一致）。
 const testAssetSource = state => state.skillTest?.assetSourceId
   ?? state.skillTest?.source?.assetId
@@ -45,9 +44,8 @@ const hostOf = state => {
 export default {
   code: '09023',
   note: 'approximation: 仅实现「附属到枪械」与「取消并重抽混乱标记」；Notched Sight / Extended Stock / Counterbalance / Leather Grip 的快速 / Extended Magazine / Quicksilver Bullets 缺条目读点未实现（见 primitive-requests/09023.json）',
-  playCostModifier: ({ state, inv }) => (customizationChecked(state, inv?.seat ?? state.currentSeat, SOURCE).includes(3) ? -1 : 0),
   customizationEffects: {
-    playCost: checkedCounts => ((checkedCounts || []).filter(index => index === 3).length ? -1 : 0),
+    playCost: checkedCounts => ((checkedCounts || []).filter(index => index === 3).length >= 3 ? -1 : 0),
   },
   customizationOptions: [
     { name: 'Notched Sight', checks: 1, text: 'If you perform an attack with attached asset against an enemy engaged with another investigator and fail, you deal no damage.' },

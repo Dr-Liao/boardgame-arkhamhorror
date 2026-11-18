@@ -1,7 +1,7 @@
 import { renderDraftPane } from './draft-mode.js'
 import { renderRulesText } from './card-text.js'
 import { registerDeckRules, deckRules, matchesCardRule, validateDeckRules, myriadUsage, cardAllowedByScope, campaignCycle, normalizeCardPoolScope, CARD_POOL_SCOPE_LABELS, CARD_POOL_RESTRICTION_ENABLED } from './deck-rules.js'
-import { parseArkhamDbInput, loadArkhamDbDeck, planArkhamDbImport } from './arkhamdb-import.js'
+import { parseArkhamDbInput, loadArkhamDbDeck, loadRecommendedDeck, planArkhamDbImport } from './arkhamdb-import.js'
 import { listLocalDecks, saveLocalDeck, deleteLocalDeck, batchDeleteLocalDecks, slotsToCodes, formatDeckLibraryJson } from './deck-library.js'
 import { tableArt } from './table-art.js'
 import { tableIcon, classIcon } from './table-components.js'
@@ -738,6 +738,53 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     imp.loading = false; render()
   }
 
+  async function useRecommendedDeck(s, g, inv) {
+    const key = deckDraftKey(s, inv)
+    if (state.arkhamRecommendation?.loading || locked(s)) return
+    const recommendation = state.arkhamRecommendation = { key, sessionId: s.sessionId, code: inv.code, loading: true }
+    render()
+    try {
+      const deck = await loadRecommendedDeck(inv.code)
+      const plan = planArkhamDbImport(deck, { ...scopedBuilder(s, g.clientData?.deckBuilder), currentCode: inv.code })
+      if (!plan.ready || plan.mismatch || plan.errors.length) throw new Error(t('hub.deck.recommendedUnavailable'))
+
+      const decks = await listLocalDecks(api)
+      const known = decks.find(item => item.arkhamdbKind === 'decklist' && item.arkhamdbId === deck.id
+        && item.investigator_code === inv.code && sameCards(slotsToCodes(item.slots), plan.codes))
+      if (!known) {
+        const saved = await saveLocalDeck(api, {
+          name: deck.name, investigatorCode: inv.code, codes: plan.codes,
+          arkhamdbId: deck.id, arkhamdbKind: deck.kind,
+        })
+        const lib = deckLibrary()
+        if (lib.decks) lib.decks = [saved, ...lib.decks.filter(item => item.id !== saved.id)]
+      }
+
+      const current = state.session
+      if (key !== deckDraftKey(current, deckInvestigator(current, g)) || !legal(current, 'hubSetDeck').length || locked(current)) return
+      recommendation.savedName = deck.name
+      await submitMove({ action: 'hubSetDeck', codes: plan.codes }, current)
+    } catch (error) {
+      recommendation.error = String(error?.message || error)
+    } finally {
+      recommendation.loading = false
+      render()
+    }
+  }
+
+  function recommendedDeckAction(s, g) {
+    const inv = deckInvestigator(s, g)
+    if (!inv || !legal(s, 'hubAutoDeck').length) return null
+    const recommendation = state.arkhamRecommendation
+    const current = recommendation?.key === deckDraftKey(s, inv)
+    return [
+      h('button', { className: 'bg-btn secondary', 'data-hub-action': 'recommended-deck',
+        disabled: locked(s) || !!recommendation?.loading, onclick: () => useRecommendedDeck(s, g, inv),
+      }, t(current && recommendation.loading ? 'hub.deck.recommendedLoading' : 'hub.deck.recommended')),
+      current && recommendation.error ? h('small', { className: 'ah-deck-import-error', role: 'alert' }, recommendation.error) : null,
+    ]
+  }
+
   async function repairSave(id) {
     state.busy = true; state.arkhamSaveError = null; render()
     try {
@@ -998,18 +1045,23 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
               t('hub.customize.cardXp', { xp: model.availableXp }))),
           h('ul', {}, entry.options.map(option => {
             const move = moves.find(item => item.code === entry.code && item.optionIndex === option.index)
-            return h('li', { className: 'ah-hub-customize-option' },
+            // P2-3：条目声明 implemented:false 的勾选格只展示卡面文本（不生成购买按钮）。
+            const unimplemented = option.implemented === false
+            return h('li', { className: 'ah-hub-customize-option', 'data-hub-customize-implemented': unimplemented ? 'false' : 'true' },
               h('span', {}, t('hub.customize.option', {
                 name: option.name, checked: option.checkedCount, checks: option.checks,
               })),
-              move
-                ? h('button', {
-                  type: 'button', className: 'bg-btn secondary', disabled: locked(s) || !!move.disabled,
-                  title: move.explanation || '',
-                  'data-hub-customize-option': `${entry.code}:${option.index}`,
-                  onclick: () => { if (!locked(s) && !move.disabled) submitMove(move, s) },
-                }, move.label)
-                : null)
+              unimplemented
+                ? h('small', { className: 'ah-hub-customize-unimplemented', title: t('hub.customize.unimplemented') },
+                  t('hub.customize.unimplemented'))
+                : move
+                  ? h('button', {
+                    type: 'button', className: 'bg-btn secondary', disabled: locked(s) || !!move.disabled,
+                    title: move.explanation || '',
+                    'data-hub-customize-option': `${entry.code}:${option.index}`,
+                    onclick: () => { if (!locked(s) && !move.disabled) submitMove(move, s) },
+                  }, move.label)
+                  : null)
           })))
       })))
   }
@@ -1318,7 +1370,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
                     onclick: () => inspectCard(candidate.code) }, tableIcon('book')))))))
               : h('p', { className: 'ah-office-empty' }, t('hub.investigators.empty'))) : null,
           active && inv.seat === (s.mySeat ?? 0) ? h('div', { className: 'ah-hub-actions' },
-            legal(s, 'hubAutoDeck').map(move => action(s, move)),
+            recommendedDeckAction(s, g),
             selected ? h('button', { className: 'bg-btn secondary', onclick: () => changeTab('deck') }, recordDeckReady(record) ? t('hub.investigators.editDeck') : t('hub.investigators.goDeck')) : null,
             legal(s, 'hubDoneSeat').map(move => action(s, move, t('hub.task.confirmReady')))) : null))
       })
@@ -1354,6 +1406,9 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const inv = deckInvestigator(s, g)
     const draft = state.arkhamDeckDraftKey === deckDraftKey(s, inv) ? state.arkhamDeckDraft || [] : null
     const unsavedDraft = canEdit && draft && !sameCards(draft, savedDraft(s, inv))
+    const recommendation = state.arkhamRecommendation
+    const recommendedName = recommendation && recommendation.sessionId === s.sessionId && recommendation.code === inv?.code && recommendation.savedName
+    const libraryNotice = recommendedName ? t('hub.deck.recommendedSaved', { name: recommendedName }) : state.arkhamDeckLibrary?.notice
     const editButton = () => canEdit ? h('button', { className: 'bg-btn', 'data-hub-action': 'edit-deck', disabled: locked(s), onclick: () => openDeck(s, g) },
       unsavedDraft ? t('hub.deck.manualDraft', { count: draft.length }) : saved ? t('hub.deck.manualSaved') : t('hub.deck.manualNew', { count: inv?.deckSize || 30 })) : null
     const importButton = () => canEdit ? h('button', { className: 'bg-btn secondary', 'data-hub-action': 'import-deck', disabled: locked(s),
@@ -1365,13 +1420,13 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       h('div', { className: 'ah-office-deck-heading' }, portrait(s.state.investigators[s.mySeat ?? 0]), h('div', {},
         h('h3', {}, s.state.investigators[s.mySeat ?? 0].name),
         saved ? h('p', {className:'ah-deck-save-status',role:'status'}, tableIcon('book'), t('hub.deck.savedStatus', { count: deckCodes.length }), s.state.investigators[s.mySeat ?? 0].autoBuilt ? t('hub.deck.autoBuilt') : '') : null)),
-      state.arkhamDeckLibrary?.notice && !state.arkhamDeckLibraryOpen
-        ? h('p', { className: 'ah-deck-import-ok', role: 'status' }, state.arkhamDeckLibrary.notice) : null,
+      libraryNotice && !state.arkhamDeckLibraryOpen
+        ? h('p', { className: 'ah-deck-import-ok', role: 'status' }, libraryNotice) : null,
       saved && legal(s, 'hubDoneSeat').length ? h('section', { className: 'ah-deck-next-action', role: 'status' },
         h('div', {}, h('strong', {}, t('hub.deck.savedTitle')), h('small', {}, t('hub.deck.savedNote'))),
         action(s, legal(s, 'hubDoneSeat')[0], t('hub.task.confirmReady')),
         h('button', { className: 'bg-btn secondary', disabled: !canEdit || locked(s), onclick: () => openDeck(s, g) }, t('hub.deck.continueEdit'))) : null,
-      h('div',{className:'ah-deck-toolbar'},editButton(),importButton(),libraryButton(),legal(s, 'hubAutoDeck').map(move => action(s, move)),
+      h('div',{className:'ah-deck-toolbar'},editButton(),importButton(),libraryButton(),recommendedDeckAction(s, g),
         h('small',{},unsavedDraft ? t('hub.deck.hintUnsaved') : saved ? canEdit ? t('hub.deck.hintSaved') : t('hub.deck.hintView')
           : canEdit ? t('hub.deck.hintCanBuild') : t('hub.deck.hintSelectFirst'))),
       saved ? h('div', { className: 'ah-office-deck-gallery', 'aria-label': t('hub.deck.savedPreviewAria') }, [...new Set(deckCodes)].map(code => {

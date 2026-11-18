@@ -18,7 +18,7 @@ async function enterUntamedWilds(page) {
   const hub = page.locator('.ah-hub')
   await hub.getByRole('button', { name: '选择调查员', exact: true }).click()
   await hub.getByRole('button', { name: /选择调查员：里奥/ }).click()
-  await hub.getByRole('button', { name: /自动构筑/ }).click()
+  await hub.getByRole('button', { name: /使用推荐卡组/ }).click()
   await hub.getByRole('button', { name: '确认准备', exact: true }).first().click()
   await hub.getByRole('navigation', { name: '战役局外页面' }).getByRole('button', { name: '开始关卡', exact: true }).click()
   await hub.getByRole('button', { name: '开始当前关卡' }).click()

@@ -107,7 +107,7 @@ test('P7 TSK story-access：章节/战役正文段落读取可用', () => {
 
 test('P7 TSK 指南：10 章指南生成结构完整（setup/resolutions/specialRules/intro）', async () => {
   const guides = await BUILT_GUIDES
-  assert.ok(guides.size >= 72, `指南总数 ${guides.size}`)
+  assert.ok(guides.size >= 84, `指南总数 ${guides.size}`)
   for (const id of SCENARIO_IDS) {
     const guide = buildTskGuide(id)
     assert.equal(guide.id, id)

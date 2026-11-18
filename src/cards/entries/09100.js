@@ -21,10 +21,11 @@ const CUSTOM_CHECKS = Object.freeze([
   { name: 'Explosive Device', checks: 4, text: 'When Makeshift Trap has no time and is discarded, deal 3 damage to each enemy and investigator at attached location.' },
 ])
 
-const checked = (state, inv, index) => {
-  const list = state?.campaign?.tsk?.customizations?.bySeat?.[inv?.seat]?.['09100']
-  return Array.isArray(list) && list.filter(value => value === index).length > 0
-}
+// 2026-11-16 P2-3：Poisonous（2 格）与 Explosive Device（4 格）必须勾满才生效；Improved Timer/Tripwire 为 1 格。
+import { customizationOptionFullyChecked } from '../../engine/tsk-customizable.js'
+
+const checked = (state, inv, index) =>
+  customizationOptionFullyChecked(state, inv?.seat, '09100', index)
 
 export default {
   code: '09100',

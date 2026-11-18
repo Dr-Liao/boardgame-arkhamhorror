@@ -16,6 +16,12 @@
 .ah-carddetail-modal .ah-kw,.ah-carddetail-modal .ah-card-full-stats span,.ah-carddetail-modal .ah-cfcost{background:#a88d4d15;color:#d8c795;border-color:#b9a36b44;border-radius:3px}
 .ah-carddetail-modal .ah-runtime-text{margin-top:18px;background:#9d7b3020;border:1px solid #af945858;border-radius:4px;padding:16px;line-height:1.85;color:#ecd5a3}
 .ah-carddetail-modal .ah-runtime-text h3{color:#d4b66d;font-size:13px;letter-spacing:2px}.ah-carddetail-modal .ah-runtime-text p{margin-bottom:0}
+.ah-detail-customization ul{list-style:none;margin:0;padding:0}
+.ah-detail-customization li+li{border-top:1px solid var(--line);margin-top:10px;padding-top:10px}
+.ah-detail-customization header{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px}
+.ah-customization-boxes{display:inline-flex;gap:4px}
+.ah-customization-box{display:grid;place-items:center;box-sizing:border-box;width:16px;height:16px;border:1px solid currentColor;font:700 13px/1 system-ui,sans-serif}
+.ah-detail-customization p{margin-top:4px}
 .ah-runtime-card-state{margin-top:18px;padding:16px;border:1px solid #af945858;border-radius:4px;background:#162a22;color:#e6d8b6}
 .ah-runtime-card-state h3,.ah-runtime-card-state h4{margin:0 0 10px;color:#d4b66d;font-size:13px;letter-spacing:2px}
 .ah-runtime-markers{display:flex;flex-wrap:wrap;gap:7px}.ah-runtime-marker{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border:1px solid #bfa875;border-radius:4px;background:#13241d;color:#fff1ca}

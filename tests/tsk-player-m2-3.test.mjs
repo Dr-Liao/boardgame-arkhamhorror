@@ -658,7 +658,8 @@ test('P6 09099 便携万能工具：真实攻击检定窗口横置 +1 技能值�
   assert.equal(inv(s).assets.find(card => card.code === '09099').exhausted, true)
 
   const s2 = fixture('01001')
-  customize(s2, '09099', [2])
+  // P2-3：Sharpened Knife 是 2 格选项，勾满 2 格才 +1（勾 1 格不生效）。
+  customize(s2, '09099', [2, 2])
   asset(s2, '09099')
   const result2 = runFight(s2, pending => {
     if (pending.kind === 'playerWindow' && pending.source === 'test.beforeCommit'

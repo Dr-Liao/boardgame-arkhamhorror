@@ -19,6 +19,14 @@
 所有选择走服务端 `requestChoice` / `selectMechanic` 的 opaque `pick:N` / `confirm` / `cancel`，
 浏览器只提交服务端合法动作；空候选直接返回 false、不产生 pending choice（无软锁）。
 
+> 2026-11-16 接线现状（P2-8 未完成）：`createTskInteractions` 事务层目前只在
+> `tests/tsk-interactions.test.mjs` 驱动，真实玩法未调用它；六组交互的实际路径是**直接调用底层原语**：
+> 定制勾选走大厅 `hubCustomize` → `tsk-customizable#upgradeCustomization`（逐格动作，
+> 不是本层的多选 `selectMechanic`；真实玩家流程见 `player-cards.md §3.1`），
+> 隐匿/密钥/空洞/地图走各章 `scenarioAction` 与 `resolveKeyShift` 的分散实现，
+> 跨座位走 `tsk-investigator` 原语。因此本文件第 1 节的「浏览器验收」句描述的是事务层自己的夹具，
+> 不代表大厅真实入口；P2-8 的剩余工作就是把真实入口迁到该层（或删除该层并重签账本）。
+
 ## 2. 隐私与投影
 
 - 未揭露迷你卡：投影只有 `locationId` / `position` / `visible=false`，不含 `kind` / `decoy`；

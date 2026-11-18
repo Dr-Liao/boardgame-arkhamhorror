@@ -15,6 +15,9 @@ const operations = {
   // 八循环《绯红密钥》交互操作（P4）：隐匿揭露/密钥变换/空洞回收/世界地图/定制勾选/跨座位即时行动。
   tskConcealed: 'mechanic.tskConcealed', tskKey: 'mechanic.tskKey', tskHollow: 'mechanic.tskHollow',
   tskMap: 'mechanic.tskMap', tskCustomizable: 'mechanic.tskCustomizable', tskCrossSeat: 'mechanic.tskCrossSeat',
+  // 九循环《铁杉谷盛宴》交互操作（P4）：法典/序曲整备/网格与矿车/猎杀袋/坚毅形态/线索搬移。
+  fhvCodex: 'mechanic.fhvCodex', fhvSurvey: 'mechanic.fhvSurvey', fhvGrid: 'mechanic.fhvGrid',
+  fhvRail: 'mechanic.fhvRail', fhvPredation: 'mechanic.fhvPredation', fhvForm: 'mechanic.fhvForm', fhvClue: 'mechanic.fhvClue',
 }
 // 寒霜标记没有打包卡图时退回 ❄ 字形；其它标记面保持原有 img 行为不变。
 const tokenChip = (h, token) => {
@@ -156,7 +159,7 @@ export function renderMechanicChoice(h, session, { disabled, busy, onSubmit, ins
 
 export function renderMechanicSummary(h, state, { seat = 0, moves = [], canAct = false, submit = null } = {}) {
   const model = state.mechanics
-  if (!model || (!model.water && !model.keys && !model.vehicles && !model.eote && !model.tsk)) return null
+  if (!model || (!model.water && !model.keys && !model.vehicles && !model.eote && !model.tsk && !model.fhv)) return null
   const water = model.water?.investigators.find(item => item.seat === seat)
   const holderName = holder => {
     const [kind, ...parts] = holder.split(':'), id = parts.join(':')
@@ -253,6 +256,97 @@ export function renderMechanicSummary(h, state, { seat = 0, moves = [], canAct =
       h('h3', {}, t('mechanic.tsk.crossSeat')),
       tsk.crossSeat.map(row => h('p', { 'data-tsk-cross-seat': String(row.targetSeat), 'data-from-seat': String(row.from) },
         t('mechanic.tsk.crossSeatLine', { from: seatName(row.from), to: seatName(row.targetSeat) })))) : null) : null
+  // ── 九循环《铁杉谷盛宴》P4 交互摘要（公开读数；法典不显示未触发条目的条件/正文）────────────
+  const fhv = model.fhv
+  const periodLabel = period => t(period === 'night' ? 'mechanic.fhv.periodNight' : 'mechanic.fhv.periodDay')
+  const statusLabel = row => row.used ? t('mechanic.fhv.codexUsed')
+    : row.available ? t('mechanic.fhv.codexAvailable') : t('mechanic.fhv.codexPending')
+  const fhvSummary = fhv ? h('div', { className: 'ah-fhv-summary' },
+    fhv.date ? h('section', { className: 'ah-fhv-time', 'aria-label': t('mechanic.fhv.time') },
+      h('h3', {}, t('mechanic.fhv.time')),
+      h('p', {
+        'data-fhv-day': String(fhv.date.day), 'data-fhv-period': fhv.date.period,
+        ...(fhv.date.localPeriod ? { 'data-fhv-local-period': fhv.date.localPeriod } : {}),
+      }, t('mechanic.fhv.dateLine', { day: fhv.date.day, period: periodLabel(fhv.date.period) }),
+      fhv.date.localPeriod && fhv.date.localPeriod !== fhv.date.period
+        ? ` · ${t('mechanic.fhv.localPeriod', { period: periodLabel(fhv.date.localPeriod) })}` : '')) : null,
+    fhv.codex?.length ? h('section', { className: 'ah-fhv-codex', 'aria-label': t('mechanic.fhv.codex') },
+      h('h3', {}, t('mechanic.fhv.codex')),
+      fhv.codex.map(row => h('p', {
+        'data-fhv-codex-entry': row.id, 'data-resident': String(row.resident),
+        'data-available': String(row.available), 'data-used': String(row.used),
+      }, row.name, ' · ', statusLabel(row)))) : null,
+    fhv.residents?.length ? h('section', { className: 'ah-fhv-residents', 'aria-label': t('mechanic.fhv.residents') },
+      h('h3', {}, t('mechanic.fhv.residents')),
+      fhv.residents.map(row => h('div', {
+        'data-fhv-resident': row.id, 'data-level': String(row.level), 'data-max': String(row.max),
+        'data-crossed-out': String(row.crossedOut), 'data-notes-count': String((row.notes || []).length),
+      }, h('p', {}, row.name, ' · ', t('mechanic.fhv.relationship', { level: row.level, max: row.max }),
+      row.crossedOut ? ` · ${t('mechanic.fhv.crossedOut')}` : ''),
+      (row.notes || []).length ? h('ul', { className: 'ah-fhv-notes' },
+        row.notes.map(note => h('li', { 'data-fhv-resident-note': row.id }, note))) : null))) : null,
+    fhv.survey ? h('section', { className: 'ah-fhv-survey', 'aria-label': t('mechanic.fhv.survey') },
+      h('h3', {}, t('mechanic.fhv.survey')),
+      h('p', { 'data-fhv-survey': fhv.survey.source, 'data-fhv-survey-chosen': fhv.survey.chosenDestination || '' },
+        fhv.survey.chosenDestination
+          ? t('mechanic.fhv.surveyChosen', { destination: fhv.survey.chosenDestination })
+          : t('mechanic.fhv.surveyPending')),
+      h('p', {}, t('mechanic.fhv.surveyDestinations'), '：'),
+      h('ul', { className: 'ah-fhv-destinations' }, fhv.survey.destinations.map(id => h('li', { 'data-fhv-survey-option': id }, id))),
+      fhv.survey.seats?.length ? h('div', {}, fhv.survey.seats.map(seat => h('p', {
+        'data-fhv-survey-seat': String(seat.seat), 'data-hand-count': String(seat.handCount),
+        'data-resources': String(seat.resources), 'data-clues': String(seat.clues),
+      }, t('mechanic.fhv.surveySeat', { seat: seatName(seat.seat), hand: seat.handCount, resources: seat.resources, clues: seat.clues }),
+      seat.assets.length ? ` · ${t('mechanic.fhv.surveyKept')}：${seat.assets.map(asset => cardName(asset.code)).join('、')}` : ''))) : null) : null,
+    fhv.grid ? h('section', { className: 'ah-fhv-grid', 'aria-label': t('mechanic.fhv.grid') },
+      h('h3', {}, t('mechanic.fhv.grid')),
+      h('p', { 'data-fhv-grid-adjacency': fhv.grid.adjacency, 'data-fhv-grid-count': String(fhv.grid.cells.length) },
+        t('mechanic.fhv.gridLine', { count: fhv.grid.cells.length })),
+      h('ul', { className: 'ah-fhv-grid-cells' }, fhv.grid.cells.map(cell => h('li', {
+        'data-fhv-grid-cell': cell.id, 'data-x': String(cell.x), 'data-y': String(cell.y),
+        'data-isolated': String(cell.isolated === true),
+      }, `${holderName(`location:${cell.id}`)} (${cell.x}, ${cell.y})`))),
+      fhv.grid.emptyAdjacent?.length ? h('p', { 'data-fhv-empty-cells': fhv.grid.emptyAdjacent.map(space => `${space.x},${space.y}`).join(';') },
+        t('mechanic.fhv.emptyAdjacent', { spaces: fhv.grid.emptyAdjacent.map(space => `(${space.x}, ${space.y})`).join('、') })) : null) : null,
+    fhv.rail ? h('section', { className: 'ah-fhv-rail', 'aria-label': t('mechanic.fhv.rail') },
+      h('h3', {}, t('mechanic.fhv.rail')),
+      h('p', {
+        'data-fhv-rail': fhv.rail.vehicle, 'data-fhv-rail-location': fhv.rail.location || '',
+        'data-fhv-rail-facing': fhv.rail.facing, 'data-fhv-rail-derailed': String(fhv.rail.derailed),
+      }, t('mechanic.fhv.railLine', {
+        location: fhv.rail.location ? holderName(`location:${fhv.rail.location}`) : t('mechanic.fhv.railDetached'),
+        facing: fhv.rail.facing,
+      }), fhv.rail.derailed ? ` · ${t('mechanic.fhv.railDerailed')}` : ''),
+      h('p', {}, t('mechanic.fhv.railMarkers', {
+        switchCount: fhv.rail.markers.switch, scrapCount: fhv.rail.markers.scrap,
+      }))) : null,
+    fhv.tokenBags?.length ? h('section', { className: 'ah-fhv-token-bags', 'aria-label': t('mechanic.fhv.tokenBags') },
+      h('h3', {}, t('mechanic.fhv.tokenBags')),
+      fhv.tokenBags.map(bag => h('p', { 'data-fhv-token-bag': bag.id, 'data-count': String(bag.count) },
+        t('mechanic.fhv.tokenBagLine', { id: bag.id, count: bag.count })))) : null,
+    fhv.enemyLocations?.length ? h('section', { className: 'ah-fhv-enemy-locations', 'aria-label': t('mechanic.fhv.enemyLocations') },
+      h('h3', {}, t('mechanic.fhv.enemyLocations')),
+      fhv.enemyLocations.map(location => h('p', {
+        'data-fhv-enemy-location': location.id, 'data-shroud': String(location.shroud),
+        'data-fight': String(location.fight), 'data-evade': String(location.evade),
+        'data-health': String(location.health), 'data-clues': String(location.clues),
+        'data-doom': String(location.doom), 'data-exhausted': String(location.exhausted),
+      }, location.name, ' · ', t('mechanic.fhv.enemyLocationLine', {
+        shroud: location.shroud, fight: location.fight, evade: location.evade, health: location.health,
+        damage: location.damage, horror: location.horror, clues: location.clues,
+      })))) : null,
+    fhv.forms?.length ? h('section', { className: 'ah-fhv-forms', 'aria-label': t('mechanic.fhv.forms') },
+      h('h3', {}, t('mechanic.fhv.forms')),
+      fhv.forms.map(row => h('p', {
+        'data-fhv-form': String(row.seat), 'data-fhv-form-code': row.code, 'data-fhv-form-kind': row.form,
+      }, t('mechanic.fhv.formLine', { seat: seatName(row.seat), code: row.code }),
+      row.healingProhibited ? ` · ${t('mechanic.fhv.healingProhibited')}` : ''))) : null,
+    fhv.clueAssets?.length ? h('section', { className: 'ah-fhv-clue-assets', 'aria-label': t('mechanic.fhv.clueAssets') },
+      h('h3', {}, t('mechanic.fhv.clueAssets')),
+      fhv.clueAssets.map(asset => h('p', {
+        'data-fhv-clue-asset': asset.id, 'data-fhv-asset-clues': String(asset.clues),
+        'data-fhv-asset-traits': asset.traits.join(','),
+      }, cardName(asset.code), ' · ', t('mechanic.fhv.clueCount', { count: asset.clues })))) : null) : null
   return h('details', { className: 'ah-mechanic-summary ah-tcu-panel' }, h('summary', {}, t('mechanic.summary'),
     water ? h('span', { className: 'ah-mechanic-air', 'data-air-required': String(water.airRequired) },
       floodLabel(water.level), ' · ', water.airRequired ? t('mechanic.airRisk', { damage: water.damage }) : t('mechanic.airSafe')) : null),
@@ -301,5 +395,6 @@ export function renderMechanicSummary(h, state, { seat = 0, moves = [], canAct =
           t('mechanic.eote.suppliesLine', { name: seatName(row.seat), count: row.count }))),
         (eote.droppedSupplies || []).map(row => h('p', { 'data-eote-dropped': row.locationId, 'data-dropped-count': String(row.count) },
           t('mechanic.eote.droppedSupplies', { location: holderName(`location:${row.locationId}`), count: row.count })))) : null) : null,
-    tskSummary)
+    tskSummary,
+    fhvSummary)
 }

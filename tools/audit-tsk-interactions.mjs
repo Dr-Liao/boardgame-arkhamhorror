@@ -111,10 +111,12 @@ export function buildInteractionAudit() {
       row => String(row.title || '').includes('指南加载失败')),
     baselineUnchanged: Boolean(baseline?.replaySha256) && baseline.replaySha256 === (baseline?.replayFile ? fileSha(baseline.replayFile) : null),
     // P0 已把既有失败冻结进 audit/tsk-baseline.json#fastFailures；P4 只要求「无新增失败」。
+    // 2026-11-16：允许其它循环把冻结失败修掉（当前 TCU/i18n 两条已修复），失败数只许 <= 冻结数。
     fastNoNewFailures: Boolean(regression?.fast) && regression.status === 'passed'
       && Array.isArray(fastAdditions) && fastAdditions.length === 0
       && Array.isArray(regression.fast.titles)
-      && regression.fast.titles.length === frozenFailures.length,
+      && regression.fast.titles.length <= frozenFailures.length
+      && regression.fast.titles.every(title => frozenFailures.includes(title)),
     replayExact: Boolean(regression?.replay) && regression.replay.exitCode === 0 && regression.replay.matches === true,
   }
   const status = Object.values(checks).every(Boolean) && allCoverage ? 'verified' : 'pending'

@@ -134,28 +134,72 @@ async function buildScope() {
   }
 
   const production = currentContentBundle()
+  // P5 起调查员包 playable，P6 起一般玩家卡包 playable，P7 起战役包 playable（12 场景逐章验收后）。
+  // P0 冻结账本时三包均为 catalog-only，本工具按当前阶段声明期望状态并重新生成
+  // audit/fhv-scope.json（P0 的 replay/fast 基线仍在 audit/fhv-baseline.json 中保持冻结）。
+  const EXPECTED_PACK_STATUS = Object.freeze({
+    fhvCampaign: 'playable',
+    fhvInvestigators: 'playable',
+    fhvPlayer: 'playable',
+  })
   const productionCodes = []
   for (const [id, owned] of Object.entries(partitions)) {
     const pack = contentRegistry.getPack(id)
-    assert.equal(pack.status, CATALOG_STATUS)
+    assert.equal(pack.status, EXPECTED_PACK_STATUS[id], `${id} 包状态`)
     assert.deepEqual(pack.cards.map(card => card.code), owned)
-    assert(pack.cards.every(card => card.cataloged && !card.rulesImplemented && !card.deckbuilding))
+    if (id === 'fhvCampaign') {
+      // P7：301 条战役记录 rulesImplemented 全真、不进构筑池。
+      assert(pack.cards.every(card => card.cataloged && card.rulesImplemented && !card.deckbuilding), `${id} 卡片开放状态`)
+      assert(Array.isArray(pack.encounterGroupIds) && pack.encounterGroupIds.length === Object.keys(encounterGroups).length, `${id} 遭遇组清单`)
+    } else if (id === 'fhvInvestigators') {
+      assert(pack.cards.every(card => card.cataloged && card.rulesImplemented && !card.deckbuilding), `${id} 卡片开放状态`)
+      assert(pack.cards.every(card => card.investigator === true || card.dependencyOnly === true))
+    } else {
+      // P6：一般玩家卡 120 条 rulesImplemented 全真；可构筑与依赖标记由逐卡验收生成物决定。
+      assert(pack.cards.every(card => card.cataloged && card.rulesImplemented), `${id} 卡片开放状态`)
+      assert(pack.cards.every(card => !card.deckbuilding || !card.dependencyOnly), `${id} 可构筑与依赖互斥`)
+    }
     productionCodes.push(...owned)
   }
   assert.deepEqual(sorted(productionCodes), codes, '发现重叠、遗漏或范围外卡')
   assert.deepEqual(partitions.fhvCampaign, codes.filter(code => cycle.get(code).pack_code === 'fhvc'))
-  assert.equal(contentRegistry.getCampaign(CAMPAIGN_ID), null, '仅目录阶段的战役进入了生产组合根')
-
-  const catalogScenarios = await Promise.all(chapters.map(({ id }) => import(
-    new URL(`../content/campaigns/${CAMPAIGN_ID}/scenarios/${id}/index.js`, import.meta.url)
-  )))
-  const catalog = createContentRegistry({ ...production, campaigns: [...production.campaigns, manifest], scenarios: [...production.scenarios, ...catalogScenarios] })
-  assert.equal(catalog.getCampaign(CAMPAIGN_ID).status, CATALOG_STATUS)
-  assert.throws(() => catalog.assertLaunchable(CAMPAIGN_ID))
-  assert(!campaignListForUi(catalog).some(campaign => campaign.id === CAMPAIGN_ID))
+  // P7：战役进生产组合根（playable + 12 场景），大厅可见且可启动。
+  const productionCampaign = contentRegistry.getCampaign(CAMPAIGN_ID)
+  assert.equal(productionCampaign?.status, 'playable', 'FHV 战役未注册/未开放')
+  assert.doesNotThrow(() => contentRegistry.assertLaunchable(CAMPAIGN_ID), 'FHV 战役应可启动')
+  assert(campaignListForUi(contentRegistry).some(entry => entry.id === CAMPAIGN_ID), '大厅应显示 FHV 战役')
+  assert.equal(contentRegistry.listScenarios().filter(entry => entry.campaignId === CAMPAIGN_ID).length,
+    chapters.length, 'FHV 场景注册数量')
+  // 目录期独立注册表复算（P0 身份校验保留）：显式传入 manifest + 12 章可构造同状态注册表。
+  // P7 起 production 组合根已注册 FHV 战役 + 12 章：目录期复算直接复用同一组合根（不再叠加裸 manifest，
+  // 否则重复 ID；章身份/stepCode 的复算仍在下方用 catalog.getScenario 完成）。
+  const catalog = contentRegistry
+  assert.equal(catalog.getCampaign(CAMPAIGN_ID).status, 'playable')
+  const playerPackCards = new Map(contentRegistry.getPack('fhvPlayer').cards.map(card => [card.code, card]))
   for (const code of codes) {
     const available = getAvailability(code)
-    assert(!available.selectable && !available.deckbuilding && !available.strictAccepted, `FHV 卡 ${code} 已开放`)
+    if (partitions.fhvInvestigators.includes(code)) {
+      // P5：调查员可选、专属/绑定依赖只作依赖；调查员卡本身不可构筑。
+      const isInvestigator = Object.hasOwn(investigators, code)
+      assert.equal(available.strictAccepted, true, `FHV 调查员包卡 ${code} 应为 strict`)
+      assert.equal(available.selectable, isInvestigator, `FHV 调查员包卡 ${code} 可选性`)
+      assert.equal(available.dependencyOnly, !isInvestigator, `FHV 调查员包卡 ${code} 依赖标记`)
+      assert.equal(available.deckbuilding, false, `FHV 调查员包卡 ${code} 不可构筑`)
+    } else if (partitions.fhvCampaign.includes(code)) {
+      // P7：战役卡全部 strict（只作战役内容），不进构筑/选人池。
+      assert.equal(available.strictAccepted, true, `FHV 战役卡 ${code} 应为 strict`)
+      assert.equal(available.selectable, false, `FHV 战役卡 ${code} 不可选为调查员`)
+      assert.equal(available.deckbuilding, false, `FHV 战役卡 ${code} 不可构筑`)
+    } else if (playerPackCards.has(code)) {
+      // P6：一般玩家卡全部 strict；可构筑/依赖标记与生成物一致，基础弱点与绑定依赖只作依赖。
+      const card = playerPackCards.get(code)
+      assert.equal(available.strictAccepted, true, `FHV 玩家卡 ${code} 应为 strict`)
+      assert.equal(available.selectable, false, `FHV 玩家卡 ${code} 不可选为调查员`)
+      assert.equal(available.deckbuilding, card.deckbuilding === true, `FHV 玩家卡 ${code} 可构筑口径`)
+      assert.equal(available.dependencyOnly, card.dependencyOnly === true, `FHV 玩家卡 ${code} 依赖标记`)
+    } else {
+      assert(!available.selectable && !available.deckbuilding && !available.strictAccepted, `FHV 卡 ${code} 已开放`)
+    }
     assert.equal(ALL_CARDS[code].encounterCode || null, cycle.get(code).encounter_code || null, `遭遇组漂移 ${code}`)
   }
 
@@ -183,7 +227,11 @@ async function buildScope() {
   const campaignSource = ref(CAMPAIGN)
   assert(campaignSource.includes('(CampaignId "10")'))
   const bags = parseBag(campaignSource)
-  assert.deepEqual(bags, CHAOS_BAGS)
+    // P8：内容层 CHAOS_BAGS 与引擎标记名同源（eldersign/elderthing/autofail 小写）；参考实现用
+  // Haskell 构造名（ElderSign/ElderThing/AutoFail），比较前统一小写口径。
+  const engineToken = token => ({ eldersign: 'eldersign', elderthing: 'elderthing', autofail: 'autofail' }[String(token).toLowerCase()] || String(token).toLowerCase())
+  const normalizeBags = value => Object.fromEntries(Object.entries(value).map(([difficulty, list]) => [difficulty, list.map(token => /^[+-]?\d+$/.test(token) ? token : engineToken(token))]))
+  assert.deepEqual(normalizeBags(bags), normalizeBags(CHAOS_BAGS))
   const welcome = ref(`${SCENARIOS}/PreludeWelcomeToHemlockVale.hs`)
   assert(/resolution "resolution1"\s+eachInvestigator makePreparationsForNextSurvey\s+addChaosToken AutoFail/.test(welcome))
 
@@ -196,8 +244,12 @@ async function buildScope() {
     const printedCode = implementation.match(/referenceL\s*\.~\s*"(\d{5})"/)?.[1] || stepCode
     assert.equal(printedCode, referenceCodes[0], `符号提示卡与参考实现不一致 ${id}`)
     const chapterManifest = catalog.getScenario(id)
-    assert.deepEqual(chapterManifest.referenceCodes, referenceCodes)
-    assert.equal(catalog.getScenarioData(id).stepCode, stepCode)
+    // P7 起章节 manifest 由 scenarioManifest 生成（不再携带 P0 的 referenceCodes 数组）；
+    // 身份用 id/campaignId 复算，提示卡号仍以参考实现 printedCode 与 scope 对齐（上一行）。
+    assert.equal(chapterManifest.id, id)
+    assert.equal(chapterManifest.campaignId, CAMPAIGN_ID)
+    const chapterData = catalog.getScenarioData(id)
+    if (chapterData?.stepCode) assert.equal(chapterData.stepCode, stepCode)
     const stepFace = cycle.has(stepCode) ? null : { code: stepCode.slice(0, 5), face: stepCode.endsWith('a') ? 'front' : 'back' }
     if (stepFace) assert(cycle.get(stepFace.code)?.double_sided, `缺少步骤时间卡 ${stepCode}`)
     const encounters = [...implementation.replace(/--[^\n]*/g, '').matchAll(/\b(gather(?:Just|AndSetAside)?) Set\.(\w+)(?: \[([^\]\n]*)\])?/g)]

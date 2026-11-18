@@ -1,0 +1,271 @@
+{
+  "key": {
+    "motherRachelShowedTheWay": "蕾切尔嬷嬷指明了道路",
+    "bertieWasRescued": "伯蒂获救",
+    "bertieWasLostInTheWoods": "伯蒂迷失在树林中",
+    "theBearWasWounded": "那头熊受了伤",
+    "finishedTheirMeal": "吃完了自己的餐食",
+    "madamePearlsDiaryWasRecovered": "珀尔夫人的日记已被找回",
+    "theInvestigatorsLaidThePearlFamilyToRest": "调查员们让珀尔家族安息了",
+    "elizabethPetersWasSaved": "伊丽莎白·彼得斯获救",
+    "motherRachelRelationshipLevel": "蕾切尔嬷嬷的关系等级",
+    "leahAtwoodRelationshipLevel": "莉亚·阿特伍德的关系等级",
+    "simeonAtwoodRelationshipLevel": "席米恩·阿特伍德的关系等级",
+    "williamHemlockRelationshipLevel": "威廉·汉洛克的关系等级",
+    "riverHawthorneRelationshipLevel": "瑞玟·霍桑的关系等级",
+    "gideonMizrahRelationshipLevel": "基甸·米兹拉克的关系等级",
+    "judithParkRelationshipLevel": "朱迪斯·帕克的关系等级",
+    "theoPetersRelationshipLevel": "希奥·彼得斯的关系等级",
+    "sections": {
+      "motherRachelNotes": "蕾切尔嬷嬷",
+      "leahAtwoodNotes": "莉亚·阿特伍德",
+      "simeonAtwoodNotes": "席米恩·阿特伍德",
+      "williamHemlockNotes": "威廉·汉洛克",
+      "riverHawthorneNotes": "瑞玟·霍桑",
+      "gideonMizrahNotes": "基甸·米兹拉克",
+      "judithParkNotes": "朱迪斯·帕克",
+      "theoPetersNotes": "希奥·彼得斯",
+      "areasSurveyed": "已勘察区域"
+    },
+    "[areasSurveyed]": {
+      "orderKey": "序号 a",
+      "name": "已勘察区域",
+      "northPointMine": {
+        "name": "北岬矿井",
+        "scenarioName": "岩间密语",
+        "ref": "第10页"
+      },
+      "hemlockHarbor": {
+        "name": "铁杉港",
+        "scenarioName": "汉洛克庄园",
+        "ref": "第14页"
+      },
+      "pearlRidge": {
+        "name": "珍珠岭",
+        "scenarioName": "寂静荒野",
+        "ref": "第19页"
+      },
+      "akwanShoreline": {
+        "name": "阿克望海岸线",
+        "scenarioName": "消失的姐妹",
+        "ref": "第23页"
+      },
+      "eastwickBog": {
+        "name": "东威克沼",
+        "scenarioName": "深沼之物",
+        "ref": "第27页"
+      },
+      "westernWoods": {
+        "name": "西部森林",
+        "scenarioName": "扭曲空洞",
+        "ref": "第34页"
+      },
+      "southernFields": {
+        "name": "南面农田",
+        "scenarioName": "最长一夜",
+        "ref": "第46页"
+      }
+    },
+    "[motherRachelNotes]": {
+      "orderKey": "序号 b",
+      "name": "蕾切尔嬷嬷",
+      "motherRachelIntervened": "蕾切尔嬷嬷出手干预",
+      "motherRachelSharedHerDoubts": "蕾切尔嬷嬷说出了她的疑虑",
+      "motherRachelCrossedOut": "蕾切尔嬷嬷已被划去"
+    },
+    "[leahAtwoodNotes]": {
+      "orderKey": "序号 c",
+      "name": "莉亚·阿特伍德",
+      "leahIsSearchingForSimeon": "莉亚正在寻找席米恩",
+      "leahSharedADance": "莉亚与你共舞",
+      "leahSharedHerFrustrations": "莉亚说出了她的烦恼",
+      "leahSawSomethingInTheMine": "莉亚在矿井里看到了什么",
+      "leahAndSimeonWereReunited": "莉亚与席米恩重逢了",
+      "leahSearchedThePearlRuins": "莉亚搜寻过珀尔废墟",
+      "leahStoodByYou": "莉亚站在了你这边",
+      "leahSacrificedThemselvesForTheInvestigators": "莉亚为调查员们牺牲了自己",
+      "leahCrossedOut": "莉亚已被划去"
+    },
+    "[simeonAtwoodNotes]": {
+      "orderKey": "序号 d",
+      "name": "席米恩·阿特伍德",
+      "simeonSurvived": "席米恩幸存",
+      "simeonDisappeared": "席米恩失踪了",
+      "simeonHatchedAPlan": "席米恩定下了一个计划",
+      "thePlanIsUnderway": "计划已启动",
+      "simeonSharedADance": "席米恩与你共舞",
+      "simeonStoodByYou": "席米恩站在了你这边",
+      "simeonSacrificedThemselvesForTheInvestigators": "席米恩为调查员们牺牲了自己",
+      "simeonCrossedOut": "席米恩已被划去"
+    },
+    "[williamHemlockNotes]": {
+      "orderKey": "序号 e",
+      "name": "威廉·汉洛克",
+      "williamTookHeart": "威廉重拾信心",
+      "williamSharedHisLegacy": "威廉分享了他的家族遗产",
+      "williamSharedADance": "威廉与你共舞",
+      "williamStoodByYou": "威廉站在了你这边",
+      "williamIsResolved": "威廉下定了决心",
+      "williamSacrificedThemselvesForTheInvestigators": "威廉为调查员们牺牲了自己",
+      "williamCrossedOut": "威廉已被划去"
+    },
+    "[riverHawthorneNotes]": {
+      "orderKey": "序号 f",
+      "name": "瑞玟·霍桑",
+      "theSchemeIsInMotion": "阴谋正在推进",
+      "riverSharedTheirAmbitions": "瑞玟分享了自己的抱负",
+      "riverAskedForHelp": "瑞玟请求了帮助",
+      "riverSharedADance": "瑞玟与你共舞",
+      "riverStoodByYou": "瑞玟站在了你这边",
+      "riverIsReclaimingTheirLegacy": "瑞玟正在夺回自己的遗产",
+      "riverSacrificedThemselvesForTheInvestigators": "瑞玟为调查员们牺牲了自己",
+      "riverCrossedOut": "瑞玟已被划去"
+    },
+    "[gideonMizrahNotes]": {
+      "orderKey": "序号 g",
+      "name": "基甸·米兹拉克",
+      "gideonToldTheStoryOfCaptainHemlock": "基甸讲了汉洛克船长的故事",
+      "gideonToldTheTaleOfTheAnnabelleLee": "基甸讲起了安娜贝尔·李号的故事",
+      "gideonFoundHisTreasure": "基甸找到了他的宝藏",
+      "gideonSharedADance": "基甸与你共舞",
+      "gideonStoodByYou": "基甸站在了你这边",
+      "gideonSacrificedThemselvesForTheInvestigators": "基甸为调查员们牺牲了自己",
+      "gideonCrossedOut": "基甸已被划去"
+    },
+    "[judithParkNotes]": {
+      "orderKey": "序号 h",
+      "name": "朱迪斯·帕克",
+      "judithSavedYourAss": "朱迪斯救了你的命",
+      "judithSharedAGrudge": "朱迪斯说出了她的积怨",
+      "judithSharedADance": "朱迪斯与你共舞",
+      "judithStoodByYou": "朱迪斯站在了你这边",
+      "youBackedJudithUp": "你给朱迪斯打了掩护",
+      "judithSacrificedThemselvesForTheInvestigators": "朱迪斯为调查员们牺牲了自己",
+      "judithCrossedOut": "朱迪斯已被划去"
+    },
+    "[theoPetersNotes]": {
+      "orderKey": "序号 i",
+      "name": "希奥·彼得斯",
+      "theoReconciledWithHelen": "希奥与海伦和解了",
+      "theoDistractedTheBear": "希奥引开了那头熊",
+      "theoSharedADance": "希奥与你共舞",
+      "theoRejectedHisFamily": "希奥拒绝了自己的家人",
+      "theoStoodByYou": "希奥站在了你这边",
+      "theoIsHavingSecondThoughts": "希奥开始动摇了",
+      "theoSacrificedThemselvesForTheInvestigators": "希奥为调查员们牺牲了自己",
+      "theoCrossedOut": "希奥已被划去"
+    },
+    "helenSharedADance": "海伦与你共舞",
+    "helenPetersJoinedTheSurvey": "海伦·彼得斯加入了勘察",
+    "bertieHadAnEpiphany": "伯蒂灵光一闪",
+    "theInvestigatorsFacedTheLongestNightAlone": "调查员们独自面对最长一夜",
+    "theCaptivesWereSaved": "俘虏们获救",
+    "manyCaptivesWereLost": "许多俘虏丧命",
+    "allTheCaptivesWereLost": "所有俘虏都丧命了",
+    "theThingInTheDepthsWasDefeated": "深沼之物已被击败",
+    "drMarquezHasAPlan": "马奎兹博士有了计划",
+    "theInvestigatorsLearnedTheirPlace": "调查员们认清了自己的位置",
+    "drMarquesHasAHunch": "马奎兹博士有了头绪",
+    "theInvestigatorsInterruptedTheFeast": "调查员们打断了盛宴",
+    "theInvestigatorsSurvivedTheHorrorsInTheRock": "调查员们在岩间恐怖中幸存",
+    "theRemainsWerePartiallyRecovered": "遗骸被部分寻回",
+    "thePetersFamilyWereReunited": "彼得斯一家团聚了",
+    "theChelydranHybridPerished": "鳄龟混种死亡",
+    "theChelydranHybridLived": "鳄龟混种存活",
+    "theChelydranHybridWasDevoured": "鳄龟混种被吞噬",
+    "theInvestigatorsLostThePath": "调查员们迷失了道路",
+    "theValeIsFullOfFireworks": "山谷里到处是烟花",
+    "theInvestigatorsBelieved": "调查员们信了",
+    "theInvestigatorsLiedToMotherRachel": "调查员们对蕾切尔嬷嬷撒了谎",
+    "gideonFinishedTheTaleOfAnnabelleLee": "基甸讲完了安娜贝尔·李号的故事",
+    "theHemlocksMadeATruce": "汉洛克家族达成了休战",
+    "bertiePerished": "伯蒂殒命",
+    "theInvestigatorsBecameTheTrueFeastOfHemlockVale": "调查员们成了真正的铁杉谷盛宴",
+    "drMarquezSacrificedHerselfForTheVale": "马奎兹博士为山谷牺牲了自己",
+    "theInvestigatorsSacrificedThemselvesForTheVale": "调查员们为山谷牺牲了自己",
+    "theValeWasSaved": "山谷得救了",
+    "theValeBurned": "山谷被焚毁",
+    "theInvestigatorsBarelySurvivedTheFeastOfHemlockVale": "调查员们勉强活过了铁杉谷盛宴",
+    "helenSacrificedThemselvesForTheInvestigators": "海伦为调查员们牺牲了自己"
+  },
+  "specialRules": [
+    {
+      "title": "铁杉谷法典",
+      "body": "<p class='basic'>《铁杉谷盛宴》战役引入了一个全新的玩法概念：铁杉谷法典。在这场战役中，有些卡牌效果会指示玩家阅读特定的法典条目。游玩时请将战役指南放在手边，方便随时查阅。</p><p class='basic'>《铁杉谷盛宴》中的某些地点、角色或敌人拥有法典条目，标记为（_{'{'}codex{'}'} X_）。要阅读某个角色或地点的法典条目，你必须先支付该能力上的所有费用，然后翻到本战役指南中当前关卡或序曲的法典部分，结算全部文本。</p><ul><li>除非另有说明，每个法典条目在每场关卡或序曲中不能结算超过一次。</li><li>结算法典条目时，由触发该条目的玩家结算全部效果（进行检定、造成伤害、支付资源等）。如果无法确定是谁触发了该法典条目，则由队长结算该条目。</li><li>如果法典条目指示玩家将某位放在一边的具名居民加入游戏，除非另有说明，该角色以剧情支援面朝上加入游戏。</li><li>战役日志中名字已被划去的居民不能在序曲或关卡中进入游戏。如果某位居民的名字已被划去，该居民笔记中的全部条目也同样失效。</li><li>在为某个特定角色结算法典条目时，你只能阅读自己满足条件的单个小节。如果你不满足法典条目第一个小节的条件，就跳到下一个小节。除非另有说明，只参考该角色在你战役日志中的笔记与关系等级。（例如：“在瑞玟·霍桑的笔记中记录瑞玟是个万人迷”是指让玩家修改瑞玟战役日志条目中的“笔记”部分。）</li><li>结算完法典条目并在战役日志中做好变更后，恢复游戏。</li></ul>"
+    },
+    {
+      "title": "三天三夜",
+      "body": "<p class='basic'>《铁杉谷盛宴》战役只给玩家游戏内的三天时间来把整个故事走完。本战役还包含可游玩的序曲，调查员可以在其中与铁杉谷的居民互动、探寻铁杉岛的秘密，并为下一场关卡做准备。序曲是非对抗性的段落，会设置地点、剧本参考卡、幕与议程。每段序曲结束时都会给出若干选项，决定接下来游玩哪场关卡。视日期与时段而定，有些关卡会提供新的剧情选项或挑战。在一次战役的通关过程中，玩家没有时间游玩每一场关卡，也无法与每一位居民都交上朋友。</p><ul><li>玩家在游玩序曲与幕间时可以赚取经验。把这些经验记录在“未花费经验”下，但在战役指南指示之前不要花费。</li><li>要掌握当前的日期／时段，你可以查看并更新战役日志中的“日期／时段”部分。</li></ul>"
+    },
+    {
+      "title": "居民与关系等级",
+      "body": "<p class='basic'>有时，剧情文本会指示调查员提高他们与某位特定居民的关系等级。若接到此类指示，请查看战役日志，找到该指定居民的条目。</p><ul><li>提到某位居民的关系等级时，其条目中已勾选的格数就是该居民的关系等级。</li><li>要提高某位居民的关系等级，勾选该居民条目中最左侧未勾选的格子。</li><li>要降低某位居民的关系等级，擦掉该居民条目中最右侧已勾选的格子。</li><li>除非另有说明，每次只能提高或降低某位居民 1 格关系等级。</li><li>若接到将某位居民的关系等级设为 0 的指示，擦掉该居民条目中所有已勾选的格子。</li><li>战役日志中名字已被划去的居民不能在序曲或关卡中进入游戏。</li></ul>"
+    },
+    {
+      "title": "本战役中的地点相邻",
+      "body": "<p class='basic'>本战役中的多数关卡按固定的网格样式摆放地点。在这些关卡中，每个地点除了连接图标之外，还与和它相邻的每个地点相连。</p><ul><li>相邻的地点共享一条边（左边、右边、上方或下方）。只共享一个角的地点不算相邻。</li><li>接到将地点加入游戏的指示时，把它放在你所在地点上方、下方、左侧或右侧的相邻空位。</li><li>你不能把地点放到已有地点所在的位置上。选择新地点的位置时，若有可能，你必须选一个没有被地点占据的位置。若无法做到，则不将任何新地点加入游戏。</li><li>注意，在使用了“山谷”遭遇组的序曲与关卡中，地点只通过其图标相连。</li></ul>"
+    },
+    {
+      "title": "警戒",
+      "body": "<p class='basic'>本战役中的某些敌人拥有警戒关键词。每当调查员在尝试躲避拥有警戒关键词的敌人时技能检定失败，在结算完该次技能检定的所有结果之后，该敌人会对躲避它的调查员执行一次攻击。敌人在执行警戒攻击后不会横置。无论该敌人是否与躲避它的调查员交战，这次攻击都会发生。</p>"
+    },
+    {
+      "title": "白日 {'{'}day{'}'} 与黑夜 {'{'}night{'}'}",
+      "body": "<p class='basic'>在本战役中设置游戏时，玩家可能会被指示将时间标记卡加入游戏。为此，请从第一日、第二日或最终日遭遇组中找到与当前日期对应的时间标记卡，并将它放在议程牌库旁。这张卡代表当前的日期与时段。</p><p class='basic'>有些卡牌会根据关卡发生在白日还是黑夜而产生不同效果。以（白日 {'{'}day{'}'}）或（黑夜 {'{'}night{'}'}）关键词开头的文本，只有所游玩的关卡或序曲分别处于白日或黑夜时才生效。前面没有这些关键词的任何其他能力，不论时段如何都生效。</p><p class='basic'>设置指示可能会根据当前的日期与时段给出特定指示。（例如：“如果当前是第二日，将瑞玟·霍桑在蔓越莓沼泽加入游戏”这条指示只在把该关卡作为第二日关卡游玩时生效，在第二夜关卡中不生效。）</p>"
+    },
+    {
+      "title": "逃逸",
+      "body": "<p class='basic'>本战役中的某些敌人拥有逃逸关键词。逃逸敌人代表为了自保或达成自己的目标而想避开调查员的敌人。</p><p class='basic'>如果处于重整状态且拥有逃逸关键词的敌人攻击或被攻击，在该次攻击结算之后，该敌人立即与所有调查员解除交战，移动到一个相连地点（若有可能，选择没有调查员的地点），然后横置。无论该敌人是否与攻击它的调查员交战，这个效果都会发生。</p>"
+    },
+    {
+      "title": "巡逻",
+      "body": "<p class='basic'>本战役中的某些敌人拥有巡逻关键词。在敌军阶段（框架步骤 3.2）中，每个处于重整状态且未交战、拥有巡逻关键词的敌人，会沿着通往指定地点（写在其巡逻字样旁的括号中）的最短路径移动到一个相连地点。</p><ul><li>如果有多个地点都符合指定地点的条件，由队长选择该敌人向哪个地点移动。</li><li>如果拥有巡逻关键词的敌人会因卡牌能力阻挡的路径而被迫移动到一个地点，则该敌人不移动。</li></ul>"
+    }
+  ],
+  "epilogue": {
+    "title": "尾声",
+    "body": "<p class='basic'>查看你的战役日志。如果还有调查员存活，你可以阅读本尾声中你满足条件的任何法典条目。</p>",
+    "label": {
+      "atwoods": "法典 2 & 3：阿特伍德一家",
+      "hemlocks": "法典 4 & 5：汉洛克家族",
+      "judith": "法典 7：朱迪斯·帕克",
+      "theo": "法典 8：希奥·彼得斯",
+      "continue": "继续阅读尾声"
+    },
+    "codex": {
+      "atwoods": {
+        "title": "{'{'}codex{'}'} 法典 2 & 3：阿特伍德一家",
+        "body": "<h3>@:theFeastOfHemlockVale.epilogue.codex.atwoods.title </h3><p>席米恩和莉亚正俯身研究着一局紧张的弹珠游戏。“别作弊，”莉亚拍开儿子的手。席米恩抗议起来，两人抬头看向你。“谢谢你所有的帮助，”这位山谷的前任厨师说。“我们要去金斯波特了。听说那儿冬天很不错。”席米恩把一颗弹珠弹进圈里，抬头看着你。“我给我的社团改了名字。我们现在是植物学家秘密捣蛋会了！”</p>"
+      },
+      "hemlocks": {
+        "title": "{'{'}codex{'}'} 法典 4 & 5：汉洛克家族",
+        "body": "<h3>@:theFeastOfHemlockVale.epilogue.codex.hemlocks.title </h3><p>这对表亲坐在海岸边，隔着堤道眺望大陆。海鸥在灰暗起伏的浪面上低飞。“铁杉岛本来会是个很糟的避风头的地方。我在纽约的朋友们已经在私下议论我的失势了，”瑞玟苦涩地说。威廉端详着自己的表亲。“我想我该回到社交界去了。我肯定能把你朋友们的看法纠正过来。”瑞玟顿了顿，随即想到一个主意，露出坏笑。“哦，威廉。我的朋友们会喜欢你的。你只要分享一首你写的诗就行。我保证他们会觉得那首诗迷人极了。”</p>"
+      },
+      "judith": {
+        "title": "{'{'}codex{'}'} 法典 7：朱迪斯·帕克",
+        "body": "<h3>@:theFeastOfHemlockVale.epilogue.codex.judith.title </h3><p>朱迪斯朝你走来，猎装上溅满血迹，头发乱糟糟的，步枪斜挎在肩上。看到你担忧的神情，她低头看了看自己的外套。“哦，别担心。你该看看另一个人成了什么样，”她眨眨眼。你问她是否还打算去波士顿，她耸了耸肩。“也许吧，也许不去了。我正想问你接下来要去哪儿。”</p><p>你告诉她你要去阿卡姆，她憋住了一声不信的嗤笑。“阿卡姆，是吗？那个每隔一周就因为怪事上新闻的城市？你真要回那儿去？”她沉默了片刻，像是在考虑什么。“你会需要有人替你看着后背，”她试探着说。你告诉她你打算好好休息一阵，她咧嘴一笑。“我有个朋友在东城的某个地方开了家地下酒馆。经历了这么多事，我看我欠你一杯酒。”</p>"
+      },
+      "theo": {
+        "title": "{'{'}codex{'}'} 法典 8：希奥·彼得斯",
+        "body": "<h3>@:theFeastOfHemlockVale.epilogue.codex.theo.title </h3><p>你走近时，希奥不好意思地笑了，然后给了你一个熊抱。他松开手时，你发现他在哭。你问他为什么，他低下头。“我真的不知道为什么。”他停下来想了想，又继续说。“我一直想要一个……一个重新有家的感觉的地方。爸妈走了以后，海伦变得——她变得很难相处。后来我开始在山谷里帮忙，而他们不在乎我有多难缠。那里感觉像家。现在那也没了。”他眨了眨眼，眨去泪水。“我想家是自己造出来的吧。你什么时候该来波特兰看看我们。我知道你会喜欢的，”他笑了。</p>"
+      }
+    },
+    "epilogue1": "<p>_尾声 1_：<span class='wolgast'>1926年6月</span></p><p class='indent'>致亨利·阿米蒂奇博士办公室：</p><p class='indent'>铁杉岛的勘察已经结束，而马奎兹博士没能回来。我们在那座荒凉岛屿上的所见所闻，完全无法用常理解释。一种异类的存在支配着当地的生态系统，扭曲了附近每一个生物的身心健康。我们见证了一些从未被记录过的物种，而且今后很可能再也无法记录。当地人与此存在共存了数十年，表面上——或者刻意地——对其退化性的影响毫不知情。有些人甚至崇拜它。我们自认能活下来已是万幸。</p><p class='indent'>不幸的是，马奎兹博士没有这样的运气。随信附上一份详尽的报告，记录了她对这片独特生态系统的观察。报告里没有写到的，是她如何——以及何等英勇地——献出了自己的生命。那个故事，我们希望能当面讲给你听。出于对她遗志的敬意，我们请求你不要把这些记录当作纯粹的臆想而不予理会。谨上，</p><p class='right'><span class='wolgast'>密斯卡托尼克勘察队</span></p>",
+    "epilogue2": "<p>_尾声 2_：<span class='wolgast'>1926年6月</span></p><p class='indent'>致亨利·阿米蒂奇博士办公室：</p><p class='indent'>铁杉岛的勘察以极大的代价结束了。在为期三天的行程中，我们见证了无法用任何常理解释的恐怖与奇观。一种前所未有的寄生生命形态以当地的生态系统为食，扭曲了周围每一个生物的生理。随信附上我们所见证现象的详尽报告，以及样本、笔记和草图。</p><p class='indent'>虽然我起初对你介绍的联络人心存戒备，但他们在整个勘察过程中提供了极其宝贵的支持。最终，我们发现的那种奇怪的气态实体夺走了他们的生命。若不是他们的牺牲，我本会丧命，铁杉岛的大部分也会如此。</p><p class='indent'>等我回去后，会把一切解释得更详尽。</p><p class='right'><span class='wolgast'>罗莎·马奎兹博士</span></p>",
+    "epilogue3": "<p>_尾声 3_：<span class='wolgast'>1926年6月</span></p><p class='indent'>致亨利·阿米蒂奇博士办公室：</p><p class='indent'>铁杉岛的勘察已经结束。在为期三天的行程中，我们见证了无法用任何常理解释的恐怖与奇观。一种前所未有的寄生生命形态以当地的生态系统为食，扭曲了周围每一个生物的生理。随信附上我们所见证现象的详尽报告，以及样本、笔记和草图。</p><p class='indent'>虽然我起初对你介绍的联络人心存戒备，但他们在整个勘察过程中证明了自己是极宝贵的助力。若不是他们的帮助，我毫不怀疑自己会丧命，许多人也会如此。我甚至有点想邀请他们参加我下一次勘察。</p><p class='indent'>等我回去后，会把一切解释得更详尽。在那之前，我和勘察队打算好好休息一段时间，这早就该有了。</p><p class='right'><span class='wolgast'>罗莎·马奎兹博士</span></p>",
+    "marquezSacrificedHerself": "如果马奎兹博士为山谷牺牲了自己，前往 _尾声 1_。",
+    "investigatorsSacrificedThemselves": "如果调查员们为山谷牺牲了自己，跳到 _尾声 2_。",
+    "otherwise": "否则，跳到 _尾声 3_。"
+  },
+  "additionalRulesAndClarifications": {
+    "title": "附加规则与澄清",
+    "theCodex": "<h3>铁杉谷法典 {'{'}codex{'}'}</h3><p class='basic'>*《铁杉谷盛宴》*战役引入了一个全新的玩法概念：铁杉谷法典。在这场战役中，有些卡牌效果会指示玩家阅读特定的法典条目。游玩时请将战役指南放在手边，方便随时查阅。</p><p class='basic'>*《铁杉谷盛宴》*中的某些地点、角色或敌人拥有法典条目，标记为（{'{'}codex{'}'} X）。要阅读某个角色或地点的法典条目，你必须先支付该能力上的所有费用，然后翻到本战役指南中当前关卡或序曲的法典部分，结算全部文本。</p><ul><li>除非另有说明，每个法典条目在每场关卡或序曲中不能结算超过一次。</li><li>结算法典条目时，由触发该条目的玩家结算全部效果（*进行检定、造成伤害、支付资源等*）。如果无法确定是谁触发了该法典条目，则由队长结算该条目。</li><li>如果法典条目指示玩家将某位放在一边的具名居民加入游戏，除非另有说明，该角色以剧情支援面朝上加入游戏。</li><li>_战役日志中名字已被划去的居民不能在序曲或关卡中进入游戏_。如果某位居民的名字已被划去，该居民笔记中的全部条目也同样失效。</li><li>在为某个特定角色结算法典条目时，你只能阅读自己满足条件的单个小节。如果你不满足法典条目第一个小节的条件，就跳到下一个小节。除非另有说明，只参考该角色在你战役日志中的笔记与关系等级。（*例如*，“在瑞玟·霍桑的笔记中记录*瑞玟是个万人迷”是指让玩家修改瑞玟战役日志条目中的“笔记”部分。*）</li><li>结算完法典条目并在战役日志中做好变更后，恢复游戏。</li></ul>",
+    "threeDaysThreeNights": "<h3>三天三夜</h3><p class='basic'>*《铁杉谷盛宴》*战役只给玩家游戏内的三天时间来把整个故事走完。本战役还包含可游玩的序曲，调查员可以在其中与铁杉谷的居民互动、探寻铁杉岛的秘密，并为下一场关卡做准备。</p><p class='basic'>序曲是非对抗性的段落，会设置地点、剧本参考卡、幕与议程。每段序曲结束时都会给出若干选项，决定接下来游玩哪场关卡。视日期与时段而定，有些关卡会提供新的剧情选项或挑战。在一次战役的通关过程中，玩家没有时间游玩每一场关卡，也无法与每一位居民都交上朋友。</p><ul><li>玩家在游玩序曲与幕间时可以赚取经验。把这些经验记录在“未花费经验”下，但在战役指南指示之前不要花费。</li><li>要掌握当前的日期／时段，你可以查看并更新战役日志中的“日期／时段”部分。</li></ul>",
+    "residentsAndRelationshipLevels": "<h3>居民与关系等级</h3><p class='basic'>有时，剧情文本会指示调查员提高他们与某位特定居民的关系等级。若接到此类指示，请查看战役日志，找到该指定居民的条目。</p><ul><li>提到某位居民的关系等级时，其条目中已勾选的格数就是该居民的关系等级。</li><li>要提高某位居民的关系等级，勾选该居民条目中最左侧未勾选的格子。</li><li>要降低某位居民的关系等级，擦掉该居民条目中最右侧已勾选的格子。</li><li>除非另有说明，每次只能提高或降低某位居民 1 格关系等级。</li><li>若接到将某位居民的关系等级设为 0 的指示，擦掉该居民条目中所有已勾选的格子。</li><li>_战役日志中名字已被划去的居民不能在序曲或关卡中进入游戏_。</li></ul>",
+    "locationAdjacency": "<h3>本战役中的地点相邻</h3><p class='basic'>本战役中的多数关卡按固定的网格样式摆放地点。_在这些关卡中，每个地点除了连接图标之外，还与和它相邻的每个地点相连_。</p><ul><li>相邻的地点共享一条边（左边、右边、上方或下方）。只共享一个角的地点不算相邻。</li><li>接到将地点加入游戏的指示时，把它放在你所在地点上方、下方、左侧或右侧的相邻空位。</li><li>你不能把地点放到已有地点所在的位置上。选择新地点的位置时，若有可能，你必须选一个没有被地点占据的位置。若无法做到，则不将任何新地点加入游戏。</li><li>注意，在使用了*山谷*遭遇组的序曲与关卡中，地点只通过其图标相连。</li></ul>"
+  },
+  "newKeywords": {
+    "title": "新关键词",
+    "body": "<h3>警戒</h3><p class='basic'>本战役中的某些敌人拥有警戒关键词。每当调查员在尝试躲避拥有警戒关键词的敌人时技能检定失败，在结算完该次技能检定的所有结果之后，该敌人会对躲避它的调查员执行一次攻击。敌人在执行警戒攻击后不会横置。无论该敌人是否与躲避它的调查员交战，这次攻击都会发生。</p><h3>白日 {'{'}day{'}'} 与黑夜 {'{'}night{'}'}</h3><p class='basic'>在本战役中设置游戏时，玩家可能会被指示将时间标记卡加入游戏。为此，请从*第一日*、*第二日*或*最终日*遭遇组中找到与当前日期对应的时间标记卡，并将它放在议程牌库旁。这张卡代表当前的日期与时段。</p><p class='basic'>有些卡牌会根据关卡发生在白日还是黑夜而产生不同效果。以 _（白日 {'{'}day{'}'}）_ 或 _（黑夜 {'{'}night{'}'}）_ 关键词开头的文本，只有所游玩的关卡或序曲分别处于白日或黑夜时才生效。前面没有这些关键词的任何其他能力，不论时段如何都生效。</p><p class='basic'>设置指示可能会根据当前的日期与时段给出特定指示。（*例如*，“如果当前是 _第二日_，将瑞玟·霍桑在蔓越莓沼泽加入游戏”*只在把该关卡作为* _第二日_ *关卡游玩时生效，在* _第二夜_ *关卡中不生效*）。</p><h3>逃逸</h3><p class='basic'>本战役中的某些敌人拥有逃逸关键词。逃逸敌人代表为了自保或达成自己的目标而想避开调查员的敌人。</p><p class='basic'>如果处于重整状态且拥有逃逸关键词的敌人攻击或被攻击，在该次攻击结算之后，该敌人立即与所有调查员解除交战，移动到一个相连地点（若有可能，选择没有调查员的地点），然后横置。无论该敌人是否与攻击它的调查员交战，这个效果都会发生。</p><h3>巡逻</h3><p class='basic'>本战役中的某些敌人拥有巡逻关键词。在敌军阶段（框架步骤 3.2）中，每个处于重整状态且未交战、拥有巡逻关键词的敌人，会沿着通往指定地点（写在其巡逻字样旁的括号中）的最短路径移动到一个相连地点。</p><ul><li>如果有多个地点都符合指定地点的条件，由队长选择该敌人向哪个地点移动。</li><li>如果拥有巡逻关键词的敌人会因卡牌能力阻挡的路径而被迫移动到一个地点，则该敌人不移动。</li></ul>"
+  }
+}

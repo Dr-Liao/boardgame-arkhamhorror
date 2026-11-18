@@ -25,10 +25,12 @@ const CUSTOM_CHECKS = Object.freeze([
   { name: 'Spring-Loaded', checks: 4, text: 'Pocket Multi Tool\'s ability is now a [reaction] ability with the trigger: "When you would fail a skill test you are performing, exhaust Pocket Multi Tool..."' },
 ])
 
-const checked = (state, inv, index) => {
-  const list = state?.campaign?.tsk?.customizations?.bySeat?.[inv?.seat]?.['09099']
-  return Array.isArray(list) && list.filter(value => value === index).length > 0
-}
+// 2026-11-16 P2-3：Sharpened Knife/Signal Mirror/Magnifying Lens（2 格）与 Lucky Charm（3 格）
+// 必须勾满才生效；Pry Bar（1 格）不受影响。
+import { customizationOptionFullyChecked } from '../../engine/tsk-customizable.js'
+
+const checked = (state, inv, index) =>
+  customizationOptionFullyChecked(state, inv?.seat, '09099', index)
 
 export default {
   code: '09099',

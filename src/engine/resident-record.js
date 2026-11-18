@@ -42,3 +42,29 @@ export function crossOutResident(campaign, raw) {
   records[spec.crossedOut] = true
   return true
 }
+
+// P4：场景声明的居民清单（内容层给 id 与记录键；引擎只保存与校验，不写居民名）。
+// 形状 [{ id, name, nameEn?, record: { level, notes, crossedOut, max } }]；记录键跨居民唯一，
+// 保证投影与关系增减不会写到同一个战役记录。声明位置：`scenarioFlags.mechanics.residents`。
+const residentId = /^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/
+export function normalizeResidentList(spec) {
+  if (spec == null) return null
+  if (!Array.isArray(spec) || !spec.length) throw new TypeError('居民清单必须为非空数组')
+  const ids = new Set()
+  const keys = new Set()
+  for (const entry of spec) {
+    assertFields(entry, ['id', 'name', 'nameEn', 'record'])
+    if (typeof entry.id !== 'string' || !residentId.test(entry.id) || ids.has(entry.id)
+      || ['constructor', 'prototype', '__proto__'].includes(entry.id)) throw new TypeError('无效居民 id')
+    ids.add(entry.id)
+    if (typeof entry.name !== 'string' || !entry.name.trim()) throw new TypeError('居民缺少名称')
+    if (entry.nameEn != null && (typeof entry.nameEn !== 'string' || !entry.nameEn.trim())) throw new TypeError('无效居民英文名')
+    const record = normalizeResidentRecord(entry.record)
+    for (const key of [record.level, record.notes, record.crossedOut]) {
+      if (keys.has(key)) throw new TypeError('居民记录键重复')
+      keys.add(key)
+    }
+  }
+  return structuredClone(spec)
+}
+

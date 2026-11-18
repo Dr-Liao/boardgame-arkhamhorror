@@ -112,6 +112,19 @@ export const UI_CARDS = Object.freeze({
     shadesOfSuffering: '09660',
     withoutATrace: '09681',
     congressOfTheKeys: '09694',
+    // 九循环《铁杉谷盛宴》：4 段序曲共用 10704，8 章各用其剧本提示卡。
+    welcomeToHemlockVale: '10704',
+    writtenInRock: '10501',
+    hemlockHouse: '10523',
+    theSilentHeath: '10549',
+    theLostSister: '10569',
+    theThingInTheDepths: '10588',
+    theTwistedHollow: '10605',
+    dawnOfTheSecondDay: '10704',
+    theLongestNight: '10626',
+    dawnOfTheFinalDay: '10704',
+    preludeTheFinalEvening: '10704',
+    fateOfTheVale: '10651',
   }),
   story: Object.freeze({
     smiteTheWicked: '02007',
@@ -148,6 +161,15 @@ export const UI_CARDS = Object.freeze({
     tdeWebOfDreamsChapters: Object.freeze(['06063', '06168', '06247', '06333']),
     tdeStoryAssetCards: Object.freeze(['06059', '06079', '06080', '06144', '06189', '06224', '06225', '06266']),
     tdeLocationDoomCards: Object.freeze(['06333', '06341', '06342', '06343', '06345', '06351', '06354']),
+    // 铁杉谷盛宴（P3）：居民剧情支援／敌人双面、传家宝与时间标记的「身份」写在卡名或战役记录里，
+    // 卡文自身不一定出现机制名；规则书按卡号把它们连到 fhvResidents / fhvTime 条目。
+    // 章节尚未开放时这些表只服务规则书「卡文直达」，不参与任何战役流程。
+    fhvResidentFaces: Object.freeze([
+      '10693', '10693b', '10694', '10694b', '10695', '10695b', '10696', '10696b', '10697',
+      '10697b', '10698', '10698b', '10699', '10699b', '10700', '10700b', '10701', '10701b',
+    ]),
+    fhvHeirloomCards: Object.freeze(['10713', '10714', '10715']),
+    fhvTimeMarkerCards: Object.freeze(['10675', '10677', '10679']),
   }),
   tomeInvestigators: Object.freeze(['01002']),
 })

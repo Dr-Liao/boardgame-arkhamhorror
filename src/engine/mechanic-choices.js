@@ -11,7 +11,10 @@ export const MECHANIC_OPERATIONS = Object.freeze(['seal', 'release', 'claimKey',
   // P4 七循环《地球边缘》交互事务：寒霜 / 伙伴 / 封印 / 城市钥匙 / 忒咳哩-哩 / 牌库顶 / 跨座位代打 / 演武 / 物资。
   'eoteFrost', 'eotePartner', 'eoteSeal', 'eoteKey', 'eoteTekeli', 'eoteDeckTop', 'eoteCrossSeat', 'eoteDiscipline', 'eoteSupply',
   // P4 八循环《绯红密钥》交互事务：隐匿揭露 / 密钥变换转移 / 空洞回收 / 世界地图启程 / 定制勾选 / 跨座位即时行动。
-  'tskConcealed', 'tskKey', 'tskHollow', 'tskMap', 'tskCustomizable', 'tskCrossSeat'])
+  'tskConcealed', 'tskKey', 'tskHollow', 'tskMap', 'tskCustomizable', 'tskCrossSeat',
+  // P4 九循环《铁杉谷盛宴》交互事务：法典触读 / 序曲整备与下一次勘察 / 网格空位滑动 /
+  // 矿车道岔 / 猎杀袋抽取转移 / 坚毅形态与线索搬移。
+  'fhvCodex', 'fhvSurvey', 'fhvGrid', 'fhvRail', 'fhvPredation', 'fhvForm', 'fhvClue'])
 export function selectMechanic(state, seat, { operation, prompt, candidates, min = 1, max = 1, optional = true, source = null, stage = 'items' }) {
   investigatorAt(state, seat)
   if (!MECHANIC_OPERATIONS.includes(operation) || !Array.isArray(candidates)

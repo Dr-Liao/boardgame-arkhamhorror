@@ -730,9 +730,10 @@ function executeHubMove(state, seat, move, events) {
       break
     }
     case 'hubCustomize': {
-      // P8：定制升级卡的一格勾选（房主代全桌执行，与 hubContinue/hubEmbark 同一房主口径）。
-      // 越权/相位校验在这里；勾选合法性、经验充分性与写入由 tsk-customizable 原语负责。
-      if (seat !== 0) throw new Error('只有房主可以执行定制升级')
+      // P8：定制升级卡的一格勾选。2026-11-16 P2-3：和 hubPurchase 一样按座位生效——
+      // 每个真人座位给**自己的**战役记录勾选（多人局不再只有房主能升级定制卡）；
+      // 是否轮到该座位由 validateHubMove/legalMoves 保证。勾选合法性、经验结算由 tsk-customizable 原语负责。
+      if (!(state.humanSeats || [0]).includes(seat)) throw new Error('AI 座位没有定制升级入口')
       if (state.uiState !== 'interlude'
         && !(state.uiState === 'scenarioSetup' && !campaign.scenarioResults?.length)) {
         throw new Error('定制升级只能在关间或首章前的构筑准备中进行')
@@ -751,13 +752,17 @@ function executeHubMove(state, seat, move, events) {
         throw new Error(`定制选项下标无效：${String(move.optionIndex)}`)
       }
       const option = optionList[optionIndex]
+      // P2-3：近似条目声明 implemented:false 的勾选格拒绝购买（UI 不生成候选，这里是伪造命令兜底）。
+      if (option.implemented === false) throw new Error(`「${option.name}」的规则尚未实现，不能勾选`)
       const checked = [...(customizationsOfSeat(state, seat)[code] || [])]
       const filled = checked.filter(index => index === optionIndex).length
       if (filled >= option.checks) throw new Error(`「${option.name}」已经勾满 ${option.checks} 格`)
       checked.push(optionIndex)
       const availableXp = Math.max(0, Number(upgradeRecord(record)?.xp) || 0)
+      // 2026-11-16 P2-3：exceptional 定制卡每格 2 XP（与 legalMoves 的 cost/availableXp 同口径）。
+      const costPerCheck = cardDef(code)?.exceptional === true ? 2 : 1
       // 原语只校验/结算，不写 `record.xp`；这里扣一次（hubPurchase 经 purchaseCard 扣一次，同一口径）。
-      const result = upgradeCustomization(state, { seat, code, checked, availableXp, costPerCheck: 1 })
+      const result = upgradeCustomization(state, { seat, code, checked, availableXp, costPerCheck })
       record.xp -= result.xpCost
       record.spentXp = (record.spentXp || 0) + result.xpCost
       campaign.xp = Object.values(campaign.investigators).reduce((sum, item) => sum + item.xp, 0)

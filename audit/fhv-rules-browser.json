@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "tools/playwright-fhv-reporter.mjs",
+  "status": "passed",
+  "specs": [
+    "fhv-rules.browser.mjs"
+  ],
+  "tests": [
+    {
+      "title": "P3 desktop en 规则目录、阅读与返回",
+      "ok": true,
+      "durationMs": 1456
+    },
+    {
+      "title": "P3 desktop zh-CN 规则目录、阅读与返回",
+      "ok": true,
+      "durationMs": 2162
+    },
+    {
+      "title": "P3 desktop 卡文直达并恢复详情焦点",
+      "ok": true,
+      "durationMs": 1995
+    },
+    {
+      "title": "P3 mobile en 规则目录、阅读与返回",
+      "ok": true,
+      "durationMs": 2265
+    },
+    {
+      "title": "P3 mobile zh-CN 规则目录、阅读与返回",
+      "ok": true,
+      "durationMs": 2151
+    },
+    {
+      "title": "P3 mobile 卡文直达并恢复详情焦点",
+      "ok": true,
+      "durationMs": 2181
+    }
+  ],
+  "screenshots": [
+    "artifacts/migration/fhv/reports/screenshots/desktop-card-link.png",
+    "artifacts/migration/fhv/reports/screenshots/desktop-en.png",
+    "artifacts/migration/fhv/reports/screenshots/desktop-zh-CN.png",
+    "artifacts/migration/fhv/reports/screenshots/mobile-card-link.png",
+    "artifacts/migration/fhv/reports/screenshots/mobile-en.png",
+    "artifacts/migration/fhv/reports/screenshots/mobile-zh-CN.png"
+  ],
+  "checks": {
+    "desktop": true,
+    "mobile": true,
+    "zh": true,
+    "en": true,
+    "cardLink": true,
+    "noHorizontalScroll": true
+  }
+}

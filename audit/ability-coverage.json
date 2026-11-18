@@ -6,28 +6,28 @@
     "effectsEntries": 0,
     "effectsTopLevelFields": 0,
     "escapeCards": 0,
-    "descriptorEntries": 1034,
-    "descriptorAbilities": 1487,
+    "descriptorEntries": 1171,
+    "descriptorAbilities": 1704,
     "abilityKinds": 12,
     "windows": 120,
     "effectPrimitives": 56,
-    "nonPlayerCards": 335,
-    "behaviorLines": 49574,
+    "nonPlayerCards": 376,
+    "behaviorLines": 71034,
     "declaredScenarios": 3
   },
   "channels": {
-    "descriptor": 1034,
+    "descriptor": 1171,
     "data": 4
   },
   "nonPlayer": {
     "byScope": {
-      "enemy": 115,
-      "location": 110,
-      "storyAsset": 61,
-      "treachery": 22,
+      "enemy": 133,
+      "location": 112,
+      "storyAsset": 75,
+      "treachery": 26,
       "act": 11,
       "scenario": 8,
-      "agenda": 8
+      "agenda": 11
     },
     "codes": [
       "01181",
@@ -361,13 +361,54 @@
       "09769b",
       "09770a",
       "09770b",
+      "10011",
+      "10014",
+      "10063",
+      "10681",
+      "10683",
+      "10686",
+      "10692",
+      "10693",
+      "10693b",
+      "10694",
+      "10694b",
+      "10695",
+      "10695b",
+      "10696",
+      "10696b",
+      "10697",
+      "10697b",
+      "10698",
+      "10698b",
+      "10699",
+      "10699b",
+      "10700",
+      "10700b",
+      "10701",
+      "10701b",
+      "10702",
+      "10703",
+      "10713",
+      "10714",
+      "10715",
+      "10716",
+      "10718",
+      "10721",
+      "10722",
+      "10723",
+      "10724",
+      "10729",
+      "10731",
+      "10732",
+      "10738",
+      "10739",
       "goatSpawn",
       "relentlessDarkYoung",
       "screechingByakhee",
       "wolfManDrew"
     ],
-    "abilities": 368,
-    "modifiers": 106
+    "abilities": 414,
+    "modifiers": 124
   },
   "declaration": {
     "abilityScopes": [
@@ -413,6 +454,18 @@
       "content/campaigns/theDunwichLegacy/later-behaviors.js",
       "content/campaigns/theDunwichLegacy/scenarios/extracurricularActivity/behavior.js",
       "content/campaigns/theDunwichLegacy/scenarios/theHouseAlwaysWins/behavior.js",
+      "content/campaigns/theFeastOfHemlockVale/scenarios/dawnOfTheFinalDay/behavior.js",
+      "content/campaigns/theFeastOfHemlockVale/scenarios/dawnOfTheSecondDay/behavior.js",
+      "content/campaigns/theFeastOfHemlockVale/scenarios/fateOfTheVale/behavior.js",
+      "content/campaigns/theFeastOfHemlockVale/scenarios/hemlockHouse/behavior.js",
+      "content/campaigns/theFeastOfHemlockVale/scenarios/preludeTheFinalEvening/behavior.js",
+      "content/campaigns/theFeastOfHemlockVale/scenarios/theLongestNight/behavior.js",
+      "content/campaigns/theFeastOfHemlockVale/scenarios/theLostSister/behavior.js",
+      "content/campaigns/theFeastOfHemlockVale/scenarios/theSilentHeath/behavior.js",
+      "content/campaigns/theFeastOfHemlockVale/scenarios/theThingInTheDepths/behavior.js",
+      "content/campaigns/theFeastOfHemlockVale/scenarios/theTwistedHollow/behavior.js",
+      "content/campaigns/theFeastOfHemlockVale/scenarios/welcomeToHemlockVale/behavior.js",
+      "content/campaigns/theFeastOfHemlockVale/scenarios/writtenInRock/behavior.js",
       "content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart1/behavior.js",
       "content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart2/behavior.js",
       "content/campaigns/theForgottenAge/scenarios/shatteredAeons/behavior.js",
@@ -442,7 +495,7 @@
       "content/campaigns/theScarletKeys/scenarios/shadesOfSuffering/behavior.js",
       "content/campaigns/theScarletKeys/scenarios/withoutATrace/behavior.js"
     ],
-    "behaviorLines": 49574,
+    "behaviorLines": 71034,
     "declaredScenarios": 3
   },
   "cards": [
@@ -5639,6 +5692,691 @@
       "code": "09128",
       "channel": "descriptor",
       "descriptors": 1
+    },
+    {
+      "code": "10001",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "10002",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10003",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10004",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "10005",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10005b",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10006",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10007",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10008",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10009",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "10010",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10012",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10013",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10015",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10016a",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10016b",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10017",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10018",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10019",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10020",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "10021",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10022",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10023",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10024",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10025",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10026",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10027",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10028",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10029",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10030",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10031",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10032",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10033",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10034",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10035",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10036",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10037",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10038",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10039",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10040",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10041",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10042",
+      "channel": "descriptor",
+      "descriptors": 3
+    },
+    {
+      "code": "10043",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10044",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10045",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10046",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10047",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10048",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10049",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10050",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10051",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10052",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10053",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10054",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10055",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10056",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10057",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10058",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10059",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10060",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10061",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10062",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10064",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10065",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10066",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10067",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10068",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10069",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10070",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10071",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10072",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10073",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10074",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10075",
+      "channel": "descriptor",
+      "descriptors": 3
+    },
+    {
+      "code": "10076",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10077",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10078",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10079",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10080",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10081",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10082",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10083",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10084",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10085",
+      "channel": "descriptor",
+      "descriptors": 3
+    },
+    {
+      "code": "10086",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "10087",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "10088",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "10089",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "10090",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "10091",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10092",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10093",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10094",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10095",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10096",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10097",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10098",
+      "channel": "descriptor",
+      "descriptors": 4
+    },
+    {
+      "code": "10099",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10100",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10101",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10102",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10103",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10104",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10105",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10106",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10107",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10108",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10109",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "10110",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10111",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10112",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10113",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10114",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10115",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10116",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10117",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10118",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "10119",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10120",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10121",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10122",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10123",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10124",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10125",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10126",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10127",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "10128",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "10129",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10130",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10131",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10132",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "10133",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10134",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "10135",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10136",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10137",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "10138",
+      "channel": "descriptor",
+      "descriptors": 2
     }
   ]
 }

@@ -12,11 +12,12 @@
 //   · Empowered：发起检定时可选择难度 +2，本次每个效果值 +1；
 //   · Perfected：成功超过难度 ≥2 时可执行两个不同选项。
 // 未实现：Enlightening 的「充能或秘密」二选一按充能处理（api.addUses(asset,1)），见 note。
-import { customizationChecked } from '../../engine/tsk-customizable.js'
+import { customizationOptionFullyChecked } from '../../engine/tsk-customizable.js'
 
 const SOURCE = '09040'
 const MAX_SUPPLIES = 3
-const checked = (state, seat) => customizationChecked(state, seat, SOURCE)
+// 2026-11-16 P2-3：Refined/Empowered/Perfected 是 2/4/5 格选项，必须勾满才生效。
+const fullyChecked = (state, inv, index) => customizationOptionFullyChecked(state, inv?.seat ?? state.currentSeat, SOURCE, index)
 
 export default {
   code: '09040',
@@ -38,7 +39,7 @@ export default {
       label: '精炼（Refined）：入场时额外 2 补给',
       resolve: ({ state, inv, source, api }) => {
         if (!source) return
-        if (!checked(state, inv.seat).includes(4)) return
+        if (!fullyChecked(state, inv, 4)) return
         api.addUses(source, 2)
         api.info(`炼金蒸馏：精炼入场，补给 ${source.uses}/${MAX_SUPPLIES + 2}。`)
       },
@@ -60,10 +61,9 @@ export default {
         }))
         const target = state.investigators[seat]
         if (!target) return
-        const picked = checked(state, inv.seat)
         let difficulty = 1
         let valueBonus = 0
-        if (picked.includes(5)) {
+        if (fullyChecked(state, inv, 5)) {
           const answer = api.choice({
             kind: 'effect', source: SOURCE, seat: inv.seat,
             prompt: '炼金蒸馏（注能）：是否把本次检定难度 +2，让每个选项的效果值 +1？',
@@ -79,10 +79,10 @@ export default {
             { id: 'draw', label: `抽取 ${2 + valueBonus} 张卡牌` },
             { id: 'resources', label: `获得 ${2 + valueBonus} 资源` },
           ]
-          if (picked.includes(0)) options.push({ id: 'healDamage', label: `治愈 ${2 + valueBonus} 点伤害` })
-          if (picked.includes(1)) options.push({ id: 'healHorror', label: `治愈 ${2 + valueBonus} 点恐惧` })
-          if (picked.includes(2)) options.push({ id: 'charge', label: '在你控制的支援上放置 1 充能' })
-          if (picked.includes(3)) options.push({ id: 'move', label: '移动最多 2 次' })
+          if (fullyChecked(state, inv, 0)) options.push({ id: 'healDamage', label: `治愈 ${2 + valueBonus} 点伤害` })
+          if (fullyChecked(state, inv, 1)) options.push({ id: 'healHorror', label: `治愈 ${2 + valueBonus} 点恐惧` })
+          if (fullyChecked(state, inv, 2)) options.push({ id: 'charge', label: '在你控制的支援上放置 1 充能' })
+          if (fullyChecked(state, inv, 3)) options.push({ id: 'move', label: '移动最多 2 次' })
           const pick = api.choice({
             kind: 'effect', source: SOURCE, seat: inv.seat,
             prompt: '炼金蒸馏：选择一个效果。', options,
@@ -126,7 +126,7 @@ export default {
             if (!result?.success) return
             const first = runOption()
             if (!first) return
-            if (!picked.includes(6)) return
+            if (!fullyChecked(state, inv, 6)) return
             if ((result.value - result.difficulty) < 2) return
             const second = api.choice({
               kind: 'effect', source: SOURCE, seat: inv.seat,

@@ -1,0 +1,438 @@
+{
+  "schemaVersion": 1,
+  "cycle": "fhv",
+  "phase": "P5",
+  "generatedBy": "tools/audit-fhv-investigators.mjs",
+  "status": "verified",
+  "items": [
+    {
+      "code": "10001",
+      "name": "威尔森·理查德",
+      "file": "src/cards/entries/10001.js",
+      "sha256": "433f24d3ca1d3147cd48de85f14aa06d29f000a315b4b65a8d71e7a5ee126054",
+      "signatures": [
+        {
+          "code": "10002",
+          "name": "应急手段",
+          "file": "src/cards/entries/10002.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "17791cb72c682f03ad32fd1fb5d5f42873e5323b5937db35b7ede207a0f619c3"
+        },
+        {
+          "code": "10003",
+          "name": "仓促修补",
+          "file": "src/cards/entries/10003.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "a932f8872e6308105c1dfe0f2c3d1a94f9b994f1a64e0a59061ced7db70a17c8"
+        }
+      ],
+      "bonded": [],
+      "checks": {
+        "registered": true,
+        "elderSign": true,
+        "signatures": true,
+        "deckConstruction": true,
+        "behaviors": true,
+        "desktop": true,
+        "mobile": true,
+        "selectable": true,
+        "sourceCurrent": true
+      },
+      "status": "verified",
+      "evidence": [
+        "tests/fhv-investigator-10001.test.mjs",
+        "audit/fhv-node-acceptance.json",
+        "audit/fhv-investigators-browser.json"
+      ]
+    },
+    {
+      "code": "10004",
+      "name": "凯特·温斯罗普",
+      "file": "src/cards/entries/10004.js",
+      "sha256": "f2ff16fd095173b17d9b7bf5d0bcc6326034cc5940cea67b52e20ee3aa0f0437",
+      "signatures": [
+        {
+          "code": "10005",
+          "name": "磁通量稳定器",
+          "file": "src/cards/entries/10005.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "4f5cc489a33a7510fdd02240b51bda643ef87bae944e845e4d501ff479aaaf51"
+        },
+        {
+          "code": "10008",
+          "name": "失败的实验",
+          "file": "src/cards/entries/10008.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "b168eca7bb4a1c19825eb677b86e8e3adfa64f25f75c37efee24451dbe1c1479"
+        }
+      ],
+      "bonded": [
+        {
+          "code": "10005b",
+          "name": "磁通量稳定器",
+          "file": "src/cards/entries/10005b.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "60cc5b90e0d9fb940204bc00e792f2b79d4b858c3a5c44100bac80ad2a0a68f0"
+        },
+        {
+          "code": "10006",
+          "name": "以太电流",
+          "file": "src/cards/entries/10006.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "8cbf0e203e1352d2dc92f6a07480e8ce4df9cb142442e89b2a0bac1b65fce199"
+        },
+        {
+          "code": "10007",
+          "name": "以太电流",
+          "file": "src/cards/entries/10007.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "d97c4818e974617e16e33cf6d0c3738f71a36173d209cdabb373712fb3596914"
+        }
+      ],
+      "checks": {
+        "registered": true,
+        "elderSign": true,
+        "signatures": true,
+        "deckConstruction": true,
+        "behaviors": true,
+        "desktop": true,
+        "mobile": true,
+        "selectable": true,
+        "sourceCurrent": true
+      },
+      "status": "verified",
+      "evidence": [
+        "tests/fhv-investigator-10004.test.mjs",
+        "audit/fhv-node-acceptance.json",
+        "audit/fhv-investigators-browser.json"
+      ]
+    },
+    {
+      "code": "10009",
+      "name": "亚历山德拉·佐兹",
+      "file": "src/cards/entries/10009.js",
+      "sha256": "dcdefea6338d8753c11b997aa9b2d8c00c77edc540700df591a439445aef3f2f",
+      "signatures": [
+        {
+          "code": "10010",
+          "name": "哄骗",
+          "file": "src/cards/entries/10010.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "722a68bb19d7e6ef117b2352e381ce16e7676d980aa849f86dd28eb0e647fa2e"
+        },
+        {
+          "code": "10011",
+          "name": "萨马科纳",
+          "file": "src/cards/entries/10011.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "b2bf18b988fec9f5b266a5ac2f896b25b063e2c4d969df082d3aacf0483e7cf5"
+        }
+      ],
+      "bonded": [],
+      "checks": {
+        "registered": true,
+        "elderSign": true,
+        "signatures": true,
+        "deckConstruction": true,
+        "behaviors": true,
+        "desktop": true,
+        "mobile": true,
+        "selectable": true,
+        "sourceCurrent": true
+      },
+      "status": "verified",
+      "evidence": [
+        "tests/fhv-investigator-10009.test.mjs",
+        "audit/fhv-node-acceptance.json",
+        "audit/fhv-investigators-browser.json"
+      ]
+    },
+    {
+      "code": "10012",
+      "name": "鸣神琥珀",
+      "file": "src/cards/entries/10012.js",
+      "sha256": "802d670a1ffa3ec92a52f7eeea01913c987566e3668e862f39d2a875ab6d1b53",
+      "signatures": [
+        {
+          "code": "10013",
+          "name": "真幻记述",
+          "file": "src/cards/entries/10013.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "7bddb4af3c8f823951bbb8f29c1f9a9872c1919df5e004230b8aabf19763ba6c"
+        },
+        {
+          "code": "10014",
+          "name": "恸哭怨魂",
+          "file": "src/cards/entries/10014.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "27bc68953f666b826f29f64e2856f0f4d50def60b84bc45b388d5660bffb99e0"
+        }
+      ],
+      "bonded": [],
+      "checks": {
+        "registered": true,
+        "elderSign": true,
+        "signatures": true,
+        "deckConstruction": true,
+        "behaviors": true,
+        "desktop": true,
+        "mobile": true,
+        "selectable": true,
+        "sourceCurrent": true
+      },
+      "status": "verified",
+      "evidence": [
+        "tests/fhv-investigator-10012.test.mjs",
+        "audit/fhv-node-acceptance.json",
+        "audit/fhv-investigators-browser.json"
+      ]
+    },
+    {
+      "code": "10015",
+      "name": "汉克‧萨姆森",
+      "file": "src/cards/entries/10015.js",
+      "sha256": "4a88984f34158a4006fd3d660e4db653d3d3c1bd4ab40c0d04eb846b39791a29",
+      "signatures": [
+        {
+          "code": "10017",
+          "name": "一身是胆",
+          "file": "src/cards/entries/10017.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "fd09a0e0a65dd5d00295220771d18b8058f787cae3b3e4a79b772c2f88a95ce5"
+        },
+        {
+          "code": "10018",
+          "name": "“爹爹在哪儿？”",
+          "file": "src/cards/entries/10018.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "b73bfa4cce2e8cd8ee8d7d42b96a993c04219f9fcd872c538c4f3e511f427692"
+        }
+      ],
+      "bonded": [
+        {
+          "code": "10016a",
+          "name": "汉克‧萨姆森",
+          "file": "src/cards/entries/10016a.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "f35a4b6b49edf5d591f45f6df9f9184974a55f6f256c2cf824382d2a98698cc3"
+        },
+        {
+          "code": "10016b",
+          "name": "汉克‧萨姆森",
+          "file": "src/cards/entries/10016b.js",
+          "registered": true,
+          "dependencyOnly": true,
+          "implemented": true,
+          "sha256": "76164995d08a4069019cfdc17854a034edc35873dd8802bd4505cb70aea4e602"
+        }
+      ],
+      "checks": {
+        "registered": true,
+        "elderSign": true,
+        "signatures": true,
+        "deckConstruction": true,
+        "behaviors": true,
+        "desktop": true,
+        "mobile": true,
+        "selectable": true,
+        "sourceCurrent": true
+      },
+      "status": "verified",
+      "evidence": [
+        "tests/fhv-investigator-10015.test.mjs",
+        "audit/fhv-node-acceptance.json",
+        "audit/fhv-investigators-browser.json"
+      ]
+    }
+  ],
+  "checks": {
+    "nodeAcceptance": true,
+    "browserAcceptance": true,
+    "investigatorsAllVerified": true,
+    "packBoundary": true,
+    "otherPacksCatalogOnly": true,
+    "originalBaselinePreserved": true,
+    "replayZeroDrift": true,
+    "fastNoNewFailures": true,
+    "docsPresent": true
+  },
+  "gates": {
+    "nodeAcceptance": true,
+    "browserAcceptance": true,
+    "investigatorsAllVerified": true,
+    "packBoundary": true,
+    "otherPacksCatalogOnly": true,
+    "originalBaselinePreserved": true,
+    "replayZeroDrift": true,
+    "fastNoNewFailures": true,
+    "docsPresent": true
+  },
+  "deliveredInvestigators": [
+    "10001",
+    "10004",
+    "10009",
+    "10012",
+    "10015"
+  ],
+  "boundary": "P5 只认证 5 位 FHV 调查员与 15 张专属/绑定依赖；战役（八章/序曲）仍 catalog-only。一般玩家卡包在 P6 由该阶段账本验收后开放，不改变 P5 对调查员逐人行为与存档回放的验收口径。",
+  "sources": [
+    {
+      "path": "audit/fhv-baseline.json",
+      "sha256": "e665681cfb8fc9b1f8761db668e9db041829de2b439e90106bd54d8ee2f0f677"
+    },
+    {
+      "path": "audit/fhv-investigators-browser.json",
+      "sha256": "9501cef2d6383342d0be37c6c735a6753f6376e0442c90e254a593937d0b850e"
+    },
+    {
+      "path": "audit/fhv-node-acceptance.json",
+      "sha256": "171220294c1912d02bc7b50804ab1e5732b23f3d9635e0eb3ff3165b9e06b08c"
+    },
+    {
+      "path": "audit/fhv-regression.json",
+      "sha256": "be58f5ca62a90030812d810ad5748cc841df7c612815fafaa98a5f9d83ab7f1c"
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/investigator-data.js",
+      "sha256": "497486870b6a6cc70400b15be9148edc97a621bc12f76283788af3fac6391e59"
+    },
+    {
+      "path": "content/packs/fhvCampaign/manifest.js",
+      "sha256": "7439d7561cd963b2f4760100e253847c579ed443797d2d8eba1a9299881aba20"
+    },
+    {
+      "path": "content/packs/fhvInvestigators/manifest.js",
+      "sha256": "d6098bd57902bfff4e18bf33237e98e17c31b1867647057c810217316b0ac4d5"
+    },
+    {
+      "path": "content/packs/fhvPlayer/manifest.js",
+      "sha256": "67bd9cb341c5a9b09fcae266777643cf97352d5bb2dd0e1ef70418a44c934228"
+    },
+    {
+      "path": "src/cards/entries/10001.js",
+      "sha256": "433f24d3ca1d3147cd48de85f14aa06d29f000a315b4b65a8d71e7a5ee126054"
+    },
+    {
+      "path": "src/cards/entries/10002.js",
+      "sha256": "17791cb72c682f03ad32fd1fb5d5f42873e5323b5937db35b7ede207a0f619c3"
+    },
+    {
+      "path": "src/cards/entries/10003.js",
+      "sha256": "a932f8872e6308105c1dfe0f2c3d1a94f9b994f1a64e0a59061ced7db70a17c8"
+    },
+    {
+      "path": "src/cards/entries/10004.js",
+      "sha256": "f2ff16fd095173b17d9b7bf5d0bcc6326034cc5940cea67b52e20ee3aa0f0437"
+    },
+    {
+      "path": "src/cards/entries/10005.js",
+      "sha256": "4f5cc489a33a7510fdd02240b51bda643ef87bae944e845e4d501ff479aaaf51"
+    },
+    {
+      "path": "src/cards/entries/10005b.js",
+      "sha256": "60cc5b90e0d9fb940204bc00e792f2b79d4b858c3a5c44100bac80ad2a0a68f0"
+    },
+    {
+      "path": "src/cards/entries/10006.js",
+      "sha256": "8cbf0e203e1352d2dc92f6a07480e8ce4df9cb142442e89b2a0bac1b65fce199"
+    },
+    {
+      "path": "src/cards/entries/10007.js",
+      "sha256": "d97c4818e974617e16e33cf6d0c3738f71a36173d209cdabb373712fb3596914"
+    },
+    {
+      "path": "src/cards/entries/10008.js",
+      "sha256": "b168eca7bb4a1c19825eb677b86e8e3adfa64f25f75c37efee24451dbe1c1479"
+    },
+    {
+      "path": "src/cards/entries/10009.js",
+      "sha256": "dcdefea6338d8753c11b997aa9b2d8c00c77edc540700df591a439445aef3f2f"
+    },
+    {
+      "path": "src/cards/entries/10010.js",
+      "sha256": "722a68bb19d7e6ef117b2352e381ce16e7676d980aa849f86dd28eb0e647fa2e"
+    },
+    {
+      "path": "src/cards/entries/10011.js",
+      "sha256": "b2bf18b988fec9f5b266a5ac2f896b25b063e2c4d969df082d3aacf0483e7cf5"
+    },
+    {
+      "path": "src/cards/entries/10012.js",
+      "sha256": "802d670a1ffa3ec92a52f7eeea01913c987566e3668e862f39d2a875ab6d1b53"
+    },
+    {
+      "path": "src/cards/entries/10013.js",
+      "sha256": "7bddb4af3c8f823951bbb8f29c1f9a9872c1919df5e004230b8aabf19763ba6c"
+    },
+    {
+      "path": "src/cards/entries/10014.js",
+      "sha256": "27bc68953f666b826f29f64e2856f0f4d50def60b84bc45b388d5660bffb99e0"
+    },
+    {
+      "path": "src/cards/entries/10015.js",
+      "sha256": "4a88984f34158a4006fd3d660e4db653d3d3c1bd4ab40c0d04eb846b39791a29"
+    },
+    {
+      "path": "src/cards/entries/10016a.js",
+      "sha256": "f35a4b6b49edf5d591f45f6df9f9184974a55f6f256c2cf824382d2a98698cc3"
+    },
+    {
+      "path": "src/cards/entries/10016b.js",
+      "sha256": "76164995d08a4069019cfdc17854a034edc35873dd8802bd4505cb70aea4e602"
+    },
+    {
+      "path": "src/cards/entries/10017.js",
+      "sha256": "fd09a0e0a65dd5d00295220771d18b8058f787cae3b3e4a79b772c2f88a95ce5"
+    },
+    {
+      "path": "src/cards/entries/10018.js",
+      "sha256": "b73bfa4cce2e8cd8ee8d7d42b96a993c04219f9fcd872c538c4f3e511f427692"
+    },
+    {
+      "path": "src/deck/availability.js",
+      "sha256": "e5c3eb69cce3d56c41761d05fa876842ec18db31d44b217a5a058737faa459ad"
+    },
+    {
+      "path": "src/deck/deckbuilding.js",
+      "sha256": "c85a844e688c6b8dd3514b3b90bd08c53383c3847c79b3430a2a6a1c3b08284e"
+    },
+    {
+      "path": "web/deck-rules.js",
+      "sha256": "da900758723f860ff7c12bbc9554a2f8e63092d9e5516eccdf373e05dc4de3a7"
+    }
+  ],
+  "evidence": [
+    "audit/fhv-node-acceptance.json",
+    "audit/fhv-investigators-browser.json",
+    "audit/fhv-regression.json",
+    "audit/fhv-baseline.json"
+  ]
+}

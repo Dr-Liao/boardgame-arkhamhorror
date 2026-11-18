@@ -3,6 +3,7 @@ import { UI_CARDS } from './ui-cards.js'
 import { TIC_RULES, ticCardRuleIds } from './tic-rules.js'
 import { EOTE_RULES, eoteCardRuleIds } from './eote-rules.js'
 import { TSK_RULES, tskCardRuleIds } from './tsk-rules.js'
+import { FHV_RULES, FHV_CARD_RULE_PATTERNS } from './fhv-rules.js'
 
 // 规则书正文只写规则本身：基础规则置顶，关键词与战役条目均不写引擎、实现或界面操作。
 // 来源：官方 Learn to Play / Rules Reference（RULE_SOURCES 与 ArkhamDB 规则全文），按当前收录内容整理。
@@ -115,6 +116,7 @@ export const RULES = [
   ...TIC_RULES,
   ...EOTE_RULES,
   ...TSK_RULES,
+  ...FHV_RULES,
 ]
 export const ruleById = id => RULES.find(r => r.id === id) || RULES[0]
 export const DEFAULT_RULE_ID = 'basics'
@@ -219,6 +221,7 @@ function scenarioCardRuleIds(card) {
   if (/^07\d{3}[a-z]?$/.test(code)) return ticCardRuleIds(card)
   if (/^08\d{3}[a-z]?$/.test(code)) return eoteCardRuleIds(card)
   if (/^09\d{3}[a-z]?$/.test(code)) return tskCardRuleIds(card)
+  if (/^10\d{3}[a-z]?$/.test(code)) return fhvCardRuleIds(card)
   if (!/^02\d{3}$/.test(code)) return []
   const number = Number(code.slice(2))
   if (number >= 62 && number <= 80) return number >= 79 ? ['storyGuests', 'clubGambling'] : ['clubGambling']
@@ -300,6 +303,32 @@ function tdeCardRuleIds(card) {
   if ((TDE_REFERENCE_CARDS.tdeLocationDoomCards || []).includes(code)) ids.push('tdeLocationDoom')
   // 章节卡与遭遇卡都受该章混乱符号表约束。
   if (['scenario', 'act', 'agenda', 'location', 'enemy', 'treachery'].includes(card?.type)) ids.push('tdeChaos')
+  return [...new Set(ids)]
+}
+// 铁杉谷盛宴（10 段）的卡文直达。判据与 content/campaigns/theFeastOfHemlockVale/keywords.js 的 pattern 一致：
+// 卡面命中哪个 pattern 就必须连到对应条目，测试逐张比对（tests/fhv-rules.test.mjs），所以两份判据不能各走各的。
+// 居民剧情支援／敌人面、传家宝与时间标记的身份写在卡名或战役记录里，按卡号登记在 web/ui-cards.js#rulebookReferences。
+const FHV_REFERENCE_CARDS = UI_CARDS.rulebookReferences
+const FHV_TYPE_RULE_LINKS = Object.freeze({
+  scenario: Object.freeze(['fhvTime', 'fhvSurvey']),
+  story: Object.freeze(['fhvTime']),
+  location: Object.freeze(['fhvGrid']),
+})
+function fhvTextOf(card) {
+  return [card?.name, card?.subname, card?.text, card?.backText, card?.textZh,
+    card?.customizationText, card?.customizationChange, (card?.traits || []).join(' ')].filter(Boolean).join('\n')
+}
+function fhvCardRuleIds(card) {
+  const code = String(card?.originalCode || card?.code || '')
+  const text = fhvTextOf(card)
+  const ids = ['fhvCampaign']
+  for (const [id, pattern] of FHV_CARD_RULE_PATTERNS) if (pattern.test(text)) ids.push(id)
+  for (const id of FHV_TYPE_RULE_LINKS[card?.type] || []) ids.push(id)
+  if ((FHV_REFERENCE_CARDS.fhvResidentFaces || []).includes(code)) ids.push('fhvResidents', 'fhvCodex')
+  if ((FHV_REFERENCE_CARDS.fhvHeirloomCards || []).includes(code)) ids.push('fhvResidents')
+  if ((FHV_REFERENCE_CARDS.fhvTimeMarkerCards || []).includes(code)) ids.push('fhvTime')
+  // 章节卡与遭遇卡都受该章混乱符号表约束。
+  if (['scenario', 'act', 'agenda', 'location', 'enemy', 'treachery'].includes(card?.type)) ids.push('fhvChaos')
   return [...new Set(ids)]
 }
 export function openRule(id = DEFAULT_RULE_ID) { window.dispatchEvent(new CustomEvent('arkham-open-rule', { detail: id })) }

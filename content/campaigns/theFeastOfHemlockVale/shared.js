@@ -19,11 +19,23 @@ export const investigators = Object.freeze({
   '10015': { signatures: ['10017', '10018'], bonded: ['10016a', '10016b'] },
 })
 
+// P5（M1 调查员批次）：五位正式调查员与其 15 张专属/绑定依赖。
+// 签名卡与专属弱点随调查员牌组强制带入（buildDeck 校验），绑定面不进入牌组、只作依赖。
+export const INVESTIGATOR_CODES = Object.freeze(Object.keys(investigators).sort())
+export const SIGNATURE_CODES = Object.freeze(Object.values(investigators)
+  .flatMap(item => item.signatures).sort())
+export const BONDED_CODES = Object.freeze(Object.values(investigators)
+  .flatMap(item => item.bonded).sort())
+export const DEPENDENCY_CODES = Object.freeze([...SIGNATURE_CODES, ...BONDED_CODES].sort())
+
+// 标记名与引擎同源（小写 `autofail`/`eldersign`/`elderthing`，见 src/engine/tests.js 的
+// `token === 'eldersign'` 判定）：早先写成 `elderSign` 时旧印会按未知标记结算（无修正、不触发
+// 调查员旧印效果），四档袋因此全部失效——P8 统一成引擎标记名。
 export const CHAOS_BAGS = Object.freeze({
-  easy: ['+1', '+1', '0', '0', '0', '-1', '-1', '-1', '-2', '-2', '-3', 'skull', 'skull', 'elderSign'],
-  standard: ['+1', '0', '0', '-1', '-1', '-1', '-2', '-2', '-3', '-3', '-4', 'skull', 'skull', 'elderSign'],
-  hard: ['0', '0', '0', '-1', '-1', '-2', '-2', '-3', '-3', '-5', '-5', '-7', 'skull', 'skull', 'elderSign'],
-  expert: ['0', '-1', '-1', '-2', '-2', '-3', '-3', '-4', '-5', '-5', '-6', '-7', '-8', 'skull', 'skull', 'elderSign'],
+  easy: ['+1', '+1', '0', '0', '0', '-1', '-1', '-1', '-2', '-2', '-3', 'skull', 'skull', 'eldersign'],
+  standard: ['+1', '0', '0', '-1', '-1', '-1', '-2', '-2', '-3', '-3', '-4', 'skull', 'skull', 'eldersign'],
+  hard: ['0', '0', '0', '-1', '-1', '-2', '-2', '-3', '-3', '-5', '-5', '-7', 'skull', 'skull', 'eldersign'],
+  expert: ['0', '-1', '-1', '-2', '-2', '-3', '-3', '-4', '-5', '-5', '-6', '-7', '-8', 'skull', 'skull', 'eldersign'],
 })
 
 // Frontend step IDs can point to a time-card face while the scenario uses 10704 for symbols.
@@ -52,6 +64,14 @@ export const partitions = Object.freeze({
 })
 export const encounterGroups = Object.freeze(Object.groupBy(partitions.fhvCampaign, code => ALL_CARDS[code].encounterCode))
 export const encounterGroupId = group => group.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase())
+
+// 本循环全部卡号（含关联面 a/b）；顺序稳定，供关键词复算、规则书卡文直达与审计逐张比对。
+export const CYCLE_CODES = Object.freeze([
+  ...partitions.fhvCampaign, ...partitions.fhvInvestigators, ...partitions.fhvPlayer,
+].sort())
+// 各章节桌面的剧本参考卡（去重）：序曲与八章实际使用的提示卡。
+export const SCENARIO_REFERENCE_CODES = Object.freeze(
+  [...new Set(chapters.flatMap(chapter => chapter.referenceCodes))].sort())
 
 export function catalogPack(id, label, typeFor) {
   const codes = partitions[id]

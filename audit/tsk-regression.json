@@ -9,17 +9,15 @@
   "status": "passed",
   "fast": {
     "exitCode": 1,
-    "outputSha256": "8825c2a1d0e5712c757c15253cff80d624d369cfecd2149353c50dc25e1178f4",
+    "outputSha256": "5e22012ca921f88cab5caec7b4efa24794247d59fbe234544c7161b50969f58a",
     "totals": {
-      "tests": 7720,
-      "pass": 7713,
-      "fail": 4
+      "tests": 7755,
+      "pass": 7750,
+      "fail": 2
     },
     "failingFiles": [
       "tests/eote-all-cards.test.mjs",
-      "tests/eote-migration-ledger.test.mjs",
-      "tests/i18n-dict.test.mjs",
-      "tests/tcu-migration.test.mjs"
+      "tests/eote-migration-ledger.test.mjs"
     ],
     "frozenTitles": [
       "P1 账本：scope.json 与 audit/tcu-migration.json 可复算且 gate 一致",
@@ -37,9 +35,7 @@
     "frozenFailureCount": 4,
     "titles": [
       "P8 eote all-cards 两次构建一致且与账本一致",
-      "P8 eote migration ledger · 确定性：导出 builder 两次深相等且与签入账本一致",
-      "已本地化的 UI 文件不再残留用户可见中文",
-      "P1 账本：scope.json 与 audit/tcu-migration.json 可复算且 gate 一致"
+      "P8 eote migration ledger · 确定性：导出 builder 两次深相等且与签入账本一致"
     ]
   },
   "replay": {

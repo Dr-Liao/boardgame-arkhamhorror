@@ -1,9 +1,16 @@
+import { ALL_CARDS } from '../cards/cards-data.js'
 import { assertFields, integer, investigatorAt, locationAt, mechanicState } from './mechanic-state.js'
 import { checkAirAfterMove } from './flood.js'
-import { cardName } from './card-lookup.js'
 import { registeredEntry } from './ability.js'
 import { enemyEngagedRestricts } from './enemy-entry.js'
 import { vehicleOf, vehiclePassengers, vehicleRecord, vehicleCard } from './vehicle-state.js'
+
+// 卡名读取不走 card-lookup：后者 import content/registered.js，会在「场景模块 → 载具原语」路径上
+// 触发组合根初始化环（P7 FHV 章节 behavior 在 registered.js 静态 import 链中被加载时 TDZ）。
+const cardName = code => {
+  const card = ALL_CARDS[code]
+  return card ? (card.nameZh || card.name || code) : code
+}
 
 // 只读入口重新导出：调用方（引擎与 _shared 的读法）共用同一份实现。
 export { vehicleOf, vehiclePassengers, vehicleRecord, vehicleCard }

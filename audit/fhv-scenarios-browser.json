@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "tools/playwright-fhv-p7-reporter.mjs",
+  "status": "passed",
+  "specs": [
+    "tests/fhv-scenarios.browser.mjs"
+  ],
+  "checks": {
+    "desktop": true,
+    "mobile": true
+  },
+  "tests": [
+    {
+      "file": "tests/fhv-scenarios.browser.mjs",
+      "title": "P7 desktop welcomeToHemlockVale 真实大厅进入欢迎来到铁杉谷并验收关卡指南与局内真实行为",
+      "status": "passed",
+      "durationMs": 19041
+    },
+    {
+      "file": "tests/fhv-scenarios.browser.mjs",
+      "title": "P7 desktop writtenInRock 真实大厅进入岩间密语并验收关卡指南与局内真实行为",
+      "status": "passed",
+      "durationMs": 25648
+    },
+    {
+      "file": "tests/fhv-scenarios.browser.mjs",
+      "title": "P7 desktop hemlockHouse 真实大厅进入汉洛克庄园并验收关卡指南与局内真实行为",
+      "status": "passed",
+      "durationMs": 25983
+    },
+    {
+      "file": "tests/fhv-scenarios.browser.mjs",
+      "title": "P7 desktop theSilentHeath 真实大厅进入寂静荒野并验收关卡指南与局内真实行为",
+      "status": "passed",
+      "durationMs": 25813
+    },
+    {
+      "file": "tests/fhv-scenarios.browser.mjs",
+      "title": "P7 desktop theLostSister 真实大厅进入消失的姐妹并验收关卡指南与局内真实行为",
+      "status": "passed",
+      "durationMs": 25795
+    },
+    {
+      "file": "tests/fhv-scenarios.browser.mjs",
+      "title": "P7 desktop theThingInTheDepths 真实大厅进入深沼之物并验收关卡指南与局内真实行为",
+      "status": "passed",
+      "durationMs": 25335
+    },
+    {
+      "file": "tests/fhv-scenarios.browser.mjs",
+      "title": "P7 desktop theTwistedHollow 真实大厅进入扭曲空洞并验收关卡指南与局内真实行为",
+      "status": "passed",
+      "durationMs": 38533
+    },
+    {
+      "file": "tests/fhv-scenarios.browser.mjs",
+      "title": "P7 desktop dawnOfTheSecondDay 真实大厅进入第二日黎明并验收关卡指南与局内真实行为",
+      "status": "passed",
+      "durationMs": 46072
+    },
+    {
+      "file": "tests/fhv-scenarios.browser.mjs",
+      "title": "P7 desktop theLongestNight 真实大厅进入最长一夜并验收关卡指南与局内真实行为",
+      "status": "passed",
+      "durationMs": 77512
+    },
+    {
+      "file": "tests/fhv-scenarios.browser.mjs",
+      "title": "P7 desktop dawnOfTheFinalDay 真实大厅进入最终日黎明并验收关卡指南与局内真实行为",
+      "status": "passed",
+      "durationMs": 58445
+    },
+    {
+      "file": "tests/fhv-scenarios.browser.mjs",
+      "title": "P7 desktop preludeTheFinalEvening 真实大厅进入最终夜并验收关卡指南与局内真实行为",
+      "status": "passed",
+      "durationMs": 68742
+    },
+    {
+      "file": "tests/fhv-scenarios.browser.mjs",
+      "title": "P7 desktop fateOfTheVale 真实大厅进入山谷的命运并验收关卡指南与局内真实行为",
+      "status": "passed",
+      "durationMs": 80433
+    },
+    {
+      "file": "tests/fhv-scenarios.browser.mjs",
+      "title": "P7 mobile welcomeToHemlockVale 真实大厅进入欢迎来到铁杉谷并验收关卡指南与局内真实行为",
+      "status": "passed",
+      "durationMs": 17248
+    },
+    {
+      "file": "tests/fhv-scenarios.browser.mjs",
+      "title": "P7 mobile writtenInRock 真实大厅进入岩间密语并验收关卡指南与局内真实行为",
+      "status": "passed",
+      "durationMs": 25533
+    },
+    {
+      "file": "tests/fhv-scenarios.browser.mjs",
+      "title": "P7 mobile hemlockHouse 真实大厅进入汉洛克庄园并验收关卡指南与局内真实行为",
+      "status": "passed",
+      "durationMs": 25816
+    },
+    {
+      "file": "tests/fhv-scenarios.browser.mjs",
+      "title": "P7 mobile theSilentHeath 真实大厅进入寂静荒野并验收关卡指南与局内真实行为",
+      "status": "passed",
+      "durationMs": 25140
+    },
+    {
+      "file": "tests/fhv-scenarios.browser.mjs",
+      "title": "P7 mobile theLostSister 真实大厅进入消失的姐妹并验收关卡指南与局内真实行为",
+      "status": "passed",
+      "durationMs": 25245
+    },
+    {
+      "file": "tests/fhv-scenarios.browser.mjs",
+      "title": "P7 mobile theThingInTheDepths 真实大厅进入深沼之物并验收关卡指南与局内真实行为",
+      "status": "passed",
+      "durationMs": 24662
+    },
+    {
+      "file": "tests/fhv-scenarios.browser.mjs",
+      "title": "P7 mobile theTwistedHollow 真实大厅进入扭曲空洞并验收关卡指南与局内真实行为",
+      "status": "passed",
+      "durationMs": 35652
+    },
+    {
+      "file": "tests/fhv-scenarios.browser.mjs",
+      "title": "P7 mobile dawnOfTheSecondDay 真实大厅进入第二日黎明并验收关卡指南与局内真实行为",
+      "status": "passed",
+      "durationMs": 45380
+    },
+    {
+      "file": "tests/fhv-scenarios.browser.mjs",
+      "title": "P7 mobile theLongestNight 真实大厅进入最长一夜并验收关卡指南与局内真实行为",
+      "status": "passed",
+      "durationMs": 84928
+    },
+    {
+      "file": "tests/fhv-scenarios.browser.mjs",
+      "title": "P7 mobile dawnOfTheFinalDay 真实大厅进入最终日黎明并验收关卡指南与局内真实行为",
+      "status": "passed",
+      "durationMs": 58920
+    },
+    {
+      "file": "tests/fhv-scenarios.browser.mjs",
+      "title": "P7 mobile preludeTheFinalEvening 真实大厅进入最终夜并验收关卡指南与局内真实行为",
+      "status": "passed",
+      "durationMs": 69397
+    },
+    {
+      "file": "tests/fhv-scenarios.browser.mjs",
+      "title": "P7 mobile fateOfTheVale 真实大厅进入山谷的命运并验收关卡指南与局内真实行为",
+      "status": "passed",
+      "durationMs": 79827
+    }
+  ],
+  "screenshots": [
+    "artifacts/migration/fhv/p7/screenshots/desktop-dawnOfTheFinalDay-guide.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-dawnOfTheFinalDay.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-dawnOfTheSecondDay-guide.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-dawnOfTheSecondDay.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-fateOfTheVale-guide.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-fateOfTheVale.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-hemlockHouse-guide.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-hemlockHouse.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-lobby.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-preludeTheFinalEvening-guide.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-preludeTheFinalEvening.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-ready.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-theLongestNight-guide.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-theLongestNight.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-theLostSister-guide.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-theLostSister.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-theSilentHeath-guide.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-theSilentHeath.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-theThingInTheDepths-guide.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-theThingInTheDepths.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-theTwistedHollow-guide.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-theTwistedHollow.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-welcomeToHemlockVale-guide.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-welcomeToHemlockVale.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-writtenInRock-guide.png",
+    "artifacts/migration/fhv/p7/screenshots/desktop-writtenInRock.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-dawnOfTheFinalDay-guide.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-dawnOfTheFinalDay.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-dawnOfTheSecondDay-guide.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-dawnOfTheSecondDay.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-fateOfTheVale-guide.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-fateOfTheVale.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-hemlockHouse-guide.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-hemlockHouse.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-lobby.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-preludeTheFinalEvening-guide.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-preludeTheFinalEvening.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-ready.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-theLongestNight-guide.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-theLongestNight.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-theLostSister-guide.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-theLostSister.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-theSilentHeath-guide.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-theSilentHeath.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-theThingInTheDepths-guide.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-theThingInTheDepths.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-theTwistedHollow-guide.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-theTwistedHollow.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-welcomeToHemlockVale-guide.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-welcomeToHemlockVale.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-writtenInRock-guide.png",
+    "artifacts/migration/fhv/p7/screenshots/mobile-writtenInRock.png"
+  ]
+}

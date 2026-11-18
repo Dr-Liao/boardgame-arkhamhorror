@@ -1,7 +1,7 @@
 // 调试控制台浏览器验收（契约 artifacts/debug-console/CONTRACT.md §7 + §10.3 v1.1）。
 //
 // 覆盖四条最小闭环：
-//   1. 单机牌桌标题栏出现入口 → 打开面板 → 执行「获得 3 资源」→ 日志出现成功消息，且服务器状态资源 +3；
+//   1. 单机牌桌用反引号打开面板 → 执行「获得 3 资源」→ 日志出现成功消息，且服务器状态资源 +3；
 //   2. 390×844 视口下面板可见、不溢出视口，Esc 能关闭；
 //   3. 失败指令（不存在的敌人）显示错误日志而不是崩溃/卡死；
 //   4. 「帮助」按钮展示 v1.1 指令清单（含抽/传送到等关键字），且帮助是只读指令、不改 revision。
@@ -66,12 +66,10 @@ async function settleOpening(page) {
 async function startAndOpenConsole(page) {
   const session = await openTable(page)
   await settleOpening(page)
-  const launcher = page.locator('.bg-game-actions').getByRole('button', { name: '调试控制台' })
-  await expect(launcher).toBeVisible({ timeout: 15000 })
-  await launcher.click()
+  await page.keyboard.press('Backquote')
   const dialog = page.getByRole('dialog', { name: '调试控制台' })
   await expect(dialog).toBeVisible({ timeout: 15000 })
-  return { session, launcher, dialog }
+  return { session, dialog }
 }
 
 async function readSession(request, sessionId) {

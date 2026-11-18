@@ -1,5 +1,8 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { readFileSync, readdirSync } from 'node:fs'
+import { join, relative } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { createGameState, enemyAttack, performTest, getStat, getMaxSanity, enemyHealth, enemyFightValue, enemyEvadeValue, describeState } from '../src/engine/engine.js'
 import { markLimitUsed, registeredEntry } from '../src/engine/ability.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
@@ -9,7 +12,13 @@ import { captureTableState, locationEntryErrors } from '../src/integration/prese
 import { fixture, enemy as makeEnemy, move } from './core-fixture.mjs'
 import { timelineEntries, timelineCardIndex, timelineCardParts } from '../web/table-timeline.js'
 import { objectiveText } from '../web/card-text.js'
-import { cardAttachmentReferences } from '../web/table-components.js'
+import {
+  cardAttachmentReferences, cardMarkerData, cardCounterMarkerData,
+  NAMED_COUNTER_DISPLAY, USE_TOKEN_DISPLAY, LABEL_MARKER_DISPLAY, INTERNAL_LABEL_MARKERS, TABLE_ICON_NAMES,
+} from '../web/table-components.js'
+import { CARD_COUNTER_IDS } from '../src/engine/card-counters.js'
+import zhDict from '../web/locales/zh-CN.js'
+import enDict from '../web/locales/en.js'
 import { contentRegistry } from '../content/registered.js'
 
 test('地图禁入提示与烈焰屏障规则一致，演出快照保留当时状态', () => {
@@ -223,6 +232,189 @@ test('幕目标结构转换为中文条件', () => {
   assert.match(objectiveText({type:'defeatEnemy',enemy:'ghoulPriest'}),/食尸鬼祭司/)
   assert.equal(objectiveText(null),'')
 })
+
+test('卡上计数展示契约：具名计数器/多类型使用标记/脚本标签都渲染成标记行，未登记项兜底可见', () => {
+  // 09015 达雷尔开局带 09016 柯达相机：证据记在 `card.markers.evidence`（引擎 card-counters.js 的
+  // 具名计数器），不是 doom/damage/uses 这些数字字段。过去 web 只渲染后者，玩家在牌桌和详情里
+  // 都看不到卡上放了多少证据（TSK full-scan D2 high：09015/09016 证据计数器不可见）。
+  const s = createGameState({ playerInvestigator: '09015', seed: 'card-counter-markers' }, [{ seat: 0 }])
+  s.pendingChoice = null
+  const inv = s.investigators[0]
+  const kodak = inv.assets.find(asset => asset.code === '09016')
+  kodak.markers = { evidence: 2 }
+  inv.assets.push({ id: 'bounty-contracts', code: '06010', exhausted: false, markers: { bounty: 4 } })
+  inv.assets.push({ id: 'binders-jar', code: '09089', exhausted: false, markers: { hollow: 1 } })
+  const marked = makeEnemy(s, { code: 'ghoulMinion', name: '带证据的敌人', markers: { evidence: 1 } })
+  // 10722 着彩枯疫的「光辉」走 useTokens；10732 毒花的「疯长」走脚本标签数组。
+  inv.threat = [{ id: 'chroma-blight', code: '01163', exhausted: false, useTokens: { brilliance: 3 } }]
+  const bloom = makeEnemy(s, { code: 'ghoulMinion', name: '长满疯长的敌人', markers: ['overgrowth', 'overgrowth'] })
+  s.locations[0].markers = ['brazier']
+
+  const live = viewState(s, 0)
+  const liveKodak = live.investigators[0].assets.find(asset => asset.id === kodak.id)
+  const liveMarked = live.enemies.find(item => item.id === marked.id)
+  const liveBloom = live.enemies.find(item => item.id === bloom.id)
+  // 投影原样带出实例计数：展示层读的就是权威状态里的同一份数据，不另派生第二份。
+  assert.deepEqual(liveKodak.markers, { evidence: 2 })
+  assert.deepEqual(liveMarked.markers, { evidence: 1 })
+  assert.deepEqual(live.investigators[0].threat[0].useTokens, { brilliance: 3 })
+  assert.deepEqual(liveBloom.markers, ['overgrowth', 'overgrowth'])
+  // 牌桌小卡、卡牌详情、地点详情共用同一份标记行：图标 + 数字 + 本地化标签。
+  assert.deepEqual(cardMarkerData(liveKodak), [['evidence', 'eye', '证据', 2]])
+  assert.deepEqual(cardMarkerData(liveMarked, { enemy: true }), [['evidence', 'eye', '证据', 1]])
+  assert.deepEqual(cardMarkerData(live.investigators[0].threat[0]), [['token-brilliance', 'eye', '光辉', 3]])
+  assert.deepEqual(cardMarkerData(liveBloom, { enemy: true }), [['marker-overgrowth', 'leaf', '疯长', 2]])
+  assert.deepEqual(cardMarkerData({ code: '06010', markers: { bounty: 4 } }), [['bounty', 'star', '赏金', 4]])
+  assert.deepEqual(cardMarkerData({ code: '09089', markers: { hollow: 1 } }), [['hollow', 'lock', '下方', 1]])
+  assert.deepEqual(cardMarkerData({ code: '01169', markers: ['brazier'] }), [['marker-brazier', 'star', '火盆', 1]])
+  // 地点详情与牌桌共用 cardCounterMarkerData，地点上的脚本标签计数同样可见。
+  assert.deepEqual(cardCounterMarkerData({ markers: ['brazier'] }), [['marker-brazier', 'star', '火盆', 1]])
+  // 纯记账标签（flipMarker 的 doomToClue:N）不重复渲染：毁灭/线索数值本身已显示。
+  assert.deepEqual(cardMarkerData({ markers: ['doomToClue:1'] }), [])
+  // fail-visible：未登记的 id 按原样兜底显示，绝不静默消失（登记表漏项由下面的契约用例点名）。
+  assert.deepEqual(cardMarkerData({ markers: ['mysteryMeat'] }), [['marker-mysteryMeat', 'star', 'mysteryMeat', 1]])
+  assert.deepEqual(cardMarkerData({ useTokens: { occult: 2 } }), [['token-occult', 'star', 'occult', 2]])
+  // 多种载体并存时按「具名计数器 → 使用标记 → 标签计数」登记顺序输出，渲染顺序稳定。
+  assert.deepEqual(cardMarkerData({ markers: { bounty: 2, evidence: 1 }, useTokens: { secret: 1 } }),
+    [['evidence', 'eye', '证据', 1], ['bounty', 'star', '赏金', 2], ['token-secret', 'arcane', '秘密', 1]])
+  // 演出快照（applyStep 期间重绘牌桌）与实时观察同口径，否则演出播放时计数会闪没。
+  const snapshot = captureTableState(s, getStat, getMaxSanity)
+  assert.deepEqual(snapshot.investigators[0].assets.find(asset => asset.id === kodak.id).markers, { evidence: 2 })
+  assert.deepEqual(snapshot.enemies.find(item => item.id === marked.id).markers, { evidence: 1 })
+  assert.deepEqual(snapshot.investigators[0].threat[0].useTokens, { brilliance: 3 })
+  assert.deepEqual(snapshot.enemies.find(item => item.id === bloom.id).markers, ['overgrowth', 'overgrowth'])
+})
+
+// ---- 展示契约门禁：引擎原语 / 内容写入点新增计数形态时，必须同轮补上展示登记 ----
+
+const stripSourceComments = source => source
+  .replace(/\/\*[\s\S]*?\*\//g, '')
+  .split('\n')
+  .map(line => line.replace(/\/\/.*$/, ''))
+  .join('\n')
+
+function walkSourceFiles(dir, acc = []) {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = join(dir, entry.name)
+    if (entry.isDirectory()) walkSourceFiles(full, acc)
+    else if (entry.name.endsWith('.js')) acc.push(full)
+  }
+  return acc
+}
+
+// 同文件顶层 `const NAME = 'literal'` 的映射：覆盖 `const MARKER = 'overgrowth'` 这类写入点。
+function sourceStringConstants(source) {
+  const constants = new Map()
+  for (const match of source.matchAll(/(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*(['"])([^'"\n]{1,80})\2/g)) {
+    constants.set(match[1], match[3])
+  }
+  return constants
+}
+
+function resolveSourceLiteral(argument, constants) {
+  const trimmed = String(argument || '').trim()
+  const quoted = trimmed.match(/^(['"`])([^'"`\n]{1,80})\1$/)
+  if (quoted) return quoted[2]
+  const identifier = trimmed.match(/^[A-Za-z_$][\w$]*$/)
+  if (identifier) return constants.get(trimmed) ?? null
+  return null
+}
+
+// 从 `(` 起截出该调用的顶层参数（跳过字符串与嵌套括号），供扫描 api.addMarker/api.placeUse。
+function readCallArguments(source, openIndex) {
+  const args = []
+  let depth = 0
+  let current = ''
+  let quote = null
+  for (let index = openIndex; index < source.length; index++) {
+    const char = source[index]
+    if (quote) {
+      current += char
+      if (char === quote && source[index - 1] !== '\\') quote = null
+      continue
+    }
+    if (char === "'" || char === '"' || char === '`') { quote = char; current += char; continue }
+    if (char === '(') { depth++; if (depth === 1) continue } else if (char === ')') {
+      depth--
+      if (depth === 0) { args.push(current); return args }
+    } else if (char === ',' && depth === 1) { args.push(current); current = ''; continue }
+    current += char
+  }
+  return null
+}
+
+function scanCounterWriteSites() {
+  const gameRoot = fileURLToPath(new URL('../', import.meta.url))
+  const labels = new Map()
+  const tokenTypes = new Map()
+  const unresolved = []
+  const record = (map, value, file) => { if (!map.has(value)) map.set(value, file) }
+  const patterns = [
+    // apiScenario.addMarker(目标, 标签)：每目标脚本标签计数（对象引用/api 前缀都算）。
+    { kind: 'label', pattern: /api\??\.(?:scenario\??\.)?addMarker(?:\?\.)?\(/g, argIndex: 1 },
+    // api.placeUse(卡, 类型, N)：多类型使用标记。
+    { kind: 'token', pattern: /api\??\.placeUse(?:\?\.)?\(/g, argIndex: 1 },
+    // api.mechanics.useTokens.move/spend(...)：引擎公开的多类型转移/合并支付入口。
+    { kind: 'token', pattern: /api\??\.mechanics\??\.useTokens\??\.(?:move|spend)\(/g, argIndex: 2 },
+  ]
+  for (const file of [...walkSourceFiles(join(gameRoot, 'src/cards')), ...walkSourceFiles(join(gameRoot, 'content'))]) {
+    const relativePath = relative(gameRoot, file).replace(/\\/g, '/')
+    const source = stripSourceComments(readFileSync(file, 'utf8'))
+    const constants = sourceStringConstants(source)
+    for (const { kind, pattern, argIndex } of patterns) {
+      for (const match of source.matchAll(pattern)) {
+        const args = readCallArguments(source, match.index + match[0].length - 1)
+        const value = args ? resolveSourceLiteral(args[argIndex], constants) : null
+        if (value == null) {
+          unresolved.push(`${relativePath}: ${match[0]}… 的第 ${argIndex + 1} 个参数无法静态解析`)
+          continue
+        }
+        record(kind === 'label' ? labels : tokenTypes, value, relativePath)
+      }
+    }
+  }
+  return { labels, tokenTypes, unresolved }
+}
+
+test('展示契约：引擎具名计数器与所有登记项都有本地化文案和可渲染图标', () => {
+  for (const id of CARD_COUNTER_IDS) {
+    assert.ok(NAMED_COUNTER_DISPLAY[id], `引擎具名计数器 "${id}" 缺展示登记（web/table-components.js#NAMED_COUNTER_DISPLAY）`)
+  }
+  const registered = [
+    ...Object.entries(NAMED_COUNTER_DISPLAY).map(([id, entry]) => [`具名计数器 ${id}`, entry]),
+    ...Object.entries(USE_TOKEN_DISPLAY).map(([id, entry]) => [`使用标记 ${id}`, entry]),
+    ...Object.entries(LABEL_MARKER_DISPLAY).map(([id, entry]) => [`脚本标签 ${id}`, entry]),
+  ]
+  for (const [label, entry] of registered) {
+    assert.ok(TABLE_ICON_NAMES.includes(entry.icon), `${label} 的图标 "${entry.icon}" 不是 tableIcon 可渲染图标`)
+    assert.equal(typeof entry.labelKey, 'string', `${label} 缺少 labelKey`)
+    assert.ok(Object.hasOwn(zhDict, entry.labelKey), `${label} 缺 zh-CN 词条 ${entry.labelKey}`)
+    assert.ok(Object.hasOwn(enDict, entry.labelKey), `${label} 缺 en 词条 ${entry.labelKey}`)
+  }
+})
+
+test('展示契约：src/cards 与 content 写出的脚本标签/使用标记类型都已登记展示', () => {
+  const { labels, tokenTypes, unresolved } = scanCounterWriteSites()
+  assert.deepEqual(unresolved, [], '计数器写入点无法静态解析：请改用字面量或同文件 const，便于展示契约门禁复核')
+  const isInternalLabel = label => INTERNAL_LABEL_MARKERS
+    .some(prefix => label === prefix || label.startsWith(prefix + ':'))
+  const unregisteredLabels = [...labels]
+    .filter(([label]) => !Object.hasOwn(LABEL_MARKER_DISPLAY, label) && !isInternalLabel(label))
+    .map(([label, file]) => `${label}（${file}）`)
+  assert.deepEqual(unregisteredLabels, [],
+    '内容写出的脚本标签缺展示登记：在 web/table-components.js#LABEL_MARKER_DISPLAY 补登记并加词典词条；'
+    + '纯记账标签登记到 INTERNAL_LABEL_MARKERS')
+  const unregisteredTokens = [...tokenTypes]
+    .filter(([type]) => !Object.hasOwn(USE_TOKEN_DISPLAY, type))
+    .map(([type, file]) => `${type}（${file}）`)
+  assert.deepEqual(unregisteredTokens, [],
+    '内容写出的多类型使用标记缺展示登记：在 web/table-components.js#USE_TOKEN_DISPLAY 补登记并加词典词条')
+  // 回归锚：本轮修复的三张卡各自的计数写法必须仍被扫描到。
+  assert.ok(labels.has('overgrowth'), '10732 毒花的「疯长」标签写入点未扫到')
+  assert.ok(labels.has('stolenSoul'), '05239 看守人的「窃魂」标签写入点未扫到')
+  assert.ok(tokenTypes.has('brilliance'), '10722 着彩枯疫的「光辉」使用标记写入点未扫到')
+})
+
 
 test('追猎恐魔的暗影之子由剧本标记派生为可查看的附属卡', () => {
   assert.deepEqual(cardAttachmentReferences({ shadowSpawned: true, shadowResources: 2 }),

@@ -320,7 +320,11 @@ const regression = readMaybe(REGRESSION)
 const baselineLedger = readMaybe('audit/tsk-baseline.json')
 const frozenTitles = [...(baselineLedger?.fastFailures || [])].sort()
 const fastTitles = [...(regression?.fast?.titles || [])].sort()
-const frozenEqual = frozenTitles.length === 4 && frozenTitles.join('|') === fastTitles.join('|')
+// 2026-11-16：冻结清单仍是 P0 的 4 条，但 TCU 账本/i18n UI 已被九循环修复；允许「失败 ⊆ 冻结清单」
+// 且数量不超过冻结数（回归只禁止新增失败，不要求旧失败永远存在）。
+const frozenEqual = JSON.stringify([...(regression?.fast?.frozenTitles || [])].sort()) === JSON.stringify(frozenTitles)
+  && fastTitles.every(title => frozenTitles.includes(title))
+  && fastTitles.length <= frozenTitles.length
 const noNewFailures = (regression?.fast?.additionsSinceInitialBaseline || []).length === 0
 const replayRun = runNode(['tools/replay-fixtures.mjs', '--compare', 'tests/fixtures/replay/tsk-baseline.json'])
 const regressionGate = {

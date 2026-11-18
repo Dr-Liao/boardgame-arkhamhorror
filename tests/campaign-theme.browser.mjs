@@ -203,6 +203,96 @@ async function startTable(page) {
   }
 }
 
+test('牌桌交战浮层、关卡设置与卡牌选项跟随战役配色', async ({ page }) => {
+  const table = await startTable(page)
+  const backgrounds = async locator => locator.evaluateAll(elements => elements.map(el => {
+    const style = getComputedStyle(el)
+    return style.backgroundImage === 'none' ? style.backgroundColor : style.backgroundImage
+  }))
+  const snapshots = []
+  for (const [campaignId, viewport] of [
+    ['theCircleUndone', { width: 1440, height: 950 }],
+    ['theDunwichLegacy', { width: 390, height: 844 }],
+  ]) {
+    await page.setViewportSize(viewport)
+    await table.update(st => {
+      st.campaign.id = campaignId
+      st.pendingChoice = null
+      st.enemies = [{ id: 'roaming', code: '01160', name: '食尸鬼', location: st.investigators[0].location, health: 3, damageTaken: 0, fight: 2, evade: 2 }]
+      st.legalMoves = [{ action: 'engage', enemyId: 'roaming', label: '交战' }]
+    })
+    const setup = page.locator('.ah-scenario-setup-button')
+    await expect(setup).toBeVisible()
+    const setupBackground = await backgrounds(setup)
+    await page.locator('.ah-map-node [data-interaction="enemy:roaming"]').dispatchEvent('click')
+    const popover = page.locator('.ah-card-action-popover')
+    await expect(popover.getByRole('button', { name: '交战' })).toBeInViewport()
+    const cancel = popover.getByRole('button', { name: '取消' })
+    await expect(cancel).toBeInViewport()
+    const popoverBackgrounds = await backgrounds(page.locator('.ah-card-action-popover, .ah-card-action-popover > button'))
+    await cancel.click()
+    await expect(popover).toHaveCount(0)
+
+    await table.update(st => {
+      st.pendingChoice = { id: 'location-search', kind: 'location', seat: 0, prompt: '选择一个地点', options: [{ id: '0', label: '无尽之桥', cardCode: '02326' }] }
+      st.legalMoves = [{ action: 'choose', choiceId: 'location-search', optionId: '0', label: '无尽之桥' }]
+    })
+    const choices = page.locator('.ah-visual-choices')
+    await expect(choices.locator('.ah-visual-option')).toBeVisible()
+    const choiceBackgrounds = await backgrounds(page.locator('.ah-visual-choices, .ah-visual-choices .ah-visual-option'))
+    snapshots.push([...setupBackground, ...popoverBackgrounds, ...choiceBackgrounds])
+  }
+  expect(snapshots[0]).toHaveLength(6)
+  expect(snapshots[1]).toHaveLength(6)
+  for (const [i, background] of snapshots[0].entries()) {
+    expect(background).not.toBe(snapshots[1][i])
+  }
+})
+
+test('调试控制台与卡牌状态跟随战役配色', async ({ page }) => {
+  const table = await startTable(page)
+  const fills = new Map()
+  const background = locator => locator.evaluate(el => getComputedStyle(el).backgroundColor)
+  for (const [campaignId, viewport] of [
+    ['theCircleUndone', { width: 1440, height: 950 }],
+    ['theDunwichLegacy', { width: 390, height: 844 }],
+  ]) {
+    await page.setViewportSize(viewport)
+    await table.update(st => {
+      st.campaign.id = campaignId
+      st.cards['09016'] = { code: '09016', type: 'asset', name: '达雷尔的柯达相机', hasAutoReaction: true }
+      st.investigators[0].assets = [{ id: 'kodak', code: '09016', exhausted: true, markers: { evidence: 3 } }]
+    })
+
+    await page.keyboard.press('Backquote')
+    const dialog = page.getByRole('dialog', { name: '调试控制台' })
+    const close = dialog.locator('.ah-debug-close')
+    const quick = dialog.locator('.ah-debug-chip:not(.is-fill)').first()
+    const fill = dialog.locator('.ah-debug-chip.is-fill').first()
+    await expect(close).toBeInViewport()
+    await expect(fill).toHaveCSS('border-top-style', 'dashed')
+    const colors = { close: await background(close), quick: await background(quick), fill: await background(fill) }
+    await quick.hover()
+    await expect.poll(() => background(quick)).not.toBe(colors.quick)
+    await close.click()
+    await expect(dialog).not.toBeVisible()
+
+    await page.locator('[data-interaction="asset:kodak"]').click({ button: 'right' })
+    const detail = page.locator('.ah-carddetail-modal')
+    const runtime = detail.locator('.ah-runtime-card-state')
+    const evidence = runtime.locator('[data-runtime-marker="evidence"]')
+    const reaction = detail.locator('.ah-reaction-mode')
+    await expect(runtime).toContainText('状态：已横置')
+    await expect(evidence).toHaveAccessibleName('证据 3')
+    await expect(reaction).toBeVisible()
+    fills.set(campaignId, { ...colors, state: await background(runtime), evidence: await background(evidence), reaction: await background(reaction) })
+    await detail.getByRole('button', { name: '关闭卡牌详情' }).click()
+  }
+  for (const [control, value] of Object.entries(fills.get('theCircleUndone'))) {
+    expect(value, control).not.toBe(fills.get('theDunwichLegacy')[control])
+  }
+})
+
 test('牌桌行动提示条跟随战役配色', async ({ page }) => {
   const table = await startTable(page)
   // 直接切换战役色板，避免为一条提示条走完整序章流程。

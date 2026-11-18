@@ -109,7 +109,7 @@ test('卡尔克萨可从大厅启动并使用专属主视觉与歌单', async ({
   await navigation.getByRole('button', { name: '开始关卡', exact: true }).click()
   await page.getByRole('button', { name: '选择调查员', exact: true }).click()
   await page.getByRole('button', { name: /选择调查员：罗兰/ }).first().click()
-  await page.getByRole('button', { name: /自动构筑/ }).first().click()
+  await page.getByRole('button', { name: /使用推荐卡组/ }).first().click()
   await navigation.getByRole('button', { name: '开始关卡', exact: true }).click()
   await page.getByRole('button', { name: '调查员与席位', exact: true }).click()
   await page.getByRole('button', { name: '确认准备', exact: true }).first().click()

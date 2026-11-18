@@ -14,6 +14,8 @@
 export const REPRINT_ALIASES = Object.freeze({
   '07114': Object.freeze(['12050']),
   '07004': Object.freeze(['98016']),
+  // 扒手行窃工具 Thieves' Kit：12049 是 09064 的跨循环重印号（cards-data duplicatedBy）。
+  '09064': Object.freeze(['12049']),
   // 巡警 Beat Cop
   '01018': Object.freeze(['01518']),
   // 证据！Evidence!

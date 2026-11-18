@@ -94,7 +94,7 @@ test('调查准备时保持当前关卡已选择，未开放的关卡保持锁�
   await expect(current.locator('button')).toHaveCount(0)
   await expect(hub.locator('.ah-hub-scenario.locked')).toHaveCount(2)
   await hub.getByRole('button', { name: '调查员与席位', exact: true }).click()
-  await hub.getByRole('button', { name: /自动构筑/ }).click()
+  await hub.getByRole('button', { name: /使用推荐卡组/ }).click()
   await hub.getByRole('button', { name: '确认准备', exact: true }).first().click()
   await expect(hub.getByRole('button', { name: '开始当前关卡' })).toBeEnabled()
   await hub.getByRole('button', { name: '关卡选择', exact: true }).click()

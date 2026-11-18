@@ -8,13 +8,17 @@
 
 import { isDraftMode, openDraftUpgrades } from '../deck/draft-mode.js'
 import { restoreInvestigatorForms } from './investigator-form.js'
+import { isStoryInvestigator, restoreStoryInvestigators } from './story-investigators.js'
 import { prepareSurvey } from './survey-preparation.js'
+import { changeChaosBag } from './chaos-bag.js'
+import { selectMechanic } from './mechanic-choices.js'
 import { investigatorRule } from '../cards/card-rules.js'
 
 export function createCampaignFlow(deps) {
   const { scenarioRuntime } = deps
   const {
     ALL_CARDS,
+    ALL_INVESTIGATORS,
     CHAOS_BAGS,
     pallidMaskCode,
     ScenarioEnded,
@@ -79,6 +83,32 @@ function reopenReplacementPreparation(state) {
   return eliminated
 }
 
+// 无牌组故事调查员（序章的 05046–05049 这类人物）只在声明它们的场景里有效：场景一结算，
+// 队伍就必须换回玩家自己的调查员。旧实现把换回放在下一关的 `startScenario`（setup.js），
+// 于是「关间准备/出发准备」窗口读到的还是故事调查员（2026-11-17 实测：万象无终第 1 关
+// 《暮色庄园失踪事件》结束后准备页仍显示「佩妮·怀特」，而真实调查员只存在于战役记录里）。
+// 参照实现的对应步骤是 `ChooseDecksStep`：序章后、下一关前就换回并选牌组。
+// 若下一关再次声明 storyInvestigators，setup.js 会按换回后的真实身份重新选人（不会丢身份）。
+function retireStoryInvestigators(state, events) {
+  if (!state.storyInvestigators) return false
+  restoreStoryInvestigators(state, { cardInfo: code => ALL_INVESTIGATORS[code] || null })
+  info(state, events, '📜 故事调查员退场，队伍换回原本的调查员。')
+  return true
+}
+
+// 旧存档（2026-11-17 关间升级窗修复前）在关卡结算时把 `pendingNode` 直接写成下一关的
+// scenario 节点；新流程图在该场景前插入了关间升级窗。读旧档续玩时改走新的中间节点，
+// 避免「存档正好停在结算页」的玩家继续跳过升级。判定口径：当前流程节点仍是上一关的
+// scenario，且新图里它的出口是一个指向 pendingNode 的 interlude——序章→《巫异时刻》这类
+// `continueNoUpgrade` 直连（出口不是 interlude）保持原样。
+function resolvePendingNode(campaign, graph, nodeId) {
+  const node = graph.nodes[nodeId]
+  const current = graph.nodes[campaign.flow?.nodeId]
+  if (node?.type !== 'scenario' || current?.type !== 'scenario' || !current.next) return nodeId
+  const next = graph.nodes[current.next]
+  return next?.type === 'interlude' && next.next === nodeId ? current.next : nodeId
+}
+
 function progressCampaign(state, events, launch = false, leaveRest = false) {
   const campaign = state.campaign
   const manifest = campaignManifestFor(state)
@@ -92,7 +122,7 @@ function progressCampaign(state, events, launch = false, leaveRest = false) {
     initializeChaosBag(state, bags[state.difficulty] || bags.standard)
   }
   if (campaign.pendingNode) {
-    enterCampaignNode(campaign, manifest, campaign.pendingNode)
+    enterCampaignNode(campaign, manifest, resolvePendingNode(campaign, graph, campaign.pendingNode))
     delete campaign.pendingNode
   } else if (leaveRest && ['interlude', 'checkpoint'].includes(graph.nodes[campaign.flow?.nodeId]?.type)) {
     enterCampaignNode(campaign, manifest, graph.nodes[campaign.flow.nodeId].next)
@@ -104,6 +134,9 @@ function progressCampaign(state, events, launch = false, leaveRest = false) {
   }), effect => applyCampaignEffect(state, effect, text => info(state, events, text)),
   { continuousInterlude: leaveRest && manifest.interludeFlow === 'continuous' })
   campaign.flowStage = node.type
+  // 故事调查员（序章人物）在场景结算后的第一个战役节点就退场：关间/下一关准备窗口必须显示
+  // 玩家自己的调查员（见 retireStoryInvestigators 的说明）。放在节点落定之后、UI 状态切换之前。
+  retireStoryInvestigators(state, events)
   if (node.type === 'end') {
     campaign.flowOutcome = node.outcome
     endCampaign(state, events)
@@ -128,7 +161,11 @@ function progressCampaign(state, events, launch = false, leaveRest = false) {
       campaign.scenarioIndex = manifest.scenarioIds.indexOf(next.scenarioId)
       state.hubSelectedScenarioId = next.scenarioId
     }
-    campaign.upgradesAllowed = node.type === 'interlude' && node.upgrades !== false && !campaign.surveyPreparation
+    // P8 修复：原先还要求 `!campaign.surveyPreparation`。但《铁杉谷盛宴》的四个序曲整备节点
+    // （内容声明 `upgrades: true`，也是本循环唯一的购牌窗）总是在勘察整备包裹待用时进入
+    // （`prepareSurvey` 在上一关结算写包裹、下一关开局才消费），该条件让四个升级窗全部关闭、
+    // 未花费经验永远花不出去。勘察包裹只决定下一关的开局手牌/支援/资源，不限制购牌。
+    campaign.upgradesAllowed = node.type === 'interlude' && node.upgrades !== false
     if (campaign.upgradesAllowed) openDraftUpgrades(state)
     state.hubReady = false; state.hubSeatDone = {}; state.currentSeat = 0
     if (launch && !state.hubFlow) runInterlude(state, campaign.scenarioIndex, events)
@@ -171,11 +208,41 @@ function persistPoisonedWeaknesses(state, events) {
   }
 }
 
+/**
+ * P8：战役混乱袋迁移（`manifest.chaosBagTransitions`）。
+ * 内容层按「关卡/结局」声明 `{ when: '<scenarioId>/<resolutionKey>', adds: [token...] }`，
+ * 引擎在结局效果结算后统一永久入袋。此前该声明没有任何引擎读点：《铁杉谷盛宴》序曲结局 1 的
+ * `[autoFail]` 从未进袋（章节与战役层都把这件事留给对方）。标记名用引擎小写 id
+ * （`autofail` / `eldersign`）。`replaces`/`lowerBy`（疲劳的标记替换）语义不同，仍由内容层
+ * 处理器结算，这里跳过。
+ */
+function applyChaosBagTransitions(state, scenario, resolutionKey, events) {
+  const transitions = campaignManifestFor(state)?.chaosBagTransitions
+  if (!Array.isArray(transitions) || !transitions.length) return []
+  const stamp = `${scenario?.id || ''}/${resolutionKey}`
+  const added = []
+  for (const transition of transitions) {
+    if (!transition || transition.when !== stamp) continue
+    if (transition.replaces != null || transition.lowerBy != null) continue
+    for (const token of transition.adds || []) {
+      if (typeof token !== 'string' || !token) continue
+      changeChaosBag(state, token, 1, { permanent: true })
+      added.push(token)
+      info(state, events, `🎲 混乱袋永久加入 1 个 ${token} 标记。`)
+    }
+  }
+  return added
+}
+
 function finishScenario(state, resolutionKey, events) {
   const CAMPAIGN = campaignFor(state)
   if (state.status !== 'playing') return
   const sc = state.scenario
   const campaign = state.campaign
+  // P7 九循环：关卡的 `resolution` 钩子在引擎结算过程中可能再次调用 `api.finish`（印刷「改为结算
+  // 结局 N」的分支）。此时引擎已经在外层结算本关，重入 `finishScenario` 会无限递归到 structuredClone
+  // 爆栈（《铁杉谷盛宴·最终夜》实测）；外层结算拥有最终结局，内层调用只作语义声明。
+  if (campaign.phase === 'resolution') return
   if (!Object.hasOwn(sc.resolutions, resolutionKey)) throw new Error('未知剧本结局')
   // 关卡结束：先还原换身（04244 伊斯人身体等），幕间/关间窗口与后续剧情都回到原本的调查员卡；
   // 战役要求延续到后续关卡的换身由 campaign.ruleFlags.investigatorForms 记录、下一关开局再套用。
@@ -203,6 +270,8 @@ function finishScenario(state, resolutionKey, events) {
   info(state, events, `剧本结局：${resolutionKey}。`)
   // 04038 黑暗契约：游戏结束/退场时仍在手牌，则移出牌库并换成「失败的代价」。
   for (const inv of state.investigators) {
+    // 故事调查员不是战役身份：他们的固定手牌/牌组不写回真实调查员的战役记录。
+    if (isStoryInvestigator(state, inv)) continue
     for (const code of [...(inv.hand || [])]) {
       const entry = registeredEntry(code)
       if (!entry?.darkPactForced || !entry.replacementCode) continue
@@ -223,12 +292,26 @@ function finishScenario(state, resolutionKey, events) {
   applyDefeatTrauma(state, events)
   const resolutionResult = applyResolutionEffects(state, resolutionKey, events)
   if (resolutionResult?.story) story = resolutionResult.story
+  applyChaosBagTransitions(state, sc, resolutionKey, events)
   if (sc.mechanics?.survey) prepareSurvey(state, {
-    choose: spec => requestChoice(state, spec), cardDef, entryOf: registeredEntry, investigatorRule,
+    // 九循环 P4：勘察整备的上车/弃牌选择走机制选择事务（fhvSurvey），
+    // 与 api.interactions.fhv.survey.prepare 同一操作；界面渲染与审计按 P4 口径覆盖。
+    choose: spec => selectMechanic(state, spec.seat, {
+      operation: 'fhvSurvey', stage: spec.kind, prompt: spec.prompt, min: 1, max: 1, optional: false,
+      candidates: spec.options.map((option, index) => ({
+        value: option.id, label: option.label,
+        ...(option.cardCode ? { cardCode: option.cardCode } : {}),
+        uiKey: `fhv-survey:${spec.kind}:${option.id}:${index}`,
+      })),
+    })?.[0] ?? null,
+    cardDef, entryOf: registeredEntry, investigatorRule,
   })
   persistPoisonedWeaknesses(state, events)
   settleExiledCards(campaign, state.exiledBySeat)
   for (const inv of state.investigators) {
+    // 故事调查员（序章人物）不记创伤、也不改真实调查员的战役状态：他们的失败只写章节自己的
+    // 「失踪人口/命运」记录（见序章 behavior.investigatorEliminated）。
+    if (isStoryInvestigator(state, inv)) continue
     // Phase 5（5a-8）：威胁卡带来的创伤由条目级标记声明（计数 / 充能阈值）。
     if (inv.threat.some(card => registeredEntry(card.code)?.mentalTraumaIfCounters && card.counters > 0)) {
       addTrauma(state, inv.seat, 'mental', 1, events)
@@ -262,6 +345,7 @@ function finishScenario(state, resolutionKey, events) {
     }, text => info(state, events, text))
   }
   if (isDraftMode(state)) for (const inv of state.investigators) {
+    if (isStoryInvestigator(state, inv)) continue
     const record = campaign.investigators[inv.seat]
     const finalXp = Math.max(0, record.earnedXp - before[inv.seat].earnedXp)
     const extra = finalXp + 2
@@ -336,6 +420,8 @@ function applyResolutionEffects(state, resolutionKey, events) {
     }
   }
   if (award) for (const inv of state.investigators) {
+    // 故事调查员不参与战役经验结算（序章本身 `award: false`；这里兜住内容层以后写错 award）。
+    if (isStoryInvestigator(state, inv)) continue
     let amount = state.victory + bonus + seatBonus(inv.seat) + (inv.scenarioXpBonus || 0)
     // Phase 5（5b-9）：「卡戎的银币」这类结局加成由条目级 obolContract 声明。
     const obol = inv.assets.find(asset => registeredEntry(asset.code)?.obolContract)
@@ -382,6 +468,9 @@ function addTrauma(state, seat, kind, amount, events) {
 
 function applyDefeatTrauma(state, events) {
   for (const inv of state.investigators) {
+    // 故事调查员（序章人物）被击败不折算成真实调查员的创伤：他们的结局只写「失踪人口」记录。
+    // 旧实现会把序章的失败记到真实调查员身上（战役一开始就带 1 点创伤），见 story-investigators.js。
+    if (isStoryInvestigator(state, inv)) continue
     if (!inv.defeated || inv.resigned || !inv.defeatCause) continue
     // 只有「因伤害/恐惧被击败」才按创伤结算；阵亡类原因（坠崖、被杀等）不折算成精神创伤。
     if (!['both', 'damage', 'horror'].includes(inv.defeatCause)) continue

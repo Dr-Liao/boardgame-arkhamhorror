@@ -1,0 +1,3327 @@
+{
+  "campaignId": "theFeastOfHemlockVale",
+  "cycle": "fhv",
+  "disclosed": [
+    {
+      "codes": [
+        "10694b"
+      ],
+      "detail": "这些记录正面没有已声明的中文图，按英文图展示；其余记录的中文图均在本地图库中",
+      "kind": "localized-front-missing"
+    },
+    {
+      "detail": "audit/image-digests.json 的 SHA-256 基线不含 FHV 的 zh/ 条目（中文图由 AI 汉化流程生成，未回写摘要），本审计对中文面只做「文件存在 + 已在 audit/local-images.json 登记」校验，未声称内容摘要已锁定",
+      "files": 440,
+      "kind": "zh-sha-baseline-absent"
+    },
+    {
+      "bySource": {
+        "bare-code-fallback": 58,
+        "reference-alt-front": 346
+      },
+      "count": 404,
+      "detail": "这些是末位兜底候选（裸号/替代 a 面回退），既不在本地库存也不保证远程存在（抽样 10501a 远程 404）；每张卡的正面与背面首选候选均在本地，兜底候选只有在首选失败后才会被请求",
+      "kind": "optional-remote-candidate"
+    },
+    {
+      "detail": "FHV 的中文卡图来自 AI 汉化流程，不在参考项目中文清单（presentation/localized-arts.json）内；本仓库以本地文件为展示事实源",
+      "files": 440,
+      "kind": "generated-localized-art",
+      "source": "presentation/generated-localized-arts.json（codex-imagegen AI 汉化）"
+    },
+    {
+      "detail": "该报告是 N2 期产物（verifiedCounts.localImagesCopied=0，早于本地图库），且内嵌 web 文件指纹；本轮以 presentation/*.json 复算为准，不把它当门禁依据",
+      "kind": "presentation-report-stale",
+      "path": "audit/presentation-report.json"
+    }
+  ],
+  "gates": {
+    "imagesResolved": true,
+    "localInventoryStable": true,
+    "mediaComplete": true,
+    "presentationClean": true,
+    "runtimeIndependent": true
+  },
+  "generatedBy": "tools/audit-fhv-assets.mjs",
+  "images": {
+    "cards": [
+      {
+        "code": "10001",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10002",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10003",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10004",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10005",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10005b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10006",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10007",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10008",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10009",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10010",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10011",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10012",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10013",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10014",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10015",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10016a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10016b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10017",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10018",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10019",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10020",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10021",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10022",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10023",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10024",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10025",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10026",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10027",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10028",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10029",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10030",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10031",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10032",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10033",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10034",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10035",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10036",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10037",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10038",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10039",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10040",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10041",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10042",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10043",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10044",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10045",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10046",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10047",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10048",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10049",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10050",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10051",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10052",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10053",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10054",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10055",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10056",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10057",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10058",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10059",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10060",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10061",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10062",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10063",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10064",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10065",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10066",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10067",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10068",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10069",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10070",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10071",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10072",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10073",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10074",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10075",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10076",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10077",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10078",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10079",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10080",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10081",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10082",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10083",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10084",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10085",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10086",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10087",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10088",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10089",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10090",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10091",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10092",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10093",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10094",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10095",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10096",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10097",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10098",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10099",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10100",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10101",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10102",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10103",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10104",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10105",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10106",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10107",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10108",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10109",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10110",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10111",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10112",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10113",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10114",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10115",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10116",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10117",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10118",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10119",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10120",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10121",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10122",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10123",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10124",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10125",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10126",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10127",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10128",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10129",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10130",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10131",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10132",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10133",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10134",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10135",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10136",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10137",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10138",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10501",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10502",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10503",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10504",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10505",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10506",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10507",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10508",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10509",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10510a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10510b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10511a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10511b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10512",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10513",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10514",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10515",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10516",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10517",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10518",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10519",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10520",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10521",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10522",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10523",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10524",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10524b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10525",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10526",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10527",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10528",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10529",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10530",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10531",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10532",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10532b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10533",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10533b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10534",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10534b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10535",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10535b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10536",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10536b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10537",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10537b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10538",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10538b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10539",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10539b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10540",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10540b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10541",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10541b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10542",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10542b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10543",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10543b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10544",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10545",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10546",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10547",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10548",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10549",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10550",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10551",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10552",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10553",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10554",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10555",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10556",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10557",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10558",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10559",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10560",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10561",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10562",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10563",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10564",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10565",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10566",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10567",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10568",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10569",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10570",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10571",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10572",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10573",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10574",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10575",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10576",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10577",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10578",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10579",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10580",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10581",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10582",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10583a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10583b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10584a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10584b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10585",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10586",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10587",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10588",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10589",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10590",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10591",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10592",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10593a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10593b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10594a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10594b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10595a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10595b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10596a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10596b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10597a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10597b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10598a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10598b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10599a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10599b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10600",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10601",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10602",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10603",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10604",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10605",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10606",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10607a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10607b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10608",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10609",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10610a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10610b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10611a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10611b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10612",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10613",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10614",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10615",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10616",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10617",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10618",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10619",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10620",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10621",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10622",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10623",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10624",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10625",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10626",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10627",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10628",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10629",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10630",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10631",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10632",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10633",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10634",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10635",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10636",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10637",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10638",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10639",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10640",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10641",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10642",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10643",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10644a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10644b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10644c",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10645a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10645b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10645c",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10646",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10647a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10647b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10647c",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10648",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10649",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10650",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10651",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10652",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10653",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10654",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10655",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10656",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10657",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10658",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10659",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10660",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10661",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10661b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10662a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10662b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10663a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10663b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10664a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10664b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10665a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10665b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10666",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10667",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10668",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10669",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10670",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10670b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10671",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10672",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10673",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10674",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10675",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10676",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10677",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10678",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10679",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10680",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10681",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10682",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10683",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10684",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10685",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10686",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10687",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10688",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10689",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10690a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10690b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10691a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10691b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10692",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10693",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10693b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10694",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10694b",
+        "local": true,
+        "localized": false,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10695",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10695b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10696",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10696b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10697",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10697b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10698",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10698b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10699",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10699b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10700",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10700b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10701",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10701b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10702",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10703",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10704",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10705a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10705b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10706a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10706b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10707a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10707b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10708a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10708b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10709a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10709b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10710a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10710b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10711a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10711b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10712a",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10712b",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10713",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10714",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10715",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10716",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10717",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10718",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10719",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10720",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10721",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10722",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10723",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10724",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10725",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10726",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10727",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10728",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10729",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10730",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10731",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10732",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10733",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10734",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10735",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10736",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10737",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10738",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10739",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10740",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10741",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10742",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      },
+      {
+        "code": "10743",
+        "local": true,
+        "localized": true,
+        "remote": false,
+        "resolved": true
+      }
+    ],
+    "faces": {
+      "backArt": 221,
+      "backFaces": 441,
+      "frontFaces": 441,
+      "genericBack": 220,
+      "localizedMissingOnDisk": [],
+      "optionalRemoteCandidates": {
+        "bySource": {
+          "bare-code-fallback": 58,
+          "reference-alt-front": 346
+        },
+        "count": 404
+      },
+      "primaryNotLocal": [],
+      "remoteOnlyFaces": []
+    },
+    "local": 441,
+    "localized": 440,
+    "remote": 0,
+    "required": {
+      "localFiles": 561,
+      "localizedFiles": 440
+    },
+    "resolved": 441,
+    "total": 441,
+    "unresolved": []
+  },
+  "localImagesLedger": {
+    "byteMismatch": [],
+    "checked": {
+      "localFiles": 561,
+      "localizedFiles": 440,
+      "sha256Verified": 574
+    },
+    "digestMismatch": [],
+    "digests": {
+      "fhvLocalizedRecords": 0,
+      "fhvRecords": 572,
+      "path": "audit/image-digests.json",
+      "present": true,
+      "records": 13245,
+      "scope": "manifest",
+      "sha256": "acb47c46a140b7716c336eb8ecec65dd5bbd6f8e0dbd98c3c995d54e028621e9"
+    },
+    "inventory": {
+      "bytes": 2383928633,
+      "fhvEntries": {
+        "english": 572,
+        "localized": 440,
+        "total": 1012
+      },
+      "fingerprint": "91e94c02d2d25634063ab845eba0f1dce2d4bcdbc2dc2d447964d9ec66836c32",
+      "host": "https://drliao1.com/arkhamhorror/cards",
+      "path": "audit/local-images.json",
+      "present": true,
+      "scope": "manifest",
+      "sha256": "745cd684dfbce12d09a2d95643cafe16d5aacd65b205ee1183a0e6ff3cb7d204",
+      "total": 14673
+    },
+    "localizedMissingOnDisk": [],
+    "missingDigest": [],
+    "missingFromInventory": [],
+    "missingOnDisk": []
+  },
+  "milestone": "P8",
+  "presentation": {
+    "artifacts": [
+      {
+        "entries": 5065,
+        "path": "presentation/localized-arts.json",
+        "sha256": "8929c5fe00cc869cd701bbc9f2a57a77bbe9347327f2fdcfa469068983d06f8f"
+      },
+      {
+        "entries": 1428,
+        "path": "presentation/generated-localized-arts.json",
+        "sha256": "900a713b2157083e2ef5cd7c1a2071155cb2446f8682440b5849a93945237aae"
+      },
+      {
+        "entries": 30895,
+        "path": "presentation/media-registry.json",
+        "sha256": "b30dc5881b9e4282221cdb1819c5b166865a5459ff6744c2883eea3d43d3ca97"
+      }
+    ],
+    "browserSuite": {
+      "reason": "该入口跑 Playwright/Edge 全量 *.browser.mjs 浏览器套件（分钟到小时级），不在素材审计内运行；本轮以 presentationStats() 与映射来源哈希在 Node 侧复算展示解析与映射产物，浏览器展示验收由各阶段账本承担。",
+      "status": "not-run",
+      "tool": "tools/check-presentation.mjs"
+    },
+    "fhv": {
+      "cards": 441,
+      "local": 441,
+      "localized": 440,
+      "localizedFilesOnDisk": 440,
+      "resolved": 441
+    },
+    "generatedFhvEntries": 440,
+    "ledger": {
+      "path": "audit/presentation-report.json",
+      "phase": "N2",
+      "schemaVersion": 1,
+      "sha256": "72fd9bcbb090b6b014d6490e57966a796074ca5fab9aae1ccce8d83221a0d245",
+      "verifiedCounts": {
+        "localImagesCopied": 0,
+        "note": "本阶段没有下载或复制媒体；可展示与缺图数量需由浏览器验收记录，不由候选数推断",
+        "remoteImagesVerified": 0
+      }
+    },
+    "mapping": {
+      "available": true,
+      "drift": [],
+      "excluded": [
+        "audit/presentation-report.json"
+      ],
+      "localizedArts": {
+        "artsMatch": true,
+        "declaredEntries": 5065,
+        "declaredSourceSha256": "ed8e006012040f1ea3358977959534438b16d84f0659c3d6226d9c9af39b9353",
+        "entries": 5065,
+        "path": "presentation/localized-arts.json",
+        "sourceMatches": true,
+        "sourcePath": "ArkhamHorror-main/frontend/src/digests/zh.json",
+        "sourceSha256": "ed8e006012040f1ea3358977959534438b16d84f0659c3d6226d9c9af39b9353"
+      },
+      "reason": null,
+      "remoteManifest": {
+        "declaredSourceSha256": "f7ec4c7e2251a7f3ddfc0b0a9114d5a98d5a3ca2e599c3f3fd05138eff8ce285",
+        "path": "presentation/media-registry.json",
+        "sourceMatches": true,
+        "sourcePath": "ArkhamHorror-main/frontend/image-manifest.json",
+        "sourceSha256": "f7ec4c7e2251a7f3ddfc0b0a9114d5a98d5a3ca2e599c3f3fd05138eff8ce285"
+      }
+    },
+    "pass": true,
+    "resolution": {
+      "cardsWithBackArt": 2592,
+      "catalogCards": 5930,
+      "localizedFrontCandidates": 5211,
+      "resolved": 5930,
+      "unresolved": 0
+    }
+  },
+  "runtimeReferenceHits": [],
+  "runtimeReferenceScan": {
+    "kinds": [
+      "module-import",
+      "fs-read",
+      "fs-write",
+      "path-construction"
+    ],
+    "markers": [
+      "参考资源",
+      "referenceRoot"
+    ],
+    "note": "逐行判定 import／require／fs 读取／路径构造；注释与溯源字符串不计（presentation/ 也在扫描内，因为它是卡图解析运行时）",
+    "roots": [
+      "src",
+      "content",
+      "web",
+      "presentation"
+    ]
+  },
+  "schemaVersion": 1,
+  "scope": {
+    "catalogMissing": [],
+    "missingFromPartitions": [],
+    "missingFromScope": [],
+    "partitions": {
+      "fhvCampaign": 301,
+      "fhvInvestigators": 20,
+      "fhvPlayer": 120
+    },
+    "records": 441,
+    "scopeLedger": "audit/fhv-scope.json",
+    "scopeMatches": true
+  },
+  "sources": [
+    {
+      "path": "presentation/images.js",
+      "sha256": "ecaf6e7727bb54128ce8e0b7f9cb289cb5c0ab72a9f78c1a7b8d9b751d33aa9d"
+    },
+    {
+      "path": "presentation/art-rules.js",
+      "sha256": "d4f7cbc4a00e3b20a72c841ce0f1be9b9a94aaaf47d2f93868db257d96774ddc"
+    },
+    {
+      "path": "web/images.js",
+      "sha256": "fe2a81eb52280500e39dcde7a0db1dbc11f870f5fb4ecc4e8c1bebc7e1035f54"
+    }
+  ],
+  "status": "verified",
+  "step": "P8 素材/图片库存与远程回退、展示数据审计"
+}

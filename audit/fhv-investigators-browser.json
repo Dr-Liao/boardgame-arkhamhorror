@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "tools/playwright-fhv-p5-reporter.mjs",
+  "status": "passed",
+  "specs": [
+    "tests/fhv-investigators.browser.mjs"
+  ],
+  "checks": {
+    "desktop": true,
+    "mobile": true
+  },
+  "tests": [
+    {
+      "file": "tests/fhv-investigators.browser.mjs",
+      "title": "P5 desktop 10001 威尔森·理查德：真实选人/开局/专属依赖/无控制台错误",
+      "status": "passed",
+      "durationMs": 2255
+    },
+    {
+      "file": "tests/fhv-investigators.browser.mjs",
+      "title": "P5 desktop 10004 凯特·温斯罗普：真实选人/开局/专属依赖/无控制台错误",
+      "status": "passed",
+      "durationMs": 1406
+    },
+    {
+      "file": "tests/fhv-investigators.browser.mjs",
+      "title": "P5 desktop 10009 亚历山德拉·佐兹：真实选人/开局/专属依赖/无控制台错误",
+      "status": "passed",
+      "durationMs": 1434
+    },
+    {
+      "file": "tests/fhv-investigators.browser.mjs",
+      "title": "P5 desktop 10012 鸣神琥珀：真实选人/开局/专属依赖/无控制台错误",
+      "status": "passed",
+      "durationMs": 1412
+    },
+    {
+      "file": "tests/fhv-investigators.browser.mjs",
+      "title": "P5 desktop 10015 汉克‧萨姆森：真实选人/开局/专属依赖/无控制台错误",
+      "status": "passed",
+      "durationMs": 1336
+    },
+    {
+      "file": "tests/fhv-investigators.browser.mjs",
+      "title": "P5 mobile 10001 威尔森·理查德：真实选人/开局/专属依赖/无控制台错误",
+      "status": "passed",
+      "durationMs": 1243
+    },
+    {
+      "file": "tests/fhv-investigators.browser.mjs",
+      "title": "P5 mobile 10004 凯特·温斯罗普：真实选人/开局/专属依赖/无控制台错误",
+      "status": "passed",
+      "durationMs": 1122
+    },
+    {
+      "file": "tests/fhv-investigators.browser.mjs",
+      "title": "P5 mobile 10009 亚历山德拉·佐兹：真实选人/开局/专属依赖/无控制台错误",
+      "status": "passed",
+      "durationMs": 1139
+    },
+    {
+      "file": "tests/fhv-investigators.browser.mjs",
+      "title": "P5 mobile 10012 鸣神琥珀：真实选人/开局/专属依赖/无控制台错误",
+      "status": "passed",
+      "durationMs": 1295
+    },
+    {
+      "file": "tests/fhv-investigators.browser.mjs",
+      "title": "P5 mobile 10015 汉克‧萨姆森：真实选人/开局/专属依赖/无控制台错误",
+      "status": "passed",
+      "durationMs": 1127
+    }
+  ],
+  "screenshots": [
+    "artifacts/migration/fhv/p5/screenshots/p5-desktop-10001.png",
+    "artifacts/migration/fhv/p5/screenshots/p5-desktop-10004.png",
+    "artifacts/migration/fhv/p5/screenshots/p5-desktop-10009.png",
+    "artifacts/migration/fhv/p5/screenshots/p5-desktop-10012.png",
+    "artifacts/migration/fhv/p5/screenshots/p5-desktop-10015.png",
+    "artifacts/migration/fhv/p5/screenshots/p5-mobile-10001.png",
+    "artifacts/migration/fhv/p5/screenshots/p5-mobile-10004.png",
+    "artifacts/migration/fhv/p5/screenshots/p5-mobile-10009.png",
+    "artifacts/migration/fhv/p5/screenshots/p5-mobile-10012.png",
+    "artifacts/migration/fhv/p5/screenshots/p5-mobile-10015.png"
+  ]
+}

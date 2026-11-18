@@ -78,7 +78,7 @@ test('音乐播放器持续播放、切歌、进度、音量保存、退出暂�
   expect(await transport(() => window.__musicAudio.every(a => a.paused))).toBe(true)
   await page.getByRole('button', { name: '选择调查员', exact: true }).click()
   await page.getByRole('button', { name: /选择调查员：罗兰/ }).first().click()
-  await page.getByRole('button', { name: /自动构筑/ }).first().click()
+  await page.getByRole('button', { name: /使用推荐卡组/ }).first().click()
   await page.getByRole('button', { name: '确认准备', exact: true }).first().click()
   await page.getByRole('button', { name: '开始当前关卡' }).first().click()
   await expect(page.locator('.ah-table')).toBeVisible()

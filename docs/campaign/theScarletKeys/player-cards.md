@@ -32,6 +32,47 @@ P6 迁移 09021–09128 共 108 条记录（103 张可构筑玩家卡 + 5 张基
 注册期登记到 `src/engine/tsk-customizable.js` 原语；可实现的运行时效果（费用修正等）经
 `customizationEffects` / 条目读点接线，缺读点的选项在条目 note 与 primitive-request 中逐项披露。
 
+### 3.1 玩家交互流程（2026-11-16 P2-3 后的真实路径）
+
+```
+构筑期 scenarioSetup / 关间 interlude
+  → mechanic-view#customizationHub（按 observer 本人座位投影）
+       { availableXp, entries: [{ code, name, checked, level, xpPerCheck, canUpgrade,
+                                  options: [{ name, checks, checkedCount, implemented }] }] }
+  → web/hub.js#customizationPanel（桌面 1440 / 移动 390 同面板）
+  → 每个选项显示「已勾 checkedCount / 共 checks 格」与一枚「下一格」按钮
+  → hubCustomize（legalMoves 逐格生成：cost = 1 或 exceptional 的 2 XP，availableXp = 当前未花费 XP）
+  → dispatch#hubCustomize（相位/座位/牌组/未满格校验；且只能由该座位自己提交）
+  → tsk-customizable#upgradeCustomization（勾选合法性、只能增加、XP 足够；写
+     campaign.tsk.customizations.bySeat[seat][code]）
+  → record.xp -= xpCost、record.spentXp += xpCost、campaign.xp 同步、info 日志
+  → 面板刷新 level = ceil(勾选数 / 2)、选项格数、可用 XP；JSON 存档往返保留。
+```
+
+运行时读点：卡条目用 `customizationOptionFullyChecked(state, seat, code, optionIndex)`
+（或 `api.mechanics.tsk.customizable.optionFullyChecked`）读取——**多格选项必须勾满 `checks` 格才生效**；
+减费类在 `turn-flow.js#playCost` 的 abilityLayer 汇总 `customizationEffects.playCost`
+（与 `playCostModifier` 单一声明，禁止同一效果两处声明造成双重减费）。
+
+### 3.2 交互口径与边界（P2-3 修复）
+
+- **多座位**：每个真人座位只给自己勾选（旧实现硬编码房主座位 0，多人局其他玩家永远无法升级）；
+  伪造跨座位提交被 `validateHubMove` 拒绝且不扣 XP。AI 座位不产生勾选候选（AI 自动升级不处理定制）。
+- **勾满才生效**：09021/09022/09023/09040/09042/09079/09081/09099/09100/09119 的
+  2–5 格选项此前用 `includes(index)` 判定，勾 1 格即拿整项效果（白付 1–3 XP）；现已逐卡改为勾满读点。
+- **费用效果**：09021/09022/09023 同时声明 `customizationEffects.playCost` 与 `playCostModifier`
+  但前者从未被引擎读取；09061 Impulse Control 的 -1 费因此**完全没生效**。现统一由
+  `turn-flow#playCost` 汇总 `customizationEffects.playCost`（勾满才减），重复声明已删除。
+- **approximation 勾选格**：09041（8 格）与 09101（5 格）的规则尚未接读点，此前可购买但无效果。
+  现声明 `implemented: false`：面板仍展示卡面文本并标「规则未实现：暂不可勾选」，不再生成候选，
+  dispatch 伪造提交也拒绝（不浪费 XP）；旧存档里已勾选的格仍可加载。
+- **写实边界**：升级草稿（hubPurchase staged）存在时定制候选隐藏、提交报「先保存/撤销」；
+  勾满的选项不再给候选；过期候选（availableXp 变化）被拒且不重复扣 XP；
+  exceptional 卡的每格 XP 元数据与候选/结算同口径（当前 16 张均非 exceptional）。
+- **仍余**：09041/09101 需补读点后才可勾选；AI 座位不自动定制；P2-8 的事务层
+  （`createTskInteractions#customizable.upgrade`）尚未接入大厅路径（当前 hub 直接调原语，
+  与交互层同源但非同一包装）。
+
 ## 4. 内容包与可用性
 
 - `content/packs/tskPlayer/manifest.js`：P6 起 `playable`，108 条 `rulesImplemented: true`，

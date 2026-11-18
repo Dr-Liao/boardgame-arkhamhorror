@@ -1,0 +1,588 @@
+{
+  "schemaVersion": 1,
+  "cycle": "fhv",
+  "phase": "P6",
+  "generatedBy": "主进程（由 artifacts/migration/fhv/primitive-requests/ 汇总）",
+  "decision": "deferred",
+  "rationale": "P6 逐卡验收采用与 P5/TSK P6 相同的披露口径：缺引擎读点的子句在条目里用现有原语实现最接近行为并以 simplified:true + note 逐条披露，新原语请求统一延后到 P7–P8 原语批次实现；不在 P6 阻塞玩家卡批次。",
+  "deferredCodes": [
+    "10028",
+    "10035",
+    "10036",
+    "10039",
+    "10043",
+    "10050",
+    "10054",
+    "10059",
+    "10063",
+    "10065",
+    "10070",
+    "10072",
+    "10075",
+    "10079",
+    "10082",
+    "10085",
+    "10086",
+    "10087",
+    "10088",
+    "10089",
+    "10090",
+    "10092",
+    "10093",
+    "10094",
+    "10096",
+    "10098",
+    "10099",
+    "10100",
+    "10101",
+    "10102",
+    "10103",
+    "10105",
+    "10106",
+    "10107",
+    "10109",
+    "10110",
+    "10117",
+    "10118",
+    "10123",
+    "10126",
+    "10129",
+    "10132",
+    "10133",
+    "10134",
+    "10135"
+  ],
+  "blockedCodes": [],
+  "requests": [
+    {
+      "code": "10028",
+      "requests": [
+        {
+          "name": "10028.json",
+          "status": "pending",
+          "clauses": [
+            {
+              "text": "Attached asset takes up 1 fewer hand or accessory slot.（所附属的支援少占据 1 个手部或饰品槽位）",
+              "gap": "槽位原语只有「整格豁免」：scenario-runtime.js#exemptAssetSlot 把 host 的某个槽位整体写入实例的 ignoredSlots（assets.js#occupiedSlots 唯一读取点），没有「把一个 Hand x2 的占用从 2 格减到 1 格」的半格/计数读点；也没有 applicable-if-attached 的槽位修正声明。",
+              "requestedPrimitive": "api.reduceAssetSlotUse(asset, { slots: ['hand'], amount: 1 })（或条目级 assetRule.hostSlotReduction: { slot, amount }，由 occupiedSlots 按格数扣减，可重复/可叠加，随附属离场自动失效）。",
+              "fallback": "按宿主印刷槽位类型整格豁免：手部（含 Hand x2）→ 忽略 hand；饰品 → 忽略 accessory；其它槽位不处理。单手/单饰品宿主与印刷一致；双手[[工具]]（如 10110 干草叉）会少算 2 格而不是 1 格。测试覆盖单饰品宿主（10020 清理工具套装）。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "10035",
+      "requests": [
+        {
+          "name": "10035.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10036",
+      "requests": [
+        {
+          "name": "10036.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10039",
+      "requests": [
+        {
+          "name": "10039.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10043",
+      "requests": [
+        {
+          "name": "10043.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10050",
+      "requests": [
+        {
+          "name": "10050.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10054",
+      "requests": [
+        {
+          "name": "10054.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10059",
+      "requests": [
+        {
+          "name": "10059.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10063",
+      "requests": [
+        {
+          "name": "10063.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10065",
+      "requests": [
+        {
+          "name": "10065.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10070",
+      "requests": [
+        {
+          "name": "10070.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10072",
+      "requests": [
+        {
+          "name": "10072.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10075",
+      "requests": [
+        {
+          "name": "10075.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10079",
+      "requests": [
+        {
+          "name": "10079.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10082",
+      "requests": [
+        {
+          "name": "10082.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10085",
+      "requests": [
+        {
+          "name": "10085.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10086",
+      "requests": [
+        {
+          "name": "10086.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10087",
+      "requests": [
+        {
+          "name": "10087.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10088",
+      "requests": [
+        {
+          "name": "10088.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10089",
+      "requests": [
+        {
+          "name": "10089.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10090",
+      "requests": [
+        {
+          "name": "10090.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10092",
+      "requests": [
+        {
+          "name": "10092.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10093",
+      "requests": [
+        {
+          "name": "10093.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10094",
+      "requests": [
+        {
+          "name": "10094.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10096",
+      "requests": [
+        {
+          "name": "10096.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10098",
+      "requests": [
+        {
+          "name": "10098.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10099",
+      "requests": [
+        {
+          "name": "10099.json",
+          "status": "pending",
+          "clauses": [
+            {
+              "text": "补满该支援的所有充能或秘密。",
+              "gap": "能力面没有「一张支援的印刷使用上限」读点：stats.js#assetEffect 只在引擎内部合并 entry.uses，api 不暴露；未迁移的充能/秘密支援（只有旧 DSL 或卡面数据）完全读不到上限。",
+              "requestedPrimitive": "api.assetUsesMax(card) → number | null（src/engine/stats.js#assetEffect 的 uses 元数据只读投影）",
+              "fallback": "读 registeredEntry(card.code).uses 作为印刷上限；读不到时只提示、不补满（条目声明 simplified + note）。"
+            },
+            {
+              "text": "然后，你可以结算该支援上的一个 [action] 或 [fast] 能力，而不支付其 [action] 费用。",
+              "gap": "无（api.cardAbilityOptions + api.resolveCardAbility 的 ignoreActionCost 已接线）。",
+              "requestedPrimitive": null,
+              "fallback": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "10100",
+      "requests": [
+        {
+          "name": "10100.json",
+          "status": "pending",
+          "clauses": [
+            {
+              "text": "如果本次躲避尝试期间揭示了符号，当你回合结束时，将缥缈灵体返回你的手牌。",
+              "gap": "事件卡没有「延迟去向」读点：打出结算完成时就要决定进弃牌堆/手牌/移出游戏（actions.js#doPlay 收尾段只读 removeAfterPlay / shuffleBackAfterPlay / exileAfterPlay / returnToHandAfterPlay 等静态标记），无法把「回合结束时返回手牌」登记成延迟效果（state.effects 的 abilities 只接受 reaction/forced + 纯数据 effect，且没有「把某张事件移回手牌」的效果原语）。",
+              "requestedPrimitive": "api.scheduleCardDestination(seat, code, { at: 'endOfTurn', to: 'hand' })（或 eventDestination 描述子回调：由条目返回本次结算后的去向，含延迟条件）+ 引擎在 turnEnds 统一结算",
+              "fallback": "条目声明 keepOnPlay，resolve 里按 result.drawn 是否含符号立即 putInHand / putIntoDiscard（近似：结算后立即返回而不是回合结束）。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "10101",
+      "requests": [
+        {
+          "name": "10101.json",
+          "status": "pending",
+          "clauses": [
+            {
+              "text": "如果本次调查期间揭示了符号，当你回合结束时，将解读秘符返回你的手牌。",
+              "gap": "事件卡没有「延迟去向」读点（与 10100/10102 同一缺口）：actions.js#doPlay 收尾段只认静态去向标记，无法登记「回合结束时返回手牌」；state.effects 的能力只接受 reaction/forced + 纯数据 effect，且没有「把某张事件移回手牌」的效果原语。",
+              "requestedPrimitive": "api.scheduleCardDestination(seat, code, { at: 'endOfTurn', to: 'hand' })+ turnEnds 统一结算（与 10100 同一原语，三张卡共用）",
+              "fallback": "条目声明 keepOnPlay，resolve 里按 result.drawn 是否含符号立即 putInHand / putIntoDiscard。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "10102",
+      "requests": [
+        {
+          "name": "10102.json",
+          "status": "pending",
+          "clauses": [
+            {
+              "text": "如果本次攻击期间揭示了符号，当你回合结束时，将幽灵利刃返回你的手牌。",
+              "gap": "事件卡没有「延迟去向」读点（与 10100/10101 同一缺口）：actions.js#doPlay 收尾段只认静态去向标记，无法登记「回合结束时返回手牌」。",
+              "requestedPrimitive": "api.scheduleCardDestination(seat, code, { at: 'endOfTurn', to: 'hand' })+ turnEnds 统一结算（与 10100 同一原语，三张卡共用）",
+              "fallback": "条目声明 keepOnPlay，resolve 里按 result.drawn 是否含符号立即 putInHand / putIntoDiscard。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "10103",
+      "requests": [
+        {
+          "name": "10103.json",
+          "status": "pending",
+          "clauses": [
+            {
+              "text": "结算这些事件时，你得到技能值 +2。",
+              "gap": "没有「只在该事件结算期间生效」的技能值作用域：inv.testBonus 是「下一次技能检定 +N」，若所结算的事件不发起检定，+2 会留到下一次检定；state.effects 的修正无法按「正在结算的事件」收窄（没有窗口上下文可供 condition.when 读取）。",
+              "requestedPrimitive": "api.addScopedTestBonus(seat, amount, { whileResolvingCode }) 或 api.withResolutionScope(code, run)（把修正限定在正在结算的那张卡的嵌套检定里，结算结束即撤销）",
+              "fallback": "用 api.playerTools.addNextTestBonus(seat, 2) 近似（检定开始时并入并清零）；事件不发起检定时的溢出在 note 披露。"
+            },
+            {
+              "text": "依次打出每张揭示的事件，其费用减少 1 点。",
+              "gap": "无（api.playCardFromHandFree 的 discount 参数已接线）。",
+              "requestedPrimitive": null,
+              "fallback": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "10105",
+      "requests": [
+        {
+          "name": "10105.json",
+          "status": "pending",
+          "clauses": [
+            {
+              "text": "查找你的绑定卡牌，找出黄铜仆从 / 钥匙看管者，并将其放置入场。",
+              "gap": "api.bonded 只有 retrieve（把整组副本 1 张入手 + 其余洗回牌库）与 shuffleCopyIntoDeck（把指定副本洗进牌库），没有「从场外集合直接取出指定副本并放置入场」的读点；现有管线会额外洗一次牌库（卡面不洗牌）。",
+              "requestedPrimitive": "api.bonded.retrieveOne(seat, mainCode, copyCode, { to: 'play' | 'hand' })（从场外集合精确取一张，不洗牌、不触发整组检索）",
+              "fallback": "shuffleCopyIntoDeck(seat, '10105', copyCode) + takeDeckCard 把副本从牌库取回，再 api.scenario.giveAsset 放置入场（多洗一次牌库，note 披露）。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "10106",
+      "requests": [
+        {
+          "name": "10106.json",
+          "status": "pending",
+          "clauses": [
+            {
+              "text": "强制 - 在钥匙看管者将要离场时：将其放在一边，位于场外。",
+              "gap": "支援离场时没有「去哪个区域」的替换读点：leavesPlay 钩子跑完后，asset-defeat.js / api.discardAsset / discardRandomAsset 仍会无条件 owner.discard.push(code)（不走 player-zones.js#replacePlayerZoneCards），因此无法阻止「进弃牌堆」，只能额外把一张副本收回场外绑定集合，弃牌堆里会多留一张同号副本。",
+              "requestedPrimitive": "api.setLeavePlayDestination(asset, { to: 'bonded' | 'setAside' })（或 leavesPlay 描述子返回去向；read point 收在 assets.js#leaveAsset，所有弃置/击败路径共用）",
+              "fallback": "zoneReplacement.discard='bonded' + leavesPlay 里 api.putIntoDiscard（副本立刻收回场外绑定集合）；引擎随后仍 push 一次弃牌堆（无玩法影响，note 披露）。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "10107",
+      "requests": [
+        {
+          "name": "10107.json",
+          "status": "pending",
+          "clauses": [
+            {
+              "text": "强制 - 在黄铜仆从将要离场时：将其放在一边，位于场外。",
+              "gap": "支援离场时没有「去哪个区域」的替换读点：leavesPlay 钩子之后 asset-defeat.js / api.discardAsset / discardRandomAsset 仍无条件 owner.discard.push(code)，无法阻止进弃牌堆（与 10106 同一缺口）。",
+              "requestedPrimitive": "api.setLeavePlayDestination(asset, { to: 'bonded' | 'setAside' })（read point 收在 assets.js#leaveAsset，所有弃置/击败路径共用）",
+              "fallback": "zoneReplacement.discard='bonded' + leavesPlay 里 api.putIntoDiscard（副本立刻收回场外绑定集合）；引擎随后仍 push 一次弃牌堆（note 披露）。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "10109",
+      "requests": [
+        {
+          "name": "10109.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10110",
+      "requests": [
+        {
+          "name": "10110.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10117",
+      "requests": [
+        {
+          "name": "10117.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10118",
+      "requests": [
+        {
+          "name": "10118.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10123",
+      "requests": [
+        {
+          "name": "10123.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10126",
+      "requests": [
+        {
+          "name": "10126.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10129",
+      "requests": [
+        {
+          "name": "10129.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10132",
+      "requests": [
+        {
+          "name": "10132.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10133",
+      "requests": [
+        {
+          "name": "10133.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10134",
+      "requests": [
+        {
+          "name": "10134.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    },
+    {
+      "code": "10135",
+      "requests": [
+        {
+          "name": "10135.json",
+          "status": "pending",
+          "clauses": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "requestFiles": 45,
+    "codes": 45,
+    "blocked": 0
+  }
+}

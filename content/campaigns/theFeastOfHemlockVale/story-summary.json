@@ -1,0 +1,90 @@
+{
+  "meta": {
+    "status": "generated",
+    "stage": "P7-story",
+    "sourceKind": "reference-en-locale + local zh supplement",
+    "officialChinese": false,
+    "note": "参考工程无本循环 zh locale：中文仅来自本地自译层 story-source/；缺译叶子逐键列入 chineseGaps 并回退英文，不冒充官方中文。",
+    "generator": "tools/import-fhv-story.mjs",
+    "generatedFrom": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale",
+    "sources": [
+      {
+        "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/base.json",
+        "sha256": "6fb4afb11123b42d75044687d1066bd3fcbc1f50602ae28d0f9b17d50e6593f1",
+        "chinesePaths": [
+          "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/base.part1.json",
+          "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/base.part2.json",
+          "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/base.part3.json",
+          "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/base.part4.json",
+          "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/base.part5.json"
+        ]
+      },
+      {
+        "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/fateOfTheVale.json",
+        "sha256": "49f2645e5704b401523e4d302cc289457e9cab55864339ba2b04b5464533be8a",
+        "chinesePaths": [
+          "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/fateOfTheVale.json"
+        ]
+      },
+      {
+        "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/hemlockHouse.json",
+        "sha256": "230f5a9723a0c8ea77c4a0a50c79c9b5a438cfbe49de9e1cdf30aeed721a8337",
+        "chinesePaths": [
+          "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/hemlockHouse.json"
+        ]
+      },
+      {
+        "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/theLongestNight.json",
+        "sha256": "eb966daf341b12dd044d0ab5d66fc4ecf7c7cecd57bff426e08ff2edbb8651e3",
+        "chinesePaths": [
+          "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/theLongestNight.json"
+        ]
+      },
+      {
+        "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/theLostSister.json",
+        "sha256": "9cd54f3bd58af2c16e3671888e4e3f182781ebc97f506324f2d2d1e057b49b08",
+        "chinesePaths": [
+          "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/theLostSister.json"
+        ]
+      },
+      {
+        "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/theSilentHeath.json",
+        "sha256": "dd54052fb47347610a2c306a51340b44e60923145176b1797c3baed7445d748d",
+        "chinesePaths": [
+          "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/theSilentHeath.json"
+        ]
+      },
+      {
+        "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/theThingInTheDepths.json",
+        "sha256": "7e3082d6f92bfb2e7dabafa0ca215eb9fe1b99c14e7453f89848a85a66e2f629",
+        "chinesePaths": [
+          "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/theThingInTheDepths.json"
+        ]
+      },
+      {
+        "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/theTwistedHollow.json",
+        "sha256": "5686d37e8fb12f686c7f506e5cae9f56f2aeb613aade22c39111b748123b43eb",
+        "chinesePaths": [
+          "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/theTwistedHollow.json"
+        ]
+      },
+      {
+        "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/writtenInRock.json",
+        "sha256": "3afd0cccd87e419b398893f8b59c8a45d7c98a988033416fcdb7d645b43745dd",
+        "chinesePaths": [
+          "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/writtenInRock.json"
+        ]
+      }
+    ],
+    "chineseGapCount": 0
+  },
+  "summary": {
+    "files": 9,
+    "chapters": 12,
+    "keys": 18,
+    "leaves": 1462,
+    "translated": 1462,
+    "chineseGaps": 0,
+    "selfTranslated": true
+  }
+}

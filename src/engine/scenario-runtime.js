@@ -5,6 +5,7 @@ import { nearestEnemies,isEnemyUnengaged } from './enemy-query.js'
 import { putInHand } from './hand-entry.js'
 import { discardPlayerCards, replacePlayerZoneCards } from './player-zones.js'
 import { createMechanicsApi } from './api-mechanics.js'
+import { emitPresentation } from './presentation-events.js'
 import { defensePreventsReady } from './location-defenses.js'
 import { sinkLocation } from './location-face.js'
 import { locationLookCandidates } from './location-look.js'
@@ -403,8 +404,10 @@ function scenarioRuntime(state, events, testSource = null) {
     },
     fight: (seat, enemyId, options = {}) => doFight(state, seat, { ...options, enemyId }, events, true),
     info: text => info(state, events, text),
-    // 内容层要全桌拍脸时走这里（密谋翻面、新密谋亮出）。普通日志仍用 info。
-    present: (text, presentation) => info(state, events, text, presentation),
+    // 提前播放之后会统一写入日志的正文时，可以只发演出提示。
+    present: (text, presentation, { log = true } = {}) => log
+      ? info(state, events, text, presentation)
+      : emitPresentation(state, events, { type: 'presentation', ...presentation, text }),
     cardName: code => cardName(code),
     // 混乱标记的中文名：「旧印」「骷髅」…（条目写日志时用，不要复制标签表）。
     tokenLabel: token => tokenLabel(token),

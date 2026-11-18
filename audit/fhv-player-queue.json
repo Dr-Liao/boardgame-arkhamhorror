@@ -1,0 +1,3308 @@
+{
+  "schemaVersion": 1,
+  "cycle": "fhv",
+  "phase": "P6",
+  "generatedBy": "tools/plan-fhv-player.mjs",
+  "items": [
+    {
+      "id": "10019",
+      "code": "10019",
+      "name": "御守",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10019.js",
+        "test": "tests/fhv-player-m2-1.test.mjs",
+        "mechanisms": [
+          "assets.uses",
+          "cards.zones",
+          "chaos.blessCurse",
+          "chaos.framework",
+          "combat.harm",
+          "content.cardIdentity",
+          "keyword.blessCurse",
+          "locations.tokens",
+          "timing.windows"
+        ],
+        "primitives": [
+          "assets.uses",
+          "chaos.blessCurse"
+        ],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 45
+        }
+      }
+    },
+    {
+      "id": "10020",
+      "code": "10020",
+      "name": "清理工具套装",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10020.js",
+        "test": "tests/fhv-player-m2-1.test.mjs",
+        "mechanisms": [
+          "assets.sharedUses",
+          "assets.uses",
+          "cards.playChannels",
+          "choice.targets",
+          "content.cardIdentity"
+        ],
+        "primitives": [
+          "assets.sharedUses",
+          "assets.uses",
+          "cards.playChannels"
+        ],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 53
+        }
+      }
+    },
+    {
+      "id": "10021",
+      "code": "10021",
+      "name": "武士刀",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10021.js",
+        "test": "tests/fhv-player-m2-1.test.mjs",
+        "mechanisms": [
+          "assets.uses",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 62
+        }
+      }
+    },
+    {
+      "id": "10022",
+      "code": "10022",
+      "name": "御札",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10022.js",
+        "test": "tests/fhv-player-m2-1.test.mjs",
+        "mechanisms": [
+          "assets.attachmentControl",
+          "assets.uses",
+          "chaos.blessCurse",
+          "choice.targets",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "enemies.alert",
+          "enemies.elusive",
+          "enemies.framework",
+          "keyword.alert",
+          "keyword.blessCurse",
+          "keyword.elusive",
+          "locations.move",
+          "timing.windows"
+        ],
+        "primitives": [
+          "chaos.blessCurse",
+          "cost.playAndSlots",
+          "enemies.alert",
+          "enemies.elusive"
+        ],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 70
+        }
+      }
+    },
+    {
+      "id": "10023",
+      "code": "10023",
+      "name": "狼面具",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10023.js",
+        "test": "tests/fhv-player-m2-1.test.mjs",
+        "mechanisms": [
+          "assets.maskLifecycle",
+          "assets.uses",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "enemies.framework",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [
+          "assets.maskLifecycle",
+          "cost.playAndSlots"
+        ],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 78
+        }
+      }
+    },
+    {
+      "id": "10024",
+      "code": "10024",
+      "name": "赦免",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10024.js",
+        "test": "tests/fhv-player-m2-1.test.mjs",
+        "mechanisms": [
+          "cards.zones",
+          "chaos.blessCurse",
+          "chaos.framework",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "keyword.blessCurse",
+          "locations.move",
+          "locations.tokens"
+        ],
+        "primitives": [
+          "chaos.blessCurse"
+        ],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 64
+        }
+      }
+    },
+    {
+      "id": "10025",
+      "code": "10025",
+      "name": "信仰指引",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10025.js",
+        "test": "tests/fhv-player-m2-1.test.mjs",
+        "mechanisms": [
+          "cards.zones",
+          "chaos.blessCurse",
+          "chaos.framework",
+          "choice.targets",
+          "content.cardIdentity",
+          "keyword.blessCurse",
+          "locations.move",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 81
+        }
+      }
+    },
+    {
+      "id": "10026",
+      "code": "10026",
+      "name": "举起手来",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10026.js",
+        "test": "tests/fhv-player-m2-1.test.mjs",
+        "mechanisms": [
+          "actions.parley",
+          "cards.zones",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "locations.move",
+          "test.outcomes"
+        ],
+        "primitives": [
+          "actions.parley",
+          "cost.playAndSlots"
+        ],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 89
+        }
+      }
+    },
+    {
+      "id": "10027",
+      "code": "10027",
+      "name": "特遣队",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10027.js",
+        "test": "tests/fhv-player-m2-1.test.mjs",
+        "mechanisms": [
+          "cards.playChannels",
+          "choice.targets",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "locations.move",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [
+          "cards.playChannels"
+        ],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 99
+        }
+      }
+    },
+    {
+      "id": "10028",
+      "code": "10028",
+      "name": "修修补补",
+      "shard": "M2-1",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10028.js",
+        "test": "tests/fhv-player-m2-1.test.mjs",
+        "mechanisms": [
+          "assets.attachmentControl",
+          "cards.zones",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 124
+        }
+      }
+    },
+    {
+      "id": "10029",
+      "code": "10029",
+      "name": "净化",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10029.js",
+        "test": "tests/fhv-player-m2-2.test.mjs",
+        "mechanisms": [
+          "chaos.blessCurse",
+          "chaos.framework",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "keyword.blessCurse",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Skill/CardDefs/TheFeastOfHemlockVale.hs",
+          "line": 7
+        }
+      }
+    },
+    {
+      "id": "10030",
+      "code": "10030",
+      "name": "手眼协调",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10030.js",
+        "test": "tests/fhv-player-m2-2.test.mjs",
+        "mechanisms": [
+          "cards.playChannels",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "timing.windows"
+        ],
+        "primitives": [
+          "cards.playChannels"
+        ],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 134
+        }
+      }
+    },
+    {
+      "id": "10031",
+      "code": "10031",
+      "name": "膂力过人",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10031.js",
+        "test": "tests/fhv-player-m2-2.test.mjs",
+        "mechanisms": [
+          "cards.zones",
+          "chaos.framework",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Skill/CardDefs/TheFeastOfHemlockVale.hs",
+          "line": 14
+        }
+      }
+    },
+    {
+      "id": "10032",
+      "code": "10032",
+      "name": "恢复元气",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10032.js",
+        "test": "tests/fhv-player-m2-2.test.mjs",
+        "mechanisms": [
+          "cards.zones",
+          "combat.harm",
+          "content.cardIdentity",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 159
+        }
+      }
+    },
+    {
+      "id": "10033",
+      "code": "10033",
+      "name": "清理工具套装",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10033.js",
+        "test": "tests/fhv-player-m2-2.test.mjs",
+        "mechanisms": [
+          "assets.attachmentControl",
+          "assets.sharedUses",
+          "assets.uses",
+          "cards.playChannels",
+          "choice.targets",
+          "content.cardIdentity",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [
+          "assets.sharedUses",
+          "cards.playChannels"
+        ],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 87
+        }
+      }
+    },
+    {
+      "id": "10034",
+      "code": "10034",
+      "name": "蒙福之刃",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10034.js",
+        "test": "tests/fhv-player-m2-2.test.mjs",
+        "mechanisms": [
+          "assets.uses",
+          "cards.zones",
+          "chaos.blessCurse",
+          "chaos.framework",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "keyword.blessCurse",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 97
+        }
+      }
+    },
+    {
+      "id": "10035",
+      "code": "10035",
+      "name": "瓦卢西亚之瞳",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10035.js",
+        "test": "tests/fhv-player-m2-2.test.mjs",
+        "mechanisms": [
+          "actions.parley",
+          "assets.attachmentControl",
+          "assets.uses",
+          "cards.bondedFaces",
+          "cards.zones",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "keyword.bonded",
+          "locations.move",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [
+          "actions.parley"
+        ],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 106
+        }
+      }
+    },
+    {
+      "id": "10036",
+      "code": "10036",
+      "name": "幽嘶之刃",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "dependency",
+      "requirements": {
+        "entry": "src/cards/entries/10036.js",
+        "test": "tests/fhv-player-m2-2.test.mjs",
+        "mechanisms": [
+          "assets.uses",
+          "cards.bondedFaces",
+          "cards.zones",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "keyword.bonded",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 117
+        }
+      }
+    },
+    {
+      "id": "10037",
+      "code": "10037",
+      "name": "旋风连击",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10037.js",
+        "test": "tests/fhv-player-m2-2.test.mjs",
+        "mechanisms": [
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 171
+        }
+      }
+    },
+    {
+      "id": "10038",
+      "code": "10038",
+      "name": "奇迹祝愿",
+      "shard": "M2-2",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10038.js",
+        "test": "tests/fhv-player-m2-2.test.mjs",
+        "mechanisms": [
+          "cards.bondedFaces",
+          "cards.zones",
+          "chaos.blessCurse",
+          "choice.targets",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "keyword.blessCurse",
+          "keyword.bonded",
+          "locations.move",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 188
+        }
+      }
+    },
+    {
+      "id": "10039",
+      "code": "10039",
+      "name": "转瞬为神",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "dependency",
+      "requirements": {
+        "entry": "src/cards/entries/10039.js",
+        "test": "tests/fhv-player-m2-3.test.mjs",
+        "mechanisms": [
+          "assets.uses",
+          "cards.bondedFaces",
+          "cards.zones",
+          "chaos.framework",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "keyword.bonded",
+          "locations.move",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 128
+        }
+      }
+    },
+    {
+      "id": "10040",
+      "code": "10040",
+      "name": "化学品套装",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10040.js",
+        "test": "tests/fhv-player-m2-3.test.mjs",
+        "mechanisms": [
+          "assets.uses",
+          "cards.zones",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "locations.move",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 138
+        }
+      }
+    },
+    {
+      "id": "10041",
+      "code": "10041",
+      "name": "查尔斯·威斯特三世博士",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10041.js",
+        "test": "tests/fhv-player-m2-3.test.mjs",
+        "mechanisms": [
+          "assets.uses",
+          "cards.zones",
+          "combat.harm",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "locations.move",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 146
+        }
+      }
+    },
+    {
+      "id": "10042",
+      "code": "10042",
+      "name": "显微镜",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10042.js",
+        "test": "tests/fhv-player-m2-3.test.mjs",
+        "mechanisms": [
+          "assets.uses",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "locations.move",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 155
+        }
+      }
+    },
+    {
+      "id": "10043",
+      "code": "10043",
+      "name": "鼠面具",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10043.js",
+        "test": "tests/fhv-player-m2-3.test.mjs",
+        "mechanisms": [
+          "assets.maskLifecycle",
+          "assets.uses",
+          "cards.zones",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "locations.move",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [
+          "assets.maskLifecycle"
+        ],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 163
+        }
+      }
+    },
+    {
+      "id": "10044",
+      "code": "10044",
+      "name": "饥饿霉菌",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10044.js",
+        "test": "tests/fhv-player-m2-3.test.mjs",
+        "mechanisms": [
+          "campaign.residents",
+          "cards.bondedFaces",
+          "cards.zones",
+          "choice.targets",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "keyword.bonded",
+          "locations.move",
+          "timing.windows"
+        ],
+        "primitives": [
+          "campaign.residents"
+        ],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 172
+        }
+      }
+    },
+    {
+      "id": "10045",
+      "code": "10045",
+      "name": "诡异疯长",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "dependency",
+      "requirements": {
+        "entry": "src/cards/entries/10045.js",
+        "test": "tests/fhv-player-m2-3.test.mjs",
+        "mechanisms": [
+          "cards.bondedFaces",
+          "cards.zones",
+          "choice.targets",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "keyword.bonded",
+          "locations.move",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 199
+        }
+      }
+    },
+    {
+      "id": "10046",
+      "code": "10046",
+      "name": "控制变量",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10046.js",
+        "test": "tests/fhv-player-m2-3.test.mjs",
+        "mechanisms": [
+          "chaos.blessCurse",
+          "content.cardIdentity",
+          "keyword.blessCurse",
+          "locations.move",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 214
+        }
+      }
+    },
+    {
+      "id": "10047",
+      "code": "10047",
+      "name": "冲刺实验",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10047.js",
+        "test": "tests/fhv-player-m2-3.test.mjs",
+        "mechanisms": [
+          "choice.targets",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "locations.move",
+          "locations.tokens",
+          "test.outcomes"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 226
+        }
+      }
+    },
+    {
+      "id": "10048",
+      "code": "10048",
+      "name": "刨根问底",
+      "shard": "M2-3",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10048.js",
+        "test": "tests/fhv-player-m2-3.test.mjs",
+        "mechanisms": [
+          "cards.zones",
+          "choice.targets",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "locations.move"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 240
+        }
+      }
+    },
+    {
+      "id": "10049",
+      "code": "10049",
+      "name": "“用书砸它！”",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10049.js",
+        "test": "tests/fhv-player-m2-4.test.mjs",
+        "mechanisms": [
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 254
+        }
+      }
+    },
+    {
+      "id": "10050",
+      "code": "10050",
+      "name": "原型惊变",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10050.js",
+        "test": "tests/fhv-player-m2-4.test.mjs",
+        "mechanisms": [
+          "assets.attachmentControl",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "enemies.framework",
+          "locations.move",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 263
+        }
+      }
+    },
+    {
+      "id": "10051",
+      "code": "10051",
+      "name": "资金充裕",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10051.js",
+        "test": "tests/fhv-player-m2-4.test.mjs",
+        "mechanisms": [
+          "content.cardIdentity",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Skill/CardDefs/TheFeastOfHemlockVale.hs",
+          "line": 21
+        }
+      }
+    },
+    {
+      "id": "10052",
+      "code": "10052",
+      "name": "加布里埃尔·卡里洛",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10052.js",
+        "test": "tests/fhv-player-m2-4.test.mjs",
+        "mechanisms": [
+          "cards.zones",
+          "chaos.blessCurse",
+          "chaos.framework",
+          "content.cardIdentity",
+          "keyword.blessCurse",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 181
+        }
+      }
+    },
+    {
+      "id": "10053",
+      "code": "10053",
+      "name": "手法稳当",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10053.js",
+        "test": "tests/fhv-player-m2-4.test.mjs",
+        "mechanisms": [
+          "assets.uses",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 190
+        }
+      }
+    },
+    {
+      "id": "10054",
+      "code": "10054",
+      "name": "精准调配",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10054.js",
+        "test": "tests/fhv-player-m2-4.test.mjs",
+        "mechanisms": [
+          "assets.attachmentControl",
+          "assets.uses",
+          "content.cardIdentity",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 271
+        }
+      }
+    },
+    {
+      "id": "10055",
+      "code": "10055",
+      "name": "绝密手段",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10055.js",
+        "test": "tests/fhv-player-m2-4.test.mjs",
+        "mechanisms": [
+          "cards.zones",
+          "chaos.blessCurse",
+          "chaos.framework",
+          "choice.targets",
+          "content.cardIdentity",
+          "keyword.blessCurse",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Skill/CardDefs/TheFeastOfHemlockVale.hs",
+          "line": 28
+        }
+      }
+    },
+    {
+      "id": "10056",
+      "code": "10056",
+      "name": "棱相眼镜",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10056.js",
+        "test": "tests/fhv-player-m2-4.test.mjs",
+        "mechanisms": [
+          "assets.uses",
+          "cards.zones",
+          "chaos.blessCurse",
+          "chaos.framework",
+          "choice.targets",
+          "content.cardIdentity",
+          "keyword.blessCurse",
+          "locations.move",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 199
+        }
+      }
+    },
+    {
+      "id": "10057",
+      "code": "10057",
+      "name": "云山雾罩",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10057.js",
+        "test": "tests/fhv-player-m2-4.test.mjs",
+        "mechanisms": [
+          "actions.parley",
+          "assets.uses",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "enemies.framework",
+          "locations.move",
+          "locations.tokens",
+          "test.outcomes"
+        ],
+        "primitives": [
+          "actions.parley"
+        ],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 286
+        }
+      }
+    },
+    {
+      "id": "10058",
+      "code": "10058",
+      "name": "显微镜",
+      "shard": "M2-4",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10058.js",
+        "test": "tests/fhv-player-m2-4.test.mjs",
+        "mechanisms": [
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "locations.move",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 208
+        }
+      }
+    },
+    {
+      "id": "10059",
+      "code": "10059",
+      "name": "饥饿霉菌",
+      "shard": "M2-5",
+      "status": "pending",
+      "kind": "researched",
+      "requirements": {
+        "entry": "src/cards/entries/10059.js",
+        "test": "tests/fhv-player-m2-5.test.mjs",
+        "mechanisms": [
+          "cards.bondedFaces",
+          "cards.zones",
+          "content.cardIdentity",
+          "keyword.bonded",
+          "locations.move",
+          "locations.tokens",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 217
+        }
+      }
+    },
+    {
+      "id": "10060",
+      "code": "10060",
+      "name": "饥饿霉菌",
+      "shard": "M2-5",
+      "status": "pending",
+      "kind": "researched",
+      "requirements": {
+        "entry": "src/cards/entries/10060.js",
+        "test": "tests/fhv-player-m2-5.test.mjs",
+        "mechanisms": [
+          "cards.bondedFaces",
+          "cards.zones",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "enemies.framework",
+          "keyword.bonded",
+          "locations.move",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 228
+        }
+      }
+    },
+    {
+      "id": "10061",
+      "code": "10061",
+      "name": "饥饿霉菌",
+      "shard": "M2-5",
+      "status": "pending",
+      "kind": "researched",
+      "requirements": {
+        "entry": "src/cards/entries/10061.js",
+        "test": "tests/fhv-player-m2-5.test.mjs",
+        "mechanisms": [
+          "cards.bondedFaces",
+          "cards.zones",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "keyword.bonded",
+          "locations.move",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 239
+        }
+      }
+    },
+    {
+      "id": "10062",
+      "code": "10062",
+      "name": "“咪咪”比安卡",
+      "shard": "M2-5",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10062.js",
+        "test": "tests/fhv-player-m2-5.test.mjs",
+        "mechanisms": [
+          "actions.parley",
+          "assets.uses",
+          "cards.bondedFaces",
+          "cards.zones",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "enemies.framework",
+          "keyword.bonded",
+          "locations.move",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 250
+        }
+      }
+    },
+    {
+      "id": "10063",
+      "code": "10063",
+      "name": "“咪咪”比安卡",
+      "shard": "M2-5",
+      "status": "pending",
+      "kind": "dependency",
+      "requirements": {
+        "entry": "src/cards/entries/10063.js",
+        "test": "tests/fhv-player-m2-5.test.mjs",
+        "mechanisms": [
+          "actions.parley",
+          "cards.bondedFaces",
+          "cards.zones",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "enemies.framework",
+          "keyword.bonded",
+          "locations.grid",
+          "timing.windows"
+        ],
+        "primitives": [
+          "locations.grid"
+        ],
+        "reference": {
+          "file": "Enemy/CardDefs/TheFeastOfHemlockVale.hs",
+          "line": 32
+        }
+      }
+    },
+    {
+      "id": "10064",
+      "code": "10064",
+      "name": "敲诈文件",
+      "shard": "M2-5",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10064.js",
+        "test": "tests/fhv-player-m2-5.test.mjs",
+        "mechanisms": [
+          "actions.parley",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "enemies.framework",
+          "locations.move",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 261
+        }
+      }
+    },
+    {
+      "id": "10065",
+      "code": "10065",
+      "name": "不列颠斗牛犬左轮手枪",
+      "shard": "M2-5",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10065.js",
+        "test": "tests/fhv-player-m2-5.test.mjs",
+        "mechanisms": [
+          "actions.parley",
+          "assets.uses",
+          "cards.zones",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 268
+        }
+      }
+    },
+    {
+      "id": "10066",
+      "code": "10066",
+      "name": "假证",
+      "shard": "M2-5",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10066.js",
+        "test": "tests/fhv-player-m2-5.test.mjs",
+        "mechanisms": [
+          "actions.parley",
+          "assets.attachmentControl",
+          "assets.uses",
+          "cards.zones",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "locations.move",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 278
+        }
+      }
+    },
+    {
+      "id": "10067",
+      "code": "10067",
+      "name": "狐面具",
+      "shard": "M2-5",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10067.js",
+        "test": "tests/fhv-player-m2-5.test.mjs",
+        "mechanisms": [
+          "assets.maskLifecycle",
+          "assets.uses",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "locations.move",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [
+          "assets.maskLifecycle"
+        ],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 286
+        }
+      }
+    },
+    {
+      "id": "10068",
+      "code": "10068",
+      "name": "贝壳护符",
+      "shard": "M2-5",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10068.js",
+        "test": "tests/fhv-player-m2-5.test.mjs",
+        "mechanisms": [
+          "assets.uses",
+          "cards.zones",
+          "chaos.blessCurse",
+          "chaos.framework",
+          "choice.targets",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "keyword.blessCurse",
+          "locations.tokens",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 295
+        }
+      }
+    },
+    {
+      "id": "10069",
+      "code": "10069",
+      "name": "银行劫案",
+      "shard": "M2-6",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10069.js",
+        "test": "tests/fhv-player-m2-6.test.mjs",
+        "mechanisms": [
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "locations.move"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 296
+        }
+      }
+    },
+    {
+      "id": "10070",
+      "code": "10070",
+      "name": "诈降",
+      "shard": "M2-6",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10070.js",
+        "test": "tests/fhv-player-m2-6.test.mjs",
+        "mechanisms": [
+          "actions.parley",
+          "cards.zones",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "locations.move",
+          "test.outcomes"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 305
+        }
+      }
+    },
+    {
+      "id": "10071",
+      "code": "10071",
+      "name": "诱骗",
+      "shard": "M2-6",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10071.js",
+        "test": "tests/fhv-player-m2-6.test.mjs",
+        "mechanisms": [
+          "actions.parley",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "locations.move",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 318
+        }
+      }
+    },
+    {
+      "id": "10072",
+      "code": "10072",
+      "name": "“我肯定还！”",
+      "shard": "M2-6",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10072.js",
+        "test": "tests/fhv-player-m2-6.test.mjs",
+        "mechanisms": [
+          "choice.targets",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "locations.move",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 327
+        }
+      }
+    },
+    {
+      "id": "10073",
+      "code": "10073",
+      "name": "把水搅浑",
+      "shard": "M2-6",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10073.js",
+        "test": "tests/fhv-player-m2-6.test.mjs",
+        "mechanisms": [
+          "actions.parley",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "enemies.framework",
+          "locations.move",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 336
+        }
+      }
+    },
+    {
+      "id": "10074",
+      "code": "10074",
+      "name": "自由表演",
+      "shard": "M2-6",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10074.js",
+        "test": "tests/fhv-player-m2-6.test.mjs",
+        "mechanisms": [
+          "actions.parley",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "enemies.framework",
+          "locations.move",
+          "locations.tokens",
+          "test.outcomes"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 345
+        }
+      }
+    },
+    {
+      "id": "10075",
+      "code": "10075",
+      "name": "福倚祸伏",
+      "shard": "M2-6",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10075.js",
+        "test": "tests/fhv-player-m2-6.test.mjs",
+        "mechanisms": [
+          "cards.zones",
+          "chaos.blessCurse",
+          "choice.targets",
+          "content.cardIdentity",
+          "keyword.blessCurse",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Skill/CardDefs/TheFeastOfHemlockVale.hs",
+          "line": 35
+        }
+      }
+    },
+    {
+      "id": "10076",
+      "code": "10076",
+      "name": "脚步轻盈",
+      "shard": "M2-6",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10076.js",
+        "test": "tests/fhv-player-m2-6.test.mjs",
+        "mechanisms": [
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "locations.move",
+          "test.outcomes"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Skill/CardDefs/TheFeastOfHemlockVale.hs",
+          "line": 42
+        }
+      }
+    },
+    {
+      "id": "10077",
+      "code": "10077",
+      "name": "不列颠斗牛犬左轮手枪",
+      "shard": "M2-6",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10077.js",
+        "test": "tests/fhv-player-m2-6.test.mjs",
+        "mechanisms": [
+          "actions.parley",
+          "assets.uses",
+          "cards.zones",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "enemies.framework",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 303
+        }
+      }
+    },
+    {
+      "id": "10078",
+      "code": "10078",
+      "name": "告密",
+      "shard": "M2-6",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10078.js",
+        "test": "tests/fhv-player-m2-6.test.mjs",
+        "mechanisms": [
+          "actions.parley",
+          "content.cardIdentity",
+          "locations.move",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 354
+        }
+      }
+    },
+    {
+      "id": "10079",
+      "code": "10079",
+      "name": "摄魂抓魄",
+      "shard": "M2-7",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10079.js",
+        "test": "tests/fhv-player-m2-7.test.mjs",
+        "mechanisms": [
+          "assets.attachmentControl",
+          "assets.uses",
+          "campaign.deckProgression",
+          "cards.bondedFaces",
+          "cards.zones",
+          "choice.targets",
+          "content.cardIdentity",
+          "enemies.framework",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 315
+        }
+      }
+    },
+    {
+      "id": "10080",
+      "code": "10080",
+      "name": "脏活",
+      "shard": "M2-7",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10080.js",
+        "test": "tests/fhv-player-m2-7.test.mjs",
+        "mechanisms": [
+          "cards.playChannels",
+          "cards.zones",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "timing.windows"
+        ],
+        "primitives": [
+          "cards.playChannels"
+        ],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 369
+        }
+      }
+    },
+    {
+      "id": "10081",
+      "code": "10081",
+      "name": "自由表演",
+      "shard": "M2-7",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10081.js",
+        "test": "tests/fhv-player-m2-7.test.mjs",
+        "mechanisms": [
+          "actions.parley",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "enemies.framework",
+          "locations.move",
+          "locations.tokens",
+          "test.outcomes"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 380
+        }
+      }
+    },
+    {
+      "id": "10082",
+      "code": "10082",
+      "name": "假证",
+      "shard": "M2-7",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10082.js",
+        "test": "tests/fhv-player-m2-7.test.mjs",
+        "mechanisms": [
+          "actions.parley",
+          "assets.attachmentControl",
+          "cards.zones",
+          "choice.targets",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "locations.move",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 323
+        }
+      }
+    },
+    {
+      "id": "10083",
+      "code": "10083",
+      "name": "把水搅浑",
+      "shard": "M2-7",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10083.js",
+        "test": "tests/fhv-player-m2-7.test.mjs",
+        "mechanisms": [
+          "actions.parley",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "enemies.framework",
+          "locations.move",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 390
+        }
+      }
+    },
+    {
+      "id": "10084",
+      "code": "10084",
+      "name": "猫面具",
+      "shard": "M2-7",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10084.js",
+        "test": "tests/fhv-player-m2-7.test.mjs",
+        "mechanisms": [
+          "assets.maskLifecycle",
+          "assets.uses",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [
+          "assets.maskLifecycle"
+        ],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 332
+        }
+      }
+    },
+    {
+      "id": "10085",
+      "code": "10085",
+      "name": "卡纳玛戈斯之杖",
+      "shard": "M2-7",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10085.js",
+        "test": "tests/fhv-player-m2-7.test.mjs",
+        "mechanisms": [
+          "assets.attachmentControl",
+          "assets.uses",
+          "cards.bondedFaces",
+          "cards.zones",
+          "chaos.blessCurse",
+          "chaos.framework",
+          "choice.targets",
+          "content.cardIdentity",
+          "enemies.framework",
+          "keyword.blessCurse",
+          "keyword.bonded",
+          "locations.move",
+          "locations.tokens",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 341
+        }
+      }
+    },
+    {
+      "id": "10086",
+      "code": "10086",
+      "name": "深渊腐烂",
+      "shard": "M2-7",
+      "status": "pending",
+      "kind": "dependency",
+      "requirements": {
+        "entry": "src/cards/entries/10086.js",
+        "test": "tests/fhv-player-m2-7.test.mjs",
+        "mechanisms": [
+          "assets.attachmentControl",
+          "cards.bondedFaces",
+          "cards.zones",
+          "combat.harm",
+          "content.cardIdentity",
+          "keyword.bonded",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 400
+        }
+      }
+    },
+    {
+      "id": "10087",
+      "code": "10087",
+      "name": "琥珀腐烂",
+      "shard": "M2-7",
+      "status": "pending",
+      "kind": "dependency",
+      "requirements": {
+        "entry": "src/cards/entries/10087.js",
+        "test": "tests/fhv-player-m2-7.test.mjs",
+        "mechanisms": [
+          "assets.attachmentControl",
+          "cards.bondedFaces",
+          "cards.zones",
+          "combat.harm",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "keyword.bonded",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 409
+        }
+      }
+    },
+    {
+      "id": "10088",
+      "code": "10088",
+      "name": "流脓腐烂",
+      "shard": "M2-7",
+      "status": "pending",
+      "kind": "dependency",
+      "requirements": {
+        "entry": "src/cards/entries/10088.js",
+        "test": "tests/fhv-player-m2-7.test.mjs",
+        "mechanisms": [
+          "assets.attachmentControl",
+          "cards.bondedFaces",
+          "cards.zones",
+          "combat.harm",
+          "content.cardIdentity",
+          "keyword.bonded",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 418
+        }
+      }
+    },
+    {
+      "id": "10089",
+      "code": "10089",
+      "name": "猩红腐烂",
+      "shard": "M2-8",
+      "status": "pending",
+      "kind": "dependency",
+      "requirements": {
+        "entry": "src/cards/entries/10089.js",
+        "test": "tests/fhv-player-m2-8.test.mjs",
+        "mechanisms": [
+          "assets.attachmentControl",
+          "cards.bondedFaces",
+          "cards.zones",
+          "combat.harm",
+          "content.cardIdentity",
+          "keyword.bonded",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 427
+        }
+      }
+    },
+    {
+      "id": "10090",
+      "code": "10090",
+      "name": "霉绿腐烂",
+      "shard": "M2-8",
+      "status": "pending",
+      "kind": "dependency",
+      "requirements": {
+        "entry": "src/cards/entries/10090.js",
+        "test": "tests/fhv-player-m2-8.test.mjs",
+        "mechanisms": [
+          "assets.attachmentControl",
+          "cards.bondedFaces",
+          "cards.zones",
+          "content.cardIdentity",
+          "keyword.bonded",
+          "locations.move",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 436
+        }
+      }
+    },
+    {
+      "id": "10091",
+      "code": "10091",
+      "name": "通灵术",
+      "shard": "M2-8",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10091.js",
+        "test": "tests/fhv-player-m2-8.test.mjs",
+        "mechanisms": [
+          "actions.parley",
+          "assets.uses",
+          "cards.zones",
+          "chaos.blessCurse",
+          "chaos.framework",
+          "choice.targets",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "keyword.blessCurse",
+          "locations.tokens",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 351
+        }
+      }
+    },
+    {
+      "id": "10092",
+      "code": "10092",
+      "name": "邪恶祭祀刀",
+      "shard": "M2-8",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10092.js",
+        "test": "tests/fhv-player-m2-8.test.mjs",
+        "mechanisms": [
+          "assets.uses",
+          "cards.zones",
+          "chaos.blessCurse",
+          "chaos.framework",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "keyword.blessCurse",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 360
+        }
+      }
+    },
+    {
+      "id": "10093",
+      "code": "10093",
+      "name": "洪荒赞歌",
+      "shard": "M2-8",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10093.js",
+        "test": "tests/fhv-player-m2-8.test.mjs",
+        "mechanisms": [
+          "cards.zones",
+          "chaos.blessCurse",
+          "chaos.framework",
+          "choice.targets",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "keyword.blessCurse",
+          "locations.tokens",
+          "test.outcomes"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 445
+        }
+      }
+    },
+    {
+      "id": "10094",
+      "code": "10094",
+      "name": "精华汲取",
+      "shard": "M2-8",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10094.js",
+        "test": "tests/fhv-player-m2-8.test.mjs",
+        "mechanisms": [
+          "actions.parley",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "enemies.framework",
+          "locations.move",
+          "test.outcomes"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 454
+        }
+      }
+    },
+    {
+      "id": "10095",
+      "code": "10095",
+      "name": "身受诅咒",
+      "shard": "M2-8",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10095.js",
+        "test": "tests/fhv-player-m2-8.test.mjs",
+        "mechanisms": [
+          "cards.zones",
+          "chaos.blessCurse",
+          "chaos.framework",
+          "choice.targets",
+          "content.cardIdentity",
+          "keyword.blessCurse",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Skill/CardDefs/TheFeastOfHemlockVale.hs",
+          "line": 48
+        }
+      }
+    },
+    {
+      "id": "10096",
+      "code": "10096",
+      "name": "催眠作用",
+      "shard": "M2-8",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10096.js",
+        "test": "tests/fhv-player-m2-8.test.mjs",
+        "mechanisms": [
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "locations.move",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Skill/CardDefs/TheFeastOfHemlockVale.hs",
+          "line": 55
+        }
+      }
+    },
+    {
+      "id": "10097",
+      "code": "10097",
+      "name": "奥利芙·麦克布莱德",
+      "shard": "M2-8",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10097.js",
+        "test": "tests/fhv-player-m2-8.test.mjs",
+        "mechanisms": [
+          "assets.uses",
+          "chaos.framework",
+          "choice.targets",
+          "content.cardIdentity",
+          "locations.tokens",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 368
+        }
+      }
+    },
+    {
+      "id": "10098",
+      "code": "10098",
+      "name": "卡纳玛戈斯之杖",
+      "shard": "M2-8",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10098.js",
+        "test": "tests/fhv-player-m2-8.test.mjs",
+        "mechanisms": [
+          "assets.attachmentControl",
+          "assets.uses",
+          "cards.bondedFaces",
+          "cards.zones",
+          "chaos.blessCurse",
+          "chaos.framework",
+          "choice.targets",
+          "content.cardIdentity",
+          "enemies.framework",
+          "keyword.blessCurse",
+          "keyword.bonded",
+          "locations.move",
+          "locations.tokens",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 378
+        }
+      }
+    },
+    {
+      "id": "10099",
+      "code": "10099",
+      "name": "呼唤彼端",
+      "shard": "M2-9",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10099.js",
+        "test": "tests/fhv-player-m2-9.test.mjs",
+        "mechanisms": [
+          "assets.uses",
+          "cards.zones",
+          "chaos.blessCurse",
+          "chaos.framework",
+          "choice.targets",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "keyword.blessCurse",
+          "locations.tokens",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 463
+        }
+      }
+    },
+    {
+      "id": "10100",
+      "code": "10100",
+      "name": "缥缈灵体",
+      "shard": "M2-9",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10100.js",
+        "test": "tests/fhv-player-m2-9.test.mjs",
+        "mechanisms": [
+          "cards.zones",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "enemies.framework",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 484
+        }
+      }
+    },
+    {
+      "id": "10101",
+      "code": "10101",
+      "name": "解读秘符",
+      "shard": "M2-9",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10101.js",
+        "test": "tests/fhv-player-m2-9.test.mjs",
+        "mechanisms": [
+          "cards.zones",
+          "choice.targets",
+          "content.cardIdentity",
+          "locations.move",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 493
+        }
+      }
+    },
+    {
+      "id": "10102",
+      "code": "10102",
+      "name": "幽灵利刃",
+      "shard": "M2-9",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10102.js",
+        "test": "tests/fhv-player-m2-9.test.mjs",
+        "mechanisms": [
+          "cards.zones",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "enemies.framework",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 502
+        }
+      }
+    },
+    {
+      "id": "10103",
+      "code": "10103",
+      "name": "超凡织造",
+      "shard": "M2-9",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10103.js",
+        "test": "tests/fhv-player-m2-9.test.mjs",
+        "mechanisms": [
+          "cards.zones",
+          "choice.targets",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 513
+        }
+      }
+    },
+    {
+      "id": "10104",
+      "code": "10104",
+      "name": "所罗门之钥",
+      "shard": "M2-9",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10104.js",
+        "test": "tests/fhv-player-m2-9.test.mjs",
+        "mechanisms": [
+          "assets.uses",
+          "chaos.blessCurse",
+          "chaos.framework",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "keyword.blessCurse",
+          "locations.move",
+          "locations.tokens",
+          "timing.windows"
+        ],
+        "primitives": [
+          "chaos.blessCurse"
+        ],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 388
+        }
+      }
+    },
+    {
+      "id": "10105",
+      "code": "10105",
+      "name": "上古封印",
+      "shard": "M2-9",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10105.js",
+        "test": "tests/fhv-player-m2-9.test.mjs",
+        "mechanisms": [
+          "assets.uses",
+          "cards.bondedFaces",
+          "cards.zones",
+          "chaos.blessCurse",
+          "content.cardIdentity",
+          "keyword.blessCurse",
+          "keyword.bonded",
+          "locations.move",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [
+          "chaos.blessCurse"
+        ],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 530
+        }
+      }
+    },
+    {
+      "id": "10106",
+      "code": "10106",
+      "name": "钥匙看管者",
+      "shard": "M2-9",
+      "status": "pending",
+      "kind": "dependency",
+      "requirements": {
+        "entry": "src/cards/entries/10106.js",
+        "test": "tests/fhv-player-m2-9.test.mjs",
+        "mechanisms": [
+          "assets.uses",
+          "cards.bondedFaces",
+          "cards.zones",
+          "chaos.blessCurse",
+          "combat.harm",
+          "content.cardIdentity",
+          "keyword.blessCurse",
+          "keyword.bonded",
+          "locations.move",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 397
+        }
+      }
+    },
+    {
+      "id": "10107",
+      "code": "10107",
+      "name": "黄铜仆从",
+      "shard": "M2-9",
+      "status": "pending",
+      "kind": "dependency",
+      "requirements": {
+        "entry": "src/cards/entries/10107.js",
+        "test": "tests/fhv-player-m2-9.test.mjs",
+        "mechanisms": [
+          "assets.uses",
+          "cards.bondedFaces",
+          "cards.zones",
+          "chaos.blessCurse",
+          "combat.harm",
+          "content.cardIdentity",
+          "keyword.blessCurse",
+          "keyword.bonded",
+          "locations.move",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 405
+        }
+      }
+    },
+    {
+      "id": "10108",
+      "code": "10108",
+      "name": "火柴盒",
+      "shard": "M2-9",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10108.js",
+        "test": "tests/fhv-player-m2-9.test.mjs",
+        "mechanisms": [
+          "assets.uses",
+          "cards.zones",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "locations.move",
+          "locations.tokens",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 413
+        }
+      }
+    },
+    {
+      "id": "10109",
+      "code": "10109",
+      "name": "毛皮货",
+      "shard": "M2-10",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10109.js",
+        "test": "tests/fhv-player-m2-10.test.mjs",
+        "mechanisms": [
+          "assets.uses",
+          "campaign.deckProgression",
+          "cards.zones",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "timing.windows"
+        ],
+        "primitives": [
+          "campaign.deckProgression"
+        ],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 421
+        }
+      }
+    },
+    {
+      "id": "10110",
+      "code": "10110",
+      "name": "草叉",
+      "shard": "M2-10",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10110.js",
+        "test": "tests/fhv-player-m2-10.test.mjs",
+        "mechanisms": [
+          "assets.attachmentControl",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "locations.move",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 430
+        }
+      }
+    },
+    {
+      "id": "10111",
+      "code": "10111",
+      "name": "雀面具",
+      "shard": "M2-10",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10111.js",
+        "test": "tests/fhv-player-m2-10.test.mjs",
+        "mechanisms": [
+          "assets.maskLifecycle",
+          "assets.uses",
+          "combat.harm",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [
+          "assets.maskLifecycle"
+        ],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 438
+        }
+      }
+    },
+    {
+      "id": "10112",
+      "code": "10112",
+      "name": "围魏救赵",
+      "shard": "M2-10",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10112.js",
+        "test": "tests/fhv-player-m2-10.test.mjs",
+        "mechanisms": [
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "enemies.framework",
+          "locations.move"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 547
+        }
+      }
+    },
+    {
+      "id": "10113",
+      "code": "10113",
+      "name": "破釜沉舟",
+      "shard": "M2-10",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10113.js",
+        "test": "tests/fhv-player-m2-10.test.mjs",
+        "mechanisms": [
+          "cards.playChannels",
+          "cards.zones",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 561
+        }
+      }
+    },
+    {
+      "id": "10114",
+      "code": "10114",
+      "name": "缓兵之计",
+      "shard": "M2-10",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10114.js",
+        "test": "tests/fhv-player-m2-10.test.mjs",
+        "mechanisms": [
+          "actions.parley",
+          "assets.uses",
+          "cards.zones",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "enemies.framework",
+          "locations.move",
+          "test.outcomes"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 577
+        }
+      }
+    },
+    {
+      "id": "10115",
+      "code": "10115",
+      "name": "阴差阳错",
+      "shard": "M2-10",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10115.js",
+        "test": "tests/fhv-player-m2-10.test.mjs",
+        "mechanisms": [
+          "assets.attachmentControl",
+          "cards.zones",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "locations.move"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 586
+        }
+      }
+    },
+    {
+      "id": "10116",
+      "code": "10116",
+      "name": "出奇制胜",
+      "shard": "M2-10",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10116.js",
+        "test": "tests/fhv-player-m2-10.test.mjs",
+        "mechanisms": [
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "locations.move",
+          "test.outcomes"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Skill/CardDefs/TheFeastOfHemlockVale.hs",
+          "line": 62
+        }
+      }
+    },
+    {
+      "id": "10117",
+      "code": "10117",
+      "name": "飞斧",
+      "shard": "M2-10",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10117.js",
+        "test": "tests/fhv-player-m2-10.test.mjs",
+        "mechanisms": [
+          "assets.attachmentControl",
+          "cards.zones",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "locations.move",
+          "scenario.stagesAndBranches",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [
+          "scenario.stagesAndBranches"
+        ],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 447
+        }
+      }
+    },
+    {
+      "id": "10118",
+      "code": "10118",
+      "name": "百折不挠",
+      "shard": "M2-10",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10118.js",
+        "test": "tests/fhv-player-m2-10.test.mjs",
+        "mechanisms": [
+          "cards.zones",
+          "choice.targets",
+          "content.cardIdentity",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Skill/CardDefs/TheFeastOfHemlockVale.hs",
+          "line": 75
+        }
+      }
+    },
+    {
+      "id": "10119",
+      "code": "10119",
+      "name": "“恶魔”",
+      "shard": "M2-11",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10119.js",
+        "test": "tests/fhv-player-m2-11.test.mjs",
+        "mechanisms": [
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "locations.move",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 456
+        }
+      }
+    },
+    {
+      "id": "10120",
+      "code": "10120",
+      "name": "消防斧",
+      "shard": "M2-11",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10120.js",
+        "test": "tests/fhv-player-m2-11.test.mjs",
+        "mechanisms": [
+          "combat.harm",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 467
+        }
+      }
+    },
+    {
+      "id": "10121",
+      "code": "10121",
+      "name": "猎装",
+      "shard": "M2-11",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10121.js",
+        "test": "tests/fhv-player-m2-11.test.mjs",
+        "mechanisms": [
+          "assets.attachmentControl",
+          "assets.uses",
+          "cards.bondedFaces",
+          "cards.zones",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 476
+        }
+      }
+    },
+    {
+      "id": "10122",
+      "code": "10122",
+      "name": "水手的罗盘",
+      "shard": "M2-11",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10122.js",
+        "test": "tests/fhv-player-m2-11.test.mjs",
+        "mechanisms": [
+          "assets.uses",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "locations.move",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 485
+        }
+      }
+    },
+    {
+      "id": "10123",
+      "code": "10123",
+      "name": "求生技术",
+      "shard": "M2-11",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10123.js",
+        "test": "tests/fhv-player-m2-11.test.mjs",
+        "mechanisms": [
+          "assets.attachmentControl",
+          "assets.uses",
+          "cards.zones",
+          "choice.targets",
+          "content.cardIdentity",
+          "locations.move",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 494
+        }
+      }
+    },
+    {
+      "id": "10124",
+      "code": "10124",
+      "name": "坚守信念",
+      "shard": "M2-11",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10124.js",
+        "test": "tests/fhv-player-m2-11.test.mjs",
+        "mechanisms": [
+          "cards.zones",
+          "chaos.blessCurse",
+          "chaos.framework",
+          "content.cardIdentity",
+          "keyword.blessCurse",
+          "locations.tokens",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 600
+        }
+      }
+    },
+    {
+      "id": "10125",
+      "code": "10125",
+      "name": "天命护佑",
+      "shard": "M2-11",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10125.js",
+        "test": "tests/fhv-player-m2-11.test.mjs",
+        "mechanisms": [
+          "cards.zones",
+          "chaos.blessCurse",
+          "chaos.framework",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "keyword.blessCurse",
+          "locations.tokens",
+          "test.outcomes"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Skill/CardDefs/TheFeastOfHemlockVale.hs",
+          "line": 83
+        }
+      }
+    },
+    {
+      "id": "10126",
+      "code": "10126",
+      "name": "宗教信物",
+      "shard": "M2-11",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10126.js",
+        "test": "tests/fhv-player-m2-11.test.mjs",
+        "mechanisms": [
+          "assets.uses",
+          "cards.zones",
+          "chaos.blessCurse",
+          "chaos.framework",
+          "choice.targets",
+          "content.cardIdentity",
+          "keyword.blessCurse",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 502
+        }
+      }
+    },
+    {
+      "id": "10127",
+      "code": "10127",
+      "name": "黑马",
+      "shard": "M2-11",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10127.js",
+        "test": "tests/fhv-player-m2-11.test.mjs",
+        "mechanisms": [
+          "campaign.deckProgression",
+          "cards.zones",
+          "choice.targets",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 512
+        }
+      }
+    },
+    {
+      "id": "10128",
+      "code": "10128",
+      "name": "惊世巧舌",
+      "shard": "M2-11",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10128.js",
+        "test": "tests/fhv-player-m2-11.test.mjs",
+        "mechanisms": [
+          "actions.parley",
+          "assets.uses",
+          "cards.playChannels",
+          "cards.zones",
+          "choice.targets",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "timing.windows"
+        ],
+        "primitives": [
+          "actions.parley"
+        ],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 520
+        }
+      }
+    },
+    {
+      "id": "10129",
+      "code": "10129",
+      "name": "静候时机",
+      "shard": "M2-12",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10129.js",
+        "test": "tests/fhv-player-m2-12.test.mjs",
+        "mechanisms": [
+          "choice.targets",
+          "content.cardIdentity",
+          "cost.playAndSlots"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 610
+        }
+      }
+    },
+    {
+      "id": "10130",
+      "code": "10130",
+      "name": "盛装出席",
+      "shard": "M2-12",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10130.js",
+        "test": "tests/fhv-player-m2-12.test.mjs",
+        "mechanisms": [
+          "actions.parley",
+          "combat.harm",
+          "content.cardIdentity",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Skill/CardDefs/TheFeastOfHemlockVale.hs",
+          "line": 90
+        }
+      }
+    },
+    {
+      "id": "10131",
+      "code": "10131",
+      "name": "黎明之星",
+      "shard": "M2-12",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10131.js",
+        "test": "tests/fhv-player-m2-12.test.mjs",
+        "mechanisms": [
+          "chaos.blessCurse",
+          "chaos.framework",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "keyword.blessCurse",
+          "locations.move",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Event/Cards/TheFeastOfHemlockVale.hs",
+          "line": 618
+        }
+      }
+    },
+    {
+      "id": "10132",
+      "code": "10132",
+      "name": "密教珍藏",
+      "shard": "M2-12",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10132.js",
+        "test": "tests/fhv-player-m2-12.test.mjs",
+        "mechanisms": [
+          "campaign.deckProgression",
+          "cards.zones",
+          "chaos.blessCurse",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 530
+        }
+      }
+    },
+    {
+      "id": "10133",
+      "code": "10133",
+      "name": "破碎冠冕",
+      "shard": "M2-12",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10133.js",
+        "test": "tests/fhv-player-m2-12.test.mjs",
+        "mechanisms": [
+          "assets.maskLifecycle",
+          "assets.uses",
+          "cards.bondedFaces",
+          "cards.zones",
+          "chaos.blessCurse",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "keyword.blessCurse",
+          "keyword.bonded",
+          "locations.move",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [
+          "assets.maskLifecycle"
+        ],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 539
+        }
+      }
+    },
+    {
+      "id": "10134",
+      "code": "10134",
+      "name": "暮光冠冕",
+      "shard": "M2-12",
+      "status": "pending",
+      "kind": "player-card",
+      "requirements": {
+        "entry": "src/cards/entries/10134.js",
+        "test": "tests/fhv-player-m2-12.test.mjs",
+        "mechanisms": [
+          "assets.maskLifecycle",
+          "assets.uses",
+          "cards.bondedFaces",
+          "cards.zones",
+          "chaos.blessCurse",
+          "chaos.framework",
+          "choice.targets",
+          "content.cardIdentity",
+          "cost.playAndSlots",
+          "keyword.blessCurse",
+          "keyword.bonded",
+          "locations.tokens",
+          "test.outcomes",
+          "timing.windows"
+        ],
+        "primitives": [],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 551
+        }
+      }
+    },
+    {
+      "id": "10135",
+      "code": "10135",
+      "name": "手部残疾",
+      "shard": "M2-12",
+      "status": "pending",
+      "kind": "basic-weakness",
+      "requirements": {
+        "entry": "src/cards/entries/10135.js",
+        "test": "tests/fhv-player-m2-12.test.mjs",
+        "mechanisms": [
+          "cards.zones",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "locations.grid",
+          "timing.windows"
+        ],
+        "primitives": [
+          "locations.grid"
+        ],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 561
+        }
+      }
+    },
+    {
+      "id": "10136",
+      "code": "10136",
+      "name": "背伤",
+      "shard": "M2-12",
+      "status": "pending",
+      "kind": "basic-weakness",
+      "requirements": {
+        "entry": "src/cards/entries/10136.js",
+        "test": "tests/fhv-player-m2-12.test.mjs",
+        "mechanisms": [
+          "cards.zones",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "locations.grid",
+          "timing.windows"
+        ],
+        "primitives": [
+          "locations.grid"
+        ],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 568
+        }
+      }
+    },
+    {
+      "id": "10137",
+      "code": "10137",
+      "name": "银蛾",
+      "shard": "M2-12",
+      "status": "pending",
+      "kind": "basic-weakness",
+      "requirements": {
+        "entry": "src/cards/entries/10137.js",
+        "test": "tests/fhv-player-m2-12.test.mjs",
+        "mechanisms": [
+          "cards.zones",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "locations.grid",
+          "timing.windows"
+        ],
+        "primitives": [
+          "locations.grid"
+        ],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 575
+        }
+      }
+    },
+    {
+      "id": "10138",
+      "code": "10138",
+      "name": "德兹特里奇之誓",
+      "shard": "M2-12",
+      "status": "pending",
+      "kind": "basic-weakness",
+      "requirements": {
+        "entry": "src/cards/entries/10138.js",
+        "test": "tests/fhv-player-m2-12.test.mjs",
+        "mechanisms": [
+          "cards.zones",
+          "choice.targets",
+          "combat.harm",
+          "content.cardIdentity",
+          "locations.grid",
+          "timing.windows"
+        ],
+        "primitives": [
+          "locations.grid"
+        ],
+        "reference": {
+          "file": "Asset/Cards/TheFeastOfHemlockVale.hs",
+          "line": 582
+        }
+      }
+    }
+  ]
+}

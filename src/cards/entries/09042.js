@@ -16,7 +16,7 @@
 //   （campaign-flow 的 XP 计算），本条目未实现；Living Quill / Spectral Binding / Mystic Vane /
 //   Interwoven Ink / Supernatural Record 缺「按勾选条件改槽位/改检定值/改触发」的读点，未实现。
 //   逐项见 note 与 artifacts/migration/tsk/primitive-requests/09042.json。
-import { customizationChecked } from '../../engine/tsk-customizable.js'
+import { customizationOptionFullyChecked } from '../../engine/tsk-customizable.js'
 
 const SOURCE = '09042'
 const hostOf = state => {
@@ -69,7 +69,7 @@ export default {
       criteria: [({ state, inv }) => {
         const host = hostOf(state)
         if (!host) return false
-        if (!customizationChecked(state, inv.seat, SOURCE).includes(4)) return false
+        if (!customizationOptionFullyChecked(state, inv.seat, SOURCE, 4)) return false
         return (inv.assets || []).some(card => card !== host.asset && (card.uses || 0) > 0)
       }],
       resolve: ({ state, inv, api }) => {

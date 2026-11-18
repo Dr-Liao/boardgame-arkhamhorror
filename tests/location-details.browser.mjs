@@ -126,13 +126,20 @@ test('地点揭示全屏显示完整正面和进入效果，手动继续且刷�
 test('地图小卡显示实际标记，数量更新与清除同步且保留点击详情',async({page})=>{
   const f=await fixture(page)
   await f.update(s=>{
-    s.state.enemies=[{id:'marked-acolyte',code:'acolyte',originalCode:'01169',name:'祭司',type:'enemy',location:'hallway',health:3,fight:3,evade:2,damage:1,horror:1,damageTaken:2,doom:1,
-      attachedTreacheries:['02096'],smiteTheWickedSeat:0,bindMonster:{code:'02031',ownerSeat:0},engagedSeat:null}]
+    // 卡上计数有三种载体，牌桌/详情必须都渲染：对象形具名计数器（markers:{evidence:1}）、
+    // 多类型使用标记（useTokens:{brilliance:3}）、脚本标签数组（markers:['overgrowth',…]）。
+    s.state.enemies=[
+      {id:'marked-acolyte',code:'acolyte',originalCode:'01169',name:'祭司',type:'enemy',location:'hallway',health:3,fight:3,evade:2,damage:1,horror:1,damageTaken:2,doom:1,markers:{evidence:1},
+        attachedTreacheries:['02096'],smiteTheWickedSeat:0,bindMonster:{code:'02031',ownerSeat:0},engagedSeat:null},
+      {id:'marked-bloom',code:'acolyte',originalCode:'01169',name:'毒花',type:'enemy',location:'hallway',health:3,fight:2,evade:1,damage:0,horror:1,damageTaken:0,exhausted:false,markers:['overgrowth','overgrowth'],engagedSeat:null},
+    ]
     s.state.storyAssets=[{id:'marked-lita',code:'01117',location:'hallway',controllerSeat:null,doom:2,damage:1}]
-    s.state.investigators[0].assets=[{id:'marked-gun',code:'01016',uses:2,doom:1,damage:1,horror:1,resources:2,counters:3,attached:['01087'],exhausted:false}]
-    s.state.investigators[0].threat=[{id:'marked-threat',code:'01163',doom:2,resources:1,counters:1,counterType:'horror'}]
+    s.state.investigators[0].assets=[{id:'marked-gun',code:'01016',uses:2,doom:1,damage:1,horror:1,resources:2,counters:3,markers:{evidence:2},attached:['01087'],exhausted:false}]
+    s.state.investigators[0].threat=[{id:'marked-threat',code:'01163',doom:2,resources:1,counters:1,counterType:'horror',markers:{bounty:1},useTokens:{brilliance:3}}]
     s.state.investigators[0].damage=1;s.state.investigators[0].horror=5
     s.state.locations.find(loc=>loc.id==='hallway').searchingForIzzieSeat=0
+    // 地点上的脚本标签数组（05241/05242 火盆）与卡牌共用同一份展示契约，在档案计数区可见。
+    s.state.locations.find(loc=>loc.id==='cellar').markers=['brazier']
   })
   const enemy=page.locator('.ah-location-entities [data-interaction="enemy:marked-acolyte"]')
   const doom=enemy.locator('[data-card-marker="doom"]')
@@ -141,6 +148,12 @@ test('地图小卡显示实际标记，数量更新与清除同步且保留点�
   await expect(enemy.locator('[data-card-marker="damage"]')).toHaveAttribute('aria-label','伤害 2')
   await expect(enemy.locator('[data-card-marker="horror"]')).toHaveCount(0)
   await expect(enemy.locator('[data-card-marker="attached"]')).toHaveAttribute('aria-label','附属卡 3')
+  // 达雷尔的柯达把证据放在敌人/诡计上：地图与详情都必须显示证据数，否则玩家不知道能不能搬。
+  await expect(enemy.locator('[data-card-marker="evidence"]')).toHaveAttribute('aria-label','证据 1')
+  // 10732 毒花的「疯长」是脚本标签数组：按标签聚合显示数量（同一标签 2 个）。
+  const bloom=page.locator('.ah-location-entities [data-interaction="enemy:marked-bloom"]')
+  await expect(bloom.locator('[data-card-marker="marker-overgrowth"]')).toHaveAttribute('aria-label','疯长 2')
+  await expect(bloom.locator('.ah-card-markers')).toHaveCount(1)
   await expect(page.locator('.ah-map-investigator .ah-card-markers')).toHaveCount(0)
   await expect(page.locator('.ah-roster-character .ah-card-markers')).toHaveCount(0)
   await expect(page.locator('[data-location-id="hallway"] [data-attachment-code="02011"]')).toBeVisible()
@@ -148,10 +161,15 @@ test('地图小卡显示实际标记，数量更新与清除同步且保留点�
   await expect(story.locator('[data-card-marker="doom"]')).toHaveAttribute('aria-label','毁灭 2')
   await expect(story.locator('[data-card-marker="damage"]')).toBeVisible()
   const asset=page.locator('[data-interaction="asset:marked-gun"]').filter({visible:true}).first()
-  for(const kind of ['uses','doom','damage','horror','resources','counters','attached']) await expect(asset.locator(`[data-card-marker="${kind}"]`)).toBeVisible()
+  for(const kind of ['uses','doom','damage','horror','resources','counters','attached','evidence']) await expect(asset.locator(`[data-card-marker="${kind}"]`)).toBeVisible()
+  await expect(asset.locator('[data-card-marker="evidence"]')).toHaveAttribute('aria-label','证据 2')
   const threat=page.locator('[data-interaction="asset:marked-threat"]').filter({visible:true}).first()
   await expect(threat.locator('[data-card-marker="doom"]')).toHaveAttribute('aria-label','毁灭 2')
   await expect(threat.locator('[data-card-marker="counters"]')).toHaveAttribute('aria-label','恐惧 1')
+  await expect(threat.locator('[data-card-marker="bounty"]')).toHaveAttribute('aria-label','赏金 1')
+  // 10722 着彩枯疫的「光辉」是多类型使用标记（useTokens）：威胁区小卡也要显示。
+  await expect(threat.locator('[data-card-marker="token-brilliance"]')).toHaveAttribute('aria-label','光辉 3')
+  await expect(threat.locator('[data-card-marker="evidence"]')).toHaveCount(0)
   for(const width of [1400,390]) {
     await page.setViewportSize({width,height:950})
     await expect(doom).toBeVisible()
@@ -165,23 +183,39 @@ test('地图小卡显示实际标记，数量更新与清除同步且保留点�
   await enemy.click()
   let detail=page.locator('.ah-carddetail-modal')
   await expect(detail.locator('[data-runtime-marker="damage"]')).toHaveAttribute('aria-label','伤害 2')
+  await expect(detail.locator('[data-runtime-marker="evidence"]')).toHaveAttribute('aria-label','证据 1')
   for(const code of ['02096','02007','02031']) await expect(detail.locator(`.ah-detail-attachment-card[data-attachment-code="${code}"]`)).toBeVisible()
   await detail.locator('.ah-detail-attachment-card[data-attachment-code="02007"]').click()
   await expect(detail.locator('.ah-runtime-host')).toContainText('祭司')
   await expect(detail).toContainText('击退邪恶')
   await page.getByRole('button',{name:'关闭卡牌详情'}).click()
+  // 标签计数在敌人详情里同样可见（详情与牌桌共用同一份 cardMarkerData）。
+  await bloom.click()
+  detail=page.locator('.ah-carddetail-modal')
+  await expect(detail.locator('[data-runtime-marker="marker-overgrowth"]')).toHaveAttribute('aria-label','疯长 2')
+  await page.getByRole('button',{name:'关闭卡牌详情'}).click()
   await asset.click({button:'right'})
   detail=page.locator('.ah-carddetail-modal')
   await expect(detail.locator('[data-runtime-marker="doom"]')).toHaveAttribute('aria-label','毁灭 1')
+  // 卡牌详情「运行中卡牌状态」显示具名计数器：柯达相机这类卡靠它显示已放置的证据。
+  await expect(detail.locator('[data-runtime-marker="evidence"]')).toHaveAttribute('aria-label','证据 2')
   await expect(detail.locator('.ah-detail-attachment-card')).toHaveAttribute('data-attachment-code','01087')
   await page.getByRole('button',{name:'关闭卡牌详情'}).click()
   await f.update(s=>{s.state.enemies[0].doom=12;s.state.enemies[0].damageTaken=0})
   await expect(doom).toHaveAttribute('aria-label','毁灭 12')
   await expect(enemy.locator('[data-card-marker="damage"]')).toHaveCount(0)
-  await f.update(s=>{s.state.enemies[0].doom=0})
+  // 计数器清空后角标消失（与数量更新同一份投影读数）；具名计数器同样遵守这条。
+  await f.update(s=>{s.state.enemies[0].doom=0;s.state.enemies[0].markers={}})
   await expect(enemy.locator('.ah-card-markers')).toHaveCount(1)
   await expect(enemy.locator('.ah-card-marker')).toHaveCount(1)
+  await expect(enemy.locator('[data-card-marker="evidence"]')).toHaveCount(0)
   await expect(enemy.locator('[data-card-marker="attached"]')).toHaveAttribute('aria-label','附属卡 3')
+  // 地点档案的计数区同样渲染脚本标签计数（火盆标记来自 api.scenario.addMarker 的数组形）。
+  await page.locator('.ah-map-node[data-location-id="cellar"] [data-map-info="clues"]').click()
+  const locationDetail=page.locator('.ah-location-detail')
+  await expect(locationDetail.locator('[data-location-stat="marker-brazier"]')).toContainText('火盆')
+  await expect(locationDetail.locator('[data-location-stat="marker-brazier"] strong')).toHaveText('1')
+  await page.getByRole('button',{name:'关闭卡牌详情'}).click()
 })
 
 test('地点上的玩家附属卡横置时在地图与档案里显示横置状态',async({page})=>{

@@ -1,0 +1,1440 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "tools/playwright-fhv-release-reporter.mjs",
+  "evidenceCommand": "node tools/run-fhv-release-browser.mjs",
+  "milestone": "P8",
+  "campaignId": "theFeastOfHemlockVale",
+  "status": "passed",
+  "complete": true,
+  "sourceStable": true,
+  "sourceStableDuringRun": true,
+  "sourceDrift": [],
+  "expectedSpecs": [
+    "tests/fhv-release.browser.mjs"
+  ],
+  "expectedTests": 6,
+  "specs": [
+    "tests/fhv-release.browser.mjs"
+  ],
+  "tests": [
+    {
+      "file": "tests/fhv-release.browser.mjs",
+      "title": "P8 online desktop 双真人真实开局/隐私/权限边界/断线恢复",
+      "status": "passed",
+      "viewport": "desktop",
+      "annotations": [
+        {
+          "type": "viewport",
+          "description": "desktop"
+        },
+        {
+          "type": "phase",
+          "description": "online"
+        },
+        {
+          "type": "scenario",
+          "description": "welcomeToHemlockVale"
+        },
+        {
+          "type": "claim",
+          "description": "privacy"
+        },
+        {
+          "type": "claim",
+          "description": "permission"
+        },
+        {
+          "type": "claim",
+          "description": "disconnect"
+        },
+        {
+          "type": "debugJump",
+          "description": "不使用调试跳关：联机阶段全部走真实 /api/online/command（start / move / debug 权限探测）；隐私与权限边界均按两个大厅实例各自的席位投影断言。"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-online-desktop-host-hub.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-online-desktop-guest-hub.png"
+        },
+        {
+          "type": "evidence",
+          "description": "联机准备：座位 0=10001 威尔森·理查德；座位 1=10004 凯特·温斯罗普；hubReady=true"
+        },
+        {
+          "type": "claim",
+          "description": "permission"
+        },
+        {
+          "type": "evidence",
+          "description": "权限边界（准备阶段）：座位 1 没有 hubBeginScenario 且被拒绝；座位 1 的 debug 命令被拒绝；客人大厅 /api/debug=404；revision 保持 8"
+        },
+        {
+          "type": "evidence",
+          "description": "隐私：座位 0 手牌=5 / 座位 1 视图座位 0 手牌=0；座位 1 手牌=5 / 座位 0 视图座位 1 手牌=0；对方 deck=[]（仅 deckSize=27）；法典投影 16 条（无正文/条件字段）"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-online-desktop-host-table.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-online-desktop-guest-table.png"
+        },
+        {
+          "type": "evidence",
+          "description": "轮流操作：座位 0 房主行动并结束回合 → 座位 1 客人行动；座位 0 在客人回合提交行动被拒绝（revision 保持 17）"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-online-desktop-host-after-turn.png"
+        },
+        {
+          "type": "claim",
+          "description": "disconnect"
+        },
+        {
+          "type": "evidence",
+          "description": "断线恢复：客人页面关闭重开后 sessionId=bg-1-mwkdm36l、scenario=welcomeToHemlockVale、手牌一致（5 张）、对方手牌仍为空"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-online-desktop-guest-reconnect.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-online-desktop-host-reload.png"
+        }
+      ],
+      "phase": "online",
+      "claims": [
+        "privacy",
+        "permission",
+        "disconnect",
+        "permission",
+        "disconnect"
+      ]
+    },
+    {
+      "file": "tests/fhv-release.browser.mjs",
+      "title": "P8 progression desktop 跨章推进/升级窗/逐日/终章结算与刷新恢复",
+      "status": "passed",
+      "viewport": "desktop",
+      "annotations": [
+        {
+          "type": "viewport",
+          "description": "desktop"
+        },
+        {
+          "type": "phase",
+          "description": "progression"
+        },
+        {
+          "type": "scenario",
+          "description": "dawnOfTheFinalDay"
+        },
+        {
+          "type": "debugJump",
+          "description": "POST /api/debug（host-only，真实 debugCommand + 事务提交）「结束这关 R1」7 次：welcomeToHemlockVale / writtenInRock / theTwistedHollow / dawnOfTheSecondDay / dawnOfTheFinalDay / preludeTheFinalEvening / fateOfTheVale 的关末结算，把战役真实推进到终章《山谷的命运》并结算到 campaignResult。每次结算后仍由真实 /api/move + 真实局外页按钮（继续 / 幕间整备 / 战役选择 / 出发准备 / 开始当前关卡）推进。"
+        },
+        {
+          "type": "claim",
+          "description": "disconnect"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-lobby-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-prepared-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-progression-welcome-table-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-progression-writtenInRock-table-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-progression-theTwistedHollow-table-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-progression-day2-table-desktop.png"
+        },
+        {
+          "type": "evidence",
+          "description": "关卡进行中（第二日黎明） 存档摘要：compatible=true、stage=inScenario、revision=24、persist=true"
+        },
+        {
+          "type": "claim",
+          "description": "disconnect"
+        },
+        {
+          "type": "evidence",
+          "description": "断线恢复（浏览器断网→恢复→真实刷新）：sessionId=bg-3-mwkdhjdy、scenario=dawnOfTheSecondDay、uiState=inScenario、revision=24→24、手牌 5 张一致"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-reconnect-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-day2-upgrade-desktop.png"
+        },
+        {
+          "type": "evidence",
+          "description": "升级窗（购买）：节点 dawn2Prep，未花费 XP 3 → 2；purchases=[{\"added\":\"01016\",\"removed\":\"01017\",\"cost\":1,\"scenarioIndex\":7,\"adaptable\":false}]"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-day2-purchased-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-progression-day3-table-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-day3-upgrade-desktop.png"
+        },
+        {
+          "type": "evidence",
+          "description": "升级窗（跳过）：节点 dawnFinalPrep，未花费 XP 2 → 2（保留），hubSeatDone=true"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-day3-skip-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-progression-finalEvening-table-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-progression-fateOfTheVale-table-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-progression-final-result-desktop.png"
+        },
+        {
+          "type": "evidence",
+          "description": "终章结算：result=victory，campaignOutcome=victory，branch=marquezSacrificed，scenarioResults=7，survivingResidents=[\"motherRachel\",\"simeonAtwood\",\"williamHemlock\",\"riverHawthorne\",\"gideonMizrah\",\"judithPark\",\"theoPeters\",\"bertieMusgrave\",\"drRosaMarquez\",\"helenPeters\"]"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-progression-campaignResult-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-savelist-desktop.png"
+        },
+        {
+          "type": "claim",
+          "description": "disconnect"
+        },
+        {
+          "type": "evidence",
+          "description": "刷新页面 → 存档管理读档恢复：sessionId=bg-3-mwkdhjdy、uiState=campaignResult、scenario=fateOfTheVale、revision=48→48"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-reload-desktop.png"
+        }
+      ],
+      "phase": "progression",
+      "claims": [
+        "disconnect",
+        "disconnect",
+        "disconnect"
+      ]
+    },
+    {
+      "file": "tests/fhv-release.browser.mjs",
+      "title": "P8 release desktop 真实大厅启动《铁杉谷盛宴》首章并验收指南/法典/序曲整备",
+      "status": "passed",
+      "viewport": "desktop",
+      "annotations": [
+        {
+          "type": "viewport",
+          "description": "desktop"
+        },
+        {
+          "type": "phase",
+          "description": "release"
+        },
+        {
+          "type": "scenario",
+          "description": "welcomeToHemlockVale"
+        },
+        {
+          "type": "debugJump",
+          "description": "真实调试控制台（牌桌 ` / ~ 快捷键，host-only）提交「结束这关 R1」一次：把首章《欢迎来到铁杉谷》推进到真实关末结算（真实 debugCommand 解析 + 事务提交），以便验证「保留 1 张支援」的序曲整备与下一章带支援入场；章内的检视、法典、打牌全部经真实 /api/move 与真实 UI。"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-lobby-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-release-hub-desktop.png"
+        },
+        {
+          "type": "evidence",
+          "description": "大厅 catalog：《铁杉谷盛宴》12 个场景，status=playable earlyAccess=false"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-prepared-desktop.png"
+        },
+        {
+          "type": "evidence",
+          "description": "准备完成：座位 0=10001 威尔森·理查德，卡组 33 张；开局手牌在关卡开始时发放"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-release-departure-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-release-table-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-guide-welcomeToHemlockVale-desktop.png"
+        },
+        {
+          "type": "evidence",
+          "description": "关卡设置指南：欢迎来到铁杉谷 · Welcome to Hemlock Vale!；分区=特别规则 / 开场 / 设置 / 说明；折叠=后续剧情（含剧透，点击展开） / 结局与结算（含剧透，点击展开）；特别规则分组=9"
+        },
+        {
+          "type": "evidence",
+          "description": "真实打出支援：01086 刀子；在场支援=[\"01086\"]"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-played-asset-desktop.png"
+        },
+        {
+          "type": "evidence",
+          "description": "真实法典交互：询问当地人（[codex] 10）；已读条目 theCrossroads；面板 16 条（data-used=true 断言通过）"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-codex-panel-desktop.png"
+        },
+        {
+          "type": "evidence",
+          "description": "序曲整备（保留支援）：整备包裹来源 welcomeToHemlockVale，保留支援=01086，目的地=5 个"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-release-result-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-release-interlude-desktop.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-release-next-prep-desktop.png"
+        },
+        {
+          "type": "evidence",
+          "description": "带支援入场：01086 在《岩间密语 · Written in Rock》开局真实在场；整备包裹已消费（surveyPreparation=null），手牌 5 张"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-release-next-table-desktop.png"
+        },
+        {
+          "type": "evidence",
+          "description": "关卡进行中（岩间密语） 存档摘要：compatible=true、stage=inScenario、revision=17、persist=true"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-savelist-desktop.png"
+        },
+        {
+          "type": "claim",
+          "description": "disconnect"
+        },
+        {
+          "type": "evidence",
+          "description": "刷新页面 → 存档管理读档恢复：sessionId=bg-1-mwkdfk9p、uiState=inScenario、scenario=writtenInRock、revision=17→17"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-reload-desktop.png"
+        },
+        {
+          "type": "evidence",
+          "description": "关卡进行中读档探测：listed=true、compatible=true、loaded=true"
+        }
+      ],
+      "phase": "release",
+      "claims": [
+        "disconnect"
+      ]
+    },
+    {
+      "file": "tests/fhv-release.browser.mjs",
+      "title": "P8 online mobile 双真人真实开局/隐私/权限边界/断线恢复",
+      "status": "passed",
+      "viewport": "mobile",
+      "annotations": [
+        {
+          "type": "viewport",
+          "description": "mobile"
+        },
+        {
+          "type": "phase",
+          "description": "online"
+        },
+        {
+          "type": "scenario",
+          "description": "welcomeToHemlockVale"
+        },
+        {
+          "type": "claim",
+          "description": "privacy"
+        },
+        {
+          "type": "claim",
+          "description": "permission"
+        },
+        {
+          "type": "claim",
+          "description": "disconnect"
+        },
+        {
+          "type": "debugJump",
+          "description": "不使用调试跳关：联机阶段全部走真实 /api/online/command（start / move / debug 权限探测）；隐私与权限边界均按两个大厅实例各自的席位投影断言。"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-online-mobile-host-hub.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-online-mobile-guest-hub.png"
+        },
+        {
+          "type": "evidence",
+          "description": "联机准备：座位 0=10001 威尔森·理查德；座位 1=10004 凯特·温斯罗普；hubReady=true"
+        },
+        {
+          "type": "claim",
+          "description": "permission"
+        },
+        {
+          "type": "evidence",
+          "description": "权限边界（准备阶段）：座位 1 没有 hubBeginScenario 且被拒绝；座位 1 的 debug 命令被拒绝；客人大厅 /api/debug=404；revision 保持 8"
+        },
+        {
+          "type": "evidence",
+          "description": "隐私：座位 0 手牌=5 / 座位 1 视图座位 0 手牌=0；座位 1 手牌=5 / 座位 0 视图座位 1 手牌=0；对方 deck=[]（仅 deckSize=27）；法典投影 16 条（无正文/条件字段）"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-online-mobile-host-table.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-online-mobile-guest-table.png"
+        },
+        {
+          "type": "evidence",
+          "description": "轮流操作：座位 0 房主行动并结束回合 → 座位 1 客人行动；座位 0 在客人回合提交行动被拒绝（revision 保持 17）"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-online-mobile-host-after-turn.png"
+        },
+        {
+          "type": "claim",
+          "description": "disconnect"
+        },
+        {
+          "type": "evidence",
+          "description": "断线恢复：客人页面关闭重开后 sessionId=bg-1-mwkdoi84、scenario=welcomeToHemlockVale、手牌一致（5 张）、对方手牌仍为空"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-online-mobile-guest-reconnect.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-online-mobile-host-reload.png"
+        }
+      ],
+      "phase": "online",
+      "claims": [
+        "privacy",
+        "permission",
+        "disconnect",
+        "permission",
+        "disconnect"
+      ]
+    },
+    {
+      "file": "tests/fhv-release.browser.mjs",
+      "title": "P8 progression mobile 跨章推进/升级窗/逐日/终章结算与刷新恢复",
+      "status": "passed",
+      "viewport": "mobile",
+      "annotations": [
+        {
+          "type": "viewport",
+          "description": "mobile"
+        },
+        {
+          "type": "phase",
+          "description": "progression"
+        },
+        {
+          "type": "scenario",
+          "description": "dawnOfTheFinalDay"
+        },
+        {
+          "type": "debugJump",
+          "description": "POST /api/debug（host-only，真实 debugCommand + 事务提交）「结束这关 R1」7 次：welcomeToHemlockVale / writtenInRock / theTwistedHollow / dawnOfTheSecondDay / dawnOfTheFinalDay / preludeTheFinalEvening / fateOfTheVale 的关末结算，把战役真实推进到终章《山谷的命运》并结算到 campaignResult。每次结算后仍由真实 /api/move + 真实局外页按钮（继续 / 幕间整备 / 战役选择 / 出发准备 / 开始当前关卡）推进。"
+        },
+        {
+          "type": "claim",
+          "description": "disconnect"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-lobby-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-prepared-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-progression-welcome-table-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-progression-writtenInRock-table-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-progression-theTwistedHollow-table-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-progression-day2-table-mobile.png"
+        },
+        {
+          "type": "evidence",
+          "description": "关卡进行中（第二日黎明） 存档摘要：compatible=true、stage=inScenario、revision=24、persist=true"
+        },
+        {
+          "type": "claim",
+          "description": "disconnect"
+        },
+        {
+          "type": "evidence",
+          "description": "断线恢复（浏览器断网→恢复→真实刷新）：sessionId=bg-4-mwkdjr28、scenario=dawnOfTheSecondDay、uiState=inScenario、revision=24→24、手牌 5 张一致"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-reconnect-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-day2-upgrade-mobile.png"
+        },
+        {
+          "type": "evidence",
+          "description": "升级窗（购买）：节点 dawn2Prep，未花费 XP 3 → 2；purchases=[{\"added\":\"01016\",\"removed\":\"01017\",\"cost\":1,\"scenarioIndex\":7,\"adaptable\":false}]"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-day2-purchased-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-progression-day3-table-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-day3-upgrade-mobile.png"
+        },
+        {
+          "type": "evidence",
+          "description": "升级窗（跳过）：节点 dawnFinalPrep，未花费 XP 2 → 2（保留），hubSeatDone=true"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-day3-skip-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-progression-finalEvening-table-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-progression-fateOfTheVale-table-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-progression-final-result-mobile.png"
+        },
+        {
+          "type": "evidence",
+          "description": "终章结算：result=victory，campaignOutcome=victory，branch=marquezSacrificed，scenarioResults=7，survivingResidents=[\"motherRachel\",\"simeonAtwood\",\"williamHemlock\",\"riverHawthorne\",\"gideonMizrah\",\"judithPark\",\"theoPeters\",\"bertieMusgrave\",\"drRosaMarquez\",\"helenPeters\"]"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-progression-campaignResult-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-savelist-mobile.png"
+        },
+        {
+          "type": "claim",
+          "description": "disconnect"
+        },
+        {
+          "type": "evidence",
+          "description": "刷新页面 → 存档管理读档恢复：sessionId=bg-4-mwkdjr28、uiState=campaignResult、scenario=fateOfTheVale、revision=48→48"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-reload-mobile.png"
+        }
+      ],
+      "phase": "progression",
+      "claims": [
+        "disconnect",
+        "disconnect",
+        "disconnect"
+      ]
+    },
+    {
+      "file": "tests/fhv-release.browser.mjs",
+      "title": "P8 release mobile 真实大厅启动《铁杉谷盛宴》首章并验收指南/法典/序曲整备",
+      "status": "passed",
+      "viewport": "mobile",
+      "annotations": [
+        {
+          "type": "viewport",
+          "description": "mobile"
+        },
+        {
+          "type": "phase",
+          "description": "release"
+        },
+        {
+          "type": "scenario",
+          "description": "welcomeToHemlockVale"
+        },
+        {
+          "type": "debugJump",
+          "description": "真实调试控制台（牌桌 ` / ~ 快捷键，host-only）提交「结束这关 R1」一次：把首章《欢迎来到铁杉谷》推进到真实关末结算（真实 debugCommand 解析 + 事务提交），以便验证「保留 1 张支援」的序曲整备与下一章带支援入场；章内的检视、法典、打牌全部经真实 /api/move 与真实 UI。"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-lobby-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-release-hub-mobile.png"
+        },
+        {
+          "type": "evidence",
+          "description": "大厅 catalog：《铁杉谷盛宴》12 个场景，status=playable earlyAccess=false"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-prepared-mobile.png"
+        },
+        {
+          "type": "evidence",
+          "description": "准备完成：座位 0=10001 威尔森·理查德，卡组 33 张；开局手牌在关卡开始时发放"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-release-departure-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-release-table-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-guide-welcomeToHemlockVale-mobile.png"
+        },
+        {
+          "type": "evidence",
+          "description": "关卡设置指南：欢迎来到铁杉谷 · Welcome to Hemlock Vale!；分区=特别规则 / 开场 / 设置 / 说明；折叠=后续剧情（含剧透，点击展开） / 结局与结算（含剧透，点击展开）；特别规则分组=9"
+        },
+        {
+          "type": "evidence",
+          "description": "真实打出支援：01087 手电筒；在场支援=[\"01087\"]"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-played-asset-mobile.png"
+        },
+        {
+          "type": "evidence",
+          "description": "真实法典交互：询问当地人（[codex] 10）；已读条目 theCrossroads；面板 16 条（data-used=true 断言通过）"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-codex-panel-mobile.png"
+        },
+        {
+          "type": "evidence",
+          "description": "序曲整备（保留支援）：整备包裹来源 welcomeToHemlockVale，保留支援=01087，目的地=5 个"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-release-result-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-release-interlude-mobile.png"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-release-next-prep-mobile.png"
+        },
+        {
+          "type": "evidence",
+          "description": "带支援入场：01087 在《岩间密语 · Written in Rock》开局真实在场；整备包裹已消费（surveyPreparation=null），手牌 5 张"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-release-next-table-mobile.png"
+        },
+        {
+          "type": "evidence",
+          "description": "关卡进行中（岩间密语） 存档摘要：compatible=true、stage=inScenario、revision=17、persist=true"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-savelist-mobile.png"
+        },
+        {
+          "type": "claim",
+          "description": "disconnect"
+        },
+        {
+          "type": "evidence",
+          "description": "刷新页面 → 存档管理读档恢复：sessionId=bg-2-mwkdgjb0、uiState=inScenario、scenario=writtenInRock、revision=17→17"
+        },
+        {
+          "type": "screenshot",
+          "description": "artifacts/migration/fhv/p8/screenshots/p8-reload-mobile.png"
+        },
+        {
+          "type": "evidence",
+          "description": "关卡进行中读档探测：listed=true、compatible=true、loaded=true"
+        }
+      ],
+      "phase": "release",
+      "claims": [
+        "disconnect"
+      ]
+    }
+  ],
+  "blocked": [],
+  "checks": {
+    "release": {
+      "desktop": true,
+      "mobile": true
+    },
+    "progression": {
+      "desktop": true,
+      "mobile": true
+    },
+    "online": {
+      "desktop": true,
+      "mobile": true
+    },
+    "privacy": {
+      "desktop": true,
+      "mobile": true
+    },
+    "permissionBoundary": true,
+    "disconnectRecovery": true
+  },
+  "screenshots": [
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-codex-panel-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 417611,
+      "sha256": "911d1573e151a9380940fa7add4dd4dbe82c5c7b1d3e71a487f2d059455853f4"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-codex-panel-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 189150,
+      "sha256": "c64996b773f067a75a6a2c6bcd8da8935ebda92d89a958feadb5ef964a9089e5"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-day2-purchased-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 326754,
+      "sha256": "1c3d9c580b6ced7082aed24b30472cea941509c44405e5f3f8954b3c1de9b0ce"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-day2-purchased-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 181489,
+      "sha256": "1194ad5a6ea685d2b62fd635c32f09a4f25578ea3e29d91285192d6dfbce6cd0"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-day2-upgrade-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 664068,
+      "sha256": "a19129dda4b2611a127541cfa7a2cbc60c6b451f9c5ef2482691fea5c7fa2da0"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-day2-upgrade-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 250945,
+      "sha256": "9d6af9bfb50696d20cd2fb79558eca19d4a02e93a35a90f7ae7d1e81b5a86c5f"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-day3-skip-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 326830,
+      "sha256": "219e4225171a6a1859be5c91a554f3ce3b4d3acefa2da91803aa43d0a5804828"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-day3-skip-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 182734,
+      "sha256": "0fcfc3b46cb07659a435d830e39638fa9e9bfbe8bc221bd67947c913a56d83e4"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-day3-upgrade-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 664180,
+      "sha256": "29b031b329e17e5b7f5ff14b3496eb50b6c1eef3a39050b19bd69bf34b489813"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-day3-upgrade-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 250945,
+      "sha256": "9d6af9bfb50696d20cd2fb79558eca19d4a02e93a35a90f7ae7d1e81b5a86c5f"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-guide-welcomeToHemlockVale-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 448384,
+      "sha256": "8a55f64c102fe7b2158cebc12102c23dcbc18214d88a9dd22d7e0a2cb56d5354"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-guide-welcomeToHemlockVale-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 133427,
+      "sha256": "7cc4a93d577a557459c35ff06920be7828cae6a4bef3b6f23006108f230d061d"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-lobby-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 489434,
+      "sha256": "297ca318180ad3b16ab35a5b3ec465ffba81f5e02790d006e319aad6bfd5df68"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-lobby-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 144428,
+      "sha256": "473f5a1867d022c865114007c4736f6f7c956425d2ebc3279f23ee2c601119d0"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-online-desktop-guest-hub.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "online",
+      "bytes": 870119,
+      "sha256": "afb83de38e29824ac628de7e187ee46b5ce23f4833476ac3eb28022b7e5a2eee"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-online-desktop-guest-reconnect.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "online",
+      "bytes": 876179,
+      "sha256": "24f9b6032ded0f323731d5c4036e45d7b99d799b0ccd3faa93f37d99d6826a30"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-online-desktop-guest-table.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "online",
+      "bytes": 1051385,
+      "sha256": "c31bcec65b2833c92a24fe3de1b1091e53947ea26513207c8970407cd8b0decc"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-online-desktop-host-after-turn.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "online",
+      "bytes": 909342,
+      "sha256": "5261fb2cf9132bc515cc04ea67c5797fbfc7402053c9e05b9085c08840e9b566"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-online-desktop-host-hub.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "online",
+      "bytes": 875206,
+      "sha256": "429257c6f21d0eb19c9346b2f51c7f88a85f9882557d4fa28878f061de42c23c"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-online-desktop-host-reload.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "online",
+      "bytes": 855921,
+      "sha256": "0a7e32d3dcd473de98d82ff5ce66ceafec20ef80eeb86a1514159095ff9f90d6"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-online-desktop-host-table.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "online",
+      "bytes": 1060649,
+      "sha256": "f918bb493c1461e6ca54c1cb03750ec730eb6efaf7d798be7171fe94775db9bf"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-online-mobile-guest-hub.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "online",
+      "bytes": 206316,
+      "sha256": "c98e6874e0bc12a135b22cf99691aba2a10d25594218ded12828f498b7cbc90e"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-online-mobile-guest-reconnect.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "online",
+      "bytes": 240293,
+      "sha256": "09f7c2420e50497299428df251b1af946d22e990e216a1d866206ee54a3c7e3e"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-online-mobile-guest-table.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "online",
+      "bytes": 241254,
+      "sha256": "1da9e8bd87a021615c57933a0ff3935f5680591b05d55ca6603e9858be591a95"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-online-mobile-host-after-turn.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "online",
+      "bytes": 239123,
+      "sha256": "46549f4e7ee60905a62ca6cbeb76ee9fc17176b21b24bd9c5d9f8549ce9acc29"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-online-mobile-host-hub.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "online",
+      "bytes": 209202,
+      "sha256": "715dcc909072b97dc16bc9812cecb2d07977c844590b6975f1471576b1ae5203"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-online-mobile-host-reload.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "online",
+      "bytes": 238094,
+      "sha256": "037d612d051c2941ebe6fc03c99317938e1b2dffba37b2dde97dc1785148d432"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-online-mobile-host-table.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "online",
+      "bytes": 244008,
+      "sha256": "c6edd86d35d4959a9437ef1e061c31b4e69ed582bfb6f1a66332023a70bbffbe"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-played-asset-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 910692,
+      "sha256": "14d3d1d8f6e2e004bb87966d0968f78e24babedfe8e37bc47a86d9cd083bcc05"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-played-asset-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 245693,
+      "sha256": "2b7a02d6356e7e5b74925b421b59262e8380d987e4609c920637eb77644b6060"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-prepared-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 292019,
+      "sha256": "df47b12347ee01bfcb043a653260d8fb19e69b82fd9fcd8f41fd6377372b8d4d"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-prepared-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 112486,
+      "sha256": "9848d87f0c37dcc1a522b859e3b2f10ba58b1ee325c406cc177c429471969f42"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-campaignResult-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 591601,
+      "sha256": "b0562e6ad58189bc0bb85f6e4021e1d7d65ec02caca992c8d3be2f28f04755b4"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-campaignResult-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 85336,
+      "sha256": "fbd2046e9e85784e624750e5cf5c711a8d0f3a4def5fe9daf887ddc160dcadfb"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-day2-table-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 891390,
+      "sha256": "57477a31bc96805f9e690669fd363602604c9aea1b510344870168895f1af3a5"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-day2-table-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 239090,
+      "sha256": "e8b1aaf6131cbed78b6973f9ae23c39ceb10b4e26ebb92cc4572a9d71b0d89c9"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-day3-table-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 884062,
+      "sha256": "504b0242cdafd11b5ba090bb8dc65a59263bbbbc64332844cde10c3d4afc2663"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-day3-table-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 235916,
+      "sha256": "0bb0103bb8fa594a8a9794a87d55a1d9162903d6a7cfe36c60d9c4d9783f414c"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-fateOfTheVale-table-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 955584,
+      "sha256": "4054d9043ea4ca0ff9bfda3a6e3b135f1c6e03fb7bf43be2c726cf037f72ce72"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-fateOfTheVale-table-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 273278,
+      "sha256": "670bbda3c50d02b1e524c12d3bf1640d408571c6ab38f0b56d4362c5d22cb7ef"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-final-result-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 637297,
+      "sha256": "1d66f3387c96495aea8072de274902e1ec21f0fd3e155d8de6eef56149f61d78"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-final-result-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 89414,
+      "sha256": "ac1752f983618a2418e19cdb743399a5832fd3a60f478102bd8032378aa7425b"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-finalEvening-table-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 876011,
+      "sha256": "b2261e8c73d751f931182c5d3fecf83cb6f2a521c25c3512edcb940102526dd0"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-finalEvening-table-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 225415,
+      "sha256": "6373d06c2f8369c54c394b4bd125f24ce979f4b4083b819dc2b3c0bbdf5392c3"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-theTwistedHollow-table-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 948082,
+      "sha256": "461f6ad7e9ba63d2f58f4e32aa2200decac6d85616f25274c1162d05cf3da935"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-theTwistedHollow-table-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 223064,
+      "sha256": "d8a09698e1522bcb4eb74ddaccec49a6acacd4707e1038affafc598fa7b1dfe0"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-welcome-table-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 920557,
+      "sha256": "ac7b240fa03b89334a65d6b9db9bae6eb4964dcf363ef9d2391f03d97b1ce078"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-welcome-table-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 239706,
+      "sha256": "e8d965dfa60a6108139b9a9be1627fa982d71b22d7cf66f859618210b1936b81"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-writtenInRock-table-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 1154465,
+      "sha256": "6f5fd53375359030f276afafc97d0d6dd03e9f83241d5b3db8eba8a7270376b1"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-writtenInRock-table-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 247679,
+      "sha256": "8670c498dfa10ee295585105cbb6f52b2cac86003a5e4770dde854296e0cb3f3"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-reconnect-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "progression",
+      "bytes": 891390,
+      "sha256": "57477a31bc96805f9e690669fd363602604c9aea1b510344870168895f1af3a5"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-reconnect-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "progression",
+      "bytes": 239090,
+      "sha256": "e8b1aaf6131cbed78b6973f9ae23c39ceb10b4e26ebb92cc4572a9d71b0d89c9"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-release-departure-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 292019,
+      "sha256": "df47b12347ee01bfcb043a653260d8fb19e69b82fd9fcd8f41fd6377372b8d4d"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-release-departure-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 112486,
+      "sha256": "9848d87f0c37dcc1a522b859e3b2f10ba58b1ee325c406cc177c429471969f42"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-release-hub-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 867134,
+      "sha256": "733c50fe5ce14dc4e184a3a83a9fb832377a7a362f1af2083c97b54caa2e9771"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-release-hub-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 207912,
+      "sha256": "736e5ad1caf06ae3b33553de0dfe050eac25c35b3433ce370743b55dc8f208f9"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-release-interlude-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 648616,
+      "sha256": "ad34c6f05423889323503d0d93967c6084a334a67b093f28706d46fc4c695019"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-release-interlude-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 234485,
+      "sha256": "c7b869e644594ee5d6a714dade2160c08abce249bc32c092fe27037281844554"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-release-next-prep-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 280531,
+      "sha256": "798fef2bafa05077dde4f0a4695d4520f76eae06a661f26e435959fff2952604"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-release-next-prep-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 109524,
+      "sha256": "427980f80f1ead4c2196e66ee4da1b914d79522b66193956c3fd7e34cd4a6d37"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-release-next-table-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 1158699,
+      "sha256": "9c5908ecc8700457a8576fdda9f0287875a4e96b9eede5011973368661c5a751"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-release-next-table-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 254649,
+      "sha256": "0148b4eb128c830286d13d1f56c56442b913bb83d8a46fe8030638043168c7a0"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-release-result-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 617965,
+      "sha256": "1ec35558eaf38c863831df667913e70bd91dabf436a63209fc997ab973716ecc"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-release-result-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 133200,
+      "sha256": "ba29f9858df30588d06f33243adb43a73842c57bb5cb20573afbeeacca4b274c"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-release-table-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 910387,
+      "sha256": "0382171dd523c96d576818c42421f6a00a21fa68e9fda4c3a4270ac330f9a2a7"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-release-table-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 240403,
+      "sha256": "74cc42c800655d63b67eb5d2fcc1cca4023658a02f74d1291e549d40fe1f00ca"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-reload-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 589691,
+      "sha256": "70f50f3cf5be93975319fd800beb45d6332686e91a45b93f5aada8c8d3157bb6"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-reload-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 86234,
+      "sha256": "08a74562c6f1f1d80c22c7a324fbb2d2acd9b69770dbfdd9ee9a08ece27cb5d3"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-savelist-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "phase": "release",
+      "bytes": 896698,
+      "sha256": "00c8e3907ae3edd56562dd6b0526f6921fe9457afb1629127f1af632f16da01a"
+    },
+    {
+      "path": "artifacts/migration/fhv/p8/screenshots/p8-savelist-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "phase": "release",
+      "bytes": 168069,
+      "sha256": "fe7f1743c8a0db070e4e61940357042c16756d22afef26b629afffa48714620a"
+    }
+  ],
+  "screenshotsMissing": [],
+  "sourceFiles": [
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/epilogue.js",
+      "sha256": "37edf686903af1f831fe51c9dead4cbf90531a3d83fb31a54647c4d47b07d481",
+      "bytes": 10618
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/flow.js",
+      "sha256": "4ee2fed6b503fa95bb636c72a6b03fd7c6430186820c8ed482e686db2f14784b",
+      "bytes": 30216
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/interludes.js",
+      "sha256": "2299ed9cde69039d7cc7af3365db341578ede9a47e0aadb6dec6c7b447139ffc",
+      "bytes": 27404
+    },
+    {
+      "path": "content/campaigns/theFeastOfHemlockVale/parts.js",
+      "sha256": "721ac6bf61a8da2f55011a7b5845b7a90aca4b25383d121937d26a13334b2130",
+      "bytes": 22821
+    },
+    {
+      "path": "content/registered.js",
+      "sha256": "35b871f6a8441fd19201171da7bf2d1f19314cf7a7e0d7fea4a9d746f6510f34",
+      "bytes": 18466
+    },
+    {
+      "path": "src/engine/campaign-flow.js",
+      "sha256": "24b1e89ef8d615e0e91e19d5e7bdd3643332ef4fcba181ec3c8a3f90905d3a41",
+      "bytes": 25676
+    },
+    {
+      "path": "src/engine/dispatch.js",
+      "sha256": "4a657c7001ad25b7862711aef4de8facc5229475ac62aee926ea3513c8a409d4",
+      "bytes": 62172
+    },
+    {
+      "path": "src/engine/hub.js",
+      "sha256": "684579ff29b7118c325e57c62514437e7968359f8e94ae77ef8bc88a96e49968",
+      "bytes": 35023
+    },
+    {
+      "path": "src/engine/mechanic-choices.js",
+      "sha256": "80865a0df19a4dc7a1d6bc54a416839c91e1e617ca24f1726d00f150449d5681",
+      "bytes": 11118
+    },
+    {
+      "path": "src/engine/survey-preparation.js",
+      "sha256": "8fd23e045a442c90117459a926f8bf9d162d19825cbf8a6537adb2eea021428b",
+      "bytes": 8020
+    },
+    {
+      "path": "src/integration/mechanic-view.js",
+      "sha256": "66ed6398ef8fc2f53bf098c331626b836ed98e2183830e5dc290a0f21ea24df5",
+      "bytes": 26785
+    },
+    {
+      "path": "src/integration/observation.js",
+      "sha256": "b6e272dcda62b10368af2ddad56b19e3989d1b8ec11ef7439df347648f736de6",
+      "bytes": 32562
+    },
+    {
+      "path": "tests/fhv-release.browser.mjs",
+      "sha256": "03b642eddcfd7b89bd06a5cfaf9825d38add516a4adfab9543a6616b41f52dc5",
+      "bytes": 112396
+    },
+    {
+      "path": "tests/playwright/playwright.fhv-release.config.mjs",
+      "sha256": "623b32ff09ec5f8302e756856ec503b33110fdeeedf31d16ccc81aba5ddffb94",
+      "bytes": 2262
+    },
+    {
+      "path": "tools/playwright-fhv-release-reporter.mjs",
+      "sha256": "1e62db12a478e1c71ff9a9b14be2ca7132d9973c7e9ea2ba6a7d30fe45f168f2",
+      "bytes": 13358
+    },
+    {
+      "path": "tools/run-fhv-release-browser.mjs",
+      "sha256": "d199e53906c832840ebaa92e3f0beb90e7065ba19a189f568a8c3244f81d9d2d",
+      "bytes": 6276
+    },
+    {
+      "path": "web/game-ui.js",
+      "sha256": "5bf39fc73031177fc55defedc6751380b8bd16311dface641bda86f4b58493af",
+      "bytes": 175880
+    },
+    {
+      "path": "web/hub.js",
+      "sha256": "d6027b5d01ba8e9dfffd2a41e7f4e25419821fc83d62b8b94538e18dffdf3082",
+      "bytes": 167973
+    },
+    {
+      "path": "web/mechanic-ui.js",
+      "sha256": "7e8d7c9461dfb7e363d70fff301044ddb86a0edcf605ac1c58e948af016c554c",
+      "bytes": 32739
+    },
+    {
+      "path": "web/scenario-setup-view.js",
+      "sha256": "74ab809456c604e471d6ff8ec323d314c9a575cdd2cad6eb27ad74580c2df051",
+      "bytes": 6359
+    }
+  ],
+  "sourceFilesMissing": []
+}

@@ -145,10 +145,10 @@ export async function prepareSeatThroughUi(page, hub, { code = '08001' } = {}) {
   expect(selectBody.session.state.legalMoves.filter(move => move.action === 'hubSelectInvestigator')
     .map(move => move.code)).toEqual(expect.arrayContaining([...EOTE_INVESTIGATOR_CODES]))
 
-  const deck = hub.getByRole('button', { name: '自动构筑合法牌组', exact: true }).first()
+  const deck = hub.getByRole('button', { name: '使用推荐卡组', exact: true }).first()
   await expect(deck).toBeEnabled({ timeout: 30_000 })
   const deckResponse = page.waitForResponse(response => response.url().endsWith('/api/move')
-    && response.request().postDataJSON()?.move?.action === 'hubAutoDeck')
+    && response.request().postDataJSON()?.move?.action === 'hubSetDeck')
   await deck.click()
   const deckBody = await (await deckResponse).json()
   expect(deckBody.ok, deckBody.error).toBe(true)

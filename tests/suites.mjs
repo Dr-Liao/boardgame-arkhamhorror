@@ -99,6 +99,50 @@ export const FAST_TESTS = Object.freeze([
   // P2（八循环通用原语）：七组原语的正常/负面/JSON 往返/读档校验；只验证原语，不认证卡牌行为。
   'tsk-primitives-state.test.mjs', 'tsk-primitives-concealed.test.mjs',
   'fhv-primitives.test.mjs',
+  // P3（九循环关键词与规则书）：6 个关键词 / 11 条双语规则 / 441 卡文直达 / 审计账本与浏览器验收。
+  'fhv-rules.test.mjs',
+  'fhv-rules-ledger.test.mjs',
+  // P4（九循环交互与界面）：7 组交互事务（法典/演进/整备/网格/矿车/敌人-地点/调查员状态）。
+  'fhv-interactions.test.mjs',
+  'fhv-interactions-ledger.test.mjs',
+  // P5（九循环调查员及专属依赖）：5 位调查员逐人验收 + 专属/绑定依赖五人口径。
+  'fhv-investigator-10001.test.mjs',
+  'fhv-investigator-10004.test.mjs',
+  'fhv-investigator-10009.test.mjs',
+  'fhv-investigator-10012.test.mjs',
+  'fhv-investigator-10015.test.mjs',
+  'fhv-investigator-signatures.test.mjs',
+  // P7（九循环战役）：12 个场景（4 序曲 + 8 章）章测试 + 战役层流程/正文/记录 + 共享遭遇组。
+  'fhv-scenario-welcomeToHemlockVale.test.mjs',
+  'fhv-scenario-writtenInRock.test.mjs',
+  'fhv-scenario-hemlockHouse.test.mjs',
+  'fhv-scenario-theSilentHeath.test.mjs',
+  'fhv-scenario-theLostSister.test.mjs',
+  'fhv-scenario-theThingInTheDepths.test.mjs',
+  'fhv-scenario-theTwistedHollow.test.mjs',
+  'fhv-scenario-dawnOfTheSecondDay.test.mjs',
+  'fhv-scenario-theLongestNight.test.mjs',
+  'fhv-scenario-dawnOfTheFinalDay.test.mjs',
+  'fhv-scenario-preludeTheFinalEvening.test.mjs',
+  'fhv-scenario-fateOfTheVale.test.mjs',
+  'fhv-campaign-flow.test.mjs',
+  'fhv-campaign-engine.test.mjs',
+  'fhv-story.test.mjs',
+  'fhv-campaign-records.test.mjs',
+  // P6（九循环一般玩家卡）：12 个分片逐卡行为测试 + 通用原语/包边界。
+  'fhv-player-m2-1.test.mjs',
+  'fhv-player-m2-2.test.mjs',
+  'fhv-player-m2-3.test.mjs',
+  'fhv-player-m2-4.test.mjs',
+  'fhv-player-m2-5.test.mjs',
+  'fhv-player-m2-6.test.mjs',
+  'fhv-player-m2-7.test.mjs',
+  'fhv-player-m2-8.test.mjs',
+  'fhv-player-m2-9.test.mjs',
+  'fhv-player-m2-10.test.mjs',
+  'fhv-player-m2-11.test.mjs',
+  'fhv-player-m2-12.test.mjs',
+  'fhv-player-primitives.test.mjs',
   'tsk-primitives-keys-hollow.test.mjs', 'tsk-primitives-map.test.mjs',
   'tsk-primitives-customizable.test.mjs', 'tsk-primitives-coterie-investigator.test.mjs',
   // P3（八循环关键词与规则书）：29 个关键词 / 17 条双语规则 / 439 卡文直达 / 审计账本与浏览器验收。
@@ -366,6 +410,8 @@ export const FAST_TESTS = Object.freeze([
   'tcu-union-disillusion.test.mjs', // 万象无终 P8：章节/共享组/账本测试
   'tcu-p0-regressions.test.mjs', // 万象无终全量扫描 P0 修复回归：05130 崩溃/幽灵面线索/变体分组/05201 反应
   'tcu-p1-regressions.test.mjs', // 万象无终全量扫描 P1 修复回归：标记含义/05095 入场毁灭/05311 裂口
+  'tcu-prologue-handoff.test.mjs', // 序章→《巫异时刻》交接：关间准备换回真实调查员、序章失败不计创伤/经验
+  'tcu-interlude-windows.test.mjs', // 关间升级窗：巫异时刻后/叙事幕间读完后在下一关前开放升级（2026-11-17 实测）
   'tcu-chapters-smoke.test.mjs', // 万象无终 P1-12：九章真实引擎冒烟（setup 不变量 + 连续合法动作）
   'tde-campaign-parts.test.mjs', // 食梦者 P3 批次 1：双 part 数据模型（纯数据，不建局）
   'tde-primitives-counters.test.mjs', // 食梦者 P3 批次 2：按调查员计数器
@@ -428,6 +474,10 @@ export const SLOW_TESTS = Object.freeze([
   'tsk-p8-customization.test.mjs', // P8：定制卡构筑期初始勾选 + 关间升级（真实 hub/dispatch/投影）
   'tsk-all-cards.test.mjs',
   'tsk-p8-migration.test.mjs',
+  // P8（九循环发布验收）：铁杉谷盛宴完整三天三夜/多勘察顺序/夜探/居民/失败/四难度/存档/replay，
+  // 以及发布总账本自检与素材账本。
+  'fhv-p8-campaign.test.mjs',
+  'fhv-p8-migration.test.mjs',
   'campaign-n4.test.mjs', // N4 战役快速回归（升级/回滚/结局/创伤/牌组迁移）
   'campaign-n4-purchase-stress.test.mjs', // 连续取消购卡压测：默认 50 轮，N4_CANCEL_LOOPS=300 跑原深度
   'campaign-n4-matrix.test.mjs', // /2/4 人整局合法走子矩阵（原 7 组含难度，难度差异由混沌袋用例覆盖）
@@ -463,4 +513,5 @@ export const ASSET_TESTS = Object.freeze([
   'tic-media.test.mjs',
   'carcosa-migration.test.mjs',
   'carcosa-story.test.mjs',
+  'fhv-p8-assets.test.mjs',
 ])

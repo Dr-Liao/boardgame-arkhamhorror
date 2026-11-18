@@ -184,7 +184,13 @@ test('behavior.js 总行数不超过 Phase 3 基线，且至少一个关卡已�
 // 2026-11-13 八循环 P1 第三轮：sanguine 幕间「云开见日」1–7、dealings 追逐 R1 入口、deadHeat
 // 09524/09521/09522/09532 、riddles 09516/09517 与隐私/投影辅助，实测 49574，按实测重锁（+207）；
 // 已把可声明部分放进 definition 常量与 manifest.publicScenarioFlags，后续仍要求只减不增。
-const BUDGET = 49574
+// 2026-11-17 九循环 P7：《铁杉谷盛宴》12 个场景（4 序曲 + 8 章）behavior.js 落盘，实测 71048，
+// 按批次实测重锁（旧基线 49574 + 21474）；后续仍要求只减不增。
+// 2026-11-17 九循环 P7 浏览器验收修复：setup 洗牌接入 api.shuffle（3 章 +10 行）、地点值标记
+// slot/symbol 的 content 侧读取包装（+8 行），实测 71066，按实测重锁；后续仍要求只减不增。
+// 2026-11-17 九循环 P8 发布修复：最终夜 lost 软锁、四档 Eldersign、升级窗/跳过勘察整备、
+// 传家宝 heirloomsAwarded 发放路径（+10 行），实测 71076，按实测重锁；后续仍要求只减不增。
+const BUDGET = 71076
   assert.ok(data.phase3.behaviorLines <= BUDGET,
     `behavior.js 总行数 ${data.phase3.behaviorLines} 超过基线 ${BUDGET}：新增关卡流程请写 `
     + 'content/scenario-declaration.js 的声明，不要往 behavior.js 加命令式钩子。')

@@ -81,7 +81,7 @@ const cardInfoCache = new WeakMap()
 function cardInfo(card) {
   const cached = cardInfoCache.get(card)
   if (cached) return cached
-  const texts = [card.text, card.textZh].filter(Boolean).map(text => String(text))
+  const texts = [card.text, card.textZh, card.textEn].filter(Boolean).map(text => String(text))
   const traits = (card.traits || []).map(lower)
   const printedUses = [
     card.usesType,
@@ -116,7 +116,7 @@ const KNOWN_RULE_KEYS = new Set(['factions', 'faction', 'level', 'types', 'trait
   // （单数）表示「只有事件/技能」。两者都翻成同一条允许项（factions + types），
   // 让 `limit` 的副职业配额（10 张）继续由 validateDeckRules 的容量分配统一执行；
   // `name` 是展示用标签，不参与匹配。`deck_size_select` / `option_select` 仍按未知键处理。
-  'faction_select', 'type', 'name'])
+  'faction_select', 'type', 'name', 'id'])
 // 规则对象（来自冻结的构筑规则，或临时的优惠 match 对象）上的正则/未知键检查缓存。
 const ruleInfoCache = new WeakMap()
 function ruleInfo(rule) {
@@ -166,7 +166,7 @@ export function matchesCardRule(card, rule, investigator) {
     const printedParley = info.parleyHeading && cardValues.parley && rule.tag?.map(lower).includes('pa')
     if (!printedParley && !info.patterns.some(pattern => cardValues.texts.some(text => pattern.test(text)))) return false
   }
-  const allowed = rule.factions || rule.faction || rule.faction_select
+  const allowed = [rule.factions, rule.faction, rule.faction_select].find(factions => factions?.length)
   if (allowed?.length && !allowed.some(faction => cardValues.factions.includes(faction))) return false
   const allowedTypes = rule.types || rule.type
   if (allowedTypes?.length && !allowedTypes.includes(card.type)) return false
@@ -198,8 +198,9 @@ export function draftCardLimit(card) {
 
 export function deckCardLimit(card) {
   let limit = card.deckLimit ?? (card.myriad ? 3 : 2)
-  // 卡面「每位调查员仅限 1 张」是构筑限制，卡表 deckLimit 未必同步。
-  if (/Limit 1 per investigator/i.test(card.text || '')) limit = Math.min(limit, 1)
+  // Only an explicit deck limit overrides the printed deck-size metadata.
+  // “Per investigator” applies to the play area.
+  if (/Limit 1 per deck/i.test(card.textEn || card.text || '')) limit = Math.min(limit, 1)
   return Number.isSafeInteger(limit) && limit > 0 ? (card.exceptional ? Math.min(1, limit) : limit) : 0
 }
 // Myriad（多重）的同名上限：跨卡号共享 3 张额度（06020/06021/06199/06245…；
@@ -249,15 +250,23 @@ function cardFactions(card) {
   return [...new Set([...(card.factions || []), card.klass, card.klass2, card.klass3]
     .filter(Boolean).map(lower))]
 }
+export function matchesFixedDeckOption(card, investigator) {
+  return deckRules(investigator).options.some(rule => !rule.faction_select?.length && rule.not !== true
+    && rule.limit == null && matchesCardRule(card, rule, investigator))
+}
+
 export function factionSelectErrors(investigator, cards) {
   const errors = []
   for (const group of factionSelectGroups(investigator)) {
-    const used = new Set()
-    for (const card of cards) {
-      if (!group.rules.some(rule => matchesCardRule(card, rule, investigator))) continue
-      for (const faction of cardFactions(card)) if (group.allowed.includes(faction)) used.add(faction)
+    const required = cards
+      .filter(card => group.rules.some(rule => matchesCardRule(card, rule, investigator)) && !matchesFixedDeckOption(card, investigator))
+      .map(card => cardFactions(card).filter(faction => group.allowed.includes(faction)))
+    function fits(choices) {
+      const uncovered = required.find(factions => !factions.some(faction => choices.includes(faction)))
+      if (!uncovered) return true
+      return choices.length < group.rules.length && uncovered.some(faction => fits([...choices, faction]))
     }
-    if (used.size > group.rules.length) {
+    if (!fits([])) {
       errors.push(t('misc.deck.factionSelect', { count: group.rules.length }))
     }
   }
@@ -382,6 +391,8 @@ export const CAMPAIGN_CYCLES = Object.freeze({
   edgeOfTheEarth: 8,
   // P7（八循环 M3 战役）：绯红密钥 09 段是第九循环，已注册进生产组合根并在大厅可启动。
   theScarletKeys: 9,
+  // P7（九循环 M3 战役）：铁杉谷盛宴 10 段是第十循环，已注册进生产组合根并在大厅可启动。
+  theFeastOfHemlockVale: 10,
 })
 export function normalizeCardPoolScope(scope) {
   return CARD_POOL_SCOPES.includes(scope) ? scope : 'all'
@@ -392,7 +403,7 @@ export function campaignCycle(campaignId) {
 export function cardCycle(code) {
   const match = /^(\d{2})\d{3}[a-z]?$/.exec(String(code ?? ''))
   const cycle = match ? Number(match[1]) : 0
-  return cycle >= 1 && cycle <= 9 ? cycle : null
+  return cycle >= 1 && cycle <= 10 ? cycle : null
 }
 export function cardAllowedByScope(code, scope, currentCycle) {
   if (!CARD_POOL_RESTRICTION_ENABLED) return true

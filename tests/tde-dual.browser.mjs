@@ -192,8 +192,8 @@ for (const [label, width, height] of [['desktop', 1440, 950], ['mobile', 390, 84
     await expect(mine.getByText('调查员已选择')).toBeVisible()
     // 自动构筑合法牌组，牌组摘要来自本线快照（不是另一条线）。
     const built = page.waitForResponse(response =>
-      response.url().endsWith('/api/move') && response.request().postDataJSON()?.move?.action === 'hubAutoDeck')
-    await mine.getByRole('button', { name: '自动构筑合法牌组' }).click()
+      response.url().endsWith('/api/move') && response.request().postDataJSON()?.move?.action === 'hubSetDeck')
+    await mine.getByRole('button', { name: '使用推荐卡组' }).click()
     const builtBody = await (await built).json()
     expect(builtBody.ok, builtBody.error).toBe(true)
     await expect(mine.getByText(/牌组 \d+ 张/)).toBeVisible()

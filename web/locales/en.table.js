@@ -100,6 +100,17 @@ export default {
   'table.marker.damage': 'Damage',
   'table.marker.uses': 'Uses remaining',
   'table.marker.counter': 'Counter',
+  // Card count display contract (table-components.js#cardCounterMarkerData): named counters +
+  // use-token types (secrets/charges/brilliance) + script label markers (overgrowth/stolen souls/brazier).
+  'table.marker.evidence': 'Evidence',
+  'table.marker.bounty': 'Bounty',
+  'table.marker.beneath': 'Beneath',
+  'table.marker.secret': 'Secrets',
+  'table.marker.charge': 'Charges',
+  'table.marker.brilliance': 'Brilliance',
+  'table.marker.overgrowth': 'Overgrowth',
+  'table.marker.stolenSoul': 'Stolen souls',
+  'table.marker.brazier': 'Brazier',
   'table.marker.attached': 'Attached cards',
   'table.marker.cardAria': 'Markers on this card',
 

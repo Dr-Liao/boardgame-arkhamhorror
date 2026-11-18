@@ -19,13 +19,35 @@ function locationFixture() {
   return { state, location };
 }
 
-test('P2.11 词表：裂口上限 3，地点标记只有 brazier，未知标记立即失败', () => {
+test('P2.11 词表：裂口上限 3，地点标记 brazier/slot/symbol，未知标记立即失败', () => {
   assert.equal(BREACH_LIMIT, 3);
-  assert.deepEqual([...LOCATION_FLAGS], ['brazier']);
+  assert.deepEqual([...LOCATION_FLAGS], ['brazier', 'slot', 'symbol']);
   assert.equal(normalizeLocationFlag('brazier'), 'brazier');
+  assert.equal(normalizeLocationFlag('slot'), 'slot');
+  assert.equal(normalizeLocationFlag('symbol'), 'symbol');
   assert.throws(() => normalizeLocationFlag('lit'), /未知地点标记/);
   assert.equal(breachOf({}), 0);
   assert.equal(breachOf({ breaches: 2 }), 2);
+});
+
+test('P7.8 值标记：slot/symbol 保留标量值，清除与存档往返都正确', () => {
+  const { state, location } = locationFixture();
+  assert.equal(setLocationFlag(state, location.id, 'slot', 3), 3);
+  assert.equal(setLocationFlag(state, location.id, 'symbol', 'diamond'), 'diamond');
+  const placed = state.locations.find(item => item.id === location.id);
+  assert.equal(placed.flags.slot, 3);
+  assert.equal(placed.flags.symbol, 'diamond');
+  assert.deepEqual(locationFlagsOf(placed), { slot: 3, symbol: 'diamond' });
+  // 布尔读点仍按 === true 判定：值标记不算 true。
+  assert.equal(locationFlagOf(placed, 'slot'), false);
+  // 清除。
+  setLocationFlag(state, location.id, 'slot', null);
+  assert.deepEqual(locationFlagsOf(placed), { symbol: 'diamond' });
+  // 存档往返 + 公开投影。
+  const restored = JSON.parse(JSON.stringify(state));
+  const restoredLocation = restored.locations.find(item => item.id === location.id);
+  assert.equal(locationFlagsOf(restoredLocation).symbol, 'diamond');
+  assert.deepEqual(locationStateProjection(restored)[location.id], { flags: { symbol: 'diamond' } });
 });
 
 test('P2.11 裂口：增减、上限、缺省与旧存档容错', () => {

@@ -3,6 +3,8 @@
 // 状态口径：
 //   · 9 章在 P8 升到 `development`，P10 验收后升 `playable`（可从大厅启动）；
 //   · P9 接上 `flow`（序章 → 9 章 → 幕间二/三/四 → 尾声 → 结束）、剧情分支与结局选择；
+//   · P9.1 补齐关间升级窗：叙事幕间（二/三/四）只作阅读停顿（`upgrades: false`），升级窗统一放在
+//     下一场冒险之前（参见 flow 顶部注释与参考实现 nextStep 的 canUpgradeDecks）；
 //   · P10 后战役为 `playable`：`assertLaunchableCampaign('theCircleUndone')` 通过，
 //     发布级证据（三组确认、逐卡账本、大厅→序章→章节实机路径）见 audit/tcu-migration.json；
 //     未逐条等价的分支仍逐条列在 remaining，不宣称规则等价（equivalenceCertified=false）。
@@ -55,17 +57,25 @@ const flow = {
     disappearanceAtTheTwilightEstate: {
       type: 'scenario', scenarioId: 'disappearanceAtTheTwilightEstate', next: 'theWitchingHour',
     },
-    theWitchingHour: { type: 'scenario', scenarioId: 'theWitchingHour', next: 'atDeathsDoorstep' },
+    // 关间升级窗（`interlude` 节点、无正文）的排布口径＝参考实现 nextStep 的 canUpgradeDecks：
+    // 每场冒险结算后、下一场冒险开始前各有一次升级机会；序章后是 `continueNoUpgrade`（序章不给
+    // 经验），所以《巫异时刻》前没有这个窗口。旧实现只在叙事幕间二/三/四开窗，巫异时刻→死亡门前、
+    // 隐秘之名→恶罪报应、恶罪报应→崇高利益、聚合幻灭→混沌魔掌都直接落到下一关准备，经验花不出去
+    // （2026-11-17 用户实测：巫异时刻结束后直接进入死亡门前准备）。
+    theWitchingHour: { type: 'scenario', scenarioId: 'theWitchingHour', next: 'restAfterWitchingHour' },
+    restAfterWitchingHour: { type: 'interlude', title: '返回阿卡姆', next: 'atDeathsDoorstep' },
     atDeathsDoorstep: { type: 'scenario', scenarioId: 'atDeathsDoorstep', next: 'interludeTwoGate' },
-    // 幕间二只在《死亡门前》结局 1（逃出幽灵国度）后阅读；结局 2/3 直接进入《隐秘之名》。
+    // 幕间二只在《死亡门前》结局 1（逃出幽灵国度）后阅读；结局 2/3 直接进入升级窗。
     interludeTwoGate: {
       type: 'branch',
       options: [
         { id: 'escaped', when: resolutionOf('atDeathsDoorstep', 'r1'), next: 'interludeTwo' },
-        { id: 'skipped', when: { not: resolutionOf('atDeathsDoorstep', 'r1') }, next: 'theSecretName' },
+        { id: 'skipped', when: { not: resolutionOf('atDeathsDoorstep', 'r1') }, next: 'restBeforeTheSecretName' },
       ],
     },
-    interludeTwo: { type: 'interlude', title: storyline.interludeTwo.title, next: 'interludeTwoFate' },
+    // 幕间二是叙事停顿窗（`upgrades: false`）：先读完正文/做完三选一，再在下一关前集中升级
+    // （参考实现：ATD 结局 1 → InterludeStep 2；幕间读完后的 nextStep 才带升级窗）。
+    interludeTwo: { type: 'interlude', upgrades: false, title: storyline.interludeTwo.title, next: 'interludeTwoFate' },
     // 幕间二的分支取决于约瑟夫·梅吉尔的结局（《死亡门前》结局 1 时已按区域落定为三条记录之一）。
     interludeTwoFate: {
       type: 'branch',
@@ -92,7 +102,7 @@ const flow = {
         { type: 'record', key: 'josefDisappearedIntoTheMist', value: true },
         { type: 'record', key: 'theInvestigatorsAreEnemiesOfTheLodge', value: true },
       ],
-      next: 'theSecretName',
+      next: 'restBeforeTheSecretName',
     },
     interludeTwoRescued: {
       type: 'story',
@@ -145,27 +155,33 @@ const flow = {
       ],
     },
     interludeTwoRefused: {
-      type: 'story', title: storyline.interludeTwo.title, text: interludeTwoResponse.refuse.text, next: 'theSecretName',
+      type: 'story', title: storyline.interludeTwo.title, text: interludeTwoResponse.refuse.text, next: 'restBeforeTheSecretName',
     },
     interludeTwoAgreed: {
-      type: 'story', title: storyline.interludeTwo.title, text: interludeTwoResponse.agree.text, next: 'theSecretName',
+      type: 'story', title: storyline.interludeTwo.title, text: interludeTwoResponse.agree.text, next: 'restBeforeTheSecretName',
     },
     interludeTwoLied: {
-      type: 'story', title: storyline.interludeTwo.title, text: interludeTwoResponse.lie.text, next: 'theSecretName',
+      type: 'story', title: storyline.interludeTwo.title, text: interludeTwoResponse.lie.text, next: 'restBeforeTheSecretName',
     },
-    theSecretName: { type: 'scenario', scenarioId: 'theSecretName', next: 'theWagesOfSin' },
-    theWagesOfSin: { type: 'scenario', scenarioId: 'theWagesOfSin', next: 'forTheGreaterGood' },
+    // 幕间二所有出口（含跳过）汇合到同一个升级窗，再进入《隐秘之名》。
+    restBeforeTheSecretName: { type: 'interlude', title: '调查间隙', next: 'theSecretName' },
+    theSecretName: { type: 'scenario', scenarioId: 'theSecretName', next: 'restBeforeTheWagesOfSin' },
+    restBeforeTheWagesOfSin: { type: 'interlude', title: '继续追查', next: 'theWagesOfSin' },
+    theWagesOfSin: { type: 'scenario', scenarioId: 'theWagesOfSin', next: 'restBeforeForTheGreaterGood' },
+    restBeforeForTheGreaterGood: { type: 'interlude', title: '秘社的集会', next: 'forTheGreaterGood' },
     forTheGreaterGood: { type: 'scenario', scenarioId: 'forTheGreaterGood', next: 'interludeThreeGate' },
-    // 幕间三只在《崇高利益》结局 1（拿走机关盒、被邀请）后阅读。
+    // 幕间三只在《崇高利益》结局 1（拿走机关盒、被邀请）后阅读；其余结局直接进入升级窗。
     interludeThreeGate: {
       type: 'branch',
       options: [
         { id: 'inducted', when: resolutionOf('forTheGreaterGood', 'r1'), next: 'interludeThree' },
-        { id: 'skipped', when: { not: resolutionOf('forTheGreaterGood', 'r1') }, next: 'unionAndDisillusion' },
+        { id: 'skipped', when: { not: resolutionOf('forTheGreaterGood', 'r1') }, next: 'restBeforeUnionAndDisillusion' },
       ],
     },
+    // 幕间三同为叙事停顿窗：正文/问答结束后在《聚合幻灭》前统一开升级窗。
     interludeThree: {
       type: 'interlude',
+      upgrades: false,
       title: storyline.interludeThree.title,
       text: interludeThreeNarrative.opening,
       next: 'interludeThreeDecision',
@@ -242,21 +258,23 @@ const flow = {
       title: storyline.interludeThree.title,
       text: interludeThreeNarrative.inducted,
       effects: [{ type: 'record', key: 'theInvestigatorsWereInductedIntoTheInnerCircle', value: true }],
-      next: 'unionAndDisillusion',
+      next: 'restBeforeUnionAndDisillusion',
     },
     interludeThreeNotInducted: {
       type: 'story',
       title: storyline.interludeThree.title,
       text: interludeThreeNarrative.notInducted,
-      next: 'unionAndDisillusion',
+      next: 'restBeforeUnionAndDisillusion',
     },
     interludeThreeLie: {
       type: 'story',
       title: storyline.interludeThree.title,
       text: interludeThreeNarrative.lie,
       effects: [{ type: 'record', key: 'theInvestigatorsKeptsTheirMementosHidden', value: true }],
-      next: 'unionAndDisillusion',
+      next: 'restBeforeUnionAndDisillusion',
     },
+    // 幕间三两条出口（含跳过）汇合到同一个升级窗，再进入《聚合幻灭》。
+    restBeforeUnionAndDisillusion: { type: 'interlude', title: '前往未访之岛', next: 'unionAndDisillusion' },
     unionAndDisillusion: {
       type: 'scenario', scenarioId: 'unionAndDisillusion', next: 'unionEndingGate',
     },
@@ -274,15 +292,19 @@ const flow = {
           when: {
             not: { any: [resolutionOf('unionAndDisillusion', 'r2'), resolutionOf('unionAndDisillusion', 'r9')] },
           },
-          next: 'inTheClutchesOfChaos',
+          next: 'restBeforeInTheClutchesOfChaos',
         },
       ],
     },
+    restBeforeInTheClutchesOfChaos: { type: 'interlude', title: '阿卡姆的异变', next: 'inTheClutchesOfChaos' },
     inTheClutchesOfChaos: {
       type: 'scenario', scenarioId: 'inTheClutchesOfChaos', next: 'interludeFour',
     },
+    // 幕间四是叙事停顿窗：先读「扭转命运」正文并结算计数，再在《黑色王座》前开升级窗
+    // （参考实现：ICC 之后是 InterludeStep 4；幕间读完后的 nextStep 才带升级窗）。
     interludeFour: {
       type: 'interlude',
+      upgrades: false,
       title: storyline.interludeFour.title,
       text: interludeFourNarrative.opening,
       // 「你面前的道路蜿蜒曲折」计数 + 请求帮助时的混乱袋增删（campaign-effects 的 twistOfFate）。
@@ -293,8 +315,9 @@ const flow = {
       type: 'story',
       title: storyline.interludeFour.title,
       text: interludeFourNarrative.outro,
-      next: 'beforeTheBlackThrone',
+      next: 'restBeforeBlackThrone',
     },
+    restBeforeBlackThrone: { type: 'interlude', title: '最后的准备', next: 'beforeTheBlackThrone' },
     beforeTheBlackThrone: { type: 'scenario', scenarioId: 'beforeTheBlackThrone', next: 'epilogue' },
     // 尾声：正文按实际结局与记录组装（tcuFlowStory），节点本身只保留标题。
     epilogue: { type: 'story', title: storyline.epilogue.title, next: 'end' },

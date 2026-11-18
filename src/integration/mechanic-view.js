@@ -20,6 +20,14 @@ import { crossSeatActionPending } from '../engine/tsk-investigator.js'
 import { tskCampaignState, tskScenarioState } from '../engine/tsk-state.js'
 // P8：地图目的地投影的展示名/图结构由战役清单提供（内容层 flow extras；投影不 import 剧情正文）。
 import { contentRegistry } from '../../content/registered.js'
+// 九循环《铁杉谷盛宴》P4 交互投影：法典进度 / 时间标记 / 居民关系与笔记 / 勘察整备 /
+// 网格与矿车 / 独立猎杀袋 / 敌人-地点 / 调查员形态与线索搬移。只暴露公开读数，不传正文与袋内标记。
+import { canResolveCodex, resolvedCodexKeys, scenarioDate, scenarioPeriod } from '../engine/scenario-calendar.js'
+import { residentStatus } from '../engine/resident-record.js'
+import { markerCountOf } from '../engine/marker-count.js'
+import {
+  observerAdjacentSpaces, scenarioGridCells, scenarioResidents, scenarioVehicles,
+} from '../engine/fhv-interactions.js'
 
 // 七循环《地球边缘》交互投影：只暴露桌面公开信息与「本人可见」的私有信息。
 // 口径：
@@ -115,6 +123,113 @@ function eoteView(state, data, observer) {
 //   · availableXp 与大厅 hubPurchase 同口径（upgradeRecord 的未花费 XP）；canUpgrade 只在 interlude
 //     且 XP ≥ 1 时真——初始构筑期只展示 0 勾选，不伪造经验；
 //   · xpPerCheck 按卡面 exceptional 判定（本循环 16 张定制卡均为 1 XP/格；原语已支持 2）。
+const FHV_CAMPAIGN_ID = 'theFeastOfHemlockVale'
+// 九循环《铁杉谷盛宴》P4 交互投影：
+//   · 法典只给「条目 id / 是否可读 / 是否已读」，未触发条目的分支条件与正文永不进入投影；
+//   · 时间标记只给当前日与时段（以及地点特质的局部昼夜判定），不给任何未到达分支的内容；
+//   · 居民关系等级与笔记属于桌面公开的战役日志；划除后笔记不再投影；
+//   · 勘察整备只给每座位手牌**张数**、保留支援与资源/线索；手牌卡号属于私有信息，不进投影；
+//   · 独立猎杀袋只给剩余张数（袋内标记面属于隐藏信息）；
+//   · 网格/轨道/敌人-地点/调查员形态是桌面公开状态。
+function fhvView(state, observer) {
+  if (state.campaign?.id !== FHV_CAMPAIGN_ID) return null
+  const mechanics = state.scenario?.mechanics || {}
+  const data = mechanicState(state)
+  const fhv = {}
+  const date = scenarioDate(state)
+  if (date) {
+    const inv = Number.isSafeInteger(observer) ? state.investigators?.[observer] : null
+    const local = mechanics.calendar?.periodByLocationTrait && inv?.location
+      ? scenarioPeriod(state, inv.location) : null
+    fhv.date = { day: date.day, period: date.period, ...(local ? { localPeriod: local } : {}) }
+  }
+  if (Array.isArray(mechanics.codex) && mechanics.codex.length) {
+    const resolved = resolvedCodexKeys(state)
+    const used = entry => {
+      if (entry.limit === 'unlimited') return false
+      if (entry.limit === 'act') return resolved.some(key => key.startsWith(`${entry.id}:`))
+      return resolved.includes(entry.id)
+    }
+    const residents = scenarioResidents(state)
+    const residentName = entry => {
+      if (!entry.resident) return entry.id
+      const resident = residents.find(row => row.record?.level === entry.resident.relationship)
+      return resident?.name || entry.id
+    }
+    fhv.codex = mechanics.codex.map(entry => ({
+      id: entry.id, name: residentName(entry), resident: Boolean(entry.resident),
+      available: canResolveCodex(state, entry.id), used: used(entry),
+    }))
+  }
+  const residents = scenarioResidents(state)
+  if (residents.length && state.campaign?.records) {
+    fhv.residents = residents.map(row => ({
+      id: row.id, name: row.name, ...(row.nameEn ? { nameEn: row.nameEn } : {}),
+      max: row.record?.max ?? 0, ...residentStatus(state.campaign, row.record),
+    }))
+  }
+  const parcel = state.campaign?.surveyPreparation
+  if (parcel) {
+    fhv.survey = {
+      source: parcel.source,
+      destinations: [...parcel.destinations],
+      chosenDestination: parcel.chosenDestination ?? null,
+      chosenBySeat: parcel.chosenBySeat ?? null,
+      seats: Object.entries(parcel.seats || {}).map(([key, seat]) => ({
+        seat: Number(key), handCount: (seat.hand || []).length,
+        assets: (seat.assets || []).map(asset => ({ id: asset.id, code: asset.code, clues: asset.clues || 0 })),
+        resources: seat.resources ?? 0, clues: seat.clues ?? 0,
+      })),
+    }
+  }
+  const cells = scenarioGridCells(state)
+  if (cells.length) {
+    fhv.grid = { adjacency: data?.gridAdjacency || 'orthogonal', cells }
+    const inv = Number.isSafeInteger(observer) ? state.investigators?.[observer] : null
+    if (inv?.location) fhv.grid.emptyAdjacent = observerAdjacentSpaces(state, observer)
+  }
+  const rail = data?.rail
+  if (rail) {
+    const vehicle = scenarioVehicles(state).find(item => item.id === rail.vehicle) || null
+    fhv.rail = {
+      vehicle: rail.vehicle, location: vehicle?.location ?? null, facing: rail.facing, derailed: rail.derailed === true,
+      markers: { switch: markerCountOf(state, 'switch'), scrap: markerCountOf(state, 'scrap') },
+    }
+  }
+  if (state.tokenBags && Object.keys(state.tokenBags).length) {
+    // 只投影剩余张数；`revealed` 由合法抽取事件公开，观察投影不复制袋内标记面。
+    fhv.tokenBags = Object.entries(state.tokenBags).map(([id, bag]) => ({ id, count: bag.tokens.length }))
+  }
+  const enemyLocations = (state.locations || []).filter(location => location.enemyLocationFace)
+  if (enemyLocations.length) {
+    fhv.enemyLocations = enemyLocations.map(location => {
+      const enemy = (state.enemies || []).find(item => item.id === location.id)
+      return {
+        id: location.id, name: location.name, shroud: location.shroud,
+        fight: enemy?.fight ?? null, evade: enemy?.evade ?? null,
+        health: enemy?.health ?? null, damage: enemy?.damage ?? null, horror: enemy?.horror ?? null,
+        clues: location.clues || 0, doom: location.doom || 0, exhausted: enemy?.exhausted === true,
+      }
+    })
+  }
+  const forms = (state.investigators || []).filter(inv => inv.form)
+  if (forms.length) {
+    fhv.forms = forms.map(inv => ({
+      seat: inv.seat, code: inv.cardCode || inv.code, form: inv.form,
+      healingProhibited: inv.formHealingProhibited === true,
+    }))
+  }
+  const inv = Number.isSafeInteger(observer) ? state.investigators?.[observer] : null
+  if (inv) {
+    const assets = (inv.assets || []).map(asset => ({
+      id: asset.id, code: asset.code, clues: asset.clues || 0, traits: [...(asset.traits || [])],
+    }))
+    if (assets.length) fhv.clueAssets = assets
+  }
+  return Object.keys(fhv).length ? fhv : null
+}
+
+// P8（大厅定制升级卡）：构筑期/关间的**本人**定制勾选面板投影的可见时机。
 const CUSTOMIZATION_HUB_STATES = Object.freeze(['scenarioSetup', 'interlude', 'campaignHub'])
 
 function customizationHubView(state, observer) {
@@ -129,6 +244,7 @@ function customizationHubView(state, observer) {
     const checked = checkedTable[code] || []
     const counts = new Map()
     for (const index of checked) counts.set(index, (counts.get(index) || 0) + 1)
+    const xpPerCheck = cardDef(code)?.exceptional === true ? 2 : 1
     return [{
       code,
       name: cardName(code),
@@ -136,9 +252,10 @@ function customizationHubView(state, observer) {
       level: customizationLevel(checked),
       options: optionList.map((option, index) => ({
         index, name: option.name, checks: option.checks, checkedCount: counts.get(index) || 0,
+        implemented: option.implemented !== false,
       })),
-      xpPerCheck: cardDef(code)?.exceptional === true ? 2 : 1,
-      canUpgrade: state.uiState === 'interlude' && availableXp >= 1,
+      xpPerCheck,
+      canUpgrade: state.uiState === 'interlude' && availableXp >= xpPerCheck,
     }]
   })
   return entries.length ? { availableXp, entries } : null
@@ -275,7 +392,8 @@ export function mechanicView(state, observer = null) {
   const data = mechanicState(state)
   const eote = eoteView(state, data, observer)
   const tsk = tskView(state, observer)
-  if (!data && !state.skillTest?.tokenResults?.length && !eote && !tsk) return null
+  const fhv = fhvView(state, observer)
+  if (!data && !state.skillTest?.tokenResults?.length && !eote && !tsk && !fhv) return null
   const revealed = state.skillTest && (state.skillTest.helpRequested || state.skillTest.seat === observer)
     ? (state.chaos?.revealed || []).flatMap((face, index) => {
       if (index < (state.chaos?.frames?.at(-1) || 0)) return []
@@ -318,6 +436,7 @@ export function mechanicView(state, observer = null) {
   if (revealed?.length) view.tokens = revealed.map(({ index, face, as, modifier, cancelled }) => ({ index, face, as, modifier, cancelled: !!cancelled }))
   if (eote) view.eote = eote
   if (tsk) view.tsk = tsk
+  if (fhv) view.fhv = fhv
   return Object.keys(view).length ? view : null
 }
 
@@ -352,6 +471,8 @@ export function maskMechanicSnapshot(model, observer) {
     }
     if (!Object.keys(copy.tsk).length) delete copy.tsk
   }
+  // FHV：投影字段全部是桌面公开读数（法典只用 id/可读/已读、猎杀袋只用张数、
+  // 勘察整备只用手牌张数与保留支援），动画快照无需二次掩码。
   return copy
 }
 

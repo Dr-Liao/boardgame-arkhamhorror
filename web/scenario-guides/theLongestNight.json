@@ -1,0 +1,767 @@
+{
+  "id": "theLongestNight",
+  "campaignId": "theFeastOfHemlockVale",
+  "sourceKind": "reference-en-locale + local zh supplement",
+  "officialChinese": false,
+  "chineseStatus": "generated",
+  "chineseGaps": [],
+  "sectionCount": 98,
+  "guideKeyCount": 9,
+  "sources": [
+    {
+      "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/base.json",
+      "sha256": "6fb4afb11123b42d75044687d1066bd3fcbc1f50602ae28d0f9b17d50e6593f1",
+      "chinesePaths": [
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/base.part1.json",
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/base.part2.json",
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/base.part3.json",
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/base.part4.json",
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/base.part5.json"
+      ]
+    },
+    {
+      "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/fateOfTheVale.json",
+      "sha256": "49f2645e5704b401523e4d302cc289457e9cab55864339ba2b04b5464533be8a",
+      "chinesePaths": [
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/fateOfTheVale.json"
+      ]
+    },
+    {
+      "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/hemlockHouse.json",
+      "sha256": "230f5a9723a0c8ea77c4a0a50c79c9b5a438cfbe49de9e1cdf30aeed721a8337",
+      "chinesePaths": [
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/hemlockHouse.json"
+      ]
+    },
+    {
+      "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/theLongestNight.json",
+      "sha256": "eb966daf341b12dd044d0ab5d66fc4ecf7c7cecd57bff426e08ff2edbb8651e3",
+      "chinesePaths": [
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/theLongestNight.json"
+      ]
+    },
+    {
+      "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/theLostSister.json",
+      "sha256": "9cd54f3bd58af2c16e3671888e4e3f182781ebc97f506324f2d2d1e057b49b08",
+      "chinesePaths": [
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/theLostSister.json"
+      ]
+    },
+    {
+      "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/theSilentHeath.json",
+      "sha256": "dd54052fb47347610a2c306a51340b44e60923145176b1797c3baed7445d748d",
+      "chinesePaths": [
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/theSilentHeath.json"
+      ]
+    },
+    {
+      "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/theThingInTheDepths.json",
+      "sha256": "7e3082d6f92bfb2e7dabafa0ca215eb9fe1b99c14e7453f89848a85a66e2f629",
+      "chinesePaths": [
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/theThingInTheDepths.json"
+      ]
+    },
+    {
+      "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/theTwistedHollow.json",
+      "sha256": "5686d37e8fb12f686c7f506e5cae9f56f2aeb613aade22c39111b748123b43eb",
+      "chinesePaths": [
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/theTwistedHollow.json"
+      ]
+    },
+    {
+      "path": "参考资源/ArkhamHorror-main/frontend/src/locales/en/theFeastOfHemlockVale/writtenInRock.json",
+      "sha256": "3afd0cccd87e419b398893f8b59c8a45d7c98a988033416fcdb7d645b43745dd",
+      "chinesePaths": [
+        "games/arkhamhorror/content/campaigns/theFeastOfHemlockVale/story-source/writtenInRock.json"
+      ]
+    }
+  ],
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "title": "关卡：最长一夜",
+          "children": [
+            {
+              "text": "开场 1：你接近阿特伍德农场时，云层退去，露出一个血红色的落日，将这片景致笼罩在朦胧的阴影中。你跟随马奎兹博士，经过无人打理的鸡笼与谷仓，来到那座废弃农舍的后门廊。教授把一根撬棍塞进封着木板的窗下，这时你注意到她后袋里的左轮手枪。“只是点保险罢了，”她说。\n\n花了些时间，窗户上的木板才被撬开。你跟在教授身后爬进去，腐烂与疾病的气味刺痛了你的感官。等眼睛适应了昏暗，你看到一幅骇人的景象。肮脏的帆布床沿墙排列，地板上拖着一道道污秽。十几个病弱的人，有的躺在床上，有的靠着墙瘫坐着。他们的皮肤结节发硬，布满了尖锐的骨刺与筋腱状的增生物。其中几人身上垂着松垮的肉片，你很快意识到那是退化的肢体。另一些人用呆滞的眼睛望着你，还有几个皮肤灰白、呈粉末状的人一动不动地躺着，盯着天花板。\n\n“你们不该来这儿，”一个声音说。一个身披破旧山谷斗篷的秃顶男人步履蹒跚地朝你走来。马奎兹博士在昏暗中眯起眼睛。“泰德？杂货店的泰德？”他还没回答，你就听见前门廊传来人声。你和马奎兹博士冲到一个破家具堆后面，前门就在此时咔哒一响，荡了开来。蕾切尔嬷嬷带着六个披斗篷的身影和另外几个病恹恹的本地人走了进来。女家长满面笑容地对房间里的人讲话。“我的星之子们。你们的时刻终于到了。你们将预备道路。”她俯身握住一名坐在轮椅上的女人的手。“你们所有人都已变得完整。现在，你们将与自己的其他自我在永恒中相聚。”\n\n调查员们必须做出决定（选择一项）：\n\n• 直面蕾切尔嬷嬷。 前往 开场 2。\n\n• 继续躲藏。 跳到 开场 3。"
+            },
+            {
+              "text": "直面蕾切尔嬷嬷。"
+            },
+            {
+              "text": "继续躲藏。"
+            },
+            {
+              "text": "开场 2：你和马奎兹博士从藏身处走了出来。“这太野蛮了。这些人该待在医院里！”教授冲女家长吼道。\n\n• 在本战役余下的时间里，将 1 枚 [tablet] 标记加入混乱袋。\n\n跳到 开场 4。"
+            },
+            {
+              "text": "开场 3：你在静默中等待，一阵恶臭的微风搅动着沉重的空气。泰德大摇大摆地走上前，对蕾切尔嬷嬷说话。“证人在这儿，”他朝你们的藏身之处比了比。片刻之后，你和教授就被粗暴地拖到了空地上。\n\n• 在本战役余下的时间里，将 1 枚 [skull] 标记加入混乱袋。\n\n前往 开场 4。"
+            },
+            {
+              "text": "开场 4：蕾切尔嬷嬷慈祥地微笑着。“我的孩子们。有些事物，若不是到了该看见的时候，我们便不该看见。不过我想，见证我们的升举，正是你们的位置所在。”她张开双臂，摆出狂喜的姿态。“我们每个人都接受自己在造物中的位置。我们已被重塑，超越了传统医学所关心的范畴。我明白，在外人看来这也许愚蠢，甚至残忍，但我们每一个人都是自愿来到这里的。包括你。”房间里的人纷纷点头附和。\n\n“你们被骗了！你们看不出来吗？”马奎兹博士愤怒地说。“这些人快要死了！”你环视房间，希望能得到一些支持。"
+            },
+            {
+              "text": "查看你的战役日志，逐一确认有哪些居民与你共舞。"
+            },
+            {
+              "text": "如果有 2 位或更多居民与你共舞，前往 开场 5。"
+            },
+            {
+              "text": "如果恰好有 1 位居民与你共舞，跳到 开场 6。"
+            },
+            {
+              "text": "否则，跳到 开场 7。"
+            },
+            {
+              "text": "开场 5：几个戴兜帽的身影拉下兜帽，站到你身后：他们正是几小时前与你共舞的朋友。蕾切尔嬷嬷逐一打量着你们。“那就这样吧。我们是麦子，你们是糠秕。”\n\n• 在本战役余下的时间里，将 1 枚 [cultist] 标记加入混乱袋。\n\n跳到 开场 8。"
+            },
+            {
+              "text": "开场 6：一个身影从蕾切尔嬷嬷身后走出，来到你身边。那正是几小时前与你共舞的朋友。蕾切尔嬷嬷苦涩地看着他们。“那就这样吧。我们是麦子，你们是糠秕。”\n\n• 在本战役余下的时间里，将 1 枚 [cultist] 标记和 1 枚 [elder_thing] 标记加入混乱袋。\n\n跳到 开场 8。"
+            },
+            {
+              "text": "开场 7：马奎兹博士的恳求悬在空中，无人回应。病俘们与戴兜帽的身影都保持沉默，蕾切尔嬷嬷带着疲惫而忧伤的微笑看着你。“哦，我的孩子们。山谷里的人都是一家人。我们每个人都知道自己的位置。你也许迟早会明白你的位置。”\n\n• 在你的战役日志中记录 调查员们独自面对最长一夜。\n\n• 在本战役余下的时间里，将 1 枚 [elder_thing] 标记加入混乱袋。\n\n前往 开场 8。"
+            },
+            {
+              "text": "开场 8：蕾切尔嬷嬷对房间讲话时，眼中泪光朦胧。“你们的牺牲不会白费。今晚，你们每个人都将履行自己在造物中的位置，明天与我们一同参加伟大的升举。”女家长对你说话时，脸上挂着疲惫而忧伤的微笑。“这不是你们该做的牺牲。请回山谷去吧。”马奎兹博士阴沉地瞪着她。蕾切尔嬷嬷眼中蓄满泪水，带着她的队伍离开了。\n\n“‘履行自己在造物中的位置’是什么意思？”马奎兹博士一边搓着前臂上的鳞状增生物，一边问泰德。秃顶男人笑了。“明天，血月将宣告我们的升举。但今晚，在这一年中最短的夜晚，森林与田野里的所有生灵都会帮我们完成旅程。”\n\n“抱歉，可这并没有回答我的问题，”教授答道。\n\n泰德咧嘴一笑。“我们都会被吃掉。做出这份牺牲，就是我们的位置。”他望向地平线时，此起彼伏的凄厉嚎叫在田野间回荡。\n\n教授惊恐地看着泰德。“休想，”她说。你跟着她走到屋外。远处的山丘上映出一个个黑色的轮廓。教授短暂地陷入沉思，然后猛地吸了口气。“我怀疑他们中没有一个人神志清醒。但也许，只要我们坚持得足够久，就能让他们得到妥善的照顾与关注。”你越过农舍望向起伏的田野。你没时间在日落前疏散病俘。更何况，你也无法保证他们会跟你走。但你必须试一试。\n\n你和教授一起在坍塌的农场里搜寻可用零件。你们找到碎木料、带刺铁丝和旧的捕猎装备，用来加固阵地。只要你们能熬过这一夜，也许就能救下一些病俘。太阳落山时，一阵可怖的吠叫划破了静止的空气。一年中最短的一夜，或许将变成最漫长的一夜。\n\n前往 设置。"
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "text": "收集下列遭遇组中的所有卡牌：第二日、最长一夜、枯疫、变形、着火了！、刺骨严寒、午夜假面和恐惧打击。"
+        },
+        {
+          "text": "收集午夜假面遭遇组时，只收集诡计卡牌。不要收集该遭遇组中的地点、幕、议程或敌人。"
+        },
+        {
+          "text": "将 第二夜 时间标记卡放入游戏。别灰心。"
+        },
+        {
+          "text": "随机将 1 个外围农田地点移出游戏。"
+        },
+        {
+          "text": "按照第 48 页的地点摆放示意图（参见第 3 页的地点相邻），将每个其余地点放置入场。"
+        },
+        {
+          "text": "按照地点摆放示意图，将每个其余地点放置入场。"
+        },
+        {
+          "text": "将病俘剧情支援放置入场，置于农庄。"
+        },
+        {
+          "text": "每位调查员从自己选择的地点开始游戏。"
+        },
+        {
+          "text": "要构建敌人牌库，收集最长一夜遭遇组中的 15 张红背敌人卡牌（见“敌人牌库”）。"
+        },
+        {
+          "text": "收集最长一夜遭遇组中的 15 张红背敌人卡牌。"
+        },
+        {
+          "text": "将乌尔辛混种（类熊混种）敌人放置入场，置于西面的外围农田地点。"
+        },
+        {
+          "text": "将剩余的敌人卡牌洗混，组成敌人牌库。将其放在议程牌库旁。"
+        },
+        {
+          "text": "查看战役日志。如果记录了那头熊受了伤，对乌尔辛混种敌人造成 2 点 [per_investigator] 伤害并横置它。"
+        },
+        {
+          "text": "准备好防御工事！无论起始位置如何，调查员们作为一个团队，选择总共放置 1 个诱饵、1 个陷阱和 1 个屏障，并在任意数量的地点之间按自己的意愿分配。（见右侧的屏障、诱饵和陷阱。）"
+        },
+        {
+          "text": "总共放置 1 个诱饵、1 个陷阱和 1 个屏障，并在任意数量的地点之间按自己的意愿分配。"
+        },
+        {
+          "text": "将“屏障、诱饵和陷阱”标记参考卡放在剧本参考卡旁。"
+        },
+        {
+          "text": "查看你的战役日志。"
+        },
+        {
+          "text": "如果调查员们独自面对最长一夜，每位调查员获得 3 条线索（从标记池中）。"
+        },
+        {
+          "text": "否则，每位调查员获得 2 条线索（从标记池中）。"
+        },
+        {
+          "text": "查看你的战役日志，并收集居民遭遇组中的每张剧情支援。该"
+        },
+        {
+          "text": "将罗莎·马奎兹博士放置入场，由一名调查员控制。在本关卡中，她不占用盟友槽位。"
+        },
+        {
+          "text": "将每位与你共舞的居民放置入场，由一名调查员控制，尽可能平均分配。"
+        },
+        {
+          "text": "如果海伦与你共舞，从每位调查员的牌库中搜寻海伦·彼得斯剧情支援，并将其放置入场，由一名调查员控制。在本关卡中，她不占用盟友槽位。"
+        },
+        {
+          "text": "将居民遭遇组中其余的卡牌移出游戏。"
+        },
+        {
+          "text": "将全部 5 张“着火了！”诡计与埃阿斯剧情支援放置一旁，置于游戏外。"
+        }
+      ],
+      "specialRules": [
+        {
+          "title": "屏障",
+          "children": [
+            {
+              "text": "屏障\n\n某些卡牌能力允许调查员在农场周围竖起屏障。屏障会阻挡敌人移动。\n\n• 要竖起一个屏障，在你的地点与一个相连地点之间放置 1 枚资源标记（从标记池中），作为屏障。如果卡牌效果指示你在你所在地点“放置”一个屏障，选择一个相邻地点，并将该屏障放置在你的地点与所选地点之间。就卡牌效果而言，该屏障被视为同时“位于”这两处地点。\n\n• 地点之间的屏障数量没有上限。\n\n• 当敌人通过关键词（即猎人、巡逻）移动，且其地点与它要移动到的地点之间有一个或多个屏障时，移除其中 1 个屏障，然后改为取消该次移动的效果。\n\n• 忽略屏障的敌人不会结算上述任何效果（包括移除屏障）。"
+            }
+          ]
+        },
+        {
+          "title": "诱饵",
+          "children": [
+            {
+              "text": "诱饵\n\n某些卡牌能力会在农场周围设置诱饵，以拖住敌人。\n\n• 要设置一个诱饵，在你所在地点上放置 1 枚恐惧标记（从标记池中），作为诱饵。每处地点限 1 个诱饵。\n\n• 当敌人进入带有诱饵的地点时，移除该诱饵，对该敌人造成 1 点伤害，使其与所有调查员解除交战，并横置它。在本轮余下的时间里，该敌人不能重整。\n\n• 忽略诱饵的敌人不会结算上述任何效果（包括移除诱饵）。"
+            }
+          ]
+        },
+        {
+          "title": "敌人牌库",
+          "children": [
+            {
+              "text": "敌人牌库\n\n在本关卡设置期间，会构建第二副牌库，其遭遇牌背与遭遇牌库不同：即敌人牌库。这副牌库是仅由敌人组成的独立牌库，代表着为病俘而来、势不可挡的狂乱兽群。在神话阶段，议程的强制效果会促使每位调查员抽取敌人牌库顶的卡牌。敌人牌库有自己独立的弃牌堆，且不受玩家卡牌效果影响。本关卡中的非弱点敌人会被弃置到敌人弃牌堆。如果敌人牌库为空，将敌人弃牌堆洗回敌人牌库。"
+            }
+          ]
+        },
+        {
+          "title": "屏障",
+          "children": [
+            {
+              "text": "某些卡牌能力允许调查员在农场周围竖起屏障。屏障会阻挡敌人移动。\n\n• 要竖起一个屏障，在你的地点与一个相连地点之间放置 1 枚资源标记（从标记池中），作为屏障。如果卡牌效果指示你在你所在地点“放置”一个屏障，选择一个相邻地点，并将该屏障放置在你的地点与所选地点之间。就卡牌效果而言，该屏障被视为同时“位于”这两处地点。\n\n• 地点之间的屏障数量没有上限。\n\n• 当敌人通过关键词（即猎人、巡逻）移动，且其地点与它要移动到的地点之间有一个或多个屏障时，移除其中 1 个屏障，然后改为取消该次移动的效果。\n\n• 忽略屏障的敌人不会结算上述任何效果（包括移除屏障）。"
+            }
+          ]
+        },
+        {
+          "title": "诱饵",
+          "children": [
+            {
+              "text": "某些卡牌能力会在农场周围设置诱饵，以拖住敌人。\n\n• 要设置一个诱饵，在你所在地点上放置 1 枚恐惧标记（从标记池中），作为诱饵。每处地点限 1 个诱饵。\n\n• 当敌人进入带有诱饵的地点时，移除该诱饵，对该敌人造成 1 点伤害，使其与所有调查员解除交战，并横置它。在本轮余下的时间里，该敌人不能重整。\n\n• 忽略诱饵的敌人不会结算上述任何效果（包括移除诱饵）。"
+            }
+          ]
+        },
+        {
+          "title": "陷阱",
+          "children": [
+            {
+              "text": "某些卡牌能力会在农场周围布设陷阱，让敌人落入其中。\n\n• 要布设一个陷阱，在你所在地点上放置 1 枚伤害标记（从标记池中），作为陷阱。每处地点限 1 个陷阱。\n\n• 当敌人进入带有陷阱的地点时，移除该陷阱，并对该敌人造成 2 点伤害。\n\n• 忽略陷阱的敌人不会结算上述任何效果（包括移除陷阱）。"
+            }
+          ]
+        },
+        {
+          "title": "敌人牌库",
+          "children": [
+            {
+              "text": "在本关卡设置期间，会构建第二副牌库，其遭遇牌背与遭遇牌库不同：即敌人牌库。这副牌库是仅由敌人组成的独立牌库，代表着为病俘而来、势不可挡的狂乱兽群。在神话阶段，议程的强制效果会促使每位调查员抽取敌人牌库顶的卡牌。敌人牌库有自己独立的弃牌堆，且不受玩家卡牌效果影响。本关卡中的非弱点敌人会被弃置到敌人弃牌堆。如果敌人牌库为空，将敌人弃牌堆洗回敌人牌库。"
+            }
+          ]
+        },
+        {
+          "title": "陷阱",
+          "children": [
+            {
+              "text": "陷阱\n\n某些卡牌能力会在农场周围布设陷阱，让敌人落入其中。\n\n• 要布设一个陷阱，在你所在地点上放置 1 枚伤害标记（从标记池中），作为陷阱。每处地点限 1 个陷阱。\n\n• 当敌人进入带有陷阱的地点时，移除该陷阱，并对该敌人造成 2 点伤害。\n\n• 忽略陷阱的敌人不会结算上述任何效果（包括移除陷阱）。"
+            }
+          ]
+        }
+      ],
+      "story": [
+        {
+          "title": "[codex] 法典 2：莉亚·阿特伍德",
+          "children": [
+            {
+              "text": "\n\n一个狼形的身影露出锋利闪亮的牙齿，像鬣狗一样笑着向你扑来。莉亚挡在你身前，一铲砸在那东西头上。“你敢！”她冲它吼道。\n\n在莉亚·阿特伍德的笔记中记录莉亚站在了你这边。对距离最近的敌人造成 3 点伤害。"
+            }
+          ]
+        },
+        {
+          "title": "[codex] 法典 3：席米恩·阿特伍德",
+          "children": [
+            {
+              "text": "\n\n“你得把它们引出来，再绊它们一跤！”席米恩咯咯笑着，把一截捆草铁丝绕在坍塌的栅栏上。就在栅栏外，他用啃剩一半的骨头和血污填满一个浅坑。“现在就等着吧，”他低声说。至少可以说，他对于布设致命陷阱那种毫不掩饰的兴致令人不安。\n\n在席米恩·阿特伍德的笔记中记录席米恩站在了你这边。在任意地点放置 1 个诱饵。"
+            }
+          ]
+        },
+        {
+          "title": "[codex] 法典 4：威廉·汉洛克",
+          "children": [
+            {
+              "text": "\n\n“我在地窖里找到了这个。”威廉把一个装满工具和废金属的背包放在地上。“希望这能帮上忙。我得说，我自己可不怎么擅长动手。”你向他道谢，然后在包里翻找可用物资。\n\n在威廉·汉洛克的笔记中记录威廉站在了你这边。每位调查员获得 1 条线索（从标记池中）。"
+            }
+          ]
+        },
+        {
+          "title": "[codex] 法典 5：瑞玟·霍桑",
+          "children": [
+            {
+              "text": "\n\n你在院子对面看见一双发着蓝光的眼睛后，向瑞玟解释了自己的计划。“别担心，亲爱的。我早就习惯所有目光都落在我身上了。算你走运，我从前可是个短跑好手。”瑞玟一边骂着脏话，一边冲过空地，把那东西引开了。\n\n在瑞玟·霍桑的笔记中记录瑞玟站在了你这边。选择一个非精英敌人。将该敌人移动到任意地点。"
+            }
+          ]
+        },
+        {
+          "title": "[codex] 法典 6：基甸·米兹拉克",
+          "children": [
+            {
+              "text": "\n\n“眼睛放亮点，找扇结实的门或者一把好锁，”基甸吩咐道。“要是你们够仔细，我也许能给它设个陷阱。这让我想起当年在新几内亚的丛林里差点送命的事。有个什么东西一直跟着我，从……”你很快就跟不上这老人的故事了。\n\n在基甸·米兹拉克的笔记中记录基甸站在了你这边。下次有调查员将从敌人牌库抽取卡牌时，改为弃掉该卡牌。"
+            }
+          ]
+        },
+        {
+          "title": "[codex] 法典 7：朱迪斯·帕克",
+          "children": [
+            {
+              "text": "\n\n“他们总算把猎物送到我们跟前了。我早就厌倦了为了找点刺激在岛上到处跋涉，”她把步枪指向一个内壁铺满尖锐废金属的坑。“依我说，我们就等它们到这儿来，然后给它们下一场地狱之雨。”\n\n在朱迪斯·帕克的笔记中记录朱迪斯站在了你这边。在任意地点放置 1 个陷阱。"
+            }
+          ]
+        },
+        {
+          "title": "[codex] 法典 8：希奥·彼得斯",
+          "children": [
+            {
+              "text": "\n\n希奥的蓝色卡车沿着道路朝你疾驰而来，一群龇牙低吼、饥肠辘辘的东西紧追不舍。“上车！”希奥一边刹车一边喊道。他猛踩油门时，你跳进了车斗。\n\n在希奥·彼得斯的笔记中记录希奥站在了你这边。你可以将你所在地点的 1 个屏障、诱饵或陷阱移动到任意地点。与所有与你交战的敌人解除交战，并移动到该地点。"
+            }
+          ]
+        },
+        {
+          "title": "[codex] 法典 Θ：罗莎·马奎兹博士",
+          "children": [
+            {
+              "text": "\n\n“这简直就是坎蒂尼战役重演，”马奎兹博士一边说着，一边拖来几个沉重的板条箱，筑成一道屏障。她向你讲述了更多往事：她在世界大战中的第一场也是最后一场战役，以及她搭档的死。“我们不能死。不能这样死，”她说。“我们只要坚持到黎明就行。”\n\n在你所在地点放置 2 个屏障。"
+            }
+          ]
+        },
+        {
+          "title": "[codex] 法典 Ω：埃阿斯",
+          "children": [
+            {
+              "text": "\n\n谷仓里传出一声驴鸣般的嘶叫，让你神经紧绷。你试探着走向谷仓，以为会看到又一个怪物，却发现一匹帕洛米诺马站在一间肮脏的隔栏里。它旁边的标牌上刻着“埃阿斯”这个名字。这头高贵的牲口甩了甩头，不耐烦地打了个响鼻。\n\n控制埃阿斯剧情支援。在本关卡余下的时间里，它不占用盟友槽位。"
+            }
+          ]
+        }
+      ],
+      "resolutions": [
+        {
+          "title": "调查员败北",
+          "children": [
+            {
+              "text": "调查员败北：在噩梦般的形体将你吞没之前，你记得的最后一件事是一种强烈的平静。银色的月光将农场浸染成冷峻的单色，那些生物撕开你的血肉。有那么一瞬间，你看见了自己在这个世界上的位置，正如蕾切尔嬷嬷所愿。你不过是能量，正被转化为另一种形式的能量。\n\n再没有别的事物显得如此完美。\n\n• 每位被击败的调查员都被吞噬（他们被击杀）。\n\n• 如果没有幸存的调查员继续战役，调查员们输掉本战役。\n\n• 如果已达成另一个结局，其余调查员前往该结局。\n\n• 如果未达成任何结局（每位幸存的调查员都撤退）：跳到 结局 3。"
+            }
+          ]
+        },
+        {
+          "title": "结局 1",
+          "children": [
+            {
+              "text": "结局 1：“请听我说，”马奎兹博士恳求病俘们。“你们每个人都值得过完整的一生。我们可以帮忙！你们可以到大陆接受治疗。”泰德啐了一口作为回应。“你夺走了我们的一项莫大特权。我们是被选中的。”马奎兹博士几乎来不及回答，一块参差的木板便从她身后抡出，砸在她肩上。一名病俘把木板举过头顶，另外几个人围了上来。泰德恶狠狠地盯着教授，低吼道：“现在就走。”马奎兹博士小心翼翼地站起身，走出农舍。你跟着她。“一群白痴。我们救了他们的命，”她嗤笑道。你们离开时，一个戴着兔子面具的年轻女孩从一些瓦砾下探出头来。你认出她是蕾切尔嬷嬷的女儿，丽贝卡。"
+            },
+            {
+              "text": "如果病俘剧情支援上的伤害量为 0，每位调查员获得 5 点奖励经验。"
+            },
+            {
+              "text": "如果病俘剧情支援上的伤害量为 1 或 2，每位调查员获得 4 点奖励经验。"
+            },
+            {
+              "text": "如果病俘剧情支援上的伤害量为 3 或 4，每位调查员获得 3 点奖励经验。"
+            },
+            {
+              "text": "在你的战役日志中记录俘虏们获救。"
+            },
+            {
+              "text": "跳到 结局 4。"
+            }
+          ]
+        },
+        {
+          "title": "结局 2",
+          "children": [
+            {
+              "text": "结局 2：泰德站在农舍中央，他那件白金色的山谷斗篷已被染成深红。在他周围，遇害病俘被啃食过半的尸体摆成一个圆圈。你走近时，这个中年男人苦涩地笑了起来。“为什么我活了下来，而那么多人却被带走了？”他双手捂住脸，歇斯底里地大笑。“为什么一切都这么亮？！”他咯咯笑着，抓挠着自己的眼睛。你转过身，走到屋外加入马奎兹博士，她正弓着身子对着一堆残骸。一个戴着兔子面具的年轻女孩从瓦砾底下爬了出来。你认出她是蕾切尔嬷嬷的女儿，丽贝卡。"
+            },
+            {
+              "text": "如果病俘剧情支援上的伤害量为 5 或 6，每位调查员获得 3 点奖励经验。"
+            },
+            {
+              "text": "如果病俘剧情支援上的伤害量为 7 或 8，每位调查员获得 2 点奖励经验。"
+            },
+            {
+              "text": "如果病俘剧情支援上的伤害量为 9，每位调查员获得 1 点奖励经验。"
+            },
+            {
+              "text": "在你的战役日志中记录许多俘虏丧命。"
+            },
+            {
+              "text": "跳到 结局 4。"
+            }
+          ]
+        },
+        {
+          "title": "结局 3",
+          "children": [
+            {
+              "text": "结局 3：“我们不能留在这儿！”马奎兹博士喊道。你彻底被压垮，冲出混战，跑进玉米地。噩梦般的影子从你身旁冲过，发出嘶鸣与嚎叫。你想到农舍里的病俘，他们正迎面直视自己的死亡。在田野的远端，你找到马奎兹博士，她正抱着一个戴着兔子面具的年轻女孩。你认出她是蕾切尔嬷嬷的女儿，丽贝卡。\n\n• 未能帮助那些需要帮助之人的愧疚将永远纠缠着你。每位调查员必须从收藏中搜寻 1 张随机基础疯狂弱点，并将其加入自己的牌组。\n\n• 在你的战役日志中记录所有俘虏都丧命了。\n\n• 前往 结局 4。"
+            }
+          ]
+        },
+        {
+          "title": "结局 4",
+          "children": [
+            {
+              "text": "结局 4：清晨的阳光灼热地照下来，亮得刺眼，你们穿过田野返回山谷。你拨开枝叶前行时，干枯的茎秆上滴下点点黏稠的黑色液体。马奎兹博士停下脚步，把手伸到脆硬的叶片下。“田野里涂满了血。可为什么？”她用手帕擦掉血，打量着这片滴血的田野。“什么样的怪物会做这种事？判处她的追随者——她自己的女儿——死刑。这简直像是圣经里的情节。”\n\n丽贝卡掀开面具，摇了摇头。“妈妈说这是我们的方式。而且她不想让我死。她让我躲起来。她说我们在玩一个游戏。‘把自己缩得很小很小，躲在煤油桶旁边。动物们在那儿闻不到你。’”\n\n“可为什么要把你带到这儿来？”教授问。\n\n“有些人不想来谷仓。可当妈妈告诉他们我也会在那儿时，他们就说没关系了。”\n\n一行人沉默下来，你们穿过一片田野，山谷重新映入眼帘，在灿烂的晨曦下笼着一层金色。突然，马奎兹博士停下脚步，把你拉到一旁。“我们也许能拿这件事当筹码。丽贝卡就是蕾切尔嬷嬷伪善的活生生证据，这话听着虽然可怕。今晚铁杉岛上的所有人都会参加盛宴。如果我们让丽贝卡告诉他们蕾切尔嬷嬷对她说了什么，也许至少能说服一部分人离开。要是这招不灵，我们就赶紧撤回大陆，让法律介入。”\n\n教授转向丽贝卡。“我们能玩个游戏吗？就像昨晚那样？你妈妈告诉我，她想让你躲到盛宴开始。”小女孩点了点头。马奎兹博士发出一声狂乱的笑：这在她一贯克制的性情中显得异常反常。尽管你刚刚目睹了那些恐怖，也忍不住憋住了一个笑容。\n\n• 如果本关卡结束时埃阿斯剧情支援处于某位调查员的控制下，选择一名调查员，将其加入该调查员的牌组，持续本战役余下的时间。它不计入其牌组张数。\n\n• 选择一名调查员，将罗莎·马奎兹博士剧情支援加入其牌组，持续本战役余下的时间。它不计入其牌组张数。\n\n• 每位调查员获得等同于胜利区中每张卡牌胜利 X 数值的经验（（按上述说明计算））。每位调查员现在可以花费战役日志中“未花费经验”下记录的经验。\n\n• 更新你的战役日志：记录马奎兹博士有了计划。在“已勘察区域”部分，勾选南面农田。\n\n• 前往 序曲：最后一个黎明。"
+            }
+          ]
+        },
+        {
+          "text": "奖励经验"
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "title": "Scenario: The Longest Night",
+          "children": [
+            {
+              "text": "Intro 1: As you approach Atwood Farm, the clouds recede to reveal a blood-red sunset that casts the landscape in hazy shadows. You follow Dr. Marquez past a neglected coop and barn to the back porch of the derelict farmhouse. As the professor jams a crowbar under a boarded window, you notice the revolver in her back pocket. \"Just some insurance,\" she says.\n\nIt takes some time to pry the boards off the windows. As you climb in after the professor, your senses sting with the scent of rot and sick. Once your eyes adjust to the murk, you see a harrowing scene. Dirty cots line the walls, and the floor is streaked with refuse. A dozen sickly people lay on cots and sit, slumped against the walls. Their skin is knotted and hard, riddled with sharp spurs and sinewy growths. Several of them have limp flaps of loose flesh that you soon realize are vestigial limbs. Others look up at you with glassy eyes, while others with gray, powdery skin lay, inert, staring up at the ceiling.\n\n\"You shouldn't be here,\" says a voice. A balding man in a tattered Vale cloak steps toward you with a halting gait. Dr. Marquez squints in the dim. \"Tad? From the general store?\" Before he can answer, you hear voices from the front porch. You and Dr. Marquez dash behind a pile of broken furniture just as the front door clicks and swings open. Mother Rachel enters alongside a half dozen cloaked figures and several more sickly locals. The matron addresses the room, beaming. \"My Star Children. Your time has come at last. You will prepare the way.\" She leans down and holds a wheelchair-bound woman's hand. \"All of you have been made whole. And now you will join your other selves in eternity.\"\n\nThe investigators must decide (choose one):\n\n• Confront Mother Rachel. Proceed to Intro 2.\n\n• Keep hidden. Skip to Intro 3."
+            },
+            {
+              "text": "Confront Mother Rachel."
+            },
+            {
+              "text": "Keep hidden."
+            },
+            {
+              "text": "Intro 2: You step out from your hiding place with Dr. Marquez. \"This is barbaric. These people belong in a hospital!\" The professor snarls at the matron.\n\n• Add 1 [tablet] token to the chaos bag for the remainder of the campaign.\n\nSkip to Intro 4."
+            },
+            {
+              "text": "Intro 3: You wait in silence as a fetid breeze stirs the heavy air. Tad saunters forward to address Mother Rachel. \"The witnesses are here,\" he gestures to your hiding place. In moments, you and the professor are dragged roughly out into the open.\n\n• Add 1 [skull] token to the chaos bag for the remainder of the campaign.\n\nProceed to Intro 4."
+            },
+            {
+              "text": "Intro 4: Mother Rachel smiles benevolently. \"My children. There are some things we are not meant to see until it is our time to see them. But then, I suppose, it is your place to witness our ascension.\" She holds her arms out in an exultant pose. \"Each of us accepts our place in creation. We have been remade beyond the concerns of conventional medicine. I understand it may seem foolish, even cruel, to an outsider, but each of us is here of our own volition. Even you.\" The room nods along in agreement.\n\n\"You're being deceived! Can't you see?\" Dr. Marquez says, furious. \"These people are dying!\" You search the room, hoping for some support."
+            },
+            {
+              "text": "Check your Campaign Log for each resident who shared a dance."
+            },
+            {
+              "text": "If 2 or more residents shared a dance, proceed to Intro 5."
+            },
+            {
+              "text": "If exactly 1 resident shared a dance, skip to Intro 6."
+            },
+            {
+              "text": "Otherwise, skip to Intro 7."
+            },
+            {
+              "text": "Intro 5: Several hooded figures pull back their hoods and stand behind you: they are the friends you danced with just hours ago. Mother Rachel regards you each in turn. \"So be it, then. We are the wheat; you the chaff.\"\n\n• Add 1 [cultist] token to the chaos bag for the remainder of the campaign.\n\nSkip to Intro 8."
+            },
+            {
+              "text": "Intro 6: A single figure steps out from behind Mother Rachel and comes to your side. It is the friend you danced with just hours ago. Mother Rachel regards them bitterly. \"So be it, then. We are the wheat, and you the chaff.\"\n\n• Add 1 [cultist] token and 1 [elder_thing] token to the chaos bag for the remainder of the campaign.\n\nSkip to Intro 8."
+            },
+            {
+              "text": "Intro 7: Dr. Marquez's plea hangs in the air, unanswered. The captives and the hooded figures remain silent as Mother Rachel regards you with a careworn smile. \"Oh, my children. The people of the Vale are family. We each know our place. You may yet learn yours.\"\n\n• In your Campaign Log, record The investigators faced the longest night alone.\n\n• Add 1 [elder_thing] token to the chaos bag for the remainder of the campaign.\n\nProceed to Intro 8."
+            },
+            {
+              "text": "Intro 8: Mother Rachel's eyes are glassy with tears as she addresses the room. \"Your sacrifice is not in vain. Tonight, you each will fulfill your place in creation and join us tomorrow for the great ascension.\" The matron wears a careworn smile as she addresses you. \"This is not your sacrifice to make. Please, return to the Vale.\" Dr. Marquez glowers in response. Mother Rachel's eyes well with tears as she leaves with her procession.\n\n\"What did she mean by 'fulfill your place in creation'?\" Dr. Marquez asks Tad as he rubs scaly growths from his forearms. The balding man smiles. \"Tomorrow, the blood moon heralds our ascension. But tonight, on the shortest night of the year, all the creatures of the forest and fields will help us complete our journey.\"\n\n\"I'm sorry, but that doesn't answer my question,\" the professor replies.\n\nTad grins. \"We will all be devoured. It is our place to make this sacrifice.\" As he looks to the horizon, a chorus of mournful howls echoes across the fields.\n\nThe professor looks at Tad, horrified. \"Like hell you will,\" she says. You follow her outside. Dark shapes stand outlined on distant hills. The professor is briefly lost in thought, then takes a sharp breath. \"I doubt any of them are in their right mind. But maybe if we hold out long enough, we can get them proper care and attention.\" You look past the farmhouse to the rolling fields. You don't have time to evacuate the captives before sunset. Moreover, you don't have any guarantee they'll follow you. But you have to try.\n\nTogether, you and the professor scavenge the collapsing farm for spare parts. You find scraps of wood, barbed wire, and old trapping equipment to fortify your position. If you can outlast the night, some of the captives might be saved. A hideous baying breaks the still air as the sun sets. The shortest night of the year may yet become the longest.\n\nProceed to Setup."
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "text": "Gather all cards from the following encounter sets: The Second Day, The Longest Night, Blight, Transfiguration, Fire!, Chilling Cold, The Midnight Masks, and Striking Fear."
+        },
+        {
+          "text": "When gathering The Midnight Masks encounter set, only gather the treachery cards. Do not gather the locations, acts, agendas, or enemies from this set."
+        },
+        {
+          "text": "Put the Night Two Time Marker card into play. Don't lose heart."
+        },
+        {
+          "text": "Randomly remove 1 Outer Fields location from the game."
+        },
+        {
+          "text": "Put each remaining location into play as shown in the Location Placement diagram on page 48 (see Location Adjacency on page 3)."
+        },
+        {
+          "text": "Put each remaining location into play as shown in the Location Placement diagram."
+        },
+        {
+          "text": "Put The Captives story asset into play at The Farmhouse."
+        },
+        {
+          "text": "Each investigator begins play at a location of their choice."
+        },
+        {
+          "text": "To build the Enemy deck, gather the 15 red-backed enemy cards in The Longest Night encounter set (see The Enemy Deck)."
+        },
+        {
+          "text": "Gather the 15 red-backed enemy cards in The Longest Night encounter set."
+        },
+        {
+          "text": "Put the Ursine Hybrid enemy into play at the west Outer Fields location."
+        },
+        {
+          "text": "Shuffle the remaining enemy cards to build the Enemy deck. Place it next to the agenda deck."
+        },
+        {
+          "text": "Check the Campaign Log. If the bear was wounded is recorded, deal 2 [per_investigator] damage to the Ursine Hybrid enemy and exhaust it."
+        },
+        {
+          "text": "Prepare your defenses! Regardless of their starting position, investigators choose, as a group, to place a total of 1 decoy, 1 trap, and 1 barrier, divided as they want among any number of locations. (See Barriers, Decoys, and Traps to the right.)"
+        },
+        {
+          "text": "Place a total of 1 decoy, 1 trap, and 1 barrier, divided as they want among any number of locations."
+        },
+        {
+          "text": "Put the \"Barriers, Decoys, and Traps\" Token Reference Card next to the scenario reference card."
+        },
+        {
+          "text": "Check your Campaign Log."
+        },
+        {
+          "text": "If the investigators faced the longest night alone, each investigator gains 3 clues (from the token pool)."
+        },
+        {
+          "text": "Otherwise, each investigator gains 2 clues (from the token pool)."
+        },
+        {
+          "text": "Check your Campaign Log and gather each story asset from the Residents encounter set. This set is indicated by the following icon:"
+        },
+        {
+          "text": "Put Dr. Rosa Marquez into play under the control of an investigator. She does not take up an ally slot during this scenario."
+        },
+        {
+          "text": "Put each resident who shared a dance into play under the control of an investigator, divided as evenly as possible."
+        },
+        {
+          "text": "If Helen shared a dance, search each investigator's deck for the Helen Peters story asset and put it into play under the control of an investigator. She does not take up an ally slot for this scenario."
+        },
+        {
+          "text": "Remove the rest of the Residents encounter set from the game."
+        },
+        {
+          "text": "Set all 5 Fire! treacheries and the Ajax story asset aside, out of play."
+        }
+      ],
+      "specialRules": [
+        {
+          "title": "Barriers",
+          "children": [
+            {
+              "text": "Barriers\n\nSome card abilities allow the investigators to put up barriers around the farm. Barriers block the movement of enemies.\n\n• To put up a barrier, place 1 resource token (from the token pool) between your location and a connecting location, as a barrier. If a card effect instructs you to place a barrier \"at\" your location, choose an adjacent location and place the barrier between your location and the chosen location. This barrier is considered to be \"at\" both locations for the purposes of card effects.\n\n• There is no limit to the number of barriers between locations.\n\n• When an enemy would move via a keyword (i.e. hunter or patrol) and one or more barriers are between its location and the location it is moving to, remove one of those barriers, then cancel the effects of the move instead.\n\n• Enemies that ignore barriers do not resolve any of the above effects (including removing the barrier)."
+            }
+          ]
+        },
+        {
+          "title": "Decoys",
+          "children": [
+            {
+              "text": "Decoys\n\nSome card abilities set up decoys around the farm to stall enemies.\n\n• To set up a decoy, place 1 horror token (from the token pool) on your location, as a decoy. Limit 1 decoy per location.\n\n• When an enemy enters a location with a decoy, remove the decoy, deal 1 damage to that enemy, disengage it from all investigators, and exhaust it. That enemy cannot ready for the remainder of the round.\n\n• Enemies that ignore decoys do not resolve any of the above effects (including removing the decoy)."
+            }
+          ]
+        },
+        {
+          "title": "The Enemy Deck",
+          "children": [
+            {
+              "text": "The Enemy Deck\n\nDuring the setup of this scenario, a second deck with a different encounter back is constructed: the Enemy deck. This deck is a separate deck made up of only enemies, and represents the relentless horde of frenzied beasts coming for the captives. During the mythos phase, the agenda's forced effect prompts each investigator to draw the top card of the Enemy deck. The Enemy deck has its own discard pile and is immune to player card effects. Non-weakness enemies in this scenario are discarded to the Enemy discard pile. If the Enemy deck is empty, shuffle the Enemy discard pile back into the Enemy deck."
+            }
+          ]
+        },
+        {
+          "title": "Barriers",
+          "children": [
+            {
+              "text": "Some card abilities allow the investigators to put up barriers around the farm. Barriers block the movement of enemies.\n\n• To put up a barrier, place 1 resource token (from the token pool) between your location and a connecting location, as a barrier. If a card effect instructs you to place a barrier “at” your location, choose an adjacent location and place the barrier between your location and the chosen location. This barrier is considered to be “at” both locations for the purposes of card effects.\n\n• There is no limit to the number of barriers between locations.\n\n• When an enemy would move via a keyword (i.e. hunter or patrol) and one or more barriers are between its location and the location it is moving to, remove one of those barriers, then cancel the effects of the move instead.\n\n• Enemies that ignore barriers do not resolve any of the above effects (including removing the barrier)."
+            }
+          ]
+        },
+        {
+          "title": "Decoys",
+          "children": [
+            {
+              "text": "Some card abilities set up decoys around the farm to stall enemies.\n\n• To set up a decoy, place 1 horror token (from the token pool) on your location, as a decoy. Limit 1 decoy per location.\n\n• When an enemy enters a location with a decoy, remove the decoy, deal 1 damage to that enemy, disengage it from all investigators, and exhaust it. That enemy cannot ready for the remainder of the round.\n\n• Enemies that ignore decoys do not resolve any of the above effects (including removing the decoy)."
+            }
+          ]
+        },
+        {
+          "title": "Traps",
+          "children": [
+            {
+              "text": "Some card abilities lay traps around the farm for enemies to fall into.\n\n• To lay a trap, place 1 damage token (from the token pool) on your location, as a trap. Limit 1 trap per location.\n\n• When an enemy enters a location with a trap, remove the trap and deal 2 damage to that enemy.\n\n• Enemies that ignore traps do not resolve any of the above effects (including removing the trap)."
+            }
+          ]
+        },
+        {
+          "title": "The Enemy Deck",
+          "children": [
+            {
+              "text": "During the setup of this scenario, a second deck with a different encounter back is constructed: the Enemy deck. This deck is a separate deck made up of only enemies, and represents the relentless horde of frenzied beasts coming for the captives. During the mythos phase, the agenda’s forced effect prompts each investigator to draw the top card of the Enemy deck. The Enemy deck has its own discard pile and is immune to player card effects. Non-weakness enemies in this scenario are discarded to the Enemy discard pile. If the Enemy deck is empty, shuffle the Enemy discard pile back into the Enemy deck."
+            }
+          ]
+        },
+        {
+          "title": "Traps",
+          "children": [
+            {
+              "text": "Traps\n\nSome card abilities lay traps around the farm for enemies to fall into.\n\n• To lay a trap, place 1 damage token (from the token pool) on your location, as a trap. Limit 1 trap per location.\n\n• When an enemy enters a location with a trap, remove the trap and deal 2 damage to that enemy.\n\n• Enemies that ignore traps do not resolve any of the above effects (including removing the trap)."
+            }
+          ]
+        }
+      ],
+      "story": [
+        {
+          "title": "[codex] Codex 2: Leah Atwood",
+          "children": [
+            {
+              "text": "\n\nA lupine figure with sharp, glistening teeth charges you, laughing like a hyena. Leah steps between you and brings her shovel down on the creature's head. \"Don't you dare!\" she yells at it.\n\nIn Leah Atwood's Notes, record Leah stood by you. Deal 3 damage to the nearest enemy."
+            }
+          ]
+        },
+        {
+          "title": "[codex] Codex 3: Simeon Atwood",
+          "children": [
+            {
+              "text": "\n\n\"You gotta lure them out and trip 'em!\" Simeon cackles, looping a thread of baling wire around a collapsed fence. Just beyond it, he fills a shallow pit with half-eaten bones and gore. \"Now we wait,\" he whispers. His obvious delight in placing lethal traps is troubling, to say the least.\n\nIn Simeon Atwood's Notes, record Simeon stood by you. Place 1 decoy at any location."
+            }
+          ]
+        },
+        {
+          "title": "[codex] Codex 4: William Hemlock",
+          "children": [
+            {
+              "text": "\n\n\"I found this stowed in the cellar.\" William sets a knapsack filled with tools and scrap metal on the ground. \"I hope it helps. I must say, I'm not particularly handy myself.\" You thank him before rummaging through the bag for supplies.\n\nIn William Hemlock's Notes, record William stood by you. Each investigator gains 1 clue (from the token pool)."
+            }
+          ]
+        },
+        {
+          "title": "[codex] Codex 5: River Hawthorne",
+          "children": [
+            {
+              "text": "\n\nYou explain your plan to River after spotting a pair of glowing blue eyes across the yard. \"Don't worry, darling. I'm used to having all eyes on me. Thankfully for you, I used to be quite the sprinter.\" River dashes across the clearing shouting expletives as they draw the creature away.\n\nIn River Hawthorne's Notes, record River stood by you. Choose a non-Elite enemy. Move that enemy to any location."
+            }
+          ]
+        },
+        {
+          "title": "[codex] Codex 6: Gideon Mizrah",
+          "children": [
+            {
+              "text": "\n\n\"Keep yer eyes peeled fer a strong door or lock,\" Gideon instructs. \"If ye take enough care, I may be able to trap one. Reminds me of the time I nearly died in the jungles of New Guinea. Summat was following me from…\" You quickly lose track of the old man's story.\n\nIn Gideon Mizrah's Notes, record Gideon stood by you. The next time an investigator would draw a card from the Enemy deck, discard that card instead."
+            }
+          ]
+        },
+        {
+          "title": "[codex] Codex 7: Judith Park",
+          "children": [
+            {
+              "text": "\n\n\"About time they brought the hunt to us. I was getting tired of hiking all over the island just for a little action,\" She points her rifle at a pit lined with sharp scrap metal. \"I say we wait for 'em to get here and rain hell.\"\n\nIn Judith Park's Notes, record Judith stood by you. Place 1 trap at any location."
+            }
+          ]
+        },
+        {
+          "title": "[codex] Codex 8: Theo Peters",
+          "children": [
+            {
+              "text": "\n\nTheo's blue truck barrels down the road toward you with a pack of snarling, ravenous creatures in hot pursuit. \"Get in!\" Theo shouts as he brakes. You hop into the truckbed as he guns the engine.\n\nIn Theo Peters' Notes, record Theo stood by you. You may move 1 barrier, decoy, or trap from your location to any location. Disengage from each enemy engaged with you and move to that location."
+            }
+          ]
+        },
+        {
+          "title": "[codex] Codex Θ: Dr. Rosa Marquez",
+          "children": [
+            {
+              "text": "\n\n\"This is Cantigny all over again,\" Dr. Marquez says as she drags several heavy crates to form a barrier. She tells you more about her first and last battle in the Great War, and the death of her partner. \"We can't die. Not like this,\" she says. \"We just have to hold out until dawn.\"\n\nPlace 2 barriers at your location."
+            }
+          ]
+        },
+        {
+          "title": "[codex] Codex Ω: Ajax",
+          "children": [
+            {
+              "text": "\n\nA braying sound from the barn sets your nerves on edge. You step tentatively toward the barn, expecting to see yet another monstrosity, but instead find a palomino horse standing in a dirty cell. The name Ajax is engraved on a sign next to him. The noble beast lets out an impatient whinny as he tosses his head.\n\nTake control of the Ajax story asset. He does not take up an ally slot for the remainder of this scenario."
+            }
+          ]
+        }
+      ],
+      "resolutions": [
+        {
+          "title": "Investigator Defeat",
+          "children": [
+            {
+              "text": "Investigator Defeat: The last thing you remember before the nightmarish shapes overwhelm you is a feeling of intense calm. The silver moonlight bathes the farm in stark monochrome as the creatures rip into your flesh. For a moment, you see your place in this world, as Mother Rachel intended. You are merely energy being converted to another form of energy.\n\nNothing else seems so perfect.\n\n• Each defeated investigator is devoured (they are killed).\n\n• If there are no surviving investigators to continue the campaign, the investigators lose the campaign.\n\n• If another resolution was reached, the remaining investigators proceed to that resolution.\n\n• If no resolution was reached (each surviving investigator resigned): Skip to Resolution 3."
+            }
+          ]
+        },
+        {
+          "title": "Resolution 1",
+          "children": [
+            {
+              "text": "Resolution 1: \"Please, listen,\" Dr. Marquez implores the captives. \"Each of you deserves to live a full life. We can help! You can receive care on the mainland.\" Tad spits in response. \"You've robbed us of a great privilege. We were chosen.\" Dr. Marquez hardly answers before a jagged plank of wood swings out from behind her, striking her on the shoulder. One of the captives holds it overhead, while several others gather round. Tad looks balefully at the professor and growls, \"Leave now.\" Dr. Marquez rises gingerly and walks out of the farmhouse. You follow her. \"Idiots. We saved their lives,\" she scoffs. As you leave, a young girl wearing a rabbit mask peers out from under some debris. You recognize her as Rebecca, Mother Rachel's daughter."
+            },
+            {
+              "text": "If the amount of damage on The Captives story asset is 0, each investigator earns 5 bonus experience."
+            },
+            {
+              "text": "If the amount of damage on The Captives story asset is 1 or 2, each investigator earns 4 bonus experience."
+            },
+            {
+              "text": "If the amount of damage on The Captives story asset is 3 or 4, each investigator earns 3 bonus experience."
+            },
+            {
+              "text": "In your Campaign Log, record the captives were saved."
+            },
+            {
+              "text": "Skip to Resolution 4."
+            }
+          ]
+        },
+        {
+          "title": "Resolution 2",
+          "children": [
+            {
+              "text": "Resolution 2: Tad stands in the center of the farmhouse, his white-gold Vale cloak stained crimson. Surrounding him, the half-eaten corpses of the slain captives are arranged in a kind of circle. When you approach, the middle-aged man laughs bitterly. \"Why was I spared, and so many others taken?\" He raises both hands to his face and laughs hysterically. \"Why is everything so bright?!\" he giggles, clawing at his own eyes. You turn away and join Dr. Marquez outside, hunched over a pile of wreckage. A young girl wearing a rabbit mask scrambles out from underneath the debris. You recognize her as Rebecca, Mother Rachel's daughter."
+            },
+            {
+              "text": "If the amount of damage on The Captives story asset is 5 or 6, each investigator earns 3 bonus experience."
+            },
+            {
+              "text": "If the amount of damage on The Captives story asset is 7 or 8, each investigator earns 2 bonus experience."
+            },
+            {
+              "text": "If the amount of damage on The Captives story asset is 9, each investigator earns 1 bonus experience."
+            },
+            {
+              "text": "In your Campaign Log, record many captives were lost."
+            },
+            {
+              "text": "Skip to Resolution 4."
+            }
+          ]
+        },
+        {
+          "title": "Resolution 3",
+          "children": [
+            {
+              "text": "Resolution 3: \"We can't stay!\" Dr. Marquez shouts. Utterly overwhelmed, you dash out of the fray and into the cornfields. Nightmarish shadows charge past you, braying and howling. You think of the captives in the farmhouse, staring their deaths head-on. At the far edge of the field, you find Dr. Marquez holding a young girl wearing a rabbit mask. You recognize her as Rebecca, Mother Rachel's daughter.\n\n• The guilt from failing to help those in need haunts you forever. Each investigator must search the collection for a random basic Madness weakness and add it to their deck.\n\n• In your Campaign Log, record all the captives were lost.\n\n• Proceed to Resolution 4."
+            }
+          ]
+        },
+        {
+          "title": "Resolution 4",
+          "children": [
+            {
+              "text": "Resolution 4: The morning sun beats down, blindingly bright, as you cut through the fields back to the Vale. Flecks of slick, dark liquid drip from the withered stalks as you push through. Dr. Marquez stops and runs a hand under the brittle leaves. \"The fields are painted with blood. But why?\" She wipes the blood on a handkerchief and surveys the dripping field. \"What kind of monster would do this? Sentencing her followers—her own daughter—to death. It's almost biblical.\"\n\nRebecca pulls back her mask and shakes her head. \"Mother says it's our way. And she doesn't want me to die. She told me to hide. She said we were playing a game. 'Make yourself very small and hide near the barrels of kerosene. The animals won't smell you there'.\"\n\n\"But why bring you here at all?\" the professor asks.\n\n\"Some people didn't want to come to the barn. But when mama told them I would be there too, they said it was okay.\"\n\nThe group falls silent as you pass from one field and back into view of the Vale, veiled in gold under the radiant dawn. Suddenly, Dr. Marquez stops and takes you aside. \"We may be able to use this as leverage. Rebecca is living proof of Mother Rachel's hypocrisy, as horrible as that sounds. Everyone on Hemlock Isle will be at the Feast tonight. If we ask Rebecca to tell them what Mother Rachel said to her, we may be able to sway at least some of them to leave. And if that doesn't work, we can high-tail it back to the mainland and get the law involved.\"\n\nThe professor turns to Rebecca. \"Can we play a game? Like last night? Your mother told me she wants you to hide until the Feast.\" The young girl nods. Dr. Marquez lets out a manic giggle: strangely out of character for her usual controlled affect. You can't help but suppress a grin, too, despite the horrors you just witnessed.\n\n• If the Ajax story asset was under the control of an investigator at the end of this scenario, choose an investigator to add it to their deck for the remainder of the campaign. It does not count toward their deck size.\n\n• Choose an investigator to add the Dr. Rosa Marquez story asset to their deck for the remainder of the campaign. It does not count toward their deck size.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display ((calculate as instructed above)). Each investigator may now spend the experience recorded under \"Unspent Experience\" in your Campaign Log.\n\n• Update your Campaign Log: Record Dr. Marquez has a plan. In the \"Areas Surveyed\" section, check off Southern Fields.\n\n• Proceed to Prelude: Dawn of the Final Day."
+            }
+          ]
+        },
+        {
+          "text": "Bonus experience"
+        }
+      ]
+    }
+  }
+}

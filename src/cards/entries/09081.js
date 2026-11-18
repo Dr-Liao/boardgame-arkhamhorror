@@ -23,10 +23,11 @@ const CUSTOM_CHECKS = Object.freeze([
   { name: 'Thrice Spoken', checks: 3, text: 'You may include three copies of Power Word in your deck. When you give a command using one copy, also give that command to each other enemy with one of your copies of Power Word attached.' },
 ])
 
-const checked = (state, inv, index) => {
-  const list = state?.campaign?.tsk?.customizations?.bySeat?.[inv?.seat]?.['09081']
-  return Array.isArray(list) && list.filter(value => value === index).length > 0
-}
+// 2026-11-16 P2-3：Tonguetwister 是 3 格选项，勾满才允许一次下两个命令。
+import { customizationOptionFullyChecked } from '../../engine/tsk-customizable.js'
+
+const checked = (state, inv, index) =>
+  customizationOptionFullyChecked(state, inv?.seat, '09081', index)
 
 export default {
   code: '09081',

@@ -1,11 +1,21 @@
 import { SCENARIO_CARD_IDENTITIES, SCENARIOS } from '../cards/scenarios-data.js'
 import { INVESTIGATOR_CODES as EOTE_INVESTIGATOR_CODES, DISCIPLINE_CODES as EOTE_DISCIPLINE_CODES } from '../../content/campaigns/edgeOfTheEarth/shared.js'
 import { INVESTIGATOR_CODES as TSK_INVESTIGATOR_CODES } from '../../content/campaigns/theScarletKeys/shared.js'
+// P5（九循环）：五位铁杉谷调查员与 15 张专属/绑定依赖（签名卡/专属弱点/绑定面）。
+import {
+  BONDED_CODES as FHV_BONDED_CODES, INVESTIGATOR_CODES as FHV_INVESTIGATOR_CODES,
+} from '../../content/campaigns/theFeastOfHemlockVale/shared.js'
 // P6：一般玩家卡 108 条记录的验证/可构筑码表来自 tools/audit-tsk-player.mjs 的生成物（初始为空占位）。
 import {
   PLAYER_CARD_CODES as TSK_PLAYER_CARD_CODES,
   TSK_PLAYER_BASIC_WEAKNESS_CODES, TSK_PLAYER_BUILDABLE_CODES, TSK_PLAYER_VERIFIED_CODES,
 } from '../../content/packs/tskPlayer/manifest.js'
+// P6（九循环）：一般玩家卡 120 条记录的验证/可构筑码表来自 tools/audit-fhv-player.mjs 的生成物。
+import {
+  PLAYER_CARD_CODES as FHV_PLAYER_CARD_CODES,
+  FHV_PLAYER_BASIC_WEAKNESS_CODES, FHV_PLAYER_BUILDABLE_CODES, FHV_PLAYER_DEPENDENCY_CODES,
+  FHV_PLAYER_RESEARCHED_CODES, FHV_PLAYER_VERIFIED_CODES,
+} from '../../content/packs/fhvPlayer/manifest.js'
 import { TIC_PLAYER_VERIFIED_CODES as TIC_PLAYER_CARD_CODES, TIC_PLAYER_BUILDABLE_CODES, TIC_PLAYER_BASIC_WEAKNESS_CODES } from '../../content/packs/ticPlayer/manifest.js'
 // P6（M2 玩家卡）：地球边缘 115 张一般玩家卡逐卡验收后开放 strict；111 张可构筑，4 张基础弱点只作依赖。
 // 码表来自生成物（src/cards/eote-player-acceptance.js → manifest），这里不手写卡号清单。
@@ -17,10 +27,14 @@ import {
 import { CAMPAIGN_CARD_CODES as EOTE_CAMPAIGN_CARD_CODES } from '../../content/packs/eoteCampaign/manifest.js'
 // P7（M3 战役）：绯红密钥 311 条战役记录开放 strict 可用性（只作战役内容，不进构筑/选人池）。
 import { CAMPAIGN_CARD_CODES as TSK_CAMPAIGN_CARD_CODES } from '../../content/packs/tskCampaign/manifest.js'
+// P7（九循环 M3 战役）：铁杉谷盛宴 301 条战役记录开放 strict 可用性（只作战役内容，不进构筑/选人池）。
+import { CAMPAIGN_CARD_CODES as FHV_CAMPAIGN_CARD_CODES } from '../../content/packs/fhvCampaign/manifest.js'
 export { TIC_PLAYER_CARD_CODES, TIC_PLAYER_BUILDABLE_CODES, TIC_PLAYER_BASIC_WEAKNESS_CODES }
 export { EOTE_PLAYER_CARD_CODES, EOTE_PLAYER_BUILDABLE_CODES, EOTE_PLAYER_BASIC_WEAKNESS_CODES }
 // P6（M2 绯红密钥）：一般玩家卡码表与可构筑表向构筑引擎/账本导出。
 export { TSK_PLAYER_CARD_CODES, TSK_PLAYER_VERIFIED_CODES, TSK_PLAYER_BUILDABLE_CODES, TSK_PLAYER_BASIC_WEAKNESS_CODES }
+// P6（九循环）：铁杉谷盛宴玩家卡码表向构筑引擎/账本导出。
+export { FHV_PLAYER_CARD_CODES, FHV_PLAYER_VERIFIED_CODES, FHV_PLAYER_BUILDABLE_CODES, FHV_PLAYER_BASIC_WEAKNESS_CODES, FHV_PLAYER_DEPENDENCY_CODES, FHV_PLAYER_RESEARCHED_CODES }
 import { expansionPlayerCodes } from '../../content/expansions.js'
 import { coreCardVerified, CORE_ACCEPTANCE_PROFILE } from '../cards/core-acceptance.js'
 import { tfaPlayerCardVerified, tfaPlayerBuildable, IMPLEMENTED_PLAYER_CODES } from '../../content/packs/tfaPlayer/manifest.js'
@@ -66,6 +80,9 @@ export const SELECTABLE_INVESTIGATOR_CODES = Object.freeze([
   ...TIC_INVESTIGATOR_CODES,
   ...EOTE_INVESTIGATOR_CODES,
   ...TSK_INVESTIGATOR_CODES,
+  // P5（九循环）：AI 随机选人池仍保持 PLAYABLE_INVESTIGATOR_CODES，不并入 FHV——
+  // 池子变长会让既有 golden replay 的 AI 选人漂移；真人可从大厅选到五位铁杉谷调查员。
+  ...FHV_INVESTIGATOR_CODES,
 ])
 
 export const CORE_PLAYER_CODES = Object.freeze([
@@ -90,9 +107,11 @@ export const ALL_BASIC_WEAKNESS_CODES = Object.freeze([
   ...TIC_PLAYER_BASIC_WEAKNESS_CODES,
   // P6：地球边缘 4 张基础弱点只作随机基础弱点依赖候选。
   ...EOTE_PLAYER_BASIC_WEAKNESS_CODES,
-  // P8：绯红密钥 5 张基础弱点（09124–09128）只作随机基础弱点依赖候选；
+  // P6：绯红密钥 5 张基础弱点（09124–09128）只作随机基础弱点依赖候选；
   // P6 已从 tskPlayer 清单导入码表但漏加入 ALL_BASIC_WEAKNESS_CODES，导致手动构筑必失败。
   ...TSK_PLAYER_BASIC_WEAKNESS_CODES,
+  // P6（九循环）：铁杉谷盛宴 4 张基础弱点（10135–10138）只作随机基础弱点依赖候选。
+  ...FHV_PLAYER_BASIC_WEAKNESS_CODES,
 ])
 export const CORE_STORY_CODES = Object.freeze(['01117'])
 export const CORE_UPGRADE_CODES = Object.freeze([
@@ -157,6 +176,13 @@ export const SIGNATURES_BY_INVESTIGATOR = Object.freeze({
   '08007': Object.freeze(['08008', '08009']),
   '08010': Object.freeze(['08015']),
   '08016': Object.freeze(['08017', '08018']),
+  // P5（九循环）：五位调查员 + 10 张签名卡/专属弱点；5 张绑定面（10005b/10006/10007/10016a/10016b）
+  // 由各自的绑定原语带入，不在 deckRequirements.signatureCards 里。
+  '10001': Object.freeze(['10002', '10003']),
+  '10004': Object.freeze(['10005', '10008']),
+  '10009': Object.freeze(['10010', '10011']),
+  '10012': Object.freeze(['10013', '10014']),
+  '10015': Object.freeze(['10017', '10018']),
 })
 export const SIMPLIFIED_CARD_CODES = Object.freeze([...CORE_PLAYER_CODES, ...CORE_SIGNATURE_CODES, ...CORE_BASIC_WEAKNESS_CODES, ...CORE_STORY_CODES])
 export {
@@ -166,12 +192,13 @@ export {
 }
 
 const investigators = new Set(SELECTABLE_INVESTIGATOR_CODES)
-const dunwichSignatures = Object.values(SIGNATURES_BY_INVESTIGATOR).slice(5, 10).flat()
-const carcosaSignatures = [...Object.values(SIGNATURES_BY_INVESTIGATOR).slice(10, 16).flat(), '03009b']
-// 第 5 步 M1 调查员批次（P6）：TCU 的 13 张专属卡。按调查员显式取，不再用 slice 位置——
-// 新增循环时 `slice(16)` 这类写法会把后面的循环一起算进来。
-const tfaSignatureGroups = Object.values(SIGNATURES_BY_INVESTIGATOR).slice(16, 21)
-const tfaSignatures = tfaSignatureGroups.flat()
+// 专属卡一律按调查员代码显式取，不再用 `Object.values(...).slice(N, M)` 的位置切片：
+// 新增循环时数字键（如 10001）在 JS 对象里会排到字符串键之前，位置切片会整体错位。
+// （P5 九循环接入时 TFA 的 04006/04008/04011 因此被误判 catalog-only，已修正。）
+const dunwichSignatures = DUNWICH_INVESTIGATOR_CODES.flatMap(code => [...(SIGNATURES_BY_INVESTIGATOR[code] || [])])
+const carcosaSignatures = [...CARCOSA_INVESTIGATOR_CODES.flatMap(code => [...(SIGNATURES_BY_INVESTIGATOR[code] || [])]), '03009b']
+// 第 5 步 M1 调查员批次（P6）：TCU 的 13 张专属卡。按调查员显式取。
+const tfaSignatures = TFA_INVESTIGATOR_CODES.flatMap(code => [...(SIGNATURES_BY_INVESTIGATOR[code] || [])])
 const tcuSignatures = TCU_INVESTIGATOR_CODES.flatMap(code => [...(SIGNATURES_BY_INVESTIGATOR[code] || [])])
 // 第五循环（食梦者）M1：11 张专属主卡 + 2 张专属弱点；06015a/b 是绑定地点（不计入构筑依赖）。
 const tdeSignatures = TDE_INVESTIGATOR_CODES.flatMap(code => [...(SIGNATURES_BY_INVESTIGATOR[code] || [])])
@@ -182,6 +209,9 @@ const eoteSignatures = EOTE_INVESTIGATOR_CODES.flatMap(code => [...(SIGNATURES_B
 const eoteDisciplineCodes = [...EOTE_DISCIPLINE_CODES]
 // P5（八循环）：六位调查员的 14 张专属依赖（签名卡/专属弱点），只作构筑依赖。
 const tskSignatures = TSK_INVESTIGATOR_CODES.flatMap(code => [...(SIGNATURES_BY_INVESTIGATOR[code] || [])])
+// P5（九循环）：5 位调查员的 10 张签名卡/弱点 + 5 张绑定面（依赖只读，不入构筑池）。
+const fhvSignatures = FHV_INVESTIGATOR_CODES.flatMap(code => [...(SIGNATURES_BY_INVESTIGATOR[code] || [])])
+const fhvBonded = [...FHV_BONDED_CODES]
 const tfaPlayerCodes = [...IMPLEMENTED_PLAYER_CODES]
 export const TFA_PLAYER_BUILDABLE_CODES = Object.freeze(tfaPlayerCodes.filter(code => tfaPlayerBuildable(code)))
 export const PLAYER_CARD_CODES = Object.freeze([
@@ -198,6 +228,8 @@ export const ALL_BUILDABLE_CODES = Object.freeze([
   ...EOTE_PLAYER_BUILDABLE_CODES,
   // P6：绯红密钥 103 张可入牌组玩家卡（09124–09128 基础弱点只作依赖）。
   ...TSK_PLAYER_BUILDABLE_CODES,
+  // P6（九循环）：铁杉谷盛宴 102 张可入牌组玩家卡（4 基础弱点/11 绑定依赖/3 Research 不进）。
+  ...FHV_PLAYER_BUILDABLE_CODES,
 ])
 // P10（M5 发布）：食梦者战役包 playable 后，283 条战役记录（249 主卡 + 34 关联面）从
 // catalog-only 升为 strict——与 P9 全卡账本「P10 升 playable 后全部 strict」的验收口径一致。
@@ -216,7 +248,9 @@ const cards = new Set([...SIMPLIFIED_CARD_CODES, ...CORE_UPGRADE_CODES, ...expan
   ...EOTE_PLAYER_CARD_CODES,
   ...EOTE_CAMPAIGN_CARD_CODES,
   ...TSK_CAMPAIGN_CARD_CODES,
+  ...FHV_CAMPAIGN_CARD_CODES,
   ...eoteSignatures, ...eoteDisciplineCodes, ...tskSignatures, ...TSK_PLAYER_VERIFIED_CODES,
+  ...fhvSignatures, ...fhvBonded, ...FHV_PLAYER_VERIFIED_CODES,
   ...DUNWICH_BASIC_WEAKNESS_CODES, ...CARCOSA_BASIC_WEAKNESS_CODES])
 const strictAcceptedCodes = new Set([...investigators, ...cards])
 const strictScenarioCodes = new Set(Object.values(SCENARIO_CARD_IDENTITIES).flatMap(categories =>
@@ -248,6 +282,8 @@ export function getAvailability(code) {
       || ticSignatures.includes(code)
       || eoteSignatures.includes(code) || eoteDisciplineCodes.includes(code)
       || tskSignatures.includes(code)
+      || fhvSignatures.includes(code) || fhvBonded.includes(code)
+      || FHV_PLAYER_BASIC_WEAKNESS_CODES.includes(code) || FHV_PLAYER_DEPENDENCY_CODES.includes(code)
       || TSK_PLAYER_BASIC_WEAKNESS_CODES.includes(code)
       || TIC_PLAYER_BASIC_WEAKNESS_CODES.includes(code)
       || EOTE_PLAYER_BASIC_WEAKNESS_CODES.includes(code)
@@ -256,6 +292,8 @@ export function getAvailability(code) {
     scenarioOnly: CORE_STORY_CODES.includes(code),
     acceptanceProfile: coreCardVerified(code) ? CORE_ACCEPTANCE_PROFILE.id : null,
     reason: coreCardVerified(code) ? '初始包已通过逐卡行为验收；范围与测试见 audit/core-acceptance.json。'
+      : FHV_PLAYER_CARD_CODES.includes(code)
+        ? 'P6 铁杉谷盛宴一般玩家卡已完成逐卡主要印刷效果验收（102 张可入牌组；4 张基础弱点 10135–10138 只作依赖，11 张绑定/场外依赖与 3 张 Research 卡不进构筑池），进入构筑界面与玩家卡池；战役与八章仍待 P7–P8。'
       : EOTE_PLAYER_CARD_CODES.includes(code)
         ? 'P6 地球边缘一般玩家卡已完成逐卡行为验收（111 张可入牌组；08130–08133 基础弱点只作依赖），进入构筑界面与玩家卡池；战役仍待 P7–P8。'
       : EOTE_CAMPAIGN_CARD_CODES.includes(code)
@@ -275,6 +313,8 @@ export function getAvailability(code) {
         ? 'P6 绯红密钥一般玩家卡已完成逐卡主要印刷效果验收（103 张可入牌组；09124–09128 基础弱点只作依赖），进入构筑界面与玩家卡池；战役与十章仍待 P7–P8。'
       : TSK_INVESTIGATOR_CODES.includes(code) || tskSignatures.includes(code)
         ? 'P5 绯红密钥六位调查员及 14 张专属依赖已完成逐人能力、构筑与存档验收；一般玩家卡见 P6，战役与十章仍待 P7–P8。'
+      : FHV_INVESTIGATOR_CODES.includes(code) || fhvSignatures.includes(code) || fhvBonded.includes(code)
+        ? 'P5 铁杉谷盛宴五位调查员及 15 张专属/绑定依赖已完成逐人能力、构筑与存档验收；一般玩家卡见 P6，战役与八章仍待 P7–P8。'
       : EOTE_INVESTIGATOR_CODES.includes(code) || eoteSignatures.includes(code) || eoteDisciplineCodes.includes(code)
         ? 'P5 地球边缘五位调查员及专属依赖已完成逐人能力、构筑与存档验收；一般玩家卡见 P6，战役仍待 P7–P8。'
       : TIC_INVESTIGATOR_CODES.includes(code) || ticSignatures.includes(code)

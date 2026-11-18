@@ -151,8 +151,11 @@ test('P6 09021 猎人护甲 定制面板 7 项契约；轻量刻印 -1 费用；
   assert.equal(entry.customizationOptions.length, 7, '7 个勾选面板项')
   assert.deepEqual(entry.customizationOptions.map(option => option.checks), [1, 2, 2, 2, 2, 3, 3], '逐项格数')
   assert.equal(playCost(state, me(state), ALL_CARDS['09021']), 4, '未勾选时印刷费用 4')
+  // 2026-11-16 P2-3：Lightweight 是 2 格选项，勾满 2 格才 -1 费用。
   custom(state, '09021', [4])
-  assert.deepEqual(customizationChecked(state, 0, '09021'), [4], '轻量刻印已勾选')
+  assert.equal(playCost(state, me(state), ALL_CARDS['09021']), 4, '轻量刻印勾 1/2 格不减费')
+  custom(state, '09021', [4, 4])
+  assert.deepEqual(customizationChecked(state, 0, '09021'), [4, 4], '轻量刻印已勾满')
   assert.equal(playCost(state, me(state), ALL_CARDS['09021']), 3, '轻量刻印：费用 -1')
   withApi(state, api => api.harm(0, { damage: 1, strategy: 'assetsFirst' }))
   assert.equal(freshAsset(state, '09021').damage, 1, '1 点伤害分配给猎人护甲')
@@ -479,8 +482,12 @@ test('P6 09040 炼金蒸馏 花 1 补给：检定[智力](1) 成功让调查员�
   assert.ok(state.lastTestResult?.success, '智力检定成功')
   assert.equal(me(state).hand.length, 2, '抽 2 张卡牌')
   assert.equal(freshAsset(state, '09040').uses, 2, '花掉 1 补给')
-  // 精炼（Refined）：入场 +2 补给。
+  // 精炼（Refined）：2 格选项勾满后，入场 +2 补给。
   custom(state, '09040', [4])
+  const bottlePartial = asset(state, '09040')
+  resolveAbility(state, '09040', { kind: 'entersPlay', source: bottlePartial })
+  assert.equal(bottlePartial.uses, 3, '精炼勾 1/2 格不生效')
+  custom(state, '09040', [4, 4])
   const bottle = asset(state, '09040')
   resolveAbility(state, '09040', { kind: 'entersPlay', source: bottle })
   assert.equal(bottle.uses, 5, '精炼：入场 3 + 2 = 5 补给')

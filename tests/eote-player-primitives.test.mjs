@@ -10,6 +10,7 @@ import assert from 'node:assert/strict'
 
 import { fixture, asset } from './core-fixture.mjs'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
+import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { resolveTransaction, choiceError } from '../src/engine/resolution.js'
 import {
   applyHarm, executeAction, executeDescriptor, getStat, legalMoves, performTest,
@@ -104,7 +105,9 @@ test('P6 原语 threatDamageSink：威胁区弱点承接伤害治疗，归零时
 test('P6 原语 composureDamage：非直接伤害必须先分配给声明 flags.composureDamage 的支援', () => {
   // 未注册的真实支援卡号（有生命可承接伤害）保证 cardDef 生命/神智可承接伤害；
   // flags 由原语读取（worker 条目同口径）。
-  const code = '10061'
+  // 选择一张尚未注册、且有生命可承接伤害的真实支援卡号（动态选择，避免与后续循环新迁移的卡号冲突）。
+  const code = Object.values(ALL_CARDS).find(card => card.type === 'asset'
+    && !registeredEntry(card.code) && !card.subtype && Number(card.health) >= 3)?.code ?? '10061'
   if (!registeredEntry(code)) {
     registerCardAbilities([{ code, flags: { composureDamage: true }, composure: true, fast: true, abilities: [], modifiers: [] }])
   }
