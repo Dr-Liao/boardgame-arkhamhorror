@@ -1159,6 +1159,7 @@ test('D9 Broken Rails affects everyone at the location and makes damaged investi
   const discarded = []
   b.resolveEncounter(s, first, { code: '02181' }, {
     choose: request => request.options[0].id,
+    canDiscardAsset: () => true,
     discardAsset: (seat, id) => discarded.push([seat, id]),
   })
   assert.equal(first.actionsLeft, 1); assert.equal(second.actionsLeft, 1)
@@ -1547,6 +1548,7 @@ test('D2 upgrade pool includes expansion XP cards and rejects them in zero-XP pl
 test('D2 permanent cards start in play before opening hand and leave the campaign deck intact', () => {
   const s = createGameState({ campaignHub: true, seed: 'd2-permanent' }, [{ seat: 0, role: 'human' }])
   move(s, { action: 'hubGoSetup' }); move(s, { action: 'hubSelectInvestigator', code: '01001' }); move(s, { action: 'hubAutoDeck' })
+  move(s, { action: 'hubConfirmDeck' })
   for (const code of ['02157', '02158', '02187', '02189', '02193']) campaignCardChange(s.campaign, 0, code, 'add', 'fixture-upgrades')
   move(s, { action: 'hubDoneSeat' }); move(s, { action: 'hubBeginScenario' }); settle(s)
   for (const code of ['02157', '02158', '02187', '02189', '02193']) {

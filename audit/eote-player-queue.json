@@ -220,8 +220,7 @@
         "08072"
       ],
       "need": "把支援上的 secrets 当资源支付同地点 Item 支援的打出费用",
-      "status": "rejected",
-      "rejectedReason": "本批以现有原语等价/近似实现主行为（见对应卡条目头注释与 README §14）；该精确读点登记为 P7 硬化候选，不阻塞 P6 验收。"
+      "status": "done"
     },
     {
       "id": "m2-2-08074",

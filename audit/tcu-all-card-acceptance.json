@@ -53,7 +53,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-      "sha256": "777ef47ea0544cf4b1613826567792d5c439b6f65160151a6fa1c69ff266af46"
+      "sha256": "c6dfa505d08f79472f2bea966902f3e5f70c4bff478cbb6c6384a58c718de2a7"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",

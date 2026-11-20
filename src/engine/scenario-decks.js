@@ -1,6 +1,7 @@
 import { mechanicState, integer, investigatorAt } from './mechanic-state.js'
 import { randomValue } from './rules-state.js'
 import { registeredEntry } from './ability.js'
+import { currentRevelation, takeRevelationScenarioDeck } from './resolution-scope.js'
 function pile(state, id) {
   if (typeof id !== 'string' || !/^[a-z][A-Za-z0-9]{0,63}$/.test(id) || ['constructor', 'prototype'].includes(id)) throw new TypeError('Invalid scenario deck id')
   const decks = mechanicState(state)?.scenarioDecks
@@ -14,13 +15,41 @@ function shuffled(state, cards) {
   return list
 }
 
+function recycleDiscard(state, piles) {
+  if (piles.deck.length || !piles.discard.length) return
+  piles.deck = shuffled(state, piles.discard)
+  piles.discard.length = 0
+}
+
+export function routeDiscardToScenarioDeck(state, code, name) {
+  const decks = mechanicState(state)?.scenarioDecks
+  if (!name || !decks || !Object.hasOwn(decks, name)) return false
+  decks[name].discard.push(code)
+  return true
+}
+
+// Only the first matching placement claims the card currently being revealed.
+// A runtime alias may be the actual deck entry even when the attachment uses a printed code.
+export function rememberScenarioDeckAttachment(attachment) {
+  const deckId = takeRevelationScenarioDeck(attachment.code)
+  if (deckId) {
+    attachment.discardToScenarioDeck = deckId
+    const code = currentRevelation()
+    if (code !== attachment.code) attachment.scenarioDeckCode = code
+  }
+  return attachment
+}
+
+export function discardEncounterAttachment(state, attachment, mainCode = attachment.originalCode || attachment.code) {
+  if (!routeDiscardToScenarioDeck(state, attachment.scenarioDeckCode || attachment.code, attachment.discardToScenarioDeck)) {
+    state.encounterDiscard.push(mainCode)
+  }
+}
+
 export function routeEnemyDiscardToScenarioDeck(state, enemy) {
   const code = enemy.originalCode || enemy.code
   const name = enemy.discardToScenarioDeck || registeredEntry(code)?.enemyRule?.discardToScenarioDeck
-  const deck = name && mechanicState(state)?.scenarioDecks?.[name]
-  if (!deck) return false
-  deck.discard.push(code)
-  return true
+  return routeDiscardToScenarioDeck(state, code, name)
 }
 export function createScenarioDeckApi(state, deps = {}) {
   return {
@@ -33,19 +62,18 @@ export function createScenarioDeckApi(state, deps = {}) {
       return cards.length
     },
     size: id => pile(state, id).deck.length,
-    discard(id, code) {
-      if (typeof code !== 'string' || !code) throw new TypeError('Invalid discard card')
-      pile(state, id).discard.push(code)
+    discard(id, code, { recycleWhenEmpty = false } = {}) {
+      if (typeof code !== 'string' || !code || typeof recycleWhenEmpty !== 'boolean') throw new TypeError('Invalid discard card')
+      const target = pile(state, id)
+      target.discard.push(code)
+      if (recycleWhenEmpty) recycleDiscard(state, target)
       return true
     },
     draw(id, seat, { recycle = false } = {}) {
       investigatorAt(state, seat)
       if (typeof recycle !== 'boolean' || typeof deps.drawCard !== 'function') throw new TypeError('Invalid separate encounter draw')
       const target = pile(state, id)
-      if (!target.deck.length && recycle && target.discard.length) {
-        target.deck = shuffled(state, target.discard)
-        target.discard.length = 0
-      }
+      if (recycle) recycleDiscard(state, target)
       const code = target.deck.pop()
       if (!code) return null
       deps.drawCard(seat, code, { scenarioDeckId: id })
@@ -64,7 +92,13 @@ export function createScenarioDeckApi(state, deps = {}) {
       return code
     },
     cards: id => [...pile(state, id).deck],
-    take(id, count = 1) { integer(count); const deck = pile(state, id).deck; return deck.splice(Math.max(0, deck.length - count), count).reverse() },
+    take(id, count = 1, { from = 'top' } = {}) {
+      integer(count)
+      if (!['top', 'bottom'].includes(from)) throw new TypeError('Invalid scenario deck end')
+      const deck = pile(state, id).deck
+      if (from === 'bottom') return deck.splice(0, count)
+      return deck.splice(Math.max(0, deck.length - count), count).reverse()
+    },
     put(id, cards, { shuffle = false, top = true } = {}) {
       if (!Array.isArray(cards) || cards.some(code => typeof code !== 'string' || !code)) throw new TypeError('Invalid scenario cards')
       const target = pile(state, id)
@@ -93,27 +127,37 @@ export function createScenarioDeckApi(state, deps = {}) {
     },
     peek(id, seat, count = 1) {
       investigatorAt(state, seat); integer(count)
-      const cards = pile(state, id).deck.slice(-count).reverse()
+      const target = pile(state, id)
+      if (!count) return false
+      const cards = target.deck.slice(-count).reverse()
       if (!cards.length) return false
       deps.cardsSeen?.(id, seat, [...cards])
       deps.choice({ kind: 'card', seat, source: id, prompt: '查看这些牌，然后继续。',
         options: cards.map((code, index) => ({ id: String(index), cardCode: code, label: deps.cardName?.(code) || code })) })
       return true
     },
-    revealChooseDraw(id, seat, count = 1, { mixEncounterTop = false } = {}) {
+    revealChooseDraw(id, seat, count = 1, { mixEncounterTop = false, discardTo = 'encounter' } = {}) {
       investigatorAt(state, seat); integer(count, 1)
-      const target = pile(state, id), revealed = target.deck.splice(Math.max(0, target.deck.length - count), count).reverse()
-      if (!revealed.length) return null
+      if (typeof mixEncounterTop !== 'boolean' || !['encounter', 'scenario'].includes(discardTo)) {
+        throw new TypeError('Invalid scenario draw options')
+      }
+      const target = pile(state, id)
+      if (!target.deck.length) return null
+      if (typeof deps.drawCard !== 'function' || typeof deps.choice !== 'function') {
+        throw new TypeError('Scenario draw needs a choice and the real encounter pipeline')
+      }
+      const revealed = target.deck.slice(-count).reverse()
       deps.cardsSeen?.(id, seat, [...revealed])
       const answer = deps.choice({ kind: 'card', seat, source: id, prompt: '选择一张揭示的牌并抽取。',
         options: revealed.map((code, index) => ({ id: String(index), cardCode: code, label: deps.cardName?.(code) || code })) })
-      const index = Number(answer)
-      if (!Number.isInteger(index) || index < 0 || index >= revealed.length) throw new Error('Invalid scenario draw selection')
+      const index = revealed.findIndex((_, index) => String(index) === String(answer))
+      if (index < 0) throw new Error('Invalid scenario draw selection')
+      target.deck.splice(target.deck.length - revealed.length)
       const [card] = revealed.splice(index, 1)
       if (mixEncounterTop && state.encounterDeck.length) revealed.push(state.encounterDeck.pop())
       target.deck = shuffled(state, [...target.deck, ...revealed])
-      if (typeof deps.drawCard !== 'function') throw new Error('Scenario draw needs the real encounter pipeline')
-      deps.drawCard(seat, card)
+      if (discardTo === 'scenario') deps.drawCard(seat, card, { scenarioDeckId: id })
+      else deps.drawCard(seat, card)
       return card
     },
     // 八循环 P2 扩展（extend.scenarioDecks）：异界牌库顶牌顺序读点（失败关闭，见文件末尾说明）。

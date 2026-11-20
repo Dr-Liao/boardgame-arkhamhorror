@@ -29,8 +29,8 @@ test('地点正反面、资源档案、相邻地点与直接行动保持一致',
   const errors=[];page.on('pageerror',e=>errors.push(e.message))
   const f=await fixture(page)
   const cellar=page.locator('.ah-map-node[data-location-id="cellar"]'), attic=page.locator('.ah-map-node[data-location-id="attic"]')
-  await expect(cellar.locator('.ah-table-art[data-art-code="01114"] img')).toHaveAttribute('src',/01114\.avif/)
-  await expect(attic.locator('.ah-table-art[data-art-code="01113"] img')).toHaveAttribute('src',/01113b\.avif/)
+  await expect(cellar.locator('.ah-table-art[data-art-code="01114"] img')).toHaveAttribute('src',/01114\.(webp|avif)/)
+  await expect(attic.locator('.ah-table-art[data-art-code="01113"] img')).toHaveAttribute('src',/01113b\.(webp|avif)/)
   await cellar.locator('[data-map-info="clues"]').click()
   const modal=page.locator('.ah-location-detail')
   await expect(modal.locator('h2')).toHaveText('地窖')
@@ -71,27 +71,20 @@ test('调查员详情使用卡面反应、旧印与技能符号，规则链接�
   const elderSign=modal.locator('.ah-card-full-text [data-card-symbol="elder_sign"]')
   await expect(reaction).toHaveAttribute('aria-label','反应')
   await expect(elderSign).toHaveAttribute('aria-label','旧印')
-  await expect(reaction.locator('.ah-card-glyph')).toHaveText('y')
-  await expect(elderSign.locator('.ah-card-glyph')).toHaveText('X')
-  for(const [skill,glyph] of Object.entries({willpower:'A',intellect:'F',combat:'D',agility:'S'})) {
-    await expect(modal.locator(`.ah-card-full-stats [data-card-symbol="${skill}"] .ah-card-glyph`)).toHaveText(glyph)
-  }
-  // 图标尺寸回归：四维字形 ≥ 16px；生命/理智是 18px 矢量剪影（不再是会糊的位图蒙版）。
+  await expect(reaction.locator('svg path')).toBeVisible()
+  await expect(elderSign.locator('svg path')).toBeVisible()
+  // 四维图标至少 16px 高，生命和理智保持 18px 矢量剪影。
   for(const skill of ['willpower','intellect','combat','agility']) {
-    const fontSize=await modal.locator(`.ah-card-full-stats-investigator [data-card-symbol="${skill}"] .ah-card-glyph`).first().evaluate(el=>parseFloat(getComputedStyle(el).fontSize))
-    expect(fontSize).toBeGreaterThanOrEqual(16)
+    const icon=modal.locator(`.ah-card-full-stats-investigator [data-card-symbol="${skill}"] svg.ah-card-glyph`).first()
+    await expect(icon.locator('path')).toBeVisible()
+    await expect.poll(async () => (await icon.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(16)
   }
   for(const name of ['health','sanity']) {
     const icon=modal.locator(`.ah-card-full-stats-investigator [data-card-symbol="${name}"] .ah-symbol-vector`).first()
     await expect(icon).toBeVisible()
-    const box=await icon.boundingBox()
-    expect(box.width).toBeGreaterThanOrEqual(17)
+    await expect.poll(async () => (await icon.boundingBox())?.width ?? 0).toBeGreaterThanOrEqual(17)
     expect(await icon.evaluate(el=>{const cs=getComputedStyle(el);return cs.maskImage==='none'||cs.maskImage===''})).toBe(true)
   }
-  expect(await page.evaluate(async()=>{
-    await document.fonts.load('20px AHCardSymbols','yXAFDS')
-    return document.fonts.check('20px AHCardSymbols','yXAFDS')
-  })).toBe(true)
   await expect(modal.locator('.ah-detail-layout > .ah-art img')).toBeVisible()
   await page.screenshot({path:output+'investigator-card-symbols.png',animations:'disabled'})
   await reaction.click()

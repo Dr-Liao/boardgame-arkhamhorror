@@ -53,6 +53,7 @@ export function policy(s, branch = 'r1', mode = 'victory') {
     if (action('hubSetDifficulty') && s.difficulty !== 'easy') return moves.find(m => m.action === 'hubSetDifficulty' && m.difficulty === 'easy')
     if (action('hubGoSetup')) return action('hubGoSetup')
     if (action('hubSelectInvestigator') && !s.hubSeatSelected?.[0]) return moves.find(m => m.action === 'hubSelectInvestigator' && m.code === inv.code)
+    if (action('hubConfirmDeck')) return action('hubConfirmDeck')
     if (action('hubSetDeck') && !s.campaign.investigators[0]) return { ...action('hubSetDeck'), codes: inv.code === '01001' ? deck : buildDeck(ALL_CARDS[inv.code], { seed: 'p6-deck' }).playerCards }
     if (action('hubConfirmUpgrades')) return action('hubConfirmUpgrades')
     const record = s.campaign.investigators[0]

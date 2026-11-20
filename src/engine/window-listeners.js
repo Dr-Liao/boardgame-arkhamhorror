@@ -17,15 +17,17 @@ export function hasWindowListener(state, windowId) {
     .some(descriptor => descriptor.trigger?.includes(windowId))
   const sources = [
     ...(state.enemies || []),
+    ...(state.enemies || []).flatMap(enemy => enemy.attachments || []),
     ...(state.locations || []).filter(location => location.revealed),
     ...(state.playerLocationAttachments || []),
     // P7 并行幕：全部活动幕都算窗口监听来源（无 parallelActs 时等于旧的「当前幕」单点）。
     ...actsInPlay(state),
     state.agendas?.[state.agendaIndex],
     ...(state.storyAssets || []),
+    ...(state.agendaAside || []).filter(card => card.ownerSeat != null),
     ...(state.investigators || []).flatMap(inv => [inv, { code: inv?.code, originalCode: inv?.originalCode },
       ...(inv?.hand || []).map(code => ({ code })), ...(inv?.assets || []), ...(inv?.threat || []),
-      ...(inv?.attachments || [])]),
+      ...(inv?.attachments || []), ...(inv?.assets || []).flatMap(asset => asset.attachments || [])]),
   ]
   return sources.some(listeners)
 }

@@ -1740,8 +1740,8 @@
       "path": "src/cards/cards-data.js",
       "kind": "repo",
       "exists": true,
-      "bytes": 13532239,
-      "sha256": "6a238be7a09932d0d3694003cea56f92b7edc21a41ac2fbfe22e995443a88a2a"
+      "bytes": 13525354,
+      "sha256": "e82ac62eb62e6c6c410a960055db9549cce336433e2003852af559dedea6f9bc"
     },
     {
       "path": "content/packs/tdeCampaign/manifest.js",
@@ -1777,9 +1777,10 @@
     "stateSchemaVersion": 7,
     "goldenReplay": {
       "fixtures": 13,
-      "steps": 797,
-      "hashes": 810
+      "steps": 870,
+      "hashes": 883
     },
+    "goldenReplaySha256": "19e63fcba8a5428123dd3f74404208e9e324ad06550999387028bdab65eac688",
     "replayBefore": {
       "fixtures": 13,
       "steps": 797,
@@ -1789,10 +1790,10 @@
     "replayBeforePath": "tests/fixtures/replay/tde-baseline.json",
     "history": "Original M0 snapshot: artifacts/migration/tde/replay-before.json. Completion baseline captured and compared after TFA/TCU repairs on 2026-11-02.",
     "replayBeforeIdsMatch": true,
-    "replayBeforeHashesMatch": true,
-    "git": {
-      "head": "5e4ff98e01edc805bf59ed1133e1db326dcc4a58",
-      "note": "提交会变，基线提交另存 artifacts/migration/tde/reports/baseline-git-head.txt；本账本不把 gitHead 纳入比对"
+    "replayBeforeHashesMatch": false,
+    "maintenance": {
+      "path": "audit/tde-replay-completion-review.json",
+      "goldenCommit": "9c09a9b3b130163122ae2009e4e53dc62b483535"
     }
   },
   "cardImages": {
@@ -1890,7 +1891,8 @@
       "stateSchemaVersion": 7,
       "replayBefore": true,
       "idsMatch": true,
-      "hashesMatch": true,
+      "hashesMatch": false,
+      "maintenanceReviewMatches": true,
       "pass": true
     },
     "crossCycleGroups": {

@@ -1,14 +1,17 @@
+import { offerEncounterLook } from './encounter-look.js'
 import { applyPhysicalFace } from './physical-faces.js'
+import { enemyIsBody, enemyIsPart, enemyParts, linkEnemyParts } from './enemy-parts.js'
 import { enemyAttackStyle } from '../integration/enemy-attack-presentation.js'
 import { requestCurrentAgendaRevert } from './agenda-advance-frame.js'
 import { nearestEnemies,isEnemyUnengaged } from './enemy-query.js'
 import { putInHand } from './hand-entry.js'
-import { discardPlayerCards, replacePlayerZoneCards } from './player-zones.js'
+import { discardPlayerCards, replacePlayerZoneCards, splicePlayerDiscard } from './player-zones.js'
 import { createMechanicsApi } from './api-mechanics.js'
 import { emitPresentation } from './presentation-events.js'
 import { defensePreventsReady } from './location-defenses.js'
 import { sinkLocation } from './location-face.js'
 import { locationLookCandidates } from './location-look.js'
+import { canDiscardControlledAsset, canLeaveControlledAsset, discardControlledAsset } from './asset-departure.js'
 // 剧本运行时（scenarioRuntime）从 engine.js 拆出的模块（Phase 6 · 6d-13）。
 //
 // 剧本内容（遭遇卡、地点、密谋、议程）拿不到引擎内部，只能拿到这个窄接口：
@@ -19,6 +22,7 @@ import { locationLookCandidates } from './location-look.js'
 
 import { linkLocationBySymbols } from './locations.js'
 import { attachLocationCard, addLocationShroud, setLocationShroudMod } from './location-attachments.js'
+import { discardEncounterAttachment, rememberScenarioDeckAttachment } from './scenario-decks.js'
 import { scenarioRuntimeExtras } from './scenario-runtime-extras.js'
 import {
   buildScenarioLocationDeck, chooseScenarioLocationDeck, discardScenarioLocation,
@@ -256,7 +260,17 @@ function scenarioRuntime(state, events, testSource = null) {
     // 机制视图；09751 等按 `api.tsk.concealed` 读，此前只有 `api.mechanics.tsk` 导致崩溃。
     get tsk () { return this.mechanics?.tsk || null },
     lookEncounterTop: (seat, count, options = {}) => {
-      const cards=state.encounterDeck.slice(-Math.max(0,count)).reverse()
+      const countToRead = Math.min(state.encounterDeck.length, Math.max(0, count))
+      const inv = state.investigators[seat]
+      const reacts = countToRead > 0 && registeredEntry(inv?.code)?.investigator?.encounterLook
+      const cards = reacts
+        ? state.encounterDeck.splice(-countToRead).reverse()
+        : countToRead ? state.encounterDeck.slice(-countToRead).reverse() : []
+      if (reacts) {
+        const result = offerEncounterLook(state, seat, cards, events, { reactionWindow })
+        state.encounterDeck.push(...result.cards.slice().reverse())
+        if (result.putOnTop) state.encounterDeck.push(result.putOnTop)
+      }
       if (cards.length) requestChoice(state,{kind:'look',source:options.source || 'lookEncounterTop',seat,
         prompt:'查看遭遇牌库顶的卡牌（从上到下），然后继续结算。',
         options:[{id:'continue',label:'继续',cardCodes:cards}]})
@@ -342,6 +356,7 @@ function scenarioRuntime(state, events, testSource = null) {
       vehicleLeft: event => dispatchVehicleEvent(state, 'left', event, () => scenarioRuntime(state, events)),
       vehicleEntered: event => dispatchVehicleEvent(state, 'entered', event, () => scenarioRuntime(state, events)),
       placeLocation: id => { placeLocation(state, id, events); return state.locations.some(loc => loc.id === id) ? id : null },
+      giveArtifact: (seat, code) => scenarioRuntime(state, events).giveAsset(seat, code),
     }),
     grantedBasicInvestigate: seat => performImmediateAction(state, seat, events, 'basicInvestigation', { actionKinds:['investigate'],basicOnly:true }),
     scoutEncounterTop: (seat, options = {}) => {
@@ -382,7 +397,7 @@ function scenarioRuntime(state, events, testSource = null) {
       for (const [index, old] of locations.entries()) {
         for (const card of old.attachments || []) {
           if (card.ownerSeat != null) discardPlayerCards(state,state.investigators[card.ownerSeat],card.code)
-          else state.encounterDiscard.push(card.originalCode || card.code)
+          else discardEncounterAttachment(state, card)
         }
         const next = { ...shuffled[index], ...positions[index], attachments: [], clues:0,doom:0,damage:0,horror:0,resources:0,veiledRevealed:false }
         for (const key of ['tokens','counters','useTokens','breaches','breach','fog','fogCode','shroudMod']) delete next[key]
@@ -605,6 +620,7 @@ function scenarioRuntime(state, events, testSource = null) {
       return true
     },
     spawn: (code, location, options = {}) => spawnEnemy(state, code, location, null, true, false, null, options),
+    linkEnemyParts: (bodyId, partIds) => linkEnemyParts(state, bodyId, partIds),
     spawnEngaged: (code, location, seat) => spawnEnemy(state, code, location, seat),
     // 从玩家牌/无目录数据生成的敌人（04331 飞天水螅：把牌库顶的牌视为敌人）。
     spawnStoryEnemy: (code, location, stats = {}, extra = {}) => spawnStoryEnemy(state, code, location, stats, extra, events),
@@ -733,17 +749,14 @@ function scenarioRuntime(state, events, testSource = null) {
         if (registeredEntry(asset.code)?.defeatedDamage) defeatedAssetRetaliation(state, inv, registeredEntry(asset.code).defeatedDamage, events)
       }
     },
+    filterAssetDiscardOptions: () => state._resolution?.filterAssetDiscardOptions !== false,
     canDiscardAsset: (seat, assetId) => {
       const inv = state.investigators[seat], asset = inv?.assets.find(item => item.id === assetId)
-      return Boolean(asset && !cardDef(asset.code)?.permanent && !registeredEntry(asset.code)?.cannotLeavePlay
-        && !asset.cannotLeavePlay && !registeredEntry(asset.code)?.cannotLeavePlayWhile?.(state, inv, asset))
+      return canDiscardControlledAsset(state, inv, asset)
     },
     discardAsset: (seat, assetId) => {
       const inv = state.investigators[seat], asset = inv?.assets.find(item => item.id === assetId)
-      if (!asset || cardDef(asset.code)?.permanent || registeredEntry(asset.code)?.cannotLeavePlay || asset.cannotLeavePlay) return null
-      if (leaveAsset(state, inv, asset, events) === false || inv.assets.includes(asset)) return null
-      if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code)
-      return asset.code
+      return discardControlledAsset(state, inv, asset, events, leaveAsset, info) ? asset.code : null
     },
     gainResources: (seat, amount) => resourceBank.gainResource(state, state.investigators[seat], amount, events),
     // 04082 补给短缺：与玩家卡 api.loseResources 共用同一实现（含 wouldLoseResources 窗口）。
@@ -753,9 +766,9 @@ function scenarioRuntime(state, events, testSource = null) {
     },
     shuffleAssetIntoDeck: (seat, assetId) => {
       const inv = state.investigators[seat], asset = inv.assets.find(item => item.id === assetId)
-      if (!asset) return null
-      leaveAsset(state, inv, asset, events)
-      if (!asset.removedFromGame) inv.deck.push(asset.code)
+      if (!canLeaveControlledAsset(state, inv, asset)) return null
+      if (leaveAsset(state, inv, asset, events) === false || inv.assets.includes(asset)) return null
+      if (!asset.removedFromGame && !asset.returnedToHand) inv.deck.push(asset.code)
       inv.deck = replacePlayerZoneCards(state, inv, shuffle(inv.deck, () => randomValue(state)), 'shuffle')
       return asset.code
     },
@@ -1078,7 +1091,7 @@ function scenarioRuntime(state, events, testSource = null) {
       const host = hosts.find(item => item.attachments?.includes(source))
       if (!host) return false
       host.attachments.splice(host.attachments.indexOf(source), 1)
-      state.encounterDiscard.push(source.originalCode || source.code)
+      discardEncounterAttachment(state, source)
       return true
     },
     // 按 id 摘除遭遇附属：供「检定成功后再弃掉本卡」这类异步回调使用——事务重放会替换
@@ -1091,7 +1104,7 @@ function scenarioRuntime(state, events, testSource = null) {
         const attachment = (host.attachments || []).find(item => item.id === attachmentId)
         if (!attachment) continue
         host.attachments.splice(host.attachments.indexOf(attachment), 1)
-        state.encounterDiscard.push(attachment.originalCode || attachment.code)
+        discardEncounterAttachment(state, attachment)
         return true
       }
       return false
@@ -1214,7 +1227,11 @@ function scenarioRuntime(state, events, testSource = null) {
       const weaknesses = owner.discard.filter(code =>
         ['weakness', 'basicweakness'].includes(cardDef(code)?.subtype))
       if (!weaknesses.length) return 0
-      owner.discard = owner.discard.filter(code => !weaknesses.includes(code))
+      if (owner.deferredEventReturns) {
+        for (let index = owner.discard.length - 1; index >= 0; index--) {
+          if (weaknesses.includes(owner.discard[index])) splicePlayerDiscard(owner, index, 1)
+        }
+      } else owner.discard = owner.discard.filter(code => !weaknesses.includes(code))
       owner.deck.push(...weaknesses)
       owner.deck = replacePlayerZoneCards(state, owner, shuffle(owner.deck, () => randomValue(state)), 'shuffle')
       return weaknesses.length
@@ -1365,7 +1382,7 @@ function scenarioRuntime(state, events, testSource = null) {
       if (!location) return null
       location.attachments ||= []
       const attachment = { id: `locatt-${location.id}-${location.attachments.length + 1}-${code}`, code, ...extra }
-      location.attachments.push(attachment)
+      location.attachments.push(rememberScenarioDeckAttachment(attachment))
       return attachment
     },
     detachLocationAttachment: (locationId, attachmentId) => {
@@ -1593,14 +1610,22 @@ function scenarioRuntime(state, events, testSource = null) {
     },
     markers: target => (target?.markers ? [...target.markers] : []),
     // 2026-10-25 第五轮修复（05110）：地点当前帷幕的完整读点（含剧本/地点修正与雾）。
-    locationShroud: (locationId, seat = state.currentSeat) => {
+    locationShroud: (locationId, seat = state.currentSeat, { includeLocationState = false } = {}) => {
       const location = state.locations.find(loc => loc.id === locationId)
       if (!location) return null
       const inv = state.investigators[seat]
       const scenarioShroud = (scenarioBehavior(state).locationShroudModifier?.(state, location, inv) || 0)
         + entityModifierTotal(state, location, 'locationShroud')
+      let modifier = 0
+      if (includeLocationState) {
+        if ((location.attachments || []).some(entry => entry.shroudAsOne === true)) return 1
+        const rule = registeredEntry(location.originalCode || location.code)?.locationRule
+        modifier += campaignState.turnShroudModifier(location, state) + (rule?.shroudModifier?.(state, location, inv) || 0)
+        const turn = location.turnShroudMod
+        if (turn?.round === state.round && turn.turnSeat === state.currentSeat) modifier += turn.amount || 0
+      }
       return location.shroud + (location.shroudMod || 0)
-        + (state.fogMod || 0) + scenarioShroud
+        + (state.fogMod || 0) + scenarioShroud + modifier
     },
     takeEnemyClues: (enemy, seat, count = 1, { victoryWhenEmpty = false } = {}) => {
       const actual = state.enemies.find(candidate => candidate.id === (typeof enemy === 'string' ? enemy : enemy?.id))
@@ -1978,7 +2003,7 @@ function scenarioRuntime(state, events, testSource = null) {
       return discarded
     },
     drawDiscard: (seat, index) => {
-      const inv = state.investigators[seat], code = inv.discard.splice(index, 1)[0]
+      const inv = state.investigators[seat], code = splicePlayerDiscard(inv, index, 1)[0]
       inv.deck.push(code); drawCards(state, inv, 1, events)
     },
     drawEncounterDiscard: (seat, index) => { state.encounterDeck.push(state.encounterDiscard.splice(index, 1)[0]); drawEncounter(state, state.investigators[seat], events) },
@@ -2088,7 +2113,7 @@ function scenarioRuntime(state, events, testSource = null) {
       const inv = state.investigators?.[seat]
       const index = inv?.discard?.lastIndexOf(String(code)) ?? -1
       if (!inv || index < 0) return null
-      return inv.discard.splice(index, 1)[0]
+      return splicePlayerDiscard(inv, index, 1)[0]
     },
     putOnTopOfDeck: (seat, code) => {
       const inv = state.investigators?.[seat]
@@ -2252,19 +2277,22 @@ function scenarioRuntime(state, events, testSource = null) {
       })).filter(item => item.rule),
     },
     discardEnemy: enemy => discardEnemyCard(state, enemy),
-    setEnemyAside: enemy => {
-      if (!state.enemies.includes(enemy)) return null
+    setEnemyAside: (enemy, { untilRoundEnd = false } = {}) => {
+      if (!state.enemies.includes(enemy) || enemyIsBody(enemy) || enemyIsPart(enemy)) return null
+      if (untilRoundEnd) enemy.asideUntilRoundEnd = { round: state.round, location: enemy.location }
       disengageEnemy(state, enemy)
       removeOne(state.enemies, enemy)
       state.setAsideEnemies ||= []
       state.setAsideEnemies.push(enemy)
       return enemy.id
     },
-    restoreEnemyFromAside: (id, locationId) => {
+    restoreEnemyFromAside: (id, locationId, { exhausted = false } = {}) => {
       const enemy = state.setAsideEnemies?.find(enemy => enemy.id === id)
       if (!enemy || !state.locations.some(location => location.id === locationId)) return null
       removeOne(state.setAsideEnemies, enemy)
       enemy.location = locationId
+      if (exhausted) enemy.exhausted = true
+      delete enemy.asideUntilRoundEnd
       state.enemies.push(enemy)
       autoEngageAt(state, locationId, events)
       return enemy
@@ -2273,10 +2301,12 @@ function scenarioRuntime(state, events, testSource = null) {
       if (!state.enemies.includes(enemy)) return false
       if (enemy.hostId) return returnSwarmCard(state, enemy)
       for (const member of swarmGroup(state, enemy).slice(1)) returnSwarmCard(state, member)
-      disengageEnemy(state, enemy)
-      removeOne(state.enemies, enemy)
       state.removedFromGame ||= []
-      state.removedFromGame.push(enemy.originalCode || enemy.code)
+      for (const item of [...enemyParts(state, enemy), enemy]) {
+        disengageEnemy(state, item)
+        removeOne(state.enemies, item)
+        state.removedFromGame.push(item.originalCode || item.code)
+      }
       if (enemy.enemyLocation) removeLocation(state, enemy.id, events)
       return true
     },

@@ -11,6 +11,7 @@ import { createHash } from 'node:crypto'
 import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { buildImageDescriptor, GENERIC_BACKS } from '../presentation/art-rules.js'
+import retiredLocalizedArts from '../presentation/retired-localized-arts.json' with { type: 'json' }
 import { ALL_CARDS, META } from '../src/cards/cards-data.js'
 
 const GAME = new URL('../', import.meta.url)
@@ -20,6 +21,7 @@ const SCOPE = JSON.parse(readFileSync(new URL('./audit/migration-scope.json', GA
 
 const LOCALIZED_DIGEST = 'frontend/src/digests/zh.json'
 const REMOTE_MANIFEST = 'frontend/image-manifest.json'
+const RETIRED_LOCALIZED_ARTS = new Set(retiredLocalizedArts)
 const MEDIA_DIRECTORIES = [
   'frontend/public/img/arkham',
   'frontend/public/img/icons',
@@ -60,7 +62,7 @@ function localizedArtList() {
   const arts = [...new Set(entries
     .filter(entry => typeof entry === 'string')
     .map(entry => entry.replace(/^\//, ''))
-    .filter(entry => /^cards\/[0-9a-z]+\.avif$/.test(entry)))].sort()
+    .filter(entry => /^cards\/[0-9a-z]+\.avif$/.test(entry) && !RETIRED_LOCALIZED_ARTS.has(entry)))].sort()
   return {
     source: { path: LOCALIZED_DIGEST, sha256: digest.sha256, entries: entries.length, cardArts: arts.length, language: 'zh', urlPrefix: 'img/arkham/zh/' },
     arts,
@@ -154,6 +156,11 @@ const PRESENTATION_FILES = Object.freeze([
   'games/arkhamhorror/web/table-art.js',
   'games/arkhamhorror/web/table-regions.js',
   'games/arkhamhorror/web/table-components.js',
+  'games/arkhamhorror/web/card-text.js',
+  'games/arkhamhorror/web/card-dossier.css',
+  'games/arkhamhorror/web/game-symbols.js',
+  'games/arkhamhorror/web/game-symbols.css',
+  'games/arkhamhorror/web/game-symbol-paths.js',
   'games/arkhamhorror/web/table-presentation.js',
   'games/arkhamhorror/web/noir.css',
   'games/arkhamhorror/web/story-book.css',

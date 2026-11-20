@@ -15,23 +15,23 @@ export default {
       cost: { action: false, exhaust: true },
       resolve: ({ inv, source, api }) => {
         const candidates = inv.assets.filter(card => card.id !== source?.id
-          && api.isChargeAsset(card) && api.canLeavePlay(card))
+          && api.isChargeAsset(card) && api.investigatorTools.canReturnAsset(inv.seat, card))
         if (!candidates.length) return
         const targetId = api.choice({ kind: 'target', source: '03014', seat: inv.seat,
           prompt: '选择一个由你控制的充能支援。',
           options: candidates.map(card => ({ id: card.id, label: api.cardName(card.code) })) })
         const card = candidates.find(item => item.id === targetId)
         if (!card) return
-        const mode = api.choice({ kind: 'effect', source: '03014', seat: inv.seat,
+        const mode = !api.investigatorTools.canDiscardAsset(inv.seat, card) ? 'return' : api.choice({ kind: 'effect', source: '03014', seat: inv.seat,
           prompt: '选择灵语人的结算方式。', options: [
             { id: 'return', label: '将支援返回手牌' },
             { id: 'resources', label: `获得 ${card.uses || 0} 资源并弃置支援` },
           ] })
         if (mode === 'return') {
-          api.returnAssetToHand(inv.seat, card)
+          if (!api.returnAssetToHand(inv.seat, card)) return
         } else {
+          if (!api.discardAsset(inv.seat, card)) return
           api.gainResources(inv.seat, card.uses || 0)
-          api.discardAsset(inv.seat, card)
         }
         api.info(`「${api.cardName('03014')}」将「${api.cardName(card.code)}」${mode === 'return' ? '返回手牌' : '转化充能并弃置'}。`)
       },

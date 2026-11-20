@@ -336,6 +336,7 @@ async function prepareCampaignSeat(page, request, session, investigatorCode) {
   expect(codes, 'EotE 调查员候选').toContain(investigatorCode)
   current = await postMove(request, current, { action: 'hubSelectInvestigator', code: investigatorCode })
   current = await postMove(request, current, { action: 'hubAutoDeck' })
+  current = await postMove(request, current, { action: 'hubConfirmDeck' })
   current = await postMove(request, current, { action: 'hubDoneSeat' })
   expect(current.state.hubReady, '全桌战役准备完成').toBe(true)
   return current

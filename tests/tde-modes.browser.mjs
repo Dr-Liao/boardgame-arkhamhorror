@@ -162,6 +162,7 @@ for (const [label, width, height] of [['desktop', 1440, 950], ['mobile', 390, 84
     // 只有座位 1 是真人，其余座位由大厅按 AI 自动准备；真人座位选人 + 自动牌组 + 确认即可。
     await post({ action: 'hubSelectInvestigator', code: '01001' }, 0)
     await post({ action: 'hubAutoDeck' }, 0)
+    await post({ action: 'hubConfirmDeck' }, 0)
     await post({ action: 'hubDoneSeat' }, 0)
     await page.getByRole('button', { name: '刷新', exact: true }).click()
     const departure = hub.locator('[data-parallel="true"]')
@@ -291,6 +292,7 @@ test('M5 并行开局后局内不做分屏：两条线在后台同时运行，�
   await post({ action: 'hubGoSetup' }, 0)
   await post({ action: 'hubSelectInvestigator', code: '01001' }, 0)
   await post({ action: 'hubAutoDeck' }, 0)
+  await post({ action: 'hubConfirmDeck' }, 0)
   await post({ action: 'hubDoneSeat' }, 0)
   await page.getByRole('button', { name: '刷新', exact: true }).click()
   const departure = hub.locator('[data-parallel="true"]')
@@ -378,6 +380,7 @@ for (const [label, width, height] of [['desktop', 1440, 950], ['mobile', 390, 84
     await post({ action: 'hubGoSetup' }, 0)
     await post({ action: 'hubSelectInvestigator', code: '01001' }, 0)
     await post({ action: 'hubAutoDeck' }, 0)
+    await post({ action: 'hubConfirmDeck' }, 0)
     await post({ action: 'hubDoneSeat' }, 0)
     await page.getByRole('button', { name: '刷新', exact: true }).click()
     const begin = page.waitForResponse(response => response.url().endsWith('/api/move') && response.request().postDataJSON()?.move?.action === 'hubBeginScenario')

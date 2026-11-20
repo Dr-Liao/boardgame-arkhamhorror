@@ -1,7 +1,10 @@
+import { assetTextBlanked, assetTextBlankedExceptForced } from './card-text.js'
+
 // Optional histories are kept only for investigators whose cards read them.
 export function tracksHistory(state, inv, key, registeredEntry) {
   const codes = [...(inv.hand || []), ...(inv.deck || []), ...(inv.discard || []),
-    ...(inv.assets || []).map(card => card.code), ...(state.campaign?.investigators?.[inv.seat]?.deck || [])]
+    ...(inv.assets || []).map(card => card.code), ...(inv.threat || []).map(card => card.code),
+    ...(state.campaign?.investigators?.[inv.seat]?.deck || [])]
   return codes.some(code => registeredEntry(typeof code === 'string' ? code : code.code)?.[key])
 }
 
@@ -13,12 +16,37 @@ export function performedActionKinds(move, kind) {
 }
 
 export function recordPerformedAction(state, inv, move, kind, registeredEntry) {
+  if (['draw', 'resource'].includes(kind)) recordRoundAction(state, inv, 'actions', kind, registeredEntry)
   if (!state.investigators.some(owner => tracksHistory(state, owner, 'trackActionHistory', registeredEntry))) return []
   if (inv.actionHistory?.turn !== state.turnSerial) inv.actionHistory = { turn: state.turnSerial, entries: [] }
   const current = performedActionKinds(move, kind)
   const previous = inv.actionHistory.entries.at(-1) || []
   inv.actionHistory.entries.push(current)
   return current.filter(value => previous.includes(value))
+}
+
+export function firstActionExemptsOpportunityAttack(state, inv, kind, registeredEntry) {
+  if (!inv.assets.some(asset => registeredEntry(asset.code)?.assetRule?.firstActionNoAoO === kind
+    && !assetTextBlanked(asset, inv) && !assetTextBlankedExceptForced(asset))) return false
+  return inv.actionHistory?.turn !== state.turnSerial || !inv.actionHistory.entries.some(types => types.includes(kind))
+}
+
+export function recordRoundAction(state, inv, category, kind, registeredEntry) {
+  const ownHistory = tracksHistory(state, inv, 'trackRoundActionHistory', registeredEntry)
+  const trackShared = category === 'opportunityAttacks'
+    && state.investigators.some(owner => tracksHistory(state, owner, 'trackRoundActionHistory', registeredEntry))
+  if (!ownHistory && !trackShared) return
+  if (inv.roundActionHistory?.round !== state.round) {
+    inv.roundActionHistory = { round: state.round, actions: [], successes: [], enemyDraws: 0 }
+  }
+  if (category === 'enemyDraws' || category === 'opportunityAttacks') {
+    inv.roundActionHistory[category] = (inv.roundActionHistory[category] || 0) + 1
+  } else inv.roundActionHistory[category].push(kind)
+}
+
+export function trackTestAssetSource(state, inv, registeredEntry) {
+  return registeredEntry(inv.code)?.campaignDeck?.trackTestAssetSource === true
+    || state.investigators.some(owner => tracksHistory(state, owner, 'trackTestAssetSource', registeredEntry))
 }
 
 export function defeatedHealthThisTurn(state, inv) {

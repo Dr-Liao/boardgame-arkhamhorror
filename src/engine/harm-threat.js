@@ -6,6 +6,9 @@ import { playerEffectCanAffect } from './effect-recipient.js'
 import { keysOnExit } from './scenario-keys.js'
 import { vehicleOf, leaveVehicle } from './vehicles.js'
 import { mechanicState } from './mechanic-state.js'
+import { roadDistance } from './map-graph.js'
+import { routeDiscardToScenarioDeck } from './scenario-decks.js'
+import { chooseTdcArtifactRecipient, earnedTdcArtifacts, tdcInteractionSpec } from './tdc-interactions.js'
 
 export function createHarmThreat(deps) {
   const {
@@ -100,15 +103,23 @@ export function createHarmThreat(deps) {
     return (inv.threat || []).some(card => card.noDrawAction === true || getThreatEffect(card)?.noDrawAction === true)
   }
 
-  function removeThreat(state, inv, threatCard, events) {
+  function removeThreat(state, inv, threatCard, events, { seat = state._resolvingSeat, discard: shouldDiscard = true } = {}) {
+    if (!inv.threat.includes(threatCard)) return false
     // 「死灵之书上有恐惧时不能离场」（01009）：只要还有计数器，任何离场路径都不生效。
     if (registeredEntry(threatCard.code)?.threatCannotLeaveWhileCounters && (threatCard.counters || 0) > 0) {
       info(state, events, `⛔ 「${cardName(threatCard.code)}」上还有恐惧，不能离场。`)
       return false
     }
     removeOne(inv.threat, threatCard)
-    const discard = ALL_TREACHERIES[threatCard.code] ? state.encounterDiscard : inv.discard
-    discard.push(threatCard.code)
+    if (!shouldDiscard) return true
+    if (!routeDiscardToScenarioDeck(state, threatCard.code, threatCard.discardToScenarioDeck)) {
+      const discard = ALL_TREACHERIES[threatCard.code] ? state.encounterDiscard : inv.discard
+      discard.push(threatCard.code)
+    }
+    if (Number.isSafeInteger(seat) && cardDef(threatCard.originalCode || threatCard.code)?.type === 'treachery') {
+      reactionWindow(state, 'encounterCardDiscardedFromPlay', { when: 'encounterCardDiscardedFromPlay',
+        seat, code: threatCard.code, targetId: threatCard.id, location: inv.location }, events, { allowNested: true })
+    }
     return true
   }
 
@@ -250,6 +261,10 @@ export function createHarmThreat(deps) {
   }
 
   function eliminateInvestigator(state, inv, events) {
+    const record = state.campaign?.investigators?.[inv.seat]
+    if (inv.defeated && !inv.resigned && registeredEntry(record?.code)?.campaignDeck?.killedOnDefeat) {
+      record.status = 'killed'
+    }
     keysOnExit(state, `investigator:${inv.seat}`, inv.location)
     const vehicleId = vehicleOf(state, inv.seat)
     if (vehicleId) {
@@ -290,14 +305,27 @@ export function createHarmThreat(deps) {
       if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code)
     }
     for (const asset of inv.assets.slice()) {
-      if (!inv.defeated || inv.resigned || !registeredEntry(asset.code)?.transferOnControllerDefeat) continue
-      const targets = aliveInvestigators(state).filter(other => other !== inv)
+      const policy = registeredEntry(asset.code)?.transferOnControllerDefeat
+      if (!inv.defeated || inv.resigned || !policy) continue
+      let targets = aliveInvestigators(state).filter(other => other !== inv)
+      if (policy === 'nearest' && targets.length > 1) {
+        const distances = targets.map(other => roadDistance(state.locations, inv.location, other.location))
+        const nearest = Math.min(...distances)
+        targets = targets.filter((_, index) => distances[index] === nearest)
+      }
       if (!targets.length) continue
-      const targetSeat = targets.length === 1 ? targets[0].seat : Number(requestChoice(state, { kind: 'investigator',
+      const lead = state.campaign.leadSeat
+      const artifact = tdcInteractionSpec(state) && earnedTdcArtifacts(state).includes(asset.originalCode || asset.code)
+      const targetSeat = targets.length === 1 ? targets[0].seat : artifact
+        ? chooseTdcArtifactRecipient(state, aliveInvestigators(state).some(other => other.seat === lead) ? lead : targets[0].seat,
+          targets, asset.id, false)
+        : Number(requestChoice(state, { kind: 'investigator',
         source: asset.code, seat: state.campaign.leadSeat ?? targets[0].seat, prompt: '将支援交给另一名调查员。',
         options: targets.map(other => ({ id: String(other.seat), label: other.name })) }))
+      const target = targets.find(other => other.seat === targetSeat && !other.defeated && !other.resigned)
+      if (!target || !inv.assets.includes(asset)) throw new RangeError('无效的支援接管目标')
       inv.assets.splice(inv.assets.indexOf(asset), 1)
-      state.investigators[targetSeat].assets.push(asset)
+      target.assets.push(asset)
       scenarioBehavior(state).assetControlChanged?.(state, asset, inv.seat, targetSeat, scenarioRuntime(state, events))
     }
     for (const eid of inv.engaged.slice()) {

@@ -15,7 +15,7 @@ export function createDiscardCostApi(state, deps) {
     return Object.values(value).every(integer) ? value : null
   }
   const handRows = (inv,cost) => {
-    const ordinary = new Set(deps.discardableHandCards(inv,cost.discardHandIcon).map(row=>row.index))
+    const ordinary = new Set(deps.discardableHandCards(inv,cost.discardHandIcon,cost.discardHandType).map(row=>row.index))
     return deps.discardableHandCards(inv).map(row=>({ ...row,
       icons: printedIconCount(deps.printedCard(row.code)), ordinary: ordinary.has(row.index) }))
   }

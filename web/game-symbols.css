@@ -1,9 +1,7 @@
-@font-face{font-family:'AHCardSymbols';src:url('./fonts/arkham.ttf') format('truetype');font-display:block}
 @font-face{font-family:'AHCardSymbolIcons';src:url('./fonts/arkhamicons.ttf') format('truetype');font-display:block}
 @font-face{font-family:'AHCardSymbolSlim';src:url('./fonts/arkhamslim.ttf') format('truetype');font-display:block}
 .ah-icon.ah-game-symbol{overflow:visible}
 .ah-game-symbol text{font-weight:normal;font-style:normal;text-transform:none;letter-spacing:0;font-variant:normal;fill:currentColor;stroke:none}
-/* 生命/理智：由参考插画描摹出的矢量剪影（见 table-components.js 的 FILLED_ICONS）。
-   旧的 PNG 蒙版在 13–18px 会糊成灰团，已全部换成路径；偶奇填充保留心形/脑回的镂空。 */
+/* 常用卡面图标和生命／理智均使用单色矢量路径。 */
 .ah-icon.ah-symbol-vector{overflow:visible}
 .ah-icon.ah-symbol-vector path{fill:currentColor;stroke:none}

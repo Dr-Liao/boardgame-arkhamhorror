@@ -1,5 +1,41 @@
 关卡自定义歌曲目录（相对于本文件）
 
+欢迎来到铁杉谷
+  campaigns/theFeastOfHemlockVale/welcomeToHemlockVale/
+
+岩间密语
+  campaigns/theFeastOfHemlockVale/writtenInRock/
+
+汉洛克庄园
+  campaigns/theFeastOfHemlockVale/hemlockHouse/
+
+寂静荒野
+  campaigns/theFeastOfHemlockVale/theSilentHeath/
+
+消失的姐妹
+  campaigns/theFeastOfHemlockVale/theLostSister/
+
+深沼之物
+  campaigns/theFeastOfHemlockVale/theThingInTheDepths/
+
+扭曲空洞
+  campaigns/theFeastOfHemlockVale/theTwistedHollow/
+
+第二日黎明
+  campaigns/theFeastOfHemlockVale/dawnOfTheSecondDay/
+
+最长一夜
+  campaigns/theFeastOfHemlockVale/theLongestNight/
+
+最终日黎明
+  campaigns/theFeastOfHemlockVale/dawnOfTheFinalDay/
+
+最终夜
+  campaigns/theFeastOfHemlockVale/preludeTheFinalEvening/
+
+山谷的命运
+  campaigns/theFeastOfHemlockVale/fateOfTheVale/
+
 谜雨
   campaigns/theScarletKeys/riddlesAndRain/
 

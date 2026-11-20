@@ -33,7 +33,7 @@ export const LIMIT_SCOPES = Object.freeze([
   'perWindow', 'perAttack', 'perSearch', 'perAction',
 ])
 
-export const LIMIT_OWNERS = Object.freeze(['instance', 'investigator', 'investigatorInstance', 'player', 'group'])
+export const LIMIT_OWNERS = Object.freeze(['instance', 'investigator', 'investigatorInstance', 'contextAsset', 'player', 'group'])
 
 // 旧字符串写法 → 新对象写法。旧表只有 5 个，且语义就是 instance/player 两种归属。
 const LEGACY_SCOPES = Object.freeze({
@@ -92,9 +92,10 @@ function scopeKey(scope, state, ctx = {}) {
   }
 }
 
-function ownerKey(owner, descriptor, source, inv) {
+function ownerKey(owner, descriptor, source, inv, context) {
   switch (owner) {
     case 'instance': return source?.id ? `card:${source.id}` : `seat:${inv?.seat}:${descriptor.code}`
+    case 'contextAsset': return `inv:${inv?.seat}:card:${context.asset?.id ?? '-'}`
     case 'investigatorInstance': return `inv:${inv?.seat}:card:${source?.id ?? descriptor.code}`
     case 'investigator': return `inv:${inv?.seat}:${descriptor.code}`
     case 'player': return `seat:${inv?.seat}:${descriptor.code}`
@@ -117,7 +118,7 @@ export function limitKey(state, inv, descriptor, context = null, windowId = null
     ...(windowId ? { windowId } : {}),
   }
   if (normalized.scope === 'perWindow' && context?.tokenIndex != null) ctx.windowInstance = `${state.skillTest?.id}:${context.tokenIndex}`
-  return `${descriptor.id}|${ownerKey(normalized.owner, descriptor, source, inv)}|`
+  return `${descriptor.id}|${ownerKey(normalized.owner, descriptor, source, inv, ctx)}|`
     + `${scopeKey(normalized.scope, state, ctx)}`
 }
 

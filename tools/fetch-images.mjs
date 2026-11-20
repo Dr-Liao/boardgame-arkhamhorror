@@ -23,6 +23,7 @@ import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { imageDescriptor } from '../presentation/images.js'
+import retiredLocalizedArts from '../presentation/retired-localized-arts.json' with { type: 'json' }
 import { DEFAULT_IMAGE_HOST, remoteImagePath } from '../web/images.js'
 import { verifyImages } from './image-integrity.mjs'
 
@@ -92,6 +93,7 @@ function manifestPaths() {
   const strip = prefix => (manifest[prefix] || []).filter(entry => typeof entry === 'string').map(entry => entry.replace(/^img\/arkham\//, ''))
   const english = new Set([...strip('img/arkham/cards'), ...strip('img/arkham/backs')])
   const localized = new Set(strip('img/arkham/zh/cards').map(entry => entry.replace(/^zh\//, '')))
+  for (const retired of retiredLocalizedArts) localized.delete(retired)
   return { english, localized }
 }
 

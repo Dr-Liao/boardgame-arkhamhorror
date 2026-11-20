@@ -9,12 +9,13 @@
 import { isDraftMode, draftLegalMoves, draftDecksReady, draftDeckStatus } from '../deck/draft-mode.js'
 import { contentRegistry } from '../../content/registered.js'
 import { cardPoolContext } from '../deck/card-pool.js'
+import { investigatorIdentity } from '../deck/investigator-identity.js'
 // P5 批次 2：四模式开局（纯策略在 src/campaign/campaign-modes.js）。
 import { assignSeatPart, campaignPartsManifest, laneBalance, modeOptions } from '../campaign/campaign-modes.js'
 // P8：世界地图启程（《绯红密钥》）——只读地图原语；图/目的地/阈值全部由 manifest 传入。
 import { embarkOptions, forcedDestination, mapTime, statusReportState } from './tsk-map.js'
 // P8：定制升级卡（Customizable）的关间勾选候选（勾选/经验结算仍走 tsk-customizable 原语）。
-import { customizationOptions, customizationsOfSeat } from './tsk-customizable.js'
+import { customizationChoiceSetup, customizationOptionFullyChecked, customizationOptions, customizationsOfSeat } from './tsk-customizable.js'
 // 2026-11-16 P2-3：exceptional 定制卡每格 2 XP（与 mechanic-view 的 xpPerCheck 同口径）。
 import { cardDef } from './card-lookup.js'
 // 2026-11-13 P1-17：战役禁用卡（02310 等）与存在抹除名单必须参与升级池过滤；
@@ -241,7 +242,8 @@ function runInterlude(state, nextIndex, events) {
   state.phase = 'interlude'
   const poolContext = upgradePoolContext(state)
   const eliminated = state.investigators.filter(inv => campaign.investigators[inv.seat].status !== 'active')
-  if (replacementCandidates(campaign, poolContext).length < eliminated.length) {
+  const availableIdentities = new Set(replacementCandidates(campaign, poolContext).map(code => investigatorIdentity(code)))
+  if (availableIdentities.size < eliminated.length) {
     campaign.failed = true
     info(state, events, '已开放的调查员不足以替换所有死亡或疯狂的人物，战役无法继续。')
     endCampaign(state, events)
@@ -286,7 +288,9 @@ function runInterlude(state, nextIndex, events) {
     options: [{ id: 'cancel', label: '取消购买' }, ...replacementOptions(record, added, campaign.records, poolContext).map(item => ({ id: item.code, label: `替换${cardName(item.code)}，支付 ${item.cost} XP` }))],
   })
   if (removed === 'cancel') resume()
-  const purchase = purchaseCard(campaign, inv.seat, added, removed, poolContext)
+  const purchase = purchaseCard(campaign, inv.seat, added, removed, {
+    ...poolContext, choosePurchaseEffect: spec => requestChoice(state, spec),
+  })
   info(state, events, `${inv.name} 完成一次牌组调整，支付 ${purchase.cost} XP。`)
   resume()
 }
@@ -451,12 +455,12 @@ function customizationMoves(state, seat, record) {
   const initial = uiState === 'scenarioSetup' && !state.campaign.scenarioResults?.length
   const interlude = uiState === 'interlude'
   if (!initial && !interlude) return []
+  if (!state._legacyStartingDeckRules && (initial || state.hubReplacementSeats?.[seat]) && hubStartingDeckReady(record)) return []
   if (interlude && state.campaign.upgradesAllowed === false) return []
   // 未保存的升级草稿把经验暂存在 record.upgradeDraft.record 上；此时勾选会把两套账算重，
   // 因此先让玩家保存/撤销升级方案（dispatch 用同一条错误口径兜底）。
   if (record.upgradeDraft) return []
   const availableXp = Math.max(0, Number(upgradeRecord(record)?.xp) || 0)
-  if (availableXp < 1) return []
   const deck = [...new Set((record.deck || []).filter(code => customizationOptions(code)))]
   if (!deck.length) return []
   const checkedTable = customizationsOfSeat(state, seat)
@@ -472,6 +476,7 @@ function customizationMoves(state, seat, record) {
       // P2-3：近似条目声明 implemented:false 的勾选格不可购买（面板仍可展示文本）。
       if (option.implemented === false) continue
       const costPerCheck = cardDef(code)?.exceptional === true ? 2 : 1
+      if (availableXp < costPerCheck) continue
       const label = `定制：${cardName(code)} · ${option.name}（第 ${filled + 1} 格 / ${costPerCheck} XP）`
       const explanation = `${option.name}：已勾选 ${filled}/${option.checks} 格；剩余 ${availableXp} XP。`
       moves.push(initial
@@ -480,6 +485,23 @@ function customizationMoves(state, seat, record) {
     }
   }
   return moves
+}
+
+function customizationSetupMoves(state, seat, record) {
+  if (record?.status !== 'active' || record.upgradeDraft || !(state.humanSeats || [0]).includes(seat)) return []
+  const deck = record.deck || []
+  return [...new Set(deck)].flatMap(code => {
+    const setup = customizationChoiceSetup(state, seat, code, deck)
+    if (!setup) return []
+    const used = new Set(Object.values(setup.recorded).flat())
+    const available = setup.catalog.filter(choice => !used.has(choice.value)).length
+    const configure = count => ({ action: 'hubConfigureCustomization', code,
+      label: `记录「${cardName(code)}」的定制选择`, ...(available < count ? { disabled: true } : {}) })
+    if (!setup.recorded.base) return [configure(setup.base)]
+    return Object.keys(setup.options).map(Number).filter(index =>
+      !setup.recorded[index] && customizationOptionFullyChecked(state, seat, code, index))
+      .map(optionIndex => ({ ...configure(setup.options[optionIndex]), optionIndex }))
+  })
 }
 
 function hubLegalMoves(state, seat = decisionSeat(state)) {
@@ -550,7 +572,7 @@ function hubLegalMoves(state, seat = decisionSeat(state)) {
       ...leaderMoves,
       { action: 'hubSelectScenario', scenarioId: CAMPAIGN.scenarioOrder[state.campaign.scenarioIndex], label: '选择当前关卡' },
       ...(!state.campaign.scenarioResults.length
-        ? [{ action: 'hubReopenSetup', label: '重新准备调查员与牌组' }] : []),
+        ? [{ action: 'hubReopenSetup', label: '重新确认席位准备' }] : []),
     ]
     // 并行：首次整备允许房主继续调整分线；人数不等时把「开始」置灰并给原因。
     if (!state.campaign.scenarioResults.length && state.campaign.mode === 'parallel') {
@@ -604,24 +626,39 @@ function hubLegalMoves(state, seat = decisionSeat(state)) {
   if (!state.campaign.scenarioResults.length && ['pick', 'parallel'].includes(state.campaign.mode)) {
     moves.push(...seatPartMoves(state).filter(move => move.seat === seat))
   }
+  const deckReady = hubStartingDeckReady(record)
+  const startingDeckPending = record?.status === 'active' && record.startingDeckConfirmationPending
+  const replacement = state.hubReplacementSeats?.[seat]
+  const legacy = state._legacyStartingDeckRules
+  const setupChoices = customizationSetupMoves(state, seat, record)
+  const customizationPending = setupChoices.some(move => !move.disabled)
+  moves.push(...setupChoices)
+  if (startingDeckPending && (!record.draftMode || draftDeckStatus(record).ready)) {
+    moves.push({ action: 'hubConfirmDeck', label: '最终确认牌组' })
+  }
   if (isDraftMode(state)) {
     if (!record || record.status !== 'active' || (initialHubPreparation(state) && !record.draftMode)) {
       moves.push(...hubInvestigatorChoices(state, seat).map(code => ({ action: 'hubSelectInvestigator', code, label: `选择调查员：${ALL_INVESTIGATORS[code].nameZh || ALL_INVESTIGATORS[code].name}` })))
     }
     moves.push(...draftLegalMoves(state, record))
-    if (record?.status === 'active' && hubStartingDeckReady(record)) moves.push({ action: 'hubDoneSeat', label: state.uiState === 'interlude' ? '跳过／完成升级，准备下一关' : '确认准备' })
+    if (record?.status === 'active' && deckReady && !customizationPending) moves.push({ action: 'hubDoneSeat', label: state.uiState === 'interlude' ? '跳过／完成升级，准备下一关' : '确认准备' })
     return moves
   }
-  if (!record || record.status !== 'active' || initialHubPreparation(state)) {
+  const initial = initialHubPreparation(state)
+  const needsInvestigator = !record || record.status !== 'active'
+  if (needsInvestigator || (initial && (legacy || !deckReady))) {
     moves.push(...hubInvestigatorChoices(state, seat).map(code => ({
       action: 'hubSelectInvestigator', code, label: `选择调查员：${ALL_INVESTIGATORS[code].nameZh || ALL_INVESTIGATORS[code].name}`,
     })))
-    if (state.hubSeatSelected?.[seat] && (!record || !hubStartingDeckReady(record))) {
-      moves.push({ action: 'hubAutoDeck', label: '自动构筑合法牌组' })
-      moves.push({ action: 'hubSetDeck', label: '保存手动牌组' })
-    }
   }
-  if (state.uiState === 'interlude' && record?.status === 'active' && state.campaign.upgradesAllowed !== false) {
+  if (state.hubSeatSelected?.[seat] && !deckReady && (needsInvestigator || initial || replacement)) {
+    if (!startingDeckPending) {
+      moves.push({ action: 'hubAutoDeck', label: '自动构筑合法牌组' })
+    }
+    moves.push({ action: 'hubSetDeck', label: '保存手动牌组' })
+  }
+  if (state.uiState === 'interlude' && record?.status === 'active' && (legacy || !replacement)
+      && state.campaign.upgradesAllowed !== false) {
     const effective = upgradeRecord(record)
     const poolContext = upgradePoolContext(state)
     for (const added of availablePurchases(effective, state.campaign.records, poolContext)) {
@@ -637,18 +674,13 @@ function hubLegalMoves(state, seat = decisionSeat(state)) {
   if (record?.upgradeDraft) {
     moves.push({ action: 'hubConfirmUpgrades', label: '保存升级方案' }, { action: 'hubCancelUpgrades', label: '撤销本轮升级' })
   }
-  if (record?.status === 'active' && !record.upgradeDraft && hubStartingDeckReady(record)) {
+  if (record?.status === 'active' && !record.upgradeDraft && deckReady && !customizationPending) {
     moves.push({ action: 'hubDoneSeat', label: state.uiState === 'interlude' ? '完成升级，准备下一关' : '确认准备' })
   }
-  if (state.uiState === 'scenarioSetup' && !state.campaign.scenarioResults.length && !state.hubSeatDone?.[seat] && record?.status === 'active') {
+  if (legacy && initial && !state.hubSeatDone?.[seat] && record?.status === 'active') {
     moves.push({ action: 'hubSetDeck', label: '调整起始牌组' })
   }
-  // 关间替补：死亡/疯狂席位在关间换上的新调查员，0 XP 起始牌组和首关准备一样属于
-  // 「可反复调整」的阶段。自动构筑后仍要能手动编辑、从本地卡组库载入或导入 ArkhamDB
-  // 清单，直到该席位确认准备（hubSeatDone）为止；已经买过升级就不再退回起始牌组编辑。
-  // 两关直接相邻（没有幕间节点）时换人发生在下一关的 scenarioSetup 窗口，与幕间同口径。
-  if (['interlude', 'scenarioSetup'].includes(state.uiState) && state.hubReplacementSeats?.[seat]
-    && record?.status === 'active' && hubStartingDeckReady(record)
+  if (legacy && replacement && record?.status === 'active' && deckReady
     && !state.hubSeatDone?.[seat] && !record.upgradeDraft
     && !record.purchases?.length && !record.removedCards?.length) {
     moves.push({ action: 'hubSetDeck', label: '调整替补调查员的起始牌组' })

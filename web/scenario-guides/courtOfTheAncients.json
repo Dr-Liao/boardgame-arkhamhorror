@@ -1,0 +1,462 @@
+{
+  "id": "courtOfTheAncients",
+  "campaignId": "theDrownedCity",
+  "sourceKind": "authored",
+  "officialChinese": false,
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "古代议庭",
+          "children": [
+            {
+              "id": "checkCampaignLog",
+              "text": "查看你的战役日志。"
+            },
+            {
+              "id": "headedWest",
+              "text": "若远征队向西进发，前往古代议庭 1。"
+            },
+            {
+              "id": "headedEast",
+              "text": "若远征队向东进发，跳至古代议庭 2。"
+            },
+            {
+              "id": "courtOfTheAncients1",
+              "text": "古代议庭 1：你循着黑暗的隧道离开城市腹地，时间仿佛悄然流逝。最终，机械持续的轰鸣与震颤渐渐消散，取而代之的是一种不祥的寂静。安迪刚提议你们折返另寻出路，无尽的阶梯便到了尽头。你们头顶的天花板上嵌着一扇雕工繁复的门。按下门中央的一块面板，一座辽阔而通透的结构显露出来，隐约像是某座古老异星大教堂的中殿。中央矗立着一台高耸的升降机，周围环绕着螺旋状的一圈圈楼层。墙壁上覆满无数异星符文，跳动着绿光。你不禁想，这座巨大的档案库会不会藏着什么有价值的东西。"
+            },
+            {
+              "id": "courtOfTheAncients2",
+              "text": "古代议庭 2：你们落在高耸中殿的顶层。扭曲的阶梯与高空栈道环绕着这座庞大的结构，露出下方更多的楼层。你们周围的墙上覆满发光的异星符文：成百上千的符号覆盖着每一处表面。你不禁想，这座巨大的档案库会不会藏着什么有价值的东西。"
+            },
+            {
+              "id": "courtOfTheAncients2Ruby",
+              "text": "“小心点。我们不是第一批来到这里的人，”露比说。这位珠宝大盗正弓身查看一具俯卧的人体，那人躺在一摊新鲜的血液中。他们那件色彩斑斓的拼布斗篷令你一阵心惊。一声深沉、隆隆的咆哮在厅堂中回荡。露比的脸色变得凝重。"
+            },
+            {
+              "id": "courtOfTheAncients2Conclusion",
+              "text": "“如果我们想找到什么有价值的东西，最好快点行动。”"
+            },
+            {
+              "id": "resolvePlumbTheDepths",
+              "text": "若有调查员拥有“探究深渊”任务，他们在右侧结算各自的故事。"
+            },
+            {
+              "id": "proceedToSetup",
+              "text": "前往设置。"
+            },
+            {
+              "id": "plumbTheDepths",
+              "title": "任务：探究深渊",
+              "children": [
+                {
+                  "id": "instructions",
+                  "text": "仅当你拥有“探究深渊”任务时阅读："
+                },
+                {
+                  "id": "body",
+                  "text": "你忍不住惊叹于这座古老建筑的肃穆宏伟。这里曾是一座古代宫殿？一座图书馆？还是一处礼拜之所？墙上的精美壁画是象形符号与异星文字的混合，描绘着一次跨越星辰的古老迁徙。符文闪烁着绿光，记载着不可知的史事、人类无从知晓的古老秘密。"
+                },
+                {
+                  "id": "memories",
+                  "text": "一幅景象——满是海洋恐怖与沉没城市的梦魇画卷——吸引了你的注意。你按下一只格外令人不安的生物的眼睛，感到一阵古老记忆的洪流。一个异星存在的思想与感受、某颗遥远行星幽暗深渊的景象，淹没了你的意识。这些记忆渐渐让位于更清晰、更明确的事实、日期，一部由史前文明记录的历史。"
+                },
+                {
+                  "id": "reflection",
+                  "text": "你开始觉得自己正在消散，仿佛意识正被筛子滤过。你能学到的东西还有很多……可是，你该学吗？"
+                },
+                {
+                  "id": "choose",
+                  "text": "你必须决定（选择一项）："
+                },
+                {
+                  "id": "lookAway",
+                  "text": "移开视线。在你的战役日志中擦除探究深渊下的 1 点进度。每名调查员在下一个剧本开始时带有 1 个线索（来自标记池）。"
+                },
+                {
+                  "id": "seekTheTruth",
+                  "text": "追寻真相。在你的战役日志中探究深渊下标记 2 点进度，并受到 1 点精神创伤。每名调查员在下一个剧本的起始手牌减少 1 张。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "setup",
+          "title": "设置",
+          "children": [
+            {
+              "id": "gatherSets",
+              "text": "从以下遭遇组中收集所有卡牌：古代议庭、支配、梦境、古老迷雾、穷途异魔、拉莱耶与星之眷族。这些组以下列图标表示："
+            },
+            {
+              "id": "placeFixedLocations",
+              "text": "按照地点布置图将扭曲栈桥、西侧前厅、东侧前厅和古代祭坛地点放入游戏。"
+            },
+            {
+              "id": "placeCrumblingArchives",
+              "text": "将每份废墟档案塔洗混，并随机将其中的一份移出游戏。按照地点布置图将其余每份废墟档案塔放入游戏。"
+            },
+            {
+              "id": "checkCampaignLogWest",
+              "text": "查看你的战役日志。若远征队向西进发："
+            },
+            {
+              "id": "westGreatLift",
+              "text": "将大升降机地点放入第 1 层，（未激活）面朝上。（见大升降机与滑动地点。）"
+            },
+            {
+              "id": "westGatherStowaways",
+              "text": "收集偷渡者遭遇组中的所有卡牌。该组以下列图标表示："
+            },
+            {
+              "id": "westBuildActAgendaDeck",
+              "text": "使用议程 1a“废墟档案塔”、议程 2a“不稳地基”、幕 1a“巨人阶梯”与幕 2a“逃离高塔（v.I）”组建幕牌库与议程牌库。将其他每张幕与议程移出游戏。"
+            },
+            {
+              "id": "westStarSpawn",
+              "text": "在星之眷族遭遇组中搜寻星之眷族观察者敌人，将其放在一边，置于场外。从星之眷族遭遇组中随机将另外两张卡移出游戏。"
+            },
+            {
+              "id": "westBeginAtEastAntechamber",
+              "text": "每名调查员从东侧前厅开始游戏。"
+            },
+            {
+              "id": "checkCampaignLogEast",
+              "text": "查看你的战役日志。若远征队向东进发："
+            },
+            {
+              "id": "eastGreatLift",
+              "text": "将大升降机地点放入第 4 层，（未激活）面朝上。（见大升降机与滑动地点。）"
+            },
+            {
+              "id": "eastGatherPilgrims",
+              "text": "收集朝圣者遭遇组中的所有卡牌。该组以下列图标表示："
+            },
+            {
+              "id": "eastBuildActAgendaDeck",
+              "text": "使用议程 1a“淹没档案塔”、议程 2a“不稳地基”、幕 1a“巨人阶梯”与幕 2a“逃离高塔（v.II）”组建幕牌库与议程牌库。将其他每张幕与议程移出游戏。"
+            },
+            {
+              "id": "eastAddFloodTokens",
+              "text": "将洪水标记加入标记池。"
+            },
+            {
+              "id": "eastFloodLevelsOneAndTwo",
+              "text": "提高第 1 层和第 2 层每个地点的洪水等级。"
+            },
+            {
+              "id": "eastFullyFloodLevelOne",
+              "text": "提高第 1 层每个地点的洪水等级，使其完全淹没。"
+            },
+            {
+              "id": "eastStarSpawn",
+              "text": "在星之眷族遭遇组中搜寻星之眷族观察者敌人，将其放在一边，置于场外。将星之眷族遭遇组中其他每张卡移出游戏。"
+            },
+            {
+              "id": "eastBeginAtTwistingCatwalks",
+              "text": "每名调查员从扭曲栈桥开始游戏。"
+            },
+            {
+              "id": "setCardsAside",
+              "text": "将伊克雷希特碎片剧情支援和巨型暴君敌人放在一边，置于场外。"
+            },
+            {
+              "id": "checkCampaignLogInescapable",
+              "text": "查看你的战役日志。"
+            },
+            {
+              "id": "creatureWasDefeated",
+              "text": "若该生物被击败了，将穷途异魔遭遇组移出游戏。"
+            },
+            {
+              "id": "otherwise",
+              "text": "否则，将穷途异魔敌人放在一边，置于场外。"
+            },
+            {
+              "id": "chooseExpeditionAsset",
+              "text": "按玩家顺序，每名玩家可以选择 1 张已获得的神器支援，或远征遭遇组中的 1 张物品支援，以在其控制下开始游戏。该组以下列图标表示："
+            },
+            {
+              "id": "buildEncounterDeck",
+              "text": "洗混其余的遭遇卡，组建遭遇牌库。"
+            },
+            {
+              "id": "readyToBegin",
+              "text": "你现在可以开始游戏了。"
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "rules",
+          "children": [
+            {
+              "id": "greatLift",
+              "title": "大升降机与滑动地点",
+              "text": "本剧本中，调查员需要乘大升降机探索塔楼的其他楼层。\n\n• 除通过大升降机、地点自身的连接图标或某些卡牌效果外，地点之间并不相连。\n\n• 大升降机只与位于其左右两侧的地点相连，反之亦然。\n\n• 当被指示将大升降机向上或向下滑动时，将大升降机移动到其当前楼层的上一层或下一层。\n• 大升降机不能移动到第 4 层以上，也不能移动到第 1 层以下。\n\n• 大升降机移动时，该地点上的每张卡和每枚标记都随之移动。"
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "xp",
+          "children": [
+            {
+              "id": "bonus",
+              "text": "因探究古代议庭"
+            }
+          ]
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "text": "结局 1：你鼓足勇气准备再攀一次，双手交替，从一个落脚点挪到下一个落脚点，整座塔楼仿佛随时会在你脚下崩塌。终于，你撑着翻上破碎圆顶的边缘，逃出生天。安迪爬出古代议庭，远征队其余成员紧随其后。你们一同俯视拉莱耶那炫目的天际线，它似乎在强劲的海风中奇异地移动、摇摆。\n\n• 更新你的战役日志。\n• 将拉莱耶地图上的“古代议庭”划掉。\n\n• 若剧本结束时伊克雷希特碎片在某个调查员的控制下，在“已获得的神器”下的“伊克雷希特碎片”旁勾选方框。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 前往黑曜石峡谷。"
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "text": "结局 2：在台座每一道沟槽上又推又拧之后，它终于滑开了。下方是一道螺旋楼梯，通往深深的黑暗。又一块岩石在古老建筑的地板上碎裂。“我们必须离开这里！”露比喊道。你毫不耽搁地走下楼梯，把正在崩塌的塔楼与它的古老秘密抛在身后。\n\n• 更新你的战役日志。\n• 将拉莱耶地图上的“古代议庭”划掉。\n\n• 若剧本结束时伊克雷希特碎片在某个调查员的控制下，在“已获得的神器”下的“伊克雷希特碎片”旁勾选方框。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 前往大秘库。"
+        },
+        {
+          "id": "noResolution",
+          "title": "无结局",
+          "text": "若无结局（每名调查员都撤退或被击败）：远征队其余成员告诉你，他们发现你站在高塔攀爬点的边缘，像在梦游一般。你揉了揉眼睛。你对那座异星议庭毫无记忆。而鉴于它几乎完全崩塌了，你也永远不会有了。\n\n• 更新你的战役日志。\n• 将拉莱耶地图上的“古代议庭”划掉。\n\n• 若剧本结束时伊克雷希特碎片在某个调查员的控制下，在“已获得的神器”下的“伊克雷希特碎片”旁勾选方框。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 查看你的战役日志。\n• 若远征队向西进发，前往黑曜石峡谷。\n\n• 若远征队向东进发，前往大秘库。"
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "Court of the Ancients",
+          "children": [
+            {
+              "id": "checkCampaignLog",
+              "text": "Check your Campaign Log."
+            },
+            {
+              "id": "headedWest",
+              "text": "If the expedition headed west, proceed to Court of the Ancients 1."
+            },
+            {
+              "id": "headedEast",
+              "text": "If the expedition headed east, skip to Court of the Ancients 2."
+            },
+            {
+              "id": "courtOfTheAncients1",
+              "text": "Court of the Ancients 1: Time seems to slip away as you follow the dark tunnels out of the heart of the city. Eventually the constant churn and thrum of machinery melts away, replaced by an ominous silence. Andy has only just proposed that you turn around to find another route when the endless stairs come to a stop. An intricately carved door is set in the ceiling above you. Pressing a panel in its center reveals a vast, airy structure that vaguely resembles the nave of some ancient alien cathedral. A towering lift dominates the center, surrounded by spiraling ringed floors. The walls are covered in countless alien glyphs, pulsing with green light. You wonder if the great archive might hold anything valuable."
+            },
+            {
+              "id": "courtOfTheAncients2",
+              "text": "Court of the Ancients 2: You land on the top floor of the towering nave. Twisting stairs and catwalks circle the sprawling structure, revealing more levels below. The walls around you are covered in glowing alien glyphs: hundreds of thousands of symbols covering every surface. You wonder if the great archive might hold anything valuable."
+            },
+            {
+              "id": "courtOfTheAncients2Ruby",
+              "text": "“Watch yourself. We’re not the first ones here,” says Ruby. The jewel thief is bent over a prone human body lying in a pool of fresh blood. You’re struck by their colorful patchwork cloak. A deep, rumbling roar reverberates through the chamber. Ruby’s expression turns grave."
+            },
+            {
+              "id": "courtOfTheAncients2Conclusion",
+              "text": "“If we’re going to find anything of value, we’d better act quickly.”"
+            },
+            {
+              "id": "resolvePlumbTheDepths",
+              "text": "If any investigator has the Plumb the Depths Task, they resolve their respective story to the right."
+            },
+            {
+              "id": "proceedToSetup",
+              "text": "Proceed to Setup."
+            },
+            {
+              "id": "plumbTheDepths",
+              "title": "Task: Plumb the Depths",
+              "children": [
+                {
+                  "id": "instructions",
+                  "text": "Read only if you have the “Plumb the Depths” Task:"
+                },
+                {
+                  "id": "body",
+                  "text": "You can’t help but marvel at the austere grandeur of the ancient structure. Was this an ancient palace? A library? A place of worship? The intricate murals on the walls are a blend of pictograph and alien writing, depicting an ancient migration across the stars. The glyphs glow with a flickering green light, chronicling unknowable histories, ancient secrets hidden from humankind."
+                },
+                {
+                  "id": "memories",
+                  "text": "One image—a nightmarescape of oceanic horrors and sunken cities—catches your attention. You press the eye of a particularly disturbing creature and feel a rush of ancient memories. Thoughts and feelings of an alien being, images of the stygian depths of some distant planet, overwhelm your consciousness. The memories give way to clearer, more defined facts, dates, a history recorded by a prehistoric civilization."
+                },
+                {
+                  "id": "reflection",
+                  "text": "You begin to feel yourself slip away, as though your consciousness were being drawn through a sieve. There is much more you could learn…but should you?"
+                },
+                {
+                  "id": "choose",
+                  "text": "You must decide (choose one):"
+                },
+                {
+                  "id": "lookAway",
+                  "text": "Look away. Erase 1 progress under Plumb the Depths in your Campaign Log. Each investigator begins the next scenario with 1 clue (from the token pool)."
+                },
+                {
+                  "id": "seekTheTruth",
+                  "text": "Seek the truth. Mark 2 progress under Plumb the Depths in your Campaign Log and suffer 1 mental trauma. Each investigator begins the next scenario with 1 fewer card in their opening hand."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "setup",
+          "title": "Setup",
+          "children": [
+            {
+              "id": "gatherSets",
+              "text": "Gather all cards from the following encounter sets: Court of the Ancients, Domination, Dreams, Elder Mist, The Inescapable, R’lyeh, and Star Spawn."
+            },
+            {
+              "id": "placeFixedLocations",
+              "text": "Put the Twisting Catwalks, West Antechamber, East Antechamber, and Ancient Altar locations into play according to the location placement diagram."
+            },
+            {
+              "id": "placeCrumblingArchives",
+              "text": "Shuffle each copy of Crumbling Archives and remove one of them from the game at random. Put each remaining copy of Crumbling Archives into play as shown in the location placement diagram."
+            },
+            {
+              "id": "checkCampaignLogWest",
+              "text": "Check your Campaign Log. If the expedition headed west:"
+            },
+            {
+              "id": "westGreatLift",
+              "text": "Put the Great Lift location into play on level 1, (Inactive) side faceup. (See The Great Lift and Sliding Locations.)"
+            },
+            {
+              "id": "westGatherStowaways",
+              "text": "Gather all cards from the Stowaways encounter set. This set is indicated by the following icon:"
+            },
+            {
+              "id": "westBuildActAgendaDeck",
+              "text": "Build the act and agenda deck using agenda 1a—“Ruined Archives,” agenda 2a—“Unstable Foundations,” act 1a—“Steps of Giants,” and act 2a—“Escape the Tower (v. I).” Remove each other act and agenda from the game."
+            },
+            {
+              "id": "westStarSpawn",
+              "text": "Search the Star Spawn encounter set for the Star Spawn Observer enemy and set it aside, out of play. Remove two other cards in the Star Spawn encounter set from the game at random."
+            },
+            {
+              "id": "westBeginAtEastAntechamber",
+              "text": "Each investigator begins play at East Antechamber."
+            },
+            {
+              "id": "checkCampaignLogEast",
+              "text": "Check your Campaign Log. If the expedition headed east:"
+            },
+            {
+              "id": "eastGreatLift",
+              "text": "Put the Great Lift location into play on level 4, (Inactive) side faceup. (See The Great Lift and Sliding Locations.)"
+            },
+            {
+              "id": "eastGatherPilgrims",
+              "text": "Gather all cards from the Pilgrims encounter set. This set is indicated by the following icon:"
+            },
+            {
+              "id": "eastBuildActAgendaDeck",
+              "text": "Build the act and agenda deck using agenda 1a—“Flooded Archives,” agenda 2a—“Unstable Foundations,” act 1a—“Steps of Giants,” and act 2a—“Escape the Tower (v. II).” Remove each other act and agenda from the game."
+            },
+            {
+              "id": "eastAddFloodTokens",
+              "text": "Add the flood tokens to the token pool."
+            },
+            {
+              "id": "eastFloodLevelsOneAndTwo",
+              "text": "Increase the flood level of each location on levels 1 and 2."
+            },
+            {
+              "id": "eastFullyFloodLevelOne",
+              "text": "Increase the flood level of each location on level 1 so that they are fully flooded."
+            },
+            {
+              "id": "eastStarSpawn",
+              "text": "Search the Star Spawn encounter set for the Star Spawn Observer enemy and set it aside, out of play. Remove each other card in the Star Spawn encounter set from the game."
+            },
+            {
+              "id": "eastBeginAtTwistingCatwalks",
+              "text": "Each investigator begins play at Twisting Catwalks."
+            },
+            {
+              "id": "setCardsAside",
+              "text": "Set the Shard of Y’ch’lecht story asset and the Colossal Tyrant enemy aside, out of play."
+            },
+            {
+              "id": "checkCampaignLogInescapable",
+              "text": "Check your Campaign Log."
+            },
+            {
+              "id": "creatureWasDefeated",
+              "text": "If the creature was defeated, remove The Inescapable encounter set from the game."
+            },
+            {
+              "id": "otherwise",
+              "text": "Otherwise, set The Inescapable enemy aside, out of play."
+            },
+            {
+              "id": "chooseExpeditionAsset",
+              "text": "In player order, each player may choose 1 earned Artifact asset or 1 Item asset from the Expedition encounter set to begin in play under their control. This set is indicated by the following icon:"
+            },
+            {
+              "id": "buildEncounterDeck",
+              "text": "Shuffle the remaining encounter cards to build the encounter deck."
+            },
+            {
+              "id": "readyToBegin",
+              "text": "You are now ready to begin."
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "rules",
+          "children": [
+            {
+              "id": "greatLift",
+              "title": "The Great Lift and Sliding Locations",
+              "text": "During this scenario, the investigators will need to use the Great Lift to explore other levels of the tower.\n\n• Locations are not connected to one another except via the Great Lift, their connection icons, or certain card effects.\n\n• The Great Lift is only connected to the locations to the left and right of it, and vice versa.\n\n• When instructed to slide the Great Lift up or down, move the Great Lift to the level above or below its current level.\n• The Great Lift cannot move above level 4 or below level 1.\n\n• When the Great Lift moves, each card and token at that location moves with it."
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "xp",
+          "children": [
+            {
+              "id": "bonus",
+              "text": "因探究古代议庭"
+            }
+          ]
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "text": "结局 1：你鼓足勇气准备再攀一次，双手交替，从一个落脚点挪到下一个落脚点，整座塔楼仿佛随时会在你脚下崩塌。终于，你撑着翻上破碎圆顶的边缘，逃出生天。安迪爬出古代议庭，远征队其余成员紧随其后。你们一同俯视拉莱耶那炫目的天际线，它似乎在强劲的海风中奇异地移动、摇摆。\n\n• 更新你的战役日志。\n• 将拉莱耶地图上的“古代议庭”划掉。\n\n• 若剧本结束时伊克雷希特碎片在某个调查员的控制下，在“已获得的神器”下的“伊克雷希特碎片”旁勾选方框。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 前往黑曜石峡谷。"
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "text": "结局 2：在台座每一道沟槽上又推又拧之后，它终于滑开了。下方是一道螺旋楼梯，通往深深的黑暗。又一块岩石在古老建筑的地板上碎裂。“我们必须离开这里！”露比喊道。你毫不耽搁地走下楼梯，把正在崩塌的塔楼与它的古老秘密抛在身后。\n\n• 更新你的战役日志。\n• 将拉莱耶地图上的“古代议庭”划掉。\n\n• 若剧本结束时伊克雷希特碎片在某个调查员的控制下，在“已获得的神器”下的“伊克雷希特碎片”旁勾选方框。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 前往大秘库。"
+        },
+        {
+          "id": "noResolution",
+          "title": "无结局",
+          "text": "若无结局（每名调查员都撤退或被击败）：远征队其余成员告诉你，他们发现你站在高塔攀爬点的边缘，像在梦游一般。你揉了揉眼睛。你对那座异星议庭毫无记忆。而鉴于它几乎完全崩塌了，你也永远不会有了。\n\n• 更新你的战役日志。\n• 将拉莱耶地图上的“古代议庭”划掉。\n\n• 若剧本结束时伊克雷希特碎片在某个调查员的控制下，在“已获得的神器”下的“伊克雷希特碎片”旁勾选方框。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 查看你的战役日志。\n• 若远征队向西进发，前往黑曜石峡谷。\n\n• 若远征队向东进发，前往大秘库。"
+        }
+      ]
+    }
+  }
+}

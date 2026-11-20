@@ -1,6 +1,6 @@
 # 十循环《沉没之城》迁移路线图
 
-The Drowned City 的战役标识为 `theDrownedCity`，审计简称沿用卡牌筛选中的 `tdc`，参考源战役编号为 `11`。截至 2026-11-15，本地卡表中的 `tdcp`、`tdcc` 共 425 条记录均为 `catalog-only`，战役与章节尚未注册。本文件记录迁移计划，P0–P8 的完成状态以对应代码、测试和审计证据为准。
+The Drowned City 的战役标识为 `theDrownedCity`，审计简称沿用卡牌筛选中的 `tdc`，参考源战役编号为 `11`。本地卡表中的 `tdcp`、`tdcc` 共 425 条记录。P5 调查员包和 P6 一般玩家卡包已开放，战役仍为 `catalog-only`。各阶段状态以对应代码、测试和审计证据为准。
 
 沿用九循环的阶段清单与八循环的分阶段验收方式。阶段内所有事项及退出门禁通过后才勾选，旁注日期、执行命令、结果及证据路径。规则、卡条目、冒险指南及发布状态按各自规范验收。[九循环路线图](../theFeastOfHemlockVale/README.md) · [八循环路线图](../theScarletKeys/README.md) · [迁移规范](../../arkham-content-migration.md) · [架构](../../../ARCHITECTURE.md) · [一卡一文件](../../card-entry-files.md) · [卡牌模型](../../card-model.md) · [冒险指南](../../scenario-guides.md)
 
@@ -36,57 +36,79 @@ The Drowned City 的战役标识为 `theDrownedCity`，审计简称沿用卡牌�
 
 ### P0 锁定范围与基线
 
-- [ ] 按包和归一化卡号复算范围，展开关联面、重印、绑定卡与范围外依赖。各分区无交集，并集与卡号清单一致。分开登记卡表记录数、印刷数量和需要行为条目的卡号。
-- [ ] 锁定 10 个真实提示卡号、四档难度的初始混乱袋与逐章符号效果、章节来源和指南来源。保留来源漂移检查，并记录中英文缺项。
-- [ ] 记录起始提交、工作区已有修改、既有测试失败与 R1/R2/R3 合规基线。在改行为前采集既有关卡的 replay 基线。此阶段各项内容保持 `catalog-only`。
+- [x] 按包和归一化卡号复算范围。分区覆盖 425 条记录，分开登记编号位置、印刷份数、关联面与候选行为卡号。范围外依赖记录了核心组的实际选取范围与歌莉娅替代号。[范围账本](../../../audit/tdc-scope.json)
+- [x] 锁定 10 张提示卡和各章符号效果指纹。将发行商俄文版指南第 3 页渲染后逐枚核对，四档初始混乱袋均与参考后端相同。首章提示卡两面均无邪教徒效果，终章第二部提示卡为 `11688a`。[范围账本](../../../audit/tdc-scope.json) · [发行商印刷指南，第 3 页](https://hobbygames.ru/download/rules/uzhas-arkhema-zatonuvshij-gorod-kampanija-rules.pdf#page=3)
+- [x] 记录大厅和 Mod 子仓库的起始提交、既有修改、快速测试和合规基线。2026-11-19 从同动作、同逐步指纹的采集副本补回旧版压缩遗漏的规则标志。严格重放逐局通过，修复前的基线和失败日志可查。内容为 `catalog-only`。[基线证据](../../../audit/tdc-baseline.json)
 
 ### P1 扫描新增机制
 
-- [ ] 扫描全部卡文及关联面、故事设置、路线、任务与结局。每张范围内的卡关联至少一个机制分类，记录代表卡号、来源、已知引擎读点及行为缺口。范围内未分类项为 0 后进入 P2。
-- [ ] 针对第 4 节逐项裁决规则差异。重点确认幕间 II 的混乱袋变化，英文指南西线明确写了移除 1 枚石板并加入 1 枚邪教徒，参考代码只显示西线文本，东线留有换标记 TODO。先对照锁定的指南与勘误确认实际适用分支，再实现和测试。
-- [ ] 盘点各章指南中的图示、条件设置、任务段落和特殊小节，建立英中段落对照表。包含 `sunkenStairway`、`lostPilgrims`、`theHiveMind`、`theVaultCore`、`cosmicOmen`、`hangingShip`、`magneticSpires` 和终章 `errata`，并解析西墙 `specialRules` 中的本地化引用。
+- [x] 425 条记录的卡文与关联面均已归类。逐行指纹、代表卡号、现有引擎读点和缺口已登记。[机制扫描](../../../audit/tdc-mechanism-scan.json)
+- [x] 幕间 II 西线移除 1 枚石板、加入 1 枚邪教徒并持续至战役后续，东线保持原袋。已登记终章阈值推进与另外三项官方勘误。印刷页核对消除了英文网页抽取漏读造成的初始混乱袋差异。[官方战役指南，第 11 页](https://images-cdn.fantasyflightgames.com/filer_public/c1/3b/c13b0e74-62bb-49bc-bc85-036ab9d1ef10/ahc84_campaign_guide-web_1.pdf#page=11) · [官方 FAQ v2.4](https://images-cdn.fantasyflightgames.com/filer_public/f9/25/f925d867-e844-48d1-9d41-045ce41f8950/ahc_faq_v24_july_2025.pdf)
+- [x] 12 份指南文件共 1,014 个段落已建立英中键位映射，标明待译状态，覆盖图示引用、条件设置、任务段落和特殊小节。西墙 `specialRules` 的本地化链接已解析。[段落对照](../../../audit/tdc-mechanism-scan.json)
 
 ### P2 拆分并实现通用原语
 
-- [ ] 按 `reuse / new / escape` 登记原语、接口、状态、窗口、目标及现有测试。先验证《印斯茅斯暗潮》的三级淹没、既有混乱袋密封、附属牌和跨章记录能力，再补离场交接、动态连接和独立牌库等真实缺口。
-- [ ] 新原语同时交付注册校验、引擎读点、正常与非法路径测试及 JSON 存档往返。重复卡文按迁移规范提取共用能力，逐卡 `resolve` 的例外记入 `escape`。新增原语均已完成且 `test:fast` 无新增失败后进入 P3。
+- [x] 已分列 `reuse / new / escape`，并复验三级淹没、已有密封、附属与跨章记录。已接入最近幸存者交接、相邻整行连接、独立牌库底抽与回收、进度指派及去重。[原语计划](../../../audit/tdc-primitive-plan.json) · [接口和验证路径](primitives.md)
+- [x] 多部位敌人已接入主体的移动和交战、部位战斗与躲避、聚合攻击、单部位反击与警戒、翻面、离场和 JSON 往返。2026-11-19 专项测试、原基线的严格重放与快速回归通过。[迁移审计](../../../audit/tdc-migration.json) · [测试与回放记录](../../../audit/tdc-baseline.json)
 
 ### P3 关键词与规则书
 
-- [ ] 从指南与卡面核对 Alert、Patrol、Relentless、Seal 的适用范围和代表卡号。重点验证 Relentless 在敌人阶段攻击步骤后重新准备并再次攻击，第一次攻击被取消也满足触发条件。
-- [ ] 登记本循环的淹没、任务、文物和字形、地点连接、终章专用板块及牌库等中英规则和卡文直达链接。按规范生成 `confirmations.keywords` 与 `confirmations.rulebook`，通过规则目录、搜索、跳转与返回的双端验收。
+- [x] 已核对警戒、巡逻、无情、封印及其印刷卡面。专项测试覆盖无情在普通敌人攻击结束后再攻一次，包括首击取消和巨型敌人攻击多个席位。[关键词账本](../../../audit/tdc-rules.json)
+- [x] 已收录淹没、任务、文物与字形、地点连接、终章板块与独立牌库等 12 个中英条目，接入 425 条循环卡表记录。桌面与移动端通过目录、搜索、相关主题跳转与返回、卡牌直达及焦点恢复。关键词和规则书确认项已验收。[规则书验收](rulebook.md) · [迁移确认](../../../audit/tdc-migration.json)
 
 ### P4 新增交互与界面
 
-- [ ] 验收任务去重选取和当前进度、东西路线与地图划除记录、字形 A–Z 翻译记录、文物分配和接管、动态地点及终章克苏鲁板块／部位目标。以服务端合法操作驱动选择和禁用原因，覆盖多人平手、取消与恢复。
-- [ ] 幕／议程行动以 `scriptCard` 归属到剧本书对应卡。复用剧本书右侧、混乱标记提示卡下方的“关卡设置”入口，特别规则优先，后续剧情和结局默认折叠。以座位权限控制私人任务选项、暗置内容和实际叙事分支。
-- [ ] 桌面 1440 与移动 390 验收新交互的正常、非法、空状态、重试、键盘和焦点路径，保存报告与截图后进入批量卡牌。
+- [x] 已验收任务去重与个人进度、东西路线与区域划除、A–Z 字形、文物分配与最近幸存者接管、地点重排，以及终章主体和部位目标。选择、禁用及多人平手由服务端判定，覆盖取消和存档恢复。[交互接口](interactions.md)
+- [x] 已验收幕／议程的 `scriptCard` 归属和提示卡下方的“关卡设置”。特别规则优先，后续剧情和结局默认折叠。座位投影验证了私人任务、暗置内容和实际叙事分支。[交互接口](interactions.md)
+- [x] 真大厅夹具在桌面 1440×900 与移动 390×844 验证了正常、非法、空状态、重试、键盘和焦点路径。报告、截图与严格回放证据已记录。[交互账本](../../../audit/tdc-interactions.json)
 
 ### P5 调查员及专属依赖
 
-对照卡面与构筑数据实现全部主能力、旧印及构筑选项。每位调查员验收初始化、专属依赖、正负构筑、触发窗口和存档。大厅选人与手动／自动构筑共用服务端口径。
+2026-11-19 已完成。大厅开放 `tdcInvestigators` 的 6 位调查员、8 个版本和 14 张专属依赖，含歌莉娅书版及两张替代牌。逐人核对了能力、旧印、构筑、专属牌与同一身份的席位互斥。[交付说明](investigators.md) · [验收账本](../../../audit/tdc-investigators.json)
 
-| 清单 | 卡号与调查员 | 专属依赖与高风险行为 |
+| 清单 | 卡号与调查员 | 专属依赖和验收重点 |
 | --- | --- | --- |
-| [ ] | `11001` 玛利翁·塔瓦雷斯（Marion Tavares） | `11002/11003`。构筑特质选择、少一个手部槽位、打出事件后补牌并可打出不同事件、每轮限制。 |
-| [ ] | `11004` 卢修斯·加洛维（Lucius Galloway） | `11005/11006`。躲避检定成功且超出难度至少 2 时，发现所在地点 1 个线索。验收每轮限制及同地点敌人数对旧印的影响。 |
-| [ ] | `11007/11008` 阿加莎·克雷恩（Agatha Crane） | 共用 `11009/11010`。探求者／潜修者版分别校验 35 张构筑与副职限制，同一角色身份互斥。回合结束检查本轮密封、取消或忽略标记，从弃牌区打出对应事件并在结算后移出游戏。 |
-| [ ] | `11011` 迈克尔·麦克格林（Michael McGlen） | `11012/11013`。枪械和来源 `fa` 标签构筑、每件枪械每轮独立限次、弹药支付与补弹。 |
-| [ ] | `11014` 歌莉娅·戈德堡（Gloria Goldberg） | `11015/11016`，替代号 `98020/98021`，同时核对书版身份 `98019`。神秘阶段调查员顺序、额外查看遭遇牌、非精英筛选和暗置区上限。 |
-| [ ] | `11017` 乔治·巴纳比（George Barnaby） | `11018/11019`。35 张构筑、弃牌后暗置并补牌、阶段限制、以暗置数量确定手牌上限及从暗置区投入检定。 |
+| [x] | `11001` 玛利翁·塔瓦雷斯 | `11002/11003`。构筑特质、手部槽、不同事件连打、检定回收和恐惧费用。 |
+| [x] | `11004` 卢修斯·加洛维 | `11005/11006`。躲避差值、线索、灵感、恰好成功、旧印与洗回。 |
+| [x] | `11007/11008` 阿加莎·克雷恩 | 共用 `11009/11010`。35 张、职阶限制、标记追踪与替换、弃牌事件移出。 |
+| [x] | `11011` 迈克尔·麦克格林 | `11012/11013`。枪械构筑、按实体限次、弹药、枪盒槽位与没收。 |
+| [x] | `11014/98019` 歌莉娅·戈德堡 | 循环版 `11015/11016`，书版 `98020/98021`。抽取顺序、查看、暗置、非精英筛选及两套签名牌。 |
+| [x] | `11017` 乔治·巴纳比 | `11018/11019`。35 张、手牌上限、暗置投入、交换、弃置与存档隐私。 |
+
+17 项专项测试和 16 项双端大厅开局验收通过。共享代码更新后，《失落的时代》的两局曾在第 22 步探索出现差异。补给短缺会按动作日志记录的规则重放其选项，修复后原基线的 13 局再次逐步一致。[回放与 P6 验收](player-cards.md)
 
 ### P6 一般玩家卡
 
-- [ ] 按职业、等级以及依赖分无交集批次，单列基础弱点、重印和变身卡。`11068a → 11068b` 的调查员转换纳入玩家卡批次，验证转换后的构筑变更限制与死亡结算，以及大厅的起始选人门禁。
-- [ ] 逐卡对照每个费用、时机、目标、限制和离场条件，保留可执行证据。接入单卡文件和索引，复核构筑、升级与随机基础弱点池。
-- [ ] 按通用规范提交原语请求及分片报告，由主进程合并、重建索引并执行合规审计。新增 R1/R2/R3 为 0、队列无悬挂、范围内卡均有测试证据后关闭本阶段。
+- [x] 按职业、等级以及依赖分无交集批次，单列基础弱点、重印和变身卡。专项测试覆盖 `11068a → 11068b` 的转换、构筑锁定、再次败退死亡和起始选人门禁。
+- [x] 111 个记录均接入单卡文件、索引和行为验收。103 张进入手动构筑，3 张研究牌通过战役记录升级，4 张基础弱点进随机候选，继任调查员只用于身份转换。
+- [x] 三个子代理提交分片、实现与实测证据，主进程合并共享规则、重建索引并核对原语队列。新增 R1/R2/R3 为 0。
+
+2026-11-19 完成。逐卡验收覆盖费用、时机、目标、限制、区域移动和存档所需的状态。桌面和移动端均通过真实大厅手动构筑验收。[P6 交付说明](player-cards.md) · [P6 验收账本](../../../audit/tdc-player.json)
 
 ### P7 共享遭遇、剧本与战役流程
 
-- [ ] 先迁移战役内共享的 Stowaways、Pilgrims、Star Spawn、Cosmic Legacy、Elder Mist、Undersea Creatures、Flood、R’lyeh、Domination、The Inescapable、Deep Ones、Dreams、Alien Machinery、Tasks、Expedition，再按第 3 节逐章接入。
-- [ ] 每章同步交付完整的中英文冒险指南，包括条件开场、完整设置、特别规则、后续剧情、全部结局与机械结算。核对布置图承载的地点层级和连线，逐章通过生成、注册覆盖和浏览器验收。
-- [ ] 实现序章、幕间 I–IV、终章导入和尾声，验证拒绝邀约、东西向、分支跳章、墓穴特殊胜负、回阿卡姆以及终章进度。覆盖退出重入与结算重试，避免重复发放经验、任务进度、奖励或标记。
-- [ ] 每章审计登记来源、身份、区域守恒、幕／议程、地图、遭遇行为、逐条卡文、符号、结局、叙事、保存／重放及浏览器证据。全部条件满足后才标记 `verified`。[逐章确认清单](../../arkham-content-migration.md#5-剧本迁移确认)
+共用运行层支持揭示时选择检定技能、按失败差值限量弃牌、最近合法地图目标，以及独立牌库重抽和弃回。剧本登记检查任务、路线和字形声明，战役流支持去重集合门槛和按调查员身份防重结算。专项测试与严格回放结果记录在账本中。[P7 进度账本](../../../audit/tdc-p7.json) · [P7 逐章账本](../../../audit/tdc-p7-scenarios.json) · [原语接口](primitives.md)
+
+战役卡包已由现有卡表登记为目录内容。正交网格地点可旋转方向出口并重算连接。跨章开局调整按调查员身份保留，可指定生效章节。指南面板在资料缺项时保留布置摘要、说明和重试入口。
+
+自有内容可按开发状态登记。战役卡包放在 `content/packs/tdcCampaign/`，战役清单与章节模块放在 `content/campaigns/theDrownedCity/`，双语指南源使用 `content/scenario-guide-sources/<scenarioId>.json`。P7 清点分别记录真实注册的章节、流程结构可达的章节、与源文件一致的指南，以及可从既有卡包复用的遭遇。逐卡行为、布置守恒、剧情、实局回放和浏览器仍按逐章确认清单验收。[生产注册表](../../../content/registered.js) · [自有指南接入](../../scenario-guides.md)
+
+**2026-11-19 P7 内容批次进度（战役与 10 章保持 `development`，未升 `playable`）**
+
+| 项 | 结果 | 证据 |
+| --- | --- | --- |
+| 共享遭遇 | 15 组 54 张全部落单卡条目（`_shared/<group>/`），33 + 24 项专项测试通过；3 条读点近似已登记原语请求（`shared-1..3`，pending） | [逐章账本](../../../audit/tdc-p7-scenarios.json) · [worker 报告](../../../../../artifacts/migration/tdc/p7/workers/shared-encounters.md) |
+| 剧本 | 10/10 章注册为 `development`（真实卡号身份、地点/连接/幕议程/牌库守恒、四档混乱符号、结局键）；231/231 张专属卡单卡条目；152 项逐章测试通过 | [逐章账本](../../../audit/tdc-p7-scenarios.json) · `tests/tdc-scenario-*.test.mjs` |
+| 战役流程 | 序章 → 金盆洗手 → 幕间 I（领任务/拒绝）→ 幕间 II 东西向 → 六章路线（含西墙结局 3、养育场结局 4 跳章）→ 墓穴三门三结局 → 幕间 III/IV → 终章 I/II → 尾声 1–4；47 节点 flow，终点与 10 章全部可达，27 项战役层测试通过 | [P7 进度账本](../../../audit/tdc-p7.json) · `tests/tdc-p7-campaign-layer.test.mjs` |
+| 叙事 | `story-text.js` 由 `tools/import-tdc-story.mjs` 生成：12 文件 1,014 叶全部自译，中文缺译 0；序章、幕间 I–IV、终章导入、尾声 1–4 齐备 | `content/campaigns/theDrownedCity/story-source/zh-CN/` · [worker 报告](../../../../../artifacts/migration/tdc/p7/workers/narrative-guides.md) |
+| 指南 | 10/10 章完整中英 authored 指南（生成物逐字节可复算、与 `buildAuthoredScenarioGuide` 同口径、注册后 `import-scenario-guides --check` 94 场景全绿） | `content/scenario-guide-sources/` · `web/scenario-guides/` |
+| 验证 | `npm run test:tdc:p7` 全绿；`npm run test:fast` 无失败；strict replay 与 recovered 基线逐局一致；`audit:tdc:p7` / `audit:tdc:scenarios` / `audit:tdc:check` 均通过（证据日志在 `artifacts/migration/tdc/p7/`）。组合根变化后已按各循环脚本重签 EOTE / TDE / TCU / TFA / Carcosa P6 / TIC / FHV 的审计账本与展示、音乐配置 | [P7 进度账本](../../../audit/tdc-p7.json) · [逐章账本](../../../audit/tdc-p7-scenarios.json) · `artifacts/migration/tdc/p7/*.log` |
+| 待完成 | 逐卡 `literalCardBehavior`（各章近似清单在 worker 报告）、每章 `saveReplay`/`browserAcceptance`、21 份原语请求（campaign-core 3 / scenario-* 15 / shared-* 3，均 pending）、架构预算按实测重锁；另有非本轮的残留：TSK 逐卡账本的证据快照计数待其维护者按新测试集重签 | 见各 `artifacts/migration/tdc/p7/workers/*.md` 与 `primitive-requests/` |
+
+- [x] 先迁移战役内共享的 Stowaways、Pilgrims、Star Spawn、Cosmic Legacy、Elder Mist、Undersea Creatures、Flood、R’lyeh、Domination、The Inescapable、Deep Ones、Dreams、Alien Machinery、Tasks、Expedition，再按第 3 节逐章接入。54 张条目逐卡 `note` 记录读点与近似；3 条未接读点已入原语队列（pending）；章节 `encounterDefinitions` 已引用共享组。
+- [ ] 每章同步交付完整的中英文冒险指南，包括条件开场、完整设置、特别规则、后续剧情、全部结局与机械结算。核对布置图承载的地点层级和连线，逐章通过生成、注册覆盖和浏览器验收。**状态：**10/10 章指南已生成并通过来源覆盖与生成复算；真实大厅桌面/移动端验收待战役可启动（`playable`）后补，故本项不勾选。
+- [ ] 实现序章、幕间 I–IV、终章导入和尾声，验证拒绝邀约、东西向、分支跳章、墓穴特殊胜负、回阿卡姆以及终章进度。覆盖退出重入与结算重试，避免重复发放经验、任务进度、奖励或标记。**状态：**流程、叙事与战役层处理器已落盘并有 27 项测试覆盖（含拒绝邀约→结束、东西向、跳章、墓穴三档、末日 I/II 结局）；实局与浏览器路线验收待 P8，故本项不勾选。
+- [ ] 每章审计登记来源、身份、区域守恒、幕／议程、地图、遭遇行为、逐条卡文、符号、结局、叙事、保存／重放及浏览器证据。全部条件满足后才标记 `verified`。[逐章确认清单](../../arkham-content-migration.md#5-剧本迁移确认) **状态：**`audit/tdc-p7-scenarios.json` 逐章登记 9/12 项（来源、身份、布置守恒、幕议程、地图、遭遇行为、符号、结局记录、叙事）；`literalCardBehavior`、`saveReplay`、`browserAcceptance` 仍为 `pending`，10 章均未标记 `verified`。
 
 ### P8 整体验收与发布
 
@@ -129,13 +151,29 @@ The Drowned City 的战役标识为 `theDrownedCity`，审计简称沿用卡牌�
 
 ## 5. 验证命令
 
-以下现有命令从 `games/arkhamhorror/` 执行。十循环专用命令随对应阶段接入，验收日志记录当次实测结果。
+以下命令从 `games/arkhamhorror/` 执行。两个扫描命令使用大厅参考资源目录复算来源与卡文指纹。迁移审计使用已记录的账本复算阶段状态。
 
 ```powershell
+npm run scan:tdc:scope:check
+npm run scan:tdc:check
+npm run audit:tdc:check
+npm run audit:tdc:p5
+npm run audit:tdc:p6
+npm run audit:tdc:p7
+npm run audit:tdc:scenarios
+npm run test:tdc:p7
+npm run test:tdc:p7:content
+npm run test:tdc:scenarios
+node tools/import-tdc-story.mjs --check
+node tools/build-tdc-guides.mjs --check
+node tools/build-tdc-guides.mjs --readiness
+npm run test:tdc:p5:browser
+npm run test:tdc:p6:browser
+npm run test:tdc
 npm run docs:check
 npm run baseline:check
 node tools/replay-fixtures.mjs --baseline ../../artifacts/migration/tdc/replay-before.json
-node tools/replay-fixtures.mjs --compare ../../artifacts/migration/tdc/replay-before.json
+node tools/replay-fixtures.mjs --compare ../../artifacts/migration/tdc/replay-before-recovered.json
 node tools/build-card-index.mjs --write
 node tools/build-encounter-index.mjs --write
 npm run cards:check

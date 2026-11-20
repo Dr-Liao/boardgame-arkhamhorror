@@ -35,6 +35,8 @@ const DECLARED_VARIANT_ARTS = new Set(Object.values(DECLARED_ART_VARIANTS).flatM
 const ART_PATTERN = /^[0-9]{3,6}[a-z]{0,2}$/
 const GENERIC_BACK_TYPES = new Set(['enemy', 'story', 'treachery', 'scenario', 'location', 'key', 'enemy_location'])
 const OWN_BACK_TYPES = new Set(['act', 'agenda', 'scenario', 'investigator'])
+// The English front of Nathan Wick is published as 05217a, including when viewed from its linked face.
+const LINKED_BACK_ART_FALLBACKS = Object.freeze({ '05217': '05217a' })
 
 export function normalizeArt(value) {
   if (typeof value !== 'string') return null
@@ -140,6 +142,7 @@ export function buildImageDescriptor(card, { localizedArts, linkedFronts } = {})
   else if (OWN_BACK_TYPES.has(type) || doubleSided) push(back, `${dropFaceSuffix(art)}b`, 'reference-own-back', context)
   // 与正面同理：关联面若记为 a 面而资产主机按裸编号发布，补一次回退（实测 09544b 的另一面）。
   if (back.length && /\da$/.test(back[0].art || '')) push(back, dropFaceSuffix(back[0].art), 'bare-code-fallback', context)
+  if (back[0]?.source === 'linked-face') push(back, LINKED_BACK_ART_FALLBACKS[back[0].art], 'reference-alt-front', context)
 
   const backKind = back.length ? 'art' : 'generic-back'
   const backFile = genericBack(type, card)

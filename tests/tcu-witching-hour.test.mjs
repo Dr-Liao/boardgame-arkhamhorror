@@ -307,6 +307,9 @@ test('介绍 2「避免命运」：记录接受命运、+2 tablet、队长获得
   assert.equal(state.chaosBag.filter(token => token === 'tablet').length, 2)
   assert.ok(state.campaign.investigators[0].deck.includes(CAMPAIGN_CARDS.towerXVI))
   assert.ok(state.campaign.investigators[0].deck.includes(CAMPAIGN_CARDS.aceOfRods))
+  // 卡面写明「不计入牌组张数」：两张奖赏卡记成 campaignCards，三选一模式的 30 张校验要扣掉。
+  assert.deepEqual([...state.campaign.investigators[0].campaignCards].sort(),
+    [CAMPAIGN_CARDS.aceOfRods, CAMPAIGN_CARDS.towerXVI].sort())
   assert.equal(state.scenarioFlags.introResolved, true)
 })
 
@@ -318,6 +321,7 @@ test('介绍 3「一派胡言」：记录拒绝命运、+2 elderthing、不拿�
   assert.equal(state.campaign.records.youHaveRejectedYourFate, true)
   assert.equal(state.chaosBag.filter(token => token === 'elderthing').length, 2)
   assert.equal(state.campaign.investigators[0].deck.length, 0)
+  assert.equal(state.campaign.investigators[0].campaignCards, undefined, '拒绝命运不拿奖赏卡')
 })
 
 test('介绍 2 后可进行 8 张固定战役占卜（只读 tarot.js 数据）', () => {

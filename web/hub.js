@@ -99,6 +99,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   }
   const recordDeckReady = record => record?.status === 'active' && record.startingDeckReady !== false
     && (record.deckSize ?? record.deck?.length ?? 0) > 0
+  const recordDeckSaved = record => recordDeckReady(record) || !!record?.startingDeckConfirmationPending
   // 双线战役的座位记录可能只在 parts[line] 快照里（首次整备时 currentPart 为空），
   // 出发准备/席位确认必须按「座位所属线」取记录，不能只看顶层。
   const recordForSeat = (s, seat) => {
@@ -903,6 +904,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     || (!!s.state.campaign.scenarioResults?.length && recordForSeat(s, seat)?.status === 'active')
   const seatTask = (s, seat) => {
     const st = s.state, record = recordForSeat(s, seat)
+    if (record?.startingDeckConfirmationPending) return t('hub.task.confirmDeck')
     if (st.uiState === 'interlude') {
       if (record?.status !== 'active') return t('hub.task.replaceInvestigator')
       if (record.draftMode && seat === (s.mySeat ?? 0) && st.draftDeckStatus?.missing > 0) return t('draft.refillTask')
@@ -945,7 +947,8 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         [t('hub.workflow.stepConfirmSeat'), !!st.hubSeatDone?.[mySeat]], [t('hub.workflow.stepStartNext'), false]]
       if (acting(s, mySeat)) {
         const confirm = legal(s, 'hubConfirmUpgrades')[0], done = legal(s, 'hubDoneSeat')[0]
-        if (confirm) primary = action(s, confirm, t('hub.task.saveUpgrades'))
+        if (record?.startingDeckConfirmationPending) primary = h('button', { className: 'bg-btn', onclick: () => changeTab('deck') }, t('hub.task.reviewDeck'))
+        else if (confirm) primary = action(s, confirm, t('hub.task.saveUpgrades'))
         else if (done) primary = action(s, done, upgraded ? t('hub.workflow.primaryUpgradeDone') : t('hub.workflow.primaryKeepXp'))
         else primary = h('button', { className: 'bg-btn', onclick: () => changeTab(record?.status === 'active' ? 'upgrades' : 'investigators') },
           record?.status === 'active' ? t('hub.workflow.stepViewUpgrades') : t('hub.task.replaceInvestigator'))
@@ -953,7 +956,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     } else if (['campaignHub', 'scenarioSetup'].includes(st.uiState)) {
       const selected = seatSelected(s, mySeat), deckReady = recordDeckReady(record), ready = !!st.hubSeatDone?.[mySeat]
       const scenarioReady = !!st.hubSelectedScenarioId
-      steps = [[t('hub.workflow.stepChooseCase'), scenarioReady], [t('hub.task.selectInvestigator'), selected], [t('hub.task.saveDeck'), deckReady], [t('hub.task.confirmReady'), ready], [t('hub.workflow.stepStartScenario'), false]]
+      steps = [[t('hub.workflow.stepChooseCase'), scenarioReady], [t('hub.task.selectInvestigator'), selected], [t('hub.task.saveDeck'), recordDeckSaved(record)], [t('hub.task.confirmDeck'), deckReady], [t('hub.task.confirmReady'), ready], [t('hub.workflow.stepStartScenario'), false]]
       if (st.uiState === 'campaignHub') {
         const setup = legal(s, 'hubGoSetup')[0]
         primary = !scenarioReady
@@ -964,7 +967,8 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         if (begin) primary = action(s, begin, t('hub.workflow.primaryStartScenario'))
       } else if (acting(s, mySeat)) {
         if (!selected) primary = h('button', { className: 'bg-btn', onclick: () => changeTab('investigators') }, t('hub.task.selectInvestigator'))
-        else if (!deckReady) primary = h('button', { className: 'bg-btn', onclick: () => changeTab('deck') }, t('hub.task.saveDeck'))
+        else if (!deckReady) primary = h('button', { className: 'bg-btn', onclick: () => changeTab('deck') },
+          t(record?.startingDeckConfirmationPending ? 'hub.task.reviewDeck' : 'hub.task.saveDeck'))
         else {
           const done = legal(s, 'hubDoneSeat')[0]
           if (done) primary = action(s, done, t('hub.task.confirmReady'))
@@ -1017,13 +1021,48 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
 
   // P8（八循环《绯红密钥》）：构筑期/关间的定制升级卡面板。
   // 数据全部来自观察投影 state.mechanics.tsk.customizationHub（本人座位）；
-  // 按钮直接提交服务端给出的 hubCustomize 合法动作（label/cost/availableXp 都由引擎决定，
-  // 前端不复制勾选上限、经验扣减或等级规则）；初始构筑期只展示 0 勾选，不渲染按钮。
+  // 按钮直接提交服务端给出的 hubCustomize 合法动作（cost/availableXp 都由引擎决定，
+  // 前端不复制勾选上限、经验扣减或等级规则）。
+  const expandedCustomizationRules = new Set()
+  let customizationSessionId = null
   function customizationPanel(s) {
     const model = s.state.mechanics?.tsk?.customizationHub
     if (!model || !Array.isArray(model.entries) || !model.entries.length) return null
+    if (customizationSessionId !== s.sessionId) {
+      customizationSessionId = s.sessionId
+      expandedCustomizationRules.clear()
+    }
     const initial = s.state.uiState !== 'interlude'
     const moves = legal(s, 'hubCustomize')
+    const setupMoves = legal(s, 'hubConfigureCustomization')
+    const choiceName = (setup, choice) => setup.kind === 'encounterTrait'
+      ? cardDisplayTraits({ traits: [choice.name] })[0] || choice.name
+      : cardDisplayName(choice)
+    const choiceForm = (setup, count, move, hidden = false) => {
+      const used = new Set(Object.values(setup.recorded).flat())
+      const choices = setup.catalog.filter(choice => !used.has(choice.value))
+      const prompt = setup.kind === 'encounterTrait'
+        ? t('hub.customize.choice.encounterTrait') : t('hub.customize.choice.assetTitle')
+      const placeholder = choices.length < count && setup.kind === 'assetTitle'
+        ? t('hub.customize.choice.insufficientAssets') : prompt
+      const submit = h('button', { type: 'submit', className: 'bg-btn secondary', disabled: true }, t('hub.customize.choice.save'))
+      const selects = Array.from({ length: count }, (_, index) => h('select', {
+        className: 'bg-select', 'aria-label': `${prompt} ${index + 1}`,
+        disabled: !choices.length,
+        onchange: () => {
+          const values = selects.map(select => select.value)
+          submit.disabled = locked(s) || values.includes('') || new Set(values).size !== count
+        },
+      }, h('option', { value: '' }, placeholder), choices.map(choice => h('option', { value: choice.value }, choiceName(setup, choice)))))
+      return h('form', {
+        className: 'ah-hub-customize-choices', hidden,
+        onsubmit: event => {
+          event.preventDefault()
+          const values = selects.map(select => select.value)
+          if (!locked(s) && !values.includes('') && new Set(values).size === count) submitMove({ ...move, values }, s)
+        },
+      }, selects, submit)
+    }
     return h('section', {
       className: 'ah-hub-customization', 'data-hub-customization': 'true',
       'data-hub-customize-state': initial ? 'initial' : 'interlude',
@@ -1036,32 +1075,72 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     h('div', { className: 'ah-hub-customization-list' },
       model.entries.map(entry => {
         const total = entry.options.reduce((sum, option) => sum + option.checks, 0)
+        const cardName = cardDisplayName(entry)
+        const setup = entry.choices
+        const setupMove = setupMoves.find(move => move.code === entry.code)
+        const recorded = setup?.selected.map(choice => choiceName(setup, choice))
         return h('article', { className: 'ah-hub-customization-card', 'data-hub-customize-card': entry.code },
           h('header', {},
-            h('strong', {}, entry.name),
+            h('strong', {}, cardName),
             h('small', { 'data-hub-customize-level': String(entry.level) },
               t('hub.customize.level', { level: entry.level, checked: entry.checked.length, total })),
             h('small', { 'data-hub-customize-card-xp': String(model.availableXp) },
-              t('hub.customize.cardXp', { xp: model.availableXp }))),
+              t('hub.customize.cardXp', { xp: model.availableXp })),
+            recorded?.length ? h('small', {}, t('hub.customize.choice.recorded', { values: recorded.join(' · ') })) : null),
+          setup && setupMove ? choiceForm(setup,
+            setupMove.optionIndex == null ? setup.base : setup.options[setupMove.optionIndex], setupMove) : null,
+          h('button', {
+            type: 'button', className: 'ah-deck-inspect ah-hub-customize-preview',
+            'aria-label': t('hub.card.inspectName', { name: cardName }),
+            'data-zoom-code': entry.code, 'data-zoom-name': cardName,
+            onclick: () => inspectCard(entry.code),
+          }, art(entry.code, cardName)),
           h('ul', {}, entry.options.map(option => {
             const move = moves.find(item => item.code === entry.code && item.optionIndex === option.index)
-            // P2-3：条目声明 implemented:false 的勾选格只展示卡面文本（不生成购买按钮）。
             const unimplemented = option.implemented === false
+            const name = cardDisplayName(option)
+            const text = cardDisplayText(option)
+            const optionId = `${entry.code}:${option.index}`
+            const choiceCount = setup?.options[option.index] || 0
+            const form = move && choiceCount && option.checkedCount + 1 === option.checks
+              ? choiceForm(setup, choiceCount, move, true) : null
+            const boxes = Array.from({ length: option.checks }, (_, index) => {
+              const props = {
+                className: 'ah-hub-customize-box', role: 'checkbox',
+                'aria-checked': String(index < option.checkedCount),
+              }
+              if (!unimplemented && move && index === option.checkedCount) {
+                const label = t('hub.customize.buyNamed', { name, cost: move.cost ?? entry.xpPerCheck })
+                return h('button', {
+                  ...props, type: 'button', title: label, 'aria-label': label,
+                  disabled: locked(s) || !!move.disabled,
+                  'data-hub-customize-option': optionId,
+                  onclick: () => {
+                    if (locked(s) || move.disabled) return
+                    if (form) {
+                      form.hidden = !form.hidden
+                      if (!form.hidden) form.querySelector('select').focus()
+                    } else submitMove(move, s)
+                  },
+                })
+              }
+              return h('span', {
+                ...props, 'aria-disabled': 'true',
+                'aria-label': t('hub.customize.box', { name, index: index + 1 }),
+              })
+            })
             return h('li', { className: 'ah-hub-customize-option', 'data-hub-customize-implemented': unimplemented ? 'false' : 'true' },
-              h('span', {}, t('hub.customize.option', {
-                name: option.name, checked: option.checkedCount, checks: option.checks,
-              })),
-              unimplemented
-                ? h('small', { className: 'ah-hub-customize-unimplemented', title: t('hub.customize.unimplemented') },
-                  t('hub.customize.unimplemented'))
-                : move
-                  ? h('button', {
-                    type: 'button', className: 'bg-btn secondary', disabled: locked(s) || !!move.disabled,
-                    title: move.explanation || '',
-                    'data-hub-customize-option': `${entry.code}:${option.index}`,
-                    onclick: () => { if (!locked(s) && !move.disabled) submitMove(move, s) },
-                  }, move.label)
-                  : null)
+              h('div', { className: 'ah-hub-customize-copy' },
+                text ? h('details', { open: expandedCustomizationRules.has(optionId) }, h('summary', { onclick: event => {
+                  event.preventDefault()
+                  const details = event.currentTarget.parentElement
+                  details.open = !details.open
+                  if (details.open) expandedCustomizationRules.add(optionId)
+                  else expandedCustomizationRules.delete(optionId)
+                } }, name),
+                  h('p', {}, renderRulesText(h, text, { links: false }))) : h('strong', {}, name),
+                unimplemented ? h('small', { className: 'ah-hub-customize-unimplemented' }, t('hub.customize.unimplemented')) : null),
+              h('div', { className: 'ah-hub-customize-boxes' }, boxes), form)
           })))
       })))
   }
@@ -1330,7 +1409,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
           !selected && !st.campaign.scenarioResults.length
             ? h('p', { className: 'ah-investigator-selection-state', role: 'status' }, t('hub.investigators.notChosen'))
             : h('p', { className: 'ah-investigator-selection-state is-selected', role: 'status' }, t('hub.investigators.chosen')),
-          h('p', {}, recordDeckReady(record) ? t('hub.investigators.deckSummary', { count: record.deckSize ?? record.deck?.length ?? 0, xp: record.xp }) : t('hub.investigators.deckNotSaved')),
+          h('p', {}, recordDeckSaved(record) ? t('hub.investigators.deckSummary', { count: record.deckSize ?? record.deck?.length ?? 0, xp: record.xp }) : t('hub.investigators.deckNotSaved')),
           active && inv.seat === (s.mySeat ?? 0) && moves.length && !st.campaign.scenarioResults.length
             ? h('p', { className: 'ah-investigator-reselect-note', role: 'note' }, t('hub.investigators.reselectNote')) : null,
           // After the first scenario a living campaign investigator is locked in.
@@ -1371,7 +1450,8 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
               : h('p', { className: 'ah-office-empty' }, t('hub.investigators.empty'))) : null,
           active && inv.seat === (s.mySeat ?? 0) ? h('div', { className: 'ah-hub-actions' },
             recommendedDeckAction(s, g),
-            selected ? h('button', { className: 'bg-btn secondary', onclick: () => changeTab('deck') }, recordDeckReady(record) ? t('hub.investigators.editDeck') : t('hub.investigators.goDeck')) : null,
+            selected ? h('button', { className: 'bg-btn secondary', onclick: () => changeTab('deck') },
+              t(recordDeckSaved(record) ? 'hub.task.reviewDeck' : 'hub.investigators.goDeck')) : null,
             legal(s, 'hubDoneSeat').map(move => action(s, move, t('hub.task.confirmReady')))) : null))
       })
     const laneSections = lanesAssigned
@@ -1402,7 +1482,9 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const record = recordForSeat(s, s.mySeat ?? 0)
     const deckCodes = record?.deck || []
     const canEdit = legal(s, 'hubSetDeck').length > 0
-    const saved = recordDeckReady(record) && deckCodes.length > 0
+    const saved = recordDeckSaved(record) && deckCodes.length > 0
+    const confirm = legal(s, 'hubConfirmDeck')[0]
+    const done = legal(s, 'hubDoneSeat')[0]
     const inv = deckInvestigator(s, g)
     const draft = state.arkhamDeckDraftKey === deckDraftKey(s, inv) ? state.arkhamDeckDraft || [] : null
     const unsavedDraft = canEdit && draft && !sameCards(draft, savedDraft(s, inv))
@@ -1422,10 +1504,13 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         saved ? h('p', {className:'ah-deck-save-status',role:'status'}, tableIcon('book'), t('hub.deck.savedStatus', { count: deckCodes.length }), s.state.investigators[s.mySeat ?? 0].autoBuilt ? t('hub.deck.autoBuilt') : '') : null)),
       libraryNotice && !state.arkhamDeckLibraryOpen
         ? h('p', { className: 'ah-deck-import-ok', role: 'status' }, libraryNotice) : null,
-      saved && legal(s, 'hubDoneSeat').length ? h('section', { className: 'ah-deck-next-action', role: 'status' },
+      confirm ? h('section', { className: 'ah-deck-next-action', role: 'status' },
         h('div', {}, h('strong', {}, t('hub.deck.savedTitle')), h('small', {}, t('hub.deck.savedNote'))),
-        action(s, legal(s, 'hubDoneSeat')[0], t('hub.task.confirmReady')),
-        h('button', { className: 'bg-btn secondary', disabled: !canEdit || locked(s), onclick: () => openDeck(s, g) }, t('hub.deck.continueEdit'))) : null,
+        action(s, { ...confirm, disabled: !!unsavedDraft, explanation: t('hub.deck.hintUnsaved') }, t('hub.task.confirmDeck')),
+        h('button', { className: 'bg-btn secondary', disabled: !canEdit || locked(s), onclick: () => openDeck(s, g) }, t('hub.deck.continueEdit'))) :
+        saved && done ? h('section', { className: 'ah-deck-next-action', role: 'status' },
+          h('div', {}, h('strong', {}, t('hub.deck.confirmedTitle'))),
+          action(s, done, t('hub.task.confirmReady'))) : null,
       h('div',{className:'ah-deck-toolbar'},editButton(),importButton(),libraryButton(),recommendedDeckAction(s, g),
         h('small',{},unsavedDraft ? t('hub.deck.hintUnsaved') : saved ? canEdit ? t('hub.deck.hintSaved') : t('hub.deck.hintView')
           : canEdit ? t('hub.deck.hintCanBuild') : t('hub.deck.hintSelectFirst'))),
@@ -2295,15 +2380,22 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const fullPool = (g.clientData?.deckBuilder?.cardPool || []).map(card=>({...s.state.cards?.[card.code],...card}))
     const cardMap = Object.fromEntries(fullPool.map(card => [card.code, card]))
     const rules = inv ? deckRules(inv,draft,cardMap) : null
+    const startingExperience = [...new Set(draft)].reduce((sum, code) => sum + (cardMap[code]?.startingExperience || 0), 0)
+    const experienceCost = card => (card?.xp || 0) * (card?.exceptional ? 2 : 1)
+    const experienceSpent = draft.reduce((sum, code) => sum + experienceCost(cardMap[code]), 0)
     const pool = fullPool.filter(card => cardAllowedByScope(card.code, scope, cycle)
       && (inv?.allowedCards?.includes(card.code) || draft.includes(card.code)
-        || ((card.xp || 0) === 0 && rules?.options.some(rule=>rule.not !== true && matchesCardRule(card,rule,inv)))))
+        || (!card.upgradeOnly && experienceCost(card) <= startingExperience
+          && rules?.options.some(rule => rule.not !== true && matchesCardRule(card, rule, inv)))))
     const shown = filterCards(pool, cardFilters('deck'))
     const counts = Object.fromEntries([...new Set(draft)].map(code => [code, draft.filter(item => item === code).length]))
     // P7（食梦者 M2）：多重（Myriad）按「同名跨卡号共享 3 张」显示 n/3；
     // 单卡张数上限仍由 validateDeckRules 的逐卡检查约束（例：三张「增强自我」各限 1）。
     const myriadTitles = new Map(myriadUsage(draft, cardMap).map(item => [item.name, item]))
     const checked = inv ? validateDeckRules(inv, draft, cardMap) : { errors: [t('hub.builder.noInvestigator')], count: 0 }
+    if (inv && (experienceSpent > startingExperience || draft.some(code => cardMap[code]?.upgradeOnly))) {
+      checked.errors.push(t('hub.builder.cardUnavailable'))
+    }
     const size = checked.size || inv?.deckSize || 30
     const distribution = draft.reduce((out, code) => {
       const card = cardMap[code]
@@ -2313,7 +2405,9 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     // One partial validation per card and render; the pool asks several times.
     const addErrors = new Map()
     const addError = code => {
-      if (!addErrors.has(code)) addErrors.set(code, !inv ? t('hub.builder.noInvestigator') : !cardMap[code] ? t('hub.builder.cardUnavailable')
+      if (!addErrors.has(code)) addErrors.set(code, !inv ? t('hub.builder.noInvestigator')
+        : (!cardMap[code] || cardMap[code].upgradeOnly || experienceSpent + experienceCost(cardMap[code]) > startingExperience)
+          ? t('hub.builder.cardUnavailable')
         : validateDeckRules(inv, [...draft, code], cardMap, { partial: true }).errors.join(t('hub.list.semicolon')))
       return addErrors.get(code)
     }

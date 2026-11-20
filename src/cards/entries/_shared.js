@@ -141,3 +141,9 @@ export function ignoreWouldEffect({ inv, api, context, reverse = false }) {
     api.gainAction(inv.seat, amount)
   }
 }
+
+export function shuffleThreatIntoDeck({ inv, source, api }) {
+  if (api.moveCard({ id: source.id, from: 'threat', to: 'deckTop', ownerSeat: inv.seat })) {
+    api.shuffleDeck(inv.seat)
+  }
+}

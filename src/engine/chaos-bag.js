@@ -1,3 +1,4 @@
+import { registeredEntry } from './ability.js'
 import { randomValue } from './rules-state.js'
 
 // The array remains the public bag. Revealed tokens are physically removed until
@@ -118,11 +119,29 @@ export function endChaosTest(state, resolved = []) {
   restoreOrder(state, z.orders?.pop())
 }
 
-export function sealChaosToken(state, token, source) {
+export function noteChaosTokenChange(state, seat) {
+  const inv = state.investigators?.[seat]
+  if (inv && registeredEntry(inv.code)?.investigator?.trackChaosTokenChanges) inv.chaosTokenChangeRound = state.round
+}
+
+export function revealSealedToken(state, source) {
+  const z = zones(state)
+  const index = z.sealed.findIndex(item => item.source === source)
+  if (index < 0) return null
+  const [{ token }] = z.sealed.splice(index, 1)
+  state.sealedTokens = z.sealed.map(item => item.token)
+  z.revealed.push(token)
+  state.skillTest.releasedTokenSources ||= []
+  state.skillTest.releasedTokenSources.push(source)
+  return token
+}
+
+export function sealChaosToken(state, token, source, seat = state._resolvingSeat ?? null) {
   const i = state.chaosBag.indexOf(token)
   if (i < 0 || !source) throw new Error('无法封印该标记')
   state.chaosBag.splice(i, 1)
   zones(state).sealed.push({ token, source })
+  if (seat != null) noteChaosTokenChange(state, seat)
   state.sealedTokens = zones(state).sealed.map(item => item.token)
 }
 

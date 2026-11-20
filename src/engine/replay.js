@@ -18,6 +18,7 @@
 
 import { createHash } from 'node:crypto'
 import { applyMove, createGameState } from './engine.js'
+import { STARTING_DECK_RULE_ACTIONS } from './dispatch.js'
 
 // 日志格式版本：字段只增不减。旧日志缺新字段时按默认值重放（例如没有 seatInvestigators
 // 就回落到按 seed + persona 推导，和 Phase 4 之前的行为一致）。
@@ -79,7 +80,10 @@ function sanitizeMove(move) {
 
 function sanitizeEntry(entry, index) {
   if (!entry || typeof entry !== 'object' || !entry.move) throw new Error(`重放日志第 ${index} 步缺少动作`)
-  return { seat: entry.seat, move: sanitizeMove(entry.move) }
+  return { seat: entry.seat, move: sanitizeMove(entry.move),
+    ...(entry.startingDeckConfirmation === true ? { startingDeckConfirmation: true } : {}),
+    ...(entry.sharedFreeWindows === true ? { sharedFreeWindows: true } : {}),
+    ...(entry.filterDiscardChoices === true ? { filterDiscardChoices: true } : {}) }
 }
 
 // 从权威状态里还原重放所需的创建参数 + 动作序列。
@@ -102,6 +106,7 @@ export function captureReplayLog(state) {
       schemaVersion: state.schemaVersion ?? null,
       rulesVersion: state.rulesVersion ?? null,
       moveCount: moves.length,
+      ...(setup._sharedFreeWindows === true ? { sharedFreeWindowsAtSetup: true } : {}),
     },
     settings: {
       campaignId: state.campaign?.id ?? null,
@@ -166,16 +171,22 @@ export function replayLog(log, { until = null, observe = null } = {}) {
     throw new Error(`重放日志完整性校验失败：meta.moveCount=${log.meta.moveCount}，实际 moves=${moves.length}`)
   }
   const count = until == null ? moves.length : Math.max(0, Math.min(moves.length, Math.floor(Number(until) || 0)))
-  const state = createGameState(settings, players)
+  const state = createGameState(settings, players, { sharedFreeWindows: log.meta?.sharedFreeWindowsAtSetup === true })
   // 建局状态本身没有动作日志；补一个空数组，让 `until: 0` 的结果形状和真实对局一致。
   if (!Array.isArray(state.actionLog)) state.actionLog = []
   if (observe) observe(state, 0)
   for (let index = 0; index < count; index++) {
     const entry = sanitizeEntry(moves[index], index)
     try {
-      applyMove(state, entry.seat, { ...entry.move })
+      // 旧动作日志按原先抽基础弱点的时机重放；当前动作逐条标记，兼容继续游玩的旧存档。
+      if (!entry.startingDeckConfirmation && STARTING_DECK_RULE_ACTIONS.has(entry.move.action)) state._legacyStartingDeckRules = true
+      applyMove(state, entry.seat, { ...entry.move }, {
+        sharedFreeWindows: entry.sharedFreeWindows === true, filterDiscardChoices: entry.filterDiscardChoices === true,
+      })
     } catch (error) {
       throw new Error(`重放第 ${index + 1} 步失败（${entry.move?.action}，座位 ${entry.seat}）：${error?.message || error}`)
+    } finally {
+      delete state._legacyStartingDeckRules
     }
     if (observe) observe(state, index + 1)
   }

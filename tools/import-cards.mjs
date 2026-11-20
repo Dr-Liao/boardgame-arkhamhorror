@@ -40,6 +40,12 @@ export function stripHtml(value) {
     .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
     .replace(/&#39;|&apos;/g, "'").replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').trim()
 }
+
+function applyPrintedTextFixes(card) {
+  if (card.code === '09120') card.textZh = card.textZh.replace('一个附属的援交换', '一个附属的支援交换')
+  if (card.code === '10503') card.backText = card.backText.replace('[[Ally] asset', '[[Ally]] asset')
+  return card
+}
 const splitTerms = value => String(value ?? '').split(/\.\s*|。/).map(s => s.trim()).filter(Boolean)
 
 export function localeFields(base, simplified, traditional) {
@@ -86,6 +92,9 @@ export function normalizeCard(c, locale) {
     result[target] = field === 'traits' ? splitTerms(value) : stripHtml(value)
   }
   if (c.restrictions?.investigator) result.signatureFor = Object.keys(c.restrictions.investigator)
+  if (Array.isArray(c.deck_tags)) {
+    result.deckTags = [...new Set(c.deck_tags.filter(tag => typeof tag === 'string' && tag.trim()).map(tag => tag.trim().toLowerCase()))]
+  }
   if (c.deck_options) result.deckOptions = c.deck_options.map(option => ({ ...clone(option), factions: clone(option.faction || []) }))
   if (c.deck_requirements) result.deckRequirements = { ...clone(c.deck_requirements), signatureCards: Object.keys(c.deck_requirements.card || {}) }
   if (c.type_code === 'investigator') {
@@ -164,7 +173,7 @@ export function mergeCatalog(sources) {
     // Encoding/allowlisting is not behavioral acceptance. P6 keeps proof scopes
     // in the per-code ledger; no card is promoted by the existence of a key.
     const effectStatus = effect?.simplified ? 'simplified' : effect || descriptor || Object.hasOwn(INVESTIGATOR_ABILITIES, code) || available ? 'unverified' : 'unimplemented'
-    const normalized = applyEoteTextFixes(normalizeCard(row, locale))
+    const normalized = applyPrintedTextFixes(applyEoteTextFixes(normalizeCard(row, locale)))
     cards[code] = { ...normalized, dataStatus: reasons.length ? 'quarantined' : source === 'legacy' ? 'compatibility' : 'validated', availability: accepted ? 'strict' : available ? 'simplified' : 'catalog-only', effectStatus, provenanceId: code }
     provenance[code] = { canonicalSource: source, rawSources: Object.keys(indexes).filter(id => indexes[id].has(code)), fields: fieldSources(row, source), locale, isolationReasons: reasons }
   }

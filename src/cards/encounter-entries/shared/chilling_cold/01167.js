@@ -10,14 +10,14 @@ export default {
   encounterResolve(state, inv, card, api) {
     api.test(inv.seat, 'willpower', 4, result => {
       if (result.success) return
-      const assets = (inv.assets || []).filter(asset => !asset.isStoryAsset)
+      const assets = (inv.assets || []).filter(asset => api.canDiscardAsset(inv.seat, asset.id))
       if (!assets.length) { api.damage(inv.seat, 2); return }
       const answer = assets.length === 1 ? assets[0].id : api.choose({
         kind: 'asset', source: '01167', seat: inv.seat,
         prompt: '地窖寒风：选择并弃掉 1 个你控制的支援。',
         options: assets.map(asset => ({ id: asset.id, label: asset.name || asset.code })),
       })
-      api.discardAsset(inv.seat, (assets.find(asset => asset.id === answer) || assets[0]).id)
+      if (!api.discardAsset(inv.seat, answer)) api.damage(inv.seat, 2)
     })
     return false
   },

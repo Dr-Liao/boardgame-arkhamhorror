@@ -9,7 +9,7 @@ import { resolveTransaction } from '../src/engine/resolution.js'
 import { viewState, viewEvents } from '../src/integration/observation.js'
 import { aiDecisionContext } from '../src/ai/ai-context.js'
 import { captureTableState, locationEntryErrors } from '../src/integration/presentation-state.js'
-import { fixture, enemy as makeEnemy, move } from './core-fixture.mjs'
+import { answer, fixture, enemy as makeEnemy, move } from './core-fixture.mjs'
 import { timelineEntries, timelineCardIndex, timelineCardParts } from '../web/table-timeline.js'
 import { objectiveText } from '../web/card-text.js'
 import {
@@ -502,6 +502,48 @@ test('个人检定结算里的公开演出（如敌人攻击）不按 privateSea
     assert.equal(attackCues(seat).length, 1, `观察者 ${seat} 应看到攻击演出`)
     assert.equal(attackCues(seat)[0].privateSeat, undefined, '演出事件不能带 privateSeat')
   }
+})
+
+test('抽到妄想症时全桌先看到弱点揭示，再看到资源结算', () => {
+  const s = fixture('01003', 2)
+  s.investigators[0].deck.push('01097')
+  const events = move(s, { action: 'draw' })
+  for (const observer of [0, 1, null]) {
+    const visible = viewEvents(events, observer)
+    const cues = visible.filter(event => event.kind === 'weakness')
+    assert.equal(cues.length, 1)
+    assert.equal(cues[0].code, '01097')
+    assert.match(cues[0].text, /抽到了弱点「妄想症」/)
+    assert.equal(cues[0].tableState.investigators[0].resources, 30)
+    const checkpoint = visible.at(-1)
+    assert.equal(checkpoint.kind, 'checkpoint')
+    assert.equal(checkpoint.tableState.investigators[0].resources, 0)
+  }
+  assert.ok(s.investigators[0].discard.includes('01097'))
+  assert.equal(s.log.filter(line => line.includes('抽到了弱点「妄想症」')).length, 1)
+})
+
+test('隐私弱点只播匿名演出', () => {
+  const hidden = fixture('01001', 2)
+  hidden.investigators[0].deck.push('06017')
+  const observed = viewEvents(move(hidden, { action: 'draw' }), 1)
+  const cue = observed.find(event => event.kind === 'weakness')
+  assert.ok(cue)
+  assert.equal(cue.code, undefined)
+  assert.equal(cue.name, undefined)
+  assert.doesNotMatch(JSON.stringify(observed), /06017|异次元监视者/)
+  assert.ok(hidden.investigators[0].hand.includes('06017'))
+})
+
+test('回答弱点显现要求的选择后不会重新播放揭示', () => {
+  const s = fixture()
+  s.investigators[0].hand = ['01088', '01090']
+  s.investigators[0].deck.push('01096')
+  assert.equal(move(s, { action: 'draw' }).filter(event => event.kind === 'weakness').length, 1)
+  assert.ok(s.pendingChoice)
+  const resumed = answer(s, s.pendingChoice.options[0].id)
+  assert.equal(resumed.filter(event => event.kind === 'weakness').length, 0)
+  assert.equal(s.investigators[0].hand.length, 1)
 })
 
 test('演出快照里的敌人派生数值与实时观察同口径（卡面修正不退回印刷值）', () => {

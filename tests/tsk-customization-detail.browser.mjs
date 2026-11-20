@@ -35,6 +35,7 @@ test('牌桌卡牌详情显示已解锁、部分勾选和未勾选的定制选�
 
   for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: 844 })
+    await expect(page.locator('.ah-mechanic-summary')).toHaveCount(0)
     await page.locator('[data-interaction="asset:quill-detail"]').click({ button: 'right' })
     const detail = page.getByRole('dialog', { name: '卡牌详情' })
     const options = detail.getByRole('region', { name: '定制选项' })

@@ -20,12 +20,12 @@
     "total": 115,
     "verified": 115,
     "missing": 0,
-    "simplified": 54,
-    "simplifiedDisclosed": 54,
+    "simplified": 53,
+    "simplifiedDisclosed": 53,
     "buildable": 111,
     "dependencyOnly": 4,
     "basicWeaknesses": 4,
-    "testsPassed": 124
+    "testsPassed": 126
   },
   "shards": [
     {
@@ -388,7 +388,7 @@
     },
     {
       "path": "src/cards/entries/08072.js",
-      "sha256": "0de5f98b7d98e622d098df1cd778a7774d54fcde6c9388509577301239dba5e3"
+      "sha256": "4f507e6cb5579fa9fb4bdd63470e3321075c7a66ff48c2b42f7e316416bba6b2"
     },
     {
       "path": "src/cards/entries/08073.js",
@@ -2026,7 +2026,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 741,
+          "line": 743,
           "test": "P6 08062 闭环：入场充能数=职阶数；花 1 充能横置执行一次基础行动"
         }
       ]
@@ -2089,7 +2089,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 765,
+          "line": 767,
           "test": "P6 08064 先见：指定卡牌与抽到的卡相同 → 取消/弃掉；遭遇牌可取消显现"
         }
       ]
@@ -2273,7 +2273,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 793,
+          "line": 795,
           "test": "P6 08070 真法魔典：揭示手牌法术支援并结算其能力"
         }
       ]
@@ -2313,31 +2313,24 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 2,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 7,
-            "detail": "// approximation: 引擎没有「把支援用途当资源直接支付」的付费来源通道。这里用 free 能力"
-          },
-          {
-            "source": "comment",
-            "line": 8,
-            "detail": "// 「花费 1 秘密 → 获得 1 资源」近似（资源可用于后续支付[[道具]]支援），并把「仅限同地点"
-          }
-        ]
-      },
-      "implementation": "0de5f98b7d98e622d098df1cd778a7774d54fcde6c9388509577301239dba5e3",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "4f507e6cb5579fa9fb4bdd63470e3321075c7a66ff48c2b42f7e316416bba6b2",
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 804,
-          "test": "P6 08072 沙夫纳的目录：花费秘密获得资源（近似秘密当资源）；秘密耗尽弃掉"
+          "line": 806,
+          "test": "P6 08072 沙夫纳的目录：用自己的秘密支付道具费用，耗尽后弃掉"
+        },
+        {
+          "file": "eote-player-m2-2.test.mjs",
+          "line": 827,
+          "test": "P6 08072 沙夫纳的目录：由同地点队友选择代付，可混合资源和多本目录"
+        },
+        {
+          "file": "eote-player-m2-2.test.mjs",
+          "line": 855,
+          "test": "P6 08072 沙夫纳的目录：不能支付非道具或远处的卡，拒绝代付后保留手牌和秘密"
         }
       ]
     },
@@ -2382,7 +2375,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 819,
+          "line": 884,
           "test": "P6 08074 应急装备：真实打出后声明式附属到道具支援（3 耐久）；宿主检定期间花 1 耐久 +2"
         }
       ]
@@ -2440,7 +2433,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 852,
+          "line": 917,
           "test": "P6 08076 阅后即焚：放逐一张 0-5 级手牌、发现 2 线索；等级≥2 时移除 1 毁灭"
         }
       ]

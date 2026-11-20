@@ -86,6 +86,7 @@ test('进入关卡依次发布故事导入与初始密谋卡演出',()=>{
   move(s,{action:'hubGoSetup'})
   move(s,{action:'hubSelectInvestigator',code:'01001'})
   move(s,{action:'hubAutoDeck'})
+  move(s,{action:'hubConfirmDeck'})
   move(s,{action:'hubDoneSeat'})
   const events=move(s,{action:'hubBeginScenario'})
   const opening=events.map(event=>event.presentation).filter(cue=>cue?.kind==='story')
@@ -143,28 +144,37 @@ test('失败故事与幕间按实际访问顺序呈现，下一关导入读取�
   const burned=introduction(next,{houseBurned:true}).paragraphs.join('')
   assert.match(burned,/大火/);assert.doesNotMatch(burned,/得以保留/)
 })
-test('起始牌组允许准备前修改，保留弱点与身份，准备后以及关间禁止重构',()=>{
+test('完整起始牌组可编辑，最终确认才抽基础弱点并锁定牌组',()=>{
   const s=createGameState({campaignHub:true,seed:'edit-deck'},[{seat:0,role:'human'}])
   move(s,{action:'hubGoSetup'});move(s,{action:'hubSelectInvestigator',code:'01001'});move(s,{action:'hubAutoDeck'})
   const record=s.campaign.investigators[0], identity=record.id
   const special=record.deck.filter(code=>!PLAYER_CARD_CODES.includes(code)), ordinary=record.deck.filter(code=>PLAYER_CARD_CODES.includes(code))
+  const basic = () => s.campaign.investigators[0].deck.filter(code => s.cards[code]?.subtype === 'basicweakness')
   assert.equal(ordinary.length,30)
+  assert.deepEqual(basic(), [])
+  assert.ok(validateMove(s,0,{action:'hubDoneSeat'}))
+  assert.ok(validateMove(s,0,{action:'hubBeginScenario'}))
+  assert.ok(validateMove(s,0,{action:'hubSetDeck',codes:ordinary.slice(1)}))
   assert.ok(legalMoves(s).some(m=>m.action==='hubSetDeck'))
   move(s,{action:'hubSetDeck',codes:ordinary})
-  assert.equal(record.id,identity);assert.deepEqual(record.deck.filter(code=>!PLAYER_CARD_CODES.includes(code)),special)
-  assert.equal(record.deck.length,30+special.length)
-  assert.deepEqual(record.deck.filter(code=>PLAYER_CARD_CODES.includes(code)).sort(),[...ordinary].sort())
+  assert.equal(s.campaign.investigators[0].id,identity)
+  assert.deepEqual(s.campaign.investigators[0].deck.filter(code=>!PLAYER_CARD_CODES.includes(code)),special)
   move(s,{action:'hubSetDeck',codes:[...ordinary].reverse()})
-  assert.equal(record.deck.length,30+special.length)
+  assert.deepEqual(basic(), [])
+  move(s,{action:'hubConfirmDeck'})
+  assert.equal(basic().length,1)
+  assert.ok(validateMove(s,0,{action:'hubConfirmDeck'}))
+  assert.ok(validateMove(s,0,{action:'hubSetDeck',codes:ordinary}))
+  assert.ok(validateMove(s,0,{action:'hubAutoDeck'}))
   move(s,{action:'hubDoneSeat'})
   assert.ok(validateMove(s,0,{action:'hubSetDeck',codes:ordinary}))
   s.uiState='interlude';s.hubReady=false
   assert.ok(validateMove(s,0,{action:'hubSetDeck',codes:ordinary}))
 })
-test('关间死亡替补：自动组卡后仍可继续编辑或换用卡组，确认席位后关闭',()=>{
+test('关间死亡替补：最终确认起始牌组后才抽弱点并开放席位准备',()=>{
   const s=createGameState({campaignHub:true,seed:'interlude-replacement-deck'},[{seat:0,role:'human'}])
   move(s,{action:'hubGoSetup'});move(s,{action:'hubSelectInvestigator',code:'01001'})
-  move(s,{action:'hubAutoDeck'});move(s,{action:'hubDoneSeat'})
+  move(s,{action:'hubAutoDeck'});move(s,{action:'hubConfirmDeck'});move(s,{action:'hubDoneSeat'})
   // 一关结束：原调查员死亡，进入关间。
   s.campaign.investigators[0].status='killed'
   s.investigators[0].defeated=true
@@ -181,37 +191,45 @@ test('关间死亡替补：自动组卡后仍可继续编辑或换用卡组，�
   assert.ok(viewState(s,0).legalMoves.some(m=>m.action==='hubSetDeck'),'前端投影里保留编辑入口')
   // 换一副普通卡清单（真实界面里手动编辑、卡组库与 ArkhamDB 导入最终都提交 hubSetDeck）。
   move(s,{action:'hubSetDeck',codes:[...deck].reverse()})
-  assert.equal(record.id,identity);assert.equal(record.deck.length,33)
-  assert.deepEqual(record.deck.filter(code=>PLAYER_CARD_CODES.includes(code)).sort(),[...deck].sort())
-  // 确认席位后关闭；下一关间的现役调查员仍不能重构起始牌组。
+  assert.equal(s.campaign.investigators[0].id,identity)
+  assert.equal(s.campaign.investigators[0].deck.length,32)
+  assert.ok(validateMove(s,0,{action:'hubDoneSeat'}))
+  move(s,{action:'hubConfirmDeck'})
+  assert.equal(s.campaign.investigators[0].deck.length,33)
+  assert.ok(validateMove(s,0,{action:'hubSetDeck',codes:deck}))
   move(s,{action:'hubDoneSeat'})
   assert.equal(s.hubReplacementSeats,undefined)
   s.uiState='interlude';s.phase='interlude';s.campaign.phase='interlude'
   s.hubReady=false;s.hubSeatDone={};s.currentSeat=0;s.hubUpgradedSeats={}
   assert.ok(!legalMoves(s).some(m=>m.action==='hubSetDeck'))
 })
-test('首关开始前可以重选调查员并重新开放准备，且不会重抽基础弱点',()=>{
+test('最终确认前可以重选调查员，重新开放准备也保持牌组锁定',()=>{
   const s=createGameState({campaignHub:true,seed:'reselect-before-start'},[{seat:0,role:'human'}])
   move(s,{action:'hubGoSetup'});move(s,{action:'hubSelectInvestigator',code:'01001'});move(s,{action:'hubAutoDeck'})
   const record=s.campaign.investigators[0],identity=record.id
-  const weaknesses=record.deck.filter(code=>s.cards[code]?.subtype==='basicweakness')
-  assert.equal(weaknesses.length,1)
+  assert.equal(record.deck.some(code=>s.cards[code]?.subtype==='basicweakness'),false)
   assert.ok(legalMoves(s).some(m=>m.action==='hubSelectInvestigator'&&m.code==='01002'))
   move(s,{action:'hubSelectInvestigator',code:'01002'})
   assert.equal(s.campaign.investigators[0].id,identity)
   assert.equal(s.campaign.investigators[0].code,'01002')
-  assert.deepEqual(s.campaign.investigators[0].deck,weaknesses)
+  assert.deepEqual(s.campaign.investigators[0].deck,[])
   assert.equal(s.campaign.investigators[0].startingDeckReady,false)
   assert.equal(legalMoves(s).some(m=>m.action==='hubDoneSeat'),false)
+  assert.ok(validateMove(s,0,{action:'hubConfirmDeck'}))
   move(s,{action:'hubAutoDeck'})
-  assert.deepEqual(s.campaign.investigators[0].deck.filter(code=>s.cards[code]?.subtype==='basicweakness'),weaknesses)
+  move(s,{action:'hubConfirmDeck'})
+  const finalized = [...s.campaign.investigators[0].deck]
+  assert.ok(validateMove(s,0,{action:'hubSelectInvestigator',code:'01001'}))
   move(s,{action:'hubDoneSeat'})
   assert.equal(s.hubReady,true)
   assert.ok(legalMoves(s).some(m=>m.action==='hubReopenSetup'))
   move(s,{action:'hubReopenSetup'})
   assert.equal(s.hubReady,false)
   assert.deepEqual(s.hubSeatDone,{})
-  assert.ok(legalMoves(s).some(m=>m.action==='hubSelectInvestigator'))
+  assert.ok(legalMoves(s).some(m=>m.action==='hubDoneSeat'))
+  assert.ok(validateMove(s,0,{action:'hubSelectInvestigator',code:'01001'}))
+  assert.ok(validateMove(s,0,{action:'hubConfirmDeck'}))
+  assert.deepEqual(s.campaign.investigators[0].deck,finalized)
 })
 test('规则索引无断链，卡牌关键字及行动符号可跳转，保留普通文本',()=>{
   const ids=new Set(RULES.map(r=>r.id));assert.equal(ids.size,RULES.length)

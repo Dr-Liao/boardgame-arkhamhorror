@@ -232,6 +232,7 @@ function apiStub(state, overrides = {}) {
     },
     // 05120/05144 的猎手移动：引擎 hunterStep 是纯计算；默认无目标，测试按需覆盖。
     hunterStep: () => null,
+    canDiscardAsset: (seat, assetId) => state.investigators[seat].assets.some(asset => String(asset.id) === String(assetId)),
     discardAsset: (seat, assetId) => {
       const inv = state.investigators[seat]
       inv.assets = inv.assets.filter(asset => String(asset.id) !== String(assetId))
@@ -1093,10 +1094,11 @@ test('05093/05094 崩毁离析/苦痛折磨：TSN 转发共享实现（横置女
     // 同地点横置女巫：卡面「本次检定自动成功」。
     state.enemies.push({ id: `witch-${code}`, code: '05090', originalCode: '05090', name: '女巫',
       traits: ['Witch'], exhausted: true, location: inv.location, engagedSeat: null })
-    const move = secretName.behavior.actions(state, inv)
+    const moves = secretName.behavior.actions(state, inv)
       .concat(secretName.behavior.encounterActions?.(state, inv) || [])
-      .find(candidate => String(candidate.threatId) === `threat-${code}`)
-    assert.ok(move, `${code} 应在遭遇行动里列出（共享 encounterActions）`)
+      .filter(candidate => candidate.threatId === `threat-${code}`)
+    assert.equal(moves.length, 1, `${code} 的摆脱行动应只列出一次`)
+    const [move] = moves
     let tested = 0
     const api = apiStub(state, {
       test: (seat, skill, difficulty, resolve) => {
@@ -1201,6 +1203,7 @@ test('05130/05131 闹鬼 choice 按选项可结算性过滤：无支援只剩恐
       damage: () => {}, horror: (seat, amount) => { inv.horror += amount },
       discardAsset: (seat, assetId) => {
         inv.assets = inv.assets.filter(asset => String(asset.id) !== String(assetId))
+        return true
       },
       spendClues: (seat, amount) => { inv.clues = Math.max(0, inv.clues - amount) },
       addDoom: amount => { state.doom = (state.doom || 0) + amount },

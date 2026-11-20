@@ -141,6 +141,19 @@ import * as fhvTheLongestNight from './campaigns/theFeastOfHemlockVale/scenarios
 import * as fhvDawnOfTheFinalDay from './campaigns/theFeastOfHemlockVale/scenarios/dawnOfTheFinalDay/index.js'
 import * as fhvPreludeTheFinalEvening from './campaigns/theFeastOfHemlockVale/scenarios/preludeTheFinalEvening/index.js'
 import * as fhvFateOfTheVale from './campaigns/theFeastOfHemlockVale/scenarios/fateOfTheVale/index.js'
+// P7（十循环 M3）：《沉没之城》战役 + 10 个场景单元。内容为 development（战役不可启动），
+// 章节内容、共享遭遇与双语指南随 P7 逐章验收；playable 提升留给 P8。
+import { manifest as tdcCampaignManifest } from './campaigns/theDrownedCity/manifest.js'
+import * as tdcOneLastJob from './campaigns/theDrownedCity/scenarios/oneLastJob/index.js'
+import * as tdcTheWesternWall from './campaigns/theDrownedCity/scenarios/theWesternWall/index.js'
+import * as tdcTheDrownedQuarter from './campaigns/theDrownedCity/scenarios/theDrownedQuarter/index.js'
+import * as tdcTheApiary from './campaigns/theDrownedCity/scenarios/theApiary/index.js'
+import * as tdcTheGrandVault from './campaigns/theDrownedCity/scenarios/theGrandVault/index.js'
+import * as tdcCourtOfTheAncients from './campaigns/theDrownedCity/scenarios/courtOfTheAncients/index.js'
+import * as tdcObsidianCanyons from './campaigns/theDrownedCity/scenarios/obsidianCanyons/index.js'
+import * as tdcSepulchreOfTheSleeper from './campaigns/theDrownedCity/scenarios/sepulchreOfTheSleeper/index.js'
+import * as tdcTheDoomOfArkhamPartI from './campaigns/theDrownedCity/scenarios/theDoomOfArkhamPartI/index.js'
+import * as tdcTheDoomOfArkhamPartII from './campaigns/theDrownedCity/scenarios/theDoomOfArkhamPartII/index.js'
 
 let bundle = {
   packs: [...packs, ...expansionBundles.map(entry => entry.manifest), dunwichCampaignPack, dunwichInvestigators,
@@ -149,7 +162,8 @@ let bundle = {
     ticCampaignPack, ticInvestigators, ticPlayer, eoteCampaignPack, eoteInvestigators, eotePlayer,
     tskCampaignPack, tskInvestigators, tskPlayer],
   campaigns: [nightOfTheZealot, theDunwichLegacy, thePathToCarcosa, theForgottenAge, theCircleUndone,
-    theDreamEaters, theInnsmouthConspiracy, eoteCampaignManifest, tskCampaignManifest, fhvCampaignManifest],
+    theDreamEaters, theInnsmouthConspiracy, eoteCampaignManifest, tskCampaignManifest, fhvCampaignManifest,
+    tdcCampaignManifest],
   scenarios: [gathering, masks, devourer, extracurricularActivity, theHouseAlwaysWins, theMiskatonicMuseum,
     theEssexCountyExpress, bloodOnTheAltar, undimensionedAndUnseen, whereDoomAwaits, lostInTimeAndSpace,
     curtainCall, theLastKing, echoesOfThePast, theUnspeakableOath, aPhantomOfTruth, thePallidMask,
@@ -168,7 +182,10 @@ let bundle = {
     tskOnThinIce, tskDogsOfWar, tskShadesOfSuffering, tskWithoutATrace, tskCongressOfTheKeys,
     fhvWelcomeToHemlockVale, fhvWrittenInRock, fhvHemlockHouse, fhvTheSilentHeath, fhvTheLostSister,
     fhvTheThingInTheDepths, fhvTheTwistedHollow, fhvDawnOfTheSecondDay, fhvTheLongestNight,
-    fhvDawnOfTheFinalDay, fhvPreludeTheFinalEvening, fhvFateOfTheVale],
+    fhvDawnOfTheFinalDay, fhvPreludeTheFinalEvening, fhvFateOfTheVale,
+    tdcOneLastJob, tdcTheWesternWall, tdcTheDrownedQuarter, tdcTheApiary, tdcTheGrandVault,
+    tdcCourtOfTheAncients, tdcObsidianCanyons, tdcSepulchreOfTheSleeper,
+    tdcTheDoomOfArkhamPartI, tdcTheDoomOfArkhamPartII],
 }
 export let contentRegistry = createContentRegistry(bundle)
 

@@ -157,6 +157,7 @@ test('真相幻影前导在调查员准备后执行，乔丹资源不会被重�
   move(state, { action: 'hubGoSetup' })
   move(state, { action: 'hubSelectInvestigator', code: '01001' })
   move(state, { action: 'hubAutoDeck' })
+  move(state, { action: 'hubConfirmDeck' })
   move(state, { action: 'hubDoneSeat' })
   state.campaign.flow = {
     nodeId: 'aPhantomOfTruth',

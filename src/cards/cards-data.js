@@ -8921,7 +8921,7 @@ export const ALL_CARDS = {
     "backFlavorZh": "一根木质横梁吱嘎一声正砸在你头上。这一下差点把你砸昏过去。矿井深外的岩穴也是一阵震颤。",
     "backName": "Caved-In",
     "backNameZh": "洞穴之间",
-    "backText": "Deal 2 damage to each investigator and 1 direct damage to each [[Ally] asset they control.\nReveal the Control Station location and move each surviving investigator to it.\nEach investigator loses all of their clues.\nAdvance the act.",
+    "backText": "Deal 2 damage to each investigator and 1 direct damage to each [[Ally]] asset they control.\nReveal the Control Station location and move each surviving investigator to it.\nEach investigator loses all of their clues.\nAdvance the act.",
     "backTextZh": "对每位调查员造成2点伤害，对其控制的每个[[盟友]]支援造成1点直接伤害。\n揭示控制站地点，将每位幸存的调查员移动至该地点。\n每位调查员失去其所有线索。\n推进场景。",
     "backimagesrc": "/bundles/cards/10503b.jpg",
     "code": "10503",
@@ -317108,7 +317108,7 @@ export const ALL_CARDS = {
     ],
     "subnameZh": "",
     "text": "Each attached asset takes up no slots and its text box is treated as if it were blank (except for [[Traits]]).\n[fast] Exhaust Tool Belt: Choose one - attach a [[Tool]] asset in your play area to Tool Belt, switch a [[Tool]] asset in your play area with an attached asset, or detach an attached asset.",
-    "textZh": "每个附属的支援不占用槽位，且其文本框视为如同空白(除[[特性]]外)。\n[free]横置工具带：选择一项 - 将你游戏区域的一个[[工具]]支援附属到工具带；将你游戏区域的一个[[工具]]支援与一个附属的援交换；或将一个已附属的支援解除附属。",
+    "textZh": "每个附属的支援不占用槽位，且其文本框视为如同空白(除[[特性]]外)。\n[free]横置工具带：选择一项 - 将你游戏区域的一个[[工具]]支援附属到工具带；将你游戏区域的一个[[工具]]支援与一个附属的支援交换；或将一个已附属的支援解除附属。",
     "traits": [
       "Item",
       "Clothing"

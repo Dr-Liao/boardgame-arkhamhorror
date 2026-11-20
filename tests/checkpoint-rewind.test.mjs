@@ -5,7 +5,8 @@ import os from 'node:os'
 import path from 'node:path'
 
 import { createServer } from '../../../lib/server.js'
-import { snapshotPath } from '../../../lib/sessions.js'
+import { readSnapshot, snapshotPath } from '../../../lib/sessions.js'
+import { applyLocalActionDelta } from '../../../public/online-delta.js'
 import arkham from '../index.js'
 import { PLAYER_CARD_CODES } from '../src/deck/availability.js'
 import { buildDeck } from '../src/deck/deckbuilding.js'
@@ -96,6 +97,7 @@ test('关卡入口检查点可由队长创建精确分支，且原时间线保�
     })
     assert.equal(started.status, 200, started.error)
     let session = started.session
+    const hubCards = session.state.cards
     const submit = async move => {
       const response = await app.request('/api/move', {
         sessionId: session.sessionId,
@@ -114,6 +116,7 @@ test('关卡入口检查点可由队长创建精确分支，且原时间线保�
       { action: 'hubGoSetup' },
       { action: 'hubSelectInvestigator', code: '01001' },
       { action: 'hubSetDeck', codes: deck },
+      { action: 'hubConfirmDeck' },
       { action: 'hubDoneSeat' },
       { action: 'hubBeginScenario' },
     ]) await submit(move)
@@ -125,6 +128,11 @@ test('关卡入口检查点可由队长创建精确分支，且原时间线保�
     const sourceId = session.sessionId
     const sourceRecordAtStart = JSON.parse(fs.readFileSync(snapshotPath(sourceId), 'utf8'))
     const checkpoint = sourceRecordAtStart.session.scenarioCheckpoints[0]
+    assert.ok(Object.keys(checkpoint.snapshot.state.cards).length < Object.keys(hubCards).length / 2)
+    assert.deepEqual(session.state.cards, checkpoint.snapshot.state.cards)
+    for (const code of [...deck, ...checkpoint.snapshot.state.investigators[0].hand]) {
+      assert.ok(checkpoint.snapshot.state.cards[code], '关卡卡表缺少 ' + code)
+    }
     assert.equal(checkpoint.snapshot.state.pendingChoice.kind, 'mulligan')
     assert.deepEqual(checkpoint.snapshot.state.investigators[0].hand, sourceRecordAtStart.session.state.investigators[0].hand)
     assert.deepEqual(checkpoint.snapshot.state.encounterDeck, sourceRecordAtStart.session.state.encounterDeck)
@@ -138,6 +146,7 @@ test('关卡入口检查点可由队长创建精确分支，且原时间线保�
       await submit(move)
     }
     assert.equal(session.state.campaign.scenarioResults[0].visitId, checkpoint.visitId)
+    assert.ok(Object.keys(hubCards).every(code => Object.hasOwn(session.state.cards, code)), '关间恢复完整构筑卡池')
     const sourceRevision = session.state.revision
     const sourceBytes = fs.readFileSync(snapshotPath(sourceId), 'utf8')
 
@@ -190,6 +199,50 @@ test('关卡入口检查点可由队长创建精确分支，且原时间线保�
     assert.deepEqual(branchRecord.agentPlans, checkpoint.snapshot.agentPlans)
     assert.equal(branchRecord.forkedFrom.sessionId, sourceId)
     assert.equal(branchRecord.forkedFrom.checkpointId, checkpoint.checkpointId)
+
+    const legacy = structuredClone(branchRecord)
+    for (const state of [legacy.state, legacy.scenarioCheckpoints[0].snapshot.state]) {
+      state.cards = { ...hubCards, ...state.cards }
+      delete state._scenarioCardTable
+    }
+    const legacyId = legacy.sessionId + '-legacy-cards'
+    legacy.sessionId = legacyId
+    const legacyPath = snapshotPath(legacyId, legacy.modId)
+    const { journalId, ...legacyRecord } = sourceRecordAtStart
+    fs.writeFileSync(legacyPath, JSON.stringify({ ...legacyRecord, session: legacy }))
+    const loadedLegacy = await app.request('/api/session/load', { sessionId: legacyId })
+    assert.equal(loadedLegacy.status, 200, loadedLegacy.error)
+    assert.deepEqual(loadedLegacy.session.state.cards, checkpoint.snapshot.state.cards)
+    assert.ok(loadedLegacy.migrationChanges.some(change => change.includes('关卡检查点') && change.includes('收窄关卡卡表')))
+    assert.equal(loadedLegacy.session.scenarioCheckpoints[0].canFork, true)
+    const migratedLegacy = JSON.parse(fs.readFileSync(legacyPath, 'utf8')).session
+    assert.deepEqual(migratedLegacy.scenarioCheckpoints[0].snapshot.state, checkpoint.snapshot.state)
+    const reloadedLegacy = await app.request('/api/session/load', { sessionId: legacyId })
+    assert.deepEqual(reloadedLegacy.migrationChanges, [], '卡表迁移只执行一次')
+
+    const baseline = reloadedLegacy.session
+    const choice = baseline.state.legalMoves.find(move => move.optionId === 'done')
+    assert.ok(choice)
+    const journaled = await app.request('/api/move', { sessionId: legacyId, revision: baseline.state.revision,
+      move: choice, client: { localBaseStamp: baseline.localActionStamp } })
+    const applied = applyLocalActionDelta(baseline, journaled.localActionDelta)
+    assert.ok(applied, journaled.error)
+    assert.equal(JSON.parse(fs.readFileSync(legacyPath, 'utf8')).session.state.revision, baseline.state.revision)
+    assert.equal(readSnapshot(legacyId).journalCount, 1)
+    assert.equal(readSnapshot(legacyId).session.state.revision, applied.state.revision)
+    const full = await app.request('/api/session?sessionId=' + legacyId)
+    assert.deepEqual(JSON.parse(JSON.stringify(applied)), full.session)
+    assert.equal(applyLocalActionDelta(applied, journaled.localActionDelta), null)
+    await app.close()
+    app = await listen()
+    const loadedJournal = await app.request('/api/session/load', { sessionId: legacyId })
+    assert.deepEqual(loadedJournal.session.state, applied.state)
+    assert.deepEqual(loadedJournal.session.events, applied.events)
+    const fromJournal = await app.request('/api/session/fork-checkpoint', { sessionId: legacyId,
+      revision: applied.state.revision, checkpointId: checkpoint.checkpointId, seat: 0, confirm: true })
+    assert.equal(fromJournal.status, 200, fromJournal.error)
+    assert.equal(fromJournal.session.state.pendingChoice.kind, 'mulligan')
+    assert.equal(readSnapshot(legacyId).session.state.revision, applied.state.revision)
 
     const incompatible = structuredClone(branchRecord)
     incompatible.scenarioCheckpoints[0].snapshot.state.schemaVersion = 999

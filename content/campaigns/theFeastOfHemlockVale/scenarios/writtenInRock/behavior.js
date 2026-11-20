@@ -522,12 +522,18 @@ export function steerMineCart(state, direction) {
   return engine ? steerRailVehicle(state, engine) : false
 }
 
+function mineCartChoiceSeat(state) {
+  const active = activeInvestigators(state)
+  return active.find(inv => inv.seat === state.campaign?.leadSeat)?.seat ?? active[0]?.seat
+}
+
 export function chooseCartFacing(state, api = {}, options = ['north', 'east']) {
   const ports = RAIL_PORTS[CONTROL_STATION_ID] || []
   const allowed = options.filter(direction => ports.includes(direction))
-  const pick = typeof api?.choose === 'function'
+  const seat = mineCartChoiceSeat(state)
+  const pick = seat != null && typeof api?.choose === 'function'
     ? api.choose({
-      kind: 'mineCartFacing', source: MINE_CART_CODE,
+      kind: 'mineCartFacing', source: MINE_CART_CODE, seat,
       prompt: '选择矿车朝向',
       options: allowed.map(direction => ({ id: direction, label: directionLabel(direction) })),
     })
@@ -699,9 +705,10 @@ export function moveMineCartOnce(state, api = {}, { depth = 0, skipWildRide = fa
     connect: () => connectGrid(state),
   }, directions => {
     const printed = directions.map(fromEngineDirection).filter(Boolean)
-    if (typeof api?.choose === 'function') {
+    const seat = mineCartChoiceSeat(state)
+    if (seat != null && typeof api?.choose === 'function') {
       const picked = api.choose({
-        kind: 'mineCartFacing', source: MINE_CART_CODE,
+        kind: 'mineCartFacing', source: MINE_CART_CODE, seat,
         prompt: '矿车进入新地点：选择朝向',
         options: printed.map(direction => ({ id: direction, label: directionLabel(direction) })),
       })
@@ -740,9 +747,10 @@ export function moveMineCart(state, api = {}, { times = 1 } = {}) {
     }
     const switches = markerCountOf(state, SWITCH)
     let choice = null
-    if (switches > 0 && Number(flags.writtenInRockCartSwitches) < 2 && typeof api?.choose === 'function') {
+    const seat = mineCartChoiceSeat(state)
+    if (seat != null && switches > 0 && Number(flags.writtenInRockCartSwitches) < 2 && typeof api?.choose === 'function') {
       choice = api.choose({
-        kind: 'mineCart', source: MINE_CART_CODE,
+        kind: 'mineCart', source: MINE_CART_CODE, seat,
         prompt: '矿车移动：可以花费 1 个道岔取消，或再移动一次。',
         options: [
           { id: 'none', label: '不花费道岔' },
@@ -1078,11 +1086,12 @@ export function burrowingHybridEntered(state, enemy, api = {}) {
     .find(entry => entry.direction === mineCartRail(state)?.facing)
   if (!neighbor) return false
   const target = neighbor.id
+  const seat = mineCartChoiceSeat(state)
   const spaces = emptyAdjacentSpaces(state, target)
   if (spaces.length) {
-    const choice = typeof api?.choose === 'function'
+    const choice = seat != null && typeof api?.choose === 'function'
       ? api.choose({
-        kind: 'slide', source: BURROWING_HYBRID_CODE,
+        kind: 'slide', source: BURROWING_HYBRID_CODE, seat,
         prompt: '深掘混种：把矿车朝向的连接地点滑入相邻空格。',
         options: spaces.map(space => ({ id: slotKey(space), label: `(${space.x}, ${space.y})` })),
       })
@@ -1092,9 +1101,9 @@ export function burrowingHybridEntered(state, enemy, api = {}) {
   }
   const neighbors = adjacentGridLocations(state, target).filter(id => canBeSlidOrSwapped(state, id))
   if (!neighbors.length) return false
-  const pick = typeof api?.choose === 'function'
+  const pick = seat != null && typeof api?.choose === 'function'
     ? api.choose({
-      kind: 'swap', source: BURROWING_HYBRID_CODE,
+      kind: 'swap', source: BURROWING_HYBRID_CODE, seat,
       prompt: '深掘混种：无法滑动，改为与相邻地点交换。',
       options: neighbors.map(id => ({ id, label: locationOf(state, id)?.name || id })),
     })
@@ -1157,12 +1166,12 @@ function caveInLocations(state) {
     .map(location => location.id)
 }
 
-function choosePair(state, api, prompt) {
+function choosePair(state, api, seat, prompt) {
   const pairs = swapPairs(state)
   if (!pairs.length) return null
   if (typeof api?.choose !== 'function') return pairs[0]
   const picked = api.choose({
-    kind: 'swap', source: ACT2_CODE, prompt,
+    kind: 'swap', source: ACT2_CODE, seat, prompt,
     options: pairs.map((pair, index) => ({
       id: String(index),
       label: `「${locationOf(state, pair[0])?.name}」↔「${locationOf(state, pair[1])?.name}」`,
@@ -1266,7 +1275,7 @@ export function fastActions(state, inv) {
   return actions(state, inv).filter(move => move.fast === true && (move.actions ?? 1) === 0)
 }
 
-function doSlide(state, api) {
+function doSlide(state, api, seat) {
   const plans = slidePlans(state)
   if (!plans.length) return false
   if (typeof api?.choose !== 'function') {
@@ -1274,7 +1283,7 @@ function doSlide(state, api) {
     return slideLocation(state, plan.id, plan.x, plan.y, api)
   }
   const picked = api.choose({
-    kind: 'slide', source: ACT2_CODE, prompt: '选择要滑动的地点与空格。',
+    kind: 'slide', source: ACT2_CODE, seat, prompt: '选择要滑动的地点与空格。',
     options: plans.map((plan, index) => ({
       id: String(index), label: `「${locationOf(state, plan.id)?.name}」→ (${plan.x}, ${plan.y})`,
     })),
@@ -1341,15 +1350,15 @@ export function performAction(state, inv, move, api = {}) {
     markUsed(state, key)
     const mode = typeof api?.choose === 'function'
       ? api.choose({
-        kind: 'slideOrSwap', source: ACT2_CODE, prompt: '选择：滑动一个地点，或交换 2 个相邻地点。',
+        kind: 'slideOrSwap', source: ACT2_CODE, seat: inv.seat, prompt: '选择：滑动一个地点，或交换 2 个相邻地点。',
         options: [{ id: 'slide', label: '滑动一个地点' }, { id: 'swap', label: '交换 2 个相邻地点' }],
       })
       : 'slide'
     if (mode === 'swap') {
-      const pair = choosePair(state, api, '交换哪 2 个相邻地点？')
+      const pair = choosePair(state, api, inv.seat, '交换哪 2 个相邻地点？')
       return Boolean(pair) && swapAdjacentLocations(state, pair[0], pair[1], api)
     }
-    return doSlide(state, api)
+    return doSlide(state, api, inv.seat)
   }
   if (rule === 'writtenInRockPaidSlide') {
     const key = `paidSlide:${Number(state.round) || 1}`
@@ -1357,7 +1366,7 @@ export function performAction(state, inv, move, api = {}) {
     if ((inv.resources || 0) < costPerPlayer(state)) return false
     spendResources(state, inv, costPerPlayer(state), api)
     markUsed(state, key)
-    return doSlide(state, api)
+    return doSlide(state, api, inv.seat)
   }
   if (rule === 'writtenInRockTakeShard') {
     const shard = (state.storyAssets || []).find(asset => entryFlag(asset, 'prismaticShard')
@@ -1369,7 +1378,7 @@ export function performAction(state, inv, move, api = {}) {
   }
   if (rule === 'writtenInRockStationSwap') {
     if (inv.location !== CONTROL_STATION_ID || !canUse(state, 'writtenInRockStationSwapUsed')) return false
-    const pair = choosePair(state, api, '控制站：交换 2 个相邻[[轨道]]地点（每局一次）。')
+    const pair = choosePair(state, api, inv.seat, '控制站：交换 2 个相邻[[轨道]]地点（每局一次）。')
     if (!pair) return false
     markUsed(state, 'writtenInRockStationSwapUsed')
     return swapAdjacentLocations(state, pair[0], pair[1], api)
@@ -1768,7 +1777,7 @@ export function codexRead(state, entry, api = {}) {
       info(api, '法典 Θ（幕 1）：在参考卡上放 1 个碎片。')
       return true
     }
-    const pair = choosePair(state, api, '法典 Θ（幕 2）：交换 2 个相邻地点。')
+    const pair = choosePair(state, api, inv.seat, '法典 Θ（幕 2）：交换 2 个相邻地点。')
     return Boolean(pair) && swapAdjacentLocations(state, pair[0], pair[1], api)
   }
   return false

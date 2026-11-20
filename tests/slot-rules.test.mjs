@@ -216,6 +216,21 @@ test('双手武器腾槽：每次只问一张，弃到刚好够用，第二次�
   assert.deepEqual(after.discard.slice().sort(), [KNIFE, FLASHLIGHT].sort())
 })
 
+test('腾槽时只提供能离场的支援，无法腾够时不能打出新支援', () => {
+  const { state, inv } = fixtureWith([KNIFE, FLASHLIGHT])
+  const [protectedAsset, flashlight] = inv.assets
+  protectedAsset.cannotLeavePlay = true
+  inv.hand = ['01029', MACHETE_HAND]
+  assert.ok(!legalMoves(state).some(option => option.action === 'play' && option.cardId === '01029'))
+
+  move(state, { action: 'play', cardId: MACHETE_HAND })
+  assert.equal(state.pendingChoice.kind, 'assetReplacement')
+  assert.deepEqual(state.pendingChoice.options.map(option => option.id), [flashlight.id])
+  answer(state, flashlight.id)
+  assert.deepEqual(me(state).assets.map(asset => asset.code), [KNIFE, MACHETE_HAND])
+  assert.deepEqual(me(state).discard, [FLASHLIGHT])
+})
+
 // ---------------------------------------------------------------------------
 // 全部可玩「额外/受限槽位」卡的边界矩阵：确保同类问题（候选卡或槽位类型可挪动性
 // 没被计入）不再出现。新增槽位机制时应在这里补用例。

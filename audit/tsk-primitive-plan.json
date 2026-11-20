@@ -7,11 +7,11 @@
   "generatedBy": "tools/audit-tsk-primitives.mjs",
   "docs": "docs/campaign/theScarletKeys/primitives.md",
   "status": "catalog-only",
-  "scanSha256": "e5aea2cc655c8e94f3e9b2985a154bb890783b4580f29287461796aeea54dbc8",
+  "scanSha256": "e5f1526abe48720cba85fb5d3915a4349dd152d41f29cb3ef733d5016926a347",
   "scanFiles": [
     {
       "path": "src/engine/api-mechanics.js",
-      "sha256": "57e84b36727f9a81dd3bb9ab29c82be33cf41fcea6da5f9f757153ecf8335d4f"
+      "sha256": "4d01f0331919f7dd1a5b4419a9c1f557fb3ceb85f10721aaaf762d96b7c20273"
     },
     {
       "path": "src/engine/effects.js",
@@ -19,7 +19,7 @@
     },
     {
       "path": "src/engine/windows.js",
-      "sha256": "00df61dfdf7213a446576810860e46caa7dc593d3fc92be0a3278641a2ea3d98"
+      "sha256": "56112d9f3c04c1dfcfb01e6bbcd38e120fb90e0a6f422ced8cc60de4e73bf26b"
     }
   ],
   "counts": {

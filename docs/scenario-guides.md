@@ -18,3 +18,7 @@ npx playwright test --config tests/playwright/playwright.config.mjs scenario-gui
 ```
 
 来源文件只用于重新生成；运行和发布只需要生成后的 `web/scenario-guides/`。生成器会拒绝未翻译的正文，检查也覆盖所有注册关卡的设置、结局、格式和关键特别规则。浏览器回归覆盖 1440 与 390 宽度、入口位置、折叠剧透、加载重试和键盘焦点。
+
+自有指南放在 `content/scenario-guide-sources/<scenarioId>.json`。生成器按已注册的剧本读取该文件，并与清单核对 `id`、`campaignId` 和全部 `resolutionIds`。文件的 `locales.zh` 和 `locales.en` 各用 `intro`、`setup`、`specialRules`、`story`、`resolutions` 分节。每段用稳定的 `id` 对应语言版本，可带 `title`、`text` 和嵌套的 `children`。中英分支必须对应，结局块以结局 ID 命名。运行时仍使用现有双语指南格式。
+
+剧本定义中的 `setup` 和 `setupNote` 提供布置摘要与说明。指南加载失败或缺少必要分节时，设置面板保留摘要、说明与重试入口。

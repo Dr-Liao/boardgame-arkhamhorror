@@ -1,5 +1,7 @@
 import { integer, investigatorAt } from './mechanic-state.js'
-import { assetTextBlankedExceptForced } from './card-text.js'
+import { assetTextBlanked, assetTextBlankedExceptForced } from './card-text.js'
+import { ALL_CARDS } from '../cards/cards-data.js'
+import { hasTrait } from './matcher.js'
 const normalize = value => String(value || '').toLowerCase().replace(/supplies$/, 'supply').replace(/s$/, '')
 function controlled(state, id) {
   for (const owner of state.investigators || []) {
@@ -36,6 +38,12 @@ export function useCostSources(state, card, registeredEntry) {
   const owner = state.investigators.find(inv => inv.assets.includes(card))
   if (!owner) return [card]
   const type = normalize(card.usesType)
+  if (type === 'charge') return [card, ...owner.assets.filter(source => {
+    const traits = registeredEntry(source.code)?.assetRule?.providesChargesForTraits
+    return source !== card && normalize(source.usesType) === 'charge'
+      && traits?.some(trait => hasTrait(ALL_CARDS[card.code], trait))
+      && !assetTextBlanked(source, owner) && !assetTextBlankedExceptForced(source)
+  })]
   if (type === 'secret') return [card, ...state.investigators.filter(inv => inv.location === owner.location && !inv.defeated && !inv.resigned)
     .flatMap(inv => inv.assets).filter(source => source !== card && !assetTextBlankedExceptForced(source) && registeredEntry(source.code)?.assetRule?.sharedUses === 'secrets')]
   if (!['supply', 'ammo'].includes(type)) return [card]

@@ -125,6 +125,17 @@ export const UI_CARDS = Object.freeze({
     dawnOfTheFinalDay: '10704',
     preludeTheFinalEvening: '10704',
     fateOfTheVale: '10651',
+    // 十循环《沉没之城》：10 章剧本提示卡（简单/普通看正面，困难/专家看背面）。
+    oneLastJob: '11501',
+    theWesternWall: '11517',
+    theDrownedQuarter: '11536',
+    theApiary: '11553',
+    theGrandVault: '11587',
+    courtOfTheAncients: '11612',
+    obsidianCanyons: '11639',
+    sepulchreOfTheSleeper: '11673',
+    theDoomOfArkhamPartI: '11682',
+    theDoomOfArkhamPartII: '11688a',
   }),
   story: Object.freeze({
     smiteTheWicked: '02007',

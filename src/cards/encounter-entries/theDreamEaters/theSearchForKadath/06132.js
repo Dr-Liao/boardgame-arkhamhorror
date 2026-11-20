@@ -10,7 +10,7 @@ export default {
       if (String(result.source?.label || '') !== '调查') return
       const token = String(result.token || '')
       if (token !== 'skull' && token !== 'cultist') return
-      const assets = [...(inv.assets || [])]
+      const assets = (inv.assets || []).filter(asset => api.canDiscardAsset(inv.seat, asset.id))
       if (!assets.length) return
       const answer = api.choose?.({
         kind: 'target', source: '06132', seat: inv.seat,
@@ -18,8 +18,9 @@ export default {
         options: assets.map(asset => ({ id: asset.id, label: asset.name || asset.code })),
       }) ?? assets[0].id
       const chosen = assets.find(asset => asset.id === String(answer)) || assets[0]
-      api.discardAsset?.(inv.seat, chosen.id)
-      api.info?.(`🗿 伊伯遗迹：${inv.name} 弃掉「${chosen.name || chosen.code}」。`)
+      if (api.discardAsset(inv.seat, chosen.id)) {
+        api.info?.(`🗿 伊伯遗迹：${inv.name} 弃掉「${chosen.name || chosen.code}」。`)
+      }
     },
   },
 }

@@ -27,9 +27,9 @@ export default {
   // 2026-10-27：「可攻击敌人」也用 _shared.js 的 attackableEnemies，排除未交战的冷漠敌人，
   // 与 resolve 的目标候选共用同一份过滤。
   playCondition: [{
-    when: ({ state, inv }) => {
+    when: ({ state, inv, helpers }) => {
       const hasCostCard = (inv.hand || []).some(isSlotItem)
-        || (inv.assets || []).some(asset => isSlotItem(asset.code))
+        || (inv.assets || []).some(asset => isSlotItem(asset.code) && helpers.canDiscardAsset(asset))
       return hasCostCard && attackableEnemies(state, inv).length > 0
     },
     message: '没有可支付额外费用的占手部槽位[[道具]]支援，或所在地点没有可攻击的敌人',
@@ -43,7 +43,7 @@ export default {
       resolve: ({ state, inv, api }) => {
         // --- 额外费用：弃掉一张占手部槽位的[[道具]]支援（手牌或游戏区域） ---
         const handItems = inv.hand.filter(isSlotItem)
-        const playItems = inv.assets.filter(asset => isSlotItem(asset.code))
+        const playItems = inv.assets.filter(asset => isSlotItem(asset.code) && api.investigatorTools.canDiscardAsset(inv.seat, asset))
         const options = [
           ...handItems.map(code => ({ id: 'hand:' + code, label: `手牌：${api.cardName(code)}` })),
           ...playItems.map(asset => ({ id: 'play:' + asset.id, label: `场上：${api.cardName(asset.code)}` })),
@@ -66,7 +66,7 @@ export default {
           if (!asset) return
           printedCost = api.cardCost(asset.code) || 0
           fromPlayArea = true
-          api.discardAsset(inv.seat, asset)
+          if (!api.discardAsset(inv.seat, asset)) return
         }
         // --- 攻击：+X 战斗、+1 伤害 ---
         const targets = attackableEnemies(state, inv)

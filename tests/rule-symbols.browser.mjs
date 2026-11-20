@@ -25,6 +25,26 @@ async function fixture(page) {
   return {session,submitted,async update(fn){fn(session);session.state.revision++;await page.getByRole('button',{name:'刷新局势'}).click();await expect(page.locator('.ah-table')).toHaveAttribute('data-revision',String(session.state.revision))}}
 }
 
+test('工具带在字体请求被拦截时仍显示意志和闪电图标', async ({ page }) => {
+  await page.route('**/fonts/*.ttf', route => route.abort())
+  await page.goto('/index.html')
+  await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
+  await page.getByRole('button', { name: '开始新游戏' }).click()
+  await page.getByRole('button', { name: '全卡图鉴', exact: true }).click()
+  const catalog = page.getByRole('dialog', { name: '诡镇全卡图鉴' })
+  await catalog.getByLabel('卡号或名称').fill('09120')
+  await catalog.locator('.ah-catalog-card').filter({ hasText: '工具带' }).click()
+  const card = page.locator('.ah-carddetail-modal')
+  for (const name of ['willpower', 'free']) {
+    const symbol = card.locator(`[data-card-symbol="${name}"]`)
+    const path = symbol.locator('svg path')
+    await expect(path).toBeVisible()
+    await expect(symbol).toHaveText('')
+    expect(await path.evaluate(el => el.getBBox().width)).toBeGreaterThan(0)
+  }
+  await expect(card.locator('.ah-card-full-text')).toContainText('一个附属的支援交换')
+})
+
 for (const width of [1440, 390]) {
   test(`检定投入、抽标记和结果弹窗不泄漏英文技能键（${width}）`, async ({ page }) => {
     await page.setViewportSize({ width, height: 1000 })
@@ -76,10 +96,9 @@ for (const width of [1440, 390]) {
     }
     // 四维图标尺寸回归：档案里的属性图标不能小于 18px（1x 屏可辨认下限；移动端 20px）。
     for (const name of ['combat', 'intellect', 'willpower', 'agility']) {
-      const box = await metrics.locator(`.ah-office-metric [data-game-symbol="${name}"]`).first().boundingBox()
-      expect(box.width).toBeGreaterThanOrEqual(18)
+      const icon = metrics.locator(`.ah-office-metric [data-game-symbol="${name}"]`).first()
+      await expect.poll(async () => (await icon.boundingBox())?.width ?? 0).toBeGreaterThanOrEqual(18)
     }
-    await page.evaluate(() => document.fonts.load('22px AHCardSymbols', 'ADFS'))
     await metrics.locator('.ah-office-metrics').evaluate(el => el.scrollIntoView({ block: 'center' }))
     await page.screenshot({ path: output + `investigator-game-symbols-${width}.png`, animations: 'disabled' })
 
@@ -115,17 +134,22 @@ for (const width of [1440, 390]) {
       }
       return ['willpower', 'intellect', 'combat', 'agility', 'wild', 'guardian', 'seeker', 'rogue', 'mystic', 'survivor', 'neutral', 'action', 'reaction', 'free'].map(name => {
         const ui = tableIcon(name), card = cardSymbol(h, name)
-        return { name, ui: ui.textContent, card: card.textContent,
-          font: ui.querySelector('text').getAttribute('font-family'),
+        return { name, uiPath: ui.querySelector('path')?.getAttribute('d'), cardPath: card.querySelector('path')?.getAttribute('d'),
+          uiText: ui.textContent, cardText: card.textContent, font: ui.querySelector('text')?.getAttribute('font-family'),
           classIcon: ['guardian', 'seeker', 'rogue', 'mystic', 'survivor', 'neutral'].includes(name) ? classIcon(name) : null }
       })
     })
     for (const symbol of shared) {
-      expect(symbol.ui).toBe(symbol.card)
-      expect(symbol.font).toBe(symbol.name === 'neutral' ? 'AHCardSymbolSlim' : 'AHCardSymbols')
+      if (symbol.name === 'neutral') {
+        expect(symbol.uiText).toBe(symbol.cardText)
+        expect(symbol.font).toBe('AHCardSymbolSlim')
+      } else {
+        expect(symbol.uiPath?.length).toBeGreaterThan(40)
+        expect(symbol.cardPath).toBe(symbol.uiPath)
+        expect(symbol.cardText).toBe('')
+      }
       if (symbol.classIcon) expect(symbol.classIcon).toBe(symbol.name)
     }
-    await page.evaluate(() => document.fonts.load('22px AHCardSymbols', 'ADFS'))
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
     await page.screenshot({ path: output + `dashboard-game-symbols-${width}.png`, animations: 'disabled' })
   })
@@ -142,10 +166,7 @@ test('地点演出、待决选择和时间线使用真正的卡面符号，保�
   await expect(detail.locator('[data-card-symbol="willpower"]')).toHaveAttribute('aria-label','意志')
   await expect(detail).not.toContainText('[willpower]')
   await expect(detail.locator('button')).toHaveCount(0)
-  expect(await detail.locator('.ah-card-glyph').evaluate(async el=>{
-    await document.fonts.load('24px AHCardSymbols','A')
-    return getComputedStyle(el).fontFamily.includes('AHCardSymbols')&&document.fonts.check('24px AHCardSymbols','A')
-  })).toBe(true)
+  await expect(detail.locator('[data-card-symbol="willpower"] svg path')).toBeVisible()
   await scene.locator('img').first().evaluate(img=>img.decode())
   await page.screenshot({path:output+'location-rule-symbols.png',animations:'disabled'})
   await scene.getByRole('button',{name:'继续',exact:true}).click()
@@ -184,19 +205,20 @@ test('双括号特性、混乱标记别名与未知内容不会被误转换或�
     const linked=h('div',{},renderRulesText(h,'[action] 战斗'))
     return {
       symbols:[...node.querySelectorAll('[data-card-symbol]')].map(el=>el.dataset.cardSymbol),
-      glyphs:Object.fromEntries([...node.querySelectorAll('[data-card-symbol]')].map(el=>[el.dataset.cardSymbol,{text:el.textContent,className:el.firstElementChild?.className}])),
+      glyphs:Object.fromEntries([...node.querySelectorAll('[data-card-symbol]')].map(el=>[el.dataset.cardSymbol,{text:el.textContent,className:el.firstElementChild?.getAttribute('class')}])),
       trait:node.querySelector('strong')?.textContent,text:node.textContent,buttons:node.querySelectorAll('button').length,scripts:node.querySelectorAll('script').length,
       linked:linked.querySelectorAll('[data-rule-id]').length,logSymbol:log.querySelector('[data-card-symbol]')?.dataset.cardSymbol,logText:log.textContent,
     }
   })
   expect(result.symbols).toEqual(['cultist','elder_sign','auto_fail','guardian','seeker','rogue','mystic','survivor','bless','curse','frost','seal_a','day','night','codex','tdc_rune_z','intellect'])
-  expect(result.glyphs.mystic.text).toBe('W')
+  expect(result.glyphs.mystic.className).toContain('ah-symbol-vector')
+  expect(result.glyphs.mystic.text).toBe('')
   expect(result.glyphs.bless.className).toContain('ah-card-glyph-icons')
   for(const symbol of ['frost','seal_a','day','night','codex','tdc_rune_z']) expect(result.glyphs[symbol].className).toContain('ah-card-glyph-slim')
   expect(await page.evaluate(async()=>{
-    await Promise.all([document.fonts.load('20px AHCardSymbols','W'),document.fonts.load('20px AHCardSymbolIcons','\ue92a'),document.fonts.load('20px AHCardSymbolSlim','\ue919')])
-    return ['AHCardSymbols','AHCardSymbolIcons','AHCardSymbolSlim'].map(font=>document.fonts.check(`20px ${font}`))
-  })).toEqual([true,true,true])
+    const faces = await Promise.all([document.fonts.load('20px AHCardSymbolIcons','\ue92a'),document.fonts.load('20px AHCardSymbolSlim','\ue919')])
+    return faces.map(family=>family.some(face=>face.status==='loaded'))
+  })).toEqual([true,true])
   expect(result.trait).toBe('Cultist')
   expect(result.text).toContain('[unknown]')
   expect(result.buttons).toBe(0);expect(result.scripts).toBe(0);expect(result.linked).toBeGreaterThan(0)

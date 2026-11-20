@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-11-18",
+  "start": {
+    "hallCommit": "dd78d9911a36c739a0babdaf3bc0b4dfde8e1000",
+    "modCommit": "d17d3c7972eb9114dd9678789ea2a0147e5bc8d0",
+    "worktreeWasDirty": true,
+    "worktreeEntries": 227,
+    "worktreeSnapshot": "artifacts/migration/tdc/reports/p0-worktree.txt",
+    "worktreeSnapshotSha256": "6a8b1f6759ab94c68a10bd527fe07cf48353772cea33150aeea08546ecdb65f1"
+  },
+  "fast": {
+    "tests": 8426,
+    "passed": 8418,
+    "failed": 5,
+    "cancelled": 0,
+    "skipped": 3,
+    "failures": [
+      "P4 交互审计账本：门禁全真、覆盖矩阵完整且可逐字节复算",
+      "TIC P8 replay 基线：逐局重放出相同逐步指纹",
+      "P1 账本：scope.json 与 audit/tcu-migration.json 可复算且 gate 一致",
+      "P10 账本：schema/范围/三包/8 章/关键词/规则书/逐卡/并行/浏览器 与真实数据复算一致",
+      "P10 账本 --check 逐字节复算（内容/证据变化即失败）"
+    ],
+    "report": "artifacts/migration/tdc/reports/p0-fast.log"
+  },
+  "globalBaselineCheck": {
+    "status": "existing-drift",
+    "fields": [
+      "audits",
+      "docLinks",
+      "goldenReplay",
+      "tests"
+    ]
+  },
+  "p2Fast": {
+    "tests": 8432,
+    "passed": 8429,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 3,
+    "failures": [],
+    "report": "artifacts/migration/tdc/reports/p2-fast.log",
+    "newFailures": []
+  },
+  "compliance": {
+    "report": "artifacts/migration/tdc/reports/entries.log",
+    "additionalViolations": {
+      "R1": 0,
+      "R2": 0,
+      "R3": 0
+    },
+    "observed": {
+      "R1": 112,
+      "R2": 0,
+      "R3": 0
+    }
+  },
+  "p2Closure": {
+    "verifiedAt": "2026-11-19",
+    "targeted": {
+      "command": "npm run test:tdc",
+      "passed": 8,
+      "failed": 0
+    },
+    "fast": {
+      "command": "npm run test:fast -- --test-concurrency=12",
+      "tests": 8435,
+      "passed": 8432,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 3,
+      "newFailures": [],
+      "report": "artifacts/migration/tdc/reports/close-p2-fast.log"
+    }
+  },
+  "replay": {
+    "baseline": "artifacts/migration/tdc/replay-before.json",
+    "baselineSha256": "a028a85323df3aec07247ccc6821f0f51253c53edc6bd92127140224dcc3ef7b",
+    "cases": 13,
+    "moves": 905,
+    "hashes": 918,
+    "rulesVersion": "n6.0",
+    "strictControlLog": "artifacts/migration/tdc/reports/p0-replay-validation.log",
+    "strictCandidateLog": "artifacts/migration/tdc/reports/p2-replay.log",
+    "strictControlPass": false,
+    "strictControlFailures": 13,
+    "strictCandidateFailures": 13,
+    "sameStrictFailures": true,
+    "error": "留档中的 hubConfirmDeck 在已有工作区的重放入口被拒绝。以模块加载对照复现；对照仅撤下本轮引擎变更。",
+    "candidateFixture": "artifacts/migration/tdc/replay-final.json",
+    "liveRecipeComparison": true,
+    "controlRecipeComparison": true,
+    "metadataRecovery": {
+      "verifiedAt": "2026-11-19",
+      "cause": "旧采集器压缩动作时漏存 startingDeckConfirmation 和 sharedFreeWindows，原基线亦缺少开局 sharedFreeWindowsAtSetup。",
+      "capture": "artifacts/migration/tdc/replay-close-before.json",
+      "recovered": "artifacts/migration/tdc/replay-before-recovered.json",
+      "recoveredSha256": "5351e8c9758f77a16d195c223ef42e39051033a64b3c86fedebb73ef29878af9",
+      "flagsRestored": 539,
+      "strictComparison": "artifacts/migration/tdc/reports/close-replay.log",
+      "verified": true
+    },
+    "baselineRefresh": {
+      "refreshedAt": "2026-11-19",
+      "reason": "P7 内容批次合并后重跑采集器刷新 replay-before.json；与 recovered 基线逐条一致（行为零变化），旧文件仅多出采集器压缩层差异。",
+      "previousBaseline": "artifacts/migration/tdc/replay-close-before.json",
+      "previousBaselineSha256": "694a73b86c82a94dfd3e5d4d4fc792334b58ef903df0c03f042ae697093ea7fa",
+      "evidence": "artifacts/migration/tdc/p7/replay-final-verified.log",
+      "verified": true
+    }
+  }
+}

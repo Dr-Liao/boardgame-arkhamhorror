@@ -5,29 +5,36 @@
 // - 抽牌时被强制的「险境/不可取消」标记：`markForcedRevelation(code, flags)` 由 drawEncounter
 //   写入、揭示结束清理；只覆盖本次揭示，不进入 state。
 const revelationStack = []
-let revelationCode = null
+let revelation = null
 const forced = new Map()
 
-export function pushRevelation(code) {
-  revelationStack.push(revelationCode)
-  revelationCode = code ?? null
+export function pushRevelation(code, scenarioDeckId = null, originalCode = null) {
+  revelationStack.push(revelation)
+  revelation = { code: code ?? null, scenarioDeckId, originalCode }
 }
 
 export function popRevelation() {
-  revelationCode = revelationStack.length ? revelationStack.pop() : null
+  revelation = revelationStack.pop() ?? null
 }
 
 export function currentRevelation() {
-  return revelationCode
+  return revelation?.code ?? null
 }
 
 export function revelationResolving() {
-  return revelationCode != null
+  return currentRevelation() != null
 }
 
 // 供 scenarioRuntime 注入给内容层读取（05049「显现效果期间」）。
 export function revelationScopeCode() {
-  return revelationCode
+  return currentRevelation()
+}
+
+export function takeRevelationScenarioDeck(code) {
+  if (!code || !revelation?.scenarioDeckId || (revelation.code !== code && revelation.originalCode !== code)) return null
+  const id = revelation.scenarioDeckId
+  revelation.scenarioDeckId = null
+  return id
 }
 
 export function markForcedRevelation(code, flags) {

@@ -1,3 +1,5 @@
+import { enemyIsBody, enemyIsPart } from './enemy-parts.js'
+
 const plainZone = zone => typeof zone === 'string' && /^[a-z][A-Za-z0-9]{0,63}$/.test(zone)
   && !['constructor', 'prototype'].includes(zone)
 const enemyCode = enemy => enemy.originalCode || enemy.code
@@ -27,7 +29,7 @@ export function createEnemyZoneApi(state, deps) {
   const contains = id => Object.values(all()).some(zone => zone.some(record => record.enemy.id === id))
   const store = (enemy, zone, { clearTokens = true, ready = true } = {}) => {
     validateZone(zone)
-    if (!enemy?.id || enemy.enemyLocation || state.enemies.some(e => e.id === enemy.id) || contains(enemy.id)
+    if (!enemy?.id || enemy.enemyLocation || enemyIsBody(enemy) || enemyIsPart(enemy) || state.enemies.some(e => e.id === enemy.id) || contains(enemy.id)
       || state.victoryDisplay?.some(card => card.id === enemy.id)) return null
     const lastLocation = enemy.location || null
     if (clearTokens) clearEnemyTokensForZone(enemy)
@@ -48,7 +50,7 @@ export function createEnemyZoneApi(state, deps) {
     enter(enemyOrId, zone, options = {}) {
       validateZone(zone)
       const enemy = state.enemies.find(e => e.id === (typeof enemyOrId === 'string' ? enemyOrId : enemyOrId?.id))
-      if (!enemy || enemy.enemyLocation || contains(enemy.id)) return null
+      if (!enemy || enemy.enemyLocation || enemyIsBody(enemy) || enemyIsPart(enemy) || contains(enemy.id)) return null
       // Parent extracts one common leave-play operation from existing cleanup.
       // It releases seals, disposes player attachments, disengages and removes
       // from active enemies. It must honor preserveKeys for effect -> depths.

@@ -1,3 +1,5 @@
+import { enemyBody, enemyIsPart, setEnemyPosition } from './enemy-parts.js'
+
 // 移动与位置（调查员移动 / 敌人移动 / 距离）从 engine.js 拆出的模块（Phase 6 · 6d-21）。
 //
 // 这一组是「谁在哪里、怎么过去」：连接图 BFS、可去地点枚举、移动执行（含进入地点的代价与
@@ -182,6 +184,26 @@ function doMove(state, seat, locationId, events) {
   relocateInvestigator(state, seat, locationId, events, null, { reason: 'move' })
 }
 
+function ownerAttachmentListensToEnemyMove(state) {
+  return (state.playerLocationAttachments || []).some(card => {
+    const entry = registeredEntry(card.code)
+    return entry?.assetRule?.ownerLocationAttachmentAbility
+      && entry.abilities.some(ability => ability.trigger?.includes('enemyMoved'))
+  })
+}
+
+function dispatchEnemyMovement(state, enemy, from, to, options, events) {
+  const context = eventWindowContext(state, {
+    when: 'enemyMoved', enemy, enemyId: enemy.id, from, to, location: to,
+    cause: options.cause || 'effect', hunter: options.cause === 'hunter', phaseInstance: state.phaseInstance ?? 0,
+    seat: options.seat ?? null,
+  })
+  reactionWindow(state, 'enemyMoved', context, events, { allowNested: true })
+  if (state.enemies.includes(enemy) && enemy.location === to) {
+    reactionWindow(state, 'enemyEnteredLocation', { ...context, when: 'enemyEnteredLocation' }, events, { allowNested: true })
+  }
+}
+
 // Entering a location has the same consequences for an action or a card effect.
 // Action payment and effect-specific disengagement stay with the caller.
 
@@ -231,14 +253,17 @@ function relocateInvestigator(state, seat, locationId, events, message = null, o
     if (enemy.bindMonster) { disengageEnemy(state, enemy); continue }
     if (!enemyCanEnterLocation(state, enemy, locationId)) { disengageEnemy(state, enemy); continue }
     const previous = enemy.location
-    enemy.location = locationId
+    setEnemyPosition(state, enemy, locationId)
     scenarioBehavior(state).enemyMoved?.(state, enemy, previous, scenarioRuntime(state, events), seat)
+    if (previous !== locationId && ownerAttachmentListensToEnemyMove(state)) {
+      dispatchEnemyMovement(state, enemy, previous, locationId, { cause: 'engagedMovement', seat }, events)
+    }
   }
   const alreadyRevealed = state.locations.find(l => l.id === locationId)?.revealed
   revealLocation(state, locationId, events, seat)
   // 2026-10-25 第六轮修复 05036：进入地点后、自动交战前开反应窗口（05236 钉鞋等）。
   const engageCandidates = state.enemies.filter(enemy => enemy.location === locationId
-    && !enemy.defeated && !enemy.engagedSeat && !enemy.massive)
+    && !enemyIsPart(enemy) && !enemy.defeated && !enemy.engagedSeat && !enemy.massive)
   {
     reactionWindow(state, 'moveBeforeEngage', {
       when: 'moveBeforeEngage', seat: inv.seat, location: locationId,
@@ -348,6 +373,7 @@ function relocateInvestigator(state, seat, locationId, events, message = null, o
 }
 
 function relocateEnemy(state, enemy, destination, events, options = {}) {
+  enemy = enemyBody(state, enemy)
   if (enemy?.hostId) enemy = state.enemies.find(item => item.id === enemy.hostId) || enemy
   if (!enemy || enemy.enemyLocation || enemy.bindMonster || !destination) return
   if (state.phase === 'enemy' && !options.routeSelected && (!options.cause || options.cause==='hunter') && !registeredEntry(enemy.originalCode || enemy.code)?.movesThroughVoid) {
@@ -381,7 +407,7 @@ function relocateEnemy(state, enemy, destination, events, options = {}) {
   const ignoredDefenses = defenseRule?.ignoreDefenses || []
   if (blockKeywordMove(state, enemy, destination, options.cause, ignoredDefenses)) return { moved: false, blockedBy: 'barrier' }
   const previous = enemy.location
-  enemy.location = destination
+  setEnemyPosition(state, enemy, destination)
   for (const member of swarmGroup(state, enemy)) member.location = destination
   if (enemy.engagedSeat != null && state.investigators[enemy.engagedSeat]?.location !== destination) disengageEnemy(state, enemy)
   const result={moved:true,from:previous,to:destination,enemyId:enemy.id,cause:options.cause||'effect'}
@@ -398,10 +424,8 @@ function relocateEnemy(state, enemy, destination, events, options = {}) {
   processPlayerEnemyEntry(state, enemy, events)
   scenarioBehavior(state).enemyMoved?.(state, enemy, previous, scenarioRuntime(state, events))
   if(!options.skipAutoEngage)autoEngageAt(state, destination, events,{ignoreAloofFor:options.ignoreAloof?enemy.id:null})
-  if(state.scenario?.eventWindowInstances){
-    const context=eventWindowContext(state,{when:'enemyMoved',enemy,enemyId:enemy.id,from:previous,to:destination,location:destination,cause:options.cause||'effect',hunter:options.cause==='hunter',phaseInstance:state.phaseInstance??0,seat:options.seat??null})
-    reactionWindow(state,'enemyMoved',context,events,{allowNested:true})
-    if(state.enemies.includes(enemy)&&enemy.location===destination)reactionWindow(state,'enemyEnteredLocation',{...context,when:'enemyEnteredLocation'},events,{allowNested:true})
+  if (state.scenario?.eventWindowInstances || ownerAttachmentListensToEnemyMove(state)) {
+    dispatchEnemyMovement(state, enemy, previous, destination, options, events)
   }
   return result
 }

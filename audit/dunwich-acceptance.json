@@ -28,11 +28,11 @@
     },
     {
       "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
-      "sha256": "750d79ebda92e8c00ad045bf7fc8da6f074611c270b171e082c496467ea5fd70"
+      "sha256": "45de0fa711511ee816827e12af16a912c9fd757bec9dcd1e9c06d505f1a38444"
     },
     {
       "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
-      "sha256": "b13dd088f8f84bd2c24970a79c6afd70ca894297bd92ea764cfccf173ce7d9c3"
+      "sha256": "3217b7b6b8dc0bbe0cac1ea4589f775c671be511d37b2f2a18fc70a2116d49b0"
     },
     {
       "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",

@@ -43,6 +43,52 @@ test('食梦者八关各三首，旧曲复用不超过 40%，新增音频只存�
   assert.ok([...newTracks].every(id => assigned.filter(track => track === id).length === 2))
 })
 
+test('铁杉谷盛宴十二个场景各三首，旧曲复用不超过 40%，录音互不重复', () => {
+  const campaignId = 'theFeastOfHemlockVale'
+  const scenarios = contentRegistry.listScenarios().filter(scenario => scenario.campaignId === campaignId)
+  assert.equal(scenarios.length, 12)
+  const earlierCampaigns = [
+    'nightOfTheZealot', 'theDunwichLegacy', 'thePathToCarcosa', 'theForgottenAge',
+    'theCircleUndone', 'theDreamEaters', 'theInnsmouthConspiracy', 'edgeOfTheEarth', 'theScarletKeys',
+  ]
+  const oldTracks = new Set(earlierCampaigns.flatMap(id => musicTracksForPlaylist(id).map(track => track.isrc)))
+  const assigned = Object.keys(SCENARIO_MUSIC[campaignId]).flatMap(id => {
+    const playlist = campaignPlaylistId({ campaign: { id: campaignId }, scenario: { id }, uiState: 'inScenario' })
+    assert.equal(playlist, campaignId + '/' + id)
+    const tracks = musicTracksForPlaylist(playlist)
+    assert.equal(tracks.length, 3, id)
+    return tracks
+  })
+  assert.equal(assigned.length, scenarios.length * 3)
+  assert.equal(new Set(assigned.map(track => track.isrc)).size, assigned.length)
+  assert.ok(assigned.filter(track => oldTracks.has(track.isrc)).length / assigned.length <= 0.4)
+  assert.deepEqual(musicTracksForPlaylist(campaignId), assigned)
+})
+
+test('铁杉谷盛宴大厅、牌桌与场景插画使用登记的 WebP', () => {
+  const campaignId = 'theFeastOfHemlockVale'
+  const base = new URL('../web/img/campaigns/theFeastOfHemlockVale/', import.meta.url)
+  const manifest = JSON.parse(readFileSync(new URL('assets.json', base), 'utf8'))
+  const scenarios = contentRegistry.listScenarios().filter(scenario => scenario.campaignId === campaignId)
+  const { hubHero, tableOverlay } = campaignPresentation(campaignId).assets
+  const expected = new Map([
+    ['hub', hubHero],
+    ['table', tableOverlay],
+    ...scenarios.map(({ id }) => [id, campaignPresentation(campaignId, id).assets.storyDefault]),
+  ])
+  assert.equal(manifest.campaignId, campaignId)
+  assert.deepEqual(manifest.assets.map(asset => asset.id).sort(), [...expected.keys()].sort())
+  for (const asset of manifest.assets) {
+    const data = readFileSync(new URL(asset.file, base))
+    assert.equal(data.subarray(8, 12).toString(), 'WEBP')
+    assert.equal(data.length, asset.bytes)
+    assert.equal(createHash('sha256').update(data).digest('hex'), asset.sha256)
+    assert.deepEqual([asset.width, asset.height], [1536, 1024])
+    assert.equal(expected.get(asset.id), '/mods/arkhamhorror/img/campaigns/' + campaignId + '/' + asset.file)
+  }
+  assert.equal(new Set(manifest.assets.map(asset => asset.sha256)).size, manifest.assets.length)
+})
+
 test('关间准备跟随下一关，桌面继续使用正在进行的关卡，未知关卡安全回退', () => {
   const state = { campaign: { id: 'theDunwichLegacy' }, scenario: { id: 'theMiskatonicMuseum' }, hubSelectedScenarioId: 'theEssexCountyExpress' }
   assert.equal(campaignPlaylistId({ ...state, uiState: 'scenarioSetup' }), 'theDunwichLegacy/theEssexCountyExpress')

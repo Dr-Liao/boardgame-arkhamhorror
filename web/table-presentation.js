@@ -8,6 +8,8 @@ import { setRulesText } from './card-text.js'
 import { skillSymbols } from './skill-presentation.js'
 import { t } from './i18n.js'
 const ROOT = '/mods/arkhamhorror/'
+const TABLE_FEEDBACK_MS = 650
+const QUICK_TABLE_FEEDBACK_MS = 180
 const SOUNDS = { select: 'click_003', draw: 'card-slide', encounter: 'encounter-reveal', play: 'drop_003', move: 'drop_001',
   clue: 'glass_001', damage: 'error_003', reveal: 'pluck_001', success: 'confirmation_002',
   failure: 'back_002', agenda: 'bong_001', gunshot: 'firearm-shot.wav', bladeSlash: 'blade-slash', bladeHit: 'blade-hit',
@@ -26,7 +28,7 @@ export function publicSequence(events) {
   const cues = []
   for (const event of events) {
     const cue = event.type === 'presentation' ? event : event.presentation
-    if (!cue || !['test', 'chaos', 'play', 'attack', 'enemyHarm', 'blast', 'directDamage', 'phase', 'automatic', 'story', 'location', 'checkpoint'].includes(cue.kind)) continue
+    if (!cue || !['test', 'chaos', 'play', 'attack', 'enemyHarm', 'blast', 'directDamage', 'phase', 'automatic', 'story', 'location', 'weakness', 'checkpoint'].includes(cue.kind)) continue
     const presented = event.seq == null ? cue : { ...cue, eventSeq: event.seq }
     // Consecutive accepted area-damage placements form one explosion. A real
     // checkpoint/other scene ends the group, so choice resumes never replay a
@@ -121,7 +123,7 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
   let anchors = new Map(), queue = [], unlocked = false
   let presentedPlays = []
   let presentedHarm = []
-  let blocking = false, cancelScene = null
+  let blocking = false, cancelScene = null, feedbackFrame = 0
   let latest = null, displayed = null
   let skipNextSync = false
   let cardTransits = [], maskedCards = new Set()
@@ -217,7 +219,15 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
     document.body.append(layer)
     return layer
   }
+  const stopFeedback = () => {
+    cancelAnimationFrame(feedbackFrame)
+    for (const el of layer?.querySelectorAll('[data-background-feedback]') || []) {
+      for (const animation of el.getAnimations()) animation.cancel()
+      el.remove()
+    }
+  }
   const clear = () => {
+    stopFeedback()
     cancelScene?.(); cancelScene = null; block(false)
     epoch++; queue = []; presentedPlays = []; presentedHarm = []; running = false; stopAudio(); cancelAnimationFrame(frame)
     for(const key of maskedCards) { const el=interaction(key);if(el)el.style.visibility='' }
@@ -355,13 +365,14 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
   }
   // Transfer the loaded artwork itself. A card is owned by either the table or
   // this moving holder, never both, including when identical copies are in hand.
-  const liftCard = (change, source) => {
+  const liftCard = (change, source, background = false) => {
     const artwork=source?.querySelector('.ah-table-art'), bounds=cardBounds(artwork)
     if(!artwork || !bounds?.width) return null
     const el=node('div','ah-fx-card ah-card-transit')
     el.dataset.fxKind=change.kind;el.dataset.cardCode=change.code
     Object.assign(el.style,{left:bounds.x+'px',top:bounds.y+'px',width:bounds.width+'px',height:bounds.height+'px',transform:`rotate(${bounds.rotation}deg)`})
-    el.append(artwork);ensureLayer().append(el)
+    if (background) el.dataset.backgroundFeedback = ''
+    el.append(background ? artwork.cloneNode(true) : artwork);ensureLayer().append(el)
     return {...change,el,art:artwork,oldAssets:(displayed?.state.investigators.find(inv=>inv.seat===change.seat)?.assets||[]).map(a=>a.id)}
   }
   const moveCard = async (transit, target, duration=550) => {
@@ -411,13 +422,14 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
       transit.el.remove();cardTransits.splice(cardTransits.indexOf(transit),1)
     }
   }
-  const drawCard = async c => {
+  const drawCard = async (c, duration = TABLE_FEEDBACK_MS, background = false) => {
     const generation=epoch,key=`hand:${c.seat}:${c.handIndex}`, target=interaction(key)
-    const destination=cardBounds(target?.querySelector('.ah-table-art')), transit=liftCard(c,target)
-    if(!transit) { maskedCards.delete(key);return }
+    const destination=cardBounds(target?.querySelector('.ah-table-art')), transit=liftCard(c,target,background)
+    if(!transit) { if (!background) maskedCards.delete(key);return }
     const deck=rect(document.querySelector('.ah-dock-deck .ah-deck-back'))
     if(deck)Object.assign(transit.el.style,{left:deck.x+'px',top:deck.y+'px',width:deck.width+'px',height:deck.height+'px',transform:'rotate(0deg)'})
-    await moveCard(transit,destination,650)
+    await moveCard(transit,destination,duration)
+    if (background) { transit.el.remove(); return }
     if(generation!==epoch)return
     const current=interaction(key)
     if(current) {
@@ -430,12 +442,14 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
   const cinematic = async change => {
     const generation = epoch
     const location = change.kind === 'location', story = change.kind === 'story' || location, phaseDef = PHASES[change.phase] || PHASES.investigation
+    const weakness = change.kind === 'weakness'
     const phase = [t(phaseDef[0]), phaseDef[1], t(phaseDef[2])]
+    const title = weakness ? t('table.cinematic.weakness') : change.title || phase[0]
     const el = node('section', story ? 'ah-cinematic is-story' + (location ? ' ah-location-reveal' : '') : 'ah-phase-scene is-' + change.phase)
     if (change.intro) el.classList.add('ah-introduction')
     if (change.intro && change.asideCode) el.classList.add('has-aside')
-    el.dataset.fxKind = change.kind; el.dataset.phase = change.phase || ''; el.dataset.title = change.title || phase[0]
-    el.setAttribute('role', story ? 'dialog' : 'region'); if (story) el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', change.title || phase[0])
+    el.dataset.fxKind = change.kind; el.dataset.phase = change.phase || ''; el.dataset.title = title
+    el.setAttribute('role', story ? 'dialog' : 'region'); if (story) el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', title)
     let positionWorld = () => {}, resizeFrame
     const place = () => {
       if (story) return
@@ -499,9 +513,9 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
     const content = node('div', 'ah-cinematic-content')
     const sigil = node('div', 'ah-cinematic-sigil')
     setRulesText(sigil, story ? '✦' : phase[1])
-    content.append(sigil,
-      node('small', 'ah-cinematic-kicker', story ? change.title : t('table.cinematic.autoRound', { round: change.round || 1 })),
-      node('h1', '', story ? change.name || change.title : phase[0]))
+    content.append(sigil)
+    if (!weakness) content.append(node('small', 'ah-cinematic-kicker', story ? change.title : t('table.cinematic.autoRound', { round: change.round || 1 })))
+    content.append(node('h1', '', story ? change.name || change.title : title))
     if (story && change.code && art) {
       const card = node('div', 'ah-cinematic-card' + (change.flip ? ' is-flipping' : ''))
       card.append(art(change.code, change.artName || change.name, { landscape: !location, face: change.face || 'front' })); content.append(card)
@@ -525,7 +539,8 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
       content.append(stats)
     }
     detail.setAttribute('aria-live', 'polite')
-    content.append(detail, progress)
+    content.append(detail)
+    if (!weakness) content.append(progress)
     const controls = node('div', 'ah-cinematic-controls'), next = node('button', '', t('table.cinematic.next')), skip = node('button', '', t('table.cinematic.skip'))
     if (story) controls.append(next)
     controls.append(skip); content.append(controls); el.append(content)
@@ -534,7 +549,7 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
       displayed = { ...displayed, state: { ...displayed.state, phase: change.phase, round: change.round || displayed.state.round } }
       onChange()
     }
-    sound(story || change.phase === 'mythos' ? 'agenda' : change.phase === 'enemy' ? 'damage' : 'reveal')
+    if (!weakness) sound(story || change.phase === 'mythos' ? 'agenda' : change.phase === 'enemy' ? 'damage' : 'reveal')
     let timer, settle, stopped = false, advanceRequested = false
     const release = () => { clearTimeout(timer); const done = settle; settle = null; done?.() }
     cancelScene = () => { stopped = true; release() }
@@ -555,13 +570,15 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
       if (duration === null) return // Story and location pages wait for the reader.
       timer = setTimeout(release, prefs.fast ? duration * .35 : duration)
     })
-    const steps = story ? [{ text: change.text || t('table.cinematic.storyFallback') }] : change.steps?.length ? change.steps : [{ text: phase[2] }]
+    const steps = story ? [{ text: change.text || t('table.cinematic.storyFallback') }] : weakness ? [change] : change.steps?.length ? change.steps : [{ text: phase[2] }]
     try {
       for (let index = 0; index < steps.length && !stopped; index++) {
+        const step = steps[index], encounter = step.effect === 'encounter', revealCard = encounter || weakness
         stepArt.replaceChildren()
-        stepArt.classList.toggle('is-encounter', steps[index].effect === 'encounter')
-        if (steps[index].code && art) stepArt.append(art(steps[index].code, steps[index].name))
-        else if (steps[index].effect === 'encounter') {
+        stepArt.classList.toggle('is-encounter', encounter)
+        stepArt.classList.toggle('is-weakness', weakness)
+        if (step.code && art) stepArt.append(art(step.code, step.name))
+        else if (revealCard) {
           // Public hidden-card cues intentionally omit the real card identity.
           const hidden = node('img', 'ah-encounter-hidden-art')
           hidden.src = ROOT + 'img/backs/hidden-encounter.webp'
@@ -581,14 +598,19 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
           if (!reduced()) hit.animate([{ transform: 'scale(1.8)', opacity: 0 }, { transform: 'scale(1)', opacity: 1 }], { duration: 400, fill: 'both' })
           sound('damage')
         }
-        const stepText = steps[index].text || phase[2]
-        setRulesText(detail, stepText, { skills: !story })
-        progress.textContent = story ? t('table.cinematic.readThenContinue') : t('table.cinematic.progress', { caption: phase[2], index: index + 1, total: steps.length })
+        const stepText = step.text || phase[2]
+        if (!weakness) setRulesText(detail, stepText, { skills: !story })
+        if (!weakness) progress.textContent = story ? t('table.cinematic.readThenContinue') : t('table.cinematic.progress', { caption: phase[2], index: index + 1, total: steps.length })
         el.dataset.step = String(index + 1)
-        if (steps[index].effect === 'encounter') {
-          const back = node('img', 'ah-encounter-reveal-back'); back.src = ROOT + 'img/backs/back_encounter.webp'; back.alt = t('table.cinematic.encounterBack')
+        if (revealCard) {
+          const back = node('img', weakness ? 'ah-weakness-reveal-back' : 'ah-encounter-reveal-back')
+          back.src = ROOT + (weakness ? 'img/backs/back_player.webp' : 'img/backs/back_encounter.webp')
+          back.alt = t(weakness ? 'table.cinematic.weaknessBack' : 'table.cinematic.encounterBack')
           stepArt.append(back); sound('draw')
-          const from = document.querySelector('.ah-encounter-deck img')?.getBoundingClientRect(), to = stepArt.getBoundingClientRect()
+          const viewer = latest?.mySeat ?? latest?.observerSeat ?? 0
+          const deck = encounter ? document.querySelector('.ah-encounter-deck img')
+            : viewer === step.seat ? document.querySelector('.ah-dock-deck .ah-deck-back') : null
+          const from = deck?.getBoundingClientRect(), to = stepArt.getBoundingClientRect()
           if (from && !reduced()) await animate(stepArt, [
             { transform: `translate(${from.x - to.x}px,${from.y - to.y}px) scale(.2) rotate(-12deg)`, opacity: .5 },
             { transform: 'translate(0,0) scale(1) rotate(0)', opacity: 1 }], 650)
@@ -598,12 +620,13 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
             await animate(stepArt, [{ transform: 'rotateY(-90deg)' }, { transform: 'rotateY(0)' }], 250)
           }
         }
+        if (weakness) setRulesText(detail, stepText, { skills: true })
         if (!reduced()) detail.animate([{ opacity: .1, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }], { duration: 250, fill: 'both' })
-        if (!story) await worldEffect(steps[index])
+        if (!story && !weakness) await worldEffect(step)
         if (stopped || generation !== epoch) break
-        await hold(story ? null : steps[index].effect === 'encounter' ? 3600 : Math.min(2400, Math.max(1400, stepText.length * 48)))
+        await hold(story ? null : revealCard ? 3600 : Math.min(2400, Math.max(1400, stepText.length * 48)))
         if (!stopped && generation === epoch) {
-          const step=steps[index], draws=step.tableState ? presentationChanges(displayed.state,{...displayed.state,...step.tableState}).filter(c=>c.kind==='draw') : []
+          const draws=step.tableState ? presentationChanges(displayed.state,{...displayed.state,...step.tableState}).filter(c=>c.kind==='draw') : []
           applyStep(step);maskArrivals(draws)
           for(const draw of draws) { sound('draw');await drawCard(draw) }
           if(cardTransits.length)await finishCards()
@@ -703,7 +726,7 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
     }
   }
   const play = async item => {
-    const { change: c, before, after } = item
+    const { change: c, before, after, background } = item
     ensureLayer().dataset.lastKind = c.kind
     if (c.kind === 'directDamage') {
       applyStep(c)
@@ -780,7 +803,7 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
       finally { clearTimeout(timer); note.remove(); loc?.classList.remove('ah-location-arrival'); if (generation === epoch) cancelScene = null }
       return
     }
-    if (c.kind === 'phase' || c.kind === 'story' || c.kind === 'location') return cinematic(c)
+    if (c.kind === 'phase' || c.kind === 'story' || c.kind === 'location' || c.kind === 'weakness') return cinematic(c)
     if (c.kind === 'chaos') return chaosReveal(c)
     if (c.kind === 'engagement') {
       const el=node('div','ah-engagement-alert');el.setAttribute('role','status')
@@ -791,7 +814,7 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
     }
     if (c.kind === 'test' || c.kind === 'agenda') return banner(c)
     sound(c.kind === 'commit' ? 'play' : c.kind === 'resource' ? 'clue' : c.kind)
-    if (c.kind === 'draw') return drawCard(c)
+    if (c.kind === 'draw') return drawCard(c, background ? QUICK_TABLE_FEEDBACK_MS : TABLE_FEEDBACK_MS, background)
     if (c.kind === 'play' || c.kind === 'commit') return playCard(c)
     if (reduced()) return
     if (c.kind === 'move') return fly(c, before.get('inv:' + c.seat) || before.get('loc:' + c.from), after.get('inv:' + c.seat) || after.get('loc:' + c.to), '◈')
@@ -805,8 +828,10 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
     if (!r) return
     const statLabel = ({ damage: 'table.marker.damage', horror: 'table.marker.horror', resources: 'table.marker.resource' })[c.field]
     const el = node('div', 'ah-fx-number ' + (c.kind === 'damage' ? 'is-damage' : ''), `${c.delta > 0 ? '+' : ''}${c.delta} ${statLabel ? t(statLabel) : ''}`)
+    if (background) el.dataset.backgroundFeedback = ''
     el.style.left = center(r).x + 'px'; el.style.top = r.y + 'px'; ensureLayer().append(el)
-    await animate(el, [{ transform: 'translate(-50%,0)', opacity: 0 }, { transform: 'translate(-50%,-16px)', opacity: 1, offset: .3 }, { transform: 'translate(-50%,-40px)', opacity: 0 }], 650); el.remove()
+    const duration = background ? QUICK_TABLE_FEEDBACK_MS : TABLE_FEEDBACK_MS
+    await animate(el, [{ transform: 'translate(-50%,0)', opacity: 0 }, { transform: 'translate(-50%,-16px)', opacity: 1, offset: .3 }, { transform: 'translate(-50%,-40px)', opacity: 0 }], duration); el.remove()
   }
   const drain = async () => {
     if (running) return
@@ -860,6 +885,7 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
           displayed = session
           return session
         }
+        stopFeedback()
         const nextAnchors = collect()
         if (session.sessionId !== sessionId || (last && session.state.revision < last.revision)) {
           clear(); last = null; sessionId = session.sessionId; lastSeq = seq
@@ -878,7 +904,23 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
           // so new hand cards cannot appear before their draw finishes.
           const cues=!changes.length ? [] : changes.some(c=>['checkpoint','phase','story'].includes(c.kind)) ? changes
             : [...publicSequence(events),{kind:'checkpoint',tableState:session.state,inferReveals:!events.some(e=>e.presentation?.kind==='location'||e.kind==='location')}]
-          for (const change of cues) queue.push({ change, before: anchors, after: nextAnchors })
+          const canPlayInBackground = !running && !queue.length && cues.every(cue => cue.kind === 'checkpoint')
+            && last.uiState === session.state.uiState && displayed?.state.phase === session.state.phase
+            && !last.skillTest && !session.state.skillTest && !displayed?.state.pendingChoice && !session.state.pendingChoice
+          let previous = displayed?.state
+          const feedback = canPlayInBackground ? cues.flatMap(cue => {
+            const next = cue.tableState ? { ...previous, ...cue.tableState } : session.state
+            const changes = presentationChanges(previous, next)
+            previous = next
+            return changes
+          }) : []
+          // 独立反馈在权威牌桌上播放，抽牌的飞行副本不接管可点击的手牌。
+          if (canPlayInBackground && feedback.every(change => change.kind === 'draw' || change.kind === 'resource')) {
+            if (feedback.length && !reduced()) feedbackFrame = requestAnimationFrame(() => {
+              const after = collect()
+              for (const change of feedback) void play({ change, after, background: true }).catch(() => {})
+            })
+          } else for (const change of cues) queue.push({ change, before: anchors, after: nextAnchors })
         }
         // 旧版直接开局（revision 仍为 0）没有可消费的事件增量：按当前状态补两幕，
         // 同样先演故事、再轮到换牌面板。

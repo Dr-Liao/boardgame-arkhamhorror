@@ -107,7 +107,7 @@ test('P7 theLongestNight 章节结构：31 张卡 / 30 个条目 / 单幕单议�
   assert.deepEqual([...AGENDA_CODES], ['10628'])
   assert.deepEqual([...RESOLUTION_KEYS], ['resolution1', 'resolution2', 'resolution3', 'resolution4'])
   assert.deepEqual(Object.keys(chapter.scenario.resolutions).sort(),
-    ['investigatorDefeat', 'resolution1', 'resolution2', 'resolution3', 'resolution4'].sort())
+    ['investigatorDefeat', 'noResolution', 'resolution1', 'resolution2', 'resolution3', 'resolution4'].sort())
   assert.deepEqual([...STORY_CODES].sort(), ['10627', '10641', '10642'].sort())
   assert.equal(chapter.manifest.locations.length, 11)
   assert.equal(chapter.manifest.acts.length, 1)

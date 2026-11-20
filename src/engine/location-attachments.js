@@ -9,6 +9,8 @@
 //
 // 卡文件只经 api.attachToLocation 调用；本模块不写日志（文案由调用方保留，避免重放指纹漂移）。
 
+import { rememberScenarioDeckAttachment } from './scenario-decks.js'
+
 export function attachLocationCard(state, locationId, fields = {}) {
   const location = (state.locations || []).find(item => item.id === locationId)
   if (!location) return null
@@ -35,7 +37,7 @@ export function attachLocationCard(state, locationId, fields = {}) {
     originalCode: fields.originalCode || fields.code,
     ...(fields.extra || {}),
   }
-  location.attachments.push(attachment)
+  location.attachments.push(rememberScenarioDeckAttachment(attachment))
   return attachment
 }
 

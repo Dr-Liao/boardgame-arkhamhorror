@@ -110,6 +110,7 @@ export function createCombatOdds(deps) {
     const rule = investigatorRule(inv.code)?.elderSign
     // 没有声明时，引擎对未登记调查员按 +1 结算（turn-flow.js 的 elderSignEffect 兜底）。
     if (!rule) return { delta: 1 }
+    if (rule.perEnemyAtLocation) return { delta: state.enemies.filter(enemy => enemy.location === inv.location).length }
     if (rule.kind == null || rule.kind === 'static') return { delta: Number(rule.bonus) || 1 }
     if (rule.kind === 'perClueAtLocation') {
       const location = (state.locations || []).find(item => item.id === inv.location)

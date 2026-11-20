@@ -1,6 +1,6 @@
 # 关卡 BGM 分配
 
-覆盖 7 个战役、54 个关卡，每关 2–3 首；六循环八关均为三首。前三个战役原有 56 个歌曲位置只用了 17 首不同曲目；补充 15 首后，56 个位置使用 32 首不同曲目，同一首最多分配两次。三循环另有 17 首曲目，其十章歌单不复用前三个战役的曲目。音频文件不重复存储。
+覆盖 10 个战役、84 个场景，每个场景 2–3 首。前三个战役原有 56 个歌曲位置只用了 17 首不同曲目；补充 15 首后，56 个位置使用 32 首不同曲目，同一首最多分配两次。三循环另有 17 首曲目，其十章歌单不复用前三个战役的曲目。音频文件不重复存储。
 
 进入关卡或关间准备选定下一关后，播放器切换到该关歌单并以首曲开场；同一关刷新不重播，手动暂停后切关保持暂停。重载同一歌单恢复所选曲目。无具体关卡时使用战役歌单，未知关卡回退战役歌单，未知战役回退通用歌单。
 
@@ -122,3 +122,22 @@
 | 苦痛之影 | 吉隆坡、雨夜幽魂、红伞旧怨 | ★ Ghostpocalypse - 6 Crossing the Threshold → ★ Trepidation → Anguish |
 | 不留痕迹 | 百慕大、异界漂流、寻找失踪者 | ★ Ghostpocalypse - 1 Departure → ★ Nightmare Machine → Symmetry |
 | 钥匙议会 | 通古斯卡、密钥审判、异界决战 | ★ Night Vigil → ★ Movement Proposition → Final Battle of the Dark Wizards |
+
+## 铁杉谷盛宴（九循环）
+
+四段序曲和八章各三首，共 36 首不同录音。新增 24 首，从既有曲库复用 12 首。按播放位置和独立录音数计算，旧曲复用率均为 **33.3%**。新增录音由 Kevin MacLeod 创作，下载自 Incompetech，按 CC BY 4.0 署名，转码为 44.1 kHz、128 kbps MP3。逐曲来源、ISRC 与校验值见 [sources.json](sources.json)，署名见 [CREDITS.txt](CREDITS.txt)。
+
+| 场景 | 场景风格 | 播放顺序（★为新增） |
+| --- | --- | --- |
+| 欢迎来到铁杉谷 | 渡口上岸、海雾小镇、初见居民 | ★ Fireflies and Stardust → ★ Almost Bliss → Evening Fall (Harp) |
+| 岩间密语 | 废弃矿道、岩壁回音、矿车逃生 | ★ Eternal Terminal → ★ Iron Horse - Distressed → Enter the Maze |
+| 汉洛克庄园 | 旧宅探查、走廊异动、压迫渐强 | ★ The House of Leaves → ★ Ghost Story → This House |
+| 寂静荒野 | 荒野勘察、风声渐息、异样动静 | ★ Willow and the Light → ★ Crowd Hammer → Myst on the Moor |
+| 消失的姐妹 | 离岛寻踪、海雾潮声、失落往事 | ★ Skye Cuillin → ★ Thunderbird → Lost Frontier |
+| 深沼之物 | 湿地低鸣、水下潜伏、沼泽危机 | ★ Water Prelude → ★ Tenebrous Brothers Carnival - Mermaid → Deep Haze |
+| 扭曲空洞 | 林间夜探、诡异枝影、迷途与追猎 | ★ Folk Round → ★ Zombie Chase → Magic Forest |
+| 第二日黎明 | 雨晨整备、屋檐滴水、暂时平静 | ★ Rains Will Fall → ★ Feather Waltz → Lost Time |
+| 最长一夜 | 农舍围守、黑暗逼近、破晓前的鏖战 | ★ Southern Gothic → ★ Hiding Your Reality → Clash Defiant |
+| 最终日黎明 | 金色晨曦、果园静候、宴前整备 | ★ Ascending the Vale → ★ Cattails → Dreams Become Real |
+| 最终夜 | 长桌烛火、暮色聚拢、不祥的宴席 | ★ Duet Musette → ★ Ancient Mystery Waltz (Allegro) → Ritual |
+| 山谷的命运 | 光色异变、山谷崩裂、终局抉择 | ★ Vanes → ★ Magistar → Black Vortex |

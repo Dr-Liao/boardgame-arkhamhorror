@@ -450,12 +450,12 @@
       "total": 115,
       "verified": 115,
       "missing": 0,
-      "simplified": 54,
-      "simplifiedDisclosed": 54,
+      "simplified": 53,
+      "simplifiedDisclosed": 53,
       "buildable": 111,
       "dependencyOnly": 4,
       "basicWeaknesses": 4,
-      "testsPassed": 124
+      "testsPassed": 126
     },
     "checks": {
       "ledger": true,
@@ -1417,7 +1417,7 @@
   "primitives": {
     "plan": {
       "path": "audit/eote-primitive-plan.json",
-      "sha256": "4d56f1d1d8cdd35c69abb5a27cf842ac005a86fc0fda53138ad7385d2014d8f9"
+      "sha256": "3b0635121ca5797a436064cf615e687f172aed7b2e12de935f3ac740df061a8b"
     },
     "gates": {
       "scanPassed": true,
@@ -1457,10 +1457,10 @@
       "total": 68,
       "pending": 33,
       "done": 0,
-      "rejected": 22,
+      "rejected": 21,
       "byStatus": {
-        "rejected": 22,
-        "implemented": 11,
+        "rejected": 21,
+        "implemented": 12,
         "partial": 2,
         "pending": 33
       },
@@ -1635,8 +1635,8 @@
     "playerQueue": {
       "total": 35,
       "pending": 0,
-      "done": 13,
-      "rejected": 22
+      "done": 14,
+      "rejected": 21
     },
     "checks": {
       "plan": true,
@@ -2106,7 +2106,7 @@
             "saveReplay": true,
             "browserAcceptance": true
           },
-          "moduleSha256": "572def2fd2d1b82cc549d9058f97d19bc39c67868c6892c5fed2e66a493349a6",
+          "moduleSha256": "8f6666a5f25341eb64df9ba1c5c733833a9c11b348b77fe09a4c916c9f0ce0aa",
           "sources": [
             {
               "lang": "en",
@@ -2171,7 +2171,7 @@
       ],
       "ledger": {
         "path": "audit/eote-scenario-acceptance.json",
-        "sha256": "ba0ff52e255436a8f99063828646dc7cb1e547da3039060d1c06b995724e3dad"
+        "sha256": "f7341108405fa7144e8f4c6776e628f9bac2a81932e042b5de0b6f3166158de2"
       },
       "browser": {
         "path": "audit/eote-scenarios-browser.json",
@@ -3515,9 +3515,9 @@
       },
       {
         "id": "playerQueueRejected",
-        "count": 22,
+        "count": 21,
         "status": "rejected",
-        "reason": "已披露近似：P6 玩家卡原语队列有 22 条 rejected（每张卡在条目头注释与 P6 报告写明近似口径），不计入 P7/P8 新增原语欠账。",
+        "reason": "已披露近似：P6 玩家卡原语队列有 21 条 rejected（每张卡在条目头注释与 P6 报告写明近似口径），不计入 P7/P8 新增原语欠账。",
         "evidence": [
           "audit/eote-player-queue.json"
         ]
@@ -3580,19 +3580,19 @@
   ],
   "evidence": {
     "files": {
-      "audit/eote-all-card-acceptance.json": "02510e45e6f09004f943b43d3dc41335f744cd0bc7875e274156d2ade69e1006",
+      "audit/eote-all-card-acceptance.json": "e2d520a746ee9333b49df85807649c5a6226ae3b503aab6fa716c6131050c692",
       "audit/eote-interactions.json": "dacdee14be3c864d821042efd6c77c4262f5b1ce9976cece203adef844764202",
       "audit/eote-investigators.json": "5a7c84602446d6f7d07a11fc8d5f8936a58e6b8f86b1ae9749e7fa6560da9ff6",
       "audit/eote-node-acceptance.json": "d74e48812e8bbba98d139974ce14b8a5029bf7a0da1fae97add23e34b1655ddc",
-      "audit/eote-player-acceptance.json": "12421d7913411de38bbc156fc267bf8bf93ee117d4cf7b34ce3112ac1bd3f3ac",
-      "audit/eote-player-queue.json": "360e575f9fe1e9ef9cf45166fbea16d5872125d82a0d22c1da745e0fc82eb74b",
-      "audit/eote-primitive-plan.json": "4d56f1d1d8cdd35c69abb5a27cf842ac005a86fc0fda53138ad7385d2014d8f9",
-      "audit/eote-primitive-requests.json": "5d32f25e2e3c076e0da3db5d0135354c88d5fdd4fcf0e046b75f6239cfe21c3d",
+      "audit/eote-player-acceptance.json": "e0f6eecb363306773e9b54f7171fac035a4d62f71d216505aff509247707b1ad",
+      "audit/eote-player-queue.json": "60cec2bc8827aa973fa0a2f94a233323ef8bdd7edc6cd935d0fbf9f1d1072a61",
+      "audit/eote-primitive-plan.json": "3b0635121ca5797a436064cf615e687f172aed7b2e12de935f3ac740df061a8b",
+      "audit/eote-primitive-requests.json": "8699aeb37738f0c0ed6c6e4bf786e7f3fd70a3ae0f9c947164e8c5c615a2b18b",
       "audit/eote-regression.json": "36a01fdd2b44bc72f8470e97df4844025e51e486addf8c6edb27ec9a3b1e557d",
-      "audit/eote-release-acceptance.json": "ec1cb6294548df96b77c3bb3ecace055267f5ded9ffe20974f8153478b066b8d",
+      "audit/eote-release-acceptance.json": "f257e233850f06e1cfaa852ca8943e3f1379ee2922a242a018db1780050dc3d8",
       "audit/eote-release-browser.json": "ad85bfa1bc19e2bdc111941e815be8d3ed190fd021ef88f3707e389d63b259d3",
       "audit/eote-rules.json": "035df26a5f680d943207d57a64a1529a971da28b18fcf97500c5304fa03ee047",
-      "audit/eote-scenario-acceptance.json": "ba0ff52e255436a8f99063828646dc7cb1e547da3039060d1c06b995724e3dad",
+      "audit/eote-scenario-acceptance.json": "f7341108405fa7144e8f4c6776e628f9bac2a81932e042b5de0b6f3166158de2",
       "audit/eote-scenarios-browser.json": "e8c81bc8eece243bc8c93a95c0db4dc9768bd9b160c3c3f9b62ac87ae3798567",
       "audit/eote-scope.json": "daac95c08f98e556963a361fdfc06bd2a94e53604c128493fb0ea04c65f24370",
       "content/campaigns/edgeOfTheEarth/story-text.js": "8df0f285fb61268b885033f501f5613afd08dbdec80a52d22ceb84f56114538d",
@@ -3610,7 +3610,7 @@
   "sources": [
     {
       "path": "content/registered.js",
-      "sha256": "f3ac7ede6293a0ac8c30ad3a3c1ccb5f69017d5286d49ed02e03ba9e9d892abe"
+      "sha256": "8c9204dc062e13af8bf40327a4bb4ebdfda18f2cacef9a01f5936338d0cb8e5d"
     },
     {
       "path": "content/registry.js",
@@ -3642,11 +3642,11 @@
     },
     {
       "path": "audit/eote-scenario-acceptance.json",
-      "sha256": "ba0ff52e255436a8f99063828646dc7cb1e547da3039060d1c06b995724e3dad"
+      "sha256": "f7341108405fa7144e8f4c6776e628f9bac2a81932e042b5de0b6f3166158de2"
     },
     {
       "path": "audit/eote-all-card-acceptance.json",
-      "sha256": "02510e45e6f09004f943b43d3dc41335f744cd0bc7875e274156d2ade69e1006"
+      "sha256": "e2d520a746ee9333b49df85807649c5a6226ae3b503aab6fa716c6131050c692"
     },
     {
       "path": "audit/eote-investigators.json",
@@ -3654,7 +3654,7 @@
     },
     {
       "path": "audit/eote-player-acceptance.json",
-      "sha256": "12421d7913411de38bbc156fc267bf8bf93ee117d4cf7b34ce3112ac1bd3f3ac"
+      "sha256": "e0f6eecb363306773e9b54f7171fac035a4d62f71d216505aff509247707b1ad"
     },
     {
       "path": "audit/eote-rules.json",
@@ -3674,11 +3674,11 @@
     },
     {
       "path": "audit/eote-player-queue.json",
-      "sha256": "360e575f9fe1e9ef9cf45166fbea16d5872125d82a0d22c1da745e0fc82eb74b"
+      "sha256": "60cec2bc8827aa973fa0a2f94a233323ef8bdd7edc6cd935d0fbf9f1d1072a61"
     },
     {
       "path": "audit/eote-primitive-plan.json",
-      "sha256": "4d56f1d1d8cdd35c69abb5a27cf842ac005a86fc0fda53138ad7385d2014d8f9"
+      "sha256": "3b0635121ca5797a436064cf615e687f172aed7b2e12de935f3ac740df061a8b"
     },
     {
       "path": "audit/eote-scenarios-browser.json",
@@ -3690,7 +3690,7 @@
     },
     {
       "path": "audit/eote-release-acceptance.json",
-      "sha256": "ec1cb6294548df96b77c3bb3ecace055267f5ded9ffe20974f8153478b066b8d"
+      "sha256": "f257e233850f06e1cfaa852ca8943e3f1379ee2922a242a018db1780050dc3d8"
     },
     {
       "path": "content/packs/eoteCampaign/manifest.js",
@@ -3706,7 +3706,7 @@
     },
     {
       "path": "src/cards/cards-data.js",
-      "sha256": "1f0d2d15776cba1023c4efb00c537c3d61f02ce318706dfa6c98262d17ce8279"
+      "sha256": "e82ac62eb62e6c6c410a960055db9549cce336433e2003852af559dedea6f9bc"
     },
     {
       "path": "tools/audit-eote.mjs",
@@ -3722,7 +3722,7 @@
     },
     {
       "path": "audit/eote-primitive-requests.json",
-      "sha256": "5d32f25e2e3c076e0da3db5d0135354c88d5fdd4fcf0e046b75f6239cfe21c3d"
+      "sha256": "8699aeb37738f0c0ed6c6e4bf786e7f3fd70a3ae0f9c947164e8c5c615a2b18b"
     }
   ],
   "testFiles": [

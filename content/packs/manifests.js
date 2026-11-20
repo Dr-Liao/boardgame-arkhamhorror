@@ -3,7 +3,10 @@ import { getAvailability } from '../../src/deck/availability.js'
 import { CONTENT_SCHEMA_VERSION } from '../schema.js'
 import { manifest as fhvCampaign } from './fhvCampaign/manifest.js'
 import { manifest as fhvInvestigators } from './fhvInvestigators/manifest.js'
+import { manifest as tdcInvestigators } from './tdcInvestigators/manifest.js'
 import { manifest as fhvPlayer } from './fhvPlayer/manifest.js'
+import { manifest as tdcPlayer } from './tdcPlayer/manifest.js'
+import { manifest as tdcCampaign } from './tdcCampaign/manifest.js'
 
 const encounterTypes = new Set(['enemy', 'treachery'])
 const playerTypes = new Set(['investigator', 'asset', 'event', 'skill'])
@@ -33,7 +36,10 @@ export const packs = Object.freeze([
     cardRanges: CORE_RANGES.map(range => ({ ...range })),
     cards: allCoreCodes.filter(code => !notzCode(code)).map(cardEntry),
     encounterGroupIds: ['rats', 'ghouls', 'strikingFear', 'ancientEvils', 'chillingCold',
-      'darkCult', 'nightgaunts', 'lockedDoors', 'agentsOfYogSothoth', 'agentsOfHastur', 'pentagram'],
+      'darkCult', 'nightgaunts', 'lockedDoors', 'agentsOfYogSothoth', 'agentsOfHastur', 'pentagram',
+      // P7 十循环：TDC 章节复用核心包的 Agents of Cthulhu 组（01181/01182）。声明为可用组，
+      // 供 scenario.requiredEncounterGroupIds 的注册期校验；卡牌仍归属 core 包。
+      'agentsOfCthulhu'],
     behaviorIds: [],
   },
   {
@@ -41,7 +47,9 @@ export const packs = Object.freeze([
     minRulesVersion: 'n4.2', status: 'playable', dependencies: ['core'],
     cardRanges: NOTZ_RANGES.map(range => ({ ...range })),
     cards: allCoreCodes.filter(notzCode).map(cardEntry),
-    encounterGroupIds: ['theGathering', 'theMidnightMasks', 'theDevourerBelow'], behaviorIds: [],
+    encounterGroupIds: ['theGathering', 'theMidnightMasks', 'theDevourerBelow',
+      // P7 十循环：TDC 的终章/序章复用《午夜假面》的 Arkham 地点组（01124–01136）。
+      'arkham'], behaviorIds: [],
   },
-  fhvCampaign, fhvInvestigators, fhvPlayer,
+  fhvCampaign, fhvInvestigators, fhvPlayer, tdcCampaign, tdcInvestigators, tdcPlayer,
 ])

@@ -428,7 +428,7 @@ export const behavior = {
         if (result.success) return
         const failedBy = Math.max(0, 4 - (result.value ?? 0))
         for (let index = 0; index < failedBy; index++) {
-          const playArea = (inv.assets || []).filter(asset => !asset.isStoryAsset)
+          const playArea = (inv.assets || []).filter(asset => api.canDiscardAsset(inv.seat, asset.id))
           const options = []
           if ((inv.hand || []).length) options.push({ id: 'hand', label: '随机弃掉一张手牌' })
           if (playArea.length) options.push({ id: 'asset', label: '选择并弃掉你游戏区域的一张卡牌' })

@@ -1,9 +1,17 @@
+import { payAdditionalPlayHorror } from './play-attempt.js'
 import { replacePlayerZoneCards } from './player-zones.js'
+import { discardEncounterAttachment } from './scenario-decks.js'
 import { returnAssetClues } from './asset-clues.js'
 import { payTokenCost } from './token-cost.js'
 import { keysOnExit } from './scenario-keys.js'
 import { removeVehicle } from './vehicles.js'
 import { recordPlayedCard } from './action-history.js'
+import { assetTextBlanked } from './card-text.js'
+import { consumeNextPlayDiscount } from './effect-state.js'
+import { afterHandEmptied } from './hand-discard-window.js'
+import { canDiscardControlledAsset, discardControlledAsset } from './asset-departure.js'
+import { choosePlayUses, spendPlayUses } from './play-payment.js'
+import { availableResources } from './resource-bank.js'
 // assets.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 支援的生命周期与槽位：装备/替换/离场、手牌位与武器位、被动加成、
 // 以及「打出的事件去哪」（牌库顶 / 弃牌堆）与反应卡打出的收尾。
@@ -95,7 +103,9 @@ export function createAssets(deps) {
   function occupiedSlots(inv, asset) {
     const host = inv.assets.find(item => item.id === asset.attachedToAsset)
     const ignored = registeredEntry(host?.code)?.attachedAssetsIgnoreSlots || []
-    return [...normalizedSlots(slotsForOccupancy(asset)), ...(asset.attachments || []).map(attachment => registeredEntry(attachment.code)?.assetRule?.hostExtraSlot).filter(Boolean)]
+    const ignoresSlots = asset.attachments?.some(source => source.hostIgnoresSlots && !assetTextBlanked(source, inv))
+    const hostSlots = ignoresSlots ? [] : normalizedSlots(slotsForOccupancy(asset))
+    return [...hostSlots, ...(asset.attachments || []).map(attachment => registeredEntry(attachment.code)?.assetRule?.hostExtraSlot).filter(Boolean)]
       .filter(slot => !ignored.includes(slot.replace(/x2$/, '')) && !(asset.ignoredSlots || []).includes(slot.replace(/x2$/, '')))
   }
 
@@ -194,10 +204,19 @@ export function createAssets(deps) {
     let occupancy = 0
     for (const asset of controlled) {
       const slots = occupiedSlots(inv, asset)
-      if (!slots.includes(slot)) continue
-      if (specs.some(entry => matches(cardDef(asset.code), entry))) occupancy += 1
+      if (!specs.some(entry => matches(cardDef(asset.code), entry))) continue
+      occupancy += slots.reduce((sum, occupied) => sum + (occupied === slot ? 1 : occupied === `${slot}x2` ? 2 : 0), 0)
     }
     return { capacity, occupancy: Math.min(occupancy, capacity), eligible }
+  }
+
+  function emptyAssetSlots(inv, slot) {
+    if (!inv || !Object.hasOwn(SLOT_CAPACITY, slot)) return 0
+    const capacity = SLOT_CAPACITY[slot] + slotBonus(inv, slot)
+      + (Number(registeredEntry(inv.code)?.investigator?.extraSlots?.[slot]) || 0)
+      + restrictedSlotInfo(inv, slot).capacity
+      - (slot === 'hand' && inv.handPenaltyActive ? inv.handSlotsPenalty || 0 : 0)
+    return Math.max(0, capacity - (slotUsage(inv)[slot] || 0))
   }
 
   function exceedsControlledTraitLimit(inv, card) {
@@ -254,21 +273,21 @@ export function createAssets(deps) {
   // 或减少它自己提供的豁免/额外槽位——不会凭空腾出别的槽位；因此只有占用了所需槽位的支援
   // 才可能让 canEquip 从 false 变 true。旧实现从全部支援递归，会把数组里靠前的无关支援
   // （例如 [盟友, 手槽支援]）先收进方案，选项里就出现盟友，玩家先点它还会被迫多弃一张。
-  function replacementCandidates(inv, card) {
+  function replacementCandidates(state, inv, card) {
     const needed = new Set(normalizedSlots(card).map(baseSlot))
     if (!needed.size) return []
     return inv.assets.filter(asset => {
-      if (cardDef(asset.code)?.permanent || assetEffect(inv, asset)?.cannotDiscard) return false
+      if (!canDiscardControlledAsset(state, inv, asset) || assetEffect(inv, asset)?.cannotDiscard) return false
       return occupiedSlots(inv, asset).some(slot => needed.has(baseSlot(slot)))
     })
   }
 
   // 只返回「弃到刚好够槽位」的最小方案：腾槽时必须停手，不能顺手多弃无关资产；
   // 同一层（张数相同）的全部组合都保留，玩家仍可自己决定先弃哪一张。
-  function assetReplacementPlans(inv, card) {
+  function assetReplacementPlans(inv, card, state) {
     if (exceedsControlledTraitLimit(inv, card)) return []
     if (canEquip(inv, card)) return [[]]
-    const assets = replacementCandidates(inv, card)
+    const assets = replacementCandidates(state, inv, card)
     for (let size = 1; size <= assets.length; size++) {
       const plans = []
       const removed = []
@@ -303,7 +322,7 @@ export function createAssets(deps) {
     for (;;) {
       const remaining = { ...inv, assets: inv.assets.filter(asset => !removed.includes(asset.id)) }
       if (canEquip(remaining, card)) break
-      const plans = assetReplacementPlans(remaining, card)
+      const plans = assetReplacementPlans(remaining, card, state)
       if (!plans.length) throw new Error('没有合法的槽位替换方案')
       const ids = [...new Set(plans.flat())].filter(id => !removed.includes(id))
       const id = requestChoice(state, { kind: 'assetReplacement', source: card.code, seat: inv.seat,
@@ -312,12 +331,10 @@ export function createAssets(deps) {
       removed.push(id)
     }
     for (const asset of inv.assets.filter(a => removed.includes(a.id))) {
-      leaveAsset(state, inv, asset, events)
-      if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code)
-      releaseChaosTokens(state, asset.id)
+      if (!inv.assets.includes(asset)) continue
+      if (!discardControlledAsset(state, inv, asset, events, leaveAsset)) throw new Error('无法弃置支援来腾出槽位')
       info(state, events, `${inv.name} 弃置「${cardName(asset.code)}」腾出槽位。`)
     }
-    inv.assets = inv.assets.filter(a => !removed.includes(a.id))
   }
 
   function enforceAssetSlotCapacity(state, inv, host, events) {
@@ -325,13 +342,13 @@ export function createAssets(deps) {
       const rest = { ...inv, assets: inv.assets.filter(asset => asset !== host) }
       const prospective = { ...cardDef(host.code), slots: occupiedSlots(inv, host) }
       if (canEquip(rest, prospective)) return true
-      const ids = [...new Set(assetReplacementPlans(rest, prospective).flat())]
-      if (!cardDef(host.code)?.permanent && !assetCannotLeavePlay(host) && !assetEffect(inv, host)?.cannotDiscard) ids.push(host.id)
+      const ids = [...new Set(assetReplacementPlans(rest, prospective, state).flat())]
+      if (canDiscardControlledAsset(state, inv, host) && !assetEffect(inv, host)?.cannotDiscard) ids.push(host.id)
       if (!ids.length) throw new Error('附属后无法满足宿主槽位要求')
       const id = requestChoice(state, { kind: 'asset', source: host.id, seat: inv.seat, prompt: '为附属后的支援腾出槽位。',
         options: ids.map(id => { const card = inv.assets.find(asset => asset.id === id); return { id, cardCode: card.code, label: cardName(card.code) } }) })
       const selected = inv.assets.find(asset => asset.id === id)
-      leaveAsset(state, inv, selected, events)
+      if (leaveAsset(state, inv, selected, events) === false) throw new Error('无法弃置支援来腾出槽位')
       if (!selected.returnedToHand && !selected.removedFromGame) state.investigators[selected.ownerSeat ?? inv.seat].discard.push(selected.code)
     }
     return false
@@ -425,7 +442,7 @@ export function createAssets(deps) {
     // 窗口之后再弃置未被返回的附属（05152 返回的已在 putInHand 时标记 returnedToHand）。
     for (const card of leavingAttachments) {
       if (card.returnedToHand || card.removedFromGame) continue
-      if (card.encounterAttached) state.encounterDiscard.push(card.code)
+      if (card.encounterAttached) discardEncounterAttachment(state, card, card.code)
       else (state.investigators[card.ownerSeat] || inv).discard.push(card.code)
     }
     // 支援离场可能让生命/神智上限下降（+上限的支援被弃置/换下、神智修正消失等）：
@@ -441,14 +458,14 @@ export function createAssets(deps) {
   }
 
   function discardRandomAsset(state, inv, events) {
-    const candidates = inv.assets.filter(asset => !assetCannotLeavePlay(asset))
-    if (!candidates.length) { info(state, events, `${inv.name} 没有可弃置的资产。`); return }
+    const candidates = inv.assets.filter(asset => canDiscardControlledAsset(state, inv, asset))
+    if (!candidates.length) { info(state, events, `${inv.name} 没有可弃置的资产。`); return false }
     const id = requestChoice(state, { kind: 'discard-asset', source: 'discard-asset', seat: inv.seat,
       prompt: '选择一件要弃置的资产。', options: candidates.map(asset => ({ id: asset.id, label: cardName(asset.code) })) })
     const a = candidates.find(asset => asset.id === id)
-    leaveAsset(state, inv, a, events)
-    if (!a.removedFromGame && !a.returnedToHand) inv.discard.push(a.code)
+    if (!discardControlledAsset(state, inv, a, events, leaveAsset)) return false
     info(state, events, `${inv.name} 弃掉了资产「${cardName(a.code)}」。`)
+    return true
   }
 
   function placeLocationForEmptySpawn(state) {
@@ -520,14 +537,20 @@ export function createAssets(deps) {
     if (!peek) return
     // 隐私弱点（03084d「你不能打出事件」）兜底：候选窗口已按同一读点过滤，
     // 这里再拦一次，避免内容层/通道直接调用执行器时绕过窗口。
-    if (playTypeBlocked(state, inv, cardDef(copyCode || peek)?.type)) return false
+    const def = cardDef(copyCode || peek)
+    if (playTypeBlocked(state, inv, def?.type)) return false
+    const cost = Math.max(0, playCost(state, inv, def) - (discount || 0))
+    const { remaining, payments } = choosePlayUses(state, inv, def, cost, deps)
+    if (availableResources(inv) < remaining) return false
     if (!payTokenCost(state, inv, registeredEntry(copyCode || peek)?.additionalTokenCost)) return false
     const code = inv.hand.splice(index, 1)[0]
     const beneathBefore = (inv.beneath || []).length
-    const def = cardDef(copyCode || code)
-    resourceBank.spendFromPool(inv, Math.max(0, playCost(state, inv, def) - (discount || 0)), state)
+    resourceBank.spendFromPool(inv, remaining, state)
+    spendPlayUses(state, payments, events, deps)
+    consumeNextPlayDiscount(state, inv.seat)
     recordPlayedCard(state, inv, def, registeredEntry)
     consumePlayThreatResources(state, inv, events)
+    payAdditionalPlayHorror(state, inv, def, events, deps)
     const fastLabel = fromChannel?.channel === 'hunch'
       ? `🔮 ${inv.name} 从直觉牌库快速打出「${cardName(code)}」。`
       : `⚡ ${inv.name} 快速打出「${copyCode ? `彩绘世界／${cardName(copyCode)}` : cardName(code)}」。`
@@ -536,6 +559,7 @@ export function createAssets(deps) {
     // 都由这里的同一执行器结算（alreadyPaid：费用与「快速打出」日志已在上面付过/写过）。
     const quick = quickEventView(copyCode || code)
     const descriptor = quick?.descriptor || null
+    if (!fromChannel) afterHandEmptied(state, inv, events, reactionWindow)
     state._reaction = context
     try {
       if (descriptor) {
@@ -579,7 +603,11 @@ export function createAssets(deps) {
         if (!movedBeneath) disposePlayedEvent(inv, code)
       }
     }
+    if (def?.type === 'event' && registeredEntry(inv.code)?.abilities?.some(row => row.trigger?.includes('eventPlayed'))) {
+      reactionWindow(state, 'eventPlayed', { when: 'eventPlayed', seat: inv.seat, cardId: code,
+        cardCode: copyCode || code, location: inv.location }, events, { allowNested: true })
+    }
   }
 
-  return { litaAuraAt, assetPassiveBonus, assetPassiveData, assetCannotLeavePlay, normalizedSlots, slotUsage, canEquip, assetReplacementPlans, replaceAssets, enforceAssetSlotCapacity, isWeaponCard, isThreatWeakness, leaveAsset, discardRandomAsset, placeLocationForEmptySpawn, farthestLocationsFor, discardLocked, hasPlayedEventsToDeckTop, topDiscardEvent, disposePlayedEvent, consumePlayThreatResources, playReactionCard }
+  return { litaAuraAt, assetPassiveBonus, assetPassiveData, assetCannotLeavePlay, normalizedSlots, slotUsage, emptyAssetSlots, canEquip, assetReplacementPlans, replaceAssets, enforceAssetSlotCapacity, isWeaponCard, isThreatWeakness, leaveAsset, discardRandomAsset, placeLocationForEmptySpawn, farthestLocationsFor, discardLocked, hasPlayedEventsToDeckTop, topDiscardEvent, disposePlayedEvent, consumePlayThreatResources, playReactionCard }
 }

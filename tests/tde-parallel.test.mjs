@@ -66,6 +66,7 @@ function parallelHub() {
   for (const seat of [0, 1, 2, 3]) {
     play(state, clean(movesOf(state, 'hubSelectInvestigator', seat)[0]), seat)
     play(state, clean(movesOf(state, 'hubAutoDeck', seat)[0]), seat)
+    play(state, clean(movesOf(state, 'hubConfirmDeck', seat)[0]), seat)
     play(state, clean(movesOf(state, 'hubDoneSeat', seat)[0]), seat)
   }
   return state
@@ -225,6 +226,7 @@ test('P9.5 开闸前：没有 dualLineGate 的战役在 mod 边界拒绝启动�
   for (const seat of [0, 1, 2, 3]) {
     play(state, clean(movesOf(state, 'hubSelectInvestigator', seat)[0]), seat)
     play(state, clean(movesOf(state, 'hubAutoDeck', seat)[0]), seat)
+    play(state, clean(movesOf(state, 'hubConfirmDeck', seat)[0]), seat)
     play(state, clean(movesOf(state, 'hubDoneSeat', seat)[0]), seat)
   }
   assert.throws(() => mod.applyMove(state, 0, clean(movesOf(state, 'hubBeginScenario')[0])), /P9\.5|dualLineGate/)
@@ -332,6 +334,7 @@ test('并行换线权限：真人只能换自己，房主只能代 AI 换线', (
   for (const seat of [0, 1, 2, 3]) {
     play(state, clean(movesOf(state, 'hubSelectInvestigator', seat)[0]), seat)
     play(state, clean(movesOf(state, 'hubAutoDeck', seat)[0]), seat)
+    play(state, clean(movesOf(state, 'hubConfirmDeck', seat)[0]), seat)
     play(state, clean(movesOf(state, 'hubDoneSeat', seat)[0]), seat)
   }
   assert.deepEqual(legalMoves(state, 0).filter(move => move.action === 'hubSetSeatPart').map(move => move.seat).sort(), [0, 2, 3])

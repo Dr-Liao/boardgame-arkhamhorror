@@ -99,6 +99,37 @@ export const FAST_TESTS = Object.freeze([
   // P2（八循环通用原语）：七组原语的正常/负面/JSON 往返/读档校验；只验证原语，不认证卡牌行为。
   'tsk-primitives-state.test.mjs', 'tsk-primitives-concealed.test.mjs',
   'fhv-primitives.test.mjs',
+  'tdc-primitives.test.mjs',
+  'campaign-objective-flow.test.mjs',
+  'shared-encounter-primitives.test.mjs',
+  'scenario-deck-attachments.test.mjs',
+  'tdc-p7-scenario-lifecycle.test.mjs',
+  'tdc-p7-grid-ports.test.mjs',
+  'starting-adjustments.test.mjs',
+  'tdc-p7-readiness.test.mjs',
+  // P7（十循环剧本与战役内容）：10 章逐章测试 + 战役层/叙事/共享遭遇/跨章完整性/注册验收。
+  'tdc-scenario-oneLastJob.test.mjs',
+  'tdc-scenario-theWesternWall.test.mjs',
+  'tdc-scenario-theDrownedQuarter.test.mjs',
+  'tdc-scenario-theApiary.test.mjs',
+  'tdc-scenario-theGrandVault.test.mjs',
+  'tdc-scenario-courtOfTheAncients.test.mjs',
+  'tdc-scenario-obsidianCanyons.test.mjs',
+  'tdc-scenario-sepulchreOfTheSleeper.test.mjs',
+  'tdc-scenario-theDoomOfArkhamPartI.test.mjs',
+  'tdc-scenario-theDoomOfArkhamPartII.test.mjs',
+  'tdc-p7-campaign-layer.test.mjs',
+  'tdc-p7-campaign-registration.test.mjs',
+  'tdc-p7-scenario-integrity.test.mjs',
+  'tdc-p7-story.test.mjs',
+  'tdc-p7-shared-encounters.test.mjs',
+  'tdc-p7-shared-assets.test.mjs',
+  'tdc-rules.test.mjs',
+  'tdc-investigators.test.mjs',
+  'tdc-player.test.mjs',
+  'tdc-player-guardian.test.mjs',
+  'tdc-player-seeker.test.mjs',
+  'tdc-player-survivor.test.mjs',
   // P3（九循环关键词与规则书）：6 个关键词 / 11 条双语规则 / 441 卡文直达 / 审计账本与浏览器验收。
   'fhv-rules.test.mjs',
   'fhv-rules-ledger.test.mjs',
@@ -125,6 +156,7 @@ export const FAST_TESTS = Object.freeze([
   'fhv-scenario-dawnOfTheFinalDay.test.mjs',
   'fhv-scenario-preludeTheFinalEvening.test.mjs',
   'fhv-scenario-fateOfTheVale.test.mjs',
+  'fhv-scenario-blockers.test.mjs',
   'fhv-campaign-flow.test.mjs',
   'fhv-campaign-engine.test.mjs',
   'fhv-story.test.mjs',
@@ -263,6 +295,7 @@ export const FAST_TESTS = Object.freeze([
   'architecture-guard.test.mjs',
   'i18n-dict.test.mjs', // 界面词典完整性：中英 key/占位符/重复 key/裸 key/残留中文
   'scenario-guides.test.mjs', // 关卡设置：每关都有布置文本和说明，并投影到观察视图
+  'authored-scenario-guide.test.mjs',
   'phase6-guard.test.mjs', // Phase 6 门禁：引擎里无卡号 / 无战役名
   'phase6-implementation.test.mjs', // Phase 6（6e-1）实现账本：通道判定 / 摘要形状 / isPlayable 一致
   'phase6-campaign.test.mjs', // Phase 6（6e-17）战役插件化：公开投影 / agentHints / observation 守卫
@@ -411,7 +444,6 @@ export const FAST_TESTS = Object.freeze([
   'tcu-p0-regressions.test.mjs', // 万象无终全量扫描 P0 修复回归：05130 崩溃/幽灵面线索/变体分组/05201 反应
   'tcu-p1-regressions.test.mjs', // 万象无终全量扫描 P1 修复回归：标记含义/05095 入场毁灭/05311 裂口
   'tcu-prologue-handoff.test.mjs', // 序章→《巫异时刻》交接：关间准备换回真实调查员、序章失败不计创伤/经验
-  'tcu-interlude-windows.test.mjs', // 关间升级窗：巫异时刻后/叙事幕间读完后在下一关前开放升级（2026-11-17 实测）
   'tcu-chapters-smoke.test.mjs', // 万象无终 P1-12：九章真实引擎冒烟（setup 不变量 + 连续合法动作）
   'tde-campaign-parts.test.mjs', // 食梦者 P3 批次 1：双 part 数据模型（纯数据，不建局）
   'tde-primitives-counters.test.mjs', // 食梦者 P3 批次 2：按调查员计数器
@@ -478,6 +510,9 @@ export const SLOW_TESTS = Object.freeze([
   // 以及发布总账本自检与素材账本。
   'fhv-p8-campaign.test.mjs',
   'fhv-p8-migration.test.mjs',
+  // 万象无终：关间升级窗 + 三选一模式下战役奖赏卡不计张数的真实 hub 流程回归
+  // （5 条用例各自跑序章→巫异时刻，文件墙钟较长，放在 slow 层；`npm run test:tcu` 仍全量覆盖）。
+  'tcu-interlude-windows.test.mjs',
   'campaign-n4.test.mjs', // N4 战役快速回归（升级/回滚/结局/创伤/牌组迁移）
   'campaign-n4-purchase-stress.test.mjs', // 连续取消购卡压测：默认 50 轮，N4_CANCEL_LOOPS=300 跑原深度
   'campaign-n4-matrix.test.mjs', // /2/4 人整局合法走子矩阵（原 7 组含难度，难度差异由混沌袋用例覆盖）

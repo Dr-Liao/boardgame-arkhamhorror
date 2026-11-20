@@ -244,6 +244,7 @@ for (const [label, width, height] of [['desktop', 1440, 950], ['mobile', 390, 84
     await post({ action: 'hubSelectInvestigator', code: '06001' })
     expect(session.state.investigators[0].code).toBe('06001')
     await post({ action: 'hubAutoDeck' })
+    await post({ action: 'hubConfirmDeck' })
     // 确认席位后 server 会替 3 个 AI 队友准备（同一 /api/move 内），返回时全桌应已就绪。
     await post({ action: 'hubDoneSeat' })
     expect(session.state.hubReady).toBe(true)

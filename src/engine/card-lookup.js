@@ -36,6 +36,7 @@ export function sourceCardDef(state, source) {
   if (!key) return null
   const direct = cardDef(key)
   if (direct) return direct
+  if (state?._revealedAbility?.source.id === key) return cardDef(state._revealedAbility.source.code)
   for (const inv of state?.investigators || []) {
     const found = [...(inv.assets || []), ...(inv.threat || [])].find(card => card.id === key)
     if (found) return cardDef(found.code)

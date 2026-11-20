@@ -1,0 +1,243 @@
+{
+  "schemaVersion": 1,
+  "plan": "audit/tdc-primitive-plan.json",
+  "primitives": [
+    {
+      "id": "flood",
+      "api": "mechanics.flood",
+      "readPoints": [
+        "src/engine/flood.js"
+      ],
+      "tests": [
+        "tests/tic-primitives.test.mjs"
+      ],
+      "docs": "docs/campaign/theDrownedCity/primitives.md"
+    },
+    {
+      "id": "chaosSeal",
+      "api": "sealChaosToken / releaseChaosTokens",
+      "readPoints": [
+        "src/engine/chaos-token-pool.js"
+      ],
+      "tests": [
+        "tests/tic-primitives.test.mjs"
+      ],
+      "docs": "docs/campaign/theDrownedCity/primitives.md"
+    },
+    {
+      "id": "attachments",
+      "api": "attachCardTo / playChannels",
+      "readPoints": [
+        "src/engine/location-attachments.js",
+        "src/engine/hosted-assets.js",
+        "src/engine/play-channels.js"
+      ],
+      "tests": [
+        "tests/play-channels.test.mjs"
+      ],
+      "docs": "docs/campaign/theDrownedCity/primitives.md"
+    },
+    {
+      "id": "campaignRecords",
+      "api": "campaignRecord / setCampaignRecord / recordSets",
+      "readPoints": [
+        "src/engine/campaign-flow.js"
+      ],
+      "tests": [
+        "tests/tcu-primitives-campaign-records.test.mjs"
+      ],
+      "docs": "docs/campaign/theDrownedCity/primitives.md"
+    },
+    {
+      "id": "glyphs",
+      "api": "mechanics.recordSets",
+      "readPoints": [
+        "src/engine/campaign-flow.js"
+      ],
+      "tests": [
+        "tests/tic-primitives.test.mjs"
+      ],
+      "docs": "docs/campaign/theDrownedCity/primitives.md"
+    },
+    {
+      "id": "skillTests",
+      "api": "performTest / descriptor windows",
+      "readPoints": [
+        "src/engine/ability.js"
+      ],
+      "tests": [
+        "tests/tic-primitives.test.mjs"
+      ],
+      "docs": "docs/campaign/theDrownedCity/primitives.md"
+    },
+    {
+      "id": "cardZones",
+      "api": "deckOps / playChannels",
+      "readPoints": [
+        "src/engine/deck-ops.js",
+        "src/engine/play-channels.js"
+      ],
+      "tests": [
+        "tests/play-channels.test.mjs"
+      ],
+      "docs": "docs/campaign/theDrownedCity/primitives.md"
+    },
+    {
+      "id": "enemyActions",
+      "api": "enemy functions",
+      "readPoints": [
+        "src/engine/enemies.js"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs"
+      ],
+      "docs": "docs/campaign/theDrownedCity/primitives.md"
+    },
+    {
+      "id": "economy",
+      "api": "cost / use-transfer",
+      "readPoints": [
+        "src/engine/ability.js",
+        "src/engine/cost.js"
+      ],
+      "tests": [
+        "tests/tic-primitives.test.mjs"
+      ],
+      "docs": "docs/campaign/theDrownedCity/primitives.md"
+    },
+    {
+      "id": "harmAndClues",
+      "api": "assignHarm / clue API",
+      "readPoints": [
+        "src/engine/harm-threat.js",
+        "src/engine/api-clue.js"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs"
+      ],
+      "docs": "docs/campaign/theDrownedCity/primitives.md"
+    },
+    {
+      "id": "modifiers",
+      "api": "modifiers / effectState",
+      "readPoints": [
+        "src/engine/modifiers.js"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs"
+      ],
+      "docs": "docs/campaign/theDrownedCity/primitives.md"
+    },
+    {
+      "id": "timedEffects",
+      "api": "ability registration / effectState",
+      "readPoints": [
+        "src/engine/ability.js",
+        "src/engine/effect-state.js"
+      ],
+      "tests": [
+        "tests/tic-primitives.test.mjs"
+      ],
+      "docs": "docs/campaign/theDrownedCity/primitives.md"
+    },
+    {
+      "id": "slots",
+      "api": "canEquip / asset rules",
+      "readPoints": [
+        "src/engine/assets.js"
+      ],
+      "tests": [
+        "tests/fhv-primitives.test.mjs"
+      ],
+      "docs": "docs/campaign/theDrownedCity/primitives.md"
+    },
+    {
+      "id": "physicalFace",
+      "api": "flipAsset / flipEnemy",
+      "readPoints": [
+        "src/engine/physical-faces.js"
+      ],
+      "tests": [
+        "tests/tic-physical-faces.test.mjs"
+      ],
+      "docs": "docs/campaign/theDrownedCity/primitives.md"
+    },
+    {
+      "id": "tasks",
+      "api": [
+        "mechanics.progress.claim(track, seat, option)",
+        "mechanics.progress.forSeat(track, seat)",
+        "mechanics.progress.change(track, seat, amount, receipt?)"
+      ],
+      "readPoints": [
+        "src/campaign/progress-tracks.js",
+        "src/engine/api-mechanics.js",
+        "src/campaign/campaign.js"
+      ],
+      "tests": [
+        "tests/tdc-primitives.test.mjs"
+      ],
+      "docs": "docs/campaign/theDrownedCity/primitives.md"
+    },
+    {
+      "id": "handoff",
+      "api": [
+        "transferOnControllerDefeat: 'nearest'"
+      ],
+      "readPoints": [
+        "src/engine/harm-threat.js",
+        "src/engine/api-misc.js"
+      ],
+      "tests": [
+        "tests/tdc-primitives.test.mjs"
+      ],
+      "docs": "docs/campaign/theDrownedCity/primitives.md"
+    },
+    {
+      "id": "topology",
+      "api": [
+        "mechanics.map.configure({ adjacency: 'rows' })",
+        "mechanics.map.relocate(cells)"
+      ],
+      "readPoints": [
+        "src/engine/grid-map.js"
+      ],
+      "tests": [
+        "tests/tdc-primitives.test.mjs"
+      ],
+      "docs": "docs/campaign/theDrownedCity/primitives.md"
+    },
+    {
+      "id": "separateDeck",
+      "api": [
+        "mechanics.scenarioDecks.take(id, count, { from: 'bottom' })",
+        "mechanics.scenarioDecks.discard(id, code, { recycleWhenEmpty: true })"
+      ],
+      "readPoints": [
+        "src/engine/scenario-decks.js",
+        "src/engine/encounter.js"
+      ],
+      "tests": [
+        "tests/tdc-primitives.test.mjs"
+      ],
+      "docs": "docs/campaign/theDrownedCity/primitives.md"
+    },
+    {
+      "id": "multipartEnemy",
+      "api": [
+        "scenarioRuntime.linkEnemyParts(bodyId, partIds)"
+      ],
+      "readPoints": [
+        "src/engine/enemy-parts.js",
+        "src/engine/targets.js",
+        "src/engine/moves.js",
+        "src/engine/combat.js",
+        "src/engine/enemies.js"
+      ],
+      "tests": [
+        "tests/tdc-primitives.test.mjs"
+      ],
+      "docs": "docs/campaign/theDrownedCity/primitives.md"
+    }
+  ]
+}

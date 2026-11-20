@@ -640,7 +640,8 @@ const treacheryChecks = {
     state.investigators[0].assets = [{ id: 'asset', code: '01016' }]
     const discarded = []
     laterBehavior('theEssexCountyExpress').resolveEncounter(state, state.investigators[0], { code: '02181' }, {
-      choose: request => request.options[0].id, discardAsset: (seat, id) => discarded.push([seat, id]),
+      choose: request => request.options[0].id, canDiscardAsset: () => true,
+      discardAsset: (seat, id) => discarded.push([seat, id]),
     })
     assert.deepEqual(state.investigators.map(inv => inv.actionsLeft), [2, 2])
     assert.deepEqual(discarded, [[0, 'asset']])

@@ -3,7 +3,7 @@ import { transactionEvents, presentationCount } from './presentation-events.js'
 
 // 续算时这些字段取自当前状态而非事务快照：存档迁移只会刷新顶层状态，
 // 若从 base 恢复版本号，旧存档回答待决选择后会退回旧版本而无法继续行动。
-const STATIC_FIELDS = ['cards', 'investigatorDefs', 'classNames', 'classColors', 'skillNames', 'tokenLabels',
+const STATIC_FIELDS = ['cards', '_scenarioCardTable', 'investigatorDefs', 'classNames', 'classColors', 'skillNames', 'tokenLabels',
   'schemaVersion', 'rulesVersion', 'resourceVersion', 'turnFlowModel', 'autoReactionHosted']
 const clone = value => JSON.parse(JSON.stringify(value))
 // 事务恢复凭据（continuation.move）只保留语义字段：label/explanation 是展示文案，
@@ -26,6 +26,18 @@ class ResolutionCheckpoint extends Error {
     this.seat = seat
     this.move = move
   }
+}
+
+class ResolutionCancelled extends Error {
+  constructor(report) {
+    super('规则事务取消')
+    this.report = report
+  }
+}
+
+export function cancelResolution(state, report) {
+  if (!state._resolution) throw new Error('取消必须在规则事务中执行')
+  throw new ResolutionCancelled(report)
 }
 
 export function resolutionCheckpoint(state, seat, move) {
@@ -134,17 +146,28 @@ function dynamicState(state) {
   return clone(Object.fromEntries(Object.entries(state).filter(([key]) => !omitted.has(key))))
 }
 
-export function resolveTransaction(state, seat, move, execute, { initial = false } = {}) {
+export function resolveTransaction(state, seat, move, execute, { initial = false, sharedFreeWindows = true, filterDiscardChoices = true } = {}) {
   const revision = state.revision
   const previous = state.continuation
-  let transaction = previous ? clone(previous) : {
-    id: revision + 1, base: dynamicState(state), seat, move: cloneMove(move), answers: [], emitted: 0,
+  // 旧存档里的暂停事务必须按它开始时的窗口顺序续算，才能消费原有选择凭据。
+  const offerSharedFreeAbilities = previous ? previous._sharedFreeWindows === true : sharedFreeWindows
+  const filterAssetDiscardOptions = previous ? previous._filterDiscardChoices === true : filterDiscardChoices
+  const windowRules = {
+    ...(offerSharedFreeAbilities ? { _sharedFreeWindows: true } : {}),
+    ...(filterAssetDiscardOptions ? { _filterDiscardChoices: true } : {}),
   }
-  if (previous) {
+  let transaction = previous ? clone(previous) : {
+    id: revision + 1, base: dynamicState(state), seat, move: cloneMove(move), answers: [], emitted: 0, ...windowRules,
+  }
+  if (previous && move) {
     const choice = state.pendingChoice
     transaction.answers.push({ choiceId: choice.id, kind: choice.kind, source: choice.source, seat: choice.seat, optionId: move.optionId })
   }
-  const staticState = clone(Object.fromEntries(STATIC_FIELDS.map(key => [key, state[key]])))
+  // Card tables are replaced at scenario/resource boundaries and read throughout a transaction.
+  const { cards, investigatorDefs, ...staticFields } = Object.fromEntries(STATIC_FIELDS.map(key => [key, state[key]]))
+  const staticState = clone(staticFields)
+  if (cards !== undefined) staticState.cards = cards
+  if (investigatorDefs !== undefined) staticState.investigatorDefs = investigatorDefs
   let draft
   const newEvents = []
   for (let checkpoints = 0; ; checkpoints++) {
@@ -152,16 +175,24 @@ export function resolveTransaction(state, seat, move, execute, { initial = false
     draft = { ...clone(transaction.base), ...staticState }
     draft.pendingChoice = null
     draft.continuation = null
-    draft._resolution = { id: transaction.id, answers: transaction.answers, cursor: 0, events: [] }
+    draft._resolution = { id: transaction.id, answers: transaction.answers, cursor: 0, events: [], offerSharedFreeAbilities, filterAssetDiscardOptions }
     try {
       execute(draft, transaction.seat, transaction.move, [])
       if (draft._resolution.cursor !== transaction.answers.length) throw new Error('存在未消费的选择恢复凭据')
     } catch (error) {
+      if (error instanceof ResolutionCancelled) {
+        if (draft._resolution.cursor !== transaction.answers.length) throw new Error('取消时存在未消费的选择恢复凭据')
+        draft = { ...clone(transaction.base), ...staticState, pendingChoice: null, continuation: null }
+        error.report(draft, newEvents)
+        break
+      }
       if (error instanceof ResolutionCheckpoint) {
         if (draft._resolution.cursor !== transaction.answers.length) throw new Error('检查点存在未消费的选择恢复凭据')
+        if (draft.cards !== undefined) staticState.cards = draft.cards
+        if (draft.investigatorDefs !== undefined) staticState.investigatorDefs = draft.investigatorDefs
         newEvents.push(...transactionEvents(draft, transaction))
         transaction = { id: `${revision + 1}c${checkpoints + 1}`, base: dynamicState(draft),
-          seat: error.seat, move: cloneMove(error.move), answers: [], emitted: 0 }
+          seat: error.seat, move: cloneMove(error.move), answers: [], emitted: 0, ...windowRules }
         continue
       }
       if (!(error instanceof ChoicePause)) throw error

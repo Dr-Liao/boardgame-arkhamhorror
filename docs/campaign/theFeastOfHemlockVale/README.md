@@ -4,6 +4,15 @@
 
 建立日期：2026-11-03。本文件是实施路线与完成清单，完成状态以代码、测试和审计证据为准。P0–P8 已全部完成，完整迁移已确认（`audit/fhv-migration.json#status = verified`，`earlyAccess: false`，`equivalenceCertified: true`）。三个内容包均为 `playable`：P5 调查员包（5 位调查员 + 15 张专属/绑定依赖）、P6 一般玩家卡包（120 条记录：102 张可构筑 + 4 基础弱点 + 11 绑定/场外依赖 + 3 Research）、P7/P8 战役包（301 条战役记录 + 4 段序曲 + 八章 + 26 个遭遇组）。发布验收覆盖完整合法三天三夜路线（多勘察顺序、夜 1/夜 2 两种分支、居民关系/法典/传家宝）、失败/撤退、四档难度、存档恢复与 replay、真实大厅三阶段双视口浏览器（含多人/AI/隐私/权限/断线）、素材与图片库存、全量回归与文档。
 
+> **2026-11-18 独立全量扫描（重要）**：迁移完成后又做了一轮**不采信账本结论**的独立复核，结论见
+> [`full-scan.md`](full-scan.md)，修复步骤见 [`fix-plan.md`](fix-plan.md)。复核发现 **6 个 P0**
+> （汉洛克庄园敌人-地点翻面崩溃、writtenInRock/theLostSister 无 seat 选择软锁、三张放一边诡计未注册
+> 抽到即崩溃、最长一夜全灭崩溃、寂静荒野敌人攻击后全灭、面具限 1 合法动作崩溃）、若干 P1
+> （终章尾声三结局同显、审计门禁在 HEAD 不复现、12 个关卡测试非真实引擎、theLostSister/writtenInRock
+> 多项规则错误、201 个无读点声明）与 P2。**在 P0/P1 修复前，本文件下方的「P8 门禁通过 / 完整迁移」
+> 勾选只代表历史迁移轮次的账本自洽，不代表当前 HEAD 的真实可玩性**；`audit/fhv-migration.json` 的
+> `verified/equivalenceCertified` 也需要在修复完成后重跑并重签。
+
 复算输入计划签入 `audit/fhv-{scope,mechanism-scan,primitive-plan,primitive-catalog}.json`；大厅根目录 `artifacts/migration/fhv/` 保存运行镜像与过程资料，继续忽略，不放开整个目录。
 
 ## 1. 依据与打勾规则

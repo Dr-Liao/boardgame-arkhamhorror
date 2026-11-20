@@ -344,7 +344,7 @@ export function createCampaignPlugin(deps) {
           const def = cardDef(code)
           if (!def || def.type !== 'asset' || isWeaknessCard(def) || inv.resources < playCost(state, inv, def)) return false
           if (def.unique && state.investigators.some(owner => owner.assets.some(asset => cardDef(asset.code)?.name === def.name))) return false
-          return assetReplacementPlans(inv, def).length > 0
+          return assetReplacementPlans(inv, def, state).length > 0
         })
       if (!candidates.length) return
       const choice = requestChoice(state, { kind: 'card', source: 'yorickAsset', seat, canSkip: true,

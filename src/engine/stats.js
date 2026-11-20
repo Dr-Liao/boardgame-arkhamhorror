@@ -4,6 +4,9 @@ import { describeLimitShort, limitUsed } from './limits.js'
 import { totalDoom } from './rules-state.js'
 import { commitProfile } from './lifecycle.js'
 import { assetTextBlanked, assetTextBlankedExceptForced } from './card-text.js'
+import { beneathCards } from './commit-origins.js'
+import { attachedAbilityCards } from './attachment-rules.js'
+import { handAbilitySources } from './ability.js'
 // stats.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 属性与「卡面给什么」的读点：技能值、图标、特质/关键词、手牌位与行动数、
 // 生命力/神智上限，以及 assetEffect（旧 passive + 条目字段 + 描述子 shim 的合并结果）。
@@ -103,6 +106,8 @@ export function createStats(deps) {
       return { id, code: inv.code, investigator: inv.seat }
     }
     return controlledAbilityCards(inv).find(card => card.id === id)
+      || attachedAbilityCards(inv).find(card => card.id === id)
+      || (id?.startsWith('hand-ability:') ? handAbilitySources(inv, id)[0] : null)
   }
 
   function lolaCanUseCard(inv, code) {
@@ -223,7 +228,9 @@ export function createStats(deps) {
   }
 
   function handSize(state, inv) {
-    let v = HAND_SIZE_BASE + (scenarioBehavior(state).handSizeModifier?.(state, inv) || 0)
+    const base = investigatorRule(inv?.code)?.handSizeFromBeneath && !deps.investigatorBlanked(state, inv)
+      ? beneathCards(state, inv.seat, inv.code).length : HAND_SIZE_BASE
+    let v = base + (scenarioBehavior(state).handSizeModifier?.(state, inv) || 0)
     // P6（食梦者）：调查员卡面的手牌上限修正（派翠丝·海瑟薇「你的手牌上限减少 3 张」）。
     v += Number(investigatorRule(inv?.code)?.handSizeModifier || 0)
     // Phase 5（5a-4）：议程的手牌上限惩罚在内容层数据里。
@@ -285,7 +292,8 @@ export function createStats(deps) {
     const entry = registeredEntry(code)
     const profile = (entry?.abilities || []).find(ability => ability.kind === 'commit')?.skill
     const list = profile?.conditionalIcons
-    const custom = profile?.iconBonus?.({ state, inv, code, skill, test: state.skillTest }) || 0
+    const custom = profile?.iconBonus?.({ state, inv, owner: inv, code,
+      skill: Array.isArray(skill) ? skill : [skill], test: state.skillTest }) || 0
     if (!Array.isArray(list) || !list.length) return custom
     let matched = null
     for (const item of list) {

@@ -127,6 +127,7 @@ test('真实引擎的序幕待决选择带上单价、说明、清单与上下�
   move({ action: 'hubGoSetup' })
   move({ action: 'hubSelectInvestigator', code: '04001' })
   move({ action: 'hubAutoDeck' })
+  move({ action: 'hubConfirmDeck' })
   move({ action: 'hubDoneSeat' })
   move({ action: 'hubBeginScenario' })
   // 序幕先问领队，领队选完后才逐位购买补给。

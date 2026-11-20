@@ -913,13 +913,9 @@ export function placeResidents(state, api = {}) {
   // Residents 组整组收集后：没入场的居民放一边（夜晚整组放一边）。
   state.scenarioZones ||= {}
   const used = new Set(placed.map(item => item.code))
-  const setAside = new Set(state.scenarioZones.setAside || [])
-  const roster = [...RESIDENT_CODES, LITTLE_SYLVIE_CODE]
-  for (const code of roster) {
-    if (used.has(code)) setAside.delete(code)
-    else setAside.add(code)
-  }
-  state.scenarioZones.setAside = [...setAside]
+  const roster = new Set([...RESIDENT_CODES, LITTLE_SYLVIE_CODE])
+  const otherCards = (state.scenarioZones.setAside || []).filter(code => !roster.has(code))
+  state.scenarioZones.setAside = [...otherCards, ...[...roster].filter(code => !used.has(code))]
   info(api, date.period === 'day'
     ? `居民入场：${placed.map(item => item.location).join('、') || '无'}。`
     : '时段为夜晚：Residents 整组放一边，本次不放置任何居民。')
@@ -1452,6 +1448,13 @@ export function actIndexAfterAdvance(state, act) {
   return codeOf(act) === STRANGE_INFESTATION_CODE ? 0 : undefined
 }
 
+function takeAsideTreacheries(state, codes) {
+  const aside = state.scenarioZones?.setAside || []
+  const taken = aside.filter(code => codes.includes(code))
+  if (taken.length) state.scenarioZones.setAside = aside.filter(code => !codes.includes(code))
+  return taken
+}
+
 export function agendaReveal(state, agenda, api = {}) {
   const code = codeOf(agenda)
   const flags = flagsOfCode(code)
@@ -1462,10 +1465,7 @@ export function agendaReveal(state, agenda, api = {}) {
     handled = true
   }
   if (flags.shuffleSetAsideTreacheriesOnBack === true) {
-    const returnCodes = [
-      ...Array(Math.max(0, Number(ALL_CARDS[OUT_OF_THE_WALLS_CODE]?.quantity) || 4)).fill(OUT_OF_THE_WALLS_CODE),
-      ...Array(Math.max(0, Number(ALL_CARDS[PULLED_IN_CODE]?.quantity) || 2)).fill(PULLED_IN_CODE),
-    ]
+    const returnCodes = takeAsideTreacheries(state, [OUT_OF_THE_WALLS_CODE, PULLED_IN_CODE])
     shuffleIntoEncounter(state, returnCodes, api)
     info(api, '议程 1b「活着的庄园」：放一边的 Out of the Walls / Pulled In 洗入遭遇牌库。')
   }
@@ -1473,8 +1473,9 @@ export function agendaReveal(state, agenda, api = {}) {
     flipNearestDormantToMostInvestigators(state, api)
   }
   if (flags.attachFireOnHighestFloor === true) {
-    const highest = highestFloorLocations(state)
-    const target = highest[0] || null
+    const fires = takeAsideTreacheries(state, [FIRE_CODE])
+    const target = fires.length ? highestFloorLocations(state)[0] : null
+    if (target) fires.shift()
     if (target && typeof api?.attachToLocation === 'function') {
       api.attachToLocation(target.id, { code: FIRE_CODE, originalCode: FIRE_CODE })
     } else if (target) {
@@ -1482,8 +1483,8 @@ export function agendaReveal(state, agenda, api = {}) {
       target.attachments.push({ id: `attach:${FIRE_CODE}:${target.attachments.length}`,
         code: FIRE_CODE, originalCode: FIRE_CODE })
     }
-    const otherFires = Math.max(0, (Number(ALL_CARDS[FIRE_CODE]?.quantity) || 5) - 1)
-    shuffleIntoEncounter(state, Array(otherFires).fill(FIRE_CODE), api)
+    const otherFires = fires.length
+    shuffleIntoEncounter(state, fires, api)
     info(api, `议程 2b「风雨大作」：「Fire!」附属到最高层最左的地点（${target?.name || '无'}），`
       + `其余 ${otherFires} 张洗入遭遇牌库。`)
     handled = true

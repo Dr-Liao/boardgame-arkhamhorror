@@ -49,6 +49,9 @@ import {
   SET_ASIDE_LOCATION_IDS, SHATTERED_SELF_CODE, START_LOCATION, STORY_CARD_CODE,
   THE_ATWOOD_HOUSE_ID, THE_COMMONS_ID, THE_CROSSROADS_ID, VALE_LOCATION_IDS,
 } from './definition.js'
+import { isCaveLocation, mirrorNestInPlay, placeAbyssLocation, placeNightLocation, syncConnections } from './locations.js'
+import { clearEscapeRoad, escapeLocationAction, performEscapeLocationAction } from './escape.js'
+export { mirrorNestInPlay, placeAbyssLocation, syncConnections } from './locations.js'
 
 const CHAPTER_ID = 'fateOfTheVale'
 const ABYSS_DECK_ID = 'abyss'
@@ -138,23 +141,6 @@ export function applyNestCodes(state) {
     }
   }
   return assignment
-}
-
-export const mirrorNestInPlay = state => (state.locations || [])
-  .filter(location => MIRROR_NEST_POSITIONS.includes(location.id))
-
-/** 在场地点的连接：镜巢环 + 深渊揭示后与每个镜巢相连。 */
-export function syncConnections(state) {
-  const inPlay = new Map((state.locations || []).map(location => [location.id, location]))
-  const abyss = inPlay.get(ABYSS_LOCATION_ID) || null
-  for (const position of MIRROR_NEST_POSITIONS) {
-    const location = inPlay.get(position)
-    if (!location) continue
-    const ring = [...(LOCATION_CONNECTIONS[position] || [])].filter(id => inPlay.has(id))
-    location.connections = abyss ? [...ring, ABYSS_LOCATION_ID] : ring
-  }
-  if (abyss) abyss.connections = MIRROR_NEST_POSITIONS.filter(id => inPlay.has(id))
-  return state.locations || []
 }
 
 // ---------------------------------------------------------------------------
@@ -412,12 +398,15 @@ export function resolveAbyssCard(state, seat, code, kind = classifyAbyssCard(cod
       return placeAbyssLocation(state, code, seat, api)
     case 'resident':
       return resolveResidentFromAbyss(state, seat, code, api)
-    case 'investigator':
-      return returnToTrueSelf(state, seat, api)
+    case 'investigator': {
+      const owner = state.investigators.find(candidate => resolveTrueSelfCode(state, candidate.seat) === String(code))
+      return owner ? returnToTrueSelf(state, owner.seat, api) : null
+    }
     case 'story':
       return addStoryAsset(state, code, { controllerSeat: null }, api)
     case 'encounter':
-      return drawEncounterFromAbyss(state, seat, api)
+      safeCall(api, 'drawEncounter', seat, { code })
+      return code
     default: {
       // 玩家卡：加入所有者手牌（深渊里的玩家卡来自各调查员牌库顶）。
       if (typeof api.addToHand === 'function') api.addToHand(seat, [code])
@@ -426,29 +415,6 @@ export function resolveAbyssCard(state, seat, code, kind = classifyAbyssCard(cod
       return code
     }
   }
-}
-
-/** 「地点：放置入场，未揭示，与最近的镜巢相邻（如可能，未连接 [[洞穴]] 的镜巢）。二者相连。」 */
-export function placeAbyssLocation(state, code, seat, api = {}) {
-  const before = new Set((state.locations || []).map(location => location.id))
-  if (typeof api.placeLocation === 'function') api.placeLocation(code)
-  if (before.size === (state.locations || []).length) {
-    const nests = mirrorNestInPlay(state)
-    const nest = nests.find(item => !(item.connections || []).some(id => CAVE_LOCATION_IDS.includes(id))) || nests[0]
-    const id = `abyssLocation${(state.locations || []).length + 1}`
-    const def = state.scenario?.locations?.[id] || null
-    const clues = investigatorCount(state) * 2
-    state.locations ||= []
-    state.locations.push({
-      ...(def ? structuredClone(def) : { id, code, name: ALL_CARDS[code]?.nameZh || code }),
-      id, code, originalCode: code, revealed: false, clues: 0, maxClues: clues,
-      connections: nest ? [nest.id] : [],
-    })
-    if (nest) nest.connections = [...(nest.connections || []), id]
-    info(api, `深渊揭示的地点 ${code} 入场（未揭示），与「${nest?.id || '镜巢'}」相连。`)
-    return id
-  }
-  return null
 }
 
 /** 居民卡：翻到敌人面，在你所在地点生成并攻击你（不交战），然后弃掉该敌人。 */
@@ -873,24 +839,12 @@ export function fateOfTheValeStep5(state, api = {}) {
   return { step: 5, vale: VALE_LOCATION_IDS.length, residents: (state.scenarioZones?.beneathResidents || []).length }
 }
 
-function placeNightLocation(state, id, api) {
-  const def = state.scenario?.locations?.[id] || LOCATIONS[id]
-  if (!def) return null
-  const existing = (state.locations || []).find(location => location.id === id)
-  if (existing) { existing.revealed = true; return existing }
-  const clues = (def.cluesPerInvestigator ?? 0) * investigatorCount(state)
-  const location = { ...structuredClone(def), id, revealed: true, clues, maxClues: clues }
-  state.locations ||= []
-  state.locations.push(location)
-  return location
-}
-
 /** 「把每个放一边的 Hemlock Vale 地点以黑夜面放入场；移除镜巢与洞穴；移动调查员到十字路口」。 */
 export function setupNightVale(state, api = {}) {
   state.enemies = (state.enemies || []).filter(enemy => !isEmissary(enemy))
   state.locations = (state.locations || []).filter(location =>
-    !MIRROR_NEST_POSITIONS.includes(location.id) && !CAVE_LOCATION_IDS.includes(location.id))
-  for (const id of VALE_LOCATION_IDS) placeNightLocation(state, id, api)
+    !MIRROR_NEST_POSITIONS.includes(location.id) && !isCaveLocation(location))
+  for (const id of VALE_LOCATION_IDS) placeNightLocation(state, id, investigatorCount(state))
   const crossroads = (state.locations || []).find(location => location.id === THE_CROSSROADS_ID)
   for (const inv of activeInvestigators(state)) {
     if (typeof api.moveInvestigator === 'function') api.moveInvestigator(inv.seat, THE_CROSSROADS_ID)
@@ -953,12 +907,15 @@ export function objectiveStatus(state) {
   const code = actCodeOf(state)
   const count = investigatorCount(state)
   if (code === ACT1_CODE) {
-    const allTrue = activeInvestigators(state).every(inv => Boolean(flagsFor(state).fateTrueSelfReturned?.[inv.seat]))
+    const flags = flagsFor(state)
+    const active = activeInvestigators(state)
+    const allTrue = active.length > 0 && active.every(inv =>
+      Boolean(flags[`fateTrueSelfReturned:${inv.seat}`] || flags.fateTrueSelfReturned?.[inv.seat]))
     return { satisfied: allTrue, rule: 'trueSelves', detail: '每位调查员都取回「真正的」调查员卡' }
   }
   if (code === ACT2_CODE) {
     const caves = (state.locations || []).filter(location =>
-      location.revealed && CAVE_LOCATION_IDS.includes(location.id) && (Number(location.clues) || 0) === 0)
+      location.revealed && isCaveLocation(location) && (Number(location.clues) || 0) === 0)
     return { satisfied: caves.length >= 3, rule: 'caves', detail: `已揭示且无线索的洞穴地点 ${caves.length}/3` }
   }
   if (code === '10657') {
@@ -977,8 +934,8 @@ export function objectiveStatus(state) {
       required, available: groupClues(state), detail: '没有居民敌人（场上/地点底下）且共同支付 3/人 线索' }
   }
   if (code === '10659') {
-    const fires = (state.encounterDiscard || []).filter(item => item === FIRE_CODE).length
-      + (state.treacheries || []).filter(item => codeOf(item) === FIRE_CODE).length
+    const fires = (state.locations || []).flatMap(location => location.attachments || [])
+      .filter(item => codeOf(item) === FIRE_CODE).length
     return { satisfied: fires >= 5, rule: 'fire', fires, detail: `场上「着火了！」${fires}/5` }
   }
   if (code === '10660') {
@@ -1035,10 +992,13 @@ export function actions(state, inv) {
       action: 'scenarioAction', rule: 'fateDrawFire',
       label: '点燃引线：抽取 1 张放一边的「着火了！」',
       ...(burned ? { reason: '本地点已经点过火（团队每地点一次）', used: true }
+        : !state.scenarioZones?.setAside?.includes(FIRE_CODE) ? { reason: '放一边区域没有剩余的「着火了！」' }
         : kindling < shroud ? { reason: `引线数量（${kindling}）少于隐藏值（${shroud}）` } : {}),
     })
   }
   if (code === '10660') {
+    const escape = escapeLocationAction(state, inv)
+    if (escape) moves.push(escape)
     const remembered = rememberCount(state)
     const resign = resignSpec(state)
     moves.push({
@@ -1049,7 +1009,7 @@ export function actions(state, inv) {
     })
   }
   const status = objectiveStatus(state)
-  if (status.satisfied) {
+  if (status.satisfied && status.rule !== 'fire') {
     moves.push({ action: 'scenarioAction', rule: 'fateAdvanceAct', label: `推进幕：${status.detail}` })
   }
   return moves
@@ -1071,8 +1031,9 @@ export function performAction(state, inv, move, api = {}) {
     case 'fateRevealFromAbyss': return revealFromAbyssReaction(state, inv, move, api)
     case 'fatePlaceKindling': return placeKindling(state, inv, api)
     case 'fateDrawFire': return drawFire(state, inv, api)
+    case 'fateEscapeLocation': return actCodeOf(state) === '10660' && performEscapeLocationAction(state, inv, api)
     case 'fateResign': {
-      if (rememberCount(state) < resignSpec(state).required) return false
+      if (actCodeOf(state) !== '10660' || rememberCount(state) < resignSpec(state).required) return false
       if (typeof api.resign === 'function') api.resign(inv.seat)
       else inv.resigned = true
       info(api, `${inv.name} 撤退：逃出了山谷。`)
@@ -1127,17 +1088,15 @@ export function placeKindling(state, inv, api = {}) {
 export function drawFire(state, inv, api = {}) {
   const location = (state.locations || []).find(item => item.id === inv?.location)
   if (!location) return false
-  const rule = act3Flags(state).kindling || ACT3_RULES.v3Kindling
   const kindling = kindlingAt(state, location.id)
   const shroud = Number(location.shroud) || 0
   if (kindling < shroud) return false
   if ((flagsFor(state).fateFireDrawn || []).includes(location.id)) return false
+  const fireCode = act3Flags(state).fireTreacheryCode || FIRE_CODE
+  if (!removeFromSetAside(state, fireCode)) return false
   setKindlingAt(state, location.id, 0)
   ;(flagsFor(state).fateFireDrawn ||= []).push(location.id)
-  const fireCode = act3Flags(state).fireTreacheryCode || FIRE_CODE
-  removeFromSetAside(state, fireCode)
-  if (typeof api.drawTreachery === 'function') api.drawTreachery(fireCode, inv.seat)
-  else (state.encounterDiscard ||= []).push(fireCode)
+  api.drawEncounter?.(inv.seat, { code: fireCode })
   info(api, `「${location.name || location.id}」被点燃：抽取「着火了！」（${fireCode}）。`)
   return true
 }
@@ -1178,17 +1137,20 @@ const successKey = actionKind => {
 export function afterTest(state, inv, result, api = {}, context = {}) {
   if (!inv || !result?.success) return false
   const kind = successKey(context?.test?.actionKind ?? state.skillTest?.actionKind)
-  if (!kind) return false
-  const table = flagsFor(state).fateSuccesses ||= {}
-  table[kind] ||= {}
-  table[kind][inv.seat] = true
+  if (kind) {
+    const table = flagsFor(state).fateSuccesses ||= {}
+    table[kind] ||= {}
+    table[kind][inv.seat] = true
+  }
   // 幕 1/2 的 [reaction]「在[[巢穴]]地点检定成功后按超过难度点数揭示深渊底部」：
   // 引擎没有卡面反应窗口的条目级读点，这里按条目 flags.lairReaction 自动结算。
   const reaction = actFlagsOf(state).lairReaction
   const location = (state.locations || []).find(item => item.id === inv.location)
   if (reaction && location && (location.traits || []).some(trait => String(trait).toLowerCase() === String(reaction.trait).toLowerCase())) {
-    const successBy = Math.max(1, (Number(result.value) || 0) - (Number(result.difficulty) || 0))
-    revealFromAbyssReaction(state, inv, { successBy }, api)
+    const successBy = Number(result.successBy ?? (result.value - result.difficulty))
+    if (successBy > 0 && (state.currentSeat == null || state.currentSeat === inv.seat)) {
+      revealFromAbyssReaction(state, inv, { successBy }, api)
+    }
   }
   return true
 }
@@ -1199,8 +1161,8 @@ export function revealFromAbyssReaction(state, inv, move = {}, api = {}) {
   const revealed = revealBottomOfAbyss(state, count)
   if (!revealed.length) { info(api, '深渊里没有牌可揭示。'); return false }
   const [first, ...rest] = revealed
-  removeFromAbyss(state, revealed)
-  returnRevealedToAbyssTop(state, rest, api)
+  abyssPile(state).deck.splice(0, revealed.length)
+  putOnAbyss(state, rest, api)
   const kind = classifyAbyssCard(first)
   resolveAbyssCard(state, inv.seat, first, kind, api)
   info(api, `${inv.name} 在巢穴检定成功：从深渊底部揭示 ${revealed.length} 张，抽走 ${first}，其余放到深渊顶。`)
@@ -1269,7 +1231,7 @@ function advanceCurrentAct(state, api = {}) {
   if (!act) return false
   if (typeof api.advanceAct === 'function') { api.advanceAct(); return true }
   actReveal(state, act, api)
-  state.actIndex = (Number(state.actIndex) || 0) + 1
+  state.actIndex = actIndexAfterAdvance(state, act) ?? ((Number(state.actIndex) || 0) + 1)
   return true
 }
 
@@ -1385,6 +1347,10 @@ export function enemyAttackedSuccessfully(state, inv, enemy, api = {}) {
 // ---------------------------------------------------------------------------
 // 幕 / 议程
 // ---------------------------------------------------------------------------
+
+function actIndexAfterAdvance(state, previous) {
+  if (codeOf(previous) === ACT2_CODE && ACT3_VARIANT_CODES.includes(actCodeOf(state))) return state.actIndex
+}
 
 /** 引擎真实入口：reveal.js#actReveal（结算幕背面）。 */
 export function actReveal(state, act, api = {}) {
@@ -1900,20 +1866,28 @@ export const behavior = {
   performAction,
   turnEnded,
   afterTest,
+  afterEvade(state, inv, enemy, result, api) {
+    if (actCodeOf(state) === '10660') return clearEscapeRoad(state, inv, enemy, result, api)
+  },
   roundEnded,
   locationEntered,
   handSizePenalty,
   statModifier,
   elderSign,
   enemyDamageAllowed,
+  canOpportunityAttack(_state, enemy) {
+    return !EMISSARY_COLOUR_CODES.includes(codeOf(enemy))
+  },
   enemyCannotAttack,
   enemyStatModifier,
   enemyAttackResolved,
   enemyDefeated,
   enemyAttackedSuccessfully,
   actReveal,
+  actIndexAfterAdvance,
   agendaReveal,
   checkObjectives,
+  allResigned: checkObjectives,
   resolveChaosToken,
   chaosTokenValue,
   applyTokenEffect,

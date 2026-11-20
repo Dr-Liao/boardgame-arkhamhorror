@@ -23,11 +23,11 @@ const CODE = '09732'
 const RECALL_LIMIT = 3
 
 // 手牌 + 场上支援里可被设为空洞的候选（非弱点）。
-function candidatesOf(inv) {
+function candidatesOf(inv, api) {
   const hand = (inv.hand || []).map((code, index) => ({ kind: 'hand', code, index }))
     .filter(item => !isWeaknessCode(item.code))
-  const assets = (inv.assets || []).map(asset => ({ kind: 'asset', code: asset.code, id: asset.id }))
-    .filter(item => !isWeaknessCode(item.code))
+  const assets = (inv.assets || []).filter(asset => !isWeaknessCode(asset.code) && api.investigatorTools.canDiscardAsset(inv.seat, asset))
+    .map(asset => ({ kind: 'asset', code: asset.code, id: asset.id, asset }))
   return [...hand, ...assets]
 }
 
@@ -35,13 +35,13 @@ const keyOf = item => (item.kind === 'hand' ? `hand:${item.index}` : `asset:${it
 const labelOf = (item, api) => `${item.kind === 'hand' ? '手牌' : '场上'}：${api.cardName(item.code)}`
 
 // 把选中的卡放在一边成为空洞（手牌 / 场上支援两条区域路径）。
-function setAside(state, api, seat, item) {
+function setAside(api, seat, item) {
   if (api.mechanics.tsk.hollow.isHollowed(item.code)) {
     api.info?.(`🌫️ 「${api.cardName(item.code)}」已有同名空洞，忽略本次（原语按卡号去重）。`)
     return false
   }
   if (item.kind === 'asset') {
-    api.discardAsset(seat, item.id)
+    if (!api.discardAsset(seat, item.asset) || !api.takeDiscardCard(seat, item.code)) return false
   } else {
     api.putInDiscard(seat, item.code, { fromHand: true })
     api.takeDiscardCard(seat, item.code)
@@ -59,14 +59,14 @@ export default {
     resolve: ({ state, source, api }) => {
       for (const inv of state.investigators) {
         if (inv.defeated || inv.resigned) continue
-        const candidates = candidatesOf(inv)
+        const candidates = candidatesOf(inv, api)
         if (!candidates.length) continue
         const chosen = candidates.length === 1 ? candidates[0] : candidates.find(item => keyOf(item) === api.choose({
           kind: 'card', source: CODE, seat: inv.seat,
           prompt: `${inv.name}：天启噩兆入场，选择一张非弱点卡牌放在一边作为空洞。`,
           options: candidates.map(item => ({ id: keyOf(item), cardCode: item.code, label: labelOf(item, api) })),
         })) || candidates[0]
-        if (chosen) setAside(state, api, inv.seat, chosen)
+        if (chosen) setAside(api, inv.seat, chosen)
       }
       api.info?.(`🌫️ 「${source.name}」入场：每位调查员的至多 1 张卡牌成为空洞。`)
     },

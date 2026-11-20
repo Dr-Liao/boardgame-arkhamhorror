@@ -1,4 +1,6 @@
 import { availableResources } from './resource-bank.js'
+import { recordRoundAction } from './action-history.js'
+import { availablePlayResources } from './play-payment.js'
 import { tokenCostAvailable } from './token-cost.js'
 import { afterUsesSpent } from './uses.js'
 import { enemyRuleFlags, investigatorRule } from '../cards/card-rules.js'
@@ -19,6 +21,7 @@ import { markForcedRevelation } from './resolution-scope.js'
 
 import { enumerateTargets } from './targets.js'
 import { beginAsIf, endAsIf } from './as-if-location.js'
+import { teamCanActivate } from './team-abilities.js'
 
 export function createEncounter(deps) {
   // 「生成 - <某类地点>」的条目级声明（位置由 enemies.js#spawnEnemy 解析，抽牌时不与抽牌者交战）。
@@ -99,7 +102,7 @@ export function createEncounter(deps) {
 
 function drawEncounter(state, inv, events, options = {}) {
   if (state.scenario?.mechanics?.noEncounterDeck && !options.scenarioDeckId) return
-  if (aliveInvestigators(state).some(owner => descriptorSources(state, owner).some(row =>
+  if (options.code == null && aliveInvestigators(state).some(owner => descriptorSources(state, owner).some(row =>
     row.entry?.abilities?.some(descriptor => descriptor.trigger?.includes('encounterCardWouldDraw'))))) {
     const context = { when: 'encounterCardWouldDraw', seat: inv.seat, location: inv.location }
     reactionWindow(state, 'encounterCardWouldDraw', context, events, { allowNested: true })
@@ -123,7 +126,13 @@ function drawEncounter(state, inv, events, options = {}) {
     else state.encounterDiscard = []
   }
   const code = options.code ?? deck().pop()
-  const encounter = ALL_ENEMIES[code] || ALL_TREACHERIES[code]
+  const phaseDrawRule = state.phase === 'mythos' ? state._mythosEncounterDrawRule : null
+  if (phaseDrawRule?.uncancelable === true && options.cannotCancel !== true) options = { ...options, cannotCancel: true }
+  const forceSurge = phaseDrawRule?.firstSurge === true
+  if (forceSurge) phaseDrawRule.firstSurge = false
+  const encounterLookRule = registeredEntry(code)?.encounterLookRule
+  const encounter = ALL_ENEMIES[code] || ALL_TREACHERIES[code] || (encounterLookRule ? ALL_CARDS[code] : null)
+  if (ALL_ENEMIES[code]) recordRoundAction(state, inv, 'enemyDraws', null, registeredEntry)
   // 2026-10-25 本循环修复 05183：drawExtra/抽牌管线支持给「本次抽到的卡」附加选项：
   //   · options.peril：强制本次遭遇视为险境（peril），影响投入/队友协助等窗口；
   //   · options.cannotCancel：本卡的取消/重抽效果不生效（其它非取消类反应照常结算）。
@@ -162,7 +171,9 @@ function drawEncounter(state, inv, events, options = {}) {
     const cancelledName = encounter?.hidden ? '一张隐私遭遇卡' : `「${encounter?.name || code}」`
     if (redrawContext.redraw) {
       info(state, events, `${cancelledName}被取消并${redrawContext.shuffleBack ? '混洗回遭遇牌库' : '弃置'}，${inv.name} 重新抽取遭遇卡。`)
-      return drawEncounter(state, inv, events, options)
+      const replacementOptions = { ...options }
+      delete replacementOptions.code
+      return drawEncounter(state, inv, events, replacementOptions)
     }
     info(state, events, `${cancelledName}的显现效果被取消并${redrawContext.shuffleBack ? '混洗回遭遇牌库' : '弃置'}。`)
     return
@@ -171,15 +182,18 @@ function drawEncounter(state, inv, events, options = {}) {
   let resolution
   const finishDraw=()=>{
     delete resolvingInv.handlingEncounter
-    const surge=encounter?.surge||resolution?.gainSurge||scenarioBehavior(state).encounterGainsSurge?.(state,code,resolvingInv)
+    const surge=forceSurge||encounter?.surge||resolution?.gainSurge||scenarioBehavior(state).encounterGainsSurge?.(state,code,resolvingInv)
     if(surge&&!options.suppressSurge&&!resolution?.surgeHandled&&!resolvingInv.defeated&&!resolvingInv.resigned){
       info(state,events,`🌀 「${encounter?.name||code}」涌动：再抽取一张遭遇牌。`)
-      const child={...options};delete child.suppressSurge
+      const child={...options};delete child.suppressSurge;delete child.code
+      if (options.skillPenalty) { delete child.skillPenalty; delete child.enemyAttacks; delete child.peril; delete child.cannotCancel }
       drawEncounter(state,resolvingInv,events,child)
     }
   }
   // 「交给你了！」只是改由他人结算；带 +2 的同类卡（如「让我来！」）在反应效果里给出 redirectBonus。
-  if (redrawContext.redirectSeat != null) resolvingInv.handlingEncounter = { code, bonus: redrawContext.redirectBonus || 0 }
+  if (redrawContext.redirectSeat != null || options.skillPenalty) {
+    resolvingInv.handlingEncounter = { code, bonus: (redrawContext.redirectBonus || 0) - (options.skillPenalty || 0) }
+  }
   scenarioBehavior(state).encounterDrawn?.(state, resolvingInv, code, scenarioRuntime(state, events))
   if (encounter?.hidden) {
     info(state, events, `${resolvingInv.name} 翻开了一张隐私遭遇卡。`, {
@@ -195,9 +209,15 @@ function drawEncounter(state, inv, events, options = {}) {
   // 「恢复元气」等需要知道本回合是否抽到过诡计。
   if (ALL_TREACHERIES[code]) resolvingInv.drewTreacheryRound = state.round
   if (ALL_CARDS[code]?.type === 'location' && !ALL_ENEMIES[code] && !ALL_TREACHERIES[code]
-    && registeredEntry(code)?.encounterResolve?.(state, resolvingInv, { code, originalCode: code }, scenarioRuntime(state, events)) === true) return
+    && registeredEntry(code)?.encounterResolve?.(state, resolvingInv, { code, originalCode: code }, scenarioRuntime(state, events)) === true) {
+    if (forceSurge) finishDraw()
+    return
+  }
   if (!ALL_ENEMIES[code] && !ALL_TREACHERIES[code]
-    && scenarioBehavior(state).resolveEncounterCard?.(state, resolvingInv, code, scenarioRuntime(state, events)) === true) return
+    && scenarioBehavior(state).resolveEncounterCard?.(state, resolvingInv, code, scenarioRuntime(state, events)) === true) {
+    if (forceSurge) finishDraw()
+    return
+  }
   if (ALL_ENEMIES[code]) {
     const def = enemyDef(code)
     // 带固定生成地点的敌人在该地点生成，否则与抽牌者交战；「任意无人地点」敌人去无人地点。
@@ -253,9 +273,13 @@ function drawEncounter(state, inv, events, options = {}) {
     if (enemy) info(state, events, `👹 ${resolvingInv.name} 遭遇了「${enemy.name}」！它出现在「${locName(state, enemy.location)}」${enemy.engagedSeat != null ? '并与之交战' : ''}。`)
     if (enemy && revelationSpawn?.cluesPerInvestigator) enemy.clues = (enemy.clues || 0) + revelationSpawn.cluesPerInvestigator * state.numInvestigators
     if (enemy) autoEngageAt(state, enemy.location, events)
+    if (enemy && options.enemyAttacks) deps.enemyAttack(state, enemy, resolvingInv, events, '遭遇卡效果')
+  } else if (encounterLookRule?.forceBeneath) {
+    discard().push(code)
+    resolution = { gainSurge: true }
   } else if (ALL_TREACHERIES[code]) {
     const capturedBefore = (state.victoryDisplay || []).filter(card => card.code === code || card.code === cardDef(code)?.originalCode).length
-    resolution = resolveTreachery(state, resolvingInv, ALL_TREACHERIES[code], events)
+    resolution = resolveTreachery(state, resolvingInv, ALL_TREACHERIES[code], events, options.scenarioDeckId)
     // Older campaign handlers may already perform their printed surge; the marker prevents a second draw.
     const placed = (typeof resolution === 'object' ? resolution.placed : resolution)
       || (state.victoryDisplay || []).filter(card => card.code === code || card.code === cardDef(code)?.originalCode).length > capturedBefore
@@ -326,9 +350,12 @@ function reactionWindow(state, when, context, events, opts = {}) {
               : { when })
             : null)
           if (!reaction || reaction.when !== when || !runtimeCardAvailable(state, inv, code)) return false
+          if (quick.descriptor.limit && limitUsed(state, inv, quick.descriptor, context, when)) return false
+          if (quick.descriptor.requiresEncounterDeck && state.scenario?.mechanics?.noEncounterDeck) return false
+          if (when === 'mythosEncounterStep' && context.encounterDrawRedirect) return false
           if (!tokenCostAvailable(state, inv, registeredEntry(copyCode || code)?.additionalTokenCost)) return false
           if (!lolaCanUseCard(inv, code)) return false
-          if (!reaction.anyLocation && context.location != null && inv.location !== context.location) return false
+          if (quick.descriptor.range !== 'anywhere' && !reaction.anyLocation && context.location != null && inv.location !== context.location) return false
           if (reaction.selfOnly && inv.seat !== context.seat) return false
           if (reaction.otherInvestigator && inv.seat === context.seat) return false
           if (reaction.nonPerilOnly && context.peril) return false
@@ -355,8 +382,9 @@ function reactionWindow(state, when, context, events, opts = {}) {
           if (playTypeBlocked(state, inv, cardDef(copyCode || code)?.type)) return false
           if (scenarioBehavior(state).canPlayCard?.(state, inv, cardDef(copyCode || code)) === false) return false
           // 2026-10-27「如同手牌」通道：折扣由原语统一给出（直觉牌库 -2 等），候选可用性与实付同源。
-          const baseCost = playCost(state, inv, cardDef(copyCode || code))
-          if (availableResources(inv) < (item.entry ? playChannels.discountedCost(baseCost, item.entry) : baseCost)) return false
+          const def = cardDef(copyCode || code)
+          const baseCost = playCost(state, inv, def)
+          if (availablePlayResources(state, inv, def) < (item.entry ? playChannels.discountedCost(baseCost, item.entry) : baseCost)) return false
           // 04111 坚韧不拔等：criteria 写成函数/数组的新通道（旧的对象形字段展开保持原样）。
           if (quick.criteria
             && (Array.isArray(quick.criteria) || typeof quick.criteria === 'function')
@@ -574,7 +602,16 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
     // 只能出现一次，否则窗口选项顺序/id 会变（重放指纹敏感）且同一能力被列两遍。
     const shimOffered = new Set()
     if (!cannotTriggerFreeAbility(state, inv)) {
-      for (const asset of controlledAbilityCards(inv)) {
+      const sources = controlledAbilityCards(inv).map(asset => ({ asset, ownerSeat: inv.seat }))
+      if (state._resolution?.offerSharedFreeAbilities) {
+        for (const owner of aliveInvestigators(state)) {
+          if (owner === inv || owner.location !== inv.location) continue
+          for (const asset of controlledAbilityCards(owner)) {
+            if (teamCanActivate(state, inv, owner, asset)) sources.push({ asset, ownerSeat: owner.seat })
+          }
+        }
+      }
+      for (const { asset, ownerSeat } of sources) {
         for (const [index, ability] of (assetEffect(inv, asset)?.abilities || []).entries()) {
           // Phase 5：用 resolve 实现的免费能力没有 effect 数据体，可行性由 resolve 自己判断。
           if (ability.cost?.action !== false || !canAffordAbility(state, inv, asset, ability)
@@ -591,7 +628,7 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
             : abilityTargets(state, inv, ability.effect)
           for (const targetId of targets.length ? targets.map(target => target.id) : [null]) options.push({
             id: `${asset.id}:${index}:${targetId || ''}`, label: `${cardName(asset.code)}：${ability.label}`,
-            assetId: asset.id, index, targetId,
+            assetId: asset.id, index, targetId, ownerSeat,
           })
           if (ability.descriptor) shimOffered.add(ability.descriptor)
         }
@@ -715,7 +752,7 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
       scenarioBehavior(state).performAction(state, inv, chosen.scenarioMove, scenarioRuntime(state, events))
       continue
     }
-    doAbility(state, inv.seat, chosen.assetId, chosen.index, chosen.targetId, null, events)
+    doAbility(state, inv.seat, chosen.assetId, chosen.index, chosen.targetId, null, events, chosen.ownerSeat)
   }
   state.timingWindow = null
 }

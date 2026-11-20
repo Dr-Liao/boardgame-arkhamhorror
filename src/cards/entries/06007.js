@@ -17,9 +17,9 @@ export default {
       weakness: { type: 'custom' },
       resolve: ({ inv, api }) => {
         const targets = (inv.assets || []).filter(asset => (asset.damage || 0) + (asset.horror || 0) > 0)
-        for (const asset of targets) api.discardAsset(inv.seat, asset)
-        if (targets.length) {
-          api.info(`「低级错误」：${inv.name} 弃掉了 ${targets.length} 个带伤害/恐惧的支援。`)
+        const discarded = targets.filter(asset => api.discardAsset(inv.seat, asset)).length
+        if (discarded) {
+          api.info(`「低级错误」：${inv.name} 弃掉了 ${discarded} 个带伤害/恐惧的支援。`)
           return
         }
         api.scheduleWeaknessShuffle(inv.seat, '06007')

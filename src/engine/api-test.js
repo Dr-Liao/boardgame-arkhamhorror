@@ -6,8 +6,10 @@ import { replacePlayerZoneCards } from './player-zones.js'
 // 与前三批相同的工厂形状（createXxxApi(state, events, deps)）。
 
 import { canCommitToTest, payCommitResourceCost } from './commit-rules.js'
-import { drawChaosToken } from './chaos-bag.js'
+import { drawChaosToken, noteChaosTokenChange, revealSealedToken } from './chaos-bag.js'
 import { rankedBagTokens } from './chaos-token-pool.js'
+import { afterHandEmptied } from './hand-discard-window.js'
+import { currentRevelation } from './resolution-scope.js'
 
 export function createTestApi(state, events, deps) {
   const {
@@ -31,32 +33,67 @@ export function createTestApi(state, events, deps) {
   } = deps
 
   return {
+    attachCommittedSkillToEnemy: (item, enemyId) => {
+      const enemy = state.enemies.find(candidate => candidate.id === enemyId && !candidate.defeated)
+      if (!enemy || !state.skillTest?.committed.includes(item) || item.destination) return false
+      const attachments = enemy.attachments ||= []
+      attachments.push({ id: deps.nextInstanceId(state, 'a'), code: item.code, ownerSeat: item.seat, committedSkill: true })
+      item.destination = 'attached'
+      return true
+    },
     captureTreacheryWithSkill: (item, options = {}) => {
       const test = state.skillTest
-      const code = test?.source?.code || state._treacheryResolving
+      const revelation = currentRevelation() || state._treacheryResolving
+      const code = options.skillInVictory && cardDef(test?.source?.code)?.type !== 'treachery'
+        ? revelation : test?.source?.code || state._treacheryResolving
       if (!test?.committed.includes(item) || cardDef(code)?.type !== 'treachery') return false
+      const originalCode = value => cardDef(value)?.originalCode || cardDef(value)?.code || value
+      const revealing = revelation && originalCode(revelation) === originalCode(code)
       state.victoryDisplay ||= []
       let capture = state.victoryDisplay.find(card => card.id === test.capturedTreacheryId)
       if (!capture) {
-        const sourceId = test.source?.instanceId || test.source?.id
+        const sourceId = test.source?.instanceId || test.source?.id || (test.target?.kind === 'treachery' ? test.target.id : null)
         const collections = state.investigators.flatMap(inv => [inv.threat, ...inv.assets.map(asset => asset.attachments || [])])
           .concat(state.locations.map(location => location.attachments || []),
             (state.acts || []).map(act => act.attachments || []), (state.agendas || []).map(agenda => agenda.attachments || []))
-        const matches = collections.flatMap(list => list.filter(card => (card.originalCode || card.code) === code
-          && (!sourceId || card.id === sourceId)).map(card => ({ list, card })))
+        const matches = options.skillInVictory && revealing && !sourceId ? [] : collections.flatMap(list =>
+          list.filter(card => originalCode(card.originalCode || card.code) === originalCode(code)
+            && (!sourceId || card.id === sourceId)).map(card => ({ list, card })))
         const physical = matches.length > 1 ? matches[Number(deps.requestChoice(state, { kind: 'card', seat: test.seat,
           source: code, prompt: '选择本次检定的诡计实体。', options: matches.map(({card},index) => ({id:String(index),label:card.id,cardCode:code})) }))] : matches[0]
+        if (options.skillInVictory && !physical && !revealing) return false
         if (physical) physical.list.splice(physical.list.indexOf(physical.card), 1)
         capture = { id: `captured:${state.round}:${state.moveCount}:${state.victoryDisplay.length}`, code,
-          name: cardDef(code).name, victory: 0, attachments: [] }
+          name: cardDef(code).name, victory: options.skillInVictory ? cardDef(code).victory || 0 : 0, attachments: [] }
         state.victoryDisplay.push(capture)
+        if (capture.victory) state.victory += capture.victory
         test.capturedTreacheryId = capture.id
       }
-      capture.attachments.push({ code: item.code, ownerSeat: item.seat, contributesIconsToSameNameTests: options.icons === true })
+      if (options.skillInVictory) state.victoryDisplay.push({ id: deps.nextInstanceId(state, 'v'), code: item.code, ownerSeat: item.seat, victory: 0 })
+      else capture.attachments.push({ code: item.code, ownerSeat: item.seat, contributesIconsToSameNameTests: options.icons === true })
       item.destination = 'attached'
       return true
     },
     addTestValue: amount => { if (state.skillTest) state.skillTest.value = (state.skillTest.value || 0) + amount },
+    sealTestToken: (seat, token, source) => {
+      if (!deps.sealRevealedChaosToken(state, token, source, seat)) return false
+      deps.abilityApi(state, events).notifyChaosTokenSealed(seat, token)
+      return true
+    },
+    revealSealedTestToken: (context, source) => {
+      if (context?.when !== 'beforeChaosTokenReveal' || context.replacementToken
+        || state.skillTest?.stage !== 'ST.3' || state.skillTest.seat !== context.seat) return false
+      context.replacementToken = revealSealedToken(state, source)
+      return !!context.replacementToken
+    },
+    addTestResolutionBonus: (seat, amount, id) => {
+      if (state.skillTest?.seat !== seat || state.skillTest.stage !== 'ST.4') return false
+      state.skillTest.revealBonus = (state.skillTest.revealBonus || 0) + amount
+      const activated = state.skillTest.activatedAbilities ||= {}
+      const abilities = activated[seat] ||= []
+      abilities.push(id)
+      return true
+    },
     revealRankedTokenInstead: (context, face, faces, options = {}) => {
       if (!state.skillTest || state.skillTest.stage !== 'ST.3' || context?.when !== 'beforeChaosTokenReveal'
         || context.seat !== state.skillTest.seat || context.replacementToken) return false
@@ -80,6 +117,7 @@ export function createTestApi(state, events, deps) {
         || state.skillTest.currentToken !== context.token) return false
       state.skillTest.cancelledSymbol = context.token
       state.skillTest.cancelledSymbolSource = options.sourceCode || null
+      noteChaosTokenChange(state, state._resolvingSeat ?? context.seat)
       return true
     },
     // 第 5 步 P6：「本次检定难度 -N」（序章故事调查员瓦伦蒂诺）。与 addTestValue 分开，
@@ -105,7 +143,11 @@ export function createTestApi(state, events, deps) {
     testResult: () => state.lastTestResult || null,
     describeTest: () => describeTestResult(state.lastTestResult),
     testStage: () => testStage(state.skillTest?.stage),
-    canCommitCard: (seat, code, options) => canCommitToTest(state, state.investigators[seat], code, deps, options),
+    canCommitCard: (seat, code, options) => {
+      const inv = state.investigators[seat]
+      if (options?.from === 'discard' && (!inv?.discard.includes(code) || deps.discardLocked(state, inv))) return false
+      return canCommitToTest(state, inv, code, deps, options)
+    },
     revealAndCommitSkill: (seat, options = {}) => {
       const inv = state.investigators[seat]
       if (!inv || !state.skillTest) return null
@@ -155,6 +197,7 @@ export function createTestApi(state, events, deps) {
           ...(options.source ? { sourceCode: options.source } : {}),
           ...(options.onSuccessDestination ? { onSuccessDestination: options.onSuccessDestination } : {}),
           ...(options.onFailDestination ? { onFailDestination: options.onFailDestination } : {}) })
+        if (!options.syntheticHand) afterHandEmptied(state, owner, events, deps.reactionWindow)
         info(state, events, `${owner.name} 强制投入「${cardName(code)}」（${icons} 个图标）。`, null, { public: true })
         added += icons
       }

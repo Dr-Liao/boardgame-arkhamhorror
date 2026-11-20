@@ -1,5 +1,6 @@
 // Allowlisted public summaries. Never send scenarioFlags.mechanics or future story/road decks.
 import { mechanicState } from '../engine/mechanic-state.js'
+import { tdcView } from './tdc-view.js'
 import { isPublicBeneath } from '../engine/commit-origins.js'
 import { effectiveFloodLevel } from '../engine/flood.js'
 import { vehicleAccessError, vehicleName } from '../engine/vehicles.js'
@@ -11,11 +12,12 @@ import { hollowCards, hollowCount } from '../engine/tsk-hollow.js'
 import { scarletKeys } from '../engine/tsk-scarlet-keys.js'
 import { forcedDestination, embarkOptions } from '../engine/tsk-map.js'
 import {
-  customizationLevel, customizationOptions, customizationsOfSeat,
+  customizationChoiceSetup, customizationLevel, customizationOptions, customizationsOfSeat,
 } from '../engine/tsk-customizable.js'
 // P8：关间/构筑期的定制升级卡面板需要卡名与 exceptional 判定（只读卡表，不复制规则）。
 import { cardDef, cardName } from '../engine/card-lookup.js'
 import { upgradeRecord } from '../campaign/campaign.js'
+import { customizationPresentation } from './customization-presentation.js'
 import { crossSeatActionPending } from '../engine/tsk-investigator.js'
 import { tskCampaignState, tskScenarioState } from '../engine/tsk-state.js'
 // P8：地图目的地投影的展示名/图结构由战役清单提供（内容层 flow extras；投影不 import 剧情正文）。
@@ -248,11 +250,12 @@ function customizationHubView(state, observer) {
     return [{
       code,
       name: cardName(code),
+      nameEn: cardDef(code)?.name,
       checked,
       level: customizationLevel(checked),
-      options: optionList.map((option, index) => ({
-        index, name: option.name, checks: option.checks, checkedCount: counts.get(index) || 0,
-        implemented: option.implemented !== false,
+      choices: customizationChoiceSetup(state, observer, code, deck),
+      options: customizationPresentation(code, optionList).map((option, index) => ({
+        ...option, index, checkedCount: counts.get(index) || 0,
       })),
       xpPerCheck,
       canUpgrade: state.uiState === 'interlude' && availableXp >= xpPerCheck,
@@ -393,7 +396,8 @@ export function mechanicView(state, observer = null) {
   const eote = eoteView(state, data, observer)
   const tsk = tskView(state, observer)
   const fhv = fhvView(state, observer)
-  if (!data && !state.skillTest?.tokenResults?.length && !eote && !tsk && !fhv) return null
+  const tdc = tdcView(state, observer)
+  if (!data && !state.skillTest?.tokenResults?.length && !eote && !tsk && !fhv && !tdc) return null
   const revealed = state.skillTest && (state.skillTest.helpRequested || state.skillTest.seat === observer)
     ? (state.chaos?.revealed || []).flatMap((face, index) => {
       if (index < (state.chaos?.frames?.at(-1) || 0)) return []
@@ -402,6 +406,7 @@ export function mechanicView(state, observer = null) {
         cancelled: !!state.skillTest.tokenTreatments?.[index]?.cancel }]
     }) : []
   const view = {}
+  if (tdc) view.tdc = tdc
   if (data?.barriers?.length) view.barriers = data.barriers.map(({ a, b, count }) => ({ a, b, count }))
   if (data?.scenarioDecks) view.scenarioDecks = Object.fromEntries(Object.entries(data.scenarioDecks).map(([id, pile]) => [id, { count: pile.deck.length }]))
   if (data?.flood || data?.air) {
@@ -445,6 +450,7 @@ export function mechanicView(state, observer = null) {
 export function maskMechanicSnapshot(model, observer) {
   if (!model) return model
   const copy = structuredClone(model)
+  if (copy.tdc?.task && copy.tdc.task.seat !== observer) delete copy.tdc.task
   for (const item of copy.beneath || []) if (item.seat !== observer && !item.public) delete item.codes
   if (copy.tokenSeat != null && copy.tokenSeat !== observer) delete copy.tokens
   delete copy.tokenSeat

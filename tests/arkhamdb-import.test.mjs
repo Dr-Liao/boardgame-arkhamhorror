@@ -8,6 +8,7 @@ import { buildDeck, buildDeckFromList, deckBuilderData } from '../src/deck/deckb
 import { ALL_CARDS, INVESTIGATORS } from '../src/cards/cards-data.js'
 import { PLAYER_CARD_CODES, isCardAvailable } from '../src/deck/availability.js'
 import { cardCycle, factionSelectErrors } from '../web/deck-rules.js'
+import { TDC_INVESTIGATOR_CODES } from '../content/packs/tdcInvestigators/manifest.js'
 import recommendedDecks from '../src/integration/recommended-decks.json' with { type: 'json' }
 
 const data = deckBuilderData()
@@ -104,8 +105,9 @@ test('粘贴的 JSON 经 resolve 接口离线规范化', async () => {
 test('预置推荐卡组可离线读取，且为所属循环内的合法 ArkhamDB 0 XP 构筑', async (t) => {
   const selectable = data.investigators.map(({ code }) => code)
   assert.deepEqual(Object.keys(recommendedDecks).filter(code => !selectable.includes(code)), [])
-  // 09008 still needs a published 0 XP list using only the numbered cycles.
-  assert.deepEqual(selectable.filter(code => code !== '09008' && !Object.hasOwn(recommendedDecks, code)), [])
+  // P5 supplies built-in automatic decks; published presets for this cycle can use P6 cards.
+  const pendingPresets = new Set(['09008', ...TDC_INVESTIGATOR_CODES])
+  assert.deepEqual(selectable.filter(code => !pendingPresets.has(code) && !Object.hasOwn(recommendedDecks, code)), [])
   const fetch = t.mock.method(globalThis, 'fetch', () => {
     throw new Error('Offline recommendation attempted a network request')
   })

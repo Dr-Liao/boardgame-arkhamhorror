@@ -1,5 +1,7 @@
-import { replacePlayerZoneCards } from './player-zones.js'
+import { clearPlayerDiscard, replacePlayerZoneCards } from './player-zones.js'
 import { keysOnExit } from './scenario-keys.js'
+import { discardHostedAssets } from './hosted-assets.js'
+import { enemyCanEnterLocation, protectFromEnemies } from './enemy-entry.js'
 // 能力 API · 敌人 / 威胁 / 毁灭写入（Phase 6 · 6d-8，abilityApi 第二批）。
 //
 // 这一组方法覆盖「敌人与威胁区的写入」：测试修正、阻止攻击、移除/生成敌人、
@@ -24,9 +26,13 @@ export function createEnemyApi(state, events, deps) {
     recordResearch,
     shuffle,
     spawnEnemy,
+    reactionWindow,
+    shuffleEnemyIntoEncounterDeck,
   } = deps
 
   return {
+    protectFromEnemies: (seat, ids, options) => protectFromEnemies(state, seat, ids, options),
+    shuffleEnemyIntoEncounterDeck: (enemy, options) => shuffleEnemyIntoEncounterDeck(state, enemy, options, events),
     enemyTestModifier: (enemy, spec = {}) => {
       if (!enemy) return enemy
       return campaignState.setEnemyTestModifier(enemy, state, spec)
@@ -45,7 +51,10 @@ export function createEnemyApi(state, events, deps) {
       for (const member of swarmGroup(state, enemy).slice(1)) returnSwarmCard(state, member)
       for (const inv of state.investigators) inv.engaged = inv.engaged.filter(id => id !== enemy.id)
       const index = state.enemies.indexOf(enemy)
-      if (index >= 0) state.enemies.splice(index, 1)
+      if (index >= 0) {
+        discardHostedAssets(state, enemy, (owner, code) => owner.discard.push(code), { keepAssets: true })
+        state.enemies.splice(index, 1)
+      }
       return enemy
     },
     shuffleIntoEncounterDeck: code => {
@@ -64,7 +73,7 @@ export function createEnemyApi(state, events, deps) {
       const owner = state.investigators[seat]
       if (!owner) return 0
       owner.deck = replacePlayerZoneCards(state, owner, shuffle([...owner.deck, ...owner.discard], () => randomValue(state)), 'shuffle')
-      owner.discard = []
+      clearPlayerDiscard(owner)
       return owner.deck.length
     },
     // Phase 5（5c-23）：「追猎」——遭遇牌库顶 N 张里的敌人候选（只读，顺序按牌库顶在数组末位）。
@@ -84,6 +93,46 @@ export function createEnemyApi(state, events, deps) {
       const spawned = spawnEnemy(state, code, owner.location, seat)
       if (spawned) engageEnemy(state, spawned, seat, events)
       return spawned
+    },
+    searchAndSpawnEnemy: (seat, { nonElite = false, exhausted = false, engage = false, source = null, onSpawn = null } = {}) => {
+      const owner = state.investigators[seat]
+      if (!owner || owner.defeated || owner.resigned || state.scenario?.mechanics?.noEncounterDeck) return null
+      const searched = reactionWindow(state, 'searchWouldResolve', {
+        when: 'searchWouldResolve', seat, location: owner.location, zone: 'encounterDeck',
+        count: state.encounterDeck.length, choose: 1, source, extraCards: 0, extraTargets: 0,
+      }, events, { allowNested: true })
+      if (searched.cancelled) return null
+      let first = null
+      const attempts = 1 + Math.max(0, searched.extraTargets || 0)
+      for (let count = 0; count < attempts; count++) {
+        const candidates = ['encounterDeck', 'encounterDiscard'].flatMap(pile =>
+          [...new Set(state[pile])].flatMap(code => {
+            const def = enemyDef(code)
+            if (!def || (nonElite && (def.elite || def.traits?.some(trait => trait.toLowerCase() === 'elite')))
+              || !enemyCanEnterLocation(state, { code, originalCode: def.originalCode || code }, owner.location)) return []
+            return [{ id: `${pile}:${code}`, pile, code, def }]
+          }))
+        if (!candidates.length) break
+        const id = candidates.length === 1 ? candidates[0].id : deps.requestChoice(state, {
+          kind: 'search', source, seat, prompt: '从遭遇牌库和遭遇弃牌堆选择一个敌人。',
+          options: candidates.map(({ id, pile, code }) => ({
+            id, cardCode: code, label: `${cardName(code)}（${pile === 'encounterDeck' ? '遭遇牌库' : '遭遇弃牌堆'}）`,
+          })),
+        })
+        const picked = candidates.find(item => item.id === id)
+        if (!picked) break
+        const pile = state[picked.pile]
+        const index = pile.lastIndexOf(picked.code)
+        if (index < 0) break
+        pile.splice(index, 1)
+        const enemy = spawnEnemy(state, picked.code, owner.location, engage ? seat : null, true, false, seat,
+          { exhausted, forceEngage: engage })
+        const spawned = enemy || picked.def
+        first ||= spawned
+        onSpawn?.(spawned)
+      }
+      state.encounterDeck = shuffle(state.encounterDeck, () => randomValue(state))
+      return first
     },
     // Phase 5（5c-22）：「预警」花 1 个线索并把它放回所在地点（这是卡的代价，不是退还费用）。
     // 三处写入与旧 handler 逐字一致：个人线索 -N、state.clues（各人线索之和）-N、地点线索 +N。

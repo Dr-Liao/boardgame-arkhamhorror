@@ -781,7 +781,7 @@
     },
     {
       "path": "tests/fhv-interactions.test.mjs",
-      "sha256": "dee48745e8537ca3f81f497c58c4cb88406116683bc2b187924e4269a3920781"
+      "sha256": "ec0fbb583bc1bb4240c8f184d861ed9761e33ec930a985c4e902e465041d693a"
     },
     {
       "path": "tests/fhv-investigator-10001.test.mjs",
@@ -889,7 +889,7 @@
     },
     {
       "path": "tests/fhv-scenario-theLongestNight.test.mjs",
-      "sha256": "2ff20f7d4f915768c514c70659105fa39aba3cbe518fb965ed09de719bd80ade"
+      "sha256": "53f28f361cf34fa264065875b2f0052e40c5b270158638f3094d234e343bb00c"
     },
     {
       "path": "tests/fhv-scenario-dawnOfTheFinalDay.test.mjs",
@@ -901,7 +901,7 @@
     },
     {
       "path": "tests/fhv-scenario-fateOfTheVale.test.mjs",
-      "sha256": "2ad4de80022fb75ebf4ddaf1daddceb9b11ed351d3637339776e2c55e354efbf"
+      "sha256": "03bca59b7f85cb0b67e527de78aab8731f7eb8e6ff99d6fc459aa775bd9da195"
     },
     {
       "path": "tests/fhv-campaign-flow.test.mjs",
@@ -909,11 +909,11 @@
     },
     {
       "path": "tests/fhv-campaign-engine.test.mjs",
-      "sha256": "4aa8535e17fae697de1fad0f662b51ffd73a547dfeae6520c15398c1f20c095b"
+      "sha256": "de69a978fccc696624d8505c2a94009120201233633bac958f1616da6f8498c3"
     },
     {
       "path": "tests/fhv-p8-campaign.test.mjs",
-      "sha256": "932c2babe3294fcc29212be4c085ecdb3a7cacec68ce6689a2c614443cf4b354"
+      "sha256": "a28a551fdcf28c33ee3da6641a2bc737a004fd8b86113264a7fbb9b900b6761e"
     },
     {
       "path": "tests/fhv-story.test.mjs",

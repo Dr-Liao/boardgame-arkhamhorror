@@ -99,7 +99,13 @@ function createApi(state, overrides = {}) {
     horror: (seat, n) => { state.investigators[seat].horror += n },
     damageEnemy: (enemyId, amount) => { const enemy = state.enemies.find(item => item.id === enemyId); if (enemy) enemy.damageTaken = (enemy.damageTaken || 0) + amount },
     discardChosen: (seat, n) => { const inv = state.investigators[seat]; for (let i = 0; i < n && inv.hand.length; i++) inv.discard.push(inv.hand.pop()) },
-    discardAsset: (seat, assetId) => { const inv = state.investigators[seat]; inv.assets = inv.assets.filter(asset => asset.id !== assetId) },
+    canDiscardAsset: (seat, assetId) => state.investigators[seat].assets.some(asset => asset.id === assetId),
+    discardAsset: (seat, assetId) => {
+      const inv = state.investigators[seat], asset = inv.assets.find(asset => asset.id === assetId)
+      if (!asset) return null
+      inv.assets = inv.assets.filter(asset => asset.id !== assetId)
+      return asset.code
+    },
     threat: (seat, code) => { state.investigators[seat].threat.push({ id: `threat-${code}`, code, originalCode: code }) },
     removeThreat: card => { for (const inv of state.investigators) inv.threat = inv.threat.filter(item => item !== card) },
     attachToLocation: (id, fields = {}) => {

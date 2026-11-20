@@ -70,9 +70,10 @@ export function deckRules(investigator, codes = [], cards = {}) {
 const lower = value => String(value).toLowerCase().replace(/\.$/, '')
 // 构筑标签：使用（充能）、治疗恐惧、法术，以及印刷的谈判行动。
 // 卡表用 tag + text（正则）描述「带有『治愈……恐惧』字样的卡牌」这类构筑选项。
-const KNOWN_DECK_TAGS = Object.freeze(['uc', 'hh', 'st', 'pa'])
+const KNOWN_DECK_TAGS = Object.freeze(['uc', 'hh', 'st', 'pa', 'fa'])
 const HEALS_HORROR = /heals? .*horror|治愈[^。\n]*恐惧|治癒[^。\n]*恐懼/i
 const SPELL_TEXT = /\[\[spell\]\]/i
+const FIREARM_TEXT = /\[\[firearm\]\]/i
 const PRINTED_PARLEY = /(?:^|\r?\n)\s*(?:\[[a-z]+\]\s*)*(?:<b>)?parley(?:<\/b>)?[.:]/i
 const PRINTED_USES = /Uses\s*\([^)]*?\b([A-Za-z]+)\s*\)/gi
 
@@ -92,9 +93,11 @@ function cardInfo(card) {
     texts,
     traits,
     printedUses,
+    deckTags: Array.isArray(card.deckTags) ? card.deckTags.map(lower) : [],
     factions: card.factions || [card.klass, card.klass2, card.klass3].filter(Boolean),
     healsHorror: texts.some(text => HEALS_HORROR.test(text)),
     isSpell: traits.includes('spell') || texts.some(text => SPELL_TEXT.test(text)),
+    firearmText: texts.some(text => FIREARM_TEXT.test(text)),
     parley: texts.some(text => PRINTED_PARLEY.test(text)),
   }
   cardInfoCache.set(card, info)
@@ -115,8 +118,8 @@ const KNOWN_RULE_KEYS = new Set(['factions', 'faction', 'level', 'types', 'trait
   // P6（食梦者）：第五循环的卡表用 `faction_select` 表示「副职业可选范围」、用 `type`
   // （单数）表示「只有事件/技能」。两者都翻成同一条允许项（factions + types），
   // 让 `limit` 的副职业配额（10 张）继续由 validateDeckRules 的容量分配统一执行；
-  // `name` 是展示用标签，不参与匹配。`deck_size_select` / `option_select` 仍按未知键处理。
-  'faction_select', 'type', 'name', 'id'])
+  // `name` 是展示用标签，不参与匹配。`option_select` 由牌组容量校验统一选定一项。
+  'faction_select', 'option_select', 'type', 'name', 'id'])
 // 规则对象（来自冻结的构筑规则，或临时的优惠 match 对象）上的正则/未知键检查缓存。
 const ruleInfoCache = new WeakMap()
 function ruleInfo(rule) {
@@ -148,10 +151,17 @@ function exclusionRulesOf(rules) {
 // 「额外限制：无等级 1-5 的[[武器]]卡牌」这类 `not: true` 规则是**排除项**，不是允许项：
 // 其余字段命中即整张牌不能进牌组（与 `not: {…}` 的否定式允许项互不冲突）。
 export function optionExcluded(investigator, card) {
+  if (!meetsCardTraitRestriction(investigator, card)) return true
   for (const rest of exclusionRulesOf(deckRules(investigator))) {
     if (matchesCardRule(card, rest, investigator)) return true
   }
   return false
+}
+
+function meetsCardTraitRestriction(investigator, card) {
+  const required = card.restrictions?.trait
+  return !Array.isArray(required) || !required.length
+    || required.some(trait => investigatorTraits(investigator).includes(lower(trait)))
 }
 export function matchesCardRule(card, rule, investigator) {
   if (investigator.code === UI_CARDS.deckRules.noFortuneInvestigator
@@ -160,6 +170,7 @@ export function matchesCardRule(card, rule, investigator) {
   if (!info.known) return false
   // 「牌组张数选择」这类选项不是卡牌许可：它在构筑时由 deckRules.size 表达，这里不匹配任何卡。
   if (rule.deck_size_select) return false
+  if (rule.option_select) return rule.option_select.some(option => matchesCardRule(card, option, investigator))
   if (rule.not && typeof rule.not === 'object' && matchesCardRule(card, rule.not, investigator)) return false
   const cardValues = cardInfo(card)
   if (info.patterns) {
@@ -177,10 +188,11 @@ export function matchesCardRule(card, rule, investigator) {
   if (rule.uses?.length && !rule.uses.map(lower).some(use => cardValues.printedUses.includes(use))) return false
   if (rule.tag?.length) {
     const tags = rule.tag.map(lower)
-    if (tags.some(tag => !KNOWN_DECK_TAGS.includes(tag))) return false
+    if (tags.some(tag => !KNOWN_DECK_TAGS.includes(tag) && !cardValues.deckTags.includes(tag))) return false
     if (tags.includes('uc') && !cardValues.printedUses.some(use => ['charge', 'charges'].includes(use))) return false
     if (tags.includes('hh') && !cardValues.healsHorror) return false
     if (tags.includes('st') && !cardValues.isSpell) return false
+    if (tags.includes('fa') && !cardValues.deckTags.includes('fa') && !cardValues.firearmText) return false
     if (tags.includes('pa') && !cardValues.parley) return false
   }
   if (rule.investigatorTraits?.length
@@ -296,7 +308,9 @@ export function validateDeckRules(investigator, codes, cards, { partial = false,
   // 排除式构筑限制（`not: true`）：命中的卡不能进牌组，且不受其它允许项豁免。
   const exclusionRules = exclusionRulesOf(rules)
   for (const card of ordinary) {
-    if (exclusionRules.some(rest => matchesCardRule(card, rest, investigator))) errors.push(t('misc.deck.excluded', { name: card.name || card.code }))
+    if (!meetsCardTraitRestriction(investigator, card) || exclusionRules.some(rest => matchesCardRule(card, rest, investigator))) {
+      errors.push(t('misc.deck.excluded', { name: card.name || card.code }))
+    }
   }
   const counted = ordinary.filter(card => !card.permanent && !card.ignoreDeckLimit)
   if ((!partial && counted.length !== rules.size) || counted.length > rules.size) errors.push(t('misc.deck.size', { size: rules.size, count: counted.length }))
@@ -322,20 +336,12 @@ export function validateDeckRules(investigator, codes, cards, { partial = false,
         : t('misc.deck.overLimit', { name, limit }))
     }
   }
-  // Capacity matching prevents one card from consuming both a primary option
-  // and a limited splash allowance; augmentation makes this order independent.
-  const limited = ordinary.filter(card => !rules.options.some(rule => rule.limit == null && matchesCardRule(card, rule, investigator)))
-  const slots = rules.options.flatMap((rule, index) => rule.limit == null ? [] : Array.from({ length: Math.min(limited.length, rule.limit) }, () => index))
-  const owners = slots.map(() => -1)
-  function assign(cardIndex, seen) {
-    for (let slot = 0; slot < slots.length; slot++) {
-      if (seen.has(slot) || !matchesCardRule(limited[cardIndex], rules.options[slots[slot]], investigator)) continue
-      seen.add(slot)
-      if (owners[slot] < 0 || assign(owners[slot], seen)) { owners[slot] = cardIndex; return true }
-    }
-    return false
-  }
-  for (let i = 0; i < limited.length; i++) if (!assign(i, new Set())) errors.push(t('misc.deck.restriction', { name: limited[i].name || limited[i].code }))
+  const optionSets = rules.options.some(rule => rule.option_select?.length) ? rules.options.reduce((sets, rule) =>
+    rule.option_select?.length ? sets.flatMap(options => rule.option_select.map(choice => [...options, choice]))
+      : sets.map(options => [...options, rule]), [[]]) : [rules.options]
+  const restrictions = optionSets.map(options => restrictedCards(ordinary, options, investigator))
+    .reduce((best, next) => next.length < best.length ? next : best)
+  for (const card of restrictions) errors.push(t('misc.deck.restriction', { name: card.name || card.code }))
   for (const rule of partial ? [] : rules.options.filter(option => option.atleast)) {
     const requiredFactions = rule.atleast.factions
     const minimum = rule.atleast.min
@@ -355,6 +361,23 @@ export function validateDeckRules(investigator, codes, cards, { partial = false,
   }
   if (!partial) errors.push(...factionSelectErrors(investigator, ordinary))
   return { errors, size: rules.size, count: counted.length, permanent: ordinary.length - counted.length }
+}
+
+function restrictedCards(ordinary, options, investigator) {
+  // Capacity matching prevents one card from consuming both a primary option
+  // and a limited splash allowance; augmentation makes this order independent.
+  const limited = ordinary.filter(card => !options.some(rule => rule.limit == null && matchesCardRule(card, rule, investigator)))
+  const slots = options.flatMap((rule, index) => rule.limit == null ? [] : Array.from({ length: Math.min(limited.length, rule.limit) }, () => index))
+  const owners = slots.map(() => -1)
+  function assign(cardIndex, seen) {
+    for (let slot = 0; slot < slots.length; slot++) {
+      if (seen.has(slot) || !matchesCardRule(limited[cardIndex], options[slots[slot]], investigator)) continue
+      seen.add(slot)
+      if (owners[slot] < 0 || assign(owners[slot], seen)) { owners[slot] = cardIndex; return true }
+    }
+    return false
+  }
+  return limited.filter((card, index) => !assign(index, new Set()))
 }
 
 // ---------------------------------------------------------------------------
@@ -393,6 +416,7 @@ export const CAMPAIGN_CYCLES = Object.freeze({
   theScarletKeys: 9,
   // P7（九循环 M3 战役）：铁杉谷盛宴 10 段是第十循环，已注册进生产组合根并在大厅可启动。
   theFeastOfHemlockVale: 10,
+  theDrownedCity: 11,
 })
 export function normalizeCardPoolScope(scope) {
   return CARD_POOL_SCOPES.includes(scope) ? scope : 'all'
@@ -403,7 +427,7 @@ export function campaignCycle(campaignId) {
 export function cardCycle(code) {
   const match = /^(\d{2})\d{3}[a-z]?$/.exec(String(code ?? ''))
   const cycle = match ? Number(match[1]) : 0
-  return cycle >= 1 && cycle <= 10 ? cycle : null
+  return cycle >= 1 && cycle <= 11 ? cycle : null
 }
 export function cardAllowedByScope(code, scope, currentCycle) {
   if (!CARD_POOL_RESTRICTION_ENABLED) return true

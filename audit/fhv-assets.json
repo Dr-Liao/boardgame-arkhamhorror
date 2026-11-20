@@ -3175,22 +3175,22 @@
       "present": true,
       "records": 13245,
       "scope": "manifest",
-      "sha256": "acb47c46a140b7716c336eb8ecec65dd5bbd6f8e0dbd98c3c995d54e028621e9"
+      "sha256": "a7d34e84c447b4df28563f6b15004b717f66fadcd7d65dabc21ecd7ad6103f7d"
     },
     "inventory": {
-      "bytes": 2383928633,
+      "bytes": 2449550500,
       "fhvEntries": {
         "english": 572,
         "localized": 440,
         "total": 1012
       },
-      "fingerprint": "91e94c02d2d25634063ab845eba0f1dce2d4bcdbc2dc2d447964d9ec66836c32",
+      "fingerprint": "72787fab7a64adbcb94c16654f0d5790d2035a110a9b73ca6c0a66fac7428f82",
       "host": "https://drliao1.com/arkhamhorror/cards",
       "path": "audit/local-images.json",
       "present": true,
       "scope": "manifest",
-      "sha256": "745cd684dfbce12d09a2d95643cafe16d5aacd65b205ee1183a0e6ff3cb7d204",
-      "total": 14673
+      "sha256": "2766cfe1c2eb79d9c56d8cef9e3978d6de90b2713001046c5db843f924a9e21c",
+      "total": 14939
     },
     "localizedMissingOnDisk": [],
     "missingDigest": [],
@@ -3201,14 +3201,14 @@
   "presentation": {
     "artifacts": [
       {
-        "entries": 5065,
+        "entries": 4799,
         "path": "presentation/localized-arts.json",
-        "sha256": "8929c5fe00cc869cd701bbc9f2a57a77bbe9347327f2fdcfa469068983d06f8f"
+        "sha256": "b8851696e9242c3b1d7e85ebd7fe6646570906fe3f11a9f5fbe49b38ba23e408"
       },
       {
-        "entries": 1428,
+        "entries": 1694,
         "path": "presentation/generated-localized-arts.json",
-        "sha256": "900a713b2157083e2ef5cd7c1a2071155cb2446f8682440b5849a93945237aae"
+        "sha256": "860c57941fcf44a8a91d40204110868f7d59720542bb975c0c41105390c14d1b"
       },
       {
         "entries": 30895,
@@ -3233,7 +3233,7 @@
       "path": "audit/presentation-report.json",
       "phase": "N2",
       "schemaVersion": 1,
-      "sha256": "72fd9bcbb090b6b014d6490e57966a796074ca5fab9aae1ccce8d83221a0d245",
+      "sha256": "860da5aacbd58c21226b80044324b020c9405895d44eb08261b0295cab1b81e5",
       "verifiedCounts": {
         "localImagesCopied": 0,
         "note": "本阶段没有下载或复制媒体；可展示与缺图数量需由浏览器验收记录，不由候选数推断",
@@ -3248,9 +3248,9 @@
       ],
       "localizedArts": {
         "artsMatch": true,
-        "declaredEntries": 5065,
+        "declaredEntries": 4799,
         "declaredSourceSha256": "ed8e006012040f1ea3358977959534438b16d84f0659c3d6226d9c9af39b9353",
-        "entries": 5065,
+        "entries": 4799,
         "path": "presentation/localized-arts.json",
         "sourceMatches": true,
         "sourcePath": "ArkhamHorror-main/frontend/src/digests/zh.json",
@@ -3315,7 +3315,7 @@
     },
     {
       "path": "presentation/art-rules.js",
-      "sha256": "d4f7cbc4a00e3b20a72c841ce0f1be9b9a94aaaf47d2f93868db257d96774ddc"
+      "sha256": "d8aae3a9b333cfd48fd22122e9bb08ee2d4c77d5ed703adea20e73ac15a0f4c1"
     },
     {
       "path": "web/images.js",

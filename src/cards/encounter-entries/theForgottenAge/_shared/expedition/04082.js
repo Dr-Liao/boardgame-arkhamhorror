@@ -14,26 +14,31 @@ import { ALL_CARDS, originalOf } from '../../../_shared.js'
 export default {
   code: '04082', scope: 'treachery', implemented: true,
   encounterResolve(state, inv, card, api) {
+    const investigators = state.investigators.filter(item => !item.defeated && !item.resigned)
+    const filterOptions = api.filterAssetDiscardOptions()
+    const discardable = target => filterOptions ? target.assets.filter(asset => api.canDiscardAsset(target.seat, asset.id)) : target.assets
     const answer = api.choose({
       kind: 'team', source: '04082', seat: inv.seat, peril: true,
       prompt: '补给短缺：全队选择一项。',
       options: [
         { id: 'resources', label: '每位调查员失去 2 资源' },
         { id: 'damage', label: '每位调查员受到 1 点伤害' },
-        { id: 'asset', label: '每位调查员弃掉自己控制的一个支援' },
+        ...(!filterOptions || investigators.some(target => discardable(target).length)
+          ? [{ id: 'asset', label: '每位调查员弃掉自己控制的一个支援' }] : []),
       ],
     })
-    for (const target of state.investigators.filter(item => !item.defeated && !item.resigned)) {
+    for (const target of investigators) {
       if (answer === 'resources') api.loseResources(target.seat, 2)
       else if (answer === 'damage') api.damage(target.seat, 1)
-      else if (target.assets.length) {
+      else {
+        const assets = discardable(target)
+        if (!assets.length) continue
         const picked = api.choose({
           kind: 'asset', source: '04082', seat: target.seat,
           prompt: `${target.name}：选择弃掉自己控制的一个支援。`,
-          options: target.assets.map(asset => ({ id: asset.id, label: ALL_CARDS[originalOf(asset)]?.nameZh || asset.name || asset.code })),
+          options: assets.map(asset => ({ id: asset.id, label: ALL_CARDS[originalOf(asset)]?.nameZh || asset.name || asset.code })),
         })
-        const chosen = target.assets.find(asset => asset.id === picked) || target.assets[0]
-        api.discardAsset(target.seat, chosen.id)
+        api.discardAsset(target.seat, picked)
       }
     }
     return false

@@ -46,7 +46,7 @@ export default {
       target: {
         kind: 'asset',
         label: '场上的[[道具]]支援',
-        query: ({ candidate }) => isItemAsset(candidate?.entity?.code ?? candidate?.id),
+        query: ({ entity, helpers }) => isItemAsset(entity?.code) && helpers.canDiscardAsset(entity),
       },
       resolve: ({ inv, api, target }) => {
         const item = target?.entity

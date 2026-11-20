@@ -6,7 +6,7 @@
   "step": "P2 拆分并实现通用原语；P3 关键词与规则书回填 keyword.*；P4 交互与界面对账 interaction.*",
   "generatedBy": "tools/audit-eote-primitives.mjs",
   "docs": "docs/edgeOfTheEarth/primitives.md",
-  "scanSha256": "08b922f2ad2cc5fe7dae1da5a4de8238dfb822dc0dba45538a80e449e8f06e02",
+  "scanSha256": "8dba44a323a3f8aba2318738b08dc465e9dfca501812d1614a034b201526afaf",
   "counts": {
     "total": 60,
     "reuse": 25,
@@ -5254,6 +5254,12 @@
         "order": 70
       },
       {
+        "id": "locationPlaced",
+        "label": "地点入场后",
+        "kind": "reaction",
+        "order": 70
+      },
+      {
         "id": "locationRevealed",
         "label": "地点揭示后",
         "kind": "reaction",
@@ -5350,8 +5356,20 @@
         "order": 100
       },
       {
+        "id": "assetCluesPlaced",
+        "label": "支援上放置线索后",
+        "kind": "reaction",
+        "order": 100
+      },
+      {
         "id": "assetDamageAssigned",
         "label": "伤害分配至支援时",
+        "kind": "reaction",
+        "order": 100
+      },
+      {
+        "id": "assetExhausted",
+        "label": "支援被横置后",
         "kind": "reaction",
         "order": 100
       },
@@ -5424,6 +5442,12 @@
       {
         "id": "consecutiveActions",
         "label": "连续两次同类行动后",
+        "kind": "reaction",
+        "order": 100
+      },
+      {
+        "id": "damageHealed",
+        "label": "伤害被治疗后",
         "kind": "reaction",
         "order": 100
       },
@@ -5518,6 +5542,12 @@
         "order": 100
       },
       {
+        "id": "harmDealtToInvestigator",
+        "label": "调查员或其控制的支援受到伤害或恐惧后",
+        "kind": "reaction",
+        "order": 100
+      },
+      {
         "id": "investigateFail",
         "label": "调查检定失败后",
         "kind": "reaction",
@@ -5574,6 +5604,12 @@
       {
         "id": "roundStarts",
         "label": "一轮开始时",
+        "kind": "reaction",
+        "order": 100
+      },
+      {
+        "id": "sharedSuppliesSpent",
+        "label": "从另一支援支付补给后",
         "kind": "reaction",
         "order": 100
       },
@@ -5641,6 +5677,12 @@
         "id": "treacheryWouldDiscard",
         "label": "诡计结算后将要弃掉时",
         "kind": "interrupt",
+        "order": 100
+      },
+      {
+        "id": "tskKeyShifted",
+        "label": "密钥变换面后",
+        "kind": "reaction",
         "order": 100
       },
       {
@@ -5744,6 +5786,12 @@
         "label": "地点淹没等级改变后",
         "kind": "reaction",
         "order": 220
+      },
+      {
+        "id": "tskExposed",
+        "label": "揭露隐匿迷你卡后",
+        "kind": "reaction",
+        "order": 410
       }
     ],
     "state": {

@@ -32,14 +32,13 @@ import {
   CAPTIVES_CODE, CAPTIVES_HEALTH, DANCE_RECORDS, DIRECTIONS, ENEMY_DAMAGE_CAPPED, ENEMY_DECK,
   ENEMY_HEALS_AFTER_ATTACK, ENEMY_PATROL_TARGET, ENEMY_SPAWN_DIRECTION, ENEMY_SPAWN_FEWEST,
   ENEMY_SPAWN_MOST, FARMHOUSE_ID, FARM_LOCATION_IDS, FIRE_CARDS, FIRE_CODE, LOCATION_ID_BY_CODE,
-  LOCATIONS, OUTER_FIELD_SLOT_BY_DIRECTION, PLAYED_OUTER_FIELD_IDS, RECORD_KEYS,
+  INVESTIGATOR_DEFEAT, LOCATIONS, NO_RESOLUTION, OUTER_FIELD_SLOT_BY_DIRECTION, PLAYED_OUTER_FIELD_IDS, RECORD_KEYS,
   REMOVED_OUTER_FIELD_ID, RESOLUTION_KEYS, SCENARIO_TEXT, SET_ASIDE_CARDS, SET_ASIDE_LOCATIONS,
   STORY_CODES, URSINE_CODE, URSINE_HEALTH_PER_INVESTIGATOR, URSINE_VICTORY,
 } from './definition.js'
 import { doomInPlay, halfDoomInPlay, isHardSide, theLongestNightChaosToken } from './chaos.js'
 
 const CHAPTER_ID = 'theLongestNight'
-const NO_RESOLUTION = 'noResolution'
 const ENEMY_DECK_ID = 'enemyDeck'
 const MILKHOUSE_CODE = '10631'
 
@@ -1701,22 +1700,35 @@ function applyResolution4(state, api = {}) {
   return bonus
 }
 
+function storyResolutionKey(state, key) {
+  if (key !== NO_RESOLUTION) return key
+  return state.investigators.some(inv => inv.defeated && !inv.resigned)
+    ? INVESTIGATOR_DEFEAT : 'resolution3'
+}
+
 export function resolution(state, key, events = [], api = {}) {
   void events
   const records = recordsFor(state)
   const damage = captivesDamage(state)
-  let finalKey = String(key || NO_RESOLUTION)
-  if (finalKey === NO_RESOLUTION) finalKey = 'resolution3'
-  if (![...RESOLUTION_KEYS, 'investigatorDefeat'].includes(finalKey)) finalKey = 'resolution3'
+  let finalKey = storyResolutionKey(state, String(key || NO_RESOLUTION))
+  if (![...RESOLUTION_KEYS, INVESTIGATOR_DEFEAT].includes(finalKey)) finalKey = 'resolution3'
   let bonus = 0
-  if (finalKey === 'investigatorDefeat') {
-    for (const inv of state.investigators || []) {
-      if (!inv.defeated && !inv.resigned) continue
+  if (finalKey === INVESTIGATOR_DEFEAT) {
+    for (const inv of state.investigators) {
+      if (!inv.defeated || inv.resigned) continue
       inv.killed = true
+      const record = state.campaign?.investigators?.[inv.seat]
+      if (record) record.status = 'killed'
     }
     records.investigatorDefeat = true
     info(api, '调查员败北：被击败的调查员被吞噬（死亡）。')
-    return { award: true, bonus: 0, resolution: finalKey }
+    if (state.investigators.every(inv => inv.killed)) {
+      if (state.campaign) state.campaign.failed = true
+      records[RECORD_KEYS.resolution] = finalKey
+      return { award: false, bonus: 0, resolution: finalKey }
+    }
+    if (key === INVESTIGATOR_DEFEAT) return { award: true, bonus: 0, resolution: finalKey }
+    finalKey = 'resolution3'
   }
   if (finalKey === 'resolution1' || finalKey === 'resolution2') {
     records[RESOLUTION_RECORD_BY_KEY[finalKey]] = true
@@ -1884,6 +1896,7 @@ export const behavior = {
   events,
   roundEnded,
   resolution,
+  storyResolutionKey,
   scenarioResolution,
   allResigned,
   codexEntry,

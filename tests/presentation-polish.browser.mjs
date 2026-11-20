@@ -2,12 +2,13 @@ import { test, expect } from '@playwright/test'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { applyLocalActionDelta } from '../../../public/online-delta.js'
 const output = fileURLToPath(new URL('../../../artifacts/arkham-polish', import.meta.url))
 
-async function fixture(page) {
+async function fixture(page, { playerCount = 2, moveDelay = 0 } = {}) {
   let session
   await page.route('**/api/start', async route => {
-    const response = await route.fetch({ postData: JSON.stringify({ modId: 'arkhamhorror', settings: { legacyAutoStart: true, campaignId: 'nightOfTheZealot', playerCount: 2, playerInvestigator: '01001', teammates: 1, seed: 'noir-polish' } }) })
+    const response = await route.fetch({ postData: JSON.stringify({ modId: 'arkhamhorror', settings: { legacyAutoStart: true, campaignId: 'nightOfTheZealot', playerCount, playerInvestigator: '01001', teammates: playerCount - 1, seed: 'noir-polish' } }) })
     const payload = await response.json(); session = payload.session
     session.state.pendingChoice = null
     session.state.investigators[0].hand = ['01087', '01088', '01025', '01086', '01090']
@@ -16,6 +17,7 @@ async function fixture(page) {
     await route.fulfill({ response, json: payload })
   })
   await page.route('**/api/move', async route => {
+    if (moveDelay) await new Promise(resolve => setTimeout(resolve, moveDelay))
     const move = route.request().postDataJSON().move
     session.state.revision++
     if (move.action === 'draw') session.state.investigators[0].hand.push('01030')
@@ -177,6 +179,35 @@ test('Noir 抽牌动画独立于界面重绘，减少动态效果仍能操作', 
   expect(await page.locator('.ah-fx-banner').evaluate(el => el.getAnimations({ subtree: true }).length)).toBe(0)
 })
 
+test('无 AI 单机的慢回包只提交一次，普通抽牌动画播放时可操作', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await fixture(page, { playerCount: 1, moveDelay: 350 })
+  const requests = []
+  page.on('request', request => {
+    const pathname = new URL(request.url()).pathname
+    if (pathname === '/api/move' || pathname === '/api/session') requests.push(`${request.method()} ${pathname}`)
+  })
+  await page.evaluate(() => {
+    const animate = Element.prototype.animate
+    window.drawFeedback = []
+    Element.prototype.animate = function (frames, options) {
+      if (this.matches('.ah-card-transit[data-fx-kind="draw"]')) window.drawFeedback.push({
+        background: this.hasAttribute('data-background-feedback'),
+        enabled: !!document.querySelector('.ah-actions button:not([disabled])'),
+        handArt: document.querySelectorAll('.ah-hand-card .ah-table-art').length,
+      })
+      return animate.call(this, frames, options)
+    }
+  })
+  const draw = page.locator('.ah-actions').getByRole('button', { name: '抽牌', exact: true })
+  await draw.click()
+  await expect(page.locator('.ah-hand-card')).toHaveCount(6)
+  await expect(draw).toBeEnabled()
+  await expect(page.locator('.ah-card-transit')).toHaveCount(0)
+  expect(requests).toEqual(['POST /api/move'])
+  await expect.poll(() => page.evaluate(() => window.drawFeedback)).toEqual([{ background: true, enabled: true, handArt: 6 }])
+})
+
 test('Noir 真实规则调查：投入面板到混乱标记与服务端结果一致', async ({ page }) => {
   await page.route('**/api/start', route => route.continue({ postData: JSON.stringify({ modId: 'arkhamhorror', settings: { legacyAutoStart: true, playerInvestigator: '01001', teammates: 0, seed: 'noir-real-test' } }) }))
   await page.goto('/index.html')
@@ -184,19 +215,26 @@ test('Noir 真实规则调查：投入面板到混乱标记与服务端结果一
   let response = page.waitForResponse('**/api/start')
   await page.getByRole('button', { name: '开始新游戏' }).click()
   let session = (await (await response).json()).session
+  const readMove = async () => {
+    const payload = await (await response).json()
+    expect(payload.ok, payload.error).toBe(true)
+    const next = payload.session || applyLocalActionDelta(session, payload.localActionDelta)
+    expect(next).toBeTruthy()
+    return next
+  }
   await page.getByRole('button', { name: '跳过演出' }).click()
   const answer = async () => {
     const move = session.state.legalMoves.find(m => ['done', 'skip', 'self'].includes(m.optionId)) || session.state.legalMoves[0]
     response = page.waitForResponse('**/api/move')
     await page.locator('[data-option-id="' + move.optionId + '"]:visible').first().click()
-    session = (await (await response).json()).session
+    session = await readMove()
   }
   for (let i = 0; session.state.pendingChoice; i++) { expect(i).toBeLessThan(15); await answer() }
   const investigation = session.state.legalMoves.find(m => m.action === 'investigate')
   expect(investigation).toBeTruthy()
   response = page.waitForResponse('**/api/move')
   await page.getByRole('button', { name: investigation.label, exact: true }).click()
-  session = (await (await response).json()).session
+  session = await readMove()
   let sawCommit = false
   const startSeq = Math.max(-1, ...session.events.map(e => e.seq))
   for (let i = 0; session.state.pendingChoice; i++) {

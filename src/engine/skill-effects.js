@@ -1,6 +1,6 @@
 import { putInHand } from './hand-entry.js'
 import { eventWindowContext } from './event-window.js'
-import { discardPlayerCards, replacePlayerZoneCards } from './player-zones.js'
+import { discardPlayerCards, replacePlayerZoneCards, splicePlayerDiscard } from './player-zones.js'
 import { wrapInvestigatorEffects } from './effect-recipient.js'
 ﻿import { investigatorRule } from '../cards/card-rules.js'
 import { noteCardCancelled } from './cancel-note.js'
@@ -192,7 +192,9 @@ function applySkillOnSuccess(state, inv, committed, success, successBy = 0, even
     const owner = inv
     const wager = campaignState.wager(owner, code)
     if (s.wagerResources && wager) {
-      resourceBank.gainResource(state, owner, wager * 2, events)
+      if (successBy >= (s.wagerMinimumSuccessBy || 0)) {
+        resourceBank.gainResource(state, owner, wager * 2, events)
+      }
       campaignState.clearWager(owner, code)
     }
     if (o.returnDiscardClass && !discardLocked(state, owner)) {
@@ -203,7 +205,7 @@ function applySkillOnSuccess(state, inv, committed, success, successBy = 0, even
             ...candidates.map((item, index) => ({ id: String(index), cardCode: item, label: cardName(item) }))] })
         if (answer !== 'skip') {
           const picked = candidates[Number(answer)]
-          removeOne(owner.discard, picked); putInHand(state, owner, picked)
+          splicePlayerDiscard(owner, owner.discard.indexOf(picked), 1); putInHand(state, owner, picked)
         }
       }
     }

@@ -18,6 +18,35 @@ export function shortestPaths(locations, from, to, canEnter = () => true) {
   }
   return result
 }
+// Find all tied targets at the first eligible hop count. Eligibility filters
+// endpoints only: a path may cross a location that cannot itself be selected.
+export function nearestLocations(locations, from, eligible = () => true) {
+  const inPlay = locations.filter(location => location.inPlay !== false)
+  const byId = new Map(inPlay.map(location => [location.id, location]))
+  if (!byId.has(from)) return []
+  const distances = new Map([[from, 0]])
+  const queue = [from]
+  let nearest = Infinity
+  const ids = new Set()
+  for (const id of queue) {
+    const distance = distances.get(id)
+    if (distance > nearest) break
+    const location = byId.get(id)
+    if (eligible(location)) {
+      nearest = distance
+      ids.add(id)
+    }
+    if (distance >= nearest) continue
+    for (const next of location.connections || []) {
+      if (byId.has(next) && !distances.has(next)) {
+        distances.set(next, distance + 1)
+        queue.push(next)
+      }
+    }
+  }
+  return inPlay.filter(location => ids.has(location.id))
+}
+
 export function orthogonalNeighbors(cells, cell) {
   if (![cell?.x, cell?.y].every(Number.isSafeInteger)) throw new TypeError('地图坐标必须为整数')
   return cells.filter(other => Math.abs(other.x - cell.x) + Math.abs(other.y - cell.y) === 1)

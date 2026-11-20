@@ -91,7 +91,7 @@ test('P7 终章可达 + P8 传家宝跨章：最终夜结算不递归，Worry Ro
       continue
     }
     const legal = legalMoves(state)
-    const order = ['hubBeginScenario', 'hubContinue', 'hubDoneSeat', 'hubAutoDeck',
+    const order = ['hubBeginScenario', 'hubContinue', 'hubDoneSeat', 'hubConfirmDeck', 'hubAutoDeck',
       'hubSelectInvestigator', 'hubGoSetup', 'hubSelectScenario']
     const next = order
       .map(action => legal.find(candidate => candidate.action === action))

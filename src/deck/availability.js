@@ -1,3 +1,5 @@
+import { TDC_INVESTIGATOR_CODES, TDC_DEPENDENCY_CODES, TDC_SIGNATURES_BY_INVESTIGATOR } from '../../content/packs/tdcInvestigators/manifest.js'
+import { TDC_PLAYER_ACCEPTED_CODES, TDC_PLAYER_BASIC_WEAKNESS_CODES, TDC_PLAYER_BUILDABLE_CODES, TDC_PLAYER_RESEARCHED_CODES } from '../../content/packs/tdcPlayer/manifest.js'
 import { SCENARIO_CARD_IDENTITIES, SCENARIOS } from '../cards/scenarios-data.js'
 import { INVESTIGATOR_CODES as EOTE_INVESTIGATOR_CODES, DISCIPLINE_CODES as EOTE_DISCIPLINE_CODES } from '../../content/campaigns/edgeOfTheEarth/shared.js'
 import { INVESTIGATOR_CODES as TSK_INVESTIGATOR_CODES } from '../../content/campaigns/theScarletKeys/shared.js'
@@ -83,6 +85,7 @@ export const SELECTABLE_INVESTIGATOR_CODES = Object.freeze([
   // P5（九循环）：AI 随机选人池仍保持 PLAYABLE_INVESTIGATOR_CODES，不并入 FHV——
   // 池子变长会让既有 golden replay 的 AI 选人漂移；真人可从大厅选到五位铁杉谷调查员。
   ...FHV_INVESTIGATOR_CODES,
+  ...TDC_INVESTIGATOR_CODES,
 ])
 
 export const CORE_PLAYER_CODES = Object.freeze([
@@ -112,6 +115,7 @@ export const ALL_BASIC_WEAKNESS_CODES = Object.freeze([
   ...TSK_PLAYER_BASIC_WEAKNESS_CODES,
   // P6（九循环）：铁杉谷盛宴 4 张基础弱点（10135–10138）只作随机基础弱点依赖候选。
   ...FHV_PLAYER_BASIC_WEAKNESS_CODES,
+  ...TDC_PLAYER_BASIC_WEAKNESS_CODES,
 ])
 export const CORE_STORY_CODES = Object.freeze(['01117'])
 export const CORE_UPGRADE_CODES = Object.freeze([
@@ -183,6 +187,7 @@ export const SIGNATURES_BY_INVESTIGATOR = Object.freeze({
   '10009': Object.freeze(['10010', '10011']),
   '10012': Object.freeze(['10013', '10014']),
   '10015': Object.freeze(['10017', '10018']),
+  ...TDC_SIGNATURES_BY_INVESTIGATOR,
 })
 export const SIMPLIFIED_CARD_CODES = Object.freeze([...CORE_PLAYER_CODES, ...CORE_SIGNATURE_CODES, ...CORE_BASIC_WEAKNESS_CODES, ...CORE_STORY_CODES])
 export {
@@ -230,6 +235,7 @@ export const ALL_BUILDABLE_CODES = Object.freeze([
   ...TSK_PLAYER_BUILDABLE_CODES,
   // P6（九循环）：铁杉谷盛宴 102 张可入牌组玩家卡（4 基础弱点/11 绑定依赖/3 Research 不进）。
   ...FHV_PLAYER_BUILDABLE_CODES,
+  ...TDC_PLAYER_BUILDABLE_CODES,
 ])
 // P10（M5 发布）：食梦者战役包 playable 后，283 条战役记录（249 主卡 + 34 关联面）从
 // catalog-only 升为 strict——与 P9 全卡账本「P10 升 playable 后全部 strict」的验收口径一致。
@@ -251,6 +257,7 @@ const cards = new Set([...SIMPLIFIED_CARD_CODES, ...CORE_UPGRADE_CODES, ...expan
   ...FHV_CAMPAIGN_CARD_CODES,
   ...eoteSignatures, ...eoteDisciplineCodes, ...tskSignatures, ...TSK_PLAYER_VERIFIED_CODES,
   ...fhvSignatures, ...fhvBonded, ...FHV_PLAYER_VERIFIED_CODES,
+  ...TDC_DEPENDENCY_CODES, ...TDC_PLAYER_ACCEPTED_CODES,
   ...DUNWICH_BASIC_WEAKNESS_CODES, ...CARCOSA_BASIC_WEAKNESS_CODES])
 const strictAcceptedCodes = new Set([...investigators, ...cards])
 const strictScenarioCodes = new Set(Object.values(SCENARIO_CARD_IDENTITIES).flatMap(categories =>
@@ -275,7 +282,7 @@ export function getAvailability(code) {
     strictAccepted: isStrictAccepted(code),
     selectable: investigators.has(code),
     deckbuilding: ALL_BUILDABLE_CODES.includes(code),
-    upgradeOnly: CORE_UPGRADE_CODES.includes(code),
+    upgradeOnly: CORE_UPGRADE_CODES.includes(code) || TDC_PLAYER_RESEARCHED_CODES.includes(code),
     dependencyOnly: CORE_SIGNATURE_CODES.includes(code) || dunwichSignatures.includes(code)
       || carcosaSignatures.includes(code) || tfaSignatures.includes(code) || tcuSignatures.includes(code)
       || tdeSignatures.includes(code)
@@ -283,6 +290,8 @@ export function getAvailability(code) {
       || eoteSignatures.includes(code) || eoteDisciplineCodes.includes(code)
       || tskSignatures.includes(code)
       || fhvSignatures.includes(code) || fhvBonded.includes(code)
+      || TDC_DEPENDENCY_CODES.includes(code)
+      || code === '11068b'
       || FHV_PLAYER_BASIC_WEAKNESS_CODES.includes(code) || FHV_PLAYER_DEPENDENCY_CODES.includes(code)
       || TSK_PLAYER_BASIC_WEAKNESS_CODES.includes(code)
       || TIC_PLAYER_BASIC_WEAKNESS_CODES.includes(code)
@@ -315,6 +324,9 @@ export function getAvailability(code) {
         ? 'P5 绯红密钥六位调查员及 14 张专属依赖已完成逐人能力、构筑与存档验收；一般玩家卡见 P6，战役与十章仍待 P7–P8。'
       : FHV_INVESTIGATOR_CODES.includes(code) || fhvSignatures.includes(code) || fhvBonded.includes(code)
         ? 'P5 铁杉谷盛宴五位调查员及 15 张专属/绑定依赖已完成逐人能力、构筑与存档验收；一般玩家卡见 P6，战役与八章仍待 P7–P8。'
+      : TDC_INVESTIGATOR_CODES.includes(code) || TDC_DEPENDENCY_CODES.includes(code)
+        ? '沉没之城 P5 调查员及专属依赖。'
+      : TDC_PLAYER_ACCEPTED_CODES.includes(code) ? '沉没之城 P6 已开放条目。'
       : EOTE_INVESTIGATOR_CODES.includes(code) || eoteSignatures.includes(code) || eoteDisciplineCodes.includes(code)
         ? 'P5 地球边缘五位调查员及专属依赖已完成逐人能力、构筑与存档验收；一般玩家卡见 P6，战役仍待 P7–P8。'
       : TIC_INVESTIGATOR_CODES.includes(code) || ticSignatures.includes(code)

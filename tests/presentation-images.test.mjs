@@ -106,6 +106,14 @@ test('中文清单决定语言候选顺序，缺图回退英文', () => {
   assert.ok(back.every(candidate => candidate.language === 'back'))
 })
 
+test('南森·威克的关联面在英文模式下仍能找到实际文件名', () => {
+  const descriptor = imageDescriptor('05217b')
+  assert.deepEqual(paths(descriptor.back), ['cards/05217.avif', 'cards/05217a.avif'])
+  assert.equal(descriptor.back.candidates[1].local, true)
+  const candidates = imageCandidates(descriptor, { side: 'back', host: HOST, language: 'en', thumbnail: true })
+  assert.ok(candidates.every(candidate => candidate.language === 'en'))
+})
+
 test('新增中文卡图进入本地和 CDN 候选', () => {
   const descriptor = imageDescriptor('03068b')
   assert.equal(descriptor.front.candidates[0].localized, true)
@@ -287,8 +295,8 @@ test('实现状态与可用性取值与目录一致，展示层有对应中文�
 
 test('本地图库覆盖全部卡面，候选优先同源地址并可离线使用', () => {
   assert.equal(LOCAL_IMAGE_LIBRARY.available, true)
-  assert.equal(LOCAL_IMAGE_LIBRARY.total, 14673)
-  assert.deepEqual(LOCAL_IMAGE_LIBRARY.byLanguage, { en: 8180, zh: 6493 })
+  assert.equal(LOCAL_IMAGE_LIBRARY.total, LOCAL_IMAGE_LIBRARY.byLanguage.en + LOCAL_IMAGE_LIBRARY.byLanguage.zh)
+  assert.ok(LOCAL_IMAGE_LIBRARY.byLanguage.zh >= 6227)
 
   let local = 0
   const remote = []

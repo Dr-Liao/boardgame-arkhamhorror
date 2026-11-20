@@ -1,0 +1,278 @@
+{
+  "id": "sepulchreOfTheSleeper",
+  "campaignId": "theDrownedCity",
+  "locales": {
+    "en": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "Sepulchre of the Sleeper",
+          "children": [
+            {
+              "id": "checkCampaignLog",
+              "text": "Check your Campaign Log."
+            },
+            {
+              "id": "sepulchreOfTheSleeper1",
+              "text": "Sepulchre of the Sleeper 1: The expedition’s reunion on the beach is decidedly dour, underscored by the rolling fog. One of the crew members you left behind to tend the boat is dead; according to the others, she was murdered when the remaining rations were stolen by starving pilgrims. Thankfully, the Cassandra is intact. You have barely enough food remaining to make it to the mainland. Andy and Ruby discuss their findings as the rest of the expedition bandage wounds and begin loading the Cassandra for the voyage home. Once the ship is loaded, you join Andy and Ruby on the shore."
+            },
+            {
+              "id": "proceedToSepulchreOfTheSleeper2",
+              "text": "If at least 1 artifact is checked under “Artifacts Earned,” and at least 10 glyphs are translated in the glyph record, proceed to Sepulchre of the Sleeper 2."
+            },
+            {
+              "id": "proceedToTheAwakening",
+              "text": "Otherwise, proceed to Interlude III: The Awakening."
+            },
+            {
+              "id": "sepulchreOfTheSleeper2",
+              "text": "Sepulchre of the Sleeper 2: “Just how much of that ugly chicken scratch did you decode?” Ruby asks. Andy is hunched over the obsidian slate, making notes in a leatherbound notebook. In the evening half-light, the glyphs on the slate glow like pale fire. Andy leafs through several waterlogged pages and places a bloody slip of paper on the stone. “Enough to decode this. I found it on the body of one of the pilgrims. It roughly translates to this,” he hastily scribbles the translation on a fresh page and holds it out to you. It reads:\n\n“That is not dead which can eternal lie\nand with strange aeons even death may die.”"
+            },
+            {
+              "id": "proceedToSepulchreOfTheSleeper3",
+              "text": "If all 5 artifacts are checked under “Artifacts Earned,” all 26 glyphs are translated in the glyph record, and the inner sanctum was unsealed, proceed to Sepulchre of the Sleeper 3."
+            },
+            {
+              "id": "addZeroToken",
+              "text": "Otherwise, add a 0 token to the chaos bag for the remainder of the campaign. Proceed to Interlude III: The Awakening."
+            },
+            {
+              "id": "sepulchreOfTheSleeper3",
+              "text": "Sepulchre of the Sleeper 3: With your own account, Ruby and Andy help you slowly piece together a narrative across the various friezes and artifacts found in the ancient city. A common theme emerges: an alien civilization from far beyond the stars; an ancient war before history itself; the sinking of R’lyeh; the “death” and prophesied return of an ancient god named Cthulhu.\n\nAndy points to the central spire. The obsidian gates in the base are swung wide open. A faint but sharp smell of decay wafts out of them. “The crew members who stayed behind say those doors opened a week ago. Someone went inside, but they never returned,” Andy says. He shares a few translations he made of rubbings from the gate. “This one describes a glorious rebirth, a risen sleeper, and the return of the great old ones. It claims he will take back what is his: every part of R’lyeh that was stolen, every corner of his domain.\n\n“This thing—Cthulhu—is dead. Or asleep. I’m not sure; the details are hazy at best. But with the city and everything else in it awakening, I imagine it’s only a matter of time until he awakens as well. He’s called followers here from their dreams. And judging by the smell, he’s in there,” the reporter points to the obsidian gates.\n\nAfter a long pause, Ruby stands up.\n\n“It wouldn’t be much of a heist if we left the doors open,” she winks. “I say we lock this thing up before we sail off into the sunset. Who’s with me?”"
+            },
+            {
+              "id": "mustDecide",
+              "text": "The investigators must decide (choose one):"
+            },
+            {
+              "id": "knowBetter",
+              "text": "“We should know better than to disturb whatever is inside.” Each investigator marks 1 progress under their Task in your Campaign Log. In your Campaign Log, record the investigators did not confront the nightmare. Proceed to Interlude III: The Awakening."
+            },
+            {
+              "id": "layItToRest",
+              "text": "“We should lay it to rest… permanently.” Proceed to Setup."
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "setup",
+          "children": [
+            {
+              "id": "gatherSets",
+              "text": "Gather all cards from the following encounter sets: Sepulchre of the Sleeper, Domination, Dreams, R’lyeh, Star Spawn, Ancient Evils, and Striking Fear. "
+            },
+            {
+              "id": "placeLocations",
+              "text": "Put Dreamer’s Rest and each copy of Sigil-Carved Alcove into play."
+            },
+            {
+              "id": "startAt",
+              "text": "Each investigator begins play at Dreamer’s Rest."
+            },
+            {
+              "id": "chooseExpeditionItem",
+              "text": "In player order, each player may choose 1 Item asset from the Expedition encounter set to begin in play under their control. This set is indicated by the following icon:"
+            },
+            {
+              "id": "artifacts",
+              "text": "Gather all earned Artifact assets and put each of them into play under an investigator’s control, divided as evenly as possible."
+            },
+            {
+              "id": "buildAgendaDeck",
+              "text": "Build a special agenda deck using Beneath the City as the first agenda and Cthulhu Awakened as the second agenda. These replace the act and agenda decks."
+            },
+            {
+              "id": "buildEncounterDeck",
+              "text": "Shuffle the remaining encounter cards to build the encounter deck."
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "rules",
+          "children": [
+            {
+              "id": "disturbance",
+              "title": "Disturbance",
+              "text": "Throughout this scenario, the number of resources under “Disturbance” on the scenario reference card indicate Cthulhu’s awareness of the investigators. The higher the Disturbance, the closer the Sleeper is to awakening. Disturbance has no inherent game effect on its own; however, some encounter card effects may change or become stronger depending on the current level of Disturbance."
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "xp",
+          "children": [
+            {
+              "id": "bonus",
+              "text": "因他们阻止了一个古老邪恶再次崛起、恐吓整个大地"
+            }
+          ]
+        },
+        {
+          "id": "noResolution",
+          "title": "调查员被击败",
+          "children": [
+            {
+              "id": "body",
+              "text": "调查员被击败：身心俱碎的你倒在克苏鲁庞大的身姿前。城市在你四周震颤，震耳欲聋的嗡鸣充满你的双耳。克苏鲁漠然地俯视着你。你对他来说不过是个麻烦、一只微不足道的害虫。随着你心智脆弱的结构让位于彻底疯狂的无限自由，你的意识很快向内塌陷。"
+            },
+            {
+              "id": "drivenInsane",
+              "text": "每名被击败的调查员陷入疯狂。若没有存活的调查员，调查员们输掉了这场战役。"
+            },
+            {
+              "id": "otherResolution",
+              "text": "若达成了另一项结局，其余调查员前往该结局。"
+            }
+          ]
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "text": "结局 1：克苏鲁庞大的身形向后倒进中央的水池。他那松软而带爪的双手抓向水池边缘，却没能攀住，身形沉入黑色的水底。五只发光的红眼被水面扭曲，缓缓消失在视野中。而一切就这样戛然而止，万籁俱寂。\n\n你走出黑曜石门，来到海岸边。终于，你准备好把这座城市抛在身后，把这些器物带回阿卡姆，继续自己的人生。登上卡桑德拉号时，你回望那亵渎的天际线，它在落日的映衬下如同远古巨兽的脊骨。当那座古城开始几乎难以察觉地下沉、重新被海洋收归时，浑浊的海水翻涌着。那位梦者与他在拉莱耶的居所，都已安息。\n\n“我真想知道蒂林哈斯特先生打算拿那些器物做什么，”安迪若有所思地说。“多半是卖掉吧，”露比叼着香烟说。你闭上眼，转身回到船舱。也许今晚，几个月来第一次，你能享受一场深沉无梦的睡眠。\n\n• 在你的战役日志中记录：调查员们阻止了克苏鲁的苏醒。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。每名调查员获得 10 点奖励经验，因为他们阻止了一个古老邪恶再次崛起、恐吓整个大地。\n\n• 每名调查员受到 2 点精神创伤。\n\n• 调查员们赢得这场战役！\n\n• 前往尾声。"
+        }
+      ]
+    },
+    "zh": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "沉睡者墓穴",
+          "children": [
+            {
+              "id": "checkCampaignLog",
+              "text": "查看你的战役日志。"
+            },
+            {
+              "id": "sepulchreOfTheSleeper1",
+              "text": "沉睡者墓穴 1：远征队在海滩上的重聚气氛阴郁，翻涌的雾气更添压抑。你留下看船的一名船员死了；据其他人说，她是在剩下的口粮被饥饿的朝圣者抢走时被杀害的。万幸的是，卡桑德拉号完好无损。你们剩下的食物勉强够撑到大陆。远征队其余成员包扎伤口、开始为归航装载卡桑德拉号时，安迪和露比则讨论着各自的发现。船装好之后，你走到岸边与安迪和露比会合。"
+            },
+            {
+              "id": "proceedToSepulchreOfTheSleeper2",
+              "text": "若“已获得的神器”下至少勾选了 1 件神器，且符文记录中至少译出了 10 枚符文，前往沉睡者墓穴 2。"
+            },
+            {
+              "id": "proceedToTheAwakening",
+              "text": "否则，前往幕间 III：苏醒。"
+            },
+            {
+              "id": "sepulchreOfTheSleeper2",
+              "text": "沉睡者墓穴 2：“你到底破译了多少那种丑陋的鬼画符？”露比问道。安迪弓着身子伏在那块黑曜石板上，在一本皮革装订的笔记本里记着笔记。在傍晚的微光中，石板上的符文如苍白的火焰般发光。安迪翻过几页被水浸透的书页，把一张带血的纸片放在石头上。“够破译这个了。我是在一个朝圣者的尸体上发现的。大致译出来是这样，”他匆匆把译文写在一张新页上，递给你。上面写着：\n\n“那并非长眠者，纵经万古亦能安卧\n而当奇异的万古流转，纵是死亡亦将死去。”"
+            },
+            {
+              "id": "proceedToSepulchreOfTheSleeper3",
+              "text": "若“已获得的神器”下全部 5 件神器都已勾选、符文记录中全部 26 枚符文都已译出，且至圣所已被解封，前往沉睡者墓穴 3。"
+            },
+            {
+              "id": "addZeroToken",
+              "text": "否则，在战役余下的时间里，向混乱袋加入一枚 0 标记。前往幕间 III：苏醒。"
+            },
+            {
+              "id": "sepulchreOfTheSleeper3",
+              "text": "沉睡者墓穴 3：在你自己的讲述之外，露比和安迪帮你把这座古城中各处壁饰与器物所记载的内容慢慢拼成一个完整的故事。一个共同的主题浮现出来：一个来自星辰之外的异星文明；一场早在历史之前就发生的古老战争；拉莱耶的沉没；一位名为克苏鲁的古老神祇的“死亡”与预言中的归来。\n\n安迪指向中央尖塔。塔基处的黑曜石门敞开着。从门中飘出一股微弱却刺鼻的腐朽气味。“留下来的船员说，那些门一周前就打开了。有人进去过，但再也没回来，”安迪说。他分享了几段他为门前拓片所作的译解。“这一段描述了一次荣耀的重生、一位升起的沉睡者，以及伟大古老者的归来。它声称他将夺回属于他的一切：拉莱耶每一处被窃走的部分，他领域的每一个角落。\n\n“这东西——克苏鲁——已经死了。或者睡着了。我不确定；细节至多只是模糊不清。但随着这座城市以及其中万物苏醒，我想他苏醒也只是时间问题。他通过梦境召来了追随者。而从这气味判断，他就在里面，”这位记者指着黑曜石门说道。\n\n沉默良久之后，露比站起身来。\n\n“要是我们就这么敞着门走人，那还算什么大劫案，”她眨了眨眼。“我说，在咱们扬帆驶向夕阳之前，先把这东西锁起来。谁跟我一起？”"
+            },
+            {
+              "id": "mustDecide",
+              "text": "调查员们必须决定（选择一项）："
+            },
+            {
+              "id": "knowBetter",
+              "text": "“我们应该懂得，不要去惊扰里面的任何东西。”每名调查员在你的战役日志中自己的任务下标记 1 点进度。在你的战役日志中记录：调查员们没有直面梦魇。前往幕间 III：苏醒。"
+            },
+            {
+              "id": "layItToRest",
+              "text": "“我们应该让它永远安息。”前往设置。"
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "setup",
+          "children": [
+            {
+              "id": "gatherSets",
+              "text": "从以下遭遇组中收集所有卡牌：沉睡者墓穴、支配、梦境、拉莱耶、星之眷族、远古邪恶与恐惧打击。这些组以下列图标表示："
+            },
+            {
+              "id": "placeLocations",
+              "text": "将梦者安息地和每份刻印壁龛放入游戏。"
+            },
+            {
+              "id": "startAt",
+              "text": "每名调查员从梦者安息地开始游戏。"
+            },
+            {
+              "id": "chooseExpeditionItem",
+              "text": "按玩家顺序，每名玩家可以选择 远征 遭遇组中的 1 张物品支援，以在其控制下开始游戏。该组以下列图标表示："
+            },
+            {
+              "id": "artifacts",
+              "text": "收集所有已获得的神器支援，并尽可能平均地分配给调查员，在每个调查员的控制下放入游戏。"
+            },
+            {
+              "id": "buildAgendaDeck",
+              "text": "使用“城市之下”作为第一张议程、“克苏鲁苏醒”作为第二张议程，组建一副特殊议程牌库。这些卡牌替代幕牌库与议程牌库。"
+            },
+            {
+              "id": "buildEncounterDeck",
+              "text": "洗混其余的遭遇卡，组建遭遇牌库。"
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "rules",
+          "children": [
+            {
+              "id": "disturbance",
+              "title": "扰动",
+              "text": "在本剧本中，剧本参考卡上“扰动”下资源的数量表示克苏鲁对调查员的察觉程度。扰动越高，沉睡者就越接近苏醒。扰动本身没有内在的游戏效果；不过，某些遭遇卡效果可能会根据当前的扰动等级而改变或变得更强。"
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "xp",
+          "children": [
+            {
+              "id": "bonus",
+              "text": "因他们阻止了一个古老邪恶再次崛起、恐吓整个大地"
+            }
+          ]
+        },
+        {
+          "id": "noResolution",
+          "title": "调查员被击败",
+          "children": [
+            {
+              "id": "body",
+              "text": "调查员被击败：身心俱碎的你倒在克苏鲁庞大的身姿前。城市在你四周震颤，震耳欲聋的嗡鸣充满你的双耳。克苏鲁漠然地俯视着你。你对他来说不过是个麻烦、一只微不足道的害虫。随着你心智脆弱的结构让位于彻底疯狂的无限自由，你的意识很快向内塌陷。"
+            },
+            {
+              "id": "drivenInsane",
+              "text": "每名被击败的调查员陷入疯狂。若没有存活的调查员，调查员们输掉了这场战役。"
+            },
+            {
+              "id": "otherResolution",
+              "text": "若达成了另一项结局，其余调查员前往该结局。"
+            }
+          ]
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "text": "结局 1：克苏鲁庞大的身形向后倒进中央的水池。他那松软而带爪的双手抓向水池边缘，却没能攀住，身形沉入黑色的水底。五只发光的红眼被水面扭曲，缓缓消失在视野中。而一切就这样戛然而止，万籁俱寂。\n\n你走出黑曜石门，来到海岸边。终于，你准备好把这座城市抛在身后，把这些器物带回阿卡姆，继续自己的人生。登上卡桑德拉号时，你回望那亵渎的天际线，它在落日的映衬下如同远古巨兽的脊骨。当那座古城开始几乎难以察觉地下沉、重新被海洋收归时，浑浊的海水翻涌着。那位梦者与他在拉莱耶的居所，都已安息。\n\n“我真想知道蒂林哈斯特先生打算拿那些器物做什么，”安迪若有所思地说。“多半是卖掉吧，”露比叼着香烟说。你闭上眼，转身回到船舱。也许今晚，几个月来第一次，你能享受一场深沉无梦的睡眠。\n\n• 在你的战役日志中记录：调查员们阻止了克苏鲁的苏醒。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。每名调查员获得 10 点奖励经验，因为他们阻止了一个古老邪恶再次崛起、恐吓整个大地。\n\n• 每名调查员受到 2 点精神创伤。\n\n• 调查员们赢得这场战役！\n\n• 前往尾声。"
+        }
+      ]
+    }
+  }
+}

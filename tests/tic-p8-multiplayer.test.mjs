@@ -151,6 +151,7 @@ test('TIC P8 多人隐私：哈珀隐藏答案只在引擎内，指控待决选�
   assert.equal(state.scenario.id, 'theVanishingOfElinaHarper')
   const hiddenAnswer = mechanicsOf(world, state).scenarioDecks.cards('harperAnswers')
   assert.equal(hiddenAnswer.length, 2, '引擎内存在两张隐藏答案（真嫌犯/真窝点）')
+  const answerCodes = codesOf(hiddenAnswer)
   // 用真实内容入口发起指控，并停在第一个待决选择上。
   world.resolution.resolveTransaction(state, 0, { action: 'p8-multiplayer-open-accusation' },
     draft => world.scenarioRuntime(draft, []).resolveScenarioEvent('ticHarperAccusation'))
@@ -191,7 +192,9 @@ test('TIC P8 多人隐私：哈珀隐藏答案只在引擎内，指控待决选�
     assert.ok(guard < 20, '指控选择未收敛')
     const choice = state.pendingChoice
     assert.equal(choice.seat, 0, '指控选择只由领队回答')
-    const optionId = choice.kind === 'card' ? choice.options[0].cardCode : choice.options[0].id
+    const answer = choice.options.find(option => answerCodes.includes(option.cardCode))
+    assert.ok(answer, '当前待决选择应包含真实答案')
+    const optionId = answer.cardCode
     world.resolution.resolveTransaction(state, choice.seat, { action: 'choose', choiceId: choice.id, optionId }, execute)
   }
   assert.equal(state.pendingChoice, null)
@@ -225,6 +228,8 @@ test('TIC P8 多人权限：非房主/非当前回合/重复选人/非应答座�
     const deck = legalFor(world, lobby, seat).find(move => move.action === 'hubAutoDeck')
     if (deck) {
       playMove(world, lobby, deck, seat)
+      settleChoices(world, lobby)
+      playMove(world, lobby, legalFor(world, lobby, seat).find(move => move.action === 'hubConfirmDeck'), seat)
       settleChoices(world, lobby)
     }
     const done = legalFor(world, lobby, seat).find(move => move.action === 'hubDoneSeat')

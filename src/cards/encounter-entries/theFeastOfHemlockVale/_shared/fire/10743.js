@@ -76,7 +76,7 @@ export default {
       code: CODE, originalCode: CODE, id: `${CODE}:${chosen.id}`,
     })
     api.info?.(`🔥 「${NAME}」附属到「${chosen.name || chosen.id}」。`)
-    return false
+    return { placed: true }
   },
   treacheryRule: {
     attachmentAbilities: [{

@@ -4,6 +4,7 @@ import { TIC_RULES, ticCardRuleIds } from './tic-rules.js'
 import { EOTE_RULES, eoteCardRuleIds } from './eote-rules.js'
 import { TSK_RULES, tskCardRuleIds } from './tsk-rules.js'
 import { FHV_RULES, FHV_CARD_RULE_PATTERNS } from './fhv-rules.js'
+import { TDC_RULES, tdcCardRuleIds } from './tdc-rules.js'
 
 // 规则书正文只写规则本身：基础规则置顶，关键词与战役条目均不写引擎、实现或界面操作。
 // 来源：官方 Learn to Play / Rules Reference（RULE_SOURCES 与 ArkhamDB 规则全文），按当前收录内容整理。
@@ -117,6 +118,7 @@ export const RULES = [
   ...EOTE_RULES,
   ...TSK_RULES,
   ...FHV_RULES,
+  ...TDC_RULES,
 ]
 export const ruleById = id => RULES.find(r => r.id === id) || RULES[0]
 export const DEFAULT_RULE_ID = 'basics'
@@ -222,6 +224,7 @@ function scenarioCardRuleIds(card) {
   if (/^08\d{3}[a-z]?$/.test(code)) return eoteCardRuleIds(card)
   if (/^09\d{3}[a-z]?$/.test(code)) return tskCardRuleIds(card)
   if (/^10\d{3}[a-z]?$/.test(code)) return fhvCardRuleIds(card)
+  if (/^11[01567]\d{2}[a-z]?$/.test(code)) return tdcCardRuleIds(card)
   if (!/^02\d{3}$/.test(code)) return []
   const number = Number(code.slice(2))
   if (number >= 62 && number <= 80) return number >= 79 ? ['storyGuests', 'clubGambling'] : ['clubGambling']
@@ -331,5 +334,7 @@ function fhvCardRuleIds(card) {
   if (['scenario', 'act', 'agenda', 'location', 'enemy', 'treachery'].includes(card?.type)) ids.push('fhvChaos')
   return [...new Set(ids)]
 }
-export function openRule(id = DEFAULT_RULE_ID) { window.dispatchEvent(new CustomEvent('arkham-open-rule', { detail: id })) }
-export function ruleLink(h,id,label) { return h('button',{type:'button',className:'ah-rule-link','data-rule-id':id,'aria-label':'查阅规则：'+ruleById(id).title,title:'查阅规则：'+ruleById(id).title,onclick:event=>{event.stopPropagation();openRule(id)}},label || ruleById(id).title) }
+export function openRule(id = DEFAULT_RULE_ID, source = null) {
+  window.dispatchEvent(new CustomEvent('arkham-open-rule', { detail: source ? { id, source } : id }))
+}
+export function ruleLink(h,id,label) { return h('button',{type:'button',className:'ah-rule-link','data-rule-id':id,'aria-label':'查阅规则：'+ruleById(id).title,title:'查阅规则：'+ruleById(id).title,onclick:event=>{event.stopPropagation();openRule(id,event.currentTarget)}},label || ruleById(id).title) }

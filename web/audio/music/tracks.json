@@ -678,5 +678,125 @@
     "id": "tskMovementProposition",
     "title": "Movement Proposition",
     "file": "common/movement-proposition.mp3"
+  },
+  {
+    "id": "fhvFirefliesAndStardust",
+    "title": "Fireflies and Stardust",
+    "file": "common/fireflies-and-stardust.mp3"
+  },
+  {
+    "id": "fhvAlmostBliss",
+    "title": "Almost Bliss",
+    "file": "common/almost-bliss.mp3"
+  },
+  {
+    "id": "fhvEternalTerminal",
+    "title": "Eternal Terminal",
+    "file": "common/eternal-terminal.mp3"
+  },
+  {
+    "id": "fhvIronHorseDistressed",
+    "title": "Iron Horse - Distressed",
+    "file": "common/iron-horse-distressed.mp3"
+  },
+  {
+    "id": "fhvTheHouseOfLeaves",
+    "title": "The House of Leaves",
+    "file": "common/the-house-of-leaves.mp3"
+  },
+  {
+    "id": "fhvGhostStory",
+    "title": "Ghost Story",
+    "file": "common/ghost-story.mp3"
+  },
+  {
+    "id": "fhvWillowAndTheLight",
+    "title": "Willow and the Light",
+    "file": "common/willow-and-the-light.mp3"
+  },
+  {
+    "id": "fhvCrowdHammer",
+    "title": "Crowd Hammer",
+    "file": "common/crowd-hammer.mp3"
+  },
+  {
+    "id": "fhvSkyeCuillin",
+    "title": "Skye Cuillin",
+    "file": "common/skye-cuillin.mp3"
+  },
+  {
+    "id": "fhvThunderbird",
+    "title": "Thunderbird",
+    "file": "common/thunderbird.mp3"
+  },
+  {
+    "id": "fhvWaterPrelude",
+    "title": "Water Prelude",
+    "file": "common/water-prelude.mp3"
+  },
+  {
+    "id": "fhvTenebrousBrothersCarnivalMermaid",
+    "title": "Tenebrous Brothers Carnival - Mermaid",
+    "file": "common/tenebrous-brothers-carnival-mermaid.mp3"
+  },
+  {
+    "id": "fhvFolkRound",
+    "title": "Folk Round",
+    "file": "common/folk-round.mp3"
+  },
+  {
+    "id": "fhvZombieChase",
+    "title": "Zombie Chase",
+    "file": "common/zombie-chase.mp3"
+  },
+  {
+    "id": "fhvRainsWillFall",
+    "title": "Rains Will Fall",
+    "file": "common/rains-will-fall.mp3"
+  },
+  {
+    "id": "fhvFeatherWaltz",
+    "title": "Feather Waltz",
+    "file": "common/feather-waltz.mp3"
+  },
+  {
+    "id": "fhvSouthernGothic",
+    "title": "Southern Gothic",
+    "file": "common/southern-gothic.mp3"
+  },
+  {
+    "id": "fhvHidingYourReality",
+    "title": "Hiding Your Reality",
+    "file": "common/hiding-your-reality.mp3"
+  },
+  {
+    "id": "fhvAscendingTheVale",
+    "title": "Ascending the Vale",
+    "file": "common/ascending-the-vale.mp3"
+  },
+  {
+    "id": "fhvCattails",
+    "title": "Cattails",
+    "file": "common/cattails.mp3"
+  },
+  {
+    "id": "fhvDuetMusette",
+    "title": "Duet Musette",
+    "file": "common/duet-musette.mp3"
+  },
+  {
+    "id": "fhvAncientMysteryWaltzAllegro",
+    "title": "Ancient Mystery Waltz (Allegro)",
+    "file": "common/ancient-mystery-waltz-allegro.mp3"
+  },
+  {
+    "id": "fhvVanes",
+    "title": "Vanes",
+    "file": "common/vanes.mp3"
+  },
+  {
+    "id": "fhvMagistar",
+    "title": "Magistar",
+    "file": "common/magistar.mp3"
   }
 ]

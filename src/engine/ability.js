@@ -1,6 +1,7 @@
 import { validateKeyCost } from './key-cost.js'
 import { normalizePatrolTarget } from './enemy-keyword-movement.js'
 import { validateDamageSourceRule } from './effect-provenance.js'
+import { validateSealEntry } from './seal-entry.js'
 // 诡镇奇谈：卡牌版 · 声明式能力注册表（Ability Registry）
 //
 // P0-A 的核心。此前「一张卡能做什么」只有两个去处：
@@ -50,7 +51,7 @@ import { NUMERIC_COST_KEYS, validateCostValue } from './cost.js'
 import { ALL_CARDS } from '../cards/cards-data.js'
 import { reprintAliasesFor } from '../cards/card-identity.js'
 import { registerDeckCardRule } from '../../web/deck-rules.js'
-import { customizationOptions as registeredCustomizationOptions, registerCustomizationEffects, registerCustomizationOptions } from './tsk-customizable.js'
+import { customizationOptions as registeredCustomizationOptions, registerCustomizationChoices, registerCustomizationEffects, registerCustomizationOptions } from './tsk-customizable.js'
 import { validateTokenCost } from './token-cost.js'
 // Phase 2（C4）：上限的作用域与归属从 ability.js 搬进 limits.js，这里只保留再导出，
 // 引擎与测试的 import 位置因此不需要改（引擎仍从 ability.js 取 limitUsed）。
@@ -89,12 +90,12 @@ const LIFECYCLE_KINDS = new Set(Object.keys(KINDS_NEEDING_PAYLOAD))
 // 第 5 步 P7：leavesPlay 同理（05313/05316 的绑定副本收回要走 api.bonded.return）。
 const LIFECYCLE_RESOLVE_KINDS = new Set(['played', 'entersPlay', 'setup', 'leavesPlay'])
 const COST_KEYS = new Set(['action', 'exhaust', 'uses', 'resources', 'clues', 'discardSelf',
-  'exileSelf', 'horror', 'damageSelf', 'assetDamage', 'discardHand', 'discardHandIcon', 'discardHandIcons', 'discardControlledAsset',
+  'exileSelf', 'horror', 'damageSelf', 'assetDamage', 'discardHand', 'discardHandIcon', 'discardHandType', 'discardHandIcons', 'discardControlledAsset',
   // Phase 5（5b-6）：旧式反应的「花 1 线索但放回地点」费用（02302 马莱森博士）。
   // 读点在 triggerReaction 的付费段：clues 照扣，returnClue 为真时把线索放回所在地点。
   'returnClue', 'damage', 'doomOnSource', 'drawEncounter', 'groupClues'])
 const DESCRIPTOR_KEYS = new Set(['kind', 'id', 'label', 'text', 'trigger', 'criteria', 'target', 'cost',
-  'limit', 'fromHand', 'noPlayCost', 'duringOwnSkillTest', 'oncePerTest', 'oncePerPhase', 'requiresNoClues',
+  'limit', 'fromHand', 'fromDiscard', 'noPlayCost', 'duringOwnSkillTest', 'oncePerTest', 'oncePerPhase', 'requiresNoClues',
   'maximumInvestigatorDamage', 'requiresEncounterDeck',
   // Phase 5（5c-37）：支援能力上的计数器上限（「时间借取」最多 3 声滴答）；读点在 canAffordAbility。
   'maxClicks',
@@ -133,7 +134,7 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   // 八循环 TSK P6：定制升级卡的勾选面板契约。选项与运行时效果由条目静态声明
   // （数据来自 cards-data 的 customizationText），注册期统一登记到 tsk-customizable 原语；
   // 读点：web 定制面板/升级校验（api.interactions.tsk.customizable）与 modifiers 的 playCost 修正。
-  'customizationOptions', 'customizationEffects',
+  'customizationOptions', 'customizationEffects', 'customizationChoices', 'enemyAttachmentTestDifficulty',
   'uses', 'usesType', 'playCondition', 'simplified', 'note', 'onFound', 'assetRule', 'flags', 'additionalTokenCost', 'playCostModifier', 'playTimingProvider',
   // P2-4：重印别名条目（注册期由 canonical 克隆生成）记录 canonical 卡号，供指标/审计去重。
   'reprintOf',
@@ -183,15 +184,16 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'onUsesEmptied',
   'cannotAffectOtherInvestigators',
   'trackActionHistory', 'trackDefeatedEnemyHealth', 'sharedSlotGroup', 'ignoreSkillSubstitution',
+  'trackRoundActionHistory', 'campaignDeck',
   'zoneReplacement',
   'deckConstruction',
   'attachedAssetsIgnoreSlots',
-  'bondedShufflePlayCost',
+  'bondedShufflePlayCost', 'discardPlayCost',
   // 敌人脚本钩子（函数，不进入关卡定义，避免 structuredClone 失败）。
   'enemyScript',
   // 隐藏卡/威胁区卡的数据型规则（第 7 批从 content/.../card-data.js 的表搬来）。
   'hiddenRule',
-  'threatEffect',
+  'threatEffect', 'encounterLookRule',
   'treacheryRule',
   // 威胁区卡面的「当你将受到伤害/恐惧时」强制修正（02221 灵魂之歌 / 05269 同文重印）。
   // 形状 `{ trigger: 'damage' | 'horror', extra: number, discard?: boolean }`；
@@ -236,6 +238,8 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   // - `shrewdAnalysis` / `arcaneResearch`：两张永久资产的身份标志（老练分析 / 奥术研究）；
   // - `uniqueInDeck`：战役把这张卡加入牌组时同名只保留一张（丽塔·钱德勒）；
   'researchRequirement', 'startingXp', 'shrewdAnalysis', 'arcaneResearch',
+  'researchUpgradeFrom', 'trackTestAssetSource',
+  'drawAfterShuffleBack',
   'uniqueInDeck',
   // 「中毒」这类弱点：战役补给点/药品按这个标志找它（第 8 批，取代 campaign-effects.js 的默认卡号）。
   'poisonWeakness',
@@ -534,6 +538,7 @@ export function normalizeDescriptor(raw, { code, index }) {
     additionalTokenCost: raw.additionalTokenCost ? Object.freeze({ ...raw.additionalTokenCost }) : null,
     limit,
     fromHand: raw.fromHand === true || raw.quickEvent === true,
+    ...(raw.fromDiscard === true ? { fromDiscard: true } : {}),
     // P2-4：快速事件统一通道标记（reaction+fromHand 写法；读点 reactionWindow / playReactionCard）。
     quickEvent: raw.quickEvent === true,
     noPlayCost: raw.noPlayCost === true,
@@ -597,15 +602,42 @@ export function registerCardAbilities(entries) {
     if (!entry || typeof entry !== 'object') throw new Error('能力条目必须是对象')
     const origin = `能力条目 ${entry.code || '<无 code>'}`
     assertKnownKeys(entry, ENTRY_KEYS, origin)
+    validateSealEntry(entry)
+    const discardPlayCost = entry.discardPlayCost
+    if (discardPlayCost != null && (typeof discardPlayCost !== 'object' || Array.isArray(discardPlayCost)
+      || Object.keys(discardPlayCost).some(key => !['trait', 'slot', 'zones'].includes(key))
+      || typeof discardPlayCost.trait !== 'string' || !discardPlayCost.trait.trim()
+      || !['hand', 'arcane', 'body', 'accessory', 'ally', 'tarot'].includes(discardPlayCost.slot)
+      || !Array.isArray(discardPlayCost.zones) || !discardPlayCost.zones.length
+      || discardPlayCost.zones.some(zone => !['hand', 'play'].includes(zone)))) {
+      throw new TypeError(origin + ': 非法额外打出弃置费用')
+    }
     validateTokenCost(entry.additionalTokenCost)
+    if (entry.transferOnControllerDefeat != null && ![true, false, 'nearest'].includes(entry.transferOnControllerDefeat)) {
+      throw new TypeError(`${origin}: 非法 transferOnControllerDefeat`)
+    }
     for (const key of ['playCostModifier', 'playTimingProvider']) if (entry[key] != null && typeof entry[key] !== 'function') throw new TypeError(`${origin}: ${key} 必须是函数`)
+    if (entry.teamActivatable != null && !['boolean', 'function'].includes(typeof entry.teamActivatable)) {
+      throw new TypeError(`${origin}: teamActivatable 必须是布尔值或函数`)
+    }
     for (const key of ['skipUpkeepReady', 'discardWithoutSealedTokens', 'sharedLocationAbility', 'costReductionAtLocation', 'playUnderAnyAtLocation', 'trackTestTarget']) {
       if (entry.assetRule?.[key] != null && typeof entry.assetRule[key] !== 'boolean') throw new TypeError(`${origin}: assetRule.${key} 必须为布尔值`)
     }
     for (const [key, allowed] of Object.entries({ harmCapacity: ['unlimited'], restrictedAction: ['engage'], hostExtraSlot: ['arcane'], sharedUses: ['secrets'] })) {
       if (entry.assetRule?.[key] != null && !allowed.includes(entry.assetRule[key])) throw new TypeError(`${origin}: 非法 assetRule.${key}`)
     }
+    const playCostUses = entry.assetRule?.playCostUses
+    if (playCostUses != null && (typeof playCostUses !== 'object' || Array.isArray(playCostUses)
+      || Object.keys(playCostUses).some(key => !['cardType', 'trait', 'scope', 'usesFrom'].includes(key))
+      || (playCostUses.cardType != null && !['asset', 'event'].includes(playCostUses.cardType))
+      || (!playCostUses.cardType && !playCostUses.trait) || !['self', 'location'].includes(playCostUses.scope)
+      || (playCostUses.trait != null && (typeof playCostUses.trait !== 'string' || !playCostUses.trait.trim()))
+      || (playCostUses.usesFrom != null && (playCostUses.usesFrom !== 'controlled' || playCostUses.scope !== 'self'))
+      || !entry.usesType)) throw new TypeError(`${origin}: 非法 assetRule.playCostUses`)
     if (entry.assetRule?.hostTrait != null && (typeof entry.assetRule.hostTrait !== 'string' || !entry.assetRule.hostTrait)) throw new TypeError(`${origin}: 非法附属特性`)
+    if (entry.assetRule?.hostIgnoresOpportunityAttack != null && typeof entry.assetRule.hostIgnoresOpportunityAttack !== 'function') {
+      throw new TypeError(`${origin}: assetRule.hostIgnoresOpportunityAttack 必须是函数`)
+    }
     if (entry.assetRule?.enemyEntryAmbush != null) {
       const rule = entry.assetRule.enemyEntryAmbush
       if (!rule || typeof rule !== 'object' || Object.keys(rule).some(key => !['autoEvade', 'clues', 'preventReady'].includes(key))
@@ -645,9 +677,13 @@ export function registerCardAbilities(entries) {
       if (!test || typeof test !== 'object' || Array.isArray(test)) {
         throw new Error(`${origin}: treacheryRule.test 必须是对象`)
       }
-      assertKnownKeys(test, new Set(['skill', 'difficulty', 'fail', 'penaltyKind']), `${origin} treacheryRule.test`)
-      if (!['willpower', 'intellect', 'combat', 'agility'].includes(test.skill)) {
-        throw new Error(`${origin}: treacheryRule.test.skill 必须是四项技能之一`)
+      assertKnownKeys(test, new Set(['skill', 'skills', 'difficulty', 'fail', 'penaltyKind']), `${origin} treacheryRule.test`)
+      const skillNames = ['willpower', 'intellect', 'combat', 'agility']
+      if (test.skills == null) {
+        if (!skillNames.includes(test.skill)) throw new Error(`${origin}: treacheryRule.test.skill 必须是四项技能之一`)
+      } else if (test.skill != null || !Array.isArray(test.skills) || test.skills.length < 2
+        || new Set(test.skills).size !== test.skills.length || test.skills.some(skill => !skillNames.includes(skill))) {
+        throw new Error(`${origin}: treacheryRule.test.skills 必须是至少两项不同的有效技能，且不能与 skill 并用`)
       }
       const difficulty = test.difficulty
       if (difficulty && typeof difficulty === 'object') {
@@ -666,6 +702,10 @@ export function registerCardAbilities(entries) {
       }
       if (!test.fail.kind && !test.penaltyKind) {
         throw new Error(`${origin}: treacheryRule.test.fail.kind 或 penaltyKind 必填`)
+      }
+      if ((test.penaltyKind || test.fail.kind) === 'discardChosenByAmount'
+        && (!Number.isSafeInteger(test.fail.max) || test.fail.max < 1)) {
+        throw new Error(`${origin}: treacheryRule.test.fail.max 必须是正整数`)
       }
     }
     if (REGISTRY.has(entry.code) && REGISTRY.get(entry.code).registered !== false) {
@@ -700,6 +740,7 @@ export function registerCardAbilities(entries) {
     if(entry.enemyRule?.ignoreHunterBarriers!=null && typeof entry.enemyRule.ignoreHunterBarriers!=='boolean')throw new TypeError('Invalid Hunter barrier rule')
     if (entry.enemyRule?.patrolTarget != null) normalizePatrolTarget(entry.enemyRule.patrolTarget)
     if (entry.enemyRule?.elusive != null && typeof entry.enemyRule.elusive !== 'boolean') throw new TypeError('无效逃逸声明')
+    if (entry.enemyRule?.relentless != null && typeof entry.enemyRule.relentless !== 'boolean') throw new TypeError('无效无情声明')
     if (entry.enemyRule?.allowedDamageSources != null) validateDamageSourceRule(entry.enemyRule.allowedDamageSources)
     if (entry.enemyRule?.discardToScenarioDeck != null && (typeof entry.enemyRule.discardToScenarioDeck !== 'string'
       || !/^[a-z][a-zA-Z0-9]{0,63}$/.test(entry.enemyRule.discardToScenarioDeck)
@@ -927,7 +968,7 @@ export function registerCardAbilities(entries) {
       // Phase 5（D2）：使用次数元数据三件套一起进注册表，迁移 uses 时不用改引擎读点。
       discardWhenEmpty: entry.discardWhenEmpty === true,
       // Phase 5：条目级卡面关键字（资产/调查员的 fast 与不引发借机攻击）。
-      transferOnControllerDefeat: entry.transferOnControllerDefeat === true,
+      transferOnControllerDefeat: entry.transferOnControllerDefeat ?? false,
       movesThroughVoid: entry.movesThroughVoid === true,
       betweenActionsAnyTurn: entry.betweenActionsAnyTurn === true,
       fast: entry.fast === true,
@@ -1045,7 +1086,7 @@ export function registerCardAbilities(entries) {
       attachedCommitAsIfInHand: entry.attachedCommitAsIfInHand === true,
       commitFromPlay: entry.commitFromPlay === true,
       commitIconBonus: entry.commitIconBonus || null,
-      teamActivatable: entry.teamActivatable === true,
+      teamActivatable: entry.teamActivatable ?? false,
       playAsHand: entry.playAsHand === true,
       lureAttachment: entry.lureAttachment ?? null,
       payOrDiscardSelf: entry.payOrDiscardSelf ?? null,
@@ -1100,13 +1141,20 @@ export function registerCardAbilities(entries) {
       trackActionHistory: entry.trackActionHistory === true,
       trackDefeatedEnemyHealth: entry.trackDefeatedEnemyHealth === true,
       sharedSlotGroup: entry.sharedSlotGroup || null,
+      ...(entry.trackRoundActionHistory === true ? { trackRoundActionHistory: true } : {}),
+      ...(entry.campaignDeck ? { campaignDeck: Object.freeze({ ...entry.campaignDeck }) } : {}),
       ignoreSkillSubstitution: entry.ignoreSkillSubstitution || null,
       zoneReplacement: entry.zoneReplacement || null,
       deckConstruction: entry.deckConstruction || null,
       attachedAssetsIgnoreSlots: entry.attachedAssetsIgnoreSlots || [],
       bondedShufflePlayCost: entry.bondedShufflePlayCost || null,
+      ...(discardPlayCost ? { discardPlayCost: Object.freeze({
+        ...discardPlayCost, zones: Object.freeze([...new Set(discardPlayCost.zones)]),
+      }) } : {}),
       onFound: typeof entry.onFound === 'function' ? entry.onFound : null,
-      assetRule: entry.assetRule ? Object.freeze({ ...entry.assetRule }) : null,
+      assetRule: entry.assetRule ? Object.freeze({ ...entry.assetRule,
+        ...(playCostUses ? { playCostUses: Object.freeze({ ...playCostUses }) } : {}),
+      }) : null,
       additionalTokenCost: entry.additionalTokenCost ? Object.freeze({ ...entry.additionalTokenCost }) : null,
       playCostModifier: entry.playCostModifier || null,
       playTimingProvider: entry.playTimingProvider || null,
@@ -1118,6 +1166,7 @@ export function registerCardAbilities(entries) {
         cannotPlayTypes: Object.freeze([...(entry.hiddenRule.cannotPlayTypes || [])]),
         discard: entry.hiddenRule.discard ? Object.freeze({ ...entry.hiddenRule.discard }) : null,
       }) : null,
+      encounterLookRule: entry.encounterLookRule || null,
       threatEffect: entry.threatEffect ? Object.freeze({
         ...entry.threatEffect,
         extraActionCost: Object.freeze([...(entry.threatEffect.extraActionCost || [])]),
@@ -1126,9 +1175,10 @@ export function registerCardAbilities(entries) {
       treacheryRule: entry.treacheryRule ? Object.freeze({
         ...entry.treacheryRule,
         // 声明式「显现 - 检定」：读点 src/cards/card-rules.js 的 resolveDeclarativeTreacheryTest。
-        // 形状 `{ skill, difficulty: number | { base, plus }, fail, penaltyKind? }`。
+        // 使用 skill 指定技能，或用 skills 列出一次检定的备选技能。
         test: entry.treacheryRule.test ? Object.freeze({
           ...entry.treacheryRule.test,
+          ...(entry.treacheryRule.test.skills ? { skills: Object.freeze([...entry.treacheryRule.test.skills]) } : {}),
           difficulty: entry.treacheryRule.test.difficulty && typeof entry.treacheryRule.test.difficulty === 'object'
             ? Object.freeze({ ...entry.treacheryRule.test.difficulty })
             : entry.treacheryRule.test.difficulty,
@@ -1179,6 +1229,9 @@ export function registerCardAbilities(entries) {
       storyRole: entry.storyRole || null,
       // 第 123 轮（第 8 批）：战役层的条目字段（读点见 card-rules.js / campaign.js）。
       researchRequirement: entry.researchRequirement || null,
+      ...(entry.researchUpgradeFrom ? { researchUpgradeFrom: entry.researchUpgradeFrom } : {}),
+      ...(entry.trackTestAssetSource === true ? { trackTestAssetSource: true } : {}),
+      ...(entry.drawAfterShuffleBack ? { drawAfterShuffleBack: entry.drawAfterShuffleBack } : {}),
       startingXp: Number.isSafeInteger(entry.startingXp) ? entry.startingXp : null,
       shrewdAnalysis: entry.shrewdAnalysis === true,
       arcaneResearch: entry.arcaneResearch === true,
@@ -1234,6 +1287,7 @@ export function registerCardAbilities(entries) {
         ? Object.freeze(entry.customizationOptions.map(option => Object.freeze({ ...option })))
         : null,
       customizationEffects: entry.customizationEffects ? Object.freeze({ ...entry.customizationEffects }) : null,
+      ...(entry.enemyAttachmentTestDifficulty != null ? { enemyAttachmentTestDifficulty: entry.enemyAttachmentTestDifficulty } : {}),
       // 条目级的「简化声明」：审计把 simplified + note 汇总进 remaining，不静默放过。
       simplified: entry.simplified === true,
       // P2-4：重印别名条目的 canonical 卡号（null = 自己就是唯一实现）。
@@ -1250,6 +1304,7 @@ export function registerCardAbilities(entries) {
       registerCustomizationOptions({ [entry.code]: normalized.customizationOptions })
     }
     if (normalized.customizationEffects) registerCustomizationEffects({ [entry.code]: normalized.customizationEffects })
+    if (entry.customizationChoices) registerCustomizationChoices(entry.code, entry.customizationChoices)
   }
   // P2-4：重印别名注册（015xx → 01xx，数据在 src/cards/reprint-aliases.js）。
   // canonical 条目已经在本次批量里注册、且别名号没有自己的条目文件时，生成「只改 code」的别名条目；
@@ -1368,6 +1423,15 @@ export function abilityShim(code) {
     maxClicks: descriptor.maxClicks ?? undefined,
     fromAbilityLayer: true,
   }))
+}
+
+export function handAbilitySources(inv, requestedId) {
+  return (inv.hand || []).flatMap((code, handAbilityIndex) => {
+    const id = `hand-ability:${handAbilityIndex}:${code}`
+    if (requestedId != null && id !== requestedId) return []
+    if (!REGISTRY.get(code)?.abilities.some(ability => ability.kind === 'action' && ability.fromHand)) return []
+    return [{ id, code, handAbilityIndex }]
+  })
 }
 
 export function descriptorsForWindow(code, windowId, kind = null) {

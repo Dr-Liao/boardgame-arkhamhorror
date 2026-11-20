@@ -40,12 +40,14 @@ export function effectSourceKindOfType(type) {
 /** 规范化一条来源；缺 kind 或未知 kind 直接拒绝（调用方必须给出真实类别）。 */
 export function normalizeEffectSource(raw) {
   if (!raw || !KINDS.has(raw.kind)) throw new TypeError('Missing authoritative effect source')
-  return Object.freeze({
+  const source = {
     kind: raw.kind,
     code: raw.code == null ? null : String(raw.code),
     sourceId: raw.sourceId == null ? null : String(raw.sourceId),
     controllerSeat: Number.isInteger(raw.controllerSeat) ? raw.controllerSeat : null,
-  })
+  }
+  if (raw.actionKind === 'parley') Object.defineProperty(source, 'actionKind', { value: 'parley' })
+  return Object.freeze(source)
 }
 
 /**
@@ -54,7 +56,8 @@ export function normalizeEffectSource(raw) {
  * 显式 `source.effectSource` 优先（转账/嵌套原语可以把真实来源带下来）。
  */
 export function cardEffectSource(state, source, descriptor, inv, { cardDef } = {}) {
-  if (source?.effectSource) return normalizeEffectSource(source.effectSource)
+  const actionKind = descriptor?.actionKind || descriptor?.countsAs || source?.effectSource?.actionKind
+  if (source?.effectSource) return normalizeEffectSource({ ...source.effectSource, actionKind })
   const code = descriptor?.code || source?.originalCode || source?.code
   const def = code && typeof cardDef === 'function' ? cardDef(code) : null
   const kind = effectSourceKindOfType(def?.type)
@@ -67,6 +70,7 @@ export function cardEffectSource(state, source, descriptor, inv, { cardDef } = {
     code,
     sourceId: source?.id ?? null,
     controllerSeat: owner ? owner.seat : (source?.controllerSeat ?? inv?.seat ?? null),
+    actionKind,
   })
 }
 

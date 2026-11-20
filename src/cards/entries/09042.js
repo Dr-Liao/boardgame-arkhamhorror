@@ -1,37 +1,41 @@
-// 09042 鸦翎羽毛笔（The Raven Quill）· 探求者事件 · 3 费 · 定制 · 独特。
-// 卡面：定制。你在购买鸦翎羽毛笔时，指定一个[[书籍]]或[[法术]]支援，并将其名称记录在本卡牌的
-//       升级卡上。附属到你控制的已指定支援。
-//       [reaction] 在你撤退或游戏结束时：勾选鸦翎羽毛笔升级卡上的一个方框，或者在下场冒险开始前
-//       升级所附属支援的经验值费用降低 1 点。
-//
-// 一张卡一个文件：这张卡的行为只在这里维护。
-// 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
-//
-// 口径：
-//   · 打出：选择你控制的一张[[书籍]]或[[法术]]支援，把本事件作为升级附属到它（api.attachPlayerCardToAsset
-//     的 code 参数是卡号，宿主附属会被 descriptorSources 枚举为能力来源）；
-//   · Energy Sap（已勾选，2 格）：本卡获得「[fast] 横置：把 1 充能/秘密从你控制的另一张支援移到
-//     所附属支援」——逐项实现，读点 uses（api.addUses）。
-// approximation：撤退/游戏结束没有玩家卡可用的窗口，且「升级经验 -1」属于战役升级报价层
-//   （campaign-flow 的 XP 计算），本条目未实现；Living Quill / Spectral Binding / Mystic Vane /
-//   Interwoven Ink / Supernatural Record 缺「按勾选条件改槽位/改检定值/改触发」的读点，未实现。
-//   逐项见 note 与 artifacts/migration/tsk/primitive-requests/09042.json。
-import { customizationOptionFullyChecked } from '../../engine/tsk-customizable.js'
+// 09042 鸦翎羽毛笔 · 定制升级效果按附属实例及其宿主结算。
+import { customizationChoiceValues, customizationOptionFullyChecked } from '../../engine/tsk-customizable.js'
+import { ALL_CARDS } from '../cards-data.js'
 
 const SOURCE = '09042'
-const hostOf = state => {
-  for (const owner of state.investigators || []) {
-    for (const asset of owner.assets || []) {
-      const attachment = (asset.attachments || []).find(item => item.code === SOURCE && !item.assetReference)
-      if (attachment) return { owner, asset, attachment }
-    }
-  }
-  return null
+const unlocked = (state, seat, index) => customizationOptionFullyChecked(state, seat, SOURCE, index)
+const hostOf = (inv, source) => inv.assets.find(asset => asset.attachments?.includes(source))
+const isHostTrait = traits => traits.some(trait => ['tome', 'spell'].includes(String(trait).toLowerCase()))
+const readyTargets = (inv, hostId) => inv.assets.filter(card => card.id !== hostId && card.exhausted)
+const useType = card => String(card.usesType || '').toLowerCase().replace(/s$/, '')
+
+function attachmentTargets(inv, titles, cardDef) {
+  return inv.assets.filter(asset => {
+    const definition = cardDef?.(asset.code)
+    const card = ALL_CARDS[asset.originalCode ?? definition?.originalCode ?? asset.code] ?? definition
+    // 尚未录入升级卡的旧局仍可附属；下一次构筑或升级时登记名称。
+    return titles.length ? titles.includes(card?.name) : isHostTrait(card?.traits || [])
+  })
+}
+
+const hasSupernaturalRecord = (state, inv, titles) => titles.length > 0 && unlocked(state, inv.seat, 6)
+
+function tokenSources(inv, host) {
+  if (!host) return []
+  return inv.assets.filter(card => card !== host).flatMap(card =>
+    ['secret', 'charge'].filter(type => (!useType(host) || useType(host) === type)
+      && (useType(card) === type ? card.uses : card.useTokens?.[type]) > 0)
+      .map(type => ({ card, type, id: `${card.id}:${type}` })))
 }
 
 export default {
-  code: '09042',
-  note: 'approximation: 只实现「附属到已指定的书籍/法术支援」与 Energy Sap 的移标记；撤退/游戏结束的勾选与升级经验 -1、以及另 5 项定制效果缺读点未实现（见 primitive-requests/09042.json）',
+  code: SOURCE,
+  keepOnPlay: true,
+  note: 'approximation: 尚无撤退或游戏结束时的战役奖励。',
+  assetRule: {
+    hostIgnoresOpportunityAttack: ({ state, inv, source }) => unlocked(state, source.ownerSeat ?? inv.seat, 0),
+  },
+  customizationChoices: { kind: 'assetTitle', base: 1, options: { 3: 2 } },
   customizationOptions: [
     { name: 'Living Quill', checks: 1, text: "Using attached asset's [action] abilities does not provoke attacks of opportunity." },
     { name: 'Spectral Binding', checks: 1, text: 'Attached asset does not take up any slots.' },
@@ -41,53 +45,87 @@ export default {
     { name: 'Interwoven Ink', checks: 3, text: 'After you resolve an [action] ability on attached asset, you may exhaust The Raven Quill to ready another asset you control.' },
     { name: 'Supernatural Record', checks: 4, text: 'When you play The Raven Quill, instead of attaching it to a named asset you control, you may search your deck, discard pile, and hand for a copy of a named asset and play it (paying its cost). Then, attach The Raven Quill to it.' },
   ],
+  playCondition: [{
+    when: ({ state, inv, helpers }) => {
+      const titles = customizationChoiceValues(state, inv.seat, SOURCE)
+      return attachmentTargets(inv, titles, helpers.cardDef).length > 0 || (hasSupernaturalRecord(state, inv, titles)
+        && helpers.canSearchPlayableAsset?.(inv, {
+          titles,
+          hostIgnoresSlots: unlocked(state, inv.seat, 1),
+          reservedResources: helpers.playCost?.(inv, SOURCE) ?? ALL_CARDS[SOURCE].cost,
+        }))
+    },
+    message: '没有可附属的已指定支援，也无法通过神奇记录打出已指定支援',
+  }],
   abilities: [
     {
       kind: 'played',
-      label: '附属到你控制的一张[[书籍]]或[[法术]]支援',
+      label: '附属到已指定的支援',
       resolve: ({ state, inv, api }) => {
-        const candidates = (inv.assets || []).filter(asset => (api.cardTraits(asset.code) || [])
-          .some(trait => ['tome', 'spell'].includes(String(trait).toLowerCase())))
-        if (!candidates.length) {
-          api.info('鸦翎羽毛笔：你控制的支援里没有[[书籍]]或[[法术]]。')
+        const titles = customizationChoiceValues(state, inv.seat, SOURCE)
+        const candidates = attachmentTargets(inv, titles, api.cardDef)
+        const hostIgnoresSlots = unlocked(state, inv.seat, 1)
+        const canSearch = hasSupernaturalRecord(state, inv, titles)
+          && api.canSearchPlayableAsset(inv.seat, { titles, hostIgnoresSlots })
+        const options = candidates.map(asset => ({ id: asset.id, cardCode: asset.code, label: api.cardName(asset.code) }))
+        if (canSearch) options.push({ id: 'search', label: '神奇记录：查找并打出一张已指定的支援' })
+        const chosen = options.length > 1 ? api.choice({
+          kind: canSearch ? 'effect' : 'asset', source: SOURCE, seat: inv.seat,
+          prompt: canSearch ? '鸦翎羽毛笔：选择要附属的支援，或使用神奇记录。' : '鸦翎羽毛笔：选择要附属的支援。',
+          options,
+        }) : options[0]?.id
+        const host = chosen === 'search' ? api.searchPlayableAsset(inv.seat, { source: SOURCE, titles, hostIgnoresSlots })
+          : candidates.find(asset => asset.id === chosen)
+        if (!host || !api.attachPlayerCardToAsset(SOURCE, host, { ownerSeat: inv.seat, ...(hostIgnoresSlots ? { hostIgnoresSlots } : {}) })) {
+          api.putIntoDiscard(inv.seat, SOURCE)
           return
         }
-        const chosen = candidates.length === 1 ? candidates[0].id : api.choice({
-          kind: 'asset', source: SOURCE, seat: inv.seat,
-          prompt: '鸦翎羽毛笔：选择要附属的[[书籍]]或[[法术]]支援。',
-          options: candidates.map(asset => ({ id: asset.id, label: api.cardName(asset.code) })),
-        })
-        const host = candidates.find(item => item.id === chosen) || candidates[0]
-        api.attachPlayerCardToAsset(SOURCE, host, { ownerSeat: inv.seat })
         api.info(`鸦翎羽毛笔：附属到「${api.cardName(host.code)}」。`)
       },
     },
     {
       kind: 'free',
-      label: '墨力汲取（Energy Sap）：横置本卡，把 1 充能/秘密移到所附属支援',
+      label: '墨力汲取：横置本卡，把 1 充能或秘密移到所附属支援',
       cost: { exhaust: true },
-      criteria: [({ state, inv }) => {
-        const host = hostOf(state)
-        if (!host) return false
-        if (!customizationOptionFullyChecked(state, inv.seat, SOURCE, 4)) return false
-        return (inv.assets || []).some(card => card !== host.asset && (card.uses || 0) > 0)
-      }],
-      resolve: ({ state, inv, api }) => {
-        const host = hostOf(state)
-        if (!host) return
-        const sources = (inv.assets || []).filter(card => card !== host.asset && (card.uses || 0) > 0)
+      criteria: [({ state, inv, source }) => unlocked(state, inv.seat, 4)
+        && tokenSources(inv, hostOf(inv, source)).length > 0],
+      resolve: ({ inv, source, api }) => {
+        const host = hostOf(inv, source)
+        const sources = tokenSources(inv, host)
         if (!sources.length) return
-        const assetId = sources.length === 1 ? sources[0].id : api.choice({
+        const id = sources.length === 1 ? sources[0].id : api.choice({
           kind: 'asset', source: SOURCE, seat: inv.seat,
-          prompt: '墨力汲取：选择要移走充能/秘密的支援。',
-          options: sources.map(card => ({ id: card.id, label: `${api.cardName(card.code)}（${card.uses}）` })),
+          prompt: '墨力汲取：选择要移动哪一个充能或秘密。',
+          options: sources.map(({ card, type, id }) => ({ id, label: `${api.cardName(card.code)}（${type === 'secret' ? '秘密' : '充能'}）` })),
         })
-        const from = sources.find(card => card.id === assetId) || sources[0]
-        api.addUses(from, -1)
-        api.addUses(host.asset, 1)
-        api.info(`鸦翎羽毛笔：把 1 个标记从「${api.cardName(from.code)}」移到「${api.cardName(host.asset.code)}」。`)
+        const picked = sources.find(item => item.id === id)
+        if (picked) api.useTokens.move(picked.card.id, host.id, picked.type, 1)
+      },
+    },
+    {
+      kind: 'reaction', trigger: 'assetActionResolved',
+      label: '交织墨水：横置本卡，重整你控制的另一张支援',
+      cost: { exhaust: true },
+      criteria: [({ state, inv, source, context }) => unlocked(state, inv.seat, 5) && context.seat === inv.seat
+        && context.assetId === source.hostAssetId && readyTargets(inv, context.assetId).length > 0],
+      resolve: ({ inv, context, api }) => {
+        const alternatives = readyTargets(inv, context.assetId)
+        const id = alternatives.length === 1 ? alternatives[0].id : api.choice({
+          kind: 'asset', source: SOURCE, seat: inv.seat,
+          prompt: '交织墨水：选择另一张支援重整。',
+          options: alternatives.map(card => ({ id: card.id, label: api.cardName(card.code) })),
+        })
+        api.ready(alternatives.find(card => card.id === id))
       },
     },
   ],
-  modifiers: [],
+  modifiers: [{
+    target: 'testValue', amount: 2,
+    condition: { when: ({ state, inv, source }) => {
+      if (!state.skillTest || !unlocked(state, inv.seat, 2)) return false
+      const assetId = state.skillTest.assetSourceId ?? state.skillTest.source?.assetId ?? state._resolvingAssetId
+      const host = hostOf(inv, source)
+      return Boolean(host) && host.id === assetId
+    } },
+  }],
 }

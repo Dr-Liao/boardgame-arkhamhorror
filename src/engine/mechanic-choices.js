@@ -14,7 +14,8 @@ export const MECHANIC_OPERATIONS = Object.freeze(['seal', 'release', 'claimKey',
   'tskConcealed', 'tskKey', 'tskHollow', 'tskMap', 'tskCustomizable', 'tskCrossSeat',
   // P4 九循环《铁杉谷盛宴》交互事务：法典触读 / 序曲整备与下一次勘察 / 网格空位滑动 /
   // 矿车道岔 / 猎杀袋抽取转移 / 坚毅形态与线索搬移。
-  'fhvCodex', 'fhvSurvey', 'fhvGrid', 'fhvRail', 'fhvPredation', 'fhvForm', 'fhvClue'])
+  'fhvCodex', 'fhvSurvey', 'fhvGrid', 'fhvRail', 'fhvPredation', 'fhvForm', 'fhvClue',
+  'tdcTask', 'tdcRoute', 'tdcGlyph', 'tdcArtifact', 'tdcMap'])
 export function selectMechanic(state, seat, { operation, prompt, candidates, min = 1, max = 1, optional = true, source = null, stage = 'items' }) {
   investigatorAt(state, seat)
   if (!MECHANIC_OPERATIONS.includes(operation) || !Array.isArray(candidates)

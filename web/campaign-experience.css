@@ -211,9 +211,7 @@ body:has(.ah-table):not(:has(.ah-db-modal,.ah-carddetail-modal)) .ah-rulebook-la
   .ah-hub-world-map-destinations { grid-template-columns: 1fr; }
 }
 
-/* P8（八循环《绯红密钥》）：构筑期/关间的定制升级卡面板。
-   与幕间/世界地图同一羊皮纸材料语言；选项行是「名称 + 已勾/总格 + 勾选按钮」的两列网格，
-   移动端 900px 以下收成一列，按钮整行宽，避免 390px 横向溢出。 */
+/* 构筑期和关间共用定制升级卡面板。 */
 .ah-hub-customization { width: calc(100% - 64px); max-width: 1280px; margin: 16px auto 0; padding: 16px 22px; border: 1px solid #bda675;
   color: var(--ah-material-paper-ink, #000);
   background: radial-gradient(ellipse at top right, #eee1bc88, transparent 70%), linear-gradient(100deg, #a99767 0, #dfd0a4 3%, #e4d5ac 97%, #ac9864);
@@ -230,21 +228,46 @@ body:has(.ah-table):not(:has(.ah-db-modal,.ah-carddetail-modal)) .ah-rulebook-la
 }
 .ah-hub-customization-line { margin: 0 0 10px; font-size: 13px; line-height: 1.6; }
 .ah-hub-customization-list { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
-.ah-hub-customization-card { padding: 12px 14px; border: 1px solid #8f7b4d66; border-radius: 6px; background: #fbf2d733; }
-.ah-hub-customization-card > header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin-bottom: 6px; }
+.ah-hub-customization-card {
+  display: grid; grid-template-columns: clamp(132px, 13vw, 176px) minmax(0, 1fr);
+  align-items: start; gap: 10px 18px; padding: 12px 14px;
+  border: 1px solid #8f7b4d66; border-radius: 6px; background: #fbf2d733;
+}
+.ah-hub-customization-card > header { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
 .ah-hub-customization-card > header strong { font-size: 16px; letter-spacing: 1px; }
 .ah-hub-customization-card > header small { font-size: 12px; opacity: .85; }
-.ah-hub-customization-card ul { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; grid-template-columns: minmax(0, 1fr); }
-.ah-hub-customize-option { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 6px 12px;
-  padding: 6px 8px; border-top: 1px solid #8f7b4d33; }
-.ah-hub-customize-option span { font-size: 13px; line-height: 1.55; overflow-wrap: anywhere; }
-.ah-hub-customize-option .bg-btn { max-width: 100%; white-space: normal; text-align: left; }
-/* P2-3：规则尚未实现的定制勾选格——展示卡面文本但不可购买。 */
-.ah-hub-customize-unimplemented { font-size: 12px; line-height: 1.4; color: #8a6d3b; font-style: italic; }
+.ah-hub-customize-preview { width: 100%; max-width: 176px; border-radius: 5px; }
+.ah-hub-customization-card ul { margin: 0; padding: 0; list-style: none; }
+.ah-hub-customize-option {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, max-content); align-items: start; gap: 8px;
+  padding: 5px 0; border-top: 1px solid #8f7b4d44; font-size: 13px; line-height: 1.55; overflow-wrap: anywhere;
+}
+.ah-hub-customize-copy { padding: 4px 0; }
+.ah-hub-customize-option summary { cursor: pointer; font-weight: 600; }
+.ah-hub-customize-option details p { margin: 6px 0 2px; }
+.ah-hub-customize-boxes { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; }
+.ah-office .ah-hub-customize-box {
+  appearance: none; display: grid; place-items: center; box-sizing: border-box; width: 28px; height: 28px;
+  padding: 0; border: 1px solid #9a875a; border-radius: 4px; background: #f9edca55; color: #fff5db; box-shadow: none;
+}
+.ah-office button.ah-hub-customize-box:enabled { border-color: #6d5125; background: #fbf1d5; cursor: pointer; }
+.ah-office button.ah-hub-customize-box:enabled:hover { background: #d8c18c; }
+.ah-office button.ah-hub-customize-box:focus-visible { outline: 2px solid #6d5125; outline-offset: 2px; }
+.ah-office .ah-hub-customize-box[aria-checked='true'] { border-color: #48604a; background: #48604a; }
+.ah-hub-customize-box[aria-checked='true']::after {
+  content: ''; width: 6px; height: 11px; border: solid currentColor; border-width: 0 2px 2px 0; transform: translateY(-1px) rotate(45deg);
+}
+.ah-hub-customize-unimplemented { display: block; margin-top: 2px; font-size: 12px; line-height: 1.4; color: #735b31; }
+.ah-hub-customize-choices:not([hidden]) {
+  grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-width: 0;
+}
+.ah-hub-customize-choices select { min-width: 0; max-width: 100%; }
 @media (max-width: 900px) {
   .ah-hub-customization { width: calc(100% - 24px); padding: 13px 12px; scroll-margin-top: 265px; }
   .ah-hub-customization-card { padding: 10px; }
-  .ah-hub-customize-option { grid-template-columns: minmax(0, 1fr); }
-  .ah-hub-customize-option .bg-btn { width: 100%; }
+}
+@media (max-width: 560px) {
+  .ah-hub-customization-card { grid-template-columns: minmax(0, 1fr); }
+  .ah-hub-customize-preview { justify-self: center; max-width: 116px; }
 }
 

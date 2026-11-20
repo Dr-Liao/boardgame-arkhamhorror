@@ -1,5 +1,5 @@
 import { createEnemyZoneApi } from './enemy-zones.js'
-import { mechanicState } from './mechanic-state.js'
+import { investigatorAt, mechanicState } from './mechanic-state.js'
 import * as pool from './chaos-token-pool.js'
 import * as water from './flood.js'
 import * as keys from './scenario-keys.js'
@@ -8,6 +8,8 @@ import * as graph from './map-graph.js'
 import * as barriers from './edge-barriers.js'
 import * as origins from './commit-origins.js'
 import * as records from '../campaign/record-sets.js'
+import { changeProgress, claimProgress, progressFor, settleProgress } from '../campaign/progress-tracks.js'
+import { deferStartingAdjustment } from '../campaign/starting-adjustments.js'
 import { setTokenTreatment } from './chaos-token-effects.js'
 import { moveUses, spendSharedUses } from './use-transfer.js'
 import { makeTurnPromise } from './turn-promises.js'
@@ -48,6 +50,7 @@ import { tskStateSummary } from './tsk-primitives.js'
 import { createTskInteractions } from './tsk-interactions.js'
 // 九循环 P4：FHV 交互事务（法典 / 序曲整备 / 网格与矿车 / 猎杀袋 / 调查员状态）。
 import { createFhvInteractions } from './fhv-interactions.js'
+import { createTdcInteractions } from './tdc-interactions.js'
 import { canResolveCodex, resolveCodex, scenarioDate, scenarioPeriod, setScenarioDate } from './scenario-calendar.js'
 import { placeLocationDefense } from './location-defenses.js'
 import { advanceRailVehicle, configureRailGrid, convertRailMarkers, endRailGrid, steerRailVehicle } from './rail-grid.js'
@@ -66,7 +69,8 @@ export function createMechanicsApi(state, deps = {}) {
   return {
     // 七循环 P4：EotE 待决选择事务。`eote` 命名空间完整暴露（keys 等与既有交互同名者只在此处）；
     // 其余不冲突的分组在顶层再给一次，供内容层简写调用。
-    interactions: { ...createMechanicChoices(state, deps), ...eoteInteractionGroups(state, deps), eote: createEoteInteractions(state, deps), tsk: createTskInteractions(state, deps), fhv: createFhvInteractions(state, deps) },
+    interactions: { ...createMechanicChoices(state, deps), ...eoteInteractionGroups(state, deps), eote: createEoteInteractions(state, deps),
+      tsk: createTskInteractions(state, deps), fhv: createFhvInteractions(state, deps), tdc: createTdcInteractions(state, deps) },
     scenarioDecks: deck,
     calendar: {
       current: () => scenarioDate(state),
@@ -153,6 +157,7 @@ export function createMechanicsApi(state, deps = {}) {
       lock: id => water.lockFloodLevel(state, id),
       level: id => water.floodLevel(state, id), effectiveLevel: (seat, options) => water.effectiveFloodLevel(state, seat, options),
       canChange: (id, amount) => water.canChangeFloodLevel(state, id, amount),
+      nearestTargets: (from, amount) => water.nearestFloodTargets(state, from, amount),
       set: (id, level, options) => water.setFloodLevel(state, id, level, { ...options, onChange: deps.floodChanged }),
       change: (id, amount, options) => water.changeFloodLevel(state, id, amount, { ...options, onChange: deps.floodChanged }),
       beginAirTurn: (seat, options) => water.beginAirTurn(state, seat, options), endAirTurn: seat => water.endAirTurn(state, seat, deps.directDamage),
@@ -183,11 +188,14 @@ export function createMechanicsApi(state, deps = {}) {
       emptyAdjacent: locationId => grid.adjacentGridSpaces(state, locationId),
       relocate: (cells, options) => grid.relocateGridCells(state, cells, options),
       position: id => grid.gridPosition(state, id),
+      ports: id => grid.gridPorts(state, id),
+      rotatePorts: (id, turns) => grid.rotateGridPorts(state, id, turns),
       locations: query => grid.gridLocations(state, query),
       place: (id, x, y, options) => grid.placeGridLocation(state, id, x, y, deps, options),
       connect: (a, b, options) => grid.connectGridPair(state, a, b, options),
       expand: (id, template, deckId) => grid.expandGridFrom(state, id, template, deckId, { ...deps, deck }),
       paths: (from, to, canEnter) => graph.shortestPaths(state.locations, from, to, canEnter),
+      nearest: (from, eligible) => graph.nearestLocations(state.locations, from, eligible).map(location => location.id),
       distance: (from, to) => graph.roadDistance(state.locations, from, to), neighbors: (cells, cell) => graph.orthogonalNeighbors(cells, cell),
       initializeRoad: spec => graph.initializeRoad(state, spec), extendRoad: (from, count) => graph.extendRoad(state, from, count, deps.placeLocation),
     },
@@ -195,9 +203,19 @@ export function createMechanicsApi(state, deps = {}) {
       values: key => records.recordSetValues(state.campaign, key), add: (key, value) => records.recordSetAdd(state.campaign, key, value),
       remove: (key, value) => records.recordSetRemove(state.campaign, key, value), claimReward: id => records.claimRecordReward(state.campaign, id),
     },
+    progress: {
+      claim: (track, seat, option) => claimProgress(state.campaign, track, investigatorAt(state, seat).seat, option),
+      forSeat: (track, seat) => progressFor(state.campaign, track, investigatorAt(state, seat).seat),
+      settle: (track, seat, receipt, resolve) => settleProgress(state.campaign, track, investigatorAt(state, seat).seat, receipt, resolve),
+      change: (track, seat, amount, receipt) => changeProgress(state.campaign, track, investigatorAt(state, seat).seat, amount, receipt),
+    },
+    startingAdjustments: {
+      defer: (seat, spec) => deferStartingAdjustment(state, investigatorAt(state, seat).seat, spec),
+    },
     commitOrigins: {
       beneath: (seat, host) => origins.beneathCards(state, seat, host), store: (seat, host, code, options) => origins.storeBeneath(state, seat, host, code, options),
       take: (seat, host, code, to) => origins.takeBeneath(state, seat, host, code, to), commit: (seat, spec) => origins.commitFromOrigin(state, seat, spec, deps.commit),
+      swap: (seat, host, beneath, hand) => origins.swapBeneathWithHand(state, seat, host, beneath, hand),
       withdraw: (seat, index) => origins.withdrawCommitment(state, seat, index),
     },
     // ── 七循环《地球边缘》P2 通用原语 ────────────────────────────────────────

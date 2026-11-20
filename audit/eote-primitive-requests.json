@@ -241,12 +241,12 @@
   {
     "file": "m2-2-08072.json",
     "id": "m2-2-08072",
-    "status": "rejected",
+    "status": "implemented",
     "need": "把支援上的 secrets 当资源支付同地点 Item 支援的打出费用",
     "cards": [
       "08072"
     ],
-    "reason": "维持当前「花 1 秘密得 1 资源」近似（已实现且测试通过）。"
+    "reason": "assetRule.playCostUses 按卡牌类型、特性及地点限制支付，08072 在目录控制者确认后直接扣除秘密。"
   },
   {
     "file": "m2-2-08074.json",

@@ -6,19 +6,31 @@
 //
 // 04234 献祭：弃掉一张秘术支援，分配 3 点（抽牌 / 资源）。
 
+import { ALL_CARDS } from '../cards-data.js'
+
+const isMystic = code => {
+  const card = ALL_CARDS[code]
+  return card?.factions ? card.factions.includes('mystic') : card?.klass === 'mystic'
+}
+
 export default {
   code: '04234',
+  playCondition: [{
+    when: ({ inv, helpers }) => inv.assets.some(asset => helpers.canDiscardAsset(asset)
+      && isMystic(asset.code)),
+    message: '没有可献祭的秘术支援',
+  }],
   abilities: [
     {
       kind: 'played', label: '献祭',
       resolve: ({ state, inv, api }) => {
-        const spells = inv.assets.filter(card => api.cardFactions(card.code).includes('mystic'))
+        const spells = inv.assets.filter(card => api.investigatorTools.canDiscardAsset(inv.seat, card) && isMystic(card.code))
         if (!spells.length) { api.info('没有可献祭的秘术支援。'); return }
         const chosen = spells.length === 1 ? spells[0].id
           : api.choice({ kind: 'target', source: '04234', seat: inv.seat, prompt: '选择要献祭的秘术支援。',
             options: spells.map(card => ({ id: card.id, label: api.cardName(card.code) })) })
         const card = spells.find(item => item.id === chosen) || spells[0]
-        api.discardAsset(inv.seat, card)
+        if (!api.discardAsset(inv.seat, card)) return
         const split = api.choice({ kind: 'effect', source: '04234', seat: inv.seat,
           prompt: '分配 3 点：抽牌与资源。',
           options: [

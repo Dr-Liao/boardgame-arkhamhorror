@@ -1,0 +1,296 @@
+{
+  "id": "theDoomOfArkhamPartI",
+  "campaignId": "theDrownedCity",
+  "locales": {
+    "en": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "The Doom of Arkham Part I",
+          "children": [
+            {
+              "id": "intro1",
+              "text": "You awaken from yet another nightmare to a furious knocking at your door. You open it to find a bedraggled-looking Andy and Ruby, along with a sharply dressed inspector who introduces himself as John Raymond Legrasse. The inspector explains that he has been investigating a spate of dreaming cults across the United States and abroad."
+            },
+            {
+              "id": "intro2",
+              "text": "You invite them inside as it begins to rain. Once seated, the inspector flashes a photo of a familiar statue. Several months ago, he sent the statue to a colleague in Miskatonic University for analysis. Apparently, Tillinghast’s request that you find his “missing shipment” was nothing more than petty theft. He tells you he arrived in Arkham about a month ago to interrogate Tillinghast and recover the statue."
+            },
+            {
+              "id": "intro3",
+              "text": "“Something didn’t sit right with me after we handed off the artifacts,” Andy says darkly. “So a few days later, I headed to the shop. When we got there the shop’d moved. Or so we thought. Ruby finally found it, and we went in to find the inspector arguing with Tillinghast and—things didn’t go so well.”"
+            },
+            {
+              "id": "intro4",
+              "text": "“That’s putting it mildly,” Legrasse says. “Randall was giving me the runaround when these two appeared. He threw us out, real quick. When we looked around, we weren’t…here.” You ask him what he means, and he shakes his head. “I mean we weren’t here. In Arkham. His shop door led somewhere else entirely. It took us a whole month to return.”"
+            },
+            {
+              "id": "intro5",
+              "text": "“I think we were somewhere in Tibet, or even farther north. It was…a journey to get back,” sighs Andy. A few months ago, you might’ve found their story hard to believe, but not now. Knowing what you do about Tillinghast, it’s no surprise that he has something far more sinister planned than simple acquisition. But what?"
+            },
+            {
+              "id": "intro6",
+              "text": "Together with Inspector Legrasse, Ruby, and Andy, you resolve to recover the artifacts and confront Tillinghast, wherever he might be. As you set out, the rain turns to a heavy downpour."
+            },
+            {
+              "id": "proceedToSetup",
+              "text": "Proceed to Setup."
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "setup",
+          "children": [
+            {
+              "id": "gatherSets",
+              "text": "Gather all cards from the following encounter sets: The Doom of Arkham Part I, Deep Ones, Domination, Dreams, Star Spawn, Agents of Cthulhu, and The Midnight Masks. "
+            },
+            {
+              "id": "midnightMasksCards",
+              "text": "When gathering the The Midnight Masks encounter set, only gather the location and treachery cards. Do not gather the acts or agendas from this set."
+            },
+            {
+              "id": "placeLocations",
+              "text": "Find each location in the The Midnight Masks encounter set and put them into play as follows:"
+            },
+            {
+              "id": "randomVersions",
+              "text": "Put one of the two Downtown locations and one of the two Southside locations into play at random and remove the other versions of those locations from the game. Put Northside, Easttown, Rivertown, St. Mary’s Hospital, and Miskatonic University into play according to the location placement diagram."
+            },
+            {
+              "id": "setAsideLocations",
+              "text": "Set each other location aside, out of play."
+            },
+            {
+              "id": "startAtRivertown",
+              "text": "Each investigator begins play at Rivertown."
+            },
+            {
+              "id": "cardsBeneathLocations",
+              "text": "Shuffle the single-sided Tillinghast Esoterica location with each treachery from the The Midnight Masks encounter set and place one of them under each location except for Rivertown."
+            },
+            {
+              "id": "starSpawn",
+              "text": "Shuffle each enemy from the Star Spawn encounter set and remove two at random from the game. (Remove three instead if playing on easy mode.)"
+            },
+            {
+              "id": "setCardsAside",
+              "text": "Gather all earned artifacts along with the Horror in Clay story asset and set them aside, out of play."
+            },
+            {
+              "id": "legrasse",
+              "text": "Choose an investigator to add the John Raymond Legrasse story asset to their deck. This card does not count toward their deck size."
+            },
+            {
+              "id": "legrasseInPlay",
+              "text": "Put the John Raymond Legrasse story asset into play under that investigator’s control. He does not take up an ally slot during Part I or Part II of this scenario."
+            },
+            {
+              "id": "doomOnAgenda",
+              "text": "Place doom on the agenda equal to the number of investigators."
+            },
+            {
+              "id": "floodTokens",
+              "text": "Add the flood tokens to the token pool."
+            },
+            {
+              "id": "buildEncounterDeck",
+              "text": "Shuffle the remaining encounter cards to build the encounter deck."
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "rules",
+          "children": [
+            {
+              "id": "partsOfTheDoomOfArkham",
+              "title": "Part I and Part II in The Doom of Arkham",
+              "text": "This scenario is split into two parts. Players may choose to play these parts one at a time (with a break between each part), or they may play both parts together as a longer session. Each part is its own game with its own setup and resolution.\n\nInvestigators may upgrade their decks between Part I and Part II."
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "xp",
+          "children": [
+            {
+              "id": "bonus",
+              "text": "因直面兰道尔·蒂林哈斯特"
+            }
+          ]
+        },
+        {
+          "id": "noResolution",
+          "title": "无结局",
+          "text": "若每名调查员都撤退或被击败：三名惊恐的本地人从你身边冲过街道，身后跟着一尊笨重缓行的克苏鲁孽种。你的血都凉了。你无处可逃。你游荡在被洪水淹没的街道上，寻找露比、安迪或勒格拉斯督察的任何踪迹。\n\n• 每名调查员从收藏中随机搜寻一张基础创伤或疯狂弱点，加入其牌组。该牌不计入该调查员的牌组大小。\n\n• 前往结局 1。"
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "text": "结局 1：一声令人不安的咆哮撼动了阿卡姆的根基。你站在同伴们身旁抬头望去，看见克苏鲁那熟悉的庞大身形从米斯卡塔尼克河中缓慢起身。这位古老者只一动，就把河岸城的整个街区踩在脚下。木头断裂与玻璃碎裂的声音充满空气，紧接着是一片尖叫的合唱。\n\n安迪、露比和督察交换了一个凝重的眼神——你们最深的恐惧得到了证实。“我们必须做点什么！”安迪在喧闹中喊道。\n\n• 更新你的战役日志。在“已获得的神器”下：\n• 将剧本结束时不在任何调查员控制下的每件神器支援名称划掉。\n\n• 若剧本结束时黏土恐怖在某个调查员的控制下，在“已获得的神器”下记录“黏土恐怖”。\n\n• 在你的战役日志中记录“被淹没的街区：”，并列出每个被淹没的地点。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 调查员们必须决定（选择一项）：\n• “我们准备好战斗了。”若你想立刻继续游戏，前往结局 2。\n\n• “我们需要更多时间。”若你想休息一下、下次游戏时继续，跳至结局 3。"
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "text": "结局 2：只有你能对抗这严峻的威胁。阿卡姆现在需要你。\n\n• 照常清理游戏。\n\n• 立即前往阿卡姆的毁灭 第二部分。"
+        },
+        {
+          "id": "resolution3",
+          "title": "结局 3",
+          "text": "结局 3：你力劝同伴们花些时间做好准备、整理心绪，迎接最后的决战。\n\n• 照常清理游戏。\n\n• 当你准备好再次游戏时，从阿卡姆的毁灭 第二部分开始。"
+        }
+      ]
+    },
+    "zh": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "阿卡姆的毁灭 第一部分",
+          "children": [
+            {
+              "id": "intro1",
+              "text": "你从又一个噩梦中醒来，听见门外传来狂乱的敲门声。你打开门，看见一身狼狈的安迪和露比，身旁还有一位衣着利落的督察，他自我介绍叫约翰·雷蒙德·勒格拉斯。这位督察解释说，他一直在调查美国国内外一连串与梦境有关的邪教。"
+            },
+            {
+              "id": "intro2",
+              "text": "外面开始下雨，你请他们进屋。坐下之后，督察亮出一张照片，上面是一尊你熟悉的雕像。几个月前，他把这尊雕像寄给米斯卡塔尼克大学的一位同事作分析。显然，蒂林哈斯特要你去找的那批“失踪货物”不过是一桩小小的盗窃。他告诉你，大约一个月前他来到阿卡姆，审讯蒂林哈斯特并取回雕像。"
+            },
+            {
+              "id": "intro3",
+              "text": "“我们把那些器物交上去之后，我总觉得有哪里不对劲，”安迪阴沉地说。“所以几天后，我去了那家店。我们到那儿的时候，店铺已经搬走了。或者我们以为是这样。露比最终找到了它，我们进去，发现督察正和蒂林哈斯特争吵——然后事情就不太妙了。”"
+            },
+            {
+              "id": "intro4",
+              "text": "“这么说还算轻描淡写，”勒格拉斯说。“兰道尔当时正跟我打马虎眼，这两个人就出现了。他把我们赶了出来，非常快。等我们环顾四周，发现我们不在……这里了。”你问他是什么意思，他摇了摇头。“我是说，我们不在阿卡姆了。他店铺的门通向完全不同的地方。我们花了整整一个月才回来。”"
+            },
+            {
+              "id": "intro5",
+              "text": "“我想我们当时在西藏的某个地方，甚至更北。回来的路……可真是一场旅程，”安迪叹道。几个月前，你或许会觉得他们的故事难以置信，但现在不会了。了解了蒂林哈斯特的所作所为，他有什么比简单收购更加恶毒的计划，都不足为奇。但究竟是什么呢？"
+            },
+            {
+              "id": "intro6",
+              "text": "你与勒格拉斯督察、露比和安迪一道，决心夺回那些器物，并直面蒂林哈斯特——不管他在哪里。你们出发时，雨变成了倾盆大雨。"
+            },
+            {
+              "id": "proceedToSetup",
+              "text": "前往设置。"
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "setup",
+          "children": [
+            {
+              "id": "gatherSets",
+              "text": "从以下遭遇组中收集所有卡牌：阿卡姆的毁灭 第一部分、深潜者、支配、梦境、星之眷族、克苏鲁的使徒与午夜假面。这些组以下列图标表示："
+            },
+            {
+              "id": "midnightMasksCards",
+              "text": "收集午夜假面遭遇组时，只收集地点卡与诡计卡。不要收集该组的幕或议程。"
+            },
+            {
+              "id": "placeLocations",
+              "text": "找出午夜假面遭遇组中的每个地点，并按如下方式放入游戏："
+            },
+            {
+              "id": "randomVersions",
+              "text": "随机将两份商业区地点之一和两份南区地点之一放入游戏，并将这两个地点的其他版本移出游戏。按照地点布置图将北区、东镇、河岸城、圣玛丽医院和米斯卡塔尼克大学放入游戏。"
+            },
+            {
+              "id": "setAsideLocations",
+              "text": "将其他每个地点放在一边，置于场外。"
+            },
+            {
+              "id": "startAtRivertown",
+              "text": "每名调查员从河岸城开始游戏。"
+            },
+            {
+              "id": "cardsBeneathLocations",
+              "text": "将单面的蒂林哈斯特密所地点与午夜假面遭遇组中的每张诡计洗混，并将其中一张放置在除河岸城以外的每个地点下方。"
+            },
+            {
+              "id": "starSpawn",
+              "text": "将星之眷族遭遇组中的每名敌人洗混，随机将其中两名移出游戏。（若以简单模式进行游戏，则改为移出三名。）"
+            },
+            {
+              "id": "setCardsAside",
+              "text": "收集所有已获得的神器以及黏土恐怖剧情支援，放在一边，置于场外。"
+            },
+            {
+              "id": "legrasse",
+              "text": "选择一名调查员，将约翰·雷蒙德·勒格拉斯剧情支援加入其牌组。该牌不计入其牌组大小。"
+            },
+            {
+              "id": "legrasseInPlay",
+              "text": "将约翰·雷蒙德·勒格拉斯剧情支援在该调查员的控制下放入游戏。在本剧本的第一部分与第二部分中，他不占用盟友槽位。"
+            },
+            {
+              "id": "doomOnAgenda",
+              "text": "在议程上放置等于调查员数量的毁灭。"
+            },
+            {
+              "id": "floodTokens",
+              "text": "将洪水标记加入标记池。"
+            },
+            {
+              "id": "buildEncounterDeck",
+              "text": "洗混其余的遭遇卡，组建遭遇牌库。"
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "rules",
+          "children": [
+            {
+              "id": "partsOfTheDoomOfArkham",
+              "title": "《阿卡姆的毁灭》第一部分与第二部分",
+              "text": "本剧本分为两部分。玩家可以选择一次进行一部分（两部分之间休息一下），也可以把两部分连起来作为一次更长的游戏。每部分都是独立的一局游戏，各有自己的设置与结局。\n\n调查员可以在第一部分与第二部分之间升级牌组。"
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "xp",
+          "children": [
+            {
+              "id": "bonus",
+              "text": "因直面兰道尔·蒂林哈斯特"
+            }
+          ]
+        },
+        {
+          "id": "noResolution",
+          "title": "无结局",
+          "text": "若每名调查员都撤退或被击败：三名惊恐的本地人从你身边冲过街道，身后跟着一尊笨重缓行的克苏鲁孽种。你的血都凉了。你无处可逃。你游荡在被洪水淹没的街道上，寻找露比、安迪或勒格拉斯督察的任何踪迹。\n\n• 每名调查员从收藏中随机搜寻一张基础创伤或疯狂弱点，加入其牌组。该牌不计入该调查员的牌组大小。\n\n• 前往结局 1。"
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "text": "结局 1：一声令人不安的咆哮撼动了阿卡姆的根基。你站在同伴们身旁抬头望去，看见克苏鲁那熟悉的庞大身形从米斯卡塔尼克河中缓慢起身。这位古老者只一动，就把河岸城的整个街区踩在脚下。木头断裂与玻璃碎裂的声音充满空气，紧接着是一片尖叫的合唱。\n\n安迪、露比和督察交换了一个凝重的眼神——你们最深的恐惧得到了证实。“我们必须做点什么！”安迪在喧闹中喊道。\n\n• 更新你的战役日志。在“已获得的神器”下：\n• 将剧本结束时不在任何调查员控制下的每件神器支援名称划掉。\n\n• 若剧本结束时黏土恐怖在某个调查员的控制下，在“已获得的神器”下记录“黏土恐怖”。\n\n• 在你的战役日志中记录“被淹没的街区：”，并列出每个被淹没的地点。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 调查员们必须决定（选择一项）：\n• “我们准备好战斗了。”若你想立刻继续游戏，前往结局 2。\n\n• “我们需要更多时间。”若你想休息一下、下次游戏时继续，跳至结局 3。"
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "text": "结局 2：只有你能对抗这严峻的威胁。阿卡姆现在需要你。\n\n• 照常清理游戏。\n\n• 立即前往阿卡姆的毁灭 第二部分。"
+        },
+        {
+          "id": "resolution3",
+          "title": "结局 3",
+          "text": "结局 3：你力劝同伴们花些时间做好准备、整理心绪，迎接最后的决战。\n\n• 照常清理游戏。\n\n• 当你准备好再次游戏时，从阿卡姆的毁灭 第二部分开始。"
+        }
+      ]
+    }
+  }
+}

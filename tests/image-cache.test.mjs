@@ -28,6 +28,23 @@ test('默认 CDN 卡图按资源包目录原子写入并可重复复用', async 
   assert.equal(requests.length, 1)
 })
 
+test('已撤下的中文卡图和缩略图不会从 CDN 重新下载', async t => {
+  const webRoot = await mkdtemp(path.join(tmpdir(), 'arkham-image-cache-'))
+  t.after(() => rm(webRoot, { recursive: true, force: true }))
+  const requests = []
+  const cache = createImageAssetCache({
+    webRoot,
+    fetchImpl: async url => {
+      requests.push(url)
+      return new Response(AVIF, { status: 200 })
+    },
+  })
+  assert.equal(await cache({ relative: 'img/zh/cards/05128.avif', searchParams: query('cache=cdn') }), false)
+  assert.equal(await cache({ relative: 'img/thumbs/zh/cards/05128.webp', searchParams: query('cache=cdn&source=avif') }), false)
+  assert.equal(await cache({ relative: 'img/cards/05128.avif', searchParams: query('cache=cdn') }), true)
+  assert.deepEqual(requests, [DEFAULT_IMAGE_HOST + '/05128.avif'])
+})
+
 test('并发请求只下载一次，非法路径、非 CDN 请求与伪图片不会落盘', async t => {
   const webRoot = await mkdtemp(path.join(tmpdir(), 'arkham-image-cache-'))
   t.after(() => rm(webRoot, { recursive: true, force: true }))

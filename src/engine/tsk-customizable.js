@@ -18,11 +18,103 @@
 //
 // 读点从不初始化容器；只有 campaign.tsk.customizations 存在时才校验。
 import { assertTskFields, assertTskObject, tskCampaignState } from './tsk-state.js'
+import { ALL_CARDS } from '../cards/cards-data.js'
 
 export const CUSTOMIZATION_STATE_VERSION = 1
 
 const optionRegistry = new Map()
 const effectRegistry = new Map()
+const choiceRegistry = new Map()
+const choiceCatalogs = new Map()
+const isTomeOrSpellAsset = card => card?.type === 'asset'
+  && card.traits?.some(trait => trait === 'Tome' || trait === 'Spell')
+
+export function registerCustomizationChoices(code, spec) {
+  if (!['assetTitle', 'encounterTrait'].includes(spec.kind) || !Number.isSafeInteger(spec.base) || spec.base < 1) {
+    throw new TypeError(`卡 ${code} 的定制选择声明无效`)
+  }
+  for (const [index, count] of Object.entries(spec.options || {})) {
+    if (!optionRegistry.get(code)?.[index] || !Number.isSafeInteger(count) || count < 1) {
+      throw new TypeError(`卡 ${code} 的第 ${index} 项定制选择声明无效`)
+    }
+  }
+  choiceRegistry.set(code, { kind: spec.kind, base: spec.base, options: { ...spec.options } })
+}
+
+function choiceCatalog(kind) {
+  if (choiceCatalogs.has(kind)) return choiceCatalogs.get(kind)
+  const choices = new Map()
+  for (const card of Object.values(ALL_CARDS)) {
+    if (kind === 'assetTitle' && isTomeOrSpellAsset(card)) {
+      if (!choices.has(card.name)) choices.set(card.name, { value: card.name, name: card.name, nameZh: card.nameZh })
+    }
+    if (kind === 'encounterTrait' && card.encounterCode) {
+      for (const trait of card.traits || []) {
+        const value = trait.toLowerCase()
+        if (!choices.has(value)) choices.set(value, { value, name: trait })
+      }
+    }
+  }
+  const catalog = [...choices.values()].sort((a, b) => a.name.localeCompare(b.name, 'en'))
+  choiceCatalogs.set(kind, catalog)
+  return catalog
+}
+
+const choiceKey = optionIndex => optionIndex == null ? 'base' : String(optionIndex)
+const recordedChoices = (state, seat, code) => customizationState(state)?.choicesBySeat?.[seat]?.[code] || {}
+
+export function customizationChoiceCount(code, optionIndex) {
+  const spec = choiceRegistry.get(code)
+  if (!spec) return 0
+  if (optionIndex == null) return spec.base
+  return Object.hasOwn(spec.options, optionIndex) ? spec.options[optionIndex] : 0
+}
+
+export function customizationChoiceValues(state, seat, code) {
+  const { base = [], ...options } = recordedChoices(state, seat, code)
+  return [...base, ...Object.entries(options).flatMap(([key, values]) =>
+    customizationOptionFullyChecked(state, seat, code, Number(key)) ? values : [])]
+}
+
+export function customizationChoiceSetup(state, seat, code, deck) {
+  const spec = choiceRegistry.get(code)
+  if (!spec) return null
+  const allChoices = choiceCatalog(spec.kind)
+  let catalog = allChoices
+  if (spec.kind === 'assetTitle') {
+    const titles = new Set(deck.map(code => ALL_CARDS[code]).filter(isTomeOrSpellAsset).map(card => card.name))
+    catalog = allChoices.filter(choice => titles.has(choice.value))
+  }
+  const values = customizationChoiceValues(state, seat, code)
+  return { kind: spec.kind, base: spec.base, options: spec.options,
+    recorded: recordedChoices(state, seat, code), values, catalog,
+    selected: values.map(value => allChoices.find(choice => choice.value === value)).filter(Boolean) }
+}
+
+export function validateCustomizationChoices(state, seat, code, optionIndex, values) {
+  const spec = choiceRegistry.get(code)
+  const count = customizationChoiceCount(code, optionIndex)
+  if (!count) {
+    if (values != null) throw new Error('该定制步骤无需选择')
+    return
+  }
+  if (!Array.isArray(values) || values.length !== count || new Set(values).size !== count) {
+    throw new Error(`请选择 ${count} 个不同的${spec.kind === 'assetTitle' ? '支援名称' : '特性'}`)
+  }
+  const key = choiceKey(optionIndex)
+  const recorded = recordedChoices(state, seat, code)
+  if (recorded[key]) throw new Error('该定制选择已经记录')
+  const existing = new Set(Object.values(recorded).flat())
+  const allowed = new Set(choiceCatalog(spec.kind).map(item => item.value))
+  if (values.some(value => existing.has(value) || !allowed.has(value))) throw new Error('定制选择无效或重复')
+}
+
+export function recordCustomizationChoices(state, seat, code, optionIndex, values) {
+  const container = customizationState(state, true)
+  const table = (container.choicesBySeat ||= {})[seat] ||= {}
+  const groups = table[code] ||= {}
+  groups[choiceKey(optionIndex)] = [...values]
+}
 
 /** 注册一张卡的定制选项（内容层 P6 使用；重复注册同卡号拒绝）。 */
 export function registerCustomizationOptions(table) {
@@ -189,7 +281,7 @@ export function customizationPlayCostDelta(seat, code, checked = null) {
 /** 读档校验：定制容器形状（存在才校验；座位/下标必须有效）。 */
 export function validateTskCustomizations(state, value = customizationState(state)) {
   if (value == null) return true
-  assertTskFields(value, ['version', 'bySeat'], '定制卡状态')
+  assertTskFields(value, ['version', 'bySeat', 'choicesBySeat'], '定制卡状态')
   if (value.version !== CUSTOMIZATION_STATE_VERSION) throw new TypeError(`不支持的定制卡版本 ${value.version}`)
   assertTskObject(value.bySeat, '定制卡座位表')
   for (const [seatKey, table] of Object.entries(value.bySeat)) {
@@ -200,6 +292,29 @@ export function validateTskCustomizations(state, value = customizationState(stat
       if (typeof code !== 'string' || !code) throw new TypeError('定制卡卡号无效')
       if (optionRegistry.has(code)) customizationCheckedError(code, checked)
       else if (!Array.isArray(checked) || checked.some(index => !Number.isSafeInteger(index) || index < 0)) throw new TypeError('定制卡勾选无效')
+    }
+  }
+  if (value.choicesBySeat != null) {
+    assertTskObject(value.choicesBySeat, '定制选择座位表')
+    for (const [seatKey, table] of Object.entries(value.choicesBySeat)) {
+      if (String(Number(seatKey)) !== seatKey || !state.investigators?.[Number(seatKey)]) throw new TypeError('定制选择座位无效')
+      assertTskObject(table, '定制选择卡表')
+      for (const [code, groups] of Object.entries(table)) {
+        assertTskObject(groups, '定制选择组')
+        const spec = choiceRegistry.get(code)
+        const allowed = spec && new Set(choiceCatalog(spec.kind).map(item => item.value))
+        const seen = new Set()
+        for (const [key, values] of Object.entries(groups)) {
+          const count = customizationChoiceCount(code, key === 'base' ? null : key)
+          if (!count || !Array.isArray(values) || values.length !== count) {
+            throw new TypeError('定制选择存档数据无效')
+          }
+          for (const item of values) {
+            if (!allowed.has(item) || seen.has(item)) throw new TypeError('定制选择存档数据无效')
+            seen.add(item)
+          }
+        }
+      }
     }
   }
   return true

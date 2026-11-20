@@ -1,0 +1,458 @@
+{
+  "id": "theGrandVault",
+  "campaignId": "theDrownedCity",
+  "sourceKind": "authored",
+  "officialChinese": false,
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "大秘库",
+          "children": [
+            {
+              "id": "checkCampaignLog",
+              "text": "查看你的战役日志。"
+            },
+            {
+              "id": "headedWest",
+              "text": "若远征队向西进发，前往大秘库 1。"
+            },
+            {
+              "id": "headedEast",
+              "text": "若远征队向东进发，跳至大秘库 2。"
+            },
+            {
+              "id": "grandVault1",
+              "text": "大秘库 1：你早在看见那台巨大机械之前，就听见了它回荡的轰鸣。走出令人窒息的隧道后，你站在一处悬崖上，俯瞰着一片巨大的洞穴般空间。它辽阔得看不到对岸。一片彼此相连的厅室如迷宫般铺展开来，回荡着异星构造物的声音。喧嚣之中，更深处还传来流水的声音。"
+            },
+            {
+              "id": "grandVault2",
+              "text": "大秘库 2：你早在看见那台巨大机械之前，就听见了它回荡的轰鸣。你走完螺旋楼梯，来到一处悬崖上，俯瞰着一片巨大的洞穴般空间。它辽阔得看不到对岸。一片彼此相连的厅室如迷宫般铺展开来，回荡着异星构造物的声音。喧嚣之中，更深处还传来流水的声音。"
+            },
+            {
+              "id": "grandVault3",
+              "text": "大秘库 3：这里是拉莱耶脉动的核心。巨大的水闸把上方城市里的洪水引入，如心脏的腔室般将秘库充满又排空。这里似乎是某种能量的来源，也是这座城市持续上升的原因。与远征队商议后，你决定先探索这座庞大的复合建筑再继续前进。如果说有什么地方能找到那种难觅的神器，那一定就是这里。"
+            },
+            {
+              "id": "resolveToeTheLine",
+              "text": "若有调查员拥有“坚守底线”任务，他们在下一页结算各自的故事。"
+            },
+            {
+              "id": "proceedToSetup",
+              "text": "前往设置。"
+            },
+            {
+              "id": "toeTheLine",
+              "title": "任务：坚守底线",
+              "children": [
+                {
+                  "id": "instructions",
+                  "text": "仅当你拥有“坚守底线”任务时阅读："
+                },
+                {
+                  "id": "body",
+                  "text": "远征队在下方秘库前扎营。吃着平淡但管饱的一餐时，一名远征队同伴透露自己与你的前雇主有些渊源。“等等，你就是大家都在说的那个人？”他嗤笑道。“相信我，我听到的那些事都表明，你不会想回去干老本行的。你以前的老板现在还拿你当笑话讲。就算蒂林哈斯特能帮你弄回那份工作，那边也没人尊重你。等着你的只有一辈子苦力活，伙计。”"
+                },
+                {
+                  "id": "reflection",
+                  "text": "你在沉默中吃完这餐饭，思索着对方的话。你的旧同事们或许不尊重你，但凭蒂林哈斯特的关系，你可以让他们害怕你。几笔贿赂、时机恰当的威胁——甚至让黑帮打个招呼——也许就能让他们乖乖就范。这算不上光明正大，但如果你牌打得好，你甚至能把前雇主赶下台。回阿卡姆之后，你还有远征余下的时间规划行动。"
+                },
+                {
+                  "id": "choose",
+                  "text": "你必须决定（选择一项）："
+                },
+                {
+                  "id": "oldJob",
+                  "text": "不惜一切代价拿回旧工作。在你的战役日志中擦除坚守底线下的 1 点进度。在下一个剧本中，第一张议程期间你的每项技能获得 +1。"
+                },
+                {
+                  "id": "highRoad",
+                  "text": "走正道。这不值得。在你的战役日志中坚守底线下标记 2 点进度，并受到 1 点精神创伤。在下一个剧本中，第一张议程期间你的每项技能获得 -1。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "setup",
+          "title": "设置",
+          "children": [
+            {
+              "id": "gatherSets",
+              "text": "从以下遭遇组中收集所有卡牌：大秘库、异界机械、洪水、穷途异魔、拉莱耶与星之眷族。这些组以下列图标表示："
+            },
+            {
+              "id": "placeFixedLocations",
+              "text": "按照地点布置图将大阶梯、移动平台、封印腔室和秘库核心地点放入游戏。"
+            },
+            {
+              "id": "removeOtherworldlyMechanisms",
+              "text": "随机将一份异界机械移出游戏（异界机械位于某些秘库腔室地点的已揭示面）。"
+            },
+            {
+              "id": "placeVaultChambers",
+              "text": "将剩余每份秘库腔室洗混，按照地点布置图放入游戏。"
+            },
+            {
+              "id": "beginAtTheGreatStair",
+              "text": "每名调查员从大阶梯开始。"
+            },
+            {
+              "id": "checkCampaignLog",
+              "text": "查看你的战役日志。"
+            },
+            {
+              "id": "powerWasDiverted",
+              "text": "若能量被转移了，在左下角的秘库腔室上放置 1 个资源。该地点已被“激活”。"
+            },
+            {
+              "id": "otherwise",
+              "text": "否则，在左下角、右下角和右上角的秘库腔室地点上各放置一个资源。这些地点已被“激活”。"
+            },
+            {
+              "id": "starSpawn",
+              "text": "将星之眷族遭遇组中的每名敌人洗混，随机将其中 2 名移出游戏。将其余的放在一边，置于场外。"
+            },
+            {
+              "id": "setCardsAside",
+              "text": "将以下卡牌放在一边，置于场外：每份双面的古代秘库诡计、每份秘库随从敌人、潮汐碑匾剧情支援，以及穷途异魔遭遇组。"
+            },
+            {
+              "id": "chooseExpeditionAsset",
+              "text": "按玩家顺序，每名玩家可以选择 1 张已获得的神器支援，或远征遭遇组中的 1 张物品支援，以在其控制下开始游戏。该组以下列图标表示："
+            },
+            {
+              "id": "addFloodTokens",
+              "text": "将洪水标记加入标记池。"
+            },
+            {
+              "id": "floodBottomRow",
+              "text": "提高最下面一排三个秘库腔室地点的洪水等级。"
+            },
+            {
+              "id": "buildEncounterDeck",
+              "text": "洗混其余的遭遇卡，组建遭遇牌库。"
+            },
+            {
+              "id": "readyToBegin",
+              "text": "你现在可以开始游戏了。"
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "theVaultCore",
+          "title": "剧本幕间：秘库核心",
+          "children": [
+            {
+              "id": "body",
+              "text": "秘库的核心处设有一座精巧的控制台。随着周围厅室被激活，控制台发出病态般的绿色能量嗡鸣。古老的程式化符文描绘着一幅扭曲、变幻的城市影像。仔细端详之后，你推断这座控制台为城市的每个区域供能；其中最引人注意的是一个熟悉的区域：一座高耸尖塔基部的两扇巨大门扉。它们的设计看起来出奇地像你登陆时经过的那些黑曜石门。"
+            },
+            {
+              "id": "node",
+              "text": "下方有一个小小的红色节点在闪烁，仿佛在恳求你按下它。"
+            },
+            {
+              "id": "choose",
+              "text": "你必须决定（选择一项）："
+            },
+            {
+              "id": "pushTheButton",
+              "text": "按下按钮。在你的战役日志中记录至圣所被解封了。继续游戏。"
+            },
+            {
+              "id": "leaveItAlone",
+              "text": "别碰它。每名调查员获得 1 点奖励经验。继续游戏。"
+            },
+            {
+              "id": "xp",
+              "children": [
+                {
+                  "id": "leaveItAlone",
+                  "text": "因不去碰那个按钮"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "text": "结局 1：远征队成员一边分享故事、一边讲着笑话，度过了这个夜晚。即便城市的气氛阴郁，士气似乎依然高涨。你与露比和她的同伴分享你的发现，安迪则试着炖了一锅汤。她讲述了他们前往秘库的艰难路线，并建议你改走穿过上方古代议庭的那条路，而不是她走过的、穿过寂静工厂的那条路。\n\n“反正那家工厂多半已经在我们身后塌了，”露比说。“如果你走穿过议庭的那条路，我建议你避开那些‘朝圣者’。整座城市里爬满了他们。我看见一大群正踉踉跄跄地朝上方那座庞大神殿走去。他们告诉我，他们从某个地下巢穴里逃了出来。其中有些人似乎染上了相当严重的发热，所以我建议你离他们远点。”\n\n• 更新你的战役日志。\n• 将拉莱耶地图上的“大秘库”划掉。\n\n• 若剧本结束时潮汐碑匾在某个调查员的控制下，在“已获得的神器”下的“潮汐碑匾”旁勾选方框。\n\n• 若有调查员拥有“好钱”任务，让他们在本页结算各自的故事。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 前往古代议庭。"
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "text": "结局 2：远征队成员一边分享故事、一边讲着笑话，度过了这个夜晚。即便城市的气氛阴郁，士气似乎依然高涨。露比与较为冲动的远征队成员打扑克时，你与安迪分享你的发现。他则讲述他们沿沉没的西墙而下、穿过城市古老地基的跋涉。\n\n“一场落石把我们困在了某种古代墓穴里。那里有些面目可憎的干尸——我从未见过那样的东西。除此之外，一切还算平静，”安迪说着，递给你一碗寡淡的汤。“啊，不过实际上，几天前我们遇到了一个病得快死的人。他拒绝跟我们走。说自己是某种‘朝圣者’，来这里是为了敬拜这座古城的真神。那东西叫克苏鲁。”\n\n“克苏鲁”这个名字在你耳中回响。你在梦中一次又一次听到过它。吃完饭，你在入睡时发觉自己正低声念着它。\n\n• 更新你的战役日志。\n• 将拉莱耶地图上的“大秘库”划掉。\n\n• 若剧本结束时潮汐碑匾在某个调查员的控制下，在“已获得的神器”下的“潮汐碑匾”旁勾选方框。\n\n• 若有调查员拥有“好钱”任务，让他们在本页结算各自的故事。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 前往养育场。"
+        },
+        {
+          "id": "noResolution",
+          "title": "无结局",
+          "text": "若无结局（每名调查员都在幕 1 期间撤退或被击败）：你被从翻滚的水流中救出，浑身是伤，但万幸还活着。回到你出发时所在的那处高耸悬崖后，你惊喜地发现露比和安迪正一边吃着干粮一边聊天。与其匆匆结束重聚，你决定就地扎营。你们一起讲笑话、分享故事，度过了这个夜晚。分别之前，露比和安迪分享了他们的发现，并绘制出一幅粗略的古城地图。\n\n• 更新你的战役日志。\n• 将拉莱耶地图上的“大秘库”划掉。\n\n• 若剧本结束时潮汐碑匾在某个调查员的控制下，在“已获得的神器”下的“潮汐碑匾”旁勾选方框。\n\n• 若有调查员拥有“好钱”任务，让他们在本页结算各自的故事。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 查看你的战役日志。\n• 若远征队向西进发，前往古代议庭。\n\n• 若远征队向东进发，前往养育场。"
+        },
+        {
+          "id": "goodMoney",
+          "title": "任务：好钱",
+          "children": [
+            {
+              "id": "instructions",
+              "text": "仅当你拥有“好钱”任务时阅读："
+            },
+            {
+              "id": "body",
+              "text": "你在黑暗中躺了几个小时睡不着，反复琢磨着你在阿卡姆的最后一次谈话。银暮结社的首领卡尔·桑福德告诉你，他有一笔买卖要给你。比蒂林哈斯特能给你的任何东西都更好的买卖。你只需把发现交给他，而不是兰道尔。如果你顺便多揩几件遗物，也许再顺走一些古城的笔记和照片，他承诺付蒂林哈斯特出价的两倍，甚至更多。"
+            },
+            {
+              "id": "reflection",
+              "text": "你并不想掺和这两个老头之间正在上演的龌龊争斗。两边下注确实有风险。话虽如此，你并不觉得桑福德认为你有得选。如果你牌打得好，你可以同时从桑福德和蒂林哈斯特那里收钱，最后带着三倍的报酬离开。无论你做什么，都需要下定决心坚持到底。"
+            },
+            {
+              "id": "choose",
+              "text": "你必须决定（选择一项）："
+            },
+            {
+              "id": "playItSafe",
+              "text": "稳妥行事。在你的战役日志中擦除好钱下的 1 点进度。在下一个剧本中，你以额外 3 个资源开始游戏。"
+            },
+            {
+              "id": "playBothSides",
+              "text": "两边通吃，榨干他们的全部价值。在你的战役日志中好钱下标记 2 点进度。在下一个剧本中，你在维持阶段不能获得资源。"
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "The Grand Vault",
+          "children": [
+            {
+              "id": "checkCampaignLog",
+              "text": "Check your Campaign Log."
+            },
+            {
+              "id": "headedWest",
+              "text": "If the expedition headed west, proceed to The Grand Vault 1."
+            },
+            {
+              "id": "headedEast",
+              "text": "If the expedition headed east, skip to The Grand Vault 2."
+            },
+            {
+              "id": "grandVault1",
+              "text": "The Grand Vault 1: You hear the echoing churn of great machinery long before you see it. After emerging from the claustrophobic tunnels, you stand on a precipice overlooking a large cavernous expanse. It is so vast that you cannot see the far side. An array of interconnected chambers are laid out like a labyrinth, thrumming with the sound of alien constructs. Amid the clamor is the sound of running water even farther below."
+            },
+            {
+              "id": "grandVault2",
+              "text": "The Grand Vault 2: You hear the echoing churn of great machinery long before you see it. You reach the bottom of the spiraling staircase to stand on a precipice overlooking a large cavernous expanse. It is so vast that you cannot see the far side. An array of interconnected chambers are laid out like a labyrinth, thrumming with the sound of alien constructs. Amid the clamor is the sound of running water even farther below."
+            },
+            {
+              "id": "grandVault3",
+              "text": "The Grand Vault 3: This is the pulsing core of R’lyeh. Colossal sluices channel floodwater from the city above, filling and draining vaults like the chambers of a heart. This seems to be some source of power, and the reason for the city’s steady rise. After discussing with the expedition, you resolve to explore the massive complex before moving on. If ever there was a place to find one of those elusive artifacts, it would be here."
+            },
+            {
+              "id": "resolveToeTheLine",
+              "text": "If any investigator has the Toe the Line Task, they resolve their respective story on the next page."
+            },
+            {
+              "id": "proceedToSetup",
+              "text": "Proceed to Setup."
+            },
+            {
+              "id": "toeTheLine",
+              "title": "Task: Toe the Line",
+              "children": [
+                {
+                  "id": "instructions",
+                  "text": "Read only if you have the “Toe the Line” Task:"
+                },
+                {
+                  "id": "body",
+                  "text": "The expedition makes camp before descending into the vault below. Over a bland but filling meal, one of your fellow expedition members reveals they have a history with your former employer. “Wait, you’re the one everyone talks about?” they snort. “Trust me, from the things I’ve heard, you don’t want your old job back. Your old boss still jokes about you. Even if Tillinghast could get you the job, nobody back there respects you. You’re looking at a life of grunt work, pal.”"
+                },
+                {
+                  "id": "reflection",
+                  "text": "You finish your meal in silence as you ponder their words. Your old colleagues might not respect you, but with Tillinghast’s connections, you could make them fear you. A few bribes, well-timed threats—even a call from the mob—might put them in their place. It’s not exactly above-board, but if you play the cards right, you could oust your former employer. You have the rest of the expedition to plan your move once you get back to Arkham."
+                },
+                {
+                  "id": "choose",
+                  "text": "You must decide (choose one):"
+                },
+                {
+                  "id": "oldJob",
+                  "text": "Take your old job back, at any cost. Erase 1 progress under Toe the Line in your Campaign Log. During the next scenario, you get +1 to each of your skills during the first agenda."
+                },
+                {
+                  "id": "highRoad",
+                  "text": "Take the high road. It ain’t worth it. Mark 2 progress under Toe the Line in your Campaign Log and suffer 1 mental trauma. During the next scenario, you get –1 to each of your skills during the first agenda."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "setup",
+          "title": "Setup",
+          "children": [
+            {
+              "id": "gatherSets",
+              "text": "Gather all cards from the following encounter sets: The Grand Vault, Alien Machinery, Flood, The Inescapable, R’lyeh, and Star Spawn."
+            },
+            {
+              "id": "placeFixedLocations",
+              "text": "Put the Great Stair, Moving Platform, Sealed Chamber, and Core of the Vault locations into play, as indicated in the location placement diagram."
+            },
+            {
+              "id": "removeOtherworldlyMechanisms",
+              "text": "Remove one copy of Otherworldly Mechanisms from the game at random (Otherworldly Mechanisms are on the revealed side of some Vault Chamber locations)."
+            },
+            {
+              "id": "placeVaultChambers",
+              "text": "Shuffle each remaining copy of Vault Chamber together and put them into play according to the location placement diagram."
+            },
+            {
+              "id": "beginAtTheGreatStair",
+              "text": "Each investigator begins at the Great Stair."
+            },
+            {
+              "id": "checkCampaignLog",
+              "text": "Check your Campaign Log."
+            },
+            {
+              "id": "powerWasDiverted",
+              "text": "If the power was diverted, place 1 resource on the bottom left Vault Chamber. This location has been “activated.”"
+            },
+            {
+              "id": "otherwise",
+              "text": "Otherwise, place one resource on the bottom left, bottom right, and top right Vault Chamber locations. These locations have been “activated.”"
+            },
+            {
+              "id": "starSpawn",
+              "text": "Shuffle each enemy from the Star Spawn encounter set and remove 2 at random from the game. Set the rest aside, out of play."
+            },
+            {
+              "id": "setCardsAside",
+              "text": "Set the following cards aside, out of play: Each copy of the double-sided Ancient Vault treachery, each copy of the Vault Attendant enemy, the Tidal Tablet story asset, and The Inescapable encounter set."
+            },
+            {
+              "id": "chooseExpeditionAsset",
+              "text": "In player order, each player may choose 1 earned Artifact asset or 1 Item asset from the Expedition encounter set to begin in play under their control. This set is indicated by the following icon:"
+            },
+            {
+              "id": "addFloodTokens",
+              "text": "Add the flood tokens to the token pool."
+            },
+            {
+              "id": "floodBottomRow",
+              "text": "Increase the flood level of the three Vault Chamber locations in the bottom row."
+            },
+            {
+              "id": "buildEncounterDeck",
+              "text": "Shuffle the remaining encounter cards to build the encounter deck."
+            },
+            {
+              "id": "readyToBegin",
+              "text": "You are now ready to begin."
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "theVaultCore",
+          "title": "Scenario Interlude: The Vault Core",
+          "children": [
+            {
+              "id": "body",
+              "text": "The core of the vault houses an elaborate control station. With the surrounding chambers activated, the control station hums with a sickly green energy. Ancient stylized glyphs portray a warped, shifting facsimile of the city. After some scrutiny, you surmise that the station powers each sector of the city; most notably, there is one familiar area that catches your attention: a pair of massive gates in the base of a towering spire. Their design looks curiously like the obsidian gates where you made landfall."
+            },
+            {
+              "id": "node",
+              "text": "A small red node blinks underneath it, as if begging you to press it."
+            },
+            {
+              "id": "choose",
+              "text": "You must decide (choose one):"
+            },
+            {
+              "id": "pushTheButton",
+              "text": "Push the button. In your Campaign Log, record the inner sanctum was unsealed. Continue playing."
+            },
+            {
+              "id": "leaveItAlone",
+              "text": "Leave it alone. Each investigator earns 1 bonus experience. Continue playing."
+            },
+            {
+              "id": "xp",
+              "children": [
+                {
+                  "id": "leaveItAlone",
+                  "text": "for leaving the button alone"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "text": "结局 1：远征队成员一边分享故事、一边讲着笑话，度过了这个夜晚。即便城市的气氛阴郁，士气似乎依然高涨。你与露比和她的同伴分享你的发现，安迪则试着炖了一锅汤。她讲述了他们前往秘库的艰难路线，并建议你改走穿过上方古代议庭的那条路，而不是她走过的、穿过寂静工厂的那条路。\n\n“反正那家工厂多半已经在我们身后塌了，”露比说。“如果你走穿过议庭的那条路，我建议你避开那些‘朝圣者’。整座城市里爬满了他们。我看见一大群正踉踉跄跄地朝上方那座庞大神殿走去。他们告诉我，他们从某个地下巢穴里逃了出来。其中有些人似乎染上了相当严重的发热，所以我建议你离他们远点。”\n\n• 更新你的战役日志。\n• 将拉莱耶地图上的“大秘库”划掉。\n\n• 若剧本结束时潮汐碑匾在某个调查员的控制下，在“已获得的神器”下的“潮汐碑匾”旁勾选方框。\n\n• 若有调查员拥有“好钱”任务，让他们在本页结算各自的故事。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 前往古代议庭。"
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "text": "结局 2：远征队成员一边分享故事、一边讲着笑话，度过了这个夜晚。即便城市的气氛阴郁，士气似乎依然高涨。露比与较为冲动的远征队成员打扑克时，你与安迪分享你的发现。他则讲述他们沿沉没的西墙而下、穿过城市古老地基的跋涉。\n\n“一场落石把我们困在了某种古代墓穴里。那里有些面目可憎的干尸——我从未见过那样的东西。除此之外，一切还算平静，”安迪说着，递给你一碗寡淡的汤。“啊，不过实际上，几天前我们遇到了一个病得快死的人。他拒绝跟我们走。说自己是某种‘朝圣者’，来这里是为了敬拜这座古城的真神。那东西叫克苏鲁。”\n\n“克苏鲁”这个名字在你耳中回响。你在梦中一次又一次听到过它。吃完饭，你在入睡时发觉自己正低声念着它。\n\n• 更新你的战役日志。\n• 将拉莱耶地图上的“大秘库”划掉。\n\n• 若剧本结束时潮汐碑匾在某个调查员的控制下，在“已获得的神器”下的“潮汐碑匾”旁勾选方框。\n\n• 若有调查员拥有“好钱”任务，让他们在本页结算各自的故事。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 前往养育场。"
+        },
+        {
+          "id": "noResolution",
+          "title": "无结局",
+          "text": "若无结局（每名调查员都在幕 1 期间撤退或被击败）：你被从翻滚的水流中救出，浑身是伤，但万幸还活着。回到你出发时所在的那处高耸悬崖后，你惊喜地发现露比和安迪正一边吃着干粮一边聊天。与其匆匆结束重聚，你决定就地扎营。你们一起讲笑话、分享故事，度过了这个夜晚。分别之前，露比和安迪分享了他们的发现，并绘制出一幅粗略的古城地图。\n\n• 更新你的战役日志。\n• 将拉莱耶地图上的“大秘库”划掉。\n\n• 若剧本结束时潮汐碑匾在某个调查员的控制下，在“已获得的神器”下的“潮汐碑匾”旁勾选方框。\n\n• 若有调查员拥有“好钱”任务，让他们在本页结算各自的故事。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 查看你的战役日志。\n• 若远征队向西进发，前往古代议庭。\n\n• 若远征队向东进发，前往养育场。"
+        },
+        {
+          "id": "goodMoney",
+          "title": "任务：好钱",
+          "children": [
+            {
+              "id": "instructions",
+              "text": "仅当你拥有“好钱”任务时阅读："
+            },
+            {
+              "id": "body",
+              "text": "你在黑暗中躺了几个小时睡不着，反复琢磨着你在阿卡姆的最后一次谈话。银暮结社的首领卡尔·桑福德告诉你，他有一笔买卖要给你。比蒂林哈斯特能给你的任何东西都更好的买卖。你只需把发现交给他，而不是兰道尔。如果你顺便多揩几件遗物，也许再顺走一些古城的笔记和照片，他承诺付蒂林哈斯特出价的两倍，甚至更多。"
+            },
+            {
+              "id": "reflection",
+              "text": "你并不想掺和这两个老头之间正在上演的龌龊争斗。两边下注确实有风险。话虽如此，你并不觉得桑福德认为你有得选。如果你牌打得好，你可以同时从桑福德和蒂林哈斯特那里收钱，最后带着三倍的报酬离开。无论你做什么，都需要下定决心坚持到底。"
+            },
+            {
+              "id": "choose",
+              "text": "你必须决定（选择一项）："
+            },
+            {
+              "id": "playItSafe",
+              "text": "稳妥行事。在你的战役日志中擦除好钱下的 1 点进度。在下一个剧本中，你以额外 3 个资源开始游戏。"
+            },
+            {
+              "id": "playBothSides",
+              "text": "两边通吃，榨干他们的全部价值。在你的战役日志中好钱下标记 2 点进度。在下一个剧本中，你在维持阶段不能获得资源。"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

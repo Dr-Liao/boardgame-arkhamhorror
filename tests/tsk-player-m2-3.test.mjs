@@ -3,10 +3,11 @@
 // 断言真实状态变化（费用/槽位/使用次数/目标/窗口/持续/负面路径）。
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { fixture, asset, enemy, move } from './core-fixture.mjs'
+import { fixture, asset, enemy, move, settle } from './core-fixture.mjs'
 import { registeredEntry, registerCardAbilities } from '../src/engine/ability.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
-import { executeDescriptor, getStat, commitIcons, playerWindow } from '../src/engine/engine.js'
+import { executeDescriptor, getStat, commitIcons, playerWindow, drawEncounter } from '../src/engine/engine.js'
+import { recordCustomizationChoices } from '../src/engine/tsk-customizable.js'
 import { slotBonus } from '../src/engine/modifiers.js'
 import { beneathCards, storeBeneath } from '../src/engine/commit-origins.js'
 import entries09075 from '../src/cards/entries/09075.js'
@@ -695,8 +696,56 @@ test('P6 09101 饱经风霜：对遭遇卡的检定每个匹配的所选特性�
   const s = fixture('01001')
   const foe = enemy(s, { engagedSeat: 0, fight: 1, evade: 1, health: 10 })
   foe.traits = ['Monster', 'Humanoid']
+  recordCustomizationChoices(s, 0, '09101', null, ['humanoid', 'terror'])
+  recordCustomizationChoices(s, 0, '09101', 1, ['monster'])
   s.skillTest = { seat: 0, skill: 'combat', source: { enemyId: foe.id }, committed: [] }
+  customize(s, '09101', [1])
+  assert.equal(commitIcons(s, inv(s), '09101', 'combat'), 3, '只勾一格时额外特性不生效')
+  customize(s, '09101', [1, 1])
   const icons = commitIcons(s, inv(s), '09101', 'combat')
   assert.equal(icons, 5, '基础 1 百搭 + 2 个匹配特性 × 2')
   assert.equal(registeredEntry('09101').customizationOptions.length, 5)
+})
+
+const grizzledCommit = pending => pending.options.find(option => String(option.label).includes('投入：饱经风霜'))?.id
+const applyGrizzled = pending => pending.options.find(option => option.id === 'apply')?.id
+
+test('09101 复仇女神：投入的技能牌附属到敌人并减 1 难度，敌人离场后返回弃牌堆', () => {
+  const s = fixture()
+  const foe = enemy(s, { code: '01161', fight: 2, health: 3, traits: ['Humanoid'] })
+  customize(s, '09101', [2, 2, 2])
+  recordCustomizationChoices(s, 0, '09101', null, ['humanoid', 'terror'])
+  inv(s).hand = ['09101']
+  const fight = () => move(s, { action: 'fight', enemyId: foe.id })
+  const settleFight = () => settle(s, pending => grizzledCommit(pending) || applyGrizzled(pending))
+  fight(); settleFight()
+  assert.equal(enemyById(s, foe.id).attachments[0].code, '09101')
+  assert.ok(!inv(s).discard.includes('09101'))
+  fight(); settleFight()
+  assert.equal(s.lastTestResult.difficulty, 1)
+  fight(); settleFight()
+  assert.equal(enemyById(s, foe.id), undefined)
+  assert.equal(inv(s).discard.filter(code => code === '09101').length, 1)
+})
+
+test('09101 时刻准备与神话历练：同一轮回收一次，并将投入的技能牌和诡计分别放入胜利区', () => {
+  const s = fixture()
+  const rounds = [3, 3, 4]
+  customize(s, '09101', [3, 3, 3, 3, 4, 4, 4, 4, 4])
+  recordCustomizationChoices(s, 0, '09101', null, ['humanoid', 'terror'])
+  inv(s).discard = ['09101', '09101']
+  for (const [index, round] of rounds.entries()) {
+    s.round = round
+    s.encounterDeck = ['rottingRemains']
+    transact(s, draft => drawEncounter(draft, inv(draft), []), pending => {
+      const recovery = pending.options.find(option => String(option.label).includes('时刻准备'))?.id
+      return recovery || (index === 0 ? grizzledCommit(pending) || applyGrizzled(pending) : null)
+    })
+    assert.equal(inv(s).discard.filter(code => code === '09101').length, index === 2 ? 0 : 1)
+    if (index === 0) {
+      assert.ok(s.victoryDisplay.some(card => card.code === '09101'))
+      assert.ok(s.victoryDisplay.some(card => ['01163', 'rottingRemains'].includes(card.code)))
+      assert.equal(s.encounterDiscard.length, 0)
+    }
+  }
 })

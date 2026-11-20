@@ -647,6 +647,8 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
 
 资源费用读取 `availableResources(inv)`；资源条件与损失仍读取真实 `inv.resources`。`asset.resources` 独立保存卡上资源，支付通过统一来源选择。
 
+`assetRule.playCostUses: { cardType, trait?, scope }` 允许支援上的 `uses` 按 1 比 1 支付符合条件的卡牌打出费用。`cardType` 为 `asset` 或 `event`，`scope` 为 `self` 或 `location`。打出候选、校验和结算都读取 `src/engine/play-payment.js`；最终费用确定后，由每张支援的控制者选择贡献数量，剩余部分照常支付。只有费用可付清时才实际扣除标记，耗尽时走 `onUsesEmptied`。例如 `08072` 用秘密为同地点调查员打出的 `Item` 支援付费。
+
 `api.progressWeakness(seat, {code, nextCode, recordKey, counterKey, addedKey})` 将个人剧情记录、当前牌库底与战役牌组升级一起持久保存。条目 `transferOnControllerDefeat` 在控制者被击败时转交同一支援实例；能力 `noOpportunityAttackFrom` 仅豁免列出的敌人。
 
 ## P7 章节接口（开发中）

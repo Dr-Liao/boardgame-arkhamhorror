@@ -1,6 +1,7 @@
 import { wouldAddToVictory } from './victory-destination.js'
 import { routeEnemyDiscardToScenarioDeck } from './scenario-decks.js'
-import { discardPlayerCards } from './player-zones.js'
+import { discardPlayerCards, splicePlayerDiscard } from './player-zones.js'
+import { putInHand } from './hand-entry.js'
 import { effectRecipient, playerEffectCanAffect } from './effect-recipient.js'
 import { firstAssetDiscount, roundPlayRules } from './action-history.js'
 import { availableResources } from './resource-bank.js'
@@ -9,9 +10,11 @@ import { endAirTurn } from './flood.js'
 import { investigatorRule } from '../cards/card-rules.js'
 import { weaknessOwnerSeat } from './card-lookup.js'
 import { locationAttachmentTotal } from './location-attachments.js'
+import { noteChaosTokenChange } from './chaos-bag.js'
 import { afterHandDiscard } from './hand-discard-window.js'
 import { vehicleOf } from './vehicles.js'
 import { reactionSource } from './reaction-source.js'
+import { nextPlayDiscount } from './effect-state.js'
 // 2026-11-16 P2-3/P2-5：《绯红密钥》定制卡的 `customizationEffects.playCost`（-1 费用类）真实读点。
 // 此前只注册不读（费用修正实际未生效）；与条目的 `playCostModifier` 二选一，避免同一效果双重减费。
 import { customizationChecked, customizationPlayCostDelta } from './tsk-customizable.js'
@@ -235,19 +238,22 @@ export function createTurnFlow(deps) {
     return { paid: target - remaining, shortfall: required - (target - remaining) }
   }
 
-  function addVictory(state, enemy, events) {
+  function addVictory(state, enemy, events, attachment = null) {
     const originalCode = enemy.originalCode || enemyDef(enemy.code)?.originalCode || enemy.code
     const vengeance = enemy.vengeance || enemyDef(enemy.code)?.vengeance || 0
     let addedToVictory = false
     // 复仇：带复仇点数的敌人被击败时同样进入胜利区（即使没有胜利点）。
-    if (wouldAddToVictory(enemy,enemyDef)) {
-      if (!state.victoryDisplay.some(card => card.id === enemy.id)) {
-        state.victoryDisplay.push({
+    if (attachment || wouldAddToVictory(enemy, enemyDef)) {
+      let enemyInVictory = state.victoryDisplay.find(card => card.id === enemy.id)
+      if (!enemyInVictory) {
+        enemyInVictory = {
           id: enemy.id, code: enemy.code, originalCode, victory: enemy.victory || 0,
           ...(vengeance ? { vengeance } : {}),
-        })
+        }
+        state.victoryDisplay.push(enemyInVictory)
         addedToVictory = true
       }
+      if (attachment) deps.attachCardTo(state, attachment.ownerSeat, attachment.code, enemyInVictory)
     } else if (isWeaknessCode(enemy.code)) {
       // 弱点牌属于某位调查员的牌组：优先用生成时记录的 bearerSeat，其次查战役牌组记录
       // （剧本从「放到一边」生成、旧存档里没有 bearerSeat 的弱点敌人）。
@@ -305,13 +311,14 @@ export function createTurnFlow(deps) {
     return candidates.find(enemy => enemy.id === id)
   }
 
-  function sealRevealedChaosToken(state, token, source) {
+  function sealRevealedChaosToken(state, token, source, seat = state.skillTest?.seat) {
     const revealed = state.chaos?.revealed || []
     const index = revealed.lastIndexOf(token)
-    if (index < 0) return false
+    if (index < (state.chaos?.frames?.at(-1) ?? 0)) return false
     revealed.splice(index, 1)
     state.chaos.sealed ||= []
     state.chaos.sealed.push({ token, source })
+    noteChaosTokenChange(state, seat)
     state.sealedTokens = state.chaos.sealed.map(entry => entry.token)
     return true
   }
@@ -404,6 +411,14 @@ export function createTurnFlow(deps) {
         }
       }
       scenarioBehavior(state).turnEnded?.(state, inv, scenarioRuntime(state, events))
+      if (inv.deferredEventReturns?.length) {
+        for (const { code, index } of inv.deferredEventReturns.slice().sort((a, b) => b.index - a.index)) {
+          if (inv.discard[index] !== code) continue
+          splicePlayerDiscard(inv, index, 1)
+          putInHand(state, inv, code)
+        }
+        delete inv.deferredEventReturns
+      }
       endAirTurn(state, inv.seat, (seat, amount) => abilityApi(state, events).directDamage(seat, amount))
       reactionWindow(state, 'turnEnded', { when: 'turnEnded', seat: inv.seat, location: inv.location,
         prompt: `${inv.name} 的回合结束。` }, events)
@@ -464,7 +479,7 @@ export function createTurnFlow(deps) {
       && factions.includes(inv.lolaDiscount.role) ? inv.lolaDiscount.amount : 0
     // Phase 6：这两项都是「打出折扣」的通用通道（名字里的战役前缀是历史遗留的 state 字段）。
     const cardDiscount = campaignState.playDiscount(inv)
-    const playDiscount = inv.playDiscount || 0
+    const playDiscount = (inv.playDiscount || 0) + nextPlayDiscount(state, inv.seat)
     const threatIncrease = inv.threat.reduce((sum, threat) =>
       sum + (getThreatEffect(threat)?.playCostIncrease || 0), 0)
     const loc = state.locations.find(location => location.id === inv.location)

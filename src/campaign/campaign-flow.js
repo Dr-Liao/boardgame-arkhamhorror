@@ -19,7 +19,7 @@ const PART_IDS = Object.freeze(['A', 'B'])
 const PENDING_EFFECT_OPS = Object.freeze(['chaosByDifficulty', 'removeCampaignCard'])
 const CONDITION_FIELDS = Object.freeze([
   'all', 'any', 'not', 'hasRecord', 'capturedInvestigators', 'activeCapturedInvestigator',
-  'compare', 'completed', 'completedStep', 'resolution', 'record', 'equals', 'atLeast', 'includes',
+  'compare', 'completed', 'completedStep', 'resolution', 'record', 'recordCount', 'equals', 'atLeast', 'includes',
   'part', 'parts', 'mode', 'modeIn', 'activeParts',
 ])
 const COMPARE_OPS = Object.freeze(['>', '>=', '<', '<=', '==='])
@@ -140,6 +140,12 @@ export function flowCondition(condition, campaign) {
     const { scenarioId, value } = condition.resolution
     return campaign.scenarioResults.findLast(r => r.scenarioId === scenarioId)?.resolution === value
   }
+  if (condition.recordCount) {
+    const { key, atLeast } = condition.recordCount
+    const values = readRecordAcrossParts(campaign, key) ?? []
+    return Array.isArray(values) && values.every(value => typeof value === 'string' && value.length > 0)
+      && new Set(values).size >= atLeast
+  }
   const value = readRecordAcrossParts(campaign, condition.record)
   if (Object.hasOwn(condition, 'equals')) return value === condition.equals
   if (Object.hasOwn(condition, 'atLeast')) return Number(value || 0) >= condition.atLeast
@@ -258,6 +264,17 @@ function conditionError(condition, recordSchema = null) {
   if (Object.hasOwn(condition, 'activeCapturedInvestigator')) {
     if (keys.length > 1) return 'activeCapturedInvestigator 不能与其它条件字段并列'
     if (typeof condition.activeCapturedInvestigator !== 'boolean') return 'activeCapturedInvestigator 必须是布尔值'
+    return null
+  }
+  if (Object.hasOwn(condition, 'recordCount')) {
+    const spec = condition.recordCount
+    if (keys.length > 1) return 'recordCount 不能与其它条件字段并列'
+    if (!spec || typeof spec !== 'object' || Array.isArray(spec)
+      || Object.keys(spec).some(key => !['key', 'atLeast'].includes(key))
+      || typeof spec.key !== 'string' || !spec.key || !Number.isSafeInteger(spec.atLeast) || spec.atLeast < 0) {
+      return 'recordCount 需要非空集合记录 key 与非负整数 atLeast'
+    }
+    if (recordSchema && recordSchema[spec.key] !== 'string[]') return `recordCount 需要已声明的集合记录 ${spec.key}`
     return null
   }
   if (Object.hasOwn(condition, 'record')) {

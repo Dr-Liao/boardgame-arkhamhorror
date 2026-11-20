@@ -233,6 +233,7 @@ for (const [label, width, height] of [['desktop', 1440, 950], ['mobile', 390, 84
     await post({ action: 'hubGoSetup' }, 0)
     await post({ action: 'hubSelectInvestigator', code: '01001' }, 0)
     await post({ action: 'hubAutoDeck' }, 0)
+    await post({ action: 'hubConfirmDeck' }, 0)
     await post({ action: 'hubDoneSeat' }, 0)
     await page.getByRole('button', { name: '刷新', exact: true }).click()
     const departure = hub.locator('[data-parallel="true"]')

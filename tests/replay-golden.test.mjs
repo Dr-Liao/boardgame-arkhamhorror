@@ -63,8 +63,9 @@ test('基线的动作与关卡覆盖不能退化', () => {
 
 test('大厅托管反应的日志可在纯引擎进程重放', () => {
   const recipe = REPLAY_RECIPES.find(item => item.id === 'notz-gathering-hub-victory-r1')
-  const { state, log } = playRecipe({ ...recipe, limit: 25, settings: { autoReactionHosted: true } })
+  const { state, log } = playRecipe({ ...recipe, limit: 35, settings: { autoReactionHosted: true } })
   assert.equal(log.settings.autoReactionHosted, true)
+  assert.ok(log.moves.some(({ move }) => move.action === 'hubConfirmDeck'))
   assert.ok(log.moves.some(({ move }) => move.action === 'choose' && move.optionId === 'trigger'))
   assert.equal(stateHash(replayLog(JSON.parse(JSON.stringify(log)))), stateHash(state))
 })

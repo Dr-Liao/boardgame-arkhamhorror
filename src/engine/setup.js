@@ -1,4 +1,5 @@
 import { isDraftMode, draftDecksReady } from '../deck/draft-mode.js'
+import { investigatorIdentity } from '../deck/investigator-identity.js'
 import { putInHand } from './hand-entry.js'
 import { replacePlayerZoneCards } from './player-zones.js'
 import { addPoolTokens } from './chaos-token-pool.js'
@@ -23,6 +24,7 @@ import {
 } from './investigator-form.js'
 import { requestChoice } from './resolution.js'
 import { investigatorRule } from '../cards/card-rules.js'
+import { applyStartingDeckExperience } from '../campaign/campaign.js'
 import { deckAfterSurvey, restoreSurveyInvestigator, surveyForDestination, surveyForInvestigator } from './survey-preparation.js'
 import { expirePurchaseDiscounts } from '../campaign/purchase-discount.js'
 import { initBeginGameDisciplines, syncPassiveDeckTop } from './eote-investigator-support.js'
@@ -205,7 +207,7 @@ const TRANSIENT_INVESTIGATOR_FIELDS = Object.freeze([
   'playUpgrades05111', 'playUpgrades05234', 'playUpgrades05277',
   // 临时属性/检定标记与关内剧情记账
   'statOverrides', 'enemyPassiveTraits', 'nextTestNoTokens',
-  'shuffleWeaknessAfterResolution', 'turnEnded',
+  'shuffleWeaknessAfterResolution', 'turnEnded', 'chaosTokenChangeRound', 'clueDiscovery',
   // 按轮/按回合记账、但字段名不带 Round/Turn 后缀的散标记（读点都带轮次比较，
   // 新关卡 round=1 会与上一关第 1 轮撞号）：
   'fieldwork', 'infighting', 'narrowEscape', 'jakeFree',
@@ -234,6 +236,9 @@ function clearScenarioSceneLeftovers(state) {
   // 「放到一边」「移出游戏」：关内临时区；旧卡会被区域检索找到，也会残留在移出区（牌组重建后
   // 同一张卡同时存在于牌库与移出区）。
   if (state.setAside?.length) state.setAside = []
+  if (state.setAsideEnemies?.some(enemy => enemy.asideUntilRoundEnd)) {
+    state.setAsideEnemies = state.setAsideEnemies.filter(enemy => !enemy.asideUntilRoundEnd)
+  }
   if (state.removedFromGame?.length) state.removedFromGame = []
   // 备用地点牌堆（alt-decks.js）：逐关重建。
   if (state.extraLocationDecks) state.extraLocationDecks = {}
@@ -270,6 +275,9 @@ function prepareInvestigator(state, inv, events, startLocation, options = {}) {
   clearInvestigatorTransients(campaignState, inv)
   delete inv.scenarioXpBonus
   delete inv.actionHistory
+  delete inv.roundActionHistory
+  delete inv.enemyProtection
+  delete inv.deferredEventReturns
   delete inv.defeatedHealthHistory
   delete inv.openingHandBonus
   if (inv.surveyOpening) delete inv.surveyOpening
@@ -281,6 +289,7 @@ function prepareInvestigator(state, inv, events, startLocation, options = {}) {
     if (!record) {
       const built = buildInvestigatorsDeck(state, inv, def, events)
       record = registerCampaignInvestigator(state.campaign, inv, built.deck)
+      applyStartingDeckExperience(state.campaign, record, built)
       deck = built.deck
     } else {
       if (record.code !== inv.code || record.status !== 'active') throw new Error('调查员战役身份不可进入剧本')
@@ -319,7 +328,8 @@ function prepareInvestigator(state, inv, events, startLocation, options = {}) {
   inv.exploreOnlyActions = 0
   inv.tomeActionUsed = false
   inv.hand = []
-  inv.deck = deck
+  inv.deck = state.scenario?.mechanics?.noEncounterDeck
+    ? deck : deck.filter(code => !registeredEntry(code)?.encounterLookRule?.forceBeneath)
   inv.discard = []
   inv.hiddenCards = []
   inv.assets = []
@@ -431,14 +441,28 @@ function applyCampaignInvestigatorForms(state, events) {
   }
 }
 
+function rebuildRuntimeCardTable(state) {
+  const campaignId = state.campaign.id
+  const embedded = embeddedCardDefs(state, campaignId)
+  state.cards = inHub(state) ? Object.assign(allCardDefs({ runtimeOnly: true, campaignId }), embedded) : embedded
+  if (state.hubFlow && state.uiState === 'inScenario') state._scenarioCardTable = true
+  else delete state._scenarioCardTable
+}
+
+function syncRuntimeCardTable(state) {
+  const compact = !!state.hubFlow && state.uiState === 'inScenario'
+  if (compact === (state._scenarioCardTable === true)) return false
+  rebuildRuntimeCardTable(state)
+  return true
+}
+
 function refreshStateResources(state) {
   const campaignId = state.campaign?.id
   if (!campaignId || !contentRegistry.getCampaign(campaignId)) throw new Error(`存档所属战役 ${campaignId || '(缺失)'} 已不可用`)
   registerCampaignScenarios(campaignId)
   if (state.scenario?.id && !SCENARIOS[state.scenario.id]) throw new Error(`存档所在关卡 ${state.scenario.id} 已不可用`)
   state.resourceVersion = META.resourceVersion
-  state.cards = inHub(state) ? allCardDefs({ runtimeOnly: true, campaignId })
-    : embeddedCardDefs(state, campaignId)
+  rebuildRuntimeCardTable(state)
   state.investigatorDefs = Object.fromEntries(SELECTABLE_INVESTIGATORS.map(code => [code, ALL_INVESTIGATORS[code]]))
   state.classNames = CLASS_NAMES
   state.classColors = CLASS_COLOR
@@ -479,7 +503,7 @@ function unknownCardCodes(state) {
   return [...missing].sort()
 }
 
-function createGameState(settings, players) {
+function createGameState(settings, players, { sharedFreeWindows = true } = {}) {
   const manifest = contentRegistry.assertLaunchable(settings.campaignId || contentRegistry.listCampaigns()[0].id)
   const CAMPAIGN = { ...manifest, scenarioOrder: manifest.scenarioIds }
   registerCampaignScenarios(manifest.id)
@@ -521,7 +545,9 @@ function createGameState(settings, players) {
     if (!Array.isArray(seatInvestigators) || seatInvestigators.length !== players.length) {
       throw new Error('座位调查员必须是与席位数一致的卡号数组')
     }
-    if (new Set(seatInvestigators).size !== seatInvestigators.length) throw new Error('座位调查员不能重复')
+    if (new Set(seatInvestigators.map(code => investigatorIdentity(code, ALL_INVESTIGATORS))).size !== seatInvestigators.length) {
+      throw new Error('座位调查员不能重复')
+    }
     seatInvestigators.forEach((code, index) => {
       if (!Object.hasOwn(ALL_INVESTIGATORS, code) || !canSelectInvestigator(code)) throw new Error(`调查员未开放：${code}`)
       if (!allowsCard(code, poolContext)) throw new Error(`调查员超出当前卡牌范围（${CARD_POOL_SCOPE_LABELS[cardPoolScope]}）：${code}`)
@@ -529,7 +555,7 @@ function createGameState(settings, players) {
     })
   }
 
-  const used = new Set()
+  const used = new Set([humanPick])
   const investigators = []
   for (const [index, p] of players.entries()) {
     let code
@@ -564,6 +590,7 @@ function createGameState(settings, players) {
       rulesMode,
       playerDeck: Array.isArray(settings.playerDeck) ? [...settings.playerDeck] : null,
       seatInvestigators: investigators.map(inv => inv.code),
+      ...(sharedFreeWindows ? { _sharedFreeWindows: true } : {}),
     },
     rngState: randomState.rngState,
     instanceSeq: { c: 0, e: 0 },
@@ -655,8 +682,8 @@ function createGameState(settings, players) {
     state.legalMoves = legalMoves(state)
     return state
   }
-  resolveTransaction(state, 0, { action: 'setup' }, executeCommand, { initial: true })
-  state.cards = embeddedCardDefs(state, CAMPAIGN.id)
+  resolveTransaction(state, 0, { action: 'setup' }, executeCommand, { initial: true, sharedFreeWindows })
+  rebuildRuntimeCardTable(state)
   state.legalMoves = legalMoves(state)
   return state
 }
@@ -665,6 +692,9 @@ function createGameState(settings, players) {
 // 所以普通对局的选人顺序不变；渐进式不会因为人设里的职业关键词挑到范围外的调查员。
 function pickAiInvestigator(player, order, used, allowed = PLAYABLE_INVESTIGATORS) {
   const persona = (player && player.persona) || ''
+  const identity = code => investigatorIdentity(code, ALL_INVESTIGATORS)
+  const occupied = new Set([...used].map(identity))
+  const eligible = code => !occupied.has(identity(code))
   const map = {
     guardian: ['守卫', '守护', '战斗', '枪', '战士', '警察', 'guardian'],
     seeker: ['探求', '求知', '学者', '书', '研究', 'seeker'],
@@ -674,14 +704,13 @@ function pickAiInvestigator(player, order, used, allowed = PLAYABLE_INVESTIGATOR
   }
   for (const [klass, keys] of Object.entries(map)) {
     if (keys.some((k) => persona.includes(k))) {
-      const code = allowed.find((c) => ALL_INVESTIGATORS[c].klass === klass && !used.has(c))
+      const code = allowed.find(c => ALL_INVESTIGATORS[c].klass === klass && eligible(c))
       if (code) return code
     }
   }
-  for (const code of order) {
-    if (!used.has(code)) return code
-  }
-  return order[0]
+  const next = order.find(eligible)
+  if (!next) throw new Error('没有可分配的独立调查员身份')
+  return next
 }
 
 // ---------------------------------------------------------------------------
@@ -716,6 +745,7 @@ function startScenario(state, index, events) {
   for (const record of Object.values(state.campaign.investigators || {})) record.currentScenarioIndex = index
   state.campaign.phase = 'scenario'
   state.uiState = 'inScenario'
+  delete state._scenarioCardTable
   state.storyAssets = []
   state.victoryDisplay = []
   state.actIndex = 0
@@ -824,8 +854,8 @@ function startScenario(state, index, events) {
   // state.cards 是给前端的派生展示表（不进重放指纹），只在开局/读档时重建；而幕间奖励的
   // 剧情卡（如 02040 亨利·阿米蒂奇博士）是在开局之后才进牌组的。这里不补的话，前端拿不到
   // 它的 slots，会把占着盟友槽的支援画进「其他资产」，槽位判定和界面就对不上了。
-  // 只补不删：开局那份卡池定义（幕间牌组界面要用）保留，只并入本关实际带入的卡。
-  Object.assign(state.cards ||= {}, embeddedCardDefs(state, CAMPAIGN.id))
+  // 布置期间先补进实际带入的卡，事务结算后再按完整局面和待决选择收窄。
+  state.cards = { ...state.cards, ...embeddedCardDefs(state, CAMPAIGN.id) }
 
   if (!deferOpeningHands) scenarioBehavior(state).preScenarioSetup?.(state, events, scenarioRuntime(state, events))
 
@@ -909,7 +939,9 @@ function setupScenarioDecks(state, events) {
     let deck = sc.encounterDeck.slice()
     deck = scenarioBehavior(state).modifyDeck?.(state, deck, events,
       { randomValue, removeCardByCode, info }) || deck
-    state.encounterDeck = shuffle(deck, rng)
+    const transferred = state.investigators.flatMap(inv => (state.campaign.investigators[inv.seat]?.deck || [])
+      .filter(code => registeredEntry(code)?.encounterLookRule?.forceBeneath))
+    state.encounterDeck = shuffle(deck.concat(transferred), rng)
   }
 
   // 午夜假面：独立异教徒牌堆。
@@ -949,5 +981,5 @@ function setupChaosBag(state, events) {
 // 战役结算（结局 → 创伤 → 冒险日志 → 下一关 / 战役结束）
 // ---------------------------------------------------------------------------
 
-  return { makeInvestigator, drawOpeningHand, buildInvestigatorsDeck, prepareInvestigator, refreshStateResources, unknownCardCodes, createGameState, pickAiInvestigator, startScenario, scenarioStartLocation, setupScenarioLocations, setupScenarioEnemies, setupScenarioDecks, setupChaosBag }
+  return { makeInvestigator, drawOpeningHand, buildInvestigatorsDeck, prepareInvestigator, refreshStateResources, syncRuntimeCardTable, unknownCardCodes, createGameState, pickAiInvestigator, startScenario, scenarioStartLocation, setupScenarioLocations, setupScenarioEnemies, setupScenarioDecks, setupChaosBag }
 }

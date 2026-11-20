@@ -1,16 +1,22 @@
-import { validateDraftState } from '../deck/draft-mode.js'
+import { validateDraftState, isDraftMode, openDraftUpgrades } from '../deck/draft-mode.js'
 import { contentRegistry } from '../../content/registered.js'
+import { campaignGraph } from '../campaign/campaign-flow.js'
 import { investigatorRule } from '../cards/card-rules.js'
 import { registeredEntry } from './ability.js'
 import { bondedPoolMain, bondedCardList } from './bonded.js'
 import { ALL_CARDS, INVESTIGATORS } from '../cards/cards-data.js'
 import { validateMechanicState } from './mechanic-state.js'
 import { validatePurchaseDiscounts } from '../campaign/purchase-discount.js'
+import { validateProgressTracks } from '../campaign/progress-tracks.js'
+import { validateStartingAdjustments } from '../campaign/starting-adjustments.js'
 import { validateInvestigatorMechanics } from './investigator-mechanics.js'
 import { validateEoteState } from './eote-primitives.js'
 import { validateEotePlayerPrimitives } from './effect-state.js'
 import { validateTskState } from './tsk-primitives.js'
 import { discardDreamGateIntruders } from './dream-gate.js'
+import { canDiscardControlledAsset } from './asset-departure.js'
+import { resolveTransaction } from './resolution.js'
+import { isDeepStrictEqual } from 'node:util'
 // 存档向下兼容与修复。
 //
 // 读取旧存档时按以下顺序处理，任一步失败都明确拒绝，不在新规则下静默续算：
@@ -28,7 +34,7 @@ import {
   entryNeedsReactionPrompt,
 } from '../cards/card-rules.js'
 import { STATE_SCHEMA_VERSION, RULES_VERSION, stateCompatibilityError } from './rules-state.js'
-import { createGameState, scenarioRuntime, refreshStateResources, unknownCardCodes, legalMoves, validateMove, applyMove, decisionSeat } from './engine.js'
+import { createGameState, scenarioRuntime, refreshStateResources, syncRuntimeCardTable, unknownCardCodes, legalMoves, validateMove, applyMove, decisionSeat, executeCommand, syncClues } from './engine.js'
 
 function fixEchoesAgendaThresholds(state) {
   for (const agendas of [state.agendas, state.scenario?.agendas]) {
@@ -237,6 +243,10 @@ function needsReactionPromptFlags(state) {
 // 建局/正常行动路径都会补算这个缓存；这里只在旧存档缺字段时重算一次（migrateRuntime 的 playable 分支）。
 function needsCachedLegalMoves(runtime) {
   return !!runtime?.pendingChoice && !Array.isArray(runtime.legalMoves)
+}
+
+function needsScenarioCardTable(runtime) {
+  return runtime.hubFlow && runtime.uiState === 'inScenario' && runtime._scenarioCardTable !== true
 }
 
 // 2026-11-13：回合收尾流程模型从 1（旧：行动点用尽自动推进 + 收尾玩家窗口）升到 2
@@ -498,8 +508,118 @@ export function repairRuntimeCardModels(state, changes = []) {
   state.bondedSets = merged
 }
 
+// ---------------------------------------------------------------------------
+// 2026-11-18 旧存档修复（内容层已补关间升级窗 / 战役奖赏卡标记）。
+//
+// 背景：某些战役的内容清单声明了 `grantedDeckCards`（卡面写「不计入牌组张数」的战役奖赏，
+// 例如某循环介绍剧情发的塔罗牌）。三选一（draft）模式的 30 张校验必须扣掉它们；旧存档没有
+// `campaignCards` 标记时牌组会被顶成 31 张，`hubBeginScenario` 永远被「请先补足调查员的牌组」挡住。
+// 同时，旧流程图可能在两场冒险之间直接落到下一关准备页、漏掉后来补上的关间升级窗。
+//
+// 两项修复都只在旧存档命中，新存档（升级窗已访问、标记已写入）不受影响：
+//   1. `backfillCampaignGrantedDeckCards`：按战役清单 `grantedDeckCards` 回填 `campaignCards`；
+//   2. `rewindToMissedUpgradeWindow`：存档停在下一关准备页、且新图里该场景前有一个从未访问过的
+//      interlude 升级窗 → 回退到该窗。不丢任何已结算经验/记录，只把漏掉的关间补回来。
+
+function grantedDeckCardsFor(campaign) {
+  const declared = contentRegistry.getCampaign(campaign?.id)?.grantedDeckCards
+  return Array.isArray(declared) ? declared.filter(code => typeof code === 'string' && code) : []
+}
+
+function missedUpgradeWindow(state) {
+  const campaign = state?.campaign
+  const flow = campaign?.flow
+  if (!campaign?.id || !flow?.nodeId || state.uiState !== 'scenarioSetup') return null
+  // 待决选择/未完成事务中不能改写流程（会破坏续算凭据）。
+  if (state.pendingChoice || state.continuation) return null
+  const manifest = contentRegistry.getCampaign(campaign.id)
+  if (!manifest?.flow) return null
+  let graph
+  try { graph = campaignGraph(manifest) } catch { return null }
+  const node = graph.nodes[flow.nodeId]
+  if (node?.type !== 'scenario') return null
+  const history = flow.history || []
+  const previous = graph.nodes[history.at(-2)?.nodeId]
+  const window = previous?.next ? graph.nodes[previous.next] : null
+  if (previous?.type !== 'scenario' || window?.type !== 'interlude') return null
+  if (window.next !== flow.nodeId || window.upgrades === false) return null
+  if (history.some(visit => visit.nodeId === previous.next)) return null
+  return { windowId: previous.next }
+}
+
+function rewindToMissedUpgradeWindow(state) {
+  const found = missedUpgradeWindow(state)
+  if (!found) return false
+  const campaign = state.campaign, flow = campaign.flow
+  // 丢掉「旧流程直接进入下一关」的访问记录，改停在漏掉的关间窗。
+  const last = flow.history.at(-1)
+  if (last?.nodeId === flow.nodeId) flow.history.pop()
+  flow.nodeId = found.windowId
+  flow.visits ||= {}
+  flow.visits[found.windowId] = (flow.visits[found.windowId] || 0) + 1
+  flow.history.push({ nodeId: found.windowId, visit: flow.visits[found.windowId] })
+  delete campaign.pendingNode
+  campaign.phase = 'interlude'
+  campaign.flowStage = 'interlude'
+  campaign.upgradesAllowed = true
+  state.uiState = 'interlude'
+  state.phase = 'interlude'
+  state.currentSeat = 0
+  state.hubReady = false
+  state.hubSeatDone = {}
+  state.hubUpgradedSeats = {}
+  if (isDraftMode(state)) openDraftUpgrades(state)
+  return true
+}
+
+function needsCampaignGrantedBackfill(state) {
+  const campaign = state?.campaign
+  const codes = grantedDeckCardsFor(campaign)
+  if (!codes.length) return false
+  return Object.values(campaign.investigators || {}).some(record =>
+    codes.some(code => record?.deck?.includes(code) && !(record.campaignCards || []).includes(code)))
+}
+
+function backfillCampaignGrantedDeckCards(state) {
+  if (!needsCampaignGrantedBackfill(state)) return false
+  const codes = grantedDeckCardsFor(state.campaign)
+  for (const record of Object.values(state.campaign.investigators || {})) {
+    for (const code of codes) {
+      if (!record?.deck?.includes(code)) continue
+      record.campaignCards ||= []
+      if (!record.campaignCards.includes(code)) record.campaignCards.push(code)
+    }
+  }
+  return true
+}
+
+function hasProtectedAssetChoice(state) {
+  if (!state.continuation || !state.pendingChoice) return false
+  const { kind, options, seat } = state.pendingChoice
+  if (!['asset', 'discard-asset', 'target', 'discard', 'assetReplacement', 'card', 'cost'].includes(kind)) return false
+  const inv = state.investigators?.[seat]
+  return inv?.assets?.some(asset => !canDiscardControlledAsset(state, inv, asset)
+    && options.some(option => [asset.id, `asset:${asset.id}`, `play:${asset.id}`].includes(option.id)))
+}
+
+function refreshProtectedAssetChoice(state) {
+  if (!hasProtectedAssetChoice(state)) return false
+  // 从事务快照重算，合法目标只剩一张或没有时也能自动走相应的结算分支。
+  const draft = structuredClone(state)
+  resolveTransaction(draft, state.pendingChoice.seat, null, executeCommand, { initial: true })
+  if (isDeepStrictEqual(draft.pendingChoice, state.pendingChoice)) return false
+  draft.actionLog = state.actionLog
+  if (draft.uiState === 'inScenario') syncClues(draft)
+  for (const key of Object.keys(state)) delete state[key]
+  Object.assign(state, draft)
+  return true
+}
+
 function runtimeNeedsWork(runtime, force) {
+  if (hasProtectedAssetChoice(runtime)) return true
   if ([runtime, runtime.continuation?.base].filter(Boolean).some(needsCardModelRepair)) return true
+  if ([runtime, runtime.continuation?.base].filter(Boolean).some(needsCampaignGrantedBackfill)) return true
+  if (missedUpgradeWindow(runtime)) return true
   // 旧存档里可能有敌人落在梦境之门上（06015a/b 禁止敌人进入/生成）。修复口径见
   // dream-gate.js#discardDreamGateIntruders：按 FAQ v2.1 改为弃掉该敌人。
   if ([runtime, runtime.continuation?.base].filter(Boolean).some(saved => (saved.enemies || []).some(enemy =>
@@ -520,6 +640,7 @@ function migrateRuntime(runtime, { force, migrations, changes, label, playable }
   if (runtime.schemaVersion > STATE_SCHEMA_VERSION) throw new Error(`${label}来自更新版本（结构 v${runtime.schemaVersion}），请升级游戏后再读取`)
   if (!runtime.campaign?.id) throw new Error(`${label}缺少战役信息，无法修复`)
   const local = []
+  const oldCardTable = needsScenarioCardTable(runtime)
   for (const saved of [runtime, runtime.continuation?.base].filter(Boolean)) repairRuntimeCardModels(saved, local)
   // 梦境之门（06015a/b）：旧存档里非法生成/进入的敌人按 FAQ v2.1 改为弃掉。
   for (const saved of [runtime, runtime.continuation?.base].filter(Boolean)) {
@@ -558,7 +679,16 @@ function migrateRuntime(runtime, { force, migrations, changes, label, playable }
   const turnFlowNote = upgradeTurnFlowModel(runtime)
   if (turnFlowNote) local.push(turnFlowNote)
   if (runtime.continuation?.base) upgradeTurnFlowModel(runtime.continuation.base, { silent: true })
+  // 2026-11-18 旧存档修复：补记「不计入牌组张数」的战役奖赏卡标记；补回旧流程图漏掉的关间升级窗
+  // （万象无终《巫异时刻》之后直接落到下一关准备页的存档）。口径见上方 missedUpgradeWindow 注释。
+  for (const saved of [runtime, runtime.continuation?.base].filter(Boolean)) {
+    if (backfillCampaignGrantedDeckCards(saved)) local.push('补记战役奖赏卡（不计入牌组张数）')
+  }
+  if (rewindToMissedUpgradeWindow(runtime)) local.push('补回漏掉的关间升级窗')
+  syncRuntimeCardTable(runtime)
+  if (oldCardTable && runtime._scenarioCardTable) local.push('收窄关卡卡表')
   if (playable) {
+    if (refreshProtectedAssetChoice(runtime)) local.push('刷新受保护支援的待决选择')
     const moves = legalMoves(runtime)
     if (JSON.stringify(moves) !== JSON.stringify(runtime.legalMoves)) {
       runtime.legalMoves = moves
@@ -575,6 +705,8 @@ export function migrateState(state, { force = false, migrations = STATE_MIGRATIO
   validateDraftState(state)
   validateMechanicState(state)
   validatePurchaseDiscounts(state.campaign)
+  validateProgressTracks(state.campaign)
+  validateStartingAdjustments(state.campaign)
   validateInvestigatorMechanics(state)
   // 七循环 P2：EotE 可选扩展（scenarioFlags.mechanics.eote / campaign.eote / 既有 mechanicState 的
   // 数值钥匙与隐藏剧本牌库）。旧存档没有这些键时各校验直接跳过，字节不变。
@@ -586,6 +718,8 @@ export function migrateState(state, { force = false, migrations = STATE_MIGRATIO
   validateTskState(state)
   for (const saved of [state.continuation?.base, ...parallelLaneEntries(state).map(([, lane]) => lane)].filter(Boolean)) {
     validateDraftState(saved); validateMechanicState(saved); validatePurchaseDiscounts(saved.campaign); validateInvestigatorMechanics(saved); validateEoteState(saved); validateEotePlayerPrimitives(saved); validateTskState(saved)
+    validateProgressTracks(saved.campaign)
+    validateStartingAdjustments(saved.campaign)
   }
   const lanes = parallelLaneEntries(state)
   const laneNeedsWork = lanes.some(([, lane]) => runtimeNeedsWork(lane, false))
@@ -594,10 +728,20 @@ export function migrateState(state, { force = false, migrations = STATE_MIGRATIO
     saved.parallel?.interlude?.state, saved.parallel?.ending].filter(Boolean)
   const needsReactionPolicy = typeof reactionPolicy === 'boolean'
     && reactionRuntimes(state).some(runtime => runtime.autoReactionHosted === undefined)
-  if (!runtimeNeedsWork(state, force) && !laneNeedsWork && !needsReactionPolicy) return { state, changes: [] }
+  const needsRepair = runtimeNeedsWork(state, force) || laneNeedsWork || needsReactionPolicy
+  const needsCardTable = needsScenarioCardTable(state) || lanes.some(([, lane]) => needsScenarioCardTable(lane))
+  if (!needsRepair && !needsCardTable) return { state, changes: [] }
   const next = structuredClone(state)
   const changes = []
   const nextLanes = parallelLaneEntries(next)
+  // 仅收窄派生卡表时，保留暂停凭据与缓存的合法行动，跳过规则修复。
+  if (!needsRepair) {
+    if (needsScenarioCardTable(next) && syncRuntimeCardTable(next)) changes.push('收窄关卡卡表')
+    for (const [part, lane] of nextLanes) {
+      if (needsScenarioCardTable(lane) && syncRuntimeCardTable(lane)) changes.push(`${part} 线：收窄关卡卡表`)
+    }
+    return { state: next, changes }
+  }
   if (needsReactionPolicy) {
     for (const runtime of reactionRuntimes(next)) runtime.autoReactionHosted ??= reactionPolicy
     changes.push('保存本局的反应托管策略')

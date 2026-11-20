@@ -1,6 +1,21 @@
 // Curated by setting and pacing. Track files remain shared; playlists never copy audio.
 const chapter = (name, mood, tracks) => Object.freeze({ name, mood, tracks: Object.freeze(tracks) })
 export const SCENARIO_MUSIC = Object.freeze({
+  // 九循环：24 首新曲 + 12 首旧曲（33.3%），36 个位置无循环内重复。
+  theFeastOfHemlockVale: Object.freeze({
+    welcomeToHemlockVale: chapter('欢迎来到铁杉谷', '渡口上岸、海雾小镇、初见居民', ['fhvFirefliesAndStardust', 'fhvAlmostBliss', 'eoteEveningFallHarp']),
+    writtenInRock: chapter('岩间密语', '废弃矿道、岩壁回音、矿车逃生', ['fhvEternalTerminal', 'fhvIronHorseDistressed', 'enterTheMaze']),
+    hemlockHouse: chapter('汉洛克庄园', '旧宅探查、走廊异动、压迫渐强', ['fhvTheHouseOfLeaves', 'fhvGhostStory', 'tcuThisHouse']),
+    theSilentHeath: chapter('寂静荒野', '荒野勘察、风声渐息、异样动静', ['fhvWillowAndTheLight', 'fhvCrowdHammer', 'tcuMystOnTheMoor']),
+    theLostSister: chapter('消失的姐妹', '离岛寻踪、海雾潮声、失落往事', ['fhvSkyeCuillin', 'fhvThunderbird', 'lostFrontier']),
+    theThingInTheDepths: chapter('深沼之物', '湿地低鸣、水下潜伏、沼泽危机', ['fhvWaterPrelude', 'fhvTenebrousBrothersCarnivalMermaid', 'ticDeepHaze']),
+    theTwistedHollow: chapter('扭曲空洞', '林间夜探、诡异枝影、迷途与追猎', ['fhvFolkRound', 'fhvZombieChase', 'magicForest']),
+    dawnOfTheSecondDay: chapter('第二日黎明', '雨晨整备、屋檐滴水、暂时平静', ['fhvRainsWillFall', 'fhvFeatherWaltz', 'eoteLostTime']),
+    theLongestNight: chapter('最长一夜', '农舍围守、黑暗逼近、破晓前的鏖战', ['fhvSouthernGothic', 'fhvHidingYourReality', 'ticClashDefiant']),
+    dawnOfTheFinalDay: chapter('最终日黎明', '金色晨曦、果园静候、宴前整备', ['fhvAscendingTheVale', 'fhvCattails', 'tdeDreamsBecomeReal']),
+    preludeTheFinalEvening: chapter('最终夜', '长桌烛火、暮色聚拢、不祥的宴席', ['fhvDuetMusette', 'fhvAncientMysteryWaltzAllegro', 'ritual']),
+    fateOfTheVale: chapter('山谷的命运', '光色异变、山谷崩裂、终局抉择', ['fhvVanes', 'fhvMagistar', 'eoteBlackVortex']),
+  }),
   // 八循环：20 首新曲 + 10 首旧曲（33.3%），30 个位置无循环内重复。
   theScarletKeys: Object.freeze({
     riddlesAndRain: chapter("谜雨", "伦敦雨夜、街巷追踪、初见红衣人", ["tskNightOnTheDocksSax","tskNoGoodLayabout","darkWalk"]),
@@ -94,6 +109,19 @@ export const SCENARIO_MUSIC = Object.freeze({
     aLightInTheFog: chapter('雾中之光', '灯塔迷雾、停尸房与地下室、多线终局', ['ticDarkFog', 'ticHush', 'lostFrontier']),
     theLairOfDagon: chapter('达贡巢穴', '深海祭坛、誓约仪式、诅咒与祝福', ['ticOppressiveGloom', 'ticAnxiety', 'ancientRite']),
     intoTheMaelstrom: chapter('暗潮之下', '伊哈·恩斯雷门扉、深海之城、终局抉择', ['ticTheDescent', 'ticStormfront', 'thunderDreams']),
+  }),
+  // 十循环《沉没之城》P7：10 章 BGM 各 3 首（复用既有曲库，不新增音频）。
+  theDrownedCity: Object.freeze({
+    oneLastJob: chapter("金盆洗手", ["阿卡姆夜街、帮派谈判、赌局揭底"], ["tskNightOnTheDocksSax","tskNoGoodLayabout","tskKillers"]),
+    theWesternWall: chapter("西墙", ["深海高墙、垂降与淹没、古城的压迫感"], ["ticTheDescent","ticOppressiveGloom","eoteInexorable"]),
+    theDrownedQuarter: chapter("淹没城区", ["海床遗迹、供能核心、潮水逼近"], ["ticDeepHaze","ticDarkFog","eoteBlackVortex"]),
+    theApiary: chapter("养育场", ["血肉隧道、蜂巢回响、朝圣者的低语"], ["ticBentAndBroken","ticAnxiety","eoteScpX2xUnseenPresence"]),
+    theGrandVault: chapter("大秘库", ["秘库阶梯、升降机、内殿封印"], ["tcuInnerSanctum","tcuSymmetry","tcuOssuary5Rest"]),
+    courtOfTheAncients: chapter("古代议庭", ["古代议庭、石柱与符文、跨层升降"], ["tcuLandOfTheDead","tcuHiddenWonders","tcuMysticForce"]),
+    obsidianCanyons: chapter("黑曜石峡谷", ["黑曜石峡谷、风暴与吊船、峰顶牌库"], ["eoteSpacialWinds","eoteCrossingTheChasm","eoteLongRoadAheadB"]),
+    sepulchreOfTheSleeper: chapter("沉睡者墓穴", ["墓穴静默、克苏鲁苏醒、仪式收束"], ["tcuPhantasm","tcuAnguish","tcuDarkling"]),
+    theDoomOfArkhamPartI: chapter("阿卡姆的毁灭 第一部分", ["阿卡姆毁灭前夜、幽灵商店、风暴将临"], ["eoteDespairAndTriumph","eoteDayOfChaos","eoteDarkeningDevelopments"]),
+    theDoomOfArkhamPartII: chapter("阿卡姆的毁灭 第二部分", ["克苏鲁降临、终局火力、尾声抉择"], ["tskGhostpocalypse6CrossingTheThreshold","tskNightmareMachine","tskTrepidation"]),
   }),
 })
 

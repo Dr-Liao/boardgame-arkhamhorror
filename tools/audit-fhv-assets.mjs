@@ -30,6 +30,10 @@ import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { partitions } from '../content/campaigns/theFeastOfHemlockVale/shared.js'
 import { imageDescriptor, imageResolution, presentationStats } from '../presentation/images.js'
 import { DEFAULT_IMAGE_HOST, LOCALIZED_PREFIX, remoteImagePath } from '../web/images.js'
+// 展示管线（tools/build-presentation.mjs）按 retired-localized-arts.json 剔除已退役中文图；
+// 本审计必须与同一口径复算，否则只要退役清单非空就会误报映射漂移。
+import retiredLocalizedArts from '../presentation/retired-localized-arts.json' with { type: 'json' }
+const RETIRED_LOCALIZED_ARTS = new Set(retiredLocalizedArts)
 
 const MOD = fileURLToPath(new URL('../', import.meta.url))
 const WORKSPACE = fileURLToPath(new URL('../../../', import.meta.url))
@@ -380,7 +384,8 @@ function auditPresentationMapping(localizedArts, mediaRegistry) {
   const regenerated = [...new Set(entries
     .filter(entry => typeof entry === 'string')
     .map(entry => entry.replace(/^\//, ''))
-    .filter(entry => /^cards\/[0-9a-z]+\.avif$/.test(entry)))].sort()
+    .filter(entry => /^cards\/[0-9a-z]+\.avif$/.test(entry))
+    .filter(entry => !RETIRED_LOCALIZED_ARTS.has(entry)))].sort()
   const declared = Array.isArray(localizedArts?.arts) ? localizedArts.arts : []
   const localized = {
     path: 'presentation/localized-arts.json',

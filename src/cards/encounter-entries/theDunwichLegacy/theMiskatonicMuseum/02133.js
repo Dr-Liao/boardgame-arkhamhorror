@@ -13,10 +13,12 @@ export default {
   code: '02133', scope: 'location',
   locationRule: {
     onTestFail(state, loc, api, inv, result) {
-      if (result.source?.label !== '调查' || !inv.assets.length) return
+      if (result.source?.label !== '调查') return
+      const assets = inv.assets.filter(asset => api.canDiscardAsset(inv.seat, asset.id))
+      if (!assets.length) return
       const choice = api.choose({ kind: 'target', source: originalOf(loc), seat: inv.seat,
         prompt: '选择弃掉一张受你控制的支援卡。',
-        options: inv.assets.map(asset => ({ id: asset.id, label: asset.name || ALL_CARDS[asset.code]?.nameZh || asset.code })) })
+        options: assets.map(asset => ({ id: asset.id, label: asset.name || ALL_CARDS[asset.code]?.nameZh || asset.code })) })
       api.discardAsset(inv.seat, choice)
     },
   },

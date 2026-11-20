@@ -793,9 +793,11 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['mobile', 390, 84
       expect(guestAfterHostPick.state.legalMoves.some(move => move.action === 'hubSelectInvestigator' && move.code === HOST_CODE),
         '座位 0 已选/占用的调查员不能出现在座位 1 候选').toBe(false)
       await act(0, 'hubAutoDeck')
+      await act(0, 'hubConfirmDeck')
       await act(0, 'hubDoneSeat')
       await act(1, 'hubSelectInvestigator', move => move.code === GUEST_CODE)
       await act(1, 'hubAutoDeck')
+      await act(1, 'hubConfirmDeck')
       await act(1, 'hubDoneSeat')
       const prepared = await waitForStatus(0, session => session.state.hubReady === true
         && session.state.campaign.investigators[0]?.code === HOST_CODE

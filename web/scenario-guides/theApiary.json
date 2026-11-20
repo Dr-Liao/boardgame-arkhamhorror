@@ -1,0 +1,944 @@
+{
+  "id": "theApiary",
+  "campaignId": "theDrownedCity",
+  "sourceKind": "authored",
+  "officialChinese": false,
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "养育场",
+          "children": [
+            {
+              "id": "checkCampaignLog",
+              "text": "查看你的战役日志。"
+            },
+            {
+              "id": "headedWest",
+              "text": "若远征队向西进发，前往 养育场 1。"
+            },
+            {
+              "id": "headedEast",
+              "text": "若远征队向东进发，跳至 养育场 2。"
+            },
+            {
+              "id": "apiary1",
+              "text": "养育场 1：拉莱耶下方的阴湿隧道无尽地分岔、缠绕，像某只巨兽的毛细血管。墙壁上每隔一段距离便嵌着一颗发光的结节，脉动着柔和的光。第三天晚上扎营后，你坐在隧道的另一侧，看着安迪在笔记本上飞速涂写。话题很快转到当初是什么事让你们两人都受雇于蒂林哈斯特。"
+            },
+            {
+              "id": "ursulaDowns",
+              "text": "若你扮演的是厄休拉·唐斯：安迪讲述让你们走到一起的往事时，你和助手杰克也各自补充了一些细节。回想起在亚马逊目睹的恐怖，以及导致杰克失去一条腿的那次事故，你不禁打了个寒颤。"
+            },
+            {
+              "id": "apiary1Andy",
+              "text": "“长话短说……蒂林哈斯特先生说他手上又有大新闻给我。一个让我一举成名的机会。而且，嗯，也许还能赚到足够的钱，还清我在希布酒馆欠的账。”他露出难为情的神情。“上回干完那票之后，我总得放松一下嘛！放松得有点过火了。”"
+            },
+            {
+              "id": "apiary1Tremor",
+              "text": "一阵震颤撼动隧道。安迪脸色发白，凑近身来。“我有个猜想。这座城？它正在上升。我是说，它还在上升。那些震动、崩塌的地基、它以前在水下而现在不在水里——你见过城市尖塔里的船只坟场吧？几个世纪以来，这片海域一直有船失踪。我不知道是什么造成的，但我总做那些梦……”"
+            },
+            {
+              "id": "apiary1Cavern",
+              "text": "第二天，你们发现了一处巨大的洞穴。墙壁和天花板布满小小的圆孔，像蜂巢一样，随意地分岔成迷宫般的群落。安迪冲到一条气味格外恶臭的隧道入口，捡起一块沾血的破布。“我不知道这里住着什么，但我觉得它们喜欢吃人。”"
+            },
+            {
+              "id": "apiary1Conclusion",
+              "text": "再往里走，隧道两侧排列着肉质的、胆汁色的增生物，渗出浓稠黏腻的脓液。这种地方真的还会有人活着吗？"
+            },
+            {
+              "id": "apiary2",
+              "text": "养育场 2：城市中心之外的隧道一路向下倾斜，穿过一连串建筑群：冻结在时光中的远古异星工厂。“不知道他们在这里造什么，”露比说。带爪的金属悬臂垂在数英里长的轨道上方，巨大的雕像从高处的壁龛中俯视。与其在诡异的寂静中行走，你不如问问同伴们当初为何受雇于蒂林哈斯特。"
+            },
+            {
+              "id": "apiary2Ruby",
+              "text": "“说实话，蒂林哈斯特逮到我正想偷走他的一些，呃，存货，”露比说。“那不是我干得最漂亮的一票。但那男人可知道怎么把任何交易都变成对他有利。他反而给了我一份工作。钱给得好——比我偷到的那些还值钱——所以我就答应了。我已经为退休存了好一阵子钱了。”"
+            },
+            {
+              "id": "apiary2Cavern",
+              "text": "工厂渐渐化为一座迷宫般的隧道系统。探索数日后，你们发现了一处巨大的洞穴。墙壁和天花板布满小小的圆孔，像蜂巢一样，随意地分岔成迷宫般的群落。一名身穿拼接斗篷的年轻人的血肉残骸俯卧在一条隧道前。那股恶臭令人无法忍受。"
+            },
+            {
+              "id": "apiary2Note",
+              "text": "“这跟另一个家伙穿的是同一种斗篷，”露比用手帕捂住口鼻，一边从那人口袋里抽出一小片纸。上面用血潦草地写着两个词：救命。“你朝隧道深处望去，两侧排列着肉质的、胆汁色的增生物，让隧道看起来像一根巨大的食道。里面传来的恶臭更浓重得多。"
+            },
+            {
+              "id": "apiary2Conclusion",
+              "text": "“我有种感觉，已经没人可救了。不过，那下面可能还有些值得一探的东西，”露比说，她声音里惯有的神气明显不见了。"
+            },
+            {
+              "id": "resolveWalkInFaith",
+              "text": "若任何调查员拥有“信仰之行”任务，他们在此页结算各自的剧情。"
+            },
+            {
+              "id": "proceedToWesternSetup",
+              "text": "前往 设置（v.I）——西部远征。"
+            },
+            {
+              "id": "proceedToEasternSetup",
+              "text": "前往 设置（v.II）——东部远征。"
+            },
+            {
+              "id": "walkInFaith",
+              "title": "任务：信仰之行",
+              "children": [
+                {
+                  "id": "instructions",
+                  "text": "仅当你拥有“信仰之行”任务时阅读："
+                },
+                {
+                  "id": "body",
+                  "text": "当你凝视这蜂窝般软肉质的隧道与地上散落的残骸时，一股压倒性的恐惧与敬畏充塞胸腔。地上有几件被撕碎的斗篷和一盏破碎的提灯。房间中央画着一个巨大的白垩圆环，上面写满拉丁语词语与诡异符号。也许是一个保护仪式？更令人不安的是，圆环中心刻着你所信仰宗教的神圣符号。画下它的人是你的同信者吗？他们可能是异端，但回想起来，你不禁怀疑他们是否也像你一样，被命运引到这座古城。当你深入这头巨兽的腹中时，你的胃隐隐作痛。你的信仰是否将你引入了歧途？"
+                },
+                {
+                  "id": "choose",
+                  "text": "你必须决定（选择一项）："
+                },
+                {
+                  "id": "doubts",
+                  "text": "“我心中充满疑虑。”在你的战役日志中“信仰之行”下擦除 1 点进度。下一次剧本中，每名调查员第一次要从遭遇牌库抽牌时，可以改为从自己的牌库抽 1 张牌。"
+                },
+                {
+                  "id": "resolve",
+                  "text": "“我意志坚定。”在你的战役日志中“信仰之行”下标记 2 点进度，并受到 1 点精神创伤。下一次剧本中，每名调查员第一次抽取遭遇卡时，该遭遇卡获得涌动。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "setup",
+          "children": [
+            {
+              "id": "west",
+              "title": "设置（v.I）——西部远征",
+              "children": [
+                {
+                  "id": "gatherSets",
+                  "text": "从以下遭遇组中收集所有卡牌：养育场、宇宙遗产、古老迷雾、穷途异魔、朝圣者、黑暗教团 与 惊惧。"
+                },
+                {
+                  "id": "buildActDeck",
+                  "text": "使用幕 1a——“不安的兆象”——与幕 2a——“失落的朝圣者”组建幕牌库。将另一张幕移出游戏。"
+                },
+                {
+                  "id": "removeFromGame",
+                  "text": "将主母敌人移出游戏。"
+                },
+                {
+                  "id": "setCardsAside",
+                  "text": "将下列各项放在一边，置于场外：每处养育场地点、奇丑混种与双面的带鳞寄生虫 [runeT] 敌人、玛莉亚·里维拉、古代遗物 [runeS] 与骇人“面具”剧情资产、朝圣者与穷途异魔遭遇组，以及每一份寄生变形弱点。"
+                },
+                {
+                  "id": "shuffleIntoBottomTen",
+                  "text": "完成上述步骤后，将放在一边的荧光通道地点洗入遭遇牌库底部的 10 张牌中。"
+                }
+              ]
+            },
+            {
+              "id": "east",
+              "title": "设置（v.II）——东部远征",
+              "children": [
+                {
+                  "id": "gatherSets",
+                  "text": "从以下遭遇组中收集所有卡牌：养育场、宇宙遗产、古老迷雾、穷途异魔、星之眷族、偷渡者 与 惊惧。收集星之眷族遭遇组时，只收集感染星之眷族敌人。将该组中的其他每张卡牌移出游戏。"
+                },
+                {
+                  "id": "buildActDeck",
+                  "text": "使用幕 1a——“不安的兆象”——与幕 2a——“蜂巢思维”组建幕牌库。将另一张幕移出游戏。"
+                },
+                {
+                  "id": "removeFromGame",
+                  "text": "将玛莉亚·里维拉剧情资产移出游戏。"
+                },
+                {
+                  "id": "setCardsAside",
+                  "text": "将下列各项放在一边，置于场外：每处养育场地点、奇丑混种、主母与双面的带鳞寄生虫 [runeV] 敌人、骇人“面具”与古代遗物 [runeR] 剧情资产、每一份寄生变形弱点，以及穷途异魔遭遇组。"
+                },
+                {
+                  "id": "shuffleIntoBottomTen",
+                  "text": "完成上述步骤后，将放在一边的攫噬长廊地点洗入遭遇牌库底部的 10 张牌中。"
+                }
+              ]
+            },
+            {
+              "id": "placeApiaryEntrance",
+              "text": "将养育场入口放入场中，（引路之光）面朝上。"
+            },
+            {
+              "id": "beginAtApiaryEntrance",
+              "text": "每名调查员从养育场入口开始游戏。"
+            },
+            {
+              "id": "chooseExpeditionAsset",
+              "text": "按玩家顺序，每位玩家可以选择 1 项已获得的 文物 支援，或 远征 遭遇组中的 1 项 物品 支援，在其控制下以已入场状态开始。该"
+            },
+            {
+              "id": "removeTheInescapable",
+              "text": "查看你的战役日志。若 该生物已被击败，将穷途异魔遭遇组移出游戏。"
+            },
+            {
+              "id": "buildEncounterDeck",
+              "text": "洗混其余每张遭遇卡，与下列放在一边的养育场地点——增生原野与两份血肉道路——一起组建遭遇牌库。"
+            },
+            {
+              "id": "readyToBegin",
+              "text": "现在可以开始了。"
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "lostPilgrims",
+          "title": "剧本幕间：失落的朝圣者",
+          "children": [
+            {
+              "id": "body",
+              "text": "那女人虚弱地咳着，自我介绍说她是玛莉亚·里维拉。她和另一些人是一群来自各行各业的朝圣者，被梦境引到了这里。“这里是溺亡之神、死去的君王克苏鲁的领域。我们的领袖道夫人指示我们在这座古城中等待他的归来。”克苏鲁这个名字在你耳边回响。你已在梦中无数次听到它。\n\n玛莉亚继续说。“不过，这些隧道里住着某种邪恶的东西。我担心是我们将自己的存在唤醒了它。我们派了一个人去找救兵，但他一直没有回来。”\n\n你们的谈话被一声可怕的咆哮打断。玛莉亚垂下目光。“自从我们到了这里，就有东西一直追猎着我们……某种可怕的东西。它穿过街道、古代档案馆，甚至穿过城市的心脏追猎我们。我曾希望它不会跟到这座腐坏可怖的地方。”她虚弱地咳了几声。“我没有力气带他们离开这些隧道了。求求你，带我们到安全的地方去。”\n\n又一声咆哮在隧道中回响，这次更近了，还伴随着寄生虫的颤鸣。安迪看向你，又看向玛莉亚，说道：“把你的人都召集起来。没有人该死在这种地方。”"
+            },
+            {
+              "id": "flipApiaryEntrance",
+              "text": "将养育场入口翻至其（危险出口）面。"
+            },
+            {
+              "id": "gatherCultists",
+              "text": "从遭遇牌库、弃牌堆以及所有在场与离场区域中搜寻每一名非弱点的 邪教徒 敌人。将它们洗混，面朝下堆成一叠，置于迷失营地之下。"
+            },
+            {
+              "id": "mariaRivera",
+              "text": "选择一名调查员来控制放在一边的玛莉亚·里维拉剧情资产。（记住，玛莉亚同时也是一名可被拯救的 邪教徒！）"
+            },
+            {
+              "id": "theInescapable",
+              "text": "将放在一边的穷途异魔敌人以横置状态生成在离所有调查员最远的地点。将 穷途异魔 遭遇组的其余卡牌与遭遇弃牌堆一起洗入遭遇牌库。"
+            },
+            {
+              "id": "placeClues",
+              "text": "在每处已揭示且没有 胜利X 的地点放置线索，数量至多为其线索值。"
+            },
+            {
+              "id": "continuePlaying",
+              "text": "继续游戏。"
+            }
+          ]
+        },
+        {
+          "id": "theHiveMind",
+          "title": "剧本幕间：蜂巢思维",
+          "children": [
+            {
+              "id": "body",
+              "text": "你感到一股异星意识的奔涌，上千个念头与记忆侵入你的脑海。她是你的主母。你在内心深处感受到了。你看见一队有翼、带触手的怪物进入一艘异界容器。你看见主母像虫子般渺小，从宿主体内爬出。你看见她进入另一个宿主，又一个宿主，在他们的喉咙里产卵。你感到她渴望成长、扩散、增殖。随后是异星血肉的滋味、人类血肉的滋味、你自己血肉的滋味——主母此刻正在品尝你。\n\n你醒来，看见露比手持利刃站在你上方。你身处一个脉动的恶臭腔室；连接你与主母的脐带在你面前的地上像蜥蜴的尾巴般抽搐。腔室的墙壁里嵌着一具巨大的异星生物尸体，像一具骇人的傀儡般被支起：那正是主母。你感到她渴望吸收你、成为你、吞噬你。\n\n“我们必须杀了它，”露比低吼道。"
+            },
+            {
+              "id": "rearrangeRing",
+              "text": "将养育场入口、攫噬长廊、饥渴长廊和酸性体腔围成一圈重新排列。将其他每处带有 胜利X 且其上没有线索的地点放入胜利区，并弃掉那些地点上的所有标记与卡牌。"
+            },
+            {
+              "id": "removeRemainingLocations",
+              "text": "从遭遇牌库、遭遇弃牌堆和游戏区域中搜寻其余每一处地点，并将它们移出游戏。"
+            },
+            {
+              "id": "placeCentralChamber",
+              "text": "找出放在一边的中央腔室地点，将其放在圈中央的空隙处，底边朝向酸性体腔。"
+            },
+            {
+              "id": "spawnMother",
+              "text": "将放在一边的主母敌人生成在中央腔室。"
+            },
+            {
+              "id": "theInescapable",
+              "text": "若 穷途异魔 遭遇组被放在一边，将穷途异魔敌人生成在离所有调查员最远的地点。将 穷途异魔 遭遇组的其余卡牌与遭遇弃牌堆一起洗入遭遇牌库。"
+            },
+            {
+              "id": "placeClues",
+              "text": "在每处已揭示且没有 胜利X 的地点放置线索，数量至多为其线索值。"
+            },
+            {
+              "id": "continuePlaying",
+              "text": "继续游戏。"
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "xp",
+          "children": [
+            {
+              "id": "bonus",
+              "text": "从九死一生中救出朝圣者们！"
+            }
+          ]
+        },
+        {
+          "id": "investigatorDefeat",
+          "title": "调查员被击败",
+          "children": [
+            {
+              "id": "body",
+              "text": "调查员被击败：你感觉不到任何痛苦。事实上，已经没有“你”来感觉痛苦了。取而代之的是，“你”已成为蛰伏在这座城市下方那无尽互联的意识的一部分。你一直在这里。你也将永远在这里。"
+            },
+            {
+              "id": "killed",
+              "text": "每名被击败的调查员死亡。若没有幸存的调查员继续战役，调查员们输掉本次战役。"
+            },
+            {
+              "id": "storyAssets",
+              "text": "若安迪·范·诺特维克或露比·斯坦迪什剧情资产在被杀死调查员的牌组中，选择一名幸存的调查员，将其加入该调查员的牌组，持续到战役结束。此卡不计入该调查员的牌组张数。"
+            },
+            {
+              "id": "otherResolution",
+              "text": "若达成了其他结局，幸存的调查员们继续前往该结局。"
+            }
+          ]
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "children": [
+            {
+              "id": "body",
+              "text": "结局 1：最后一名幸存者从恶臭的隧道中走出。朝圣者们道过谢后，指出了他们来时经过的、通往“城市心脏”的那条隧道。离开时，安迪擦掉相机镜头上的脓液。“又浪费了一卷胶片。本来只要一张照片就能成就我的事业。我当初还不如在来的路上就把所有胶卷扔进海里。”"
+            },
+            {
+              "id": "updateCampaignLog",
+              "text": "更新你的战役日志。"
+            },
+            {
+              "id": "crossOutTheApiary",
+              "text": "在拉莱耶地图上划掉“养育场”。"
+            },
+            {
+              "id": "grislyMask",
+              "text": "若剧本结束时骇人“面具”正由某名调查员控制，在“已获得文物”下骇人“面具”旁勾选框。"
+            },
+            {
+              "id": "victory",
+              "text": "每名调查员获得等同于胜利区中每张卡牌胜利 X 值之和的经验。"
+            },
+            {
+              "id": "experience",
+              "text": "经验：（按上述说明计算）"
+            },
+            {
+              "id": "recordPilgrimsWereSaved",
+              "text": "记录 朝圣者们得救了。"
+            },
+            {
+              "id": "bonus",
+              "text": "每名调查员因从九死一生中救出朝圣者而获得 2 点额外经验！"
+            },
+            {
+              "id": "proceedToTheGrandVault",
+              "text": "前往 大秘库。"
+            }
+          ]
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "children": [
+            {
+              "id": "body",
+              "text": "结局 2：你带着创伤后遗神游般的状态从隧道中钻出，发现回到了当初出发的那座巨大前厅。若有朝圣者幸存，他们也没有久留。漫长的沉默之后，远征队准备继续前进。安迪眯眼打量地上的一道血迹，指出若是有朝圣者被拖走，现场会凌乱得多。他们的踪迹也许正通往玛莉亚所说的“城市核心”。"
+            },
+            {
+              "id": "updateCampaignLog",
+              "text": "更新你的战役日志。"
+            },
+            {
+              "id": "crossOutTheApiary",
+              "text": "在拉莱耶地图上划掉“养育场”。"
+            },
+            {
+              "id": "grislyMask",
+              "text": "若剧本结束时骇人“面具”正由某名调查员控制，在“已获得文物”下骇人“面具”旁勾选框。"
+            },
+            {
+              "id": "victory",
+              "text": "每名调查员获得等同于胜利区中每张卡牌胜利 X 值之和的经验。"
+            },
+            {
+              "id": "experience",
+              "text": "经验：（按上述说明计算）"
+            },
+            {
+              "id": "parasiticTransformation",
+              "text": "每名调查员必须从养育场遭遇组中搜寻一份寄生变形，并将其加入自己的牌组。此卡不计入其牌组张数。"
+            },
+            {
+              "id": "recordPilgrimsWereDevoured",
+              "text": "记录 朝圣者们被吞噬了。"
+            },
+            {
+              "id": "proceedToTheGrandVault",
+              "text": "前往 大秘库。"
+            }
+          ]
+        },
+        {
+          "id": "resolution3",
+          "title": "结局 3",
+          "children": [
+            {
+              "id": "body",
+              "text": "结局 3：远征队满身血污，艰难跋涉回养育场入口。你挠了挠后颈上一个挥之不去的痒处，希望自己没有受到感染。你曾短暂成为蜂巢思维一部分的那些碎裂记忆，仍在不断侵入你的思绪。你怀疑自己再也无法真正回到从前了。"
+            },
+            {
+              "id": "updateCampaignLog",
+              "text": "更新你的战役日志。"
+            },
+            {
+              "id": "crossOutTheApiary",
+              "text": "在拉莱耶地图上划掉“养育场”。"
+            },
+            {
+              "id": "grislyMask",
+              "text": "若剧本结束时骇人“面具”正由某名调查员控制，在“已获得文物”下骇人“面具”旁勾选框。"
+            },
+            {
+              "id": "victory",
+              "text": "每名调查员获得等同于胜利区中每张卡牌胜利 X 值之和的经验。"
+            },
+            {
+              "id": "experience",
+              "text": "经验：（按上述说明计算）"
+            },
+            {
+              "id": "recordParasitesExterminated",
+              "text": "记录 调查员们消灭了异星寄生虫。"
+            },
+            {
+              "id": "proceedToResolution4",
+              "text": "前往 结局 4。"
+            }
+          ]
+        },
+        {
+          "id": "noResolution",
+          "title": "无结局",
+          "children": [
+            {
+              "id": "body",
+              "text": "若未达成任何结局：你从脖颈上扯下一条扭动的虫子，逃出腐臭的隧道。但愿你没有受到感染……"
+            },
+            {
+              "id": "updateCampaignLog",
+              "text": "更新你的战役日志。"
+            },
+            {
+              "id": "crossOutTheApiary",
+              "text": "在拉莱耶地图上划掉“养育场”。"
+            },
+            {
+              "id": "grislyMask",
+              "text": "若剧本结束时骇人“面具”正由某名调查员控制，在“已获得文物”下骇人“面具”旁勾选框。"
+            },
+            {
+              "id": "victory",
+              "text": "每名调查员获得等同于胜利区中每张卡牌胜利 X 值之和的经验。"
+            },
+            {
+              "id": "experience",
+              "text": "经验：（按上述说明计算）"
+            },
+            {
+              "id": "parasiticTransformation",
+              "text": "每名调查员必须从养育场遭遇组中搜寻一份寄生变形，并将其加入自己的牌组。此卡不计入其牌组张数。"
+            },
+            {
+              "id": "checkCampaignLog",
+              "text": "查看你的战役日志。"
+            },
+            {
+              "id": "proceedToTheGrandVault",
+              "text": "若远征队向西进发，前往 大秘库。"
+            },
+            {
+              "id": "proceedToResolution4",
+              "text": "若远征队向东进发，跳至 结局 4。"
+            }
+          ]
+        },
+        {
+          "id": "resolution4",
+          "title": "结局 4",
+          "text": "结局 4：你终于找到了旧路。又走了几天，你们来到一扇大如银行金库的圆门前。依次按下几个异星字形后，门滚向一旁，露出一条干燥的路径，沿着海床蜿蜒通向一座散发柔光的穹顶。一道闪烁的、薄纱般的能量场挡住了海水的重量。正当你们惊叹于这条奇迹般的路径与穹顶时，一块黑曜石松动，从上方坠落到穹顶上。穹顶非但没有碎裂，反而泛起涟漪、柔韧地凹陷，让岩石在一阵雷鸣般的巨响中穿过。\n\n“这不可能，”露比倒吸一口气。“那穹顶里有东西在给屏障供能。看起来它挡住了水，却允许其他东西穿过。不管是什么在供能，对兰道尔来说可能都是个重大发现。”她抬头望向通往水面的陡峭墙壁。\n\n• 调查员们必须决定（选择一项）：\n• “我们都走到这里了。不能放过任何一块石头。”要探索海床穹顶，前往 淹没城区。\n\n• “你疯了吗？我们得离开这里！”要攀上墙壁回到营地，前往 西墙。"
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "The Apiary",
+          "children": [
+            {
+              "id": "checkCampaignLog",
+              "text": "Check your Campaign Log."
+            },
+            {
+              "id": "headedWest",
+              "text": "If the expedition headed west, proceed to The Apiary 1."
+            },
+            {
+              "id": "headedEast",
+              "text": "If the expedition headed east, skip to The Apiary 2."
+            },
+            {
+              "id": "apiary1",
+              "text": "The Apiary 1: The dank tunnels beneath R’lyeh branch and thread endlessly like the capillaries of some giant beast. Shining nodules are stationed at intervals in the walls, pulsing with soft light. After making camp on the third evening, you sit across the tunnel from Andy as he scribbles furiously in his notebook. The conversation soon turns to the events that led you both into Tillinghast’s employ."
+            },
+            {
+              "id": "ursulaDowns",
+              "text": "If you are playing as Ursula Downs: You and your assistant Jake each chime in with a few details of your own as Andy recounts the story that brought you together. You suppress a shudder as you recall the horrors you witnessed in the Amazon, and the incident that took Jake’s leg."
+            },
+            {
+              "id": "apiary1Andy",
+              "text": "“The long and the short of it is…Mr. Tillinghast said he had another big story for me. A chance for me to make my big break. And, well, maybe enough money to pay off my tab at Hibb’s.” He looks bashful. “I had to let off some steam after my last gig! A lot of steam.”"
+            },
+            {
+              "id": "apiary1Tremor",
+              "text": "A tremor rocks the tunnels. Andy’s face grows ashen as he leans in. “I have a theory. This city? It’s rising. I mean, still rising. The shakes, the crumbling foundation, the fact that it was underwater before and now it isn’t. You saw the ship graveyard in the city spires, right? Ships’ve been going missing in this stretch of ocean for centuries. I don’t know what’s causing it, but I keep having these dreams…”"
+            },
+            {
+              "id": "apiary1Cavern",
+              "text": "The next day, you discover a vast cavern. The walls and ceiling are honeycombed with small round holes that branch off haphazardly into a labyrinthine warren. Andy rushes to the entrance of one particularly foul-smelling tunnel and picks up a bloody scrap of cloth. “I don’t know what lives here, but I think they like eating people.”"
+            },
+            {
+              "id": "apiary1Conclusion",
+              "text": "Further in, fleshy, bilious growths line the tunnel, oozing a thick, phlegmy ichor. Could anyone actually be left alive down here?"
+            },
+            {
+              "id": "apiary2",
+              "text": "The Apiary 2: The tunnels beyond the heart of the city slope ever-downward through a series of complexes: ancient alien factories frozen in time. “I wonder what they made here,” Ruby says. Clawed metal appendages hang over mile-long tracks while gargantuan statues stare down from high alcoves. Rather than walk in the eerie silence, you ask your companions what brought them into Tillinghast’s employ."
+            },
+            {
+              "id": "apiary2Ruby",
+              "text": "“Truth is, Tillinghast caught me trying to sneak off with some of his, er, stock,” Ruby says. “Not my best work. But that man knows how to spin any deal in his favor. He offered me a job, instead. The money was good—better than the stuff I’d nabbed—so I said yes. I’ve been saving up for retirement for a while now.”"
+            },
+            {
+              "id": "apiary2Cavern",
+              "text": "The factories give way to a labyrinthine tunnel system. After days of exploration, you discover a vast cavern. The walls and ceiling are honeycombed with small round holes that branch off haphazardly into a labyrinthine warren. The gory remains of a young man in a patchwork cloak lies prone in front of one tunnel. The stench is unbearable."
+            },
+            {
+              "id": "apiary2Note",
+              "text": "“This is the same kind of cloak the other fella was wearing,” Ruby holds a handkerchief to her mouth as she pulls a small scrap of paper out of the man’s pocket. Scrawled in blood are two words: SEND HELP. You look down the tunnel. Fleshy, bilious growths line the sides, giving it the look of a giant esophagus. A far worse stench emanates from within."
+            },
+            {
+              "id": "apiary2Conclusion",
+              "text": "“Something tells me there’s nobody left to help. Still, there could be something worthwhile down there,” Ruby says, the usual panache noticeably absent from her voice."
+            },
+            {
+              "id": "resolveWalkInFaith",
+              "text": "If any investigator has the Walk in Faith Task, they resolve their respective story on this page."
+            },
+            {
+              "id": "proceedToWesternSetup",
+              "text": "Proceed to Setup (v.I) - Western Expedition."
+            },
+            {
+              "id": "proceedToEasternSetup",
+              "text": "Proceed to Setup (v.II) - Eastern Expedition."
+            },
+            {
+              "id": "walkInFaith",
+              "title": "Task: Walk in Faith",
+              "children": [
+                {
+                  "id": "instructions",
+                  "text": "Read only if you have the “Walk in Faith” Task:"
+                },
+                {
+                  "id": "body",
+                  "text": "An overwhelming sense of dread and awe fills your chest as you stare at the honeycomb of spongy, fleshy tunnels and the littered debris on the ground. There are several torn cloaks and a broken lantern. A massive chalk circle composed of Latinate words and eldritch symbols has been drawn in the center of the room. A ritual of protection, perhaps? More disturbingly, a sacred symbol of your own faith is inscribed in its center. Were the ones who drew it fellow adherents of your faith? They could be heretics, but as you think about it, you wonder if they were drawn, much like you, to this ancient city by fate. As you descend into the belly of the beast, your stomach aches. Has your faith led you astray?"
+                },
+                {
+                  "id": "choose",
+                  "text": "You must decide (choose one):"
+                },
+                {
+                  "id": "doubts",
+                  "text": "“I have such doubts.” Erase 1 progress under Walk in Faith in your Campaign Log. The first time each investigator would draw from the encounter deck in the next scenario, they may draw 1 card from their deck instead."
+                },
+                {
+                  "id": "resolve",
+                  "text": "“I am firm in my resolve.” Mark 2 progress under Walk in Faith in your Campaign Log and suffer 1 mental trauma. The first time each investigator draws an encounter card in the next scenario, that encounter card gains surge."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "setup",
+          "children": [
+            {
+              "id": "west",
+              "title": "Setup (v.I) – Western Expedition",
+              "children": [
+                {
+                  "id": "gatherSets",
+                  "text": "Gather all cards from the following encounter sets: The Apiary, Cosmic Legacy, Elder Mist, The Inescapable, Pilgrims, Dark Cult, and Striking Fear."
+                },
+                {
+                  "id": "buildActDeck",
+                  "text": "Build the act deck using act 1a—“Unsettling Signs” and act 2a—“Lost Pilgrims.” Remove the other act from the game."
+                },
+                {
+                  "id": "removeFromGame",
+                  "text": "Remove the Mother enemy from the game."
+                },
+                {
+                  "id": "setCardsAside",
+                  "text": "Set each of the following aside, out of play: each Apiary location, the Grotesque Amalgam and the double-sided Squamous Parasite [runeT] enemies, the Maria Rivera, Ancient Relic [runeS], and Grisly “Mask” story assets, the Pilgrims and The Inescapable encounter sets, and each copy of the Parasitic Transformation weakness."
+                },
+                {
+                  "id": "shuffleIntoBottomTen",
+                  "text": "After doing so, shuffle the set-aside Luminous Tunnels location into the bottom 10 cards of the encounter deck."
+                }
+              ]
+            },
+            {
+              "id": "east",
+              "title": "Setup (v.II) – Eastern Expedition",
+              "children": [
+                {
+                  "id": "gatherSets",
+                  "text": "Gather all cards from the following encounter sets: The Apiary, Cosmic Legacy, Elder Mist, The Inescapable, Star Spawn, Stowaways, and Striking Fear. When gathering the Star Spawn encounter set, only gather the Infected Star Spawn enemy. Remove each other card in that set from the game."
+                },
+                {
+                  "id": "buildActDeck",
+                  "text": "Build the act deck using act 1a—“Unsettling Signs” and act 2a—“The Hive Mind.” Remove the other act from the game."
+                },
+                {
+                  "id": "removeFromGame",
+                  "text": "Remove the Maria Rivera story asset from the game."
+                },
+                {
+                  "id": "setCardsAside",
+                  "text": "Set each of the following aside, out of play: each Apiary location, the Grotesque Amalgam, Mother, and double-sided Squamous Parasite [runeV] enemies, the Grisly “Mask” and Ancient Relic [runeR] story assets, each copy of the Parasitic Transformation weakness, and The Inescapable encounter set."
+                },
+                {
+                  "id": "shuffleIntoBottomTen",
+                  "text": "After doing so, shuffle the set-aside Grasping Corridor location into the bottom 10 cards of the encounter deck."
+                }
+              ]
+            },
+            {
+              "id": "placeApiaryEntrance",
+              "text": "Put Apiary Entrance into play, (Beckoning Light) side faceup."
+            },
+            {
+              "id": "beginAtApiaryEntrance",
+              "text": "Each investigator begins play at Apiary Entrance."
+            },
+            {
+              "id": "chooseExpeditionAsset",
+              "text": "In player order, each player may choose 1 earned Artifact asset or 1 Item asset from the Expedition encounter set to begin in play under their control. This set is indicated by the following icon:"
+            },
+            {
+              "id": "removeTheInescapable",
+              "text": "Check your Campaign Log. If the creature was defeated, remove The Inescapable encounter set from the game."
+            },
+            {
+              "id": "buildEncounterDeck",
+              "text": "Shuffle each remaining encounter card to build the encounter deck along with the following set-aside Apiary locations: Growing Fields and both copies of Fleshy Paths."
+            },
+            {
+              "id": "readyToBegin",
+              "text": "You are now ready to begin."
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "lostPilgrims",
+          "title": "Scenario Interlude: Lost Pilgrims",
+          "children": [
+            {
+              "id": "body",
+              "text": "Coughing weakly, the woman introduces herself as Maria Rivera. She and the others are a collective of pilgrims from all walks of life, led to this place by their dreams. “This is the domain of the drowned god, the dead monarch Cthulhu. We have been instructed by our leader, Lady Dao, to await his return in this ancient city.” The name “Cthulhu” rings in your ears. You have heard it time and again in your dreams.\n\nMaria continues. “However, there is something malevolent living in these tunnels. Something I fear we awakened by our presence. We sent one of our own to find help, but they haven’t returned.”\n\nYour discussion is cut short by a dreadful roar. Maria lowers her gaze. “Since we arrived, we’ve been pursued by something…something awful. It hunted us through the streets, the ancient archive, and even through the city’s heart. I hoped it would not follow us to this corrupt and horrible place.” She coughs weakly. “I do not have the strength to lead them out of these tunnels. Please, I beg you, lead us to safety.”\n\nAnother roar echoes through the tunnels, closer this time, accompanied by the trilling of parasites. Andy looks to you, then to Maria and says, “Gather your people. Nobody deserves to die down here.”"
+            },
+            {
+              "id": "flipApiaryEntrance",
+              "text": "Flip Apiary Entrance to its (Dangerous Exit) side."
+            },
+            {
+              "id": "gatherCultists",
+              "text": "Search the encounter deck, discard pile, and all in- and out-of-play areas for each non-weakness Cultist enemy. Shuffle them together and place them in a facedown stack beneath Lost Campsite."
+            },
+            {
+              "id": "mariaRivera",
+              "text": "Choose an investigator to take control of the set-aside Maria Rivera story asset. (Remember that Maria is also a Cultist who can be saved!)"
+            },
+            {
+              "id": "theInescapable",
+              "text": "Spawn the set-aside The Inescapable enemy, exhausted, at the location farthest from all investigators. Shuffle the rest of The Inescapable encounter set into the encounter deck, along with the encounter discard pile."
+            },
+            {
+              "id": "placeClues",
+              "text": "Place clues on each revealed location without victory X up to its clue value."
+            },
+            {
+              "id": "continuePlaying",
+              "text": "Continue playing."
+            }
+          ]
+        },
+        {
+          "id": "theHiveMind",
+          "title": "Scenario Interlude: The Hive Mind",
+          "children": [
+            {
+              "id": "body",
+              "text": "You feel the rush of an alien consciousness as a thousand thoughts and memories encroach upon yours. She is your Mother. You feel it deep within. You see a legion of winged, tentacled monstrosities entering an otherworldly vessel. You see Mother, small as a worm, crawl out of her host. You see her enter another host, and then another, laying eggs within their gullets. You feel her need to grow, to spread, to proliferate. Then the taste of alien flesh, of human flesh, of your own flesh as Mother tastes you even now.\n\nYou awaken to see Ruby standing over you, knife in hand. You are in a pulsing, fetid chamber; the cord that linked you to the Mother flails like a lizard’s tail on the ground before you. Embedded in the walls of the chamber is a massive corpse of an alien creature held up like a grisly puppet: Mother herself. You feel her desire to absorb you, to become you, to devour you.\n\n“We have to kill it,” Ruby growls."
+            },
+            {
+              "id": "rearrangeRing",
+              "text": "Rearrange the Apiary Entrance, Grasping Corridor, Starving Corridor, and Acidic Coelom in a circle. Place each other location with victory X and no clues on it in the victory display, discarding all tokens and cards at those locations."
+            },
+            {
+              "id": "removeRemainingLocations",
+              "text": "Search the encounter deck, encounter discard pile, and play area for each remaining location and remove them from the game."
+            },
+            {
+              "id": "placeCentralChamber",
+              "text": "Find the set-aside Central Chamber location and place it in the central gap, with the bottom edge facing Acidic Coelom."
+            },
+            {
+              "id": "spawnMother",
+              "text": "Spawn the set-aside Mother enemy at Central Chamber."
+            },
+            {
+              "id": "theInescapable",
+              "text": "If The Inescapable encounter set is set aside, spawn The Inescapable enemy at the location farthest from all investigators. Shuffle the rest of The Inescapable encounter set into the encounter deck, along with the encounter discard pile."
+            },
+            {
+              "id": "placeClues",
+              "text": "Place clues on each revealed location without victory X up to its clue value."
+            },
+            {
+              "id": "continuePlaying",
+              "text": "Continue playing."
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "xp",
+          "children": [
+            {
+              "id": "bonus",
+              "text": "从九死一生中救出朝圣者们！"
+            }
+          ]
+        },
+        {
+          "id": "investigatorDefeat",
+          "title": "调查员被击败",
+          "children": [
+            {
+              "id": "body",
+              "text": "调查员被击败：你感觉不到任何痛苦。事实上，已经没有“你”来感觉痛苦了。取而代之的是，“你”已成为蛰伏在这座城市下方那无尽互联的意识的一部分。你一直在这里。你也将永远在这里。"
+            },
+            {
+              "id": "killed",
+              "text": "每名被击败的调查员死亡。若没有幸存的调查员继续战役，调查员们输掉本次战役。"
+            },
+            {
+              "id": "storyAssets",
+              "text": "若安迪·范·诺特维克或露比·斯坦迪什剧情资产在被杀死调查员的牌组中，选择一名幸存的调查员，将其加入该调查员的牌组，持续到战役结束。此卡不计入该调查员的牌组张数。"
+            },
+            {
+              "id": "otherResolution",
+              "text": "若达成了其他结局，幸存的调查员们继续前往该结局。"
+            }
+          ]
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "children": [
+            {
+              "id": "body",
+              "text": "结局 1：最后一名幸存者从恶臭的隧道中走出。朝圣者们道过谢后，指出了他们来时经过的、通往“城市心脏”的那条隧道。离开时，安迪擦掉相机镜头上的脓液。“又浪费了一卷胶片。本来只要一张照片就能成就我的事业。我当初还不如在来的路上就把所有胶卷扔进海里。”"
+            },
+            {
+              "id": "updateCampaignLog",
+              "text": "更新你的战役日志。"
+            },
+            {
+              "id": "crossOutTheApiary",
+              "text": "在拉莱耶地图上划掉“养育场”。"
+            },
+            {
+              "id": "grislyMask",
+              "text": "若剧本结束时骇人“面具”正由某名调查员控制，在“已获得文物”下骇人“面具”旁勾选框。"
+            },
+            {
+              "id": "victory",
+              "text": "每名调查员获得等同于胜利区中每张卡牌胜利 X 值之和的经验。"
+            },
+            {
+              "id": "experience",
+              "text": "经验：(calculate as instructed above)"
+            },
+            {
+              "id": "recordPilgrimsWereSaved",
+              "text": "记录 朝圣者们得救了。"
+            },
+            {
+              "id": "bonus",
+              "text": "每名调查员因从九死一生中救出朝圣者而获得 2 点额外经验！"
+            },
+            {
+              "id": "proceedToTheGrandVault",
+              "text": "前往 大秘库。"
+            }
+          ]
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "children": [
+            {
+              "id": "body",
+              "text": "结局 2：你带着创伤后遗神游般的状态从隧道中钻出，发现回到了当初出发的那座巨大前厅。若有朝圣者幸存，他们也没有久留。漫长的沉默之后，远征队准备继续前进。安迪眯眼打量地上的一道血迹，指出若是有朝圣者被拖走，现场会凌乱得多。他们的踪迹也许正通往玛莉亚所说的“城市核心”。"
+            },
+            {
+              "id": "updateCampaignLog",
+              "text": "更新你的战役日志。"
+            },
+            {
+              "id": "crossOutTheApiary",
+              "text": "在拉莱耶地图上划掉“养育场”。"
+            },
+            {
+              "id": "grislyMask",
+              "text": "若剧本结束时骇人“面具”正由某名调查员控制，在“已获得文物”下骇人“面具”旁勾选框。"
+            },
+            {
+              "id": "victory",
+              "text": "每名调查员获得等同于胜利区中每张卡牌胜利 X 值之和的经验。"
+            },
+            {
+              "id": "experience",
+              "text": "经验：(calculate as instructed above)"
+            },
+            {
+              "id": "parasiticTransformation",
+              "text": "每名调查员必须从养育场遭遇组中搜寻一份寄生变形，并将其加入自己的牌组。此卡不计入其牌组张数。"
+            },
+            {
+              "id": "recordPilgrimsWereDevoured",
+              "text": "记录 朝圣者们被吞噬了。"
+            },
+            {
+              "id": "proceedToTheGrandVault",
+              "text": "前往 大秘库。"
+            }
+          ]
+        },
+        {
+          "id": "resolution3",
+          "title": "结局 3",
+          "children": [
+            {
+              "id": "body",
+              "text": "结局 3：远征队满身血污，艰难跋涉回养育场入口。你挠了挠后颈上一个挥之不去的痒处，希望自己没有受到感染。你曾短暂成为蜂巢思维一部分的那些碎裂记忆，仍在不断侵入你的思绪。你怀疑自己再也无法真正回到从前了。"
+            },
+            {
+              "id": "updateCampaignLog",
+              "text": "更新你的战役日志。"
+            },
+            {
+              "id": "crossOutTheApiary",
+              "text": "在拉莱耶地图上划掉“养育场”。"
+            },
+            {
+              "id": "grislyMask",
+              "text": "若剧本结束时骇人“面具”正由某名调查员控制，在“已获得文物”下骇人“面具”旁勾选框。"
+            },
+            {
+              "id": "victory",
+              "text": "每名调查员获得等同于胜利区中每张卡牌胜利 X 值之和的经验。"
+            },
+            {
+              "id": "experience",
+              "text": "经验：(calculate as instructed above)"
+            },
+            {
+              "id": "recordParasitesExterminated",
+              "text": "记录 调查员们消灭了异星寄生虫。"
+            },
+            {
+              "id": "proceedToResolution4",
+              "text": "前往 结局 4。"
+            }
+          ]
+        },
+        {
+          "id": "noResolution",
+          "title": "无结局",
+          "children": [
+            {
+              "id": "body",
+              "text": "若未达成任何结局：你从脖颈上扯下一条扭动的虫子，逃出腐臭的隧道。但愿你没有受到感染……"
+            },
+            {
+              "id": "updateCampaignLog",
+              "text": "更新你的战役日志。"
+            },
+            {
+              "id": "crossOutTheApiary",
+              "text": "在拉莱耶地图上划掉“养育场”。"
+            },
+            {
+              "id": "grislyMask",
+              "text": "若剧本结束时骇人“面具”正由某名调查员控制，在“已获得文物”下骇人“面具”旁勾选框。"
+            },
+            {
+              "id": "victory",
+              "text": "每名调查员获得等同于胜利区中每张卡牌胜利 X 值之和的经验。"
+            },
+            {
+              "id": "experience",
+              "text": "经验：(calculate as instructed above)"
+            },
+            {
+              "id": "parasiticTransformation",
+              "text": "每名调查员必须从养育场遭遇组中搜寻一份寄生变形，并将其加入自己的牌组。此卡不计入其牌组张数。"
+            },
+            {
+              "id": "checkCampaignLog",
+              "text": "查看你的战役日志。"
+            },
+            {
+              "id": "proceedToTheGrandVault",
+              "text": "若远征队向西进发，前往 大秘库。"
+            },
+            {
+              "id": "proceedToResolution4",
+              "text": "若远征队向东进发，跳至 结局 4。"
+            }
+          ]
+        },
+        {
+          "id": "resolution4",
+          "title": "结局 4",
+          "text": "结局 4：你终于找到了旧路。又走了几天，你们来到一扇大如银行金库的圆门前。依次按下几个异星字形后，门滚向一旁，露出一条干燥的路径，沿着海床蜿蜒通向一座散发柔光的穹顶。一道闪烁的、薄纱般的能量场挡住了海水的重量。正当你们惊叹于这条奇迹般的路径与穹顶时，一块黑曜石松动，从上方坠落到穹顶上。穹顶非但没有碎裂，反而泛起涟漪、柔韧地凹陷，让岩石在一阵雷鸣般的巨响中穿过。\n\n“这不可能，”露比倒吸一口气。“那穹顶里有东西在给屏障供能。看起来它挡住了水，却允许其他东西穿过。不管是什么在供能，对兰道尔来说可能都是个重大发现。”她抬头望向通往水面的陡峭墙壁。\n\n• 调查员们必须决定（选择一项）：\n• “我们都走到这里了。不能放过任何一块石头。”要探索海床穹顶，前往 淹没城区。\n\n• “你疯了吗？我们得离开这里！”要攀上墙壁回到营地，前往 西墙。"
+        }
+      ]
+    }
+  }
+}

@@ -143,10 +143,12 @@ export function dunwichChaosAfterTest(id, state, inv, result, api) {
         if (pile || state.scenarioZones.void) api.spawn('02141', inv.location)
       }
     }
-    if (has('elderthing') && !result.success && inv.assets.length) {
+    if (has('elderthing') && !result.success) {
+      const assets = inv.assets.filter(asset => api.canDiscardAsset(inv.seat, asset.id))
+      if (!assets.length) return
       const choice = api.choose({ kind: 'discard-asset', source: '02118', seat: inv.seat,
         prompt: '选择弃掉一张受你控制的支援卡。',
-        options: inv.assets.map(asset => ({ id: asset.id, label: asset.name || ALL_CARDS[asset.code]?.nameZh || asset.code })) })
+        options: assets.map(asset => ({ id: asset.id, label: asset.name || ALL_CARDS[asset.code]?.nameZh || asset.code })) })
       api.discardAsset(inv.seat, choice)
     }
   }

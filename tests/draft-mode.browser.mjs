@@ -80,6 +80,7 @@ for (const width of [1440, 390]) test(`三选一高级设置、初始选牌与�
   for (let guard = 0; guard < 80 && session.state.legalMoves.some(m => m.action === 'hubDraftPick'); guard++) {
     await move(session.state.legalMoves.find(m => m.action === 'hubDraftPick'))
   }
+  await move({ action: 'hubConfirmDeck' })
   await move({ action: 'hubDoneSeat' })
   await move({ action: 'hubBeginScenario' })
   for (let guard = 0; guard < 12 && session.state.pendingChoice; guard++) {

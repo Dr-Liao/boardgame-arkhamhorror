@@ -4,13 +4,7 @@ import { registeredEntry } from './ability.js'
 import { cardDef } from './card-lookup.js'
 import { canCommitDeckTop, commitDeckTop, validateEoteInvestigatorFields } from './eote-investigator-support.js'
 import { validateTskInvestigatorFields } from './tsk-investigator-support.js'
-
-export function canDiscardControlledAsset(state, inv, asset) {
-  const entry = registeredEntry(asset?.code)
-  return !!asset && inv.assets.includes(asset) && !cardDef(asset.code)?.permanent
-    && !asset.cannotLeavePlay && !entry?.cannotLeavePlay && !entry?.cannotDiscard && !entry?.passive?.cannotDiscard
-    && entry?.cannotLeavePlayWhile?.(state, inv, asset) !== true
-}
+import { canDiscardControlledAsset, canLeaveControlledAsset } from './asset-departure.js'
 
 export function notifyPlacedAsset(state, seat, asset, events, reactionWindow) {
   if (!asset || !state.investigators.some(inv => (inv.assets || []).some(source =>
@@ -62,9 +56,7 @@ export function createInvestigatorMechanics(state, deps) {
     canCommitDeckTop: seat => canCommitDeckTop(state, seat),
     commitDeckTop: seat => commitDeckTop(state, seat),
     canReturnAsset(seat, asset) {
-      const inv = state.investigators[seat], entry = registeredEntry(asset?.code)
-      return inv.assets.includes(asset) && !cardDef(asset.code)?.permanent && !asset.cannotLeavePlay
-        && !entry?.cannotLeavePlay && entry?.cannotLeavePlayWhile?.(state, inv, asset) !== true
+      return canLeaveControlledAsset(state, state.investigators[seat], asset)
     },
     rotateBeneath(seat, host) {
       const inv = state.investigators[seat]

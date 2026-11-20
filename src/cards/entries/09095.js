@@ -21,7 +21,7 @@ export default {
       kind: 'played',
       label: '可弃掉法术/仪式支援；从手牌或弃牌堆打出法术/仪式卡，费用 -3',
       resolve: ({ state, inv, api }) => {
-        const controlled = (inv.assets || []).filter(asset => hasSpellTrait(asset.code, api))
+        const controlled = (inv.assets || []).filter(asset => hasSpellTrait(asset.code, api) && api.investigatorTools.canDiscardAsset(inv.seat, asset))
         if (controlled.length) {
           const answer = api.choice({
             kind: 'reaction', source: '09095', seat: inv.seat, canSkip: true,
@@ -31,8 +31,7 @@ export default {
           })
           if (answer && answer !== 'skip') {
             const asset = controlled.find(item => item.id === answer)
-            if (asset) {
-              api.discardAsset(inv.seat, asset)
+            if (asset && api.discardAsset(inv.seat, asset)) {
               api.info(`🕊️ 「解锢灵魂」：弃掉「${api.cardName(asset.code)}」。`)
             }
           }

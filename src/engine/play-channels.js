@@ -1,8 +1,10 @@
+import { beneathCards, pullBeneath } from './commit-origins.js'
 import { afterUsesSpent } from './uses.js'
 import { consumeDeckTop, deckTopCard, deckTopDiscountUsed, restoreDeckTop } from './eote-deck-top.js'
 import { syncPassiveDeckTop, takeDeckTopForCommit } from './eote-investigator-support.js'
 import { eoteScenarioState } from './eote-state.js'
 import { assetTextBlankedExceptForced } from './card-text.js'
+import { splicePlayerDiscard } from './player-zones.js'
 
 export function parleyDiscardProvider(inv, code, sourceId, { cardDef, registeredEntry }) {
   const def = cardDef(code)
@@ -665,7 +667,7 @@ export function createPlayChannels(deps) {
         if (sourceId && !provider) return { ok: false }
         const at = (inv.discard || []).lastIndexOf(candidate.code)
         if (at < 0) return { ok: false }
-        inv.discard.splice(at, 1)
+        splicePlayerDiscard(inv, at, 1)
         inv.hand.push(candidate.code)
         return { ...base, handIndex: inv.hand.length - 1, ...(provider ? { finish: () => {
           provider.uses -= 1
@@ -907,6 +909,14 @@ export function createPlayChannels(deps) {
         label: `投入（底下）：${cardName(code)}`,
       })
     }
+    if (registeredEntry(inv.code)?.investigator?.commitFromBeneath && !deps.investigatorBlanked?.(state, inv)) {
+      for (const [index, code] of beneathCards(state, inv.seat, inv.code).entries()) {
+        if (!cardDef(code) || isWeaknessCode(code) || !runtimeCardAvailable(state, inv, code)) continue
+        out.push({ channel: 'investigatorBeneath', code, index, sourceId: inv.code,
+          optionId: `investigatorBeneath:${index}`, uiKey: `beneath:${code}`,
+          label: `投入（暗置）：${cardName(code)}` })
+      }
+    }
     for (const host of inv.assets || []) {
       if (registeredEntry(host.code)?.commitFromPlay) out.push({ channel: 'playCommit', code: host.code,
         sourceId: host.id, optionId: `playCommit:${host.id}`, uiKey: `asset:${host.id}`, forced: true,
@@ -935,6 +945,9 @@ export function createPlayChannels(deps) {
   }
 
   function takeCommit(state, inv, candidate) {
+    if (candidate.channel === 'investigatorBeneath') {
+      return pullBeneath(state, inv.seat, inv.code, candidate.code, candidate.index)
+    }
     if (candidate.channel === 'playCommit') {
       const index = inv.assets.findIndex(asset => asset.id === candidate.sourceId)
       if (index < 0) return null

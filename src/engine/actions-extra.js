@@ -1,7 +1,10 @@
 import { discardPlayerCards } from './player-zones.js'
+import { rememberScenarioDeckAttachment } from './scenario-decks.js'
 import { availableResources } from './resource-bank.js'
+import { availablePlayResources } from './play-payment.js'
 import { investigatorRule } from '../cards/card-rules.js'
 import { afterHandDiscard } from './hand-discard-window.js'
+import { canDiscardControlledAsset, discardControlledAsset } from './asset-departure.js'
 import { actionsAvailable as restrictedActionsAvailable, consumeAction as consumeRestrictedAction } from './restricted-actions.js'
 // actions-extra.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 场景/剧情侧的额外行动：谈判、剧情资产、地点能力、威胁与债务等。
@@ -81,15 +84,24 @@ export function createActionsExtra(deps) {
       || playTypeBlocked(state, inv, def.type)) {
       return '当前效果禁止打出支援'
     }
-    if (availableResources(inv) < playCost(state, inv, def)) return '资源不足'
+    if (availablePlayResources(state, inv, def) < playCost(state, inv, def)) return '资源不足'
     if (def.unique && state.investigators.some(other =>
       other.assets.some(asset => cardDef(asset.code)?.name === def.name))) return '同名独特支援已在场'
-    if (normalizedSlots(def).length && !assetReplacementPlans(inv, def).length) return '没有可用槽位'
+    if (!assetReplacementPlans(inv, def, state).length) return '没有合法的支援放置方案'
     return null
   }
 
   function attachmentTargets(state, inv, spec, code) {
     if (!spec) return []
+    if (spec.kind === 'playerCard') {
+      const assets = attachmentTargets(state, inv, { ...spec, kind: 'asset' }, code)
+      const investigators = attachmentTargets(state, inv, { ...spec, kind: 'investigator' }, code)
+      return [
+        ...assets.filter(asset => !spec.hasHealthOrSanity
+          || assetCapacityValue(asset, 'health') > 0 || assetCapacityValue(asset, 'sanity') > 0),
+        ...investigators,
+      ]
+    }
     if (spec.kind === 'asset') {
       // controllerScope==='location'（04193 特制弹药）：可选同地点其他调查员的支援，附件仍由打出者拥有。
       const owners = spec.controllerScope === 'location'
@@ -146,8 +158,10 @@ export function createActionsExtra(deps) {
   function attachCardTo(state, seat, code, target, extra = {}) {
     target.attachments ||= []
     const id = nextInstanceId(state, 'a')
-    target.attachments.push({ id, code, ownerSeat: seat, attachedRound: state.round, ...extra })
-    return target.attachments[target.attachments.length - 1]
+    const attachment = { id, code, ownerSeat: seat, attachedRound: state.round, ...extra }
+    if (seat == null) rememberScenarioDeckAttachment(attachment)
+    target.attachments.push(attachment)
+    return attachment
   }
 
   function assetCapacityValue(asset, capacity) {
@@ -233,10 +247,7 @@ export function createActionsExtra(deps) {
     spendAction(state, inv)
     resourceBank.spendFromPool(inv, enemy.parleyCost, state)
     info(state, events, `🤝 ${inv.name} 花费 ${enemy.parleyCost} 资源谈判，「${enemy.name}」被弃掉。`)
-    removeOne(state.enemies, enemy)
-    removeOne(inv.engaged, enemy.id)
-    if (isWeaknessCode(enemy.code)) inv.discard.push(enemy.code)
-    else state.encounterDiscard.push(enemy.code)
+    deps.discardEnemyCard(state, enemy, events, { seat })
   }
 
   function doParleyCultist(state, seat, enemyId, events) {
@@ -267,13 +278,17 @@ export function createActionsExtra(deps) {
     return performTest(state, seat, 'intellect', 4, { source: { label: '谈判', name: '丽塔·钱德勒', code: LITA_CHANDLER_CODE }, resolve: r => {
       if (r.success) {
         while (!canEquip(inv, cardDef(asset.code))) {
-          const allies = inv.assets.filter(item => normalizedSlots(cardDef(item.code)).includes('ally'))
+          const allies = inv.assets.filter(item => canDiscardControlledAsset(state, inv, item)
+            && normalizedSlots(cardDef(item.code)).includes('ally'))
+          if (!allies.length) {
+            info(state, events, '没有可弃掉的盟友，无法为丽塔腾出槽位。')
+            return
+          }
           const id = requestChoice(state, { kind: 'discard-asset', source: 'lita-control', seat,
             prompt: '选择弃掉一位盟友，为丽塔腾出槽位。',
             options: allies.map(item => ({ id: item.id, label: cardName(item.code) })) })
           const discarded = inv.assets.find(item => item.id === id)
-          leaveAsset(state, inv, discarded)
-          inv.discard.push(discarded.code)
+          if (!discardControlledAsset(state, inv, discarded, events, leaveAsset)) return
         }
         removeOne(state.storyAssets, asset)
         delete asset.location
@@ -356,10 +371,11 @@ export function createActionsExtra(deps) {
     const cost = th.discardCost.action ?? 1
     for (let i = 0; i < cost; i++) spendAction(state, inv)
     const discard = () => {
-      if (removeThreat(state, owner, t, events)) info(state, events, `${inv.name} 花 ${cost} 行动弃掉了「${cardName(t.code)}」。`)
+      if (removeThreat(state, owner, t, events, { seat })) info(state, events, `${inv.name} 花 ${cost} 行动弃掉了「${cardName(t.code)}」。`)
     }
     if (th.discardTest) {
-      performTest(state, seat, th.discardTest.skill, th.discardTest.difficulty, { source: { label: '解除威胁', name: cardName(t.code), code: t.code }, resolve: result => {
+      performTest(state, seat, th.discardTest.skill, th.discardTest.difficulty, { source: { label: '解除威胁', name: cardName(t.code), code: t.code },
+        target: { kind: 'treachery', id: t.id }, resolve: result => {
           if (result.success) discard()
           else info(state, events, `${inv.name} 未通过「${cardName(t.code)}」的弃置检定，该牌留在威胁区域。`)
       } })
@@ -385,7 +401,7 @@ export function createActionsExtra(deps) {
     info(state, events, `📖 ${inv.name} 将「${cardName(t.code)}」的 1 点恐惧移到自己身上（剩余 ${t.counters}），受到 1 点恐惧。`)
     applyHorror(state, inv, 1, events, true)
     if (t.counters <= 0) {
-      removeThreat(state, inv, t, events)
+      removeThreat(state, inv, t, events, { seat })
       info(state, events, `✔️ 「${cardName(t.code)}」恐惧清空，被弃掉。`)
     }
   }

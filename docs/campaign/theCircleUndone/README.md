@@ -69,8 +69,17 @@
 观察投影把它排回实际发生的章节（序章导入之后、序章结算之前）；旧存档的 `tcuPrologue*` 按
 《暮色庄园失踪事件》回填，结算页默认展开本关结算、准备页默认展开下一关导入。
 
+**三选一（draft）模式的连带问题（2026-11-18 用户存档实测）**：《巫异时刻》介绍 2 把「高塔·XVI」
+「权杖王牌」作为**不计入牌组张数**的战役奖赏加入牌组（`campaignCardChange(..., { deckSlot: false })`
+→ `record.campaignCards`）。三选一模式的 30 张校验必须扣掉这些卡，否则牌组会变成 31 张、
+`hubBeginScenario` 永远被「请先补足所有调查员的牌组」挡住。`draftDeckStatus` / `draftLegalMoves`
+与关间替换池都按 `campaignCards` 扣除；旧存档没有这个标记时由存档迁移按
+「已接受命运 + 牌组含权杖王牌」回填。同一次迁移还会把「旧流程直接落在下一关准备页」的存档
+**回退到漏掉的关间升级窗**（不丢已结算经验/记录，三选一模式同时进入补牌/升级阶段）。
+
 **证据**：`tests/tcu-interlude-windows.test.mjs`（真实 hub 流程：巫异时刻结算 → 关间升级 → 死亡门前；
-死亡门前 r1/r2 两条出口的升级窗）、`tests/tcu-story.test.mjs`（flow 契约 + 私密故事排序），
+死亡门前 r1/r2 两条出口的升级窗；三选一模式奖赏卡不计张数；旧存档迁移回退升级窗并补记奖赏卡）、
+`tests/tcu-story.test.mjs`（flow 契约 + 私密故事排序）、
 `node --test tests/tcu-chapters-smoke.test.mjs`（九章真实引擎冒烟）与 `node tools/audit-tcu.mjs --check`
 （flow 节点 41、剧情测试 19/19）。
 

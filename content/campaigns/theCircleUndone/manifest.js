@@ -344,6 +344,10 @@ export const manifest = {
   recordDefaults,
   recordLabels: RECORD_LABELS,
   mementoLabels: MEMENTO_LABELS,
+  // 战役奖赏卡（卡面写明「不计入牌组张数」）：新获取时由 campaignCardChange(..., { deckSlot: false })
+  // 直接写进调查员记录的 `campaignCards`；这张表只给存档迁移回填旧存档（三选一模式的 30 张
+  // 牌组校验/补牌必须扣掉它们，否则《巫异时刻》介绍给的权杖王牌会把牌组顶成 31 张）。
+  grantedDeckCards: ['05040'],
   // 幕间处理器：P9 起幕间二/三/四由 flow 节点 + campaign-effects 结算（见 interludes.js）。
   interludeHandlerId: 'tcuInterlude',
   resolutionIds: ['defeat', 'victory'],

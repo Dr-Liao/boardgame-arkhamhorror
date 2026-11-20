@@ -1,4 +1,5 @@
-import { discardPlayerCards, replacePlayerZoneCards } from './player-zones.js'
+import { discardPlayerCards, replacePlayerZoneCards, splicePlayerDiscard } from './player-zones.js'
+import { enemyIsPart, enemyParts } from './enemy-parts.js'
 import { wrapInvestigatorEffects } from './effect-recipient.js'
 import { createInvestigatorApi } from './investigator-mechanics.js'
 import { createPlayerApi } from './player-mechanics.js'
@@ -62,6 +63,8 @@ import { CHAOS_BAGS, SYMBOL_DEFAULTS } from '../../content/campaigns/nightOfTheZ
 import { contentRegistry } from '../../content/registered.js'
 import { buildDeck, buildDeckFromList, playablePool, expandedPlayablePool, hashSeed, shuffle } from '../deck/deckbuilding.js'
 import { PLAYABLE_INVESTIGATOR_CODES, SELECTABLE_INVESTIGATOR_CODES, canSelectInvestigator, isCardAvailable, getAvailability } from '../deck/availability.js'
+import { campaignInvestigatorRecords, investigatorIdentity } from '../deck/investigator-identity.js'
+import { applyInvestigatorForm } from './investigator-form.js'
 import { EFFECTS, isAutomaticReward } from '../cards/card-effects.js'
 import {
   agendaHandSizePenalty, blanksTraits, enemyWeaknessExtra, entryNeedsReactionPrompt,
@@ -99,6 +102,12 @@ import {
   removeEffectsFromSource,
 } from './effect-state.js'
 import { playAccess, playConditionError } from './play-condition.js'
+import { canSearchPlayableAsset } from './asset-search-play.js'
+import { availableResources } from './resource-bank.js'
+import { availablePlayResources } from './play-payment.js'
+import { bondedPlayCostAvailable } from './play-attempt.js'
+import { sealAvailable } from './seal-entry.js'
+import { tokenCostAvailable } from './token-cost.js'
 import {
   statPipeline, enemyHealthDelta, playCostDelta, slotBonus, setModifierRegistry, setModifierHooks,
   // Phase 2（C1/C2）：布尔修正与授予类修正的读点。
@@ -162,6 +171,7 @@ const SELECTABLE_INVESTIGATORS = SELECTABLE_INVESTIGATOR_CODES
 // 修正管线（modifiers.js）通过注入读取能力层注册表，避免两个模块互相 import。
 setModifierRegistry(registeredEntry)
 setTargetHooks({ enemyHealth: (...args) => enemyHealth(...args), enemyEvade: (state, enemy, seat) => enemyEvadeValue(state, enemy, state.investigators[seat]),
+  entityRuleActive,
   canDamageEnemy: (state, enemy, seat, source) => canDamageEnemy(state, enemy, seat, source),
   canMoveTo: (state, seat, id) => canMoveTo(state, seat, id),
   // 沉睡目标的合法性过滤（targets.js）：候选卡面类型 + 沉睡判定都走引擎同一份读点。
@@ -390,6 +400,7 @@ import { createMoves } from './moves.js'
 import { createCardApi } from './api-card.js'
 import { createEnemyApi } from './api-enemy.js'
 import { createClueApi } from './api-clue.js'
+import { sortEncounterLook, discardStashedEncounter, drawStashedEncounter } from './encounter-look.js'
 import { createTestApi } from './api-test.js'
 import { createMiscApi } from './api-misc.js'
 import { createMechanicsApi } from './api-mechanics.js'
@@ -408,7 +419,8 @@ import { createEnemies } from './enemies.js'
 import { enemyIgnoresInvestigator } from './trait-passives.js'
 import { createLocations } from './locations.js'
 import { createSkillEffects } from './skill-effects.js'
-import { createTurn } from './turn.js'
+import { createTurn, grantActionOnNextTurn, redirectMythosEncounterDraw } from './turn.js'
+import { enemyProtectionBlocks } from './enemy-entry.js'
 import { createReveal } from './reveal.js'
 import { createDeckOps } from './deck-ops.js'
 import { createHub } from './hub.js'
@@ -674,17 +686,26 @@ function groupClues(state, location) {
 
 
 
-function discardEnemyCard(state, enemy) {
+function discardEnemyCard(state, enemy, events = [], { seat = state._resolvingSeat } = {}) {
+  for (const part of enemyParts(state, enemy)) discardEnemyCard(state, part)
   if (enemy.hostId) { returnSwarmCard(state, enemy); return }
   for (const member of swarmGroup(state, enemy).slice(1)) returnSwarmCard(state, member)
   disengageEnemy(state, enemy)
   discardHostedAssets(state, enemy, (owner, code) => owner.discard.push(code))
+  for (const attachment of enemy.attachments || []) {
+    if (!registeredEntry(attachment.code)?.assetRule?.sharedEnemyAttachment) continue
+    const owner = state.investigators[attachment.ownerSeat]
+    if (owner) discardPlayerCards(state, owner, attachment.code)
+  }
   removeOne(state.enemies, enemy)
   const owner = state.investigators[enemy.bearerSeat]
   if (isWeaknessCode(enemy.code) && owner) owner.discard.push(enemy.code)
   else if (!routeEnemyDiscardToScenarioDeck(state, enemy)) state.encounterDiscard.push(enemy.code)
   if (enemy.enemyLocation) removeLocation(state, enemy.id, [])
   scenarioBehavior(state).enemyDiscarded?.(state, enemy, scenarioRuntime(state, []))
+  if (Number.isSafeInteger(seat)) reactionWindow(state, 'encounterCardDiscardedFromPlay', {
+    when: 'encounterCardDiscardedFromPlay', seat, code: enemy.code, targetId: enemy.id, location: enemy.location,
+  }, events, { allowNested: true })
 }
 
 
@@ -701,7 +722,7 @@ function interrogateCultist(state, enemy, events) {
 }
 
 function engagesAutomatically(state, enemy, options={}) {
-  if (enemy.enemyLocation) return false
+  if (enemy.enemyLocation || enemyIsPart(enemy)) return false
   // 沉睡（enemyRule.slumbering）的敌人印着「不能与调查员交战」：连自动交战也不发生，
   // 不论当前效果来源；换到清醒面后这条立刻失效（读当前印刷面）。
   if (!enemyEffectAllowed(state, enemy, 'autoEngage', { entryOf: registeredEntry, isBlanked: enemyTextBlanked })) return false
@@ -717,6 +738,7 @@ function autoEngageAt(state, locationId, events = [], options={}) {
     if (enemy.location !== locationId || !engagesAutomatically(state, enemy, options)) continue
     const here = aliveInvestigators(state)
       .filter((i) => i.location === locationId && !enemyIgnoresInvestigator(state, i, enemy) && !capabilityBlocked(state, i, 'engage')
+        && !enemyProtectionBlocks(state, i, enemy, 'engage')
         && !isCaptured(state, i.seat))
       .map((i) => i.seat)
     const target = preyTarget(state, enemy, here)
@@ -729,6 +751,7 @@ function autoEngageAll(state, events) {
     if (!engagesAutomatically(state, enemy)) continue
     const here = aliveInvestigators(state)
       .filter((i) => i.location === enemy.location && !enemyIgnoresInvestigator(state, i, enemy) && !capabilityBlocked(state, i, 'engage')
+        && !enemyProtectionBlocks(state, i, enemy, 'engage')
         && !isCaptured(state, i.seat))
       .map((i) => i.seat)
     const target = preyTarget(state, enemy, here)
@@ -910,11 +933,12 @@ function exilePlayerCard(state, inv, code, events) {
 
 
 
-function discardableHandCards(inv, requiredIcon = null) {
+function discardableHandCards(inv, requiredIcon = null, requiredType = null) {
   return inv.hand.map((code, index) => ({ code, index })).filter(({ code }) =>
     !isWeaknessCode(code) && canDiscardFromHand(inv, code)
       // 2026-11-13 P1-16：不能离开手牌的牌（09766）不能成为弃牌候选。
       && !cannotLeaveHand(code)
+      && (!requiredType || cardDef(code)?.type === requiredType)
       && (!requiredIcon || Number(cardDef(code)?.icons?.[requiredIcon] || 0) > 0))
 }
 
@@ -957,8 +981,8 @@ function spendAction(state, inv) {
 
 /** Seats allowed to submit now; per-seat hub preparation is simultaneous. */
 
-const HUB_SEAT_ACTIONS = new Set(['hubDraftRefill', 'hubResumeDraft', 'hubDraftPick', 'hubDraftBuy', 'hubDraftRefresh', 'hubDraftLock', 'hubSelectInvestigator', 'hubAutoDeck', 'hubSetDeck', 'hubPurchase', 'hubCustomize',
-  'hubConfirmUpgrades', 'hubCancelUpgrades', 'hubAutoUpgrade', 'hubDoneSeat'])
+const HUB_SEAT_ACTIONS = new Set(['hubDraftRefill', 'hubResumeDraft', 'hubDraftPick', 'hubDraftBuy', 'hubDraftRefresh', 'hubDraftLock', 'hubSelectInvestigator', 'hubAutoDeck', 'hubSetDeck', 'hubConfirmDeck', 'hubPurchase', 'hubCustomize',
+  'hubConfigureCustomization', 'hubConfirmUpgrades', 'hubCancelUpgrades', 'hubAutoUpgrade', 'hubDoneSeat'])
 
 /** Seat preparation only touches the submitting seat, so it may follow a teammate's newer revision. */
 
@@ -1141,6 +1165,8 @@ const locationTraits = {
 }
 
 const commonDeps = {
+  investigatorBlanked: (state, inv) => investigatorTextBlanked(state, inv),
+  eventPlayChoices,
   prepareEnemyOutcome,
   campaignState,
   ALL_CARDS,
@@ -1171,6 +1197,7 @@ const commonDeps = {
   campaignFor,
   canDiscardFromHand,
   canDiscoverClueAt,
+  discardableHandCards,
   bondedAvailable: (state, seat, main, copy) => {
     const set=state.bondedSets?.[bondedSetKey(state,main,seat)]
     return set ? set.cards.filter(card=>(card.code || card)===copy).length
@@ -1316,6 +1343,8 @@ const apiDeps = { ...commonDeps,
 const apiEnemyDeps = { ...commonDeps,
   assetCannotLeavePlay,
   isChargeAsset,
+  reactionWindow,
+  shuffleEnemyIntoEncounterDeck: (...args) => enemiesApi().shuffleEnemyIntoEncounterDeck(...args),
   recordResearch, }
 
 const apiClueDeps = { ...commonDeps,
@@ -1327,6 +1356,9 @@ const apiClueDeps = { ...commonDeps,
   removeThreat, }
 
 const apiTestDeps = { ...commonDeps,
+  discardLocked,
+  sealRevealedChaosToken,
+  nextInstanceId,
   commitIcons,
   describeLimit,
   describeLook,
@@ -1338,6 +1370,7 @@ const apiTestDeps = { ...commonDeps,
   testStage, }
 
 const apiMiscDeps = { ...commonDeps,
+  canPlayCardAsEffect,
   SKILL_NAMES,
   discardHandTo,
   // P6（食梦者）：支援被击败判定（applyHarm 与「移动伤害」共用同一实现）。
@@ -1405,10 +1438,11 @@ function abilityApi(state, events) {
     entryError: (seat, destination) => investigatorEntryError(state, destination, seat)
       || movementError(state, state.investigators[seat], destination, { vehicle: true }),
     placeLocation: id => { scenarioRuntime(state, events).place(id); return state.locations.some(loc => loc.id === id) ? id : null },
+    giveArtifact: (seat, code) => scenarioRuntime(state, events).giveAsset(seat, code),
     canCommitOrigin: (seat, code) => {
       const draft = structuredClone(state), count = draft.skillTest?.committed.length || 0
       draft.investigators[seat].hand.push(code)
-      createTestApi(draft, [], apiTestDeps).commitCards(seat, [code])
+      createTestApi(draft, [], apiTestDeps).commitCards(seat, [code], { syntheticHand: true })
       return (draft.skillTest?.committed.length || 0) > count
     },
     commit: (seat, code, options) => {
@@ -1421,7 +1455,8 @@ function abilityApi(state, events) {
   // 先建两个工厂再摊平，避免 API 构造路径重复调用工厂。
   const miscApi = createMiscApi(state, events, apiMiscDeps)
   const playerApi = createPlayerApi(state, events, {
-    canPlace: (seat, source) => assetReplacementPlans({ ...state.investigators[seat], assets: state.investigators[seat].assets.filter(asset => asset !== source) }, cardDef(source.code)).length > 0,
+    leaveAsset,
+    canPlace: (seat, source) => assetReplacementPlans({ ...state.investigators[seat], assets: state.investigators[seat].assets.filter(asset => asset !== source) }, cardDef(source.code), state).length > 0,
     makeRoom: (seat, source) => replaceAssets(state, state.investigators[seat], cardDef(source.code), events),
     notifyDraw: (seat, code) => {
       const inv = state.investigators[seat]
@@ -1437,8 +1472,67 @@ function abilityApi(state, events) {
   const playerTools = { ...playerApi.playerTools, ...(miscApi.playerToolsExtras || {}) }
   return wrapInvestigatorEffects(state, {
     ...playerApi,
+    emptyAssetSlots: (seat, slot) => createAssetsApi().emptyAssetSlots(state.investigators[seat], slot),
+    redirectMythosEncounterDraw: (context, seat, options) => redirectMythosEncounterDraw(state, context, seat, options),
+    grantActionOnNextTurn: (seat, amount) => grantActionOnNextTurn(state, seat, amount),
+    repeatAssetAbility: (context, options) => abilityExec().repeatAssetAbility(state, context, options, events),
+    hasImmediateAction: (seat, options) => hasImmediateAction(state, seat, options),
+    performImmediateAction: (seat, source, options) => performImmediateAction(state, seat, events, source, options),
+    copyableInvestigatorFronts: seat => copyableInvestigatorFronts(state, seat),
+    copyInvestigatorFront: (seat, code) => {
+      if (!copyableInvestigatorFronts(state, seat).includes(code)) return false
+      applyInvestigatorForm(state, state.investigators[seat], { code, form: 'copied', keepHarmCapacity: true })
+      return true
+    },
+    chooseCollectionPlay: (seat, { source, level = 0 } = {}) => {
+      const inv = state.investigators[seat]
+      const choices = expandedPlayablePool().filter(def => def.xp === level && !def.permanent
+        && canPlayCardAsEffect(state, inv, def, { free: true }))
+      if (!choices.length) return false
+      const picked = requestChoice(state, { kind: 'search', source, seat, canSkip: true,
+        prompt: '从收藏选择一张可免费打出的卡。',
+        options: [{ id: 'skip', label: '不选择' }, ...choices.map(def => ({ id: def.code, label: cardName(def.code), cardCode: def.code }))] })
+      if (!choices.some(def => def.code === picked)) return false
+      const count = inv.hand.filter(code => code === picked).length
+      inv.hand.unshift(picked)
+      doPlay(state, seat, picked, events, false, true, null, null, null, null,
+        playCost(state, inv, cardDef(picked)), null, null, { syntheticHand: true })
+      if (inv.hand.filter(code => code === picked).length <= count) return true
+      inv.hand.splice(inv.hand.indexOf(picked), 1)
+      return false
+    },
+    sortEncounterLook: (seat, context) => sortEncounterLook(state, seat, context, events, {
+      requestChoice, cardName, cardDef, isWeaknessCode, defeatInvestigatorWithTrauma,
+    }),
+    discardStashedEncounter: (seat, code) => discardStashedEncounter(state, seat, code),
+    drawStashedEncounter: (seat, options) => drawStashedEncounter(state, seat, options, events, { drawEncounter, randomValue, isWeaknessCode }),
+    eventPlayChoices: (seat, options) => eventPlayChoices(state, state.investigators[seat], options),
+    offerEventPlay: (seat, options = {}) => {
+      const inv = state.investigators[seat]
+      const choices = eventPlayChoices(state, inv, options)
+      if (!choices.length) return
+      const code = requestChoice(state, {
+        kind: 'card', source: options.source, seat, prompt: '选择要打出的事件。',
+        options: [{ id: 'skip', label: '不打出' }, ...choices.map(id => ({ id, cardCode: id, label: cardName(id) }))],
+      })
+      if (!choices.includes(code)) return
+      doPlay(state, seat, code, events, false, true, null, null, null, null, 0, null, null, {
+        grantedEvent: true, eventOrigin: options.from === 'discard' ? 'discard' : null,
+        removeEventAfter: options.removeAfter === true,
+      })
+    },
+    cardDef,
+    canSearchPlayableAsset: (seat, options) => canPlayNamedAsset(state, state.investigators[seat], options),
+    searchPlayableAsset: (seat, options) => {
+      const inv = state.investigators[seat]
+      return deckOpsApi().searchPlayableAsset(state, inv, {
+        ...options, canPlay: candidate => canPlayAssetSearchCandidate(state, inv, candidate, options),
+        play: ({ zone, code }) => doPlay(state, seat, code, events, false, true, null, null, null, null, 0, null, null,
+          { assetOrigin: zone, hostIgnoresSlots: options.hostIgnoresSlots }),
+      }, events)
+    },
     ...createInvestigatorApi(state, events, {
-      discardEnemy: enemy => { if (!state.enemies.includes(enemy)) return false; discardEnemyCard(state, enemy); return true },
+      discardEnemy: enemy => { if (!state.enemies.includes(enemy)) return false; discardEnemyCard(state, enemy, events); return true },
       choice: spec => requestChoice(state, spec), cardName,
       draw: (seat, n) => { for (const line of drawCards(state, state.investigators[seat], n, events)) info(state, events, line) },
       canCommit: (seat, code, options) => createTestApi(state, events, apiTestDeps).canCommitCard(seat, code, options),
@@ -1503,7 +1597,7 @@ function doEngage(state, seat, enemyId, events) {  const inv = state.investigato
   const enemy = state.enemies.find((e) => e.id === enemyId)
   if (!enemy) return
   // 04325b/04326b：「不与你交战」——不能主动与该特性的敌人建立交战。
-  if (enemyIgnoresInvestigator(state, inv, enemy)) {
+  if (enemyIgnoresInvestigator(state, inv, enemy) || enemyProtectionBlocks(state, inv, enemy, 'engage')) {
     info(state, events, `🕊️ ${inv.name} 不能与「${enemy.name}」交战（调查员被动）。`)
     return
   }
@@ -1623,12 +1717,38 @@ const { doFight, doEvade } = createCombat({
 })
 
 // Phase 6（6d-4）：打牌 / 调查搬进 actions.js；依赖一次性注入。
+function defeatInvestigatorWithTrauma(state, inv, mental, events) {
+  inv.defeated = true
+  inv.defeatCause = 'card'
+  if (mental) addTrauma(state, inv.seat, 'mental', mental, events)
+  eliminateInvestigator(state, inv, events)
+  checkOutcome(state, events)
+}
+
+function eventPlayChoices(state, inv, { from = 'hand', traits = [], exclude = null } = {}) {
+  if (!inv || inv.defeated || inv.resigned || playTypeBlocked(state, inv, 'event') || cannotPlayTypes(inv).has('event')) return []
+  return [...new Set(inv[from])].filter(code => {
+    const def = cardDef(code)
+    const access = playAccess(code)
+    return def?.type === 'event' && def.name !== cardDef(exclude)?.name
+      && !isWeaknessCard(def) && runtimeCardAvailable(state, inv, code)
+      && !access.reactionOnly && (!access.onlyFromDiscard || from === 'discard')
+      && (!traits.length || traits.some(trait => def.traits?.some(value => value.toLowerCase() === trait)))
+      && !cardPlayBlockedReason(state, inv, def)
+      && lolaCanUseCard(inv, code)
+      && scenarioBehavior(state).canPlayCard?.(state, inv, def) !== false
+      && !playConditionError(state, inv, code, playConditionHelpers(state))
+      && playCost(state, inv, def) <= availableResources(inv)
+      && normalActionsLeft(inv) >= (Number(descriptorOfKind(code, 'played')?.cost?.action) || 0)
+  })
+}
+
 // 2026-10-25 第七轮修复 05235：不经过「弃牌堆顶/playableFromDiscard」限制，强制从弃牌堆打出事件。
 export function playCardFromDiscardForced(state, seat, code, events, options = {}) {
   const inv = state.investigators[seat]
   if (!inv || !cardDef(code) || !Array.isArray(inv.discard) || !inv.discard.includes(code)) return false
   const index = inv.discard.indexOf(code)
-  inv.discard.splice(index, 1)
+  splicePlayerDiscard(inv, index, 1)
   inv.hand.push(code)
   if (options.discount) inv.playDiscount = (inv.playDiscount || 0) + options.discount
   // 2026-10-25 第七轮修复 05320：用「手牌张数是否减少」判定是否真的打出；
@@ -1852,6 +1972,7 @@ function resourceBankApi() {
 let playChannelsImpl = null
 function playChannelsApi() {
   playChannelsImpl ||= createPlayChannels({
+    investigatorBlanked: investigatorTextBlanked,
     reactionWindow,
     cardDef,
     cardName,
@@ -2236,6 +2357,7 @@ function setupApi() {
 // setupApi() 的导出包装：每行 3 个（保持 function 声明，commonDeps 等可在模块初始化时提前引用）。
 export function makeInvestigator(...args) { return setupApi().makeInvestigator(...args) } export function drawOpeningHand(...args) { return setupApi().drawOpeningHand(...args) } export function buildInvestigatorsDeck(...args) { return setupApi().buildInvestigatorsDeck(...args) }
 export function prepareInvestigator(...args) { return setupApi().prepareInvestigator(...args) } export function refreshStateResources(...args) { return setupApi().refreshStateResources(...args) } export function unknownCardCodes(...args) { return setupApi().unknownCardCodes(...args) }
+export function syncRuntimeCardTable(state) { return setupApi().syncRuntimeCardTable(state) }
 export function createGameState(...args) { return setupApi().createGameState(...args) } export function pickAiInvestigator(...args) { return setupApi().pickAiInvestigator(...args) } export function startScenario(...args) { return setupApi().startScenario(...args) }
 export function scenarioStartLocation(...args) { return setupApi().scenarioStartLocation(...args) } export function setupScenarioLocations(...args) { return setupApi().setupScenarioLocations(...args) } export function setupScenarioEnemies(...args) { return setupApi().setupScenarioEnemies(...args) }
 export function setupScenarioDecks(...args) { return setupApi().setupScenarioDecks(...args) } export function setupChaosBag(...args) { return setupApi().setupChaosBag(...args) }
@@ -2324,6 +2446,7 @@ function dispatchApi() {
   selectInitialHubScenario,
   stagePurchase,
   startScenario,
+  syncRuntimeCardTable,
   unpaidExtraActionThreats,
   validateMove,
 })
@@ -2657,6 +2780,43 @@ export { banishEnemyToVictory, currentFaceCode, enemyCannotBeDefeated, enemyFace
 
 // Phase 6（6d-28）：牌堆操作搬进 deck-ops.js；惰性装配保持导出与调用点。
 let deckOpsImpl = null
+function canPlayAssetSearchCandidate(state, inv, { zone, code }, options) {
+  const def = cardDef(code)
+  const entry = registeredEntry(code)
+  return (zone === 'discard' || !playAccess(code).onlyFromDiscard)
+    && !cannotPlayTypes(inv).has('asset') && lolaCanUseCard(inv, code)
+    && !cardPlayBlockedReason(state, inv, def)
+    && !playConditionError(state, inv, code, playConditionHelpers(state))
+    && (!def.unique || !state.investigators.some(owner => owner.assets.some(asset => cardDef(asset.code)?.name === def.name)))
+    && (options.hostIgnoresSlots || canEquip(inv, def) || assetReplacementPlans(inv, def, state).length > 0)
+    && sealAvailable(state, entry) && tokenCostAvailable(state, inv, entry?.additionalTokenCost)
+    && bondedPlayCostAvailable(state, inv, code)
+    && (options.reservedResources || 0) <= availableResources(inv)
+    && playCost(state, inv, def) + (options.reservedResources || 0) <= availablePlayResources(state, inv, def)
+}
+
+function canPlayNamedAsset(state, inv, options) {
+  return canSearchPlayableAsset(state, inv, options.titles, { ...options, cardDef, isWeaknessCard, discardLocked: discardLocked(state, inv),
+    canPlay: candidate => canPlayAssetSearchCandidate(state, inv, candidate, options) })
+}
+
+function canPlayCardAsEffect(state, inv, def, { free = false, discount = 0 } = {}) {
+  if (!inv || !def || inv.defeated || inv.resigned || !['asset', 'event'].includes(def.type) || isWeaknessCard(def)) return false
+  const entry = registeredEntry(def.code)
+  const access = playAccess(def.code)
+  if (!runtimeCardAvailable(state, inv, def.code) || access.onlyFromDiscard || access.reactionOnly
+    || cannotPlayTypes(inv).has(def.type) || !lolaCanUseCard(inv, def.code) || cardPlayBlockedReason(state, inv, def)
+    || playConditionError(state, inv, def.code, playConditionHelpers(state))
+    || !sealAvailable(state, entry) || !tokenCostAvailable(state, inv, entry?.additionalTokenCost)
+    || !bondedPlayCostAvailable(state, inv, def.code)) return false
+  if (entry?.attachTo && !attachmentTargets(state, inv, entry.attachTo, def.code).length) return false
+  if (def.type === 'asset' && !canEquip(inv, def) && !assetReplacementPlans(inv, def, state).length) return false
+  if (def.unique && state.investigators.some(owner => owner.assets.some(asset => cardDef(asset.code)?.name === def.name))) return false
+  const effect = playedEffect(def.code)
+  if (effect && effectError(state, inv, effect)) return false
+  return free || Math.max(0, playCost(state, inv, def) - discount) <= availablePlayResources(state, inv, def)
+}
+
 function deckOpsApi() {
   deckOpsImpl ||= createDeckOps({
     canPlaySearchedCard: (state, inv, def) => !playAccess(def.code).onlyFromDiscard
@@ -2664,7 +2824,7 @@ function deckOpsApi() {
       && !cardPlayBlockedReason(state,inv,def)
       && !playConditionError(state,inv,def.code,playConditionHelpers(state))
       && (!def.unique || !state.investigators.some(owner=>owner.assets.some(asset=>cardDef(asset.code)?.name===def.name)))
-      && (def.type!=='asset' || canEquip(inv,def) || assetReplacementPlans(inv,def).length>0),
+      && (def.type!=='asset' || canEquip(inv,def) || assetReplacementPlans(inv, def, state).length>0),
     enemyAttack,
     playCost,
     abilityApi,
@@ -2699,6 +2859,7 @@ function deckOpsApi() {
     normalizeSearchOptions,
     removeThreat,
     resolveWeakness,
+    capturePresentationState: state => captureTableState(state, getStat, getMaxSanity, { enemyHealth, enemyFightValue, enemyEvadeValue }),
     campaignCardDrawReaction,
     weaknessProfile,
     // P6（食梦者）：被查找到的那张牌自己的规则（searchedCardRule）。
@@ -2770,6 +2931,7 @@ let createAbilityRulesImpl = null
 function createAbilityRulesApi() {
   createAbilityRulesImpl ||= createAbilityRules({
   discardLocked,
+    canPlayNamedAsset,
     ...commonDeps,
     doAbility,
     legalMoves,
@@ -2784,6 +2946,9 @@ function createAbilityRulesApi() {
     canSpendClues,
     hasNonPlayerBehavior,
     hiddenFightBlocked,
+    hasImmediateAction,
+    copyableInvestigatorFronts,
+    canRepeatAssetAbility: (state, context, options) => abilityExec().canRepeatAssetAbility(state, context, options),
     limitUsed,
     normalizeCostValues,
     openAbilityWindow,
@@ -2860,6 +3025,7 @@ function createActionsExtraApi() {
     cardHasTrait,
     discardChosenCards,
     discardHiddenCard,
+    discardEnemyCard,
     effectiveTraits,
     groupClues,
     groupPayment,
@@ -2957,6 +3123,7 @@ function createTreacheryTokensApi() {
     TOKEN_LABEL,
     cannotTriggerFreeAbility,
     chooseAmong,
+    discardChosenCards,
     discardRandomAsset,
     placeCluesOnLocation,
     placeHiddenCard,
@@ -3251,7 +3418,30 @@ export function charlesPayCandidate(...args) { return createTurnFlowApi().charle
 export function canParleyCultist(...args) { return createTurnFlowApi().canParleyCultist(...args) } export function litaControlled(...args) { return createTurnFlowApi().litaControlled(...args) } export function litaUncontrolled(...args) { return createTurnFlowApi().litaUncontrolled(...args) }
 export function unique(...args) { return createTurnFlowApi().unique(...args) } export function evaluateCriteria(...args) { return createTurnFlowApi().evaluateCriteria(...args) } export function playConditionHelpers(...args) { return createTurnFlowApi().playConditionHelpers(...args) }
 
+function copyableInvestigatorFronts(state, seat) {
+  const owner = state.investigators[seat]
+  if (!owner || owner.defeated || owner.resigned) return []
+  const identities = new Set([...campaignInvestigatorRecords(state.campaign), ...state.investigators]
+    .flatMap(record => [record.code, record.formOriginal?.code].filter(Boolean)).map(code => investigatorIdentity(code)))
+  return SELECTABLE_INVESTIGATOR_CODES.filter(code => canSelectInvestigator(code, state.rulesMode || 'simplified')
+    && !identities.has(investigatorIdentity(code)))
+}
+
+function hasImmediateAction(state, seat, options) {
+  return withImmediateAction(state, seat, null, options, moves => moves.length > 0)
+}
+
 function performImmediateAction(state, seat, events, source, options = {}) {
+  return withImmediateAction(state, seat, source, options, moves => {
+    if (!moves.length) return false
+    const id = requestChoice(state, { kind: 'action', source, seat, prompt: '立即进行一次行动（如同现在是你的回合）。',
+      options: moves.map((move, index) => ({ id: String(index), label: move.label || move.action })) })
+    executeAction(state, seat, moves[Number(id)], events)
+    return true
+  })
+}
+
+function withImmediateAction(state, seat, source, options = {}, resolve) {
   const inv = state.investigators[seat]
   if (!inv || inv.defeated || inv.resigned) return false
   const returnSeat = state.currentSeat
@@ -3266,16 +3456,16 @@ function performImmediateAction(state, seat, events, source, options = {}) {
   inv.exploreOnlyActions = 0; inv.spellOnlyActions = 0; inv.bountyOnlyActions = 0
   state.immediateAction = { seat, returnSeat, returnPhase, source }
   try {
+    const excluded = new Set(options.excludeActionKinds || [])
     const moves = legalMoves(state).filter(move => move.action !== 'endTurn' && actionCost(state, inv, move) === 1 && !validateMove(state, seat, move)
       && (!options.basicOnly || ['fight','investigate','evade','move','engage','resource','draw'].includes(move.action))
+      && !excluded.has(actionKind(state, inv, move))
+      && !(excluded.has('activate') && ['ability', 'entityAbility'].includes(move.action))
+      && !(excluded.has('play') && move.action === 'play')
       && (!options.actionKinds?.length || options.actionKinds.includes(actionKind(state, inv, move))
         || (options.actionKinds.includes('activate') && ['ability', 'entityAbility'].includes(move.action))
         || (options.actionKinds.includes('play') && move.action === 'play')))
-    if (!moves.length) return false
-    const id = requestChoice(state, { kind: 'action', source, seat, prompt: '立即进行一次行动（如同现在是你的回合）。',
-      options: moves.map((move, index) => ({ id: String(index), label: move.label || move.action })) })
-    executeAction(state, seat, moves[Number(id)], events)
-    return true
+    return resolve(moves)
   } finally {
     inv.actionsLeft = actionsLeft + inv.actionsLeft - 1
     for (const key of Object.keys(restricted)) {

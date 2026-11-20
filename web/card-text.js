@@ -3,7 +3,7 @@ import { tableIcon } from './table-components.js'
 import { CARD_GLYPHS, ICON_GLYPHS, SLIM_GLYPHS, SYMBOL_ALIASES, TDC_RUNES } from './game-symbols.js'
 import { skillText } from './skill-presentation.js'
 import { RULES, ruleLink } from './rulebook-data.js'
-const aliases = RULES.flatMap(r=>r.aliases.filter(a=>!a.startsWith('[')).map(a=>[a,r.id])).sort((a,b)=>b[0].length-a[0].length)
+const aliases = RULES.filter(rule=>!rule.campaignId).flatMap(r=>r.aliases.filter(a=>!a.startsWith('[')).map(a=>[a,r.id])).sort((a,b)=>b[0].length-a[0].length)
 const keywordPattern = new RegExp('(' + aliases.map(([a])=>/^[a-z ]+$/i.test(a)?'\\b'+a+'\\b':a).join('|') + ')','gi')
 function linkedText(h,text) {
   return text.split(keywordPattern).map(part=>{
@@ -33,13 +33,13 @@ export function cardSymbol(h, name) {
   name = SYMBOL_ALIASES[name] || name
   const symbol = SYMBOLS[name]
   if (!symbol) return `[${name}]`
-  const glyph = CARD_GLYPHS[name]
+  const fontClass = ICON_GLYPHS.has(name) ? 'ah-card-glyph-icons' : SLIM_GLYPHS.has(name) ? 'ah-card-glyph-slim' : null
   const label = symbol[2] ? t(symbol[1], symbol[2]) : t(symbol[1])
   return h('span', { className: 'ah-rule-symbol', 'data-card-symbol': name, title: label, 'aria-label': label, role: 'img' },
-    glyph ? h('span', {
-      className: 'ah-card-glyph' + (ICON_GLYPHS.has(name) ? ' ah-card-glyph-icons' : SLIM_GLYPHS.has(name) ? ' ah-card-glyph-slim' : ''),
+    fontClass ? h('span', {
+      className: 'ah-card-glyph ' + fontClass,
       'aria-hidden': 'true',
-    }, glyph) : tableIcon(symbol[0]))
+    }, CARD_GLYPHS[name]) : tableIcon(CARD_GLYPHS[name] ? name : symbol[0], { inline: true }))
 }
 export function renderRulesText(h, text, { links = true, skills = false } = {}) {
   if (typeof text !== 'string') return ''

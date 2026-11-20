@@ -1,0 +1,824 @@
+{
+  "id": "obsidianCanyons",
+  "campaignId": "theDrownedCity",
+  "locales": {
+    "en": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "Obsidian Canyons",
+          "children": [
+            {
+              "id": "checkCampaignLog",
+              "text": "Check your Campaign Log."
+            },
+            {
+              "id": "headedWest",
+              "text": "If the expedition headed west, proceed to Obsidian Canyons 1."
+            },
+            {
+              "id": "headedEast",
+              "text": "If the expedition headed east, proceed to Obsidian Canyons 2."
+            },
+            {
+              "id": "obsidianCanyons1",
+              "text": "Obsidian Canyons 1: “Am I dreaming?” Andy looks out at the horizon. Ephemeral shapes coalesce and then dissipate in the mists below. In the distance, you see the Obsidian Gates where you made landfall. The wide expanse between you and it is filled with mind-bending spires and poisonous green mist. Andy curses as he dumps water out of his camera bag. “Mr. Tillinghast assured me this bag was airtight. I told him all I wanted was pictures, maybe a book deal. And now it’s all ruined.”\n\n• Skip to Obsidian Canyons 3."
+            },
+            {
+              "id": "obsidianCanyons2",
+              "text": "Obsidian Canyons 2: The streets of R’lyeh are flooded with stagnant water and a foul, bilious smell you cannot identify. After spending hours making little progress from where you made landfall, you find a climbable path up to the summit. Using your rope and a little climbing gear, you reach the nearest vantage point. The ancient dome beckons to you in the distance. “Just don’t look down,” Ruby says. “If you fall, I’m not peeling you off the ground.”\n\n• Proceed to Obsidian Canyons 3."
+            },
+            {
+              "id": "obsidianCanyons3",
+              "text": "Obsidian Canyons 3: The alien city sprawls for miles. Chunks of broken spires are suspended in the air above collapsed towers, and colorful reefs hang from the undersides of ancient bridges. Decaying wrecks of ancient ships lean precariously atop the obsidian spires, swaying gently. You and your companions stare in awe at the unbelievable landscape.A gale-force wind nearly sweeps you off your feet. You steady yourself and look to the south to see dark, angry storm clouds crackling with green energy. The breeze reaches a howling crescendo, then suddenly dies down. The landscape below seems to rearrange as miasmic clouds bend and swirl. Your head swims; when you look back at the horizon, the skyline has changed entirely."
+            },
+            {
+              "id": "resolveTasks",
+              "text": "If any investigator has the Dreams of Destruction or Prove Your Worth Tasks, they resolve their respective story on this page."
+            },
+            {
+              "id": "setupWest",
+              "text": "If the expedition headed west, proceed to Setup (v. I) – Western Expedition."
+            },
+            {
+              "id": "setupEast",
+              "text": "If the expedition headed east, proceed to Setup (v. II) – Eastern Expedition."
+            },
+            {
+              "id": "dreamsOfDestruction",
+              "title": "Task: Dreams of Destruction",
+              "children": [
+                {
+                  "id": "instructions",
+                  "text": "Read only if you have the “Dreams of Destruction” Task:"
+                },
+                {
+                  "id": "body",
+                  "text": "As you look out at the breathtaking landscape, a cacophony of whispers fills your thoughts. Overwhelmed, you fall to your knees, clutching your hands to your temples."
+                },
+                {
+                  "id": "vision",
+                  "text": "In your mind’s eye, you see a corona of light, a sky filled with tenebrous shadows, and a gargantuan figure writhing in pain, covered in glowing sigils. Is it a vision? Or an ancient memory? You see the city spires bow like blades of grass as meteors fall from the sky."
+                },
+                {
+                  "id": "sorrow",
+                  "text": "Something inside you stirs. You are feeling someone—or something—else’s sorrow. The city buried, serene, doomed to sleep on the ocean floor for vigintillion years. Whatever it is that you feel, it wants to share your burdens, your fears, your desires. You need only to let it in…"
+                },
+                {
+                  "id": "choose",
+                  "text": "You must decide (choose one):"
+                },
+                {
+                  "id": "drownOut",
+                  "text": "Drown out the whispers. Erase 1 progress under Dreams of Destruction in your Campaign Log and suffer 1 mental trauma. You (and only you) gain 2 bonus experience."
+                },
+                {
+                  "id": "letItIn",
+                  "text": "Let it in. Mark 2 progress under Dreams of Destruction in your Campaign Log. At the beginning of each investigator’s first turn in the Obsidian Canyons scenario, they must draw the top card of the encounter deck."
+                }
+              ]
+            },
+            {
+              "id": "proveYourWorth",
+              "title": "Task: Prove Your Worth",
+              "children": [
+                {
+                  "id": "instructions",
+                  "text": "Read only if you have the “Prove Your Worth” Task:"
+                },
+                {
+                  "id": "body",
+                  "text": "Nobody else on this expedition appreciates your talents. How could they? It’s your duty to help, to show them why you were the perfect choice for this damned expedition. Nobody asked you, but this could be the perfect time to prove your worth."
+                },
+                {
+                  "id": "choose",
+                  "text": "You must decide (choose one):"
+                },
+                {
+                  "id": "ropesAreWrong",
+                  "text": "“These ropes are all wrong. I can do much better.” Without consulting them, choose an investigator to help (not yourself, if able). Remember “[your investigator’s name] helped with the ropes” (as well as the chosen investigator’s name). Each investigator begins the next scenario with 2 fewer starting resources."
+                },
+                {
+                  "id": "trustTheirHandiwork",
+                  "text": "“I trust their handiwork.” Each investigator begins the next scenario with 1 additional starting resource."
+                }
+              ]
+            },
+            {
+              "id": "xp",
+              "children": [
+                {
+                  "id": "dreamsOfDestruction",
+                  "text": "for drowning out the whispers"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "setup",
+          "children": [
+            {
+              "id": "west",
+              "title": "Setup (v.I) – Western Expedition",
+              "children": [
+                {
+                  "id": "gatherSets",
+                  "text": "Gather all cards from the following encounter sets: Obsidian Canyons, Cosmic Legacy, Elder Mist, The Inescapable, R’lyeh, Star Spawn, Ancient Evils, Chilling Cold, Nightgaunts, and Striking Fear. Set all 14 cards in the Ancient Evils, Chilling Cold, and Striking Fear encounter sets aside, out of play, as “open sky” (see Open Sky)."
+                },
+                {
+                  "id": "gatherLocations",
+                  "text": "Gather each location in the Obsidian Canyons encounter set."
+                },
+                {
+                  "id": "removeLocations",
+                  "text": "Remove Ancient Dome from the game."
+                },
+                {
+                  "id": "setAsideLocations",
+                  "text": "Set R’lyeh Streets, Central Spire, Floating Spire, Aerial Waterfall, Glyph Orrery[runeD], and Western Wall aside, out of play."
+                },
+                {
+                  "id": "buildSummitDeck",
+                  "text": "Shuffle each remaining Summit location into a separate deck, unrevealed side faceup. This is the Summit deck. (See The Summit Deck and Sliding Locations.)"
+                },
+                {
+                  "id": "placeStart",
+                  "text": "Put R’lyeh Streets into play along with four of the set-aside open sky cards according to the location placement diagram for act 1."
+                },
+                {
+                  "id": "fillGrid",
+                  "text": "Fill each empty space in the diagram with the bottom card of the Summit deck above and to the right of R’lyeh Streets until there are 3 rows and 4 columns."
+                },
+                {
+                  "id": "shuffleInCentralSpire",
+                  "text": "Shuffle the set-aside Central Spire into the top three cards of the Summit deck."
+                },
+                {
+                  "id": "beginAtRlyehStreets",
+                  "text": "Each investigator begins play at R’lyeh Streets."
+                },
+                {
+                  "id": "windsStoryCard",
+                  "text": "Find the double-sided Eastern Winds/Western Winds story card and put it into play, Eastern Winds side faceup."
+                },
+                {
+                  "id": "buildActAgendaDeck",
+                  "text": "Build the act and agenda decks using agenda 1a—“Encroaching Storms,” act 1a—“Scouring the Spires,” act 2a—“Deadly Skies,” and act 3a—“Return to the Shoreline.” Remove each other act and agenda from the game."
+                },
+                {
+                  "id": "stormIntensity",
+                  "text": "Place 1 resource on the scenario reference card under Storm Intensity."
+                },
+                {
+                  "id": "starSpawn",
+                  "text": "Shuffle each enemy from the Star Spawn encounter set and remove two at random from the game."
+                },
+                {
+                  "id": "setCardsAside",
+                  "text": "Set the double-sided Sky Relic[runeF] story asset, Eroded Frieze[runeE] treachery, and the Obsidian Claw story asset aside, out of play."
+                },
+                {
+                  "id": "checkCampaignLogInescapable",
+                  "text": "Check your Campaign Log. If the creature was defeated, remove The Inescapable encounter set from the game. Otherwise, spawn The Inescapable enemy at the location farthest from all investigators, exhausted."
+                },
+                {
+                  "id": "chooseExpeditionAsset",
+                  "text": "In player order, each player may choose 1 earned Artifact asset or 1 Item asset from the Expedition encounter set to begin in play under their control. This set is indicated by the following icon:"
+                },
+                {
+                  "id": "buildEncounterDeck",
+                  "text": "Shuffle the remaining encounter cards to build the encounter deck."
+                },
+                {
+                  "id": "readyToBegin",
+                  "text": "You are now ready to begin."
+                }
+              ]
+            },
+            {
+              "id": "east",
+              "title": "Setup (v.II) — Eastern Expedition",
+              "children": [
+                {
+                  "id": "gatherSets",
+                  "text": "Gather all cards from the following encounter sets: Obsidian Canyons, Cosmic Legacy, Elder Mist, The Inescapable, R’lyeh, Star Spawn, Chilling Cold, Nightgaunts, and Striking Fear. Set all 11 cards in the Chilling Cold and Striking Fear encounter sets aside, out of play, as “open sky” (see Open Sky)."
+                },
+                {
+                  "id": "gatherLocations",
+                  "text": "Gather each location in the Obsidian Canyons encounter set."
+                },
+                {
+                  "id": "removeLocations",
+                  "text": "Remove Western Wall and Floating Spire from the game."
+                },
+                {
+                  "id": "setAsideLocations",
+                  "text": "Set R’lyeh Streets, Central Spire, Aerial Waterfall, Glyph Orrery[runeD], and Ancient Dome aside, out of play."
+                },
+                {
+                  "id": "buildSummitDeck",
+                  "text": "Shuffle each remaining Summit location into a separate deck, unrevealed side faceup. This is the Summit deck. (See The Summit Deck and Sliding Locations.)"
+                },
+                {
+                  "id": "placeStart",
+                  "text": "Put R’lyeh Streets into play along with four of the set-aside open sky cards according to the location placement diagram for act 1."
+                },
+                {
+                  "id": "fillGrid",
+                  "text": "Fill each empty space in the diagram with the bottom card of the Summit deck above and to the right of R’lyeh Streets until there are 3 rows and 4 columns."
+                },
+                {
+                  "id": "shuffleInCentralSpire",
+                  "text": "Shuffle the set-aside Central Spire into the top three cards of the Summit deck."
+                },
+                {
+                  "id": "beginAtRlyehStreets",
+                  "text": "Each investigator begins play at R’lyeh Streets."
+                },
+                {
+                  "id": "windsStoryCard",
+                  "text": "Find the double-sided Eastern Winds/Western Winds story card and put it into play, Western Winds side faceup."
+                },
+                {
+                  "id": "buildActAgendaDeck",
+                  "text": "Build the act and agenda decks using agenda 1a—“Otherworldly Storms,” act 1a—“Searching the Spires,” and act 2a—“To the Ancient Dome!” Remove each other act and agenda from the game."
+                },
+                {
+                  "id": "stormIntensity",
+                  "text": "Place 1 resource on the scenario reference card under Storm Intensity."
+                },
+                {
+                  "id": "starSpawn",
+                  "text": "Shuffle each enemy from the Star Spawn encounter set and remove three at random from the game."
+                },
+                {
+                  "id": "setCardsAside",
+                  "text": "Set the double-sided Sky Relic[runeF] story asset, Eroded Frieze[runeE] treachery, and the Obsidian Claw story asset aside, out of play, along with The Inescapable encounter set."
+                },
+                {
+                  "id": "removeStarVampire",
+                  "text": "Search the Obsidian Canyons encounter set for one copy of the Star Vampire enemy and remove it from the game."
+                },
+                {
+                  "id": "chooseExpeditionAsset",
+                  "text": "In player order, each player may choose 1 Item asset from the Expedition encounter set to begin in play under their control. This set is indicated by the following icon:"
+                },
+                {
+                  "id": "buildEncounterDeck",
+                  "text": "Shuffle the remaining encounter cards to build the encounter deck."
+                },
+                {
+                  "id": "readyToBegin",
+                  "text": "You are now ready to begin."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "rules",
+          "children": [
+            {
+              "id": "openSky",
+              "title": "Open Sky",
+              "text": "Throughout this scenario, you will be instructed to place “open sky” cards by taking the encounter cards gathered during setup and placing them in the indicated positions, facedown.\n\n• Open sky counts as a location for the purposes of card effects, location adjacency, and for determining distance between locations.\n\n• Investigators cannot move into open sky unless otherwise indicated by scenario effects.\n\n• Open sky cannot be investigated and clues cannot be dropped on it. If a clue would be dropped or placed on open sky for any reason, the investigators must choose the nearest revealed location and place that clue on it instead.\n\n• Locations can enter play in a position occupied by an open sky card. Should this happen, the open sky card occupying that position leaves play.\n\n• If open sky leaves play for any reason, place it on the top of the Summit deck. Do not place it in the encounter discard pile. All enemies, tokens, and attachments at that open sky are discarded."
+            },
+            {
+              "id": "summitDeck",
+              "title": "The Summit Deck and Sliding Locations",
+              "text": "During this scenario, locations and open sky will enter and leave play via the Summit deck. This deck is composed of Summit location cards as well as single-sided open sky cards.\n\n• Cards are always drawn from the bottom of the Summit deck.\n\n• Encounter cards from the Summit deck are always placed facedown (unrevealed side faceup if they are locations).\n\n• If a gap between locations and/or open sky is created for any reason and not immediately filled via scenario card instructions, fill that gap with the bottom card of the Summit deck, facedown if it is an encounter card or unrevealed side faceup if it is a location.\n\n• Investigators may be instructed to slide rows to the left or right. To do so, slide each card in that row (locations and open sky) once in the indicated direction. Each card and token at those locations/open sky move as well. Any cards that move outside of the established columns are placed on top of the Summit deck.\n\n• Some locations cannot be moved. If instructed to slide cards in a row and there is a location in that row that cannot be moved, leave that location in its place and “skip” it, moving the card that would enter its space into the nearest gap created."
+            },
+            {
+              "id": "stormIntensity",
+              "title": "Storm Intensity",
+              "text": "Throughout this scenario, the number of resources under “Storm Intensity” on the scenario reference card indicates the strength of the otherworldly gales of R’lyeh. The higher the Storm Intensity, the more hazardous the weather. Storm Intensity has no inherent game effect on its own; however, some scenario effects may change or become stronger depending on the current level of Storm Intensity."
+            },
+            {
+              "id": "locationAdjacency",
+              "title": "Location Adjacency in this Scenario",
+              "text": "During this scenario, locations are arranged in a set grid pattern. Each location is connected to each location adjacent to it.\n\n• Adjacent locations share a side (left, right, above, or below).\n\n• Locations that share only a corner are not considered adjacent."
+            }
+          ]
+        },
+        {
+          "id": "hangingShip",
+          "children": [
+            {
+              "id": "slide",
+              "text": "Slide Hanging Ship into an adjacent open sky"
+            }
+          ]
+        },
+        {
+          "id": "magneticSpires",
+          "children": [
+            {
+              "id": "swap",
+              "text": "Choose an open sky up to 2 spaces away and swap Magnetic Spires with it"
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "xp",
+          "children": [
+            {
+              "id": "bonus",
+              "text": "因勇闯黑曜石峡谷"
+            }
+          ]
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "text": "结局 1：安迪坐在一块闪闪发光的巨石上，尽力不让自己显得惊魂未定。“好吧。我本以为这趟旅行能成就我的事业。可结果呢——在异星寄生虫、磁性风暴，还有，你知道的，太平洋之间——我的事业根本没戏了，”他叹道。“至少我们完整地回来了。嗯，大体上完整吧，”他笑着，小心翼翼地护着缠着绷带的手臂。\n\n其余队员集合之后，你们动身返回登陆的海滩。\n\n• 更新你的战役日志。\n• 若剧本结束时黑曜石之爪在某个调查员的控制下，在你的战役日志“已获得的神器”部分的“黑曜石之爪”旁勾选方框。\n\n• 在你的战役日志中，将拉莱耶地图上的黑曜石峡谷划掉。\n\n• 若有调查员拥有“证明你的价值”任务，他们在本页结算各自的故事。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 前往沉睡者墓穴。"
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "text": "结局 2：你来到古代议庭顶端的露比身边。当你俯视深处时，被这座建筑之宽广惊呆了。你脚下这座破碎圆顶直径至少有四分之一英里，覆盖着一座辽阔通透的厅堂。下方，一台高耸的升降机立在如大教堂中殿般的空间中央，四周环绕着螺旋状的一圈圈楼层。五条长长的半圆室如黑曜石之爪从中央结构向外伸展，主宰着这异界的天际线。\n\n露比站在破碎的边缘上，俯视下方广阔的天地。“我甚至不知道我能不能看到底，但我想下面再糟也比那场风暴好。”\n\n你望着渐暗的地平线，不得不表示同意。\n\n• 更新你的战役日志。\n• 若剧本结束时黑曜石之爪在某个调查员的控制下，在你的战役日志“已获得的神器”部分的“黑曜石之爪”旁勾选方框。\n\n• 在你的战役日志中，将拉莱耶地图上的黑曜石峡谷划掉。\n\n• 若有调查员拥有“证明你的价值”任务，他们在本页结算各自的故事。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 前往古代议庭。"
+        },
+        {
+          "id": "noResolution",
+          "title": "无结局",
+          "text": "若无结局（每名调查员都被击败）：有毒的狂风以飓风般的威力呼啸着穿过古城黑色石廊。刺骨的锐风从四面八方抽打你，辛辣的雾气让你脑中翻涌着令人不安的幻象。这些超凡的天气格局似乎从某个远在维度之外的平面吹来。\n\n你醒来时，看见同伴们围在身边。他们扶你站起来时，你背对那炫目的天际线和翻涌的云层。你完全不记得自己昏了过去。你到底是怎么到这里来的？\n\n• 在你的战役日志中，将拉莱耶地图上的“黑曜石峡谷”划掉。\n\n• 每名调查员必须从收藏中随机搜寻一张疯狂或凶兆基础弱点，在战役余下的时间里加入其牌组。\n\n• 若有调查员拥有“证明你的价值”任务，他们在本页结算各自的故事。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 查看你的战役日志。\n• 若远征队向西进发，前往沉睡者墓穴。\n\n• 若远征队向东进发，前往古代议庭。"
+        },
+        {
+          "id": "proveYourWorth",
+          "title": "任务：证明你的价值",
+          "children": [
+            {
+              "id": "instructions",
+              "text": "仅当你拥有“证明你的价值”任务时阅读："
+            },
+            {
+              "id": "checkCampaignLog",
+              "text": "查看你的战役日志。"
+            },
+            {
+              "id": "helpedWithTheRopes",
+              "text": "若“[你的调查员名字]帮忙拉了绳索”，前往任务 1。"
+            },
+            {
+              "id": "otherwise",
+              "text": "否则，跳至任务 2。"
+            },
+            {
+              "id": "task1",
+              "text": "任务 1：你该为自己做的事感到骄傲。远征队其他成员对你的工作如此赞赏，以至于你听见有人在攀爬时高喊你的名字。他们可能是在尖叫；你也不确定。不管当时发生了什么，他们似乎不愿再多谈。可惜的是，你处理的那些绳索没帮上什么忙。攀爬途中有好几根断裂了，还有一名远征队成员现在断了一条腿。真是遗憾。一定是制造商的过错。"
+            },
+            {
+              "id": "task1Chosen",
+              "text": "你先前选择帮助的那名调查员受到 1 点肉体创伤，并获得 2 点奖励经验。"
+            },
+            {
+              "id": "task1Progress",
+              "text": "你对自己挺满意的，不是吗？在你的战役日志中“证明你的价值”下标记 2 点进度。"
+            },
+            {
+              "id": "task2",
+              "text": "任务 2：“不，不是那样！”又一名远征队成员上前来帮忙。你把回击的话咽了回去。他们根本不知道自己有多无礼。他们也不在乎。何必费劲向这些不知感恩的家伙证明自己？他们不值得你费心。"
+            },
+            {
+              "id": "task2Trauma",
+              "text": "确实如此：你永远达不到标准。擦除“证明你的价值”下的 1 点进度，并受到 1 点精神创伤。"
+            },
+            {
+              "id": "task2OtherInvestigators",
+              "text": "其他每名调查员（除你之外）获得 1 点奖励经验。"
+            },
+            {
+              "id": "xp",
+              "children": [
+                {
+                  "id": "helped",
+                  "text": "因那些断裂的绳索"
+                },
+                {
+                  "id": "other",
+                  "text": "因忍受了这一切"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "黑曜石峡谷",
+          "children": [
+            {
+              "id": "checkCampaignLog",
+              "text": "查看你的战役日志。"
+            },
+            {
+              "id": "headedWest",
+              "text": "若远征队向西进发，前往黑曜石峡谷 1。"
+            },
+            {
+              "id": "headedEast",
+              "text": "若远征队向东进发，前往黑曜石峡谷 2。"
+            },
+            {
+              "id": "obsidianCanyons1",
+              "text": "黑曜石峡谷 1：“我是在做梦吗？”安迪望向地平线。短暂的形影在下方雾气中聚拢又消散。远处，你看见了登陆时经过的黑曜石门。你与它之间那片广阔的天地里，充满了令人心神错乱的尖塔和有毒的绿雾。安迪一边把水从相机包里倒出来，一边咒骂。“蒂林哈斯特先生向我保证这包是密封的。我跟他说过我只要照片，也许还能写本书。现在全毁了。”\n\n• 跳至黑曜石峡谷 3。"
+            },
+            {
+              "id": "obsidianCanyons2",
+              "text": "黑曜石峡谷 2：拉莱耶的街道里积满死水，弥漫着一股你无法辨认的恶臭胆汁味。你从登陆点出发走了几个小时却没走多远，随后找到一条可攀爬的小径通往山顶。你用绳索和一点攀爬工具抵达了最近的制高点。那座古老圆顶在远处向你招手。“只要别往下看，”露比说。“你要是掉下去，我可不会把你从地上揭下来。”\n\n• 前往黑曜石峡谷 3。"
+            },
+            {
+              "id": "obsidianCanyons3",
+              "text": "黑曜石峡谷 3：这座异星城市延绵数英里。破碎尖塔的碎块悬浮在崩塌塔楼的上空，五彩的礁石从古代桥梁的底面垂下。古老船只腐朽的残骸危险地斜倚在黑曜石尖塔上，轻轻摇晃。你和同伴们惊叹地凝视着这难以置信的景色。一阵狂风几乎把你掀翻。你稳住身形，望向南方，看见黑暗而愤怒的风暴云中闪着绿色能量。风声呼啸到极点，随后骤然平息。下方的景色似乎随着瘴气云雾的弯折与旋转而重新排布。你头晕目眩；当你再看向地平线时，天际线已经完全变了。"
+            },
+            {
+              "id": "resolveTasks",
+              "text": "若有调查员拥有“毁灭之梦”或“证明你的价值”任务，他们在本页结算各自的故事。"
+            },
+            {
+              "id": "setupWest",
+              "text": "若远征队向西进发，前往设置（v.I）——西线远征。"
+            },
+            {
+              "id": "setupEast",
+              "text": "若远征队向东进发，前往设置（v.II）——东线远征。"
+            },
+            {
+              "id": "dreamsOfDestruction",
+              "title": "任务：毁灭之梦",
+              "children": [
+                {
+                  "id": "instructions",
+                  "text": "仅当你拥有“毁灭之梦”任务时阅读："
+                },
+                {
+                  "id": "body",
+                  "text": "你眺望着这令人屏息的景色，一片嘈杂的低语涌入你的思绪。你不堪重负，双膝跪地，双手紧紧按住太阳穴。"
+                },
+                {
+                  "id": "vision",
+                  "text": "在头脑的眼眸中，你看见一圈光晕、满是幽暗影子的天空，以及一个痛苦扭动、覆满发光符文的庞大人形。这是幻象？还是一段古老的记忆？你看见流星从天而降时，城市尖塔如草叶般弯伏。"
+                },
+                {
+                  "id": "sorrow",
+                  "text": "你体内的某个东西被触动了。你感受到别人——或者别的什么——的悲伤。这座被埋葬的城市安详而注定要在海床上沉睡无数年。你感受到的那个存在，想要分担你的重负、你的恐惧、你的欲望。你只需让它进来……"
+                },
+                {
+                  "id": "choose",
+                  "text": "你必须决定（选择一项）："
+                },
+                {
+                  "id": "drownOut",
+                  "text": "压过那些低语。在你的战役日志中擦除毁灭之梦下的 1 点进度，并受到 1 点精神创伤。你（且只有你）获得 2 点奖励经验。"
+                },
+                {
+                  "id": "letItIn",
+                  "text": "让它进来。在你的战役日志中毁灭之梦下标记 2 点进度。在“黑曜石峡谷”剧本中，每名调查员的第一个回合开始时，必须抽取遭遇牌库顶的卡牌。"
+                }
+              ]
+            },
+            {
+              "id": "proveYourWorth",
+              "title": "任务：证明你的价值",
+              "children": [
+                {
+                  "id": "instructions",
+                  "text": "仅当你拥有“证明你的价值”任务时阅读："
+                },
+                {
+                  "id": "body",
+                  "text": "这趟远征中除了你没有谁欣赏你的才能。他们怎么可能欣赏？帮助别人是你的职责，让他们看看你为什么是这趟该死远征的完美人选。没人问过你，但这可能是证明你价值的最佳时机。"
+                },
+                {
+                  "id": "choose",
+                  "text": "你必须决定（选择一项）："
+                },
+                {
+                  "id": "ropesAreWrong",
+                  "text": "“这些绳索全都不对。我能做得更好得多。”不与对方商议，选择一名调查员来帮忙（若能够，不要选自己）。记住“[你的调查员名字]帮忙拉了绳索”（以及所选调查员的名字）。每名调查员在下一个剧本开始时，起始资源减少 2 个。"
+                },
+                {
+                  "id": "trustTheirHandiwork",
+                  "text": "“我信得过他们的手艺。”每名调查员在下一个剧本开始时，起始资源增加 1 个。"
+                }
+              ]
+            },
+            {
+              "id": "xp",
+              "children": [
+                {
+                  "id": "dreamsOfDestruction",
+                  "text": "因压过了那些低语"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "setup",
+          "children": [
+            {
+              "id": "west",
+              "title": "设置（v.I）——西线远征",
+              "children": [
+                {
+                  "id": "gatherSets",
+                  "text": "从以下遭遇组中收集所有卡牌：黑曜石峡谷、宇宙遗产、古老迷雾、穷途异魔、拉莱耶、星之眷族、远古邪恶、寒冷刺骨、夜魇与恐惧打击。这些组以下列图标表示：将远古邪恶、寒冷刺骨和恐惧打击遭遇组中共 14 张卡放在一边，置于场外，作为“开放天空”（见开放天空）。"
+                },
+                {
+                  "id": "gatherLocations",
+                  "text": "收集黑曜石峡谷遭遇组中的每个地点。"
+                },
+                {
+                  "id": "removeLocations",
+                  "text": "将古代圆顶移出游戏。"
+                },
+                {
+                  "id": "setAsideLocations",
+                  "text": "将拉莱耶街道、中央尖塔、漂浮尖塔、空中瀑布、符文星盘仪[runeD]和西墙放在一边，置于场外。"
+                },
+                {
+                  "id": "buildSummitDeck",
+                  "text": "将剩余的每张山顶地点洗混，组成一副单独的牌库，未揭示面朝上。这就是山顶牌库。（见山顶牌库与滑动地点。）"
+                },
+                {
+                  "id": "placeStart",
+                  "text": "按照幕 1 的地点布置图，将拉莱耶街道与四张放在一边的开放天空卡一起放入游戏。"
+                },
+                {
+                  "id": "fillGrid",
+                  "text": "按照幕 1 的地点布置图，用山顶牌库最底部的卡从拉莱耶街道的上方和右方开始填充每一处空位，直到形成 3 行 4 列。"
+                },
+                {
+                  "id": "shuffleInCentralSpire",
+                  "text": "将放在一边的中央尖塔洗入山顶牌库顶的三张牌中。"
+                },
+                {
+                  "id": "beginAtRlyehStreets",
+                  "text": "每名调查员从拉莱耶街道开始游戏。"
+                },
+                {
+                  "id": "windsStoryCard",
+                  "text": "找出双面的东风/西风剧情卡，将其放入游戏，东风面朝上。"
+                },
+                {
+                  "id": "buildActAgendaDeck",
+                  "text": "使用议程 1a“逼近的风暴”、幕 1a“扫荡尖塔”、幕 2a“致命天空”和幕 3a“返回海岸线”组建幕牌库与议程牌库。将其他每张幕与议程移出游戏。"
+                },
+                {
+                  "id": "stormIntensity",
+                  "text": "在剧本参考卡上“风暴强度”下放置 1 个资源。"
+                },
+                {
+                  "id": "starSpawn",
+                  "text": "将星之眷族遭遇组中的每名敌人洗混，随机将其中两名移出游戏。"
+                },
+                {
+                  "id": "setCardsAside",
+                  "text": "将双面的天空遗物[runeF]剧情支援、剥蚀壁画[runeE]诡计和黑曜石之爪剧情支援放在一边，置于场外。"
+                },
+                {
+                  "id": "checkCampaignLogInescapable",
+                  "text": "查看你的战役日志。若该生物被击败了，将穷途异魔遭遇组移出游戏。否则，在距所有调查员最远的地点生成穷途异魔敌人，横置状态。"
+                },
+                {
+                  "id": "chooseExpeditionAsset",
+                  "text": "按玩家顺序，每名玩家可以选择 1 张已获得的神器支援，或远征遭遇组中的 1 张物品支援，以在其控制下开始游戏。该组以下列图标表示："
+                },
+                {
+                  "id": "buildEncounterDeck",
+                  "text": "洗混其余的遭遇卡，组建遭遇牌库。"
+                },
+                {
+                  "id": "readyToBegin",
+                  "text": "你现在可以开始游戏了。"
+                }
+              ]
+            },
+            {
+              "id": "east",
+              "title": "设置（v.II）——东线远征",
+              "children": [
+                {
+                  "id": "gatherSets",
+                  "text": "从以下遭遇组中收集所有卡牌：黑曜石峡谷、宇宙遗产、古老迷雾、穷途异魔、拉莱耶、星之眷族、寒冷刺骨、夜魇与恐惧打击。这些组以下列图标表示：将寒冷刺骨和恐惧打击遭遇组中共 11 张卡放在一边，置于场外，作为“开放天空”（见开放天空）。"
+                },
+                {
+                  "id": "gatherLocations",
+                  "text": "收集黑曜石峡谷遭遇组中的每个地点。"
+                },
+                {
+                  "id": "removeLocations",
+                  "text": "将西墙和漂浮尖塔移出游戏。"
+                },
+                {
+                  "id": "setAsideLocations",
+                  "text": "将拉莱耶街道、中央尖塔、空中瀑布、符文星盘仪[runeD]和古代圆顶放在一边，置于场外。"
+                },
+                {
+                  "id": "buildSummitDeck",
+                  "text": "将剩余的每张山顶地点洗混，组成一副单独的牌库，未揭示面朝上。这就是山顶牌库。（见山顶牌库与滑动地点。）"
+                },
+                {
+                  "id": "placeStart",
+                  "text": "按照幕 1 的地点布置图，将拉莱耶街道与四张放在一边的开放天空卡一起放入游戏。"
+                },
+                {
+                  "id": "fillGrid",
+                  "text": "按照幕 1 的地点布置图，用山顶牌库最底部的卡从拉莱耶街道的上方和右方开始填充每一处空位，直到形成 3 行 4 列。"
+                },
+                {
+                  "id": "shuffleInCentralSpire",
+                  "text": "将放在一边的中央尖塔洗入山顶牌库顶的三张牌中。"
+                },
+                {
+                  "id": "beginAtRlyehStreets",
+                  "text": "每名调查员从拉莱耶街道开始游戏。"
+                },
+                {
+                  "id": "windsStoryCard",
+                  "text": "找出双面的东风/西风剧情卡，将其放入游戏，西风面朝上。"
+                },
+                {
+                  "id": "buildActAgendaDeck",
+                  "text": "使用议程 1a“异界风暴”、幕 1a“搜寻尖塔”和幕 2a“前往古代圆顶！”组建幕牌库与议程牌库。将其他每张幕与议程移出游戏。"
+                },
+                {
+                  "id": "stormIntensity",
+                  "text": "在剧本参考卡上“风暴强度”下放置 1 个资源。"
+                },
+                {
+                  "id": "starSpawn",
+                  "text": "将星之眷族遭遇组中的每名敌人洗混，随机将其中三名移出游戏。"
+                },
+                {
+                  "id": "setCardsAside",
+                  "text": "将双面的天空遗物[runeF]剧情支援、剥蚀壁画[runeE]诡计和黑曜石之爪剧情支援放在一边，置于场外，穷途异魔遭遇组也一并如此。"
+                },
+                {
+                  "id": "removeStarVampire",
+                  "text": "在黑曜石峡谷遭遇组中搜寻一份星之吸血鬼敌人，并将其移出游戏。"
+                },
+                {
+                  "id": "chooseExpeditionAsset",
+                  "text": "按玩家顺序，每名玩家可以选择远征遭遇组中的 1 张物品支援，以在其控制下开始游戏。该组以下列图标表示："
+                },
+                {
+                  "id": "buildEncounterDeck",
+                  "text": "洗混其余的遭遇卡，组建遭遇牌库。"
+                },
+                {
+                  "id": "readyToBegin",
+                  "text": "你现在可以开始游戏了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "rules",
+          "children": [
+            {
+              "id": "openSky",
+              "title": "开放天空",
+              "text": "在本剧本中，你会被指示放置“开放天空”卡：取来设置时收集的遭遇卡，将其背面朝上放置在指定的位置。\n\n• 就卡牌效果、地点相邻关系以及计算地点间距离而言，开放天空视为一个地点。\n\n• 除非剧本效果另有说明，调查员不能移动进开放天空。\n\n• 开放天空不能被调查，线索也不能被丢在它上面。若某项效果会使线索被丢在或放置在开放天空上，调查员必须选择最近的已揭示地点并将该线索改放在那里。\n\n• 地点可以进入一个被开放天空卡占据的位置。若发生这种情况，占据该位置的开放天空卡离场。\n\n• 若开放天空因任何原因离场，将其放置到山顶牌库顶部。不要将其放入遭遇弃牌堆。该开放天空上的所有敌人、标记和附属物都被弃掉。"
+            },
+            {
+              "id": "summitDeck",
+              "title": "山顶牌库与滑动地点",
+              "text": "在本剧本中，地点与开放天空会经由山顶牌库进场与离场。该牌库由山顶地点卡和单面的开放天空卡组成。\n\n• 卡牌总是从山顶牌库的底部抽取。\n\n• 从山顶牌库抽出的遭遇卡总是背面朝上放置（若为地点，则未揭示面朝上）。\n\n• 若地点和/或开放天空之间因任何原因出现空缺，且未立即按剧本卡指示填补，则用山顶牌库的最底部卡填补该空缺：若为遭遇卡则背面朝上，若为地点则未揭示面朝上。\n\n• 调查员可能会被指示将整行向左或向右滑动。此时，将该行每张卡（地点与开放天空）按所示方向各滑动一次。那些地点/开放天空上的每张卡和每枚标记也随之移动。任何移动出既有列范围的卡被放置到山顶牌库顶部。\n\n• 某些地点不能被移动。若被指示滑动一行中的卡，而该行有一个不能移动的地点，则让该地点留在原处并“跳过”它，把原本要进入其位置的卡移入最近产生的空缺。"
+            },
+            {
+              "id": "stormIntensity",
+              "title": "风暴强度",
+              "text": "在本剧本中，剧本参考卡上“风暴强度”下资源的数量表示拉莱耶异界狂风的强度。风暴强度越高，天气越危险。风暴强度本身没有内在的游戏效果；不过，某些剧本效果可能会根据当前的风暴强度等级而改变或变得更强。"
+            },
+            {
+              "id": "locationAdjacency",
+              "title": "本剧本中的地点相邻关系",
+              "text": "在本剧本中，地点按固定的网格样式排布。每个地点都与相邻的每个地点相连。\n\n• 相邻地点共有一条边（左、右、上或下）。\n\n• 只共有一个角的地点不视为相邻。"
+            }
+          ]
+        },
+        {
+          "id": "hangingShip",
+          "children": [
+            {
+              "id": "slide",
+              "text": "将悬挂船只滑入相邻的开放天空"
+            }
+          ]
+        },
+        {
+          "id": "magneticSpires",
+          "children": [
+            {
+              "id": "swap",
+              "text": "选择最多 2 格内的一个开放天空，将磁性尖塔与其交换"
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "xp",
+          "children": [
+            {
+              "id": "bonus",
+              "text": "因勇闯黑曜石峡谷"
+            }
+          ]
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "text": "结局 1：安迪坐在一块闪闪发光的巨石上，尽力不让自己显得惊魂未定。“好吧。我本以为这趟旅行能成就我的事业。可结果呢——在异星寄生虫、磁性风暴，还有，你知道的，太平洋之间——我的事业根本没戏了，”他叹道。“至少我们完整地回来了。嗯，大体上完整吧，”他笑着，小心翼翼地护着缠着绷带的手臂。\n\n其余队员集合之后，你们动身返回登陆的海滩。\n\n• 更新你的战役日志。\n• 若剧本结束时黑曜石之爪在某个调查员的控制下，在你的战役日志“已获得的神器”部分的“黑曜石之爪”旁勾选方框。\n\n• 在你的战役日志中，将拉莱耶地图上的黑曜石峡谷划掉。\n\n• 若有调查员拥有“证明你的价值”任务，他们在本页结算各自的故事。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 前往沉睡者墓穴。"
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "text": "结局 2：你来到古代议庭顶端的露比身边。当你俯视深处时，被这座建筑之宽广惊呆了。你脚下这座破碎圆顶直径至少有四分之一英里，覆盖着一座辽阔通透的厅堂。下方，一台高耸的升降机立在如大教堂中殿般的空间中央，四周环绕着螺旋状的一圈圈楼层。五条长长的半圆室如黑曜石之爪从中央结构向外伸展，主宰着这异界的天际线。\n\n露比站在破碎的边缘上，俯视下方广阔的天地。“我甚至不知道我能不能看到底，但我想下面再糟也比那场风暴好。”\n\n你望着渐暗的地平线，不得不表示同意。\n\n• 更新你的战役日志。\n• 若剧本结束时黑曜石之爪在某个调查员的控制下，在你的战役日志“已获得的神器”部分的“黑曜石之爪”旁勾选方框。\n\n• 在你的战役日志中，将拉莱耶地图上的黑曜石峡谷划掉。\n\n• 若有调查员拥有“证明你的价值”任务，他们在本页结算各自的故事。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 前往古代议庭。"
+        },
+        {
+          "id": "noResolution",
+          "title": "无结局",
+          "text": "若无结局（每名调查员都被击败）：有毒的狂风以飓风般的威力呼啸着穿过古城黑色石廊。刺骨的锐风从四面八方抽打你，辛辣的雾气让你脑中翻涌着令人不安的幻象。这些超凡的天气格局似乎从某个远在维度之外的平面吹来。\n\n你醒来时，看见同伴们围在身边。他们扶你站起来时，你背对那炫目的天际线和翻涌的云层。你完全不记得自己昏了过去。你到底是怎么到这里来的？\n\n• 在你的战役日志中，将拉莱耶地图上的“黑曜石峡谷”划掉。\n\n• 每名调查员必须从收藏中随机搜寻一张疯狂或凶兆基础弱点，在战役余下的时间里加入其牌组。\n\n• 若有调查员拥有“证明你的价值”任务，他们在本页结算各自的故事。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 查看你的战役日志。\n• 若远征队向西进发，前往沉睡者墓穴。\n\n• 若远征队向东进发，前往古代议庭。"
+        },
+        {
+          "id": "proveYourWorth",
+          "title": "任务：证明你的价值",
+          "children": [
+            {
+              "id": "instructions",
+              "text": "仅当你拥有“证明你的价值”任务时阅读："
+            },
+            {
+              "id": "checkCampaignLog",
+              "text": "查看你的战役日志。"
+            },
+            {
+              "id": "helpedWithTheRopes",
+              "text": "若“[你的调查员名字]帮忙拉了绳索”，前往任务 1。"
+            },
+            {
+              "id": "otherwise",
+              "text": "否则，跳至任务 2。"
+            },
+            {
+              "id": "task1",
+              "text": "任务 1：你该为自己做的事感到骄傲。远征队其他成员对你的工作如此赞赏，以至于你听见有人在攀爬时高喊你的名字。他们可能是在尖叫；你也不确定。不管当时发生了什么，他们似乎不愿再多谈。可惜的是，你处理的那些绳索没帮上什么忙。攀爬途中有好几根断裂了，还有一名远征队成员现在断了一条腿。真是遗憾。一定是制造商的过错。"
+            },
+            {
+              "id": "task1Chosen",
+              "text": "你先前选择帮助的那名调查员受到 1 点肉体创伤，并获得 2 点奖励经验。"
+            },
+            {
+              "id": "task1Progress",
+              "text": "你对自己挺满意的，不是吗？在你的战役日志中“证明你的价值”下标记 2 点进度。"
+            },
+            {
+              "id": "task2",
+              "text": "任务 2：“不，不是那样！”又一名远征队成员上前来帮忙。你把回击的话咽了回去。他们根本不知道自己有多无礼。他们也不在乎。何必费劲向这些不知感恩的家伙证明自己？他们不值得你费心。"
+            },
+            {
+              "id": "task2Trauma",
+              "text": "确实如此：你永远达不到标准。擦除“证明你的价值”下的 1 点进度，并受到 1 点精神创伤。"
+            },
+            {
+              "id": "task2OtherInvestigators",
+              "text": "其他每名调查员（除你之外）获得 1 点奖励经验。"
+            },
+            {
+              "id": "xp",
+              "children": [
+                {
+                  "id": "helped",
+                  "text": "因那些断裂的绳索"
+                },
+                {
+                  "id": "other",
+                  "text": "因忍受了这一切"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

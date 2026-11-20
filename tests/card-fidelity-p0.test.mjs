@@ -199,8 +199,8 @@ test('03102 锈蚀：按隐藏值合计弃掉多张道具，弃够即停', () =>
   state.investigators = [inv]
   let surges = 0
   const api = {
-    info() {}, choose: request => request.options[0].id,
-    discardAsset(seat, assetId) { inv.assets = inv.assets.filter(asset => asset.id !== assetId) },
+    info() {}, choose: request => request.options[0].id, canDiscardAsset: () => true,
+    discardAsset(seat, assetId) { inv.assets = inv.assets.filter(asset => asset.id !== assetId); return true },
     drawEncounter() { surges++ },
   }
   nonPlayerEntryFor('03102').encounterResolve(state, inv, { code: '03102' }, api)
@@ -215,7 +215,7 @@ test('03102 锈蚀：道具费用合计不足 X 时一张也不弃并涌动', ()
     assets: [{ id: 'a1', code: item.code, cost: item.cost }] }
   state.investigators = [inv]
   let surges = 0
-  const api = { info() {}, choose: request => request.options[0].id,
+  const api = { info() {}, choose: request => request.options[0].id, canDiscardAsset: () => true,
     discardAsset() { throw new Error('不应弃牌') }, drawEncounter() { surges++ } }
   nonPlayerEntryFor('03102').encounterResolve(state, inv, { code: '03102' }, api)
   assert.equal(inv.assets.length, 1, '弃不够时不应弃掉部分卡牌')

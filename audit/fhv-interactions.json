@@ -113,7 +113,7 @@
     },
     {
       "path": "audit/fhv-node-acceptance.json",
-      "sha256": "171220294c1912d02bc7b50804ab1e5732b23f3d9635e0eb3ff3165b9e06b08c"
+      "sha256": "5ba46baea25335004f44e104714a1f7278ea70a17aa3bcfd09769148d77ebcbe"
     },
     {
       "path": "audit/fhv-regression.json",
@@ -121,7 +121,7 @@
     },
     {
       "path": "src/engine/campaign-flow.js",
-      "sha256": "960d6764b4c5c88bea098d035f871fd5fb407255a50149d3e4669f6ec29ac377"
+      "sha256": "f69c2f4b811f5d83018d95c231b496a21324b2121379a655364ba0625fd75b4a"
     },
     {
       "path": "src/engine/fhv-interactions.js",
@@ -129,11 +129,11 @@
     },
     {
       "path": "src/engine/mechanic-choices.js",
-      "sha256": "80865a0df19a4dc7a1d6bc54a416839c91e1e617ca24f1726d00f150449d5681"
+      "sha256": "3da71d947bed6e1c91d12f8e2ea7608c616cb50cada927b1bbea687a5dc43d02"
     },
     {
       "path": "src/integration/mechanic-view.js",
-      "sha256": "66ed6398ef8fc2f53bf098c331626b836ed98e2183830e5dc290a0f21ea24df5"
+      "sha256": "10babd9156fcce53e432ca606a7104b66c58978559c62403979476542b2ea2da"
     },
     {
       "path": "tests/fhv-interaction-fixture.mjs",
@@ -145,11 +145,11 @@
     },
     {
       "path": "tests/fhv-interactions.test.mjs",
-      "sha256": "dee48745e8537ca3f81f497c58c4cb88406116683bc2b187924e4269a3920781"
+      "sha256": "ec0fbb583bc1bb4240c8f184d861ed9761e33ec930a985c4e902e465041d693a"
     },
     {
       "path": "web/mechanic-ui.js",
-      "sha256": "7e8d7c9461dfb7e363d70fff301044ddb86a0edcf605ac1c58e948af016c554c"
+      "sha256": "553db01fcc388db9a15873c9e4fa40d229cb1dbda9719f33bcdb55dd2de28ad8"
     }
   ]
 }

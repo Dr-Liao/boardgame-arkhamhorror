@@ -175,6 +175,7 @@ function hubSetupAdvanced({
       const deck = findMove(engine, state, 'hubAutoDeck', seat)
       assert.ok(deck, `座位 ${seat} 应有自动构筑`)
       play(engine, state, deck, seat)
+      play(engine, state, findMove(engine, state, 'hubConfirmDeck', seat), seat)
     }
     const done = findMove(engine, state, 'hubDoneSeat', seat)
     if (done) play(engine, state, done, seat)
@@ -292,11 +293,11 @@ test('P9.5 G1 TDE 选定模式才写 campaign 双线字段；parallel 才写 sta
   assert.equal(parallel.campaign.mode, 'parallel')
   assert.equal(parallel.parallel.lanes.A.parallel, undefined, 'lane 内部不再嵌套容器')
 
-  // §11.2 门禁 1：旧 13 局 baseline 留档且 hashes 逐条在（行为零变化由 replay --compare 复算）。
-  const baseline = JSON.parse(fs.readFileSync(new URL('../artifacts/migration/tde/replay-before.json', import.meta.url), 'utf8'))
+  // §11.2 门禁 1：用仓库内的已复核快照核对 13 局逐步指纹，空工作区也能运行。
+  const baseline = JSON.parse(fs.readFileSync(new URL('./fixtures/replay/tde-baseline.json', import.meta.url), 'utf8'))
   assert.equal(baseline.fixtures.length, 13, '旧 13 局 baseline 必须保留')
   for (const fixture of baseline.fixtures) {
-    assert.ok(fixture.hashes?.length || fixture.hash, `fixture ${fixture.name || fixture.id} 缺少 hashes`)
+    assert.equal(fixture.hashes?.length, fixture.steps + 1, `${fixture.id} 缺少逐步指纹`)
   }
 })
 
@@ -451,6 +452,7 @@ test('P9.5 G2 分选两线不均/某线 0 人显式拒绝；并行 3:1 开始置
   // 座位 1（AI，准备期间出牌顺序：房主 completed 后由 AI 自己操作）检查改线动作。
   play(engine, pick, pickInvestigator(pick, 0), 0)
   play(engine, pick, findMove(engine, pick, 'hubAutoDeck', 0), 0)
+  play(engine, pick, findMove(engine, pick, 'hubConfirmDeck', 0), 0)
   play(engine, pick, findMove(engine, pick, 'hubDoneSeat', 0), 0)
   const change = legalFor(engine, pick, 1).find(move => move.action === 'hubSetSeatPart' && move.seat === 1 && move.part === 'A')
   assert.ok(change, '座位 1 应有改线动作')

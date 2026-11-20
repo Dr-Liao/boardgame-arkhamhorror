@@ -176,7 +176,10 @@ export function aiDecisionContext(state, seat) {
       data.deckRules = deckRules(INVESTIGATORS[inv.code])
       data.buildPool = playablePool().filter(c => (c.xp || 0) === 0 && matchesDeckOptions(INVESTIGATORS[inv.code], c)).map(c => c.code)
       data.buildPool.forEach(code => known.add(code))
-      data.deckInstruction = '提交 hubSetDeck，codes 是普通玩家卡卡号数组，可重复以表示数量；必须凑足 deckRules.size。签名和随机弱点由引擎添加。根据队友职责、经济、槽位和组合构筑，不得调用自动构筑代替思考。'
+      data.deckInstruction = '提交 hubSetDeck，codes 是普通玩家卡卡号数组，可重复以表示数量；必须凑足 deckRules.size，签名由引擎添加。根据队友职责、经济、槽位和组合构筑，不得调用自动构筑代替思考。'
+    }
+    if (moves.some(m => m.action === 'hubConfirmDeck')) {
+      data.deckInstruction = '完整牌组已保存。提交 hubConfirmDeck 抽取基础弱点并锁定牌组，随后用 hubDoneSeat 确认准备。'
     }
     if (record) {
       const effective = upgradeRecord(record)

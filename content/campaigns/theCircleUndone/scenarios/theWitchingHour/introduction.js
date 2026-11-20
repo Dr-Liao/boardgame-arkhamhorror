@@ -42,12 +42,13 @@ export function preScenarioSetup(state, events, api) {
   records.youHaveAcceptedYourFate = true
   flags.fateChaosToken = 'tablet'
   api.info?.('「别犹豫。别后悔。机会来临的时候，你必须行动起来改变命运。」记录「你接受了自己的命运」，混乱袋加入 2 个石板标记。')
-  // 队长把「高塔·XVI」和「权杖王牌」加入牌组（不占 30 张）。
+  // 队长把「高塔·XVI」和「权杖王牌」加入牌组（卡面写明**不计入牌组张数**）：
+  // 两者都只进战役牌组记录，不进 30 张计数/关间替换池（三选一模式靠这个标记才能补齐牌组）。
   const campaign = state.campaign
   const record = campaign?.investigators?.[lead]
   for (const code of [CAMPAIGN_CARDS.towerXVI, CAMPAIGN_CARDS.aceOfRods]) {
     if ((record?.deck || []).includes(code)) continue
-    campaignCardChange(campaign, lead, code, 'add', '巫异时刻介绍2')
+    campaignCardChange(campaign, lead, code, 'add', '巫异时刻介绍2', { deckSlot: false })
   }
   api.info?.('队长从收藏中找出「高塔·XVI」与「权杖王牌」加入牌组（不计入牌组张数）。')
   // 重返版的 8 张固定 Campaign Reading（原版没有；P8 作为垂直切片保留）。

@@ -5,7 +5,7 @@ import { effectiveTraits } from '../engine/engine.js'
 import { ALL_CARDS } from '../cards/cards-data.js'
 import { campaignView, replacementBlockers, upgradeRecord } from '../campaign/campaign.js'
 import { cardPoolContext } from '../deck/card-pool.js'
-import { actingSeats, decisionSeat, embeddedCardDefs, enemyEvadeValue, enemyFightValue, enemyHealth, getMaxHealth, getMaxSanity, getStat, handSize, legalMoves, scriptActionHints, abilityUsage } from '../engine/engine.js'
+import { actingSeats, allCardDefs, decisionSeat, embeddedCardDefs, enemyEvadeValue, enemyFightValue, enemyHealth, getMaxHealth, getMaxSanity, getStat, handSize, legalMoves, scriptActionHints, abilityUsage, validateMove } from '../engine/engine.js'
 import { contentRegistry } from '../../content/registered.js'
 import { projectTableState, locationEntryErrors, maskHiddenLocations, publicAttachments, attachLocationCards, attachCardAttachments, publicCardInstance } from './presentation-state.js'
 import { campaignStory } from '../campaign/story.js'
@@ -17,13 +17,14 @@ import { choiceOptionsFor, choiceSeats } from '../engine/resolution.js'
 // （探索牌库 / 古代遗物 / 领队 / 复仇 / 伊格之怒 / 两个剧本的公开标记）。
 import { campaignProjection } from '../cards/campaign-view.js'
 import { scenarioInteractionsView } from './scenario-interactions.js'
-import { scenarioGuide, scenarioSetupText } from '../../content/scenario-guides.js'
+import { scenarioSetupNote, scenarioSetupText } from '../../content/scenario-guides.js'
 import { mechanicView } from './mechanic-view.js'
 // 八循环 P2：隐匿迷你卡的观察投影（未翻面/未合法获知时不泄露真身或诱饵身份）。
 import { concealedProjection } from '../engine/tsk-concealed.js'
 // TIC 捕获/押送：被俘是**公开信息**（桌面上把迷你卡侧放），观察投影按座位派生后下发，
 // 不写入 inv（见 src/engine/capture.js 的存储说明）。
 import { capturedLocation, isCaptured } from '../engine/capture.js'
+import { assetTextBlanked, assetTextBlankedExceptForced } from '../engine/card-text.js'
 
 const PUBLIC_STATE_FIELDS = [
   'schemaVersion', 'rulesVersion', 'resourceVersion', 'rulesMode', 'revision',
@@ -176,7 +177,15 @@ export function viewState(state, observerSeat = null, options = {}) {
   const copyField = isolated ? copyViewValue : structuredClone
   const observer = Number.isInteger(observerSeat) && state.investigators.some(inv => inv.seat === observerSeat)
     ? observerSeat : null
-  const view = pick(state, slim ? PUBLIC_STATE_FIELDS_SLIM : PUBLIC_STATE_FIELDS, copyField)
+  // 收窄后，某个卡号出现在权威表里本身就可能暴露其他调查员的牌组。
+  const catalogCards = state._scenarioCardTable && !options?.local
+  const filterCards = state._scenarioCardTable && options?.local && (observer === null || state.investigators.length > 1)
+  const view = pick(state, slim || catalogCards || filterCards ? PUBLIC_STATE_FIELDS_SLIM : PUBLIC_STATE_FIELDS, copyField)
+  if (!slim && (catalogCards || filterCards)) {
+    view.cards = catalogCards ? allCardDefs({ runtimeOnly: true, campaignId: state.campaign?.id })
+      : copyField(embeddedCardDefs(state, state.campaign?.id, { observerSeat: observer }))
+    view.investigatorDefs = copyField(state.investigatorDefs)
+  }
   const attachments = publicAttachments(state)
   view.locations = maskHiddenLocations(attachLocationCards(view.locations || [], attachments.locations), state)
   // 投影有效帷幕：印刷值 + shroudMod（含「直到某张卡重整」的临时修正，如皮博迪先生的 -1）
@@ -287,7 +296,7 @@ export function viewState(state, observerSeat = null, options = {}) {
     ...pick(state.scenario, ['id', 'name', 'nameEn', 'intro', 'setup'], copyField),
     intro: view.campaignStory.entries.find(e => e.id === `current:${state.scenario.id}`)?.paragraphs.join('\n\n') || state.scenarioIntro?.paragraphs?.join('\n\n') || state.scenario.intro,
     setup: scenarioSetupText(state.scenario),
-    setupNote: scenarioGuide(state.scenario.id)?.note || '',
+    setupNote: scenarioSetupNote(state.scenario),
     layout: structuredClone(contentRegistry.getScenario(state.scenario.id).layout),
   } : null
   view.setAsideCards = publicSetAsideCards(state)
@@ -346,6 +355,10 @@ export function viewState(state, observerSeat = null, options = {}) {
   // 「放在密谋牌库旁」的卡（state.agendaAside）与剧情资产/胜利区一样公开在桌面上；
   // 卡面定义必须随视图下发，否则前端只能显示卡号，详情也加载不出规则文本。
   for (const card of state.agendaAside || []) if (card?.code) visibleCodes.add(card.code)
+  const choice = state.pendingChoice
+  const scopedChoiceCards = state._scenarioCardTable
+    ? choiceOptionsFor(choice, observer).map(option => option.cardCode).filter(Boolean) : []
+  for (const code of scopedChoiceCards) visibleCodes.add(code)
   // P1.4：精简视图拿不到 view.cards，用大厅传入的公共表（publicCards，只读）判断缺哪些卡面。
   const publicCards = slim && options.publicCards && typeof options.publicCards === 'object' ? options.publicCards : null
   const publicCardCodes = slim && !publicCards && options.publicCardCodes instanceof Set ? options.publicCardCodes : null
@@ -362,7 +375,7 @@ export function viewState(state, observerSeat = null, options = {}) {
     } else {
       // 公共表只来自 mod.staticTables：公共新增进 cardsPatch（大厅合并后重发一次静态表），
       // 只有本人手牌/牌库/压牌里的卡面进 privateCards，只发给这个观察者。
-      const privateZones = new Set()
+      const privateZones = new Set(scopedChoiceCards)
       const own = (state.investigators || []).find(inv => inv.seat === observer)
       if (own) for (const code of [...(own.hand || []), ...(own.deck || []), ...(own.beneath || [])]) if (code) privateZones.add(code)
       if (own) for (const cards of Object.values(state.scenarioFlags?.mechanics?.beneath?.[own.seat] || {})) for (const code of cards) privateZones.add(code)
@@ -403,13 +416,19 @@ export function viewState(state, observerSeat = null, options = {}) {
   }
   view.encounterDeck = []
   view.encounterDeckSize = state.encounterDeck.length
+  const encounterTop = state.encounterDeck.at(-1)
+  if (encounterTop && state.investigators.some(inv => !inv.defeated && !inv.resigned
+    && inv.assets.some(asset => !asset.facedown && registeredEntry(asset.code)?.assetRule?.revealEncounterTop
+      && !assetTextBlanked(asset, inv) && !assetTextBlankedExceptForced(asset)))) {
+    view.encounterTop = { ...(state.cards?.[encounterTop] || ALL_CARDS[encounterTop]), code: encounterTop }
+  }
   view.cultistDeck = []
   view.cultistDeckSize = state.cultistDeck.length
-  const choice = state.pendingChoice
   // A private test can still cause another investigator to take damage or
   // answer a mandatory effect. Keep that recipient's own decision visible.
   const responder = choiceSeats(choice).includes(observer)
-  view.pendingChoice = choice && (!privateTest || responder) ? {
+  const privateTask = choice?.kind === 'mechanic' && choice.source?.operation === 'tdcTask'
+  view.pendingChoice = choice && ((!privateTest && !privateTask) || responder) ? {
     ...pick(choice, ['id', 'kind', 'seat', 'seats', 'prompt', 'canSkip', 'min', 'max', 'payment', 'autoOptionId', 'autoTriggerOptionId', 'cardCode'], copyField),
     source: typeof choice.source === 'string' ? choice.source : pick(choice.source || {}, [
       'id', 'code', 'label', 'name', 'type',
@@ -433,6 +452,12 @@ export function viewState(state, observerSeat = null, options = {}) {
   // state.legalMoves is cached for the primary seat; simultaneous seats compute their own list.
   view.legalMoves = observer == null || !actingSeats(state).includes(observer) ? []
     : observer === decisionSeat(state) ? structuredClone(state.legalMoves || []) : legalMoves(state, observer)
+  if (view.mechanics?.tdc && state.investigators[observer]) {
+    view.mechanics.tdc.targets = Object.fromEntries(state.enemies.filter(enemy => enemy.partOf).map(enemy => [
+      enemy.id, Object.fromEntries(['fight', 'evade'].map(action => [action,
+        validateMove(state, observer, { action, enemyId: enemy.id })])),
+    ]))
+  }
   if (state.deckMode === 'draft' && observer != null) {
     const own = view.campaign?.investigators?.[observer] || Object.values(view.campaign?.parts || {}).map(part => part.investigators?.[observer]).find(Boolean)
     if (own?.draftMode) view.draftDeckStatus = draftDeckStatus(own)
@@ -488,7 +513,9 @@ export function viewEvents(events, observerSeat = null) {
 // 不含任何席位的私有信息；返回独立副本，供大厅长期缓存、合并 cardsPatch，且不回写权威状态。
 export function staticTables(state) {
   return {
-    cards: structuredClone(state.cards || {}),
+    // 公共缓存的基础表由目录生成。途中读档或回档后，缓存也与私有卡区无关。
+    cards: structuredClone(state._scenarioCardTable
+      ? allCardDefs({ runtimeOnly: true, campaignId: state.campaign?.id }) : state.cards || {}),
     investigatorDefs: structuredClone(state.investigatorDefs || {}),
   }
 }

@@ -78,8 +78,31 @@ for (const fails of [false, true]) test(`导入请求${fails ? '失败' : '成�
     const saved = page.waitForResponse(response => response.url().endsWith('/api/move')
       && response.request().postDataJSON()?.move?.action === 'hubSetDeck')
     await modal.getByRole('button', { name: '保存牌组', exact: true }).click()
-    expect((await (await saved).json()).ok).toBe(true)
+    const savedBody = await (await saved).json()
+    expect(savedBody.ok).toBe(true)
     await expect(hub.locator('.ah-deck-save-status')).toContainText('已保存')
+    if (!fails) {
+      const basicWeaknesses = ({ state }) => state.campaign.investigators[0].deck
+        .filter(code => state.cards[code]?.subtype === 'basicweakness')
+      expect(basicWeaknesses(savedBody.session)).toEqual([])
+      const finalize = hub.getByRole('button', { name: '最终确认牌组', exact: true })
+      const ready = hub.getByRole('button', { name: '确认准备', exact: true })
+      await expect(ready).toHaveCount(0)
+      for (const width of [1440, 390]) {
+        await page.setViewportSize({ width, height: 900 })
+        await expect(finalize).toBeEnabled()
+        expect(await hub.evaluate(el => el.scrollWidth <= el.clientWidth + 1)).toBe(true)
+      }
+      const finalized = page.waitForResponse(response => response.url().endsWith('/api/move')
+        && response.request().postDataJSON()?.move?.action === 'hubConfirmDeck')
+      await finalize.click()
+      const finalizedBody = await (await finalized).json()
+      expect(finalizedBody.ok).toBe(true)
+      expect(basicWeaknesses(finalizedBody.session)).toHaveLength(1)
+      await expect(hub.getByText('牌组已确认并锁定', { exact: true })).toBeVisible()
+      await expect(hub.getByRole('button', { name: '从 ArkhamDB 导入' })).toHaveCount(0)
+      await expect(ready).toBeEnabled()
+    }
     expect(errors).toEqual([])
   } finally { release() }
 })
@@ -95,6 +118,8 @@ test('调查准备时保持当前关卡已选择，未开放的关卡保持锁�
   await expect(hub.locator('.ah-hub-scenario.locked')).toHaveCount(2)
   await hub.getByRole('button', { name: '调查员与席位', exact: true }).click()
   await hub.getByRole('button', { name: /使用推荐卡组/ }).click()
+  await hub.getByRole('button', { name: '卡组构筑', exact: true }).click()
+  await hub.getByRole('button', { name: '最终确认牌组', exact: true }).first().click()
   await hub.getByRole('button', { name: '确认准备', exact: true }).first().click()
   await expect(hub.getByRole('button', { name: '开始当前关卡' })).toBeEnabled()
   await hub.getByRole('button', { name: '关卡选择', exact: true }).click()

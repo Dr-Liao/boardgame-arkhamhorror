@@ -14,9 +14,9 @@
   },
   "baseline": {
     "path": "audit/baseline.json",
-    "retaken": true,
+    "retaken": false,
     "milestone": "P10",
-    "note": null
+    "note": "发布收尾需 node tools/audit-baseline.mjs --write 记录 TIC 审计命令"
   },
   "campaign": {
     "id": "theInnsmouthConspiracy",
@@ -111,7 +111,7 @@
     "required": {
       "launch": true,
       "lobby": true,
-      "chapters": true,
+      "chapters": false,
       "allCards": true,
       "allCardsStrict": true,
       "node": false,
@@ -130,7 +130,7 @@
   "releaseGate": {
     "launch": true,
     "lobby": true,
-    "chapters": true,
+    "chapters": false,
     "allCards": true,
     "allCardsStrict": true,
     "node": false,
@@ -324,7 +324,7 @@
         "stageStructurePresent": true,
         "ledgerItemPresent": true,
         "ledgerTwelveTrue": true,
-        "ledgerFileHashesFresh": true,
+        "ledgerFileHashesFresh": false,
         "testFilePresent": true
       }
     },
@@ -366,7 +366,7 @@
         "stageStructurePresent": true,
         "ledgerItemPresent": true,
         "ledgerTwelveTrue": true,
-        "ledgerFileHashesFresh": true,
+        "ledgerFileHashesFresh": false,
         "testFilePresent": true
       }
     },
@@ -409,7 +409,7 @@
         "stageStructurePresent": true,
         "ledgerItemPresent": true,
         "ledgerTwelveTrue": true,
-        "ledgerFileHashesFresh": true,
+        "ledgerFileHashesFresh": false,
         "testFilePresent": true
       }
     },
@@ -453,7 +453,7 @@
         "stageStructurePresent": true,
         "ledgerItemPresent": true,
         "ledgerTwelveTrue": true,
-        "ledgerFileHashesFresh": true,
+        "ledgerFileHashesFresh": false,
         "testFilePresent": true
       }
     },
@@ -495,7 +495,7 @@
         "stageStructurePresent": true,
         "ledgerItemPresent": true,
         "ledgerTwelveTrue": true,
-        "ledgerFileHashesFresh": true,
+        "ledgerFileHashesFresh": false,
         "testFilePresent": true
       }
     },
@@ -538,7 +538,7 @@
         "stageStructurePresent": true,
         "ledgerItemPresent": true,
         "ledgerTwelveTrue": true,
-        "ledgerFileHashesFresh": true,
+        "ledgerFileHashesFresh": false,
         "testFilePresent": true
       }
     },
@@ -580,7 +580,7 @@
         "stageStructurePresent": true,
         "ledgerItemPresent": true,
         "ledgerTwelveTrue": true,
-        "ledgerFileHashesFresh": true,
+        "ledgerFileHashesFresh": false,
         "testFilePresent": true
       }
     },
@@ -624,7 +624,7 @@
         "stageStructurePresent": true,
         "ledgerItemPresent": true,
         "ledgerTwelveTrue": true,
-        "ledgerFileHashesFresh": true,
+        "ledgerFileHashesFresh": false,
         "testFilePresent": true
       }
     }
@@ -691,11 +691,11 @@
         "stageStructurePresent": true,
         "ledgerItemPresent": true,
         "ledgerTwelveTrue": true,
-        "ledgerFileHashesFresh": true,
+        "ledgerFileHashesFresh": false,
         "testFilePresent": true
       },
       "launchable": true,
-      "pass": true
+      "pass": false
     },
     {
       "id": "theVanishingOfElinaHarper",
@@ -767,11 +767,11 @@
         "stageStructurePresent": true,
         "ledgerItemPresent": true,
         "ledgerTwelveTrue": true,
-        "ledgerFileHashesFresh": true,
+        "ledgerFileHashesFresh": false,
         "testFilePresent": true
       },
       "launchable": true,
-      "pass": true
+      "pass": false
     },
     {
       "id": "inTooDeep",
@@ -838,11 +838,11 @@
         "stageStructurePresent": true,
         "ledgerItemPresent": true,
         "ledgerTwelveTrue": true,
-        "ledgerFileHashesFresh": true,
+        "ledgerFileHashesFresh": false,
         "testFilePresent": true
       },
       "launchable": true,
-      "pass": true
+      "pass": false
     },
     {
       "id": "devilReef",
@@ -906,11 +906,11 @@
         "stageStructurePresent": true,
         "ledgerItemPresent": true,
         "ledgerTwelveTrue": true,
-        "ledgerFileHashesFresh": true,
+        "ledgerFileHashesFresh": false,
         "testFilePresent": true
       },
       "launchable": true,
-      "pass": true
+      "pass": false
     },
     {
       "id": "horrorInHighGear",
@@ -972,11 +972,11 @@
         "stageStructurePresent": true,
         "ledgerItemPresent": true,
         "ledgerTwelveTrue": true,
-        "ledgerFileHashesFresh": true,
+        "ledgerFileHashesFresh": false,
         "testFilePresent": true
       },
       "launchable": true,
-      "pass": true
+      "pass": false
     },
     {
       "id": "aLightInTheFog",
@@ -1040,11 +1040,11 @@
         "stageStructurePresent": true,
         "ledgerItemPresent": true,
         "ledgerTwelveTrue": true,
-        "ledgerFileHashesFresh": true,
+        "ledgerFileHashesFresh": false,
         "testFilePresent": true
       },
       "launchable": true,
-      "pass": true
+      "pass": false
     },
     {
       "id": "theLairOfDagon",
@@ -1107,11 +1107,11 @@
         "stageStructurePresent": true,
         "ledgerItemPresent": true,
         "ledgerTwelveTrue": true,
-        "ledgerFileHashesFresh": true,
+        "ledgerFileHashesFresh": false,
         "testFilePresent": true
       },
       "launchable": true,
-      "pass": true
+      "pass": false
     },
     {
       "id": "intoTheMaelstrom",
@@ -1177,11 +1177,11 @@
         "stageStructurePresent": true,
         "ledgerItemPresent": true,
         "ledgerTwelveTrue": true,
-        "ledgerFileHashesFresh": true,
+        "ledgerFileHashesFresh": false,
         "testFilePresent": true
       },
       "launchable": true,
-      "pass": true
+      "pass": false
     }
   ],
   "encounterGroups": [
@@ -2168,7 +2168,7 @@
   "sources": [
     {
       "path": "content/registered.js",
-      "sha256": "c02fd529d500b0bc128a91cbcaef98661d618b37a9c006de45514e5be1c182b3"
+      "sha256": "8c9204dc062e13af8bf40327a4bb4ebdfda18f2cacef9a01f5936338d0cb8e5d"
     },
     {
       "path": "content/registry.js",
@@ -2176,7 +2176,7 @@
     },
     {
       "path": "content/mechanics.js",
-      "sha256": "ea861291928ea27cea5b6451d9ea56b19dd3e5323d487557347b589128702836"
+      "sha256": "cd3fe2a750929fe31a8ae99547f16c728c07af5d0f0c6e09ef8eeb2f15ad304a"
     },
     {
       "path": "content/schema.js",
@@ -2212,7 +2212,7 @@
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/chapter-definition.js",
-      "sha256": "22994886db8f1ac701051cdc0a4bb6f60570ade256caf2a843e61189126f17cd"
+      "sha256": "2442d4ceaea376b29f8495c26ca43e820feea47c86a2050e5d17e64363ceced7"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/chapter-data.json",
@@ -2228,7 +2228,7 @@
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/resolutions.js",
-      "sha256": "729c9186edf1e6135ff8a53e1a3a43fb3ec63217ccd81d7ffddd587479b60737"
+      "sha256": "9a3f5eba726cae94d09ff1b67616c29d001e89650e6e71234c4048e4e5e44765"
     },
     {
       "path": "content/campaigns/theInnsmouthConspiracy/interludes.js",
@@ -2252,7 +2252,7 @@
     },
     {
       "path": "web/rulebook-data.js",
-      "sha256": "71a772ad286cf0a04c4448bd3486f712b6c0e7a23c46e7fe9cd46d3db0f3d9c4"
+      "sha256": "eb358d0b381aae56282c48244a6a0548a7691ad66f6b5db60847268f6da26f62"
     },
     {
       "path": "web/tic-rules.js",
@@ -2260,27 +2260,27 @@
     },
     {
       "path": "web/deck-rules.js",
-      "sha256": "a5ed5df307ffade0166120b546f5d8215376eb369ba7c1ad015c68e465ab722a"
+      "sha256": "ab77908ae47e7fada8a33f63238517f9b4a2345db30990089e686b724760db71"
     },
     {
       "path": "presentation/art-rules.js",
-      "sha256": "d4f7cbc4a00e3b20a72c841ce0f1be9b9a94aaaf47d2f93868db257d96774ddc"
+      "sha256": "d8aae3a9b333cfd48fd22122e9bb08ee2d4c77d5ed703adea20e73ac15a0f4c1"
     },
     {
       "path": "src/cards/cards-data.js",
-      "sha256": "6a238be7a09932d0d3694003cea56f92b7edc21a41ac2fbfe22e995443a88a2a"
+      "sha256": "e82ac62eb62e6c6c410a960055db9549cce336433e2003852af559dedea6f9bc"
     },
     {
       "path": "src/cards/card-rules.js",
-      "sha256": "01839d93008d092a9bea8c6e3f3dd33f3498cd897908f82f193a2cf2d9e3d354"
+      "sha256": "6c0a89768b35258ec669aac139dea68d94cc4cd5b3da07c52759c5ebed001c6d"
     },
     {
       "path": "src/cards/core-acceptance.js",
-      "sha256": "34e6a4e317508f9f5317c8bd63123bb3964eb7084fcdc346cefc3ae480a81018"
+      "sha256": "cd5b71416028aee7f6389ea0ae7a078e179977adfcf839749a794e67c49035e0"
     },
     {
       "path": "src/deck/availability.js",
-      "sha256": "906a7078fd7be596bc6f89f0c18916e2130466b1384401310164ae60f57b2681"
+      "sha256": "f69169bed68b4f29e6a4173cebeba448b505804c2a166718effe0826f5000fe7"
     },
     {
       "path": "tools/audit-tic.mjs",
@@ -2308,7 +2308,7 @@
     },
     {
       "path": "tools/import-scenario-guides.mjs",
-      "sha256": "3564f47584bd7acf770233dbaa665782ad0e9e51216f8b15cc9b7283926d31e0"
+      "sha256": "e403d735a38fcea9004e2ebe4acf71c37c04af55dc212701ac5b2dce97d1c8e3"
     },
     {
       "path": "tools/audit-tic-release.mjs",
@@ -2328,7 +2328,7 @@
     },
     {
       "path": "tools/replay-tic-fixtures.mjs",
-      "sha256": "be5be932c58b2b75354db123439a26185ab4ee3516f68f7d8956fe28fa8a5bb2"
+      "sha256": "0a8f6b121ebf56d69fa93f8656593e6f6211970d1b0dbb999f5def4dfa2f5b6b"
     },
     {
       "path": "tests/playwright/playwright.tic-release.config.mjs",
@@ -2336,7 +2336,7 @@
     },
     {
       "path": "tests/tic-browser-helpers.mjs",
-      "sha256": "37cb094ac246c5ca1407f7d2a73ad3e9876939e83eb6f397f78a57b12de70efd"
+      "sha256": "d57dd3747c5940badc0d539164fbfd8499949852fad40f58ecdd74d50ef0f206"
     },
     {
       "path": "tests/tic-release.browser.mjs",
@@ -2344,7 +2344,7 @@
     },
     {
       "path": "tests/tic-online.browser.mjs",
-      "sha256": "36da9177e012986d02d09639d142cd7f197f54f195cd1d3549d094abdac18885"
+      "sha256": "5c96f71ab7610202f238df464cb3b3657e2901ab4a117d97aaadd0e10697b028"
     },
     {
       "path": "tests/tic-progression.browser.mjs",
@@ -2352,15 +2352,15 @@
     },
     {
       "path": "tests/replay-tic-p8.test.mjs",
-      "sha256": "ac1b2ac18db8eec0be538837fd41af42a184e9f390ba609eaf41bf5b1695a4a6"
+      "sha256": "1b46c0801aa73473d8aec0b304863f1e0b2288f6e22fbeaed48dde027fb41289"
     },
     {
       "path": "tests/fixtures/replay/tic-p8-baseline.json",
-      "sha256": "adeb7a0f16eb6100153ef577fece5eaaa38c1acb7d46c1ae856a968d30ae4f9b"
+      "sha256": "577f224aa0fd4cce5515fb0622e639c62b493ee6dc2534a779ed63b99e7e1aa7"
     },
     {
       "path": "tests/tic-p8-fixture.mjs",
-      "sha256": "0f4938cff50584c1c53317f5dcc5c04d49f455503503a444cb3ef04ecbd37e7c"
+      "sha256": "fbb3c88969b287acb679f51ea4a0b6196c91cfddc86f5bd60fc0a91002c8a3ca"
     },
     {
       "path": "tests/tic-migration.test.mjs",
@@ -2376,11 +2376,11 @@
     },
     {
       "path": "tests/tic-p8-campaign.test.mjs",
-      "sha256": "afd0260c9d1689705305ca7e6f302084b755d6528641178cea95de7e964e0ee1"
+      "sha256": "31e4adebecaa803e385f1af15886631d0328b832d8b04111feddc8033f72c116"
     },
     {
       "path": "tests/tic-p8-multiplayer.test.mjs",
-      "sha256": "73416376002f6b931cabd716faca4265292a530a4702ba2020f6ab82a2103a9d"
+      "sha256": "7204fbf0bbc6e433e9c127b53c6ae53dd7b68d42848b6f7a2ca6cb17f99ac716"
     },
     {
       "path": "tests/tic-late-b-cards.test.mjs",
@@ -2488,7 +2488,7 @@
     },
     {
       "path": "docs/arkham-content-migration.md",
-      "sha256": "6dcb28b9cea2d5f0123b633be579cd56850a6a721303dd247266d31ecbf3ab27"
+      "sha256": "f59ced6d960168c4532e911b0868888fa5fce1c5b775180623db3ae007087b9c"
     }
   ],
   "confirmations": {
@@ -3636,8 +3636,8 @@
         },
         "desktopBrowser": true,
         "mobileBrowser": true,
-        "legacyDesktopBrowser": true,
-        "legacyMobileBrowser": true
+        "legacyDesktopBrowser": false,
+        "legacyMobileBrowser": false
       },
       "evidence": [
         "web/rulebook-data.js",
@@ -3650,15 +3650,15 @@
   },
   "evidence": {
     "files": {
-      "audit/presentation-report.json": "c86ce7824691decdfc43d9259e093d81165e4784d9c654bf006c1d6035dbf005",
+      "audit/presentation-report.json": "860da5aacbd58c21226b80044324b020c9405895d44eb08261b0295cab1b81e5",
       "audit/tic-all-card-acceptance.json": "f84ec3aa909b6b22e119e75721831ae300cb9242227a88990b02102b034ef140",
-      "audit/tic-browser-acceptance.json": "9a2c88c2071e2195fd3ec62cd50d0d043ac5df64e4364bbca8766ba9eaca4a4e",
+      "audit/tic-browser-acceptance.json": "bb399e3e6caa4be7be325f2fefaa6355fb2dbaef1d8c5ad06a259b8250fc8ebf",
       "audit/tic-control-regression.json": "9467ddf166a857cc89e2283cc59c2164fba3400c829c6882a41a72b323a09385",
       "audit/tic-interaction-regression.json": "ef246a83209cdd86a8080ece8f457078ea44616f27b1a49751d32a9942d9a412",
       "audit/tic-interactions.json": "0b874aab2e09a4522b81568bf05834682ef18be9087592a79225922bf905dee6",
       "audit/tic-investigators.json": "b234e9c1bf649e985ef6412a7a392c9c5d21b313f4ad2ab0bb6a60358e6ce24c",
       "audit/tic-mechanism-scan.json": "576e911e9e12340c74b055e8124046fe48a2a4ca83fcea3e47a1893e4e402db2",
-      "audit/tic-node-acceptance.json": "fef251b42805f7a3ee1b4cca47276ff7d7a9fd7c16c9a0d101d2c71b98afb1b2",
+      "audit/tic-node-acceptance.json": "5074f06c79354ab2a7450021ecd17c811f3039104f56e64693ab1df7e50917c5",
       "audit/tic-p8-replay.json": "95f3d84e3fa73b7024ca6dbae093f6658d063fc8da9d5cce4d2fa66d4dc6d1aa",
       "audit/tic-player-acceptance.json": "e0cdcb06c4ef2d582e9a3878a4a52f47cf0a4cb3928537eb31d95491739e7af1",
       "audit/tic-player-queue.json": "66d4e35ddb501e18002c982db7cccc51c8bb2ecc9b9c78143982d9b224ac3808",
@@ -3671,25 +3671,25 @@
       "audit/tic-scenario-acceptance.json": "ee9580114569be90fbbdfd0452064daa1421a40d122e4a576126eae603659095",
       "audit/tic-scope.json": "cdc2afe0206a869f7465cb99a073431132049fbc0c60a6a690785e6a46b4720f",
       "audit/tic-story-acceptance.json": "11f904fe53da94a8836ddc9f1793494a5c499447c75c25c71165c21eb52dfcfa",
-      "tests/fixtures/replay/tic-p8-baseline.json": "adeb7a0f16eb6100153ef577fece5eaaa38c1acb7d46c1ae856a968d30ae4f9b"
+      "tests/fixtures/replay/tic-p8-baseline.json": "577f224aa0fd4cce5515fb0622e639c62b493ee6dc2534a779ed63b99e7e1aa7"
     },
     "browser": {
       "legacy": {
         "path": "audit/tic-browser-acceptance.json",
-        "status": "passed",
+        "status": "failed",
         "coverage": {
-          "desktop:zh-CN": true,
-          "desktop:en": true,
-          "mobile:zh-CN": true,
-          "mobile:en": true
+          "desktop:zh-CN": false,
+          "desktop:en": false,
+          "mobile:zh-CN": false,
+          "mobile:en": false
         },
         "links": {
-          "desktop": true,
-          "mobile": true
+          "desktop": false,
+          "mobile": false
         },
-        "tests": 38,
-        "screenshots": 68,
-        "scenariosCovered": 8
+        "tests": 2,
+        "screenshots": 2,
+        "scenariosCovered": 0
       },
       "release": {
         "path": "audit/tic-release-browser.json",
@@ -4174,7 +4174,7 @@
         "sha256": "adeb7a0f16eb6100153ef577fece5eaaa38c1acb7d46c1ae856a968d30ae4f9b",
         "fixtures": 13,
         "steps": 855,
-        "hashMatches": true
+        "hashMatches": false
       },
       "replay": {
         "command": "node tools/replay-fixtures.mjs --compare tests/fixtures/replay/tic-p8-baseline.json",
@@ -4207,9 +4207,9 @@
       "zhLocal": 489,
       "remoteFallbackAvailable": 361,
       "remoteFallbackMissing": 0,
-      "referenceSourceMentions": 37,
+      "referenceSourceMentions": 198,
       "referenceSourceBound": 0,
-      "runtimeFilesScanned": 2809
+      "runtimeFilesScanned": 4984
     },
     "guides": {
       "command": "node tools/import-scenario-guides.mjs",
@@ -4220,14 +4220,14 @@
     "presentation": {
       "command": "node tools/build-presentation.mjs --check",
       "exitCode": 0,
-      "presentationVersion": "1d9d4f31dab048572c6ac818d1059676783baafa5315da22f633aabf7d61fede",
+      "presentationVersion": "1fb167e0e7d9783dea135762b49f8815e82d1b73eedf88254742a75b319a546c",
       "ticDescriptorsResolved": 361
     },
     "docs": {
       "command": "node tools/check-doc-links.mjs --json",
       "exitCode": 0,
-      "files": 39,
-      "links": 134,
+      "files": 82,
+      "links": 429,
       "broken": 0
     },
     "registry": {
@@ -4255,7 +4255,7 @@
       "current": false
     },
     "browser": {
-      "legacy": 38,
+      "legacy": 2,
       "release": 6,
       "screenshots": 0
     },
@@ -4283,9 +4283,11 @@
     "回归证据不 current/未通过（audit/tic-interaction-regression.json）",
     "关键词未 verified：bless、curse、seal、vehicle、road、researched、covenant、exceptional、permanent、fast、hunter、aloof、massive、retaliate、surge、peril、victory、revelation",
     "规则书未 verified：scenarioMechanics、keywordEntries",
+    "发布验收未通过：chapters",
     "发布验收未通过：node",
     "发布验收未通过：replay",
     "发布验收未通过：regression",
+    "audit/baseline.json 尚未记录 TIC 发布审计（milestone P10）：发布收尾需 node tools/audit-baseline.mjs --write（AUDITS 增加 node tools/scan-tic-scope.mjs --check 与 node tools/audit-tic.mjs --check）",
     "P8 门禁未通过：planLedger",
     "P8 门禁未通过：keywordsVerified",
     "P8 门禁未通过：rulebookVerified",
@@ -4293,9 +4295,11 @@
     "P8 门禁未通过：regressionVerified",
     "P8 门禁未通过：replayVerified",
     "P8 门禁未通过：investigatorsVerified",
+    "P8 门禁未通过：scenariosVerified",
+    "P8 门禁未通过：browserAcceptance",
     "P8 门禁未通过：primitivesDone",
     "P8 门禁未通过：interactionVerified",
-    "发布门禁未通过：node、replay、regression、disclosure"
+    "发布门禁未通过：chapters、node、replay、regression、disclosure"
   ],
   "gate": {
     "scopeLedger": {
@@ -4620,12 +4624,12 @@
         "sha256": "adeb7a0f16eb6100153ef577fece5eaaa38c1acb7d46c1ae856a968d30ae4f9b",
         "fixtures": 13,
         "steps": 855,
-        "hashMatches": true
+        "hashMatches": false
       },
       "chaptersCovered": 8,
       "sourceFiles": {
         "total": 2809,
-        "verified": 2806,
+        "verified": 2399,
         "fresh": false
       },
       "pass": false
@@ -4679,12 +4683,12 @@
       "ledgerVerified": true,
       "chaptersAligned": true,
       "twelveOfTwelve": true,
-      "fileHashesFresh": true,
+      "fileHashesFresh": false,
       "sourceStableDuringRun": true,
       "testsPresent": true,
       "pendingRequests": 0,
       "pendingRequestFiles": 0,
-      "pass": true,
+      "pass": false,
       "verified": 8,
       "total": 8
     },
@@ -4724,24 +4728,24 @@
     "browserAcceptance": {
       "reportPresent": true,
       "generatedBy": "playwright + tools/playwright-tic-reporter.mjs",
-      "status": "passed",
+      "status": "failed",
       "current": false,
       "coverage": {
-        "desktop:zh-CN": true,
-        "desktop:en": true,
-        "mobile:zh-CN": true,
-        "mobile:en": true
+        "desktop:zh-CN": false,
+        "desktop:en": false,
+        "mobile:zh-CN": false,
+        "mobile:en": false
       },
       "links": {
-        "desktop": true,
-        "mobile": true
+        "desktop": false,
+        "mobile": false
       },
-      "tests": 38,
-      "screenshots": 68,
-      "scenariosCovered": 8,
-      "desktop": true,
-      "mobile": true,
-      "pass": true
+      "tests": 2,
+      "screenshots": 2,
+      "scenariosCovered": 0,
+      "desktop": false,
+      "mobile": false,
+      "pass": false
     },
     "releaseBrowserVerified": {
       "path": "audit/tic-release-browser.json",
@@ -4754,7 +4758,7 @@
       "sourceStableDuringRun": true,
       "sourceFiles": {
         "total": 2808,
-        "verified": 2739,
+        "verified": 2357,
         "fresh": false
       },
       "specs": [
@@ -5161,8 +5165,8 @@
           "content/**",
           "web/**"
         ],
-        "filesScanned": 2809,
-        "mentionCount": 37,
+        "filesScanned": 4984,
+        "mentionCount": 198,
         "boundReferenceCount": 0,
         "boundReferences": []
       },
@@ -5176,7 +5180,7 @@
       "report": {
         "path": "audit/presentation-report.json",
         "present": true,
-        "presentationVersion": "1d9d4f31dab048572c6ac818d1059676783baafa5315da22f633aabf7d61fede",
+        "presentationVersion": "1fb167e0e7d9783dea135762b49f8815e82d1b73eedf88254742a75b319a546c",
         "catalogCards": 5930,
         "imageResolutionCards": 1
       },
@@ -5191,8 +5195,8 @@
       "exitCode": 0,
       "ok": true,
       "missing": false,
-      "files": 39,
-      "links": 134,
+      "files": 82,
+      "links": 429,
       "broken": 0,
       "brokenLinks": [],
       "pass": true
@@ -5273,7 +5277,7 @@
     "releaseGate": {
       "launch": true,
       "lobby": true,
-      "chapters": true,
+      "chapters": false,
       "allCards": true,
       "allCardsStrict": true,
       "node": false,

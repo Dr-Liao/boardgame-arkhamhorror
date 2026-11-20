@@ -9,6 +9,7 @@ import { discardPlayerCards, replacePlayerZoneCards } from './player-zones.js'
 
 import { popRevelation, pushRevelation } from './resolution-scope.js'
 import { afterThreatEntered } from './threat-entry.js'
+import { canDiscardControlledAsset, discardControlledAsset } from './asset-departure.js'
 
 export function createWeakness(deps) {
   const {
@@ -21,7 +22,6 @@ export function createWeakness(deps) {
     applyDamage,
     applyHarm,
     applyHorror,
-    assetCannotLeavePlay,
     cardDef,
     cardName,
     checkDefeated,
@@ -182,7 +182,7 @@ function resolveWeaknessBody(state, inv, def, events, texts) {
   if (eff.weakness.type === 'boughtInBlood') {
     const allyTrait = item => (cardDef(item.code)?.traits || [])
       .some(trait => String(trait).toLowerCase() === 'ally')
-    const controlled = inv.assets.filter(asset => allyTrait(asset) && !assetCannotLeavePlay(asset))
+    const controlled = inv.assets.filter(asset => allyTrait(asset) && canDiscardControlledAsset(state, inv, asset))
     const handAllies = inv.hand.filter(code => (cardDef(code)?.traits || [])
       .some(trait => String(trait).toLowerCase() === 'ally'))
     let discarded = 0
@@ -198,10 +198,10 @@ function resolveWeaknessBody(state, inv, def, events, texts) {
         source: def.code, seat: inv.seat, prompt: '「血的代价」：选择弃掉的盟友支援。',
         options: controlled.map(asset => ({ id: asset.id, label: cardName(asset.code) })) })
       const asset = controlled.find(item => item.id === chosen) || controlled[0]
-      leaveAsset(state, inv, asset, events)
-      inv.discard.push(asset.code)
-      discarded = 1
-      info(state, events, `「${cardName(def.code)}」：${inv.name} 弃掉「${cardName(asset.code)}」。`)
+      if (discardControlledAsset(state, inv, asset, events, leaveAsset)) {
+        discarded = 1
+        info(state, events, `「${cardName(def.code)}」：${inv.name} 弃掉「${cardName(asset.code)}」。`)
+      }
     } else if (choice === 'hand' && handAllies.length) {
       for (const code of handAllies.slice()) {
         removeOne(inv.hand, code)
@@ -260,9 +260,7 @@ function resolveWeaknessBody(state, inv, def, events, texts) {
     const role = inv.role
     for (const asset of inv.assets.slice()) {
       const factions = cardDef(asset.code)?.factions || [cardDef(asset.code)?.klass].filter(Boolean)
-      if (!factions.includes(role) || assetCannotLeavePlay(asset)) continue
-      leaveAsset(state, inv, asset, events)
-      inv.discard.push(asset.code)
+      if (factions.includes(role)) discardControlledAsset(state, inv, asset, events, leaveAsset)
     }
     const top = inv.deck.pop()
     if (top) inv.discard.push(top)

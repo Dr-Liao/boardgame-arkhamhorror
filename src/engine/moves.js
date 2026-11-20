@@ -1,5 +1,9 @@
 import { availableResources } from './resource-bank.js'
+import { availablePlayResources } from './play-payment.js'
+import { enemyInEngagement, enemyIsBody, enemyIsPart } from './enemy-parts.js'
 import { playTimingCandidates, playTimingSource } from './play-timing.js'
+import { attachedAbilityCards } from './attachment-rules.js'
+import { teamCanActivate } from './team-abilities.js'
 // 合法行动枚举与校验（legalMoves / validateMove）从 engine.js 拆出的第六个模块
 // （Phase 6 · 6d-6）。
 //
@@ -10,9 +14,10 @@ import { playTimingCandidates, playTimingSource } from './play-timing.js'
 import { investigatorRule } from '../cards/card-rules.js'
 import { scriptCardOwner } from './script-cards.js'
 import { enemyIgnoresInvestigator } from './trait-passives.js'
+import { enemyProtectionBlocks } from './enemy-entry.js'
 import { locationEntryNotice } from './location-facts.js'
 import { all as matchAll } from './matcher.js'
-import { descriptorOfKind, playedActionCost } from './ability.js'
+import { descriptorOfKind, handAbilitySources, playedActionCost } from './ability.js'
 import { actionEntityById, entityActionDescriptors, entityAbilityInRange, parleyMovesFor, parleyTargetError, isParleyDescriptor } from './parley.js'
 // 第 5 步 P6：法术专用额外行动的算术（与 dispatch 共用同一份读点）。
 // P6（食梦者）：受限行动的 kind 由 table-decisions 的 restrictedKindOfMove 统一判定。
@@ -107,7 +112,6 @@ export function createMoves(deps) {
     lolaCanUseCard,
     movementError,
     normalActionsLeft,
-    normalizedSlots,
     playAccess,
     playConditionError,
     playConditionHelpers,
@@ -325,11 +329,12 @@ export function createMoves(deps) {
     const extraActionCost = playedActionCost(code)
     if (extraActionCost && actionsAvailable(inv) < extraActionCost + 1) continue
     const potentialReduction = potentialPlayReduction(state, inv, code, def)
-    const timings = playTimingCandidates(state, inv, def).filter(item => availableResources(inv) >= cost - potentialReduction - (item.spec.discount || 0))
-    const ordinary = availableResources(inv) >= cost - potentialReduction || charlesPayCandidate(state, inv, cost, def)
+    const funds = availablePlayResources(state, inv, def)
+    const timings = playTimingCandidates(state, inv, def).filter(item => funds >= cost - potentialReduction - (item.spec.discount || 0))
+    const ordinary = funds >= cost - potentialReduction || charlesPayCandidate(state, inv, cost, def)
     if (!ordinary && !timings.length) continue
     if (isSteadfastCard(def) && steadfastInPlay(state)) continue
-    if (def.type === 'asset' && normalizedSlots(def).length && !assetReplacementPlans(inv, def).length) continue
+    if (def.type === 'asset' && !assetReplacementPlans(inv, def, state).length) continue
     const kindLabel = def.type === 'asset' ? '装备' : '打出'
     if (ordinary) moves.push({ action: 'play', cardId: code, label: `🃏 ${kindLabel}「${cardName(code)}」(${cost} 资源)` })
     for (const { source, spec } of timings) moves.push({ action: 'play', cardId: code, fastSourceId: source.id,
@@ -360,11 +365,12 @@ export function createMoves(deps) {
     if (isSteadfastCard(def) && steadfastInPlay(state)) continue
     const cost = playCostFor(state, inv, def, candidate)
     const potentialReduction = potentialPlayReduction(state, inv, candidate.code, def)
-    if (availableResources(inv) < cost - potentialReduction
+    const otherPayer = candidate.channel === 'otherHand' ? state.investigators[candidate.move.ownerSeat] : null
+    if (availablePlayResources(state, inv, def, otherPayer) < cost - potentialReduction
       && !charlesPayCandidate(state, inv, cost, def)) continue
     if (registeredEntry(candidate.code)?.limitPerInvestigator
       && inv.assets.some(asset => asset.code === candidate.code)) continue
-    if (def.type === 'asset' && normalizedSlots(def).length && !assetReplacementPlans(inv, def).length) continue
+    if (def.type === 'asset' && !assetReplacementPlans(inv, def, state).length) continue
     moves.push({
       ...candidate.move,
       ...(candidate.uiKey ? { uiKey: candidate.uiKey } : {}),
@@ -461,16 +467,17 @@ export function createMoves(deps) {
   }
 
   for (const enemy of state.enemies.filter(enemy => enemy.location === inv.location)) {
-    if ((!enemyRuleFlags(enemy.code).damageOnlyFrom || enemyTextBlanked(state, enemy)) && !hiddenFightBlocked(state, inv, enemy)
+    if (!enemyIsBody(enemy) && (!enemyRuleFlags(enemy.code).damageOnlyFrom || enemyTextBlanked(state, enemy)) && !hiddenFightBlocked(state, inv, enemy)
       && !enemyCannotBeAttacked(state, enemy, inv.seat) && !aloofPreventsAttack(state, inv, enemy)
       && enemyEffectAllowed(state, enemy, 'fightAction', slumberDeps)
       && scenarioBehavior(state).canFightEnemy?.(state, inv, enemy) !== false)
       moves.push({ action: 'fight', enemyId: enemy.id, label: `⚔️ 攻击「${enemy.name}」（战斗 vs ${enemyFightValue(state, enemy, inv)}${enemy.retaliate ? '，反击' : ''}）` })
-    if (enemyEffectAllowed(state, enemy, 'evadeAction', slumberDeps)
+    if (!enemyIsBody(enemy) && (!enemyIsPart(enemy) || enemyInEngagement(state, enemy, inv))
+      && enemyEffectAllowed(state, enemy, 'evadeAction', slumberDeps)
       && scenarioBehavior(state).canEvadeEnemy?.(state, inv, enemy) !== false)
       moves.push({ action: 'evade', enemyId: enemy.id, label: `💨 躲避「${enemy.name}」（敏捷 vs ${enemyEvadeValue(state, enemy, inv)}）` })
     // 芬恩·爱德华兹：每回合 1 次不消耗行动的额外躲避。
-    if (canUseExtraEvade(state, inv) && (enemy.engagedSeat === seat || (enemy.massive && enemy.location === inv.location))
+    if (!enemyIsBody(enemy) && canUseExtraEvade(state, inv) && enemyInEngagement(state, enemy, inv)
       && enemyEffectAllowed(state, enemy, 'evadeAction', slumberDeps)
       && scenarioBehavior(state).canEvadeEnemy?.(state, inv, enemy) !== false)
       moves.push({ action: 'extraEvade', enemyId: enemy.id,
@@ -480,7 +487,8 @@ export function createMoves(deps) {
     }
     // 2026-10-25 本循环修复 can-engage-enemy-hook：剧本可以声明「该敌人不能被交战」
     // （对应参考实现 CannotBeEngaged，如《恶罪报应》非幽灵地点的异端者）。
-    if (!enemy.massive && enemy.engagedSeat !== seat && !capabilityBlocked(state, inv, 'engage') && !enemyIgnoresInvestigator(state, inv, enemy)
+    if (!enemyIsPart(enemy) && !enemy.massive && enemy.engagedSeat !== seat && !capabilityBlocked(state, inv, 'engage') && !enemyIgnoresInvestigator(state, inv, enemy)
+      && !enemyProtectionBlocks(state, inv, enemy, 'engage')
       && enemyEffectAllowed(state, enemy, 'engage', slumberDeps)
       && scenarioBehavior(state).canEngageEnemy?.(state, inv, enemy) !== false) {
       moves.push({ action: 'engage', enemyId: enemy.id, label: `与「${enemy.name}」交战` })
@@ -522,13 +530,14 @@ export function createMoves(deps) {
 
 
   // 2026-10-25 第七轮修复 05196：同地点队友的 teamActivatable 支援也可被激活（actor 支付费用）。
-  const abilitySources = controlledAbilityCards(inv).map(asset => ({ asset, ownerSeat: inv.seat }))
+  const abilitySources = [...controlledAbilityCards(inv), ...attachedAbilityCards(inv), ...handAbilitySources(inv)]
+    .map(asset => ({ asset, ownerSeat: inv.seat }))
   const investigatorSource = !investigatorTextBlanked(state, inv) && controlledAbilityCard(inv, `investigator:${inv.seat}`)
   if (investigatorSource) abilitySources.push({ asset: investigatorSource, ownerSeat: inv.seat })
   for (const other of aliveInvestigators(state)) {
     if (other.seat === inv.seat || other.location !== inv.location) continue
     for (const asset of controlledAbilityCards(other)) {
-      if (registeredEntry(asset.code)?.teamActivatable !== true) continue
+      if (!teamCanActivate(state, inv, other, asset)) continue
       abilitySources.push({ asset, ownerSeat: other.seat })
     }
   }
@@ -561,6 +570,7 @@ export function createMoves(deps) {
       const progress = Number.isFinite(requiredUses) && a.uses != null
         ? `（${a.usesType === 'charges' ? '充能' : '标记'} ${a.uses}/${requiredUses}）` : ''
       const base = { action: 'ability', assetId: a.id, abilityIndex: i,
+        ...(a.handAbilityIndex != null ? { uiKey: `hand:${inv.seat}:${a.handAbilityIndex}` } : {}),
         ...(abilityOwnerSeat !== inv.seat ? { ownerSeat: abilityOwnerSeat } : {}) }
       // 2026-10-25 第七轮修复 05230：所附属卡禁止宿主攻击与你交战的敌人。
       const hostAttackBlocked = (a.attachments || []).some(attachment => registeredEntry(attachment.code)?.hostCannotAttackEngaged)
@@ -787,10 +797,11 @@ export function createMoves(deps) {
       const extraActionCost = playedActionCost(move.copyCode || move.cardId)
       const extraActionBase = move.fastSourceId ? 0 : 1
       if (extraActionCost && actionsAvailable(inv) < extraActionCost + extraActionBase) return '行动不足'
-      if (availableResources(inv) < playCost(state, inv, def) - channelDiscount - potentialPlayReduction(state, inv, move.cardId, def) - (fastSource?.spec.discount || 0)
+      const otherPayer = channelCandidate?.channel === 'otherHand' ? state.investigators[channelCandidate.move.ownerSeat] : null
+      if (availablePlayResources(state, inv, def, otherPayer) < playCost(state, inv, def) - channelDiscount - potentialPlayReduction(state, inv, move.cardId, def) - (fastSource?.spec.discount || 0)
         && !charlesPayCandidate(state, inv, playCost(state, inv, def), def)) return '资源不足'
       if (def.unique && state.investigators.some(item => item.assets.some(asset => cardDef(asset.code)?.name === def.name))) return '唯一资产已经在场'
-      if (def.type === 'asset' && normalizedSlots(def).length && !assetReplacementPlans(inv, def).length) return '槽位已满'
+      if (def.type === 'asset' && !assetReplacementPlans(inv, def, state).length) return '没有合法的支援放置方案'
       if (playAccess(move.cardId).limitPerInvestigator
         && inv.assets.some(asset => asset.code === move.cardId)) return '每位调查员仅限 1 张'
       // 「沉稳」卡牌场上仅限 1 张（03107/03109/03111/03113/03115）。
@@ -1000,6 +1011,7 @@ export function createMoves(deps) {
       if (capabilityBlocked(state, inv, 'fight')) return '当前效果禁止你攻击'
       const enemy = state.enemies.find((e) => e.id === move.enemyId)
       if (!enemy) return '未找到该敌人'
+      if (enemyIsBody(enemy)) return '请选择要攻击的敌人部位'
       if (!enemyEffectAllowed(state, enemy, 'fightAction', slumberDeps)) return '沉睡的目标免疫调查员行动'
       if (enemyRuleFlags(enemy.code).damageOnlyFrom && !enemyTextBlanked(state, enemy)) return '子嗣只能使用深奥的咒文攻击'
       if (hiddenFightBlocked(state, inv, enemy)) return '隐私牌禁止你攻击该敌人'
@@ -1013,9 +1025,10 @@ export function createMoves(deps) {
       if (capabilityBlocked(state, inv, 'evade')) return '当前效果禁止你躲避'
       const enemy = state.enemies.find((e) => e.id === move.enemyId)
       if (!enemy) return '未找到该敌人'
+      if (enemyIsBody(enemy)) return '请选择要躲避的敌人部位'
       if (!enemyEffectAllowed(state, enemy, 'evadeAction', slumberDeps)) return '沉睡的目标免疫调查员行动'
       if (scenarioBehavior(state).canEvadeEnemy?.(state, inv, enemy) === false) return '该敌人不能被躲避'
-      const canEvade = enemy.engagedSeat === seat || (enemy.massive && enemy.location === inv.location)
+      const canEvade = enemyInEngagement(state, enemy, inv)
       if (!canEvade) return '该敌人未与你交战'
       return null
     }
@@ -1023,9 +1036,10 @@ export function createMoves(deps) {
       if (!canUseExtraEvade(state, inv)) return '本回合的额外躲避行动已经用过'
       const enemy = state.enemies.find((e) => e.id === move.enemyId)
       if (!enemy) return '未找到该敌人'
+      if (enemyIsBody(enemy)) return '请选择要躲避的敌人部位'
       if (!enemyEffectAllowed(state, enemy, 'evadeAction', slumberDeps)) return '沉睡的目标免疫调查员行动'
       if (scenarioBehavior(state).canEvadeEnemy?.(state, inv, enemy) === false) return '该敌人不能被躲避'
-      const canEvade = enemy.engagedSeat === seat || (enemy.massive && enemy.location === inv.location)
+      const canEvade = enemyInEngagement(state, enemy, inv)
       if (!canEvade) return '该敌人未与你交战'
       return null
     }
@@ -1034,7 +1048,7 @@ export function createMoves(deps) {
       if (move.ownerSeat != null && move.ownerSeat !== seat) {
         const owner = state.investigators[move.ownerSeat]
         const teamAsset = owner && controlledAbilityCard(owner, move.assetId)
-        if (!teamAsset || registeredEntry(teamAsset.code)?.teamActivatable !== true || (owner.defeated || owner.resigned || owner.location !== inv.location)) {
+        if (!teamCanActivate(state, inv, owner, teamAsset)) {
           return '该支援不能由你团队激活'
         }
       }
@@ -1103,6 +1117,7 @@ export function createMoves(deps) {
       if (capabilityBlocked(state, inv, 'engage')) return '当前效果禁止你与敌人交战'
       const enemy = state.enemies.find((e) => e.id === move.enemyId)
       if (!enemy) return '未找到该敌人'
+      if (enemyIsPart(enemy)) return '请选择敌人主体进行交战'
       if (!enemyEffectAllowed(state, enemy, 'engage', slumberDeps)) return '沉睡的目标免疫调查员行动'
       if (enemy.location !== inv.location) return '该敌人不在你所在的地点'
       if (enemy.massive) return '庞大敌人已与所在地点所有调查员交战'

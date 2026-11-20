@@ -10,7 +10,17 @@ export function renderDraftPane({ h, s, g, record, moves, action, art, inspectCa
   const refill = draft?.phase === 'refill'
   const status = s.state.draftDeckStatus
   const deck = record?.deck || []
-  const ordinary = deck.filter(code => cards.has(code))
+  // 战役奖赏卡（卡面「不计入牌组张数」，如《巫异时刻》给的权杖王牌）不算 30 张牌组的一部分：
+  // 摘要张数/费用曲线按扣除后的牌组显示（服务端 draftDeckStatus 是同一口径）。
+  const granted = new Map()
+  for (const code of record?.campaignCards || []) granted.set(code, (granted.get(code) || 0) + 1)
+  const displayDeck = granted.size ? deck.filter(code => {
+    const left = granted.get(code) || 0
+    if (left <= 0) return true
+    granted.set(code, left - 1)
+    return false
+  }) : deck
+  const ordinary = displayDeck.filter(code => cards.has(code))
   const size = ordinary.filter(code => !card(code).permanent && !card(code).ignoreDeckLimit).length
   const costs = new Map()
   for (const code of ordinary) {
@@ -22,13 +32,14 @@ export function renderDraftPane({ h, s, g, record, moves, action, art, inspectCa
   const typeOf = code => ['weakness', 'basicweakness'].includes(card(code).subtype) ? 'weakness'
     : typeKeys.includes(card(code).type) ? card(code).type : 'other'
   const typeLabel = type => t(['asset', 'weakness', 'other'].includes(type) ? `draft.type.${type}` : `hub.cardKind.${type}`)
-  const groups = typeKeys.map(type => ({ type, codes: deck.filter(code => typeOf(code) === type) }))
-  const button = move => action(s, move)
+  const groups = typeKeys.map(type => ({ type, codes: displayDeck.filter(code => typeOf(code) === type) }))
+  const button = move => action(s, move, move.action === 'hubConfirmDeck' ? t('hub.task.confirmDeck') : move.label)
   return h('section', { className: 'ah-hub-pane ah-draft-pane', 'data-draft-phase': draft?.phase || 'unselected' },
     h('h2', {}, t('draft.title')),
     h('p', { role: 'status' }, !draft ? t('draft.chooseInvestigator') : initial
       ? t('draft.initialStatus', { count: size, free: draft.freeRerolls })
       : refill ? t('draft.refillStatus', { count: status?.count ?? size, size: status?.size ?? size, missing: status?.missing ?? 0 })
+      : draft.phase === 'ready' ? t(record.startingDeckConfirmationPending ? 'hub.deck.savedNote' : 'hub.deck.confirmedTitle')
       : t('draft.upgradeStatus', { xp: record.xp })),
     status?.missing > 0 ? h('p', { className: 'ah-draft-notice', role: 'status' },
       t('draft.deckRequirement', { count: status.count, size: status.size, missing: status.missing })) : null,
@@ -50,8 +61,8 @@ export function renderDraftPane({ h, s, g, record, moves, action, art, inspectCa
                 `${move.removed ? name(move.removed) : t('draft.noReplacement')} · ${move.cost} XP`)))) : null,
           selected ? button(selected) : h('p', { role: 'status' }, t('draft.unavailable'))) : null)
     })),
-    draft && !draft.options.length ? h('p', {}, draft.phase === 'ready' ? t('draft.initialDone') : t('draft.consumed')) : null,
-    h('div', { className: 'ah-hub-actions' }, moves.filter(move => ['hubDraftRefill', 'hubDraftRefresh', 'hubDraftLock', 'hubDoneSeat', 'hubResumeDraft'].includes(move.action)).map(button)),
+    draft && draft.phase !== 'ready' && !draft.options.length ? h('p', {}, t('draft.consumed')) : null,
+    h('div', { className: 'ah-hub-actions' }, moves.filter(move => ['hubDraftRefill', 'hubDraftRefresh', 'hubDraftLock', 'hubConfirmDeck', 'hubDoneSeat', 'hubResumeDraft'].includes(move.action)).map(button)),
     refill ? h('p', { className: 'ah-draft-note' }, t('draft.refillNote')) : null,
     draft?.phase === 'upgrade' ? h('p', { className: 'ah-draft-note' }, t('draft.upgradeNote')) : null,
     h('section', { className: 'ah-draft-summary' }, h('h3', {}, t('draft.deckTitle', { count: size })),

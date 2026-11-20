@@ -2,17 +2,31 @@ import { DEFAULT_RULE_ID, RULE_INDEX, RULE_SOURCES, ruleById } from './rulebook-
 import { tableIcon } from './table-components.js'
 import { getLocale, t } from './i18n.js'
 export function createRulebook(h,render) {
-  let opened=false, selected=DEFAULT_RULE_ID, query='', history=[], returnFocus=null, returnRuleId=null
+  let opened=false, selected=DEFAULT_RULE_ID, query='', history=[], returnFocus=null, returnRuleId=null, returnInRuleLinks=false
   let cachedNode=null,cachedKey='',cachedQuery=''
   let directoryScroll={top:0,left:0}
   const rememberDirectory=()=>{const nav=cachedNode?.querySelector('nav');if(nav?.isConnected)directoryScroll={top:nav.scrollTop,left:nav.scrollLeft}}
   const restoreDirectory=(node,scroll)=>queueMicrotask(()=>{const nav=node?.querySelector('nav');if(nav?.isConnected){nav.scrollTop=scroll.top;nav.scrollLeft=scroll.left}})
-  const show = id => { if(!opened){returnFocus=document.activeElement;returnRuleId=returnFocus?.dataset?.ruleId||null;directoryScroll={top:0,left:0}}else rememberDirectory(); opened=true; selected=ruleById(id).id;query='';render();queueMicrotask(()=>document.querySelector('.ah-rulebook-close')?.focus()) }
-  window.addEventListener('arkham-open-rule',event=>{if(opened)history.push(selected);show(event.detail)})
+  const show = (id, source = document.activeElement) => {
+    if (!opened) {
+      returnFocus = source
+      returnRuleId = source?.dataset?.ruleId || null
+      returnInRuleLinks = !!source?.closest('.ah-card-rule-links')
+      directoryScroll = { top: 0, left: 0 }
+    } else rememberDirectory()
+    opened = true; selected = ruleById(id).id; query = ''; render()
+    queueMicrotask(() => document.querySelector('.ah-rulebook-close')?.focus())
+  }
+  window.addEventListener('arkham-open-rule', event => {
+    if (opened) history.push(selected)
+    if (!event.detail || typeof event.detail === 'string') show(event.detail)
+    else show(event.detail.id, event.detail.source)
+  })
   window.addEventListener('keydown',event=>{if(event.key==='F1' && document.querySelector('.ah-rulebook-launcher')){event.preventDefault();show(DEFAULT_RULE_ID)}})
   const close=()=>{opened=false;history=[];render();queueMicrotask(()=>{
+    const container = returnInRuleLinks ? '.ah-carddetail-modal .ah-card-rule-links' : '.ah-carddetail-modal'
     const restored=returnFocus?.isConnected ? returnFocus
-      : returnRuleId ? [...document.querySelectorAll('.ah-carddetail-modal [data-rule-id]')].find(node=>node.dataset.ruleId===returnRuleId) : null
+      : returnRuleId ? [...document.querySelectorAll(container+' [data-rule-id]')].find(node=>node.dataset.ruleId===returnRuleId) : null
     ;(restored||document.querySelector('.ah-carddetail-modal button,.ah-db-modal input,.ah-header-rulebook,.ah-rulebook-launcher'))?.focus({preventScroll:true})
   })}
   const select=id=>{rememberDirectory();history.push(selected);selected=id;render();queueMicrotask(()=>document.querySelector('.ah-rulebook-article')?.focus({preventScroll:true}))}

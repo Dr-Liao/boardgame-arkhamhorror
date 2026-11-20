@@ -1,7 +1,12 @@
 import { putInHand } from './hand-entry.js'
+import { hasWindowListener } from './window-listeners.js'
+import { cardEffectSource, withEffectSource } from './effect-provenance.js'
+import { trackTestAssetSource } from './action-history.js'
+import { afterHandEmptied } from './hand-discard-window.js'
 import { eventWindowContext } from './event-window.js'
-import { replacePlayerZoneCards } from './player-zones.js'
+import { replacePlayerZoneCards, splicePlayerDiscard } from './player-zones.js'
 import { availableResources } from './resource-bank.js'
+import { availablePlayResources, choosePlayUses, spendPlayUses } from './play-payment.js'
 import { actionTestSkill } from './skill-substitution.js'
 // 打牌与调查（doPlay / doInvestigate）从 engine.js 拆出的第四个模块（Phase 6 · 6d-4）。
 //
@@ -13,14 +18,18 @@ import { actionTestSkill } from './skill-substitution.js'
 import { beginInvestigationFrame, endInvestigationFrame, investigationFrameRef } from './resolution-scope.js'
 import { placeDreamGate } from './dream-gate.js'
 import { grantSpellCredit } from './spell-actions.js'
-import { preparePlayAttempt, payBondedPlayCost } from './play-attempt.js'
+import { preparePlayAttempt, payBondedPlayCost, payAdditionalPlayHorror } from './play-attempt.js'
 import { withOptionalLocationIgnore, ignoreLocationTrigger } from './location-effect-scope.js'
 import { recordPlayedCard } from './action-history.js'
+import { consumeNextPlayDiscount } from './effect-state.js'
 import { parleyDiscardProvider } from './play-channels.js'
 import { notePromiseEvent } from './turn-promises.js'
 import { payTokenCost, tokenCostAvailable } from './token-cost.js'
+import { chooseEntrySeal, sealAvailable } from './seal-entry.js'
 import { playTimingSource } from './play-timing.js'
+import { payPlayDiscardCost, playDiscardCostChoices } from './play-discard-cost.js'
 import { actionsAvailable, consumeAction } from './restricted-actions.js'
+import { cancelResolution } from './resolution.js'
 export function createActions(deps) {
   const {
     campaignState,
@@ -87,7 +96,7 @@ export function createActions(deps) {
     withEffectCode,
   } = deps
 
-function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = false, copyCode = null, fromPlanAssetId = null, fromBackpackId = null, fromThreatId = null, playDiscount = 0, fastSourceId = null, fromDiscardProviderId = null) {
+function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = false, copyCode = null, fromPlanAssetId = null, fromBackpackId = null, fromThreatId = null, playDiscount = 0, fastSourceId = null, fromDiscardProviderId = null, options = {}) {
   const inv = state.investigators[seat]
   const def = cardDef(cardId)
   const discardProvider = fromDiscardProviderId && parleyDiscardProvider(inv, cardId, fromDiscardProviderId, { cardDef, registeredEntry })
@@ -114,6 +123,22 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
   // 2026-10-27：从威胁区打出的那张实体（05010 悬案的 playableFromThreat 通道）。
   // 支付失败/没有合法宿主/唯一冲突时原样放回威胁区。
   let removedThreatCard = null
+  let playedFromHand = false
+  let playedAsset = null
+  let discardedEvent
+  let emptiedBackpack = null
+  const origin = options.assetOrigin || options.eventOrigin
+  let originIndex = -1
+  let deferredOrigin
+  const restoreOrigin = () => {
+    if (originIndex < 0) return false
+    if (origin === 'discard') {
+      splicePlayerDiscard(inv, originIndex, 0, cardId)
+      if (deferredOrigin) (inv.deferredEventReturns ||= []).push(...deferredOrigin)
+    } else inv[origin].splice(originIndex, 0, cardId)
+    originIndex = -1
+    return true
+  }
   let chosenVariableCost = null
   if (!def) return
   // P6（九循环）：Double 特质的「作为额外费用，花费 1 个行动」。
@@ -126,9 +151,10 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
   }
   const timingSource = fastSourceId ? playTimingSource(state, inv, def, fastSourceId) : null
   if (fastSourceId && !timingSource) return
+  if (!sealAvailable(state, registeredEntry(cardId))) { restoreOtherHandCard(); return }
   if (!tokenCostAvailable(state, inv, registeredEntry(cardId)?.additionalTokenCost)) return
   if (!noAction && registeredEntry(cardId)?.investigator?.cannotPlayAction) return
-  if (playAccess(cardId).onlyFromDiscard && !fromDiscard) return
+  if (playAccess(cardId).onlyFromDiscard && !fromDiscard && origin !== 'discard') return
   if (!lolaCanUseCard(inv, cardId)) return
   if (def.type === 'skill' || (isWeaknessCard(def) && !playAccess(cardId).playableWeakness)) return
   if (cannotPlayTypes(inv).has(def.type)) {
@@ -138,19 +164,34 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
   const playAttempt = preparePlayAttempt(state, inv, copiedDef?.code || cardId, events,
     { playCost, cardDef, reactionWindow, shuffle, randomValue }, playDiscount)
   if (playAttempt.cancelled) return
+  const discardPlayCost = registeredEntry(playedDef.code)?.discardPlayCost
+  if (discardPlayCost && !playDiscardCostChoices(state, inv, discardPlayCost).length) {
+    restoreOtherHandCard()
+    info(state, events, '没有能够支付额外弃置费用的牌。')
+    return
+  }
   const plan = fromPlanAssetId && inv.assets.find(asset =>
     asset.id === fromPlanAssetId && registeredEntry(asset.code)?.cardPlan && !asset.exhausted && asset.attached?.includes(cardId))
-  if (plan) {
+  if (origin && origin !== 'hand') {
+    if (!['deck', 'discard'].includes(origin) || (options.eventOrigin ? def.type !== 'event' : def.type !== 'asset')) return
+    originIndex = inv[origin].lastIndexOf(cardId)
+    if (originIndex < 0) return
+    if (origin === 'discard') {
+      deferredOrigin = inv.deferredEventReturns?.filter(item => item.index === originIndex)
+      splicePlayerDiscard(inv, originIndex, 1)
+    }
+    else inv[origin].splice(originIndex, 1)
+  } else if (plan) {
     plan.attached.splice(plan.attached.indexOf(cardId), 1)
     plan.exhausted = true
   } else if (fromDiscard) {
     // 温蒂的护身符要求弃牌堆顶；「临时武器」等标记 playableFromDiscard 的卡可在弃牌堆任意位置。
     if (discardProvider || playAccess(cardId).fromDiscard) {
       if (!inv.discard.includes(cardId)) return
-      inv.discard.splice(inv.discard.lastIndexOf(cardId), 1)
+      splicePlayerDiscard(inv, inv.discard.lastIndexOf(cardId), 1)
     } else {
       if (topDiscardEvent(state, inv) !== cardId) return
-      inv.discard.splice(inv.discard.lastIndexOf(cardId), 1)
+      splicePlayerDiscard(inv, inv.discard.lastIndexOf(cardId), 1)
     }
   } else if (fromBackpackId) {
     // 04037 背包：从附属区当作手牌打出；最后一张打完后弃掉背包。
@@ -158,17 +199,19 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     const index = bag?.attachedCards?.indexOf(cardId) ?? -1
     if (index < 0) return
     bag.attachedCards.splice(index, 1)
-    if (!bag.attachedCards.length) {
-      inv.discard.push(bag.code)
-      leaveAsset(state, inv, bag, events)
-      info(state, events, '🎒 背包里的最后一张牌被打出，弃掉背包。')
-    }
+    if (!bag.attachedCards.length) emptiedBackpack = bag
   } else if (fromThreatId) {
     // 2026-10-27：从威胁区打出（条目级 playableFromThreat，05010 悬案）。
     const index = (inv.threat || []).findIndex(card => card.id === fromThreatId)
     if (index < 0 || inv.threat[index].code !== cardId) return
     removedThreatCard = inv.threat.splice(index, 1)[0]
-  } else if (!removeCardByCode(inv.hand, cardId)) return
+  } else {
+    if (options.handIndex != null) {
+      if (inv.hand[options.handIndex] !== cardId) return
+      inv.hand.splice(options.handIndex, 1)
+    } else if (!removeCardByCode(inv.hand, cardId)) return
+    playedFromHand = !otherHandContext && !options.syntheticHand && inv.hand.length === 0
+  }
 
   // 2026-10-25 修复：把「打出费用」抽成可复用步骤，附属事件（attachTo）也必须付费。
   // 之前附属分支在费用结算之前 return，05230「瞄准镜」等附属事件实测不扣资源。
@@ -191,7 +234,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     if (variableCostEntry) {
       cost = Number(requestChoice(state, { kind: 'resource', source: cardId, seat,
         prompt: `选择为「${cardName(cardId)}」支付多少资源（X）。`,
-        options: Array.from({ length: availableResources(inv) + 1 }, (_, i) => ({ id: String(i), label: `${i}` })),
+        options: Array.from({ length: availablePlayResources(state, inv, playedDef) + 1 }, (_, i) => ({ id: String(i), label: `${i}` })),
       }))
       if (variableCostEntry.variableCostPaidAs === 'paidX') chosenVariableCost = cost
     } else {
@@ -231,22 +274,31 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     }
     campaignState.clearPlayDiscount(inv)
     delete inv.playDiscount
+    const { remaining, payments, offered } = choosePlayUses(state, inv, playedDef, cost, deps)
+    const cancelUnpaidPlay = message => {
+      if (offered && options.cancelUnpaidPlay) {
+        // 行动及借机攻击由 dispatch 先结算，拒绝代付后须恢复整次打出的状态。
+        cancelResolution(state, (restored, emitted) => info(restored, emitted, message))
+      }
+      info(state, events, message)
+    }
     // 地球边缘 P5（08016 鲍勃）：跨座位代打由代打者与牌主共同支付（印刷「双方都可以为支付
     // 其费用花费资源」）。有分账元数据时按元数据分摊；否则先扣代打者余额、余额不足部分由牌主支付。
     let crossPay = null
     if (otherHandOwner && otherHandOwner !== inv) {
       const split = otherHandContext.costSplit || null
       let selfAmount, ownerAmount
-      if (split && Number.isSafeInteger(split.self) && Number.isSafeInteger(split.owner)) {
-        selfAmount = Math.max(0, split.self)
-        ownerAmount = Math.max(0, split.owner)
+      const explicitSplit = split && Number.isSafeInteger(split.self) && Number.isSafeInteger(split.owner)
+      if (explicitSplit) {
+        ownerAmount = Math.min(remaining, Math.max(0, split.owner))
+        selfAmount = remaining - ownerAmount
       } else {
-        selfAmount = Math.min(cost, availableResources(inv))
-        ownerAmount = cost - selfAmount
+        selfAmount = Math.min(remaining, availableResources(inv))
+        ownerAmount = remaining - selfAmount
       }
-      if (selfAmount + ownerAmount !== cost
+      if ((explicitSplit && Math.max(0, split.self) + Math.max(0, split.owner) !== cost)
         || availableResources(inv) < selfAmount || availableResources(otherHandOwner) < ownerAmount) {
-        info(state, events, `${inv.name} 与 ${otherHandOwner.name} 的资源不足以支付「${cardName(cardId)}」。`)
+        cancelUnpaidPlay(`${inv.name} 与 ${otherHandOwner.name} 的资源不足以支付「${cardName(cardId)}」。`)
         if (fromDiscard) inv.discard.push(cardId)
         else restoreOtherHandCard()
         return { ok: false, cost }
@@ -254,16 +306,16 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       crossPay = { selfAmount, ownerAmount, owner: otherHandOwner }
     }
     let payer = inv
-    if (!crossPay && availableResources(inv) < cost) {
-      const charles = charlesPayCandidate(state, inv, cost, playedDef)
+    if (!crossPay && availableResources(inv) < remaining) {
+      const charles = charlesPayCandidate(state, inv, remaining, playedDef)
       if (charles && requestChoice(state, {
         kind: 'resource', source: cardId, seat: charles.seat, canSkip: true,
-        prompt: `${inv.name} 资源不足，是否由查尔斯·罗斯代付 ${cost} 资源？`,
+        prompt: `${inv.name} 资源不足，是否由查尔斯·罗斯代付 ${remaining} 资源？`,
         options: [{ id: 'skip', label: '不代付' }, { id: 'pay', label: '让查尔斯支付' }],
       }) === 'pay') payer = charles
     }
-    if (availableResources(payer) < cost) {
-      info(state, events, `${inv.name} 资源不足，无法打出「${cardName(cardId)}」。`)
+    if (!crossPay && availableResources(payer) < remaining) {
+      cancelUnpaidPlay(`${inv.name} 资源不足，无法打出「${cardName(cardId)}」。`)
       // 2026-10-25 第五轮：支付失败时把已离手的牌放回原处（否则「合法性靠潜在减费放行、
       // 但玩家放弃/减不够」会让牌凭空消失）。
       if (fromBackpackId) {
@@ -277,7 +329,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
         inv.threat.push(removedThreatCard)
       } else if (fromDiscard) {
         inv.discard.push(cardId)
-      } else {
+      } else if (!restoreOrigin()) {
         putInHand(state, inv, cardId)
       }
       return { ok: false, cost }
@@ -285,7 +337,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     if (!payBondedPlayCost(state, inv, cardId, { shuffle, randomValue })) {
       if (removedThreatCard) inv.threat.push(removedThreatCard)
       else if (fromDiscard) inv.discard.push(cardId)
-      else putInHand(state, inv, cardId)
+      else if (!restoreOrigin()) putInHand(state, inv, cardId)
       return { ok: false, cost }
     }
     if (crossPay) {
@@ -294,20 +346,36 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       info(state, events, `🤝 ${inv.name} 与 ${crossPay.owner.name} 共同支付「${cardName(cardId)}」的费用：`
         + `${inv.name} ${crossPay.selfAmount} / ${crossPay.owner.name} ${crossPay.ownerAmount}。`)
     } else {
-      resourceBank.spendFromPool(payer, cost, state)
+      resourceBank.spendFromPool(payer, remaining, state)
     }
     if (!payTokenCost(state, inv, registeredEntry(cardId)?.additionalTokenCost)) throw new Error('额外混乱标记费用已失效')
+    spendPlayUses(state, payments, events, deps)
+    if (discardPlayCost) {
+      const discardedCard = payPlayDiscardCost(state, inv, cardId, discardPlayCost, events, deps)
+      if (!discardedCard) {
+        cancelResolution(state, (restored, emitted) => info(restored, emitted, '额外弃置费用已无法支付。'))
+      }
+      playCostWindow.discardedCard = discardedCard
+    }
+    if (emptiedBackpack && inv.assets.includes(emptiedBackpack)) {
+      inv.discard.push(emptiedBackpack.code)
+      leaveAsset(state, inv, emptiedBackpack, events)
+      info(state, events, '🎒 背包里的最后一张牌被打出，弃掉背包。')
+    }
+    consumeNextPlayDiscount(state, inv.seat)
     if (discardProvider) discardProvider.uses -= 1
     recordPlayedCard(state, inv, playedDef, registeredEntry)
     notePromiseEvent(state, inv.seat, 'play', context => reactionWindow(state, 'promiseBroken', context, events, { allowNested: true }))
     if (def.type === 'asset' && (def.traits || []).some(trait => String(trait).toLowerCase() === 'item')) {
       consumeItemDiscountAtLocation(state, inv)
     }
+    payAdditionalPlayHorror(state, inv, playedDef, events, deps)
     consumePlayThreatResources(state, inv, events)
     if (usesLolaDiscount) delete inv.lolaDiscount
     // P6（九循环）：Double 特质的额外行动费用在资源费用成功后一次性扣减（与打印文本同一时机）。
     if (playedExtraAction > 0) consumeAction(inv, playedExtraAction)
     info(state, events, `🃏 ${inv.name} 打出「${cardName(cardId)}」（花费 ${cost} 资源${playedExtraAction ? ` 与 ${playedExtraAction} 行动` : ''}，剩余 ${inv.resources}）。`, { kind: 'play', seat: inv.seat, code: cardId })
+    if (playedFromHand) afterHandEmptied(state, inv, events, reactionWindow)
     return { ok: true, cost, playCostContext: playCostWindow }
   }
 
@@ -315,7 +383,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
   // 2026-10-25：05021「附属到同地点任意调查员」——kind:'investigator' 也走这条通道
   // （attachmentTargets 返回调查员对象，attachCardTo 写入 inv.attachments）。
   const attachSpec = registeredEntry(copyCode || cardId)?.attachTo
-  if (attachSpec && (attachSpec.kind === 'asset' || attachSpec.kind === 'investigator')) {
+  if (attachSpec && ['asset', 'investigator', 'playerCard'].includes(attachSpec.kind)) {
     const candidates = attachmentTargets(state, inv, attachSpec, cardId)
     if (!candidates.length) {
       // 没有合法宿主：把卡放回被取出的位置（P7 顺带修：这里原本引用从未存在的
@@ -324,7 +392,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
         inv.threat ||= []
         inv.threat.push(removedThreatCard)
       } else if (fromDiscard) inv.discard.push(cardId)
-      else putInHand(state, inv, cardId)
+      else if (!restoreOrigin()) putInHand(state, inv, cardId)
       info(state, events, `没有可以附属「${cardName(cardId)}」的支援。`)
       return
     }
@@ -333,21 +401,24 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       // fromThreat 的复位已在 payPlayCost 内完成（见 removedThreatCard）。
       if (!fromThreatId) {
         if (fromDiscard) inv.discard.push(cardId)
-        else putInHand(state, inv, cardId)
+        else if (originIndex >= 0) restoreOrigin()
+        else if (!origin) putInHand(state, inv, cardId)
       }
       return
     }
     const isInvestigatorTarget = attachSpec.kind === 'investigator'
-    const chosen = candidates.length === 1 ? candidates[0].id : requestChoice(state, { kind: 'target', source: cardId, seat,
-      prompt: `选择要附属「${cardName(cardId)}」的${isInvestigatorTarget ? '调查员' : '支援'}。`,
-      options: candidates.map(asset => ({ id: asset.id, label: isInvestigatorTarget ? (asset.label || asset.name || cardName(asset.code)) : cardName(asset.code) })) })
+    const preferred = candidates.find(candidate => candidate.id === options.preferredAttachmentTargetId)
+    const chosen = preferred?.id ?? (candidates.length === 1 ? candidates[0].id : requestChoice(state, { kind: 'target', source: cardId, seat,
+      prompt: `选择要附属「${cardName(cardId)}」的${attachSpec.kind === 'playerCard' ? '调查员或支援' : isInvestigatorTarget ? '调查员' : '支援'}。`,
+      options: candidates.map(asset => ({ id: asset.id,
+        label: isInvestigatorTarget || asset.investigator ? (asset.label || asset.name || cardName(asset.code)) : cardName(asset.code) })) }))
     const candidate = candidates.find(asset => asset.id === chosen) || candidates[0]
     // 2026-10-25 第七轮修复 05021：attachmentTargets 对 investigator 返回包装对象，必须取真实调查员实例；
     // 此前把 attachments 写在临时包装上，commit 后丢失。
-    const target = isInvestigatorTarget
-      ? (candidate.investigator || state.investigators[candidate.seat] || candidate)
-      : candidate
-    const attachment = attachCardTo(state, seat, cardId, target)
+    const target = candidate.investigator || (isInvestigatorTarget && state.investigators[candidate.seat]) || candidate
+    const attachment = options.removeEventAfter
+      ? null : attachCardTo(state, seat, cardId, target)
+    if (options.removeEventAfter) (state.removedFromGame ||= []).push(cardId)
     // P6 原语（08074 应急装备）：附属事件按条目 uses/usesType 初始化耐久/充能，
     // 否则「使用(3 耐久)」的附属事件没有可花费的资源。只在条目声明了 uses 时写入。
     if (attachment && registeredEntry(cardId)?.uses != null) {
@@ -377,11 +448,14 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
   }
 
   // 跨座位代打：槽位替换按控制者（牌主）判定，而不是代打者。
-  if (def.type === 'asset' && !registeredEntry(cardId)?.assetRule?.playUnderAnyAtLocation) replaceAssets(state, controller, def, events)
+  const needsSlots = def.type === 'asset' && !options.hostIgnoresSlots && !registeredEntry(cardId)?.assetRule?.playUnderAnyAtLocation
+  const replaceAfterPayment = origin || availablePlayResources(state, inv, def) > availableResources(inv)
+  if (needsSlots && !replaceAfterPayment) replaceAssets(state, controller, def, events)
 
   const paid = payPlayCost()
   if (!paid.ok) return
   const cost = paid.cost
+  if (needsSlots && replaceAfterPayment) replaceAssets(state, controller, def, events)
 
   if (def.type === 'asset') {
     // Phase 5（5b-8）：资产入场时读的 passive（额外行动等）也要认条目。
@@ -390,9 +464,6 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     const eff = {
       ...({}),
       ...(entryPassive ? { passive: entryPassive } : {}),
-      ...(entryFlags.sealOnEnter ? { sealOnEnter: entryFlags.sealOnEnter } : {}),
-      // Phase 6（6e-15）：选择式封印（04030/04031）也走条目级字段。
-      ...(entryFlags.sealOnEnterChoice ? { sealOnEnterChoice: entryFlags.sealOnEnterChoice } : {}),
       // Phase 6（6e-14）：「入场放毁灭」搬到条目级字段（旧 DSL 条目由上面的 spread 回落）。
       ...(entryFlags.onPlayDoom != null ? { onPlayDoom: entryFlags.onPlayDoom } : {}),
     }
@@ -414,7 +485,18 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
         }
       }
     }
+    const seal = chooseEntrySeal(state, entryFlags, { seat: placedController.seat, code: cardId,
+      choose: spec => requestChoice(state, spec), label: tokenLabel })
+    if (seal === false) throw new Error('入场封印费用已失效')
     const asset = newPlayerAssetInstance(state, placedController, cardId)
+    playedAsset = asset
+    if (seal) {
+      sealChaosToken(state, seal, asset.id, inv.seat)
+      info(state, events, `🔒 「${cardName(cardId)}」封印了 ${tokenLabel(seal)}。`)
+      if (hasWindowListener(state, 'chaosTokenChanged')) reactionWindow(state, 'chaosTokenChanged', {
+        when: 'chaosTokenChanged', seat, token: seal, change: 'seal', location: inv.location,
+      }, events, { allowNested: true })
+    }
     // Phase 5（5a-18）：「打出时自选花费并转成弹药」也由条目级 chooseResourceCostOnPlay 声明。
     if (chosenVariableCost != null) asset.paidX = chosenVariableCost
     else if (registeredEntry(cardId)?.chooseResourceCostOnPlay) { asset.uses = cost; asset.usesType = 'ammo' }
@@ -426,30 +508,6 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       grantSpellCredit(state, placedController, { info: text => info(state, events, text) })
     }
     scenarioBehavior(state).assetEntered?.(state, placedController, asset, scenarioRuntime(state, events))
-    if (eff.sealOnEnter && state.chaosBag.includes(eff.sealOnEnter)) {
-      sealChaosToken(state, eff.sealOnEnter, asset.id)
-      info(state, events, `🔒 「${cardName(cardId)}」封印了 ${tokenLabel(eff.sealOnEnter)}。`)
-    }
-    // 封印任意标记：从混乱袋中选择一个符合条件的标记。
-    if (eff.sealOnEnterChoice) {
-      const symbols = ['skull', 'cultist', 'tablet', 'elderthing']
-      const pool = state.chaosBag.filter(token => {
-        if (Array.isArray(eff.sealOnEnterChoice)) return eff.sealOnEnterChoice.includes(token)
-        if (eff.sealOnEnterChoice === 'symbol') return symbols.includes(token)
-        if (eff.sealOnEnterChoice === 'nonAutofail') return token !== 'autofail'
-        return true
-      })
-      if (pool.length) {
-        const chosen = eff.sealOnEnterChoice === 'random'
-          ? pool[Math.floor(randomValue(state) * pool.length)]
-          : pool.length === 1 ? pool[0] : requestChoice(state, { kind: 'seal', source: cardId, seat,
-            prompt: `选择要封印在「${cardName(cardId)}」上的标记。`,
-            options: pool.map(token => ({ id: token, label: tokenLabel(token) })) })
-        const token = pool.includes(chosen) ? chosen : pool[0]
-        sealChaosToken(state, token, asset.id)
-        info(state, events, `🔒 「${cardName(cardId)}」封印了 ${tokenLabel(token)}。`)
-      }
-    }
     info(state, events, `✔️ 「${cardName(cardId)}」已装备（${def.textZh || def.text || ''}）。`)
     // 入场即生效的支援（如「背包」「爱丽·霍洛维兹博士」）：
     // Phase 1 起走进入场钩子的唯一读点（描述子 kind: 'entersPlay'，回落旧 onEnter）。
@@ -474,7 +532,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     const playedFlags = descriptorOfKind(copyCode || cardId, 'played') || {}
     const entryFlags = registeredEntry(copyCode || cardId) || {}
     const disposal = {
-      removeAfterPlay: eff.removeAfterPlay === true || playedFlags.removeAfterPlay === true || entryFlags.removeAfterPlay === true,
+      removeAfterPlay: options.removeEventAfter === true || eff.removeAfterPlay === true || playedFlags.removeAfterPlay === true || entryFlags.removeAfterPlay === true,
       shuffleBackAfterPlay: eff.shuffleBackAfterPlay === true || playedFlags.shuffleBackAfterPlay === true || entryFlags.shuffleBackAfterPlay === true,
       // Phase 5（5c-24）：打出后去向的另外三项也认 played 描述子与条目级字段（旧 DSL 仍然优先）。
       exileAfterPlay: eff.exileAfterPlay === true || playedFlags.exileAfterPlay === true || entryFlags.exileAfterPlay === true,
@@ -488,16 +546,21 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     // 与 effect 数据体共用同一个读点，因此迁移一张事件卡不需要改引擎。
     const playedDescriptor = descriptorOfKind(copyCode || cardId, 'played')
     // 「临时武器」等从弃牌堆打出的事件需要知道自己来自哪里。
+    const playedContext = { fromDiscard: fromDiscard || origin === 'discard', copyCode: copyCode || null,
+      cardId, playCost: paid.playCostContext || null }
     const previousFromDiscard = state._fromDiscardCode
-    state._fromDiscardCode = fromDiscard ? cardId : null
+    state._fromDiscardCode = fromDiscard || origin === 'discard' ? cardId : null
     try {
       if (playedDescriptor?.resolve) {
         // Phase 5（5c-35）：quietPlay 的条目复刻「数据体事件卡」的日志——旧数据体不写
         // 「使用「X」：…」这一行，迁移后若照写会改玩家可见日志、重放指纹立刻对不上（03189）。
         executeDescriptor(state, { inv, source: { code: cardId, id: cardId }, descriptor: playedDescriptor,
-          context: { fromDiscard, copyCode: copyCode || null, cardId, playCost: paid.playCostContext || null }, events,
+          context: playedContext, events,
           silent: registeredEntry(cardId)?.quietPlay === true })
-      } else if (played) resolveEffect(state, seat, played, makeRuntime(state, events))
+      } else if (played) {
+        const source = cardEffectSource(state, { code: copyCode || cardId, id: cardId }, null, inv, { cardDef })
+        withEffectSource(state, source, () => resolveEffect(state, seat, played, makeRuntime(state, events)))
+      }
     } finally {
       if (previousFromDiscard === undefined) delete state._fromDiscardCode
       else state._fromDiscardCode = previousFromDiscard
@@ -507,7 +570,8 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       disposal.fromHandShuffle = true
     }
     delete state._playDisposal
-    if (copyCode && registeredEntry(cardId)?.copiesBeneathEvents) {
+    if (playedContext.victoryAttached) { /* Defeat resolution already placed the event in victory. */ }
+    else if (copyCode && registeredEntry(cardId)?.copiesBeneathEvents) {
       state.removedFromGame ||= []
       state.removedFromGame.push(cardId)
     } else if (disposal.removeAfterPlay) {
@@ -521,26 +585,38 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     else if (disposal.exileAfterPlay) exilePlayerCard(state, inv, cardId, events)
     else if (entryFlags.returnToHandAfterPlay) putInHand(state, inv, cardId)
     else if (disposal.becomesAsset) { /* 「危险预感」等：卡牌本身留在场上，由效果创建实例。 */ }
-    else if (disposal.shuffleBackAfterPlay && (fromDiscard || disposal.fromHandShuffle)) {
+    else if (disposal.shuffleBackAfterPlay && (fromDiscard || origin === 'discard' || disposal.fromHandShuffle)) {
       inv.deck = replacePlayerZoneCards(state, inv, shuffle([...inv.deck, cardId], () => randomValue(state)), 'shuffle')
       info(state, events, `「${cardName(cardId)}」洗回 ${inv.name} 的牌库。`)
+      const draw = entryFlags.drawAfterShuffleBack
+      if (draw) abilityApi(state, events).drawCards(inv.seat, draw)
     }
     // Phase 5（5a-18）：附属到地点/敌人的事件不弃掉，由效果数据里的 keepOnPlay 标记声明。
     // 条目声明 keepOnPlay，或这张牌正以「绑定」形态留在敌人身上时，不按普通事件弃掉。
     else if (registeredEntry(cardId)?.keepOnPlay !== true
-      && !state.enemies.some(enemy => enemy.bindMonster?.ownerSeat === seat && enemy.bindMonster.code === cardId)) disposePlayedEvent(inv, cardId)
+      && !state.enemies.some(enemy => enemy.bindMonster?.ownerSeat === seat && enemy.bindMonster.code === cardId)) {
+      const index = inv.discard.length
+      disposePlayedEvent(inv, cardId)
+      if (inv.discard[index] === cardId && hasWindowListener(state, 'eventPlayed')) discardedEvent = { code: cardId, index }
+    }
   }
   // 第 5 步 P7：事件打出并结算后开窗（05320 超级加倍；卡面用 api.replayPlayedCode 重放刚打出的事件）。
   // 只有事件卡开这个窗口；没有卡面挂载时 reactionWindow 是 no-op，不影响既有行为。
   if (def.type === 'event') {
     reactionWindow(state, 'eventPlayed', {
       when: 'eventPlayed', seat, cardId, cardCode: copyCode || cardId, location: inv.location,
+      ...(discardedEvent ? { discardedEvent } : {}),
       prompt: `${inv.name} 打出「${cardName(cardId)}」后`,
-    }, events)
+    }, events, { allowNested: options.grantedEvent === true })
   }
   const traits = (playedDef.traits || []).map(trait => String(trait).toLowerCase())
   if (traits.includes('spell')) triggerReaction(state, seat, 'spellPlayed', events, { location: inv.location, cardId })
+  if (def.type === 'asset' && playedAsset && registeredEntry(cardId)?.abilities?.some(row => row.trigger?.includes('assetPlayed'))) {
+    reactionWindow(state, 'assetPlayed', { when: 'assetPlayed', seat, assetId: playedAsset.id,
+      cardCode: cardId, location: inv.location }, events, { allowNested: true })
+  }
   if (!noAction) spendAction(state, inv)
+  return playedAsset
 }
 
 function doInvestigate(state, seat, opts, events, noSpend) {
@@ -619,8 +695,10 @@ function runInvestigate(state, seat, opts, events, noSpend) {
   const trustedFreshBonus = (trustedHost?.attachments || [])
     .reduce((sum, entry) => sum + (registeredEntry(entry.code)?.attachedSkillBonus || 0), 0)
   beginInvestigationFrame({ locationId: loc.id, retarget: null })
-  const testResult = performTest(state, seat, skill, difficulty, { source: { label: '调查', name: loc.name, code: loc.originalCode || loc.code, ...(opts.trackAssetSource ? { assetId: opts.assetId } : {}) }, baseValue,
+  const testResult = performTest(state, seat, skill, difficulty, { source: { label: '调查', name: loc.name, code: loc.originalCode || loc.code,
+    ...(opts.trackAssetSource || opts.assetId && trackTestAssetSource(state, inv, registeredEntry) ? { assetId: opts.assetId } : {}) }, baseValue,
     ...(opts.onToken ? { onToken: opts.onToken } : {}),
+    ...(opts.rerollFirstChaosToken ? { rerollFirstChaosToken: true } : {}),
     basicAction: opts.basicAction,
       investigation: { locationId: loc.id },
       testTarget: { kind: 'location', id: loc.id, actionKind: 'investigate' },
@@ -655,7 +733,8 @@ function runInvestigate(state, seat, opts, events, noSpend) {
       // 「未知的呼唤」需要知道本回合是否成功调查了被指定的地点。
       if (inv.investigatedTurnRound !== state.round) { inv.investigatedTurnRound = state.round; inv.investigatedThisTurn = [] }
       if (!inv.investigatedThisTurn.includes(loc.id)) inv.investigatedThisTurn.push(loc.id)
-      const gain = (1 + (opts.clueBonus || 0) + (opts.clueIfNoResources && inv.resources === 0 ? 1 : 0) + (r.clueBonus || 0)
+      const gain = (1 + (opts.clueBonus || 0) + (opts.successClueBonus?.(r) || 0) + (opts.clueBonusForResult?.(r) || 0)
+        + (opts.clueIfNoResources && inv.resources === 0 ? 1 : 0) + (r.clueBonus || 0)
         + (opts.successByClueEvery ? Math.floor(successBy / opts.successByClueEvery) : 0)) * (r.rewardMultiplier || 1)
       info(state, events, `${inv.name} 调查成功（${SKILL_NAMES[skill]} ${r.value} vs ${difficulty}）。`)
       triggerReaction(state, seat, 'investigateSuccess', events, { seat, location: loc.id, successBy: r.value - difficulty })

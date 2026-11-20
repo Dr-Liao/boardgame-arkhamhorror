@@ -15,6 +15,12 @@ export function payCommitResourceCost(state, owner, code, deps) {
   return true
 }
 
+// A remote permission belongs to the specific card, not every card in its owner's hand.
+export function allowsConnectingCommit(state, owner, code, deps) {
+  const profile = commitProfile(code)
+  return profile?.commitFrom === 'connecting' && canCommitToTest(state, owner, code, deps)
+}
+
 // Shared by hand, attached cards and effects which force a card into a test.
 export function canCommitToTest(state, owner, code, deps, options = {}) {
   const test = state.skillTest

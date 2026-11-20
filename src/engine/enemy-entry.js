@@ -1,4 +1,29 @@
 import { registeredEntry } from './ability.js'
+import { enemyBody } from './enemy-parts.js'
+
+export function enemyProtectionBlocks(state, inv, enemy, kind) {
+  if (!inv || !enemy) return false
+  const record = inv.enemyProtection
+  if (!record || record.round !== state.round) return false
+  const ids = kind === 'engage' ? record.engage : kind === 'damage' ? record.damage : []
+  const bodyId = enemyBody(state, enemy)?.id
+  return Array.isArray(ids) && (ids.includes(enemy.id) || (bodyId != null && ids.includes(bodyId)))
+}
+
+export function protectFromEnemies(state, seat, ids, { duration = 'endOfRound', cannotDamage = false } = {}) {
+  const inv = state.investigators[seat]
+  if (!inv || duration !== 'endOfRound' || !Array.isArray(ids)) return 0
+  const wanted = new Set(ids)
+  const known = state.enemies.filter(enemy => wanted.has(enemy.id) && !enemy.elite)
+  if (!known.length) return 0
+  const record = inv.enemyProtection?.round === state.round ? inv.enemyProtection
+    : (inv.enemyProtection = { round: state.round, engage: [], damage: [] })
+  for (const enemy of known) {
+    if (!record.engage.includes(enemy.id)) record.engage.push(enemy.id)
+    if (cannotDamage && !record.damage.includes(enemy.id)) record.damage.push(enemy.id)
+  }
+  return known.length
+}
 
 export function enemyCanEnterLocation(state, enemy, destination) {
   if (enemy?.enemyLocation && destination !== enemy.id) return false

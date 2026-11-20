@@ -296,7 +296,9 @@ test('批量返回的自动阶段按事件顺序演出，重绘不重播，减�
   await page.emulateMedia({reducedMotion:'reduce'})
   const f=await fixture(page)
   await page.getByRole('button',{name:'跳过演出'}).click()
-  await page.clock.install({time:new Date('2026-01-01T00:00:00Z')});await page.clock.pauseAt(new Date('2026-01-01T00:00:00Z'))
+  const pausedAt = new Date('2026-01-01T00:00:00Z')
+  await page.clock.install({ time: new Date(pausedAt.getTime() - 10_000) })
+  await page.clock.pauseAt(pausedAt)
   const events=[
     {kind:'phase',phase:'enemy',round:1,text:'猎手开始行动'},
     {kind:'automatic',phase:'enemy',round:1,text:'食尸鬼攻击罗兰',code:'01160',effect:'attack',damage:1,horror:1},
@@ -315,7 +317,10 @@ test('批量返回的自动阶段按事件顺序演出，重绘不重播，减�
   await expect(scene.getByRole('button',{name:'下一步',exact:true})).toHaveCount(0)
   await page.clock.runFor(1400)
   await expect(scene.locator('.ah-cinematic-detail')).toHaveText('食尸鬼攻击罗兰')
-  await expect(scene.locator('.ah-cinematic-hit')).toHaveText('♥ 1  ·  ◈ 1')
+  const hit = scene.locator('.ah-cinematic-hit')
+  await expect(hit).toHaveText('1 · 1')
+  await expect(hit.getByRole('img', { name: '生命' })).toBeVisible()
+  await expect(hit.getByRole('img', { name: '理智' })).toBeVisible()
   await expect(page.locator('.ah-phase-world-cue[data-effect="attack"]')).toBeVisible()
   await expect(page.locator('.ah-phase-ring')).toBeVisible()
   expect(await scene.evaluate(el=>el.getAnimations({subtree:true}).length)).toBe(0)
@@ -352,6 +357,45 @@ test('批量返回的自动阶段按事件顺序演出，重绘不重播，减�
   await page.getByRole('button',{name:'刷新局势'}).click()
   await expect(scene).toHaveCount(0)
   expect(await page.locator('.ah-table').evaluate(el=>el.classList.contains('ah-presenting'))).toBe(false)
+})
+
+for (const width of [1440, 390]) test(`抽到妄想症会从玩家牌库揭示再结算 (${width})`, async ({ page }) => {
+  const [{ fixture: engineFixture, move }, { viewState, viewEvents }] = await Promise.all([
+    import('./core-fixture.mjs'), import('../src/integration/observation.js'),
+  ])
+  await page.setViewportSize({ width, height: 844 })
+  const f = await fixture(page)
+  await page.getByRole('button', { name: '跳过演出' }).click()
+  const engine = engineFixture('01003', 2)
+  engine.investigators[0].deck.push('01097')
+  engine.revision = f.session.state.revision + 1
+  await f.update(session => { session.state = { ...viewState(engine, 0), revision: session.state.revision } })
+  await page.route('**/api/move', async route => {
+    const session = f.session
+    const events = viewEvents(move(engine, route.request().postDataJSON().move), 0)
+    const firstSeq = Math.max(-1, ...session.events.map(event => event.seq ?? -1)) + 1
+    session.events.push(...events.map((event, index) => ({ ...event, seq: firstSeq + index })))
+    session.state = viewState(engine, 0)
+    await route.fulfill({ json: { ok: true, session } })
+  })
+
+  await page.locator('.ah-dock-deck').click()
+  const scene = page.getByRole('region', { name: '弱点揭示' })
+  const back = scene.locator('.ah-weakness-reveal-back')
+  const resources = page.locator('.ah-pool-resource strong')
+  await expect(back).toHaveAttribute('src', /back_player\.webp$/)
+  await expect(back).toHaveCount(0)
+  await expect(scene.locator('.is-weakness .ah-table-art')).toHaveAttribute('data-image-state', 'displayable')
+  await expect(scene.locator('.is-weakness img:not([hidden])')).toBeInViewport()
+  await expect(scene).toContainText('妄想症')
+  await expect(resources).toHaveText('30')
+  await expect(scene.getByRole('button', { name: '跳过演出' })).toBeInViewport()
+  expect(await scene.evaluate(el => el.scrollWidth <= el.clientWidth + 1 && el.scrollHeight <= el.clientHeight + 1)).toBe(true)
+  if (width === 1440) await expect(scene).toHaveCount(0, { timeout: 8000 })
+  else await scene.getByRole('button', { name: '跳过演出' }).click()
+  await expect(resources).toHaveText('0')
+  await page.getByRole('button', { name: '刷新局势' }).click()
+  await expect(scene).toHaveCount(0)
 })
 
 test('顶部阶段提示无溢出，遭遇牌堆抽牌翻面，检定来源和逐次混乱抽取可见',async({page})=>{

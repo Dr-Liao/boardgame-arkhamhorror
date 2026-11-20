@@ -59,7 +59,8 @@ function hubMove(state, seat) {
   if (!state.campaign?.leadConfirmed && by('hubSetLeader')) return by('hubSetLeader')
   if (by('hubGoSetup')) return by('hubGoSetup')
   if (by('hubContinue')) return by('hubContinue')
-  // 席位准备：选人 → 自动构筑 → 完成。record.deck 为空说明这一席位还没准备好。
+  // 席位准备：选人 → 自动构筑 → 最终确认牌组 → 确认准备。
+  if (by('hubConfirmDeck')) return by('hubConfirmDeck')
   if (!record?.deck?.length) {
     if (by('hubAutoDeck')) return by('hubAutoDeck')
     if (by('hubSelectInvestigator')) return by('hubSelectInvestigator')
@@ -161,6 +162,7 @@ function ticHubPreparationMove(state, seat, recipe) {
   if (['interlude', 'scenarioSetup'].includes(state.uiState) && record && record.status !== 'active') {
     const selection = moves.find(move => move.action === 'hubSelectInvestigator')
     if (selection) return selection
+    if (by('hubConfirmDeck')) return by('hubConfirmDeck')
     if (by('hubAutoDeck')) return by('hubAutoDeck')
     if (by('hubDoneSeat')) return by('hubDoneSeat')
     return moves[0] ?? null
@@ -175,6 +177,7 @@ function ticHubPreparationMove(state, seat, recipe) {
       const selection = moves.find(move => move.action === 'hubSelectInvestigator')
       if (selection) return selection
     }
+    if (by('hubConfirmDeck')) return by('hubConfirmDeck')
     if (by('hubAutoDeck')) return by('hubAutoDeck')
   }
   return null

@@ -35,7 +35,7 @@ export default {
       label: '弃任意数量法术槽位支援；对交战的非精英敌人造成 X 伤害（X ≤ 空法术槽）',
       resolve: ({ state, inv, context, api }) => {
         while (true) {
-          const candidates = arcaneAssets(inv)
+          const candidates = arcaneAssets(inv).filter(asset => api.investigatorTools.canDiscardAsset(inv.seat, asset))
           if (!candidates.length) break
           const picked = api.choice({
             kind: 'discard', source: '09087', seat: inv.seat, canSkip: true,
@@ -45,8 +45,7 @@ export default {
           })
           if (!picked || picked === 'done') break
           const asset = candidates.find(item => item.id === picked)
-          if (!asset) break
-          api.discardAsset(inv.seat, asset)
+          if (!asset || !api.discardAsset(inv.seat, asset)) break
           api.info(`🔥 「爆炸结界」：从法术槽位弃掉「${api.cardName(asset.code)}」。`)
         }
         const paidX = Number(context?.playCost?.cost ?? 0)

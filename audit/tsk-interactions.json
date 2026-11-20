@@ -100,7 +100,7 @@
   "sources": [
     {
       "path": "audit/tsk-interactions-browser.json",
-      "sha256": "661cd1a61906e58cae6a22640be968ea13b0da8b764be9fa82a10cca8adf0c66"
+      "sha256": "f0f267a0e366ec28d2972d8fe474c1842e3a09fe8d76684730107344895b38f6"
     },
     {
       "path": "audit/tsk-node-acceptance.json",
@@ -116,7 +116,7 @@
     },
     {
       "path": "src/integration/mechanic-view.js",
-      "sha256": "c02e0a7ff61087c73f9c5f96e7f8c28f7a58d572ad357a19fb5d1f86d16db281"
+      "sha256": "779b67729d48080d6d2b996588d4185f79960dc331c215dd1691d88c7a7bf3be"
     },
     {
       "path": "tests/tsk-interaction-fixture.mjs",
@@ -128,11 +128,11 @@
     },
     {
       "path": "tests/tsk-interactions.test.mjs",
-      "sha256": "9c7624b622b04af337d49ed8f579219745e3feb808e1f15fe69af3f68aa75a83"
+      "sha256": "275c143401aaca1618ba01abe71f3838732d13b73ab5932098e13ff447146233"
     },
     {
       "path": "web/mechanic-ui.js",
-      "sha256": "3a89bd93c77283ed174b5ebc2a43db8d94f7032eeabe7637cb20669b3e78264e"
+      "sha256": "087207abc54c6413f31081b4092ee42ab06426f698a01de066d420abac8a6fde"
     }
   ]
 }

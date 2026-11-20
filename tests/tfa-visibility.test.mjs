@@ -13,6 +13,7 @@ function launchTfa() {
   step({ action: 'hubGoSetup' })
   step({ action: 'hubSelectInvestigator', code: '04001' })
   step({ action: 'hubAutoDeck' })
+  step({ action: 'hubConfirmDeck' })
   step({ action: 'hubDoneSeat' })
   step({ action: 'hubBeginScenario' })
   for (let guard = 0; state.pendingChoice && guard < 200; guard++) {
@@ -102,6 +103,7 @@ test('观察投影按座位一致：公开状态不因观察者不同而改变',
   for (const seat of [0, 1]) {
     step(seat, { action: 'hubSelectInvestigator', code: seat === 0 ? '04001' : '04002' })
     step(seat, { action: 'hubAutoDeck' })
+    step(seat, { action: 'hubConfirmDeck' })
     step(seat, { action: 'hubDoneSeat' })
   }
   step(0, { action: 'hubBeginScenario' })

@@ -14,12 +14,69 @@ import assert from 'node:assert/strict'
 import { readdirSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
-import { fixture, move, settle } from './core-fixture.mjs'
+import { answer, asset, fixture, move, settle, validateMove } from './core-fixture.mjs'
+import { registerCardAbilities } from '../src/engine/ability.js'
 import { createGameState, addBasicWeakness, spawnEnemy } from '../src/engine/engine.js'
 import { weaknessProfile } from '../src/engine/lifecycle.js'
 import { requestChoice } from '../src/engine/resolution.js'
+import { migrateState } from '../src/engine/save-migration.js'
 import { contentRegistry } from '../content/registered.js'
 import { encounterRules as tfaRules } from '../content/campaigns/theForgottenAge/encounter-rules.js'
+
+function drawFailedCryptChill(state, code = '01167') {
+  state.chaosBag = ['autofail']
+  state.encounterDeck = [code]
+  move(state, { action: 'debug', kind: 'encounter', targetSeat: 0 })
+  for (let index = 0; state.pendingChoice && index < 10; index++) {
+    const { kind, options, source } = state.pendingChoice
+    if (kind === 'asset' && source === '01167' || kind === 'discard-asset') return
+    answer(state, options.find(option => ['done', 'skip', 'self'].includes(option.id))?.id ?? options[0].id)
+  }
+  assert.equal(state.pendingChoice, null)
+}
+
+test('地窖寒风只列出可弃置的支援，合法选择会实际弃牌', () => {
+  const state = fixture('01001', 1, { legacyAutoStart: true })
+  const permanent = asset(state, '08071')
+  const bound = asset(state, '05019')
+  const partner = asset(state, '08714', { isStoryAsset: true })
+  const ordinary = asset(state, '01020')
+  const story = asset(state, '04051', { isStoryAsset: true })
+  drawFailedCryptChill(state)
+  assert.deepEqual(state.pendingChoice.options.map(option => option.id), [ordinary.id, story.id])
+  assert.match(validateMove(state, 0, { action: 'choose', choiceId: state.pendingChoice.id, optionId: permanent.id }), /无效选择/)
+  answer(state, story.id)
+  settle(state)
+  assert.deepEqual(state.investigators[0].assets.map(card => card.id), [permanent.id, bound.id, partner.id, ordinary.id])
+  assert.deepEqual(state.investigators[0].discard, [story.code])
+  assert.equal(state.investigators[0].damage, 0)
+})
+
+test('地窖寒风只有永久支援可见时改为造成 2 点伤害', () => {
+  for (const code of ['01167', 'cryptChill']) {
+    const state = fixture('01001', 1, { legacyAutoStart: true })
+    const permanent = asset(state, '08071')
+    drawFailedCryptChill(state, code)
+    assert.equal(state.pendingChoice, null)
+    assert.equal(state.investigators[0].damage, 2)
+    assert.deepEqual(state.investigators[0].assets.map(card => card.id), [permanent.id])
+    assert.deepEqual(state.investigators[0].discard, [])
+  }
+})
+
+test('旧存档恢复时清除地窖寒风待决菜单里的永久支援', () => {
+  const state = fixture('01001', 1, { legacyAutoStart: true })
+  const permanent = asset(state, '08071')
+  const flashlight = asset(state, '01020')
+  const second = asset(state, '01020')
+  drawFailedCryptChill(state)
+  state.pendingChoice.options.unshift({ id: permanent.id, label: '补给匮乏' })
+  const restored = migrateState(JSON.parse(JSON.stringify(state)))
+  assert.ok(restored.changes.some(change => change.includes('刷新受保护支援')))
+  assert.deepEqual(restored.state.pendingChoice.options.map(option => option.id), [flashlight.id, second.id])
+  answer(restored.state, flashlight.id)
+  assert.ok(restored.state.investigators[0].discard.includes(flashlight.code))
+})
 
 test('P0 选择事务拒绝缺失或重复的选项 id，避免产出不可提交的合法动作', () => {
   const context = () => ({ _resolution: { id: 1, answers: [], cursor: 0 } })
@@ -88,30 +145,24 @@ test('P0 addBasicWeakness 只从本战役开放、且已实现的基础弱点里
   }
 })
 
-test('P0 能力 API 覆盖条目里所有 api.* 调用（locName 回归）', async () => {
-  const factories = await Promise.all([
-    import('../src/engine/api-misc.js').then(module => module.createMiscApi),
-    import('../src/engine/api-test.js').then(module => module.createTestApi),
-    import('../src/engine/api-clue.js').then(module => module.createClueApi),
-    import('../src/engine/api-enemy.js').then(module => module.createEnemyApi),
-    import('../src/engine/api-card.js').then(module => module.createCardApi),
-    import('../src/engine/api-mechanics.js').then(module => module.createMechanicsApi),
-    import('../src/engine/investigator-mechanics.js').then(module => module.createInvestigatorApi),
-    import('../src/engine/player-mechanics.js').then(module => module.createPlayerApi),
-  ])
-  const proxy = new Proxy(function () {}, {
-    get: (target, key) => key === 'then' ? undefined : proxy,
-    apply: () => proxy,
+test('P0 能力 API 覆盖条目里所有 api.* 调用（locName 回归）', () => {
+  const state = fixture()
+  const code = 'ability-api-probe'
+  let abilityApi
+  registerCardAbilities({
+    code,
+    abilities: [{ kind: 'action', resolve: ({ api }) => { abilityApi = api } }],
   })
-  // abilityApi（engine.js）在 8 个工厂之外还挂 `mechanics` 域（P2/P4 原语面，api.mechanics.*），
-  // 这里按同一装配口径补上，避免把合法读点误报为缺失方法。
-  const api = Object.assign({ mechanics: {} }, ...factories.map(create => create(proxy, proxy, proxy)))
+  const source = asset(state, code)
+  move(state, { action: 'ability', assetId: source.id, abilityIndex: 0 })
+  settle(state)
+  assert.ok(abilityApi, '探针须从实际结算收到装配后的能力 API')
   const entries = fileURLToPath(new URL('../src/cards/entries/', import.meta.url))
   const missing = new Map()
   for (const name of readdirSync(entries).filter(file => file.endsWith('.js') && !['index.js', '_shared.js'].includes(file))) {
     const text = readFileSync(entries + name, 'utf8')
     for (const match of text.matchAll(/\bapi\.([A-Za-z_$][\w$]*)/g)) {
-      if (!(match[1] in api)) {
+      if (!(match[1] in abilityApi)) {
         const codes = missing.get(match[1]) || []
         codes.push(name.replace(/\.js$/, ''))
         missing.set(match[1], codes)

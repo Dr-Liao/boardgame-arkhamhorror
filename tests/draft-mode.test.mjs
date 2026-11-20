@@ -24,12 +24,16 @@ function setup(players = [{ seat: 0, role: 'human' }]) {
   return s
 }
 function complete(s) {
-  for (let n = 0; n < 100 && !s.campaign.investigators[0].startingDeckReady; n++) {
+  for (let n = 0; n < 100 && s.campaign.investigators[0].draftMode.phase === 'initial'; n++) {
     const move = legalMoves(s, 0).find(move => move.action === 'hubDraftPick')
     assert.ok(move, 'initial draft can finish')
     play(s, move)
   }
+  assert.equal(s.campaign.investigators[0].deck.some(code => ALL_CARDS[code]?.subtype === 'basicweakness'), false)
+  assert.ok(validateMove(s, 0, { action: 'hubDoneSeat' }))
+  play(s, { action: 'hubConfirmDeck' })
   assert.equal(s.campaign.investigators[0].startingDeckReady, true)
+  assert.equal(s.campaign.investigators[0].deck.filter(code => ALL_CARDS[code]?.subtype === 'basicweakness').length, 1)
 }
 function interlude(s) {
   complete(s)
@@ -66,7 +70,8 @@ test('初始扩容永久牌提高目标张数，不占普通牌位，达到新�
   record.draftMode.options = ['01016', null, null]
   play(s, { action: 'hubDraftPick', code: '01016' })
   record = s.campaign.investigators[0]
-  assert.equal(record.startingDeckReady, true)
+  assert.equal(record.startingDeckReady, false)
+  assert.equal(validateMove(s, 0, { action: 'hubConfirmDeck' }), null)
   assert.equal(draftDeckStatus(record).size, 45)
   assert.equal(draftDeckStatus(record).count, 45)
 })
@@ -160,7 +165,8 @@ test('模式入口、五次初始刷新、服务端拒绝绕过选牌和伪造�
   assert.equal(arkham.settingsSpec.find(spec => spec.key === 'deckMode').default, 'standard')
   const s = setup()
   let r = s.campaign.investigators[0]
-  assert.equal(r.deck.length, 3, 'only signatures and weaknesses, no starter cards')
+  assert.equal(r.deck.length, 2, 'only signature cards and signature weaknesses')
+  assert.ok(validateMove(s, 0, { action: 'hubConfirmDeck' }))
   for (let n = 0; n < 5; n++) play(s, { action: 'hubDraftRefresh' })
   r = s.campaign.investigators[0]
   assert.equal(r.draftMode.freeRerolls, 0)

@@ -2,6 +2,26 @@ import { ALL_CARDS } from '../cards/cards-data.js'
 import { cannotLeaveHand, registeredEntry } from './ability.js'
 import { findBondedMain, bondedSetKey } from './bonded.js'
 
+export function splicePlayerDiscard(inv, index, count, ...codes) {
+  if (index < 0) return []
+  const removed = inv.discard.splice(index, count, ...codes)
+  if (inv.deferredEventReturns) {
+    const next = inv.deferredEventReturns.flatMap(card => {
+      if (card.index < index) return [card]
+      if (card.index < index + removed.length) return []
+      return [{ ...card, index: card.index + codes.length - removed.length }]
+    })
+    if (next.length) inv.deferredEventReturns = next
+    else delete inv.deferredEventReturns
+  }
+  return removed
+}
+
+export function clearPlayerDiscard(inv) {
+  inv.discard = []
+  delete inv.deferredEventReturns
+}
+
 export function replacePlayerZoneCards(state, inv, codes, reason) {
   return codes.filter(code => {
     if (registeredEntry(code)?.zoneReplacement?.[reason] !== 'bonded') return true

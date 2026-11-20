@@ -17,6 +17,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 
 import { CARD_ABILITY_ENTRIES, CARD_ABILITY_CODES } from '../src/cards/card-abilities.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
+import { abilityShim } from '../src/engine/ability.js'
 import { actionPreview } from '../src/engine/engine.js'
 import { fixture, enemy } from './core-fixture.mjs'
 import { buildCardIndex, entryFiles } from '../tools/build-card-index.mjs'
@@ -171,14 +172,17 @@ test('带豁免类行动指示的 [action] 能力：发动预览不出现借机�
   for (const entry of CARD_ABILITY_ENTRIES) {
     const card = ALL_CARDS[entry.code]
     if (!card) continue
-    ;(entry.abilities || []).forEach((ability, index) => {
-      if (ability.kind !== 'action') return
-      const kind = declaredKinds(ability).find(isExemptKind)
+    abilityShim(entry.code).forEach(({ descriptor }, index) => {
+      if (descriptor.kind !== 'action') return
+      const kind = declaredKinds(descriptor).find(isExemptKind)
       if (!kind) return
       const state = fixture()
-      state.investigators[0].assets = [{ id: 'preview-asset', code: entry.code, exhausted: false }]
+      const inv = state.investigators[0]
+      const assetId = descriptor.fromHand ? `hand-ability:0:${entry.code}` : 'preview-asset'
+      if (descriptor.fromHand) inv.hand.unshift(entry.code)
+      else inv.assets = [{ id: assetId, code: entry.code, exhausted: false }]
       enemy(state, { damage: 2 })
-      const preview = actionPreview(state, 0, { action: 'ability', assetId: 'preview-asset', abilityIndex: index })
+      const preview = actionPreview(state, 0, { action: 'ability', assetId, abilityIndex: index })
       if (preview?.opportunityAttacks?.length) problems.push(`${entry.code}（${card.name}）第 ${index} 条能力预览仍出现借机攻击`)
     })
   }

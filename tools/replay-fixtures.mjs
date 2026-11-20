@@ -32,9 +32,9 @@ const describeMove = move => move ? `${move.action}${move.cardId ? `(${move.card
 // 动作日志里的展示字段（label/explanation）不进基线：
 // 它们不影响状态，却会让"改一句卡面文案"变成一次全量基线重采。
 function compactMoves(moves) {
-  return moves.map(({ seat, move }) => {
+  return moves.map(({ move, ...entry }) => {
     const { label, explanation, ...rest } = move || {}
-    return { seat, move: rest }
+    return { ...entry, move: rest }
   })
 }
 

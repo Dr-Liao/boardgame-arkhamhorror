@@ -181,8 +181,7 @@ function scheduleReactionPass(session) {
   return true
 }
 
-// 反应提示开关统一成一颗可开关的闪电图标（卡面/详情/角色面板同一个控件，不再显示「反应开/反应关」文字）。
-// 有自动资格的卡（hasAutoReaction）用三态按钮；只有快速开关的卡是两态 skip ↔ ask，图标仍是同一颗闪电。
+// 卡面、详情和角色面板共用反应提示开关。
 function renderReactionToggle(s, code) {
   if (!s) return null
   const def = ahCardDef(s, code)
@@ -196,8 +195,8 @@ function renderReactionToggle(s, code) {
 }
 
 // 三态按钮：skip → ask → auto → skip。一个命中区，图标随状态变化：
-// skip=暗闪电+斜杠，ask=亮闪电，auto=亮齿轮（旋转）。hover/aria 都描述当前状态与下一档。
-// 没有自动资格的卡只有 skip/ask 两态，始终用闪电图标。
+// skip=暗色反应图标+斜杠，ask=亮色反应图标，auto=旋转齿轮。hover/aria 都描述当前状态与下一档。
+// 没有自动资格的卡只有 skip/ask 两态。
 const REACTION_MODE_NEXT = { skip: 'ask', ask: 'auto', auto: 'skip' }
 const REACTION_MODE_NEXT_NO_AUTO = { skip: 'ask', ask: 'skip', auto: 'skip' }
 // 显式 key 表：i18n 守卫只认 t(字面量)，不要用模板拼接。
@@ -236,7 +235,7 @@ function renderReactionModeButton(s, seat, code, def) {
       resetReactionSync()
       render()
     },
-  }, tableIcon(threeWay && mode === 'auto' ? 'gear' : 'action'),
+  }, tableIcon(mode === 'auto' ? 'gear' : 'reaction'),
     mode === 'skip' ? h('i', { className: 'ah-reaction-slash', 'aria-hidden': 'true' }) : null)
 }
 function renderReactionModes(s, inv) {
@@ -875,7 +874,7 @@ function renderLocationDetail(detail) {
   const duelMoves = [...moves.map(move => ({ move, enemyFace: false })), ...enemyMoves.map(move => ({ move, enemyFace: true }))]
   const usedHints = !state.busy && !presentation.isBlocking && canAct(s, decision) ? usedActionHints(st, loc.id) : []
   const people = st.investigators.filter(inv => inv.location === loc.id && !inv.defeated && !inv.resigned)
-  const enemies = st.enemies.filter(enemy => enemy.location === loc.id)
+  const enemies = st.enemies.filter(enemy => enemy.location === loc.id && !enemy.partOf)
   const attachments = [...locationAttachments(s, loc), ...(st.storyAssets || []).filter(asset => asset.location === loc.id).map(asset => ({...ahCardDef(s,asset.code),...asset}))]
   return h('div', { className: 'ah-location-dossier' },
     h('header', {}, h('small', {}, t('game.location.header')),h('h2', {},loc.name),h('span', {className:'ah-location-state'},loc.revealed ? t('game.location.revealed') : t('game.location.hidden'))),
@@ -1081,7 +1080,15 @@ async function cardMove(move, displayedSession, options = {}) {
     state.arkhamHubPending = { sessionId: session.sessionId, seat }
     state.arkhamHubTab = 'departure'
   }
-  render()
+  const table = session.localActionStamp && !pending && ['draw', 'resource'].includes(move.action)
+    ? document.querySelector('.ah-table') : null
+  const status = table?.querySelector('.bg-game-status')
+  if (status && table.dataset.sessionId === session.sessionId) {
+    // The accepted revision rebuilds the table. Until then update the controls in place.
+    table.setAttribute('aria-busy', 'true')
+    status.textContent = status.title = t('game.status.submittingYours')
+    for (const button of table.querySelectorAll('button.ah-action, button.ah-dock-deck')) button.disabled = true
+  } else render()
   let waiting = true, progressTimer
   const sameSession = () => state.session?.sessionId === session.sessionId
   const pollProgress = async () => {
@@ -1096,9 +1103,10 @@ async function cardMove(move, displayedSession, options = {}) {
     } catch { /* The submitted move remains the authority for success/errors. */ }
     if (waiting && sameSession()) progressTimer = setTimeout(pollProgress, 500)
   }
-  // /move waits for the AI loop. Read committed revisions while it is pending
-  // so the presentation queue can run during model latency, not only afterward.
-  progressTimer = setTimeout(pollProgress, 150)
+  // 联机和带 AI 的本地局可能在提交期间继续推进，轮询可提前拿到中间局面。
+  if (session.online || session.players.some(player => player.role === 'ai')) {
+    progressTimer = setTimeout(pollProgress, 150)
+  }
   try {
     const { label, ...mv } = move
     const version = Number.isSafeInteger(st.revision) ? { revision: st.revision } : {}
@@ -1113,6 +1121,7 @@ async function cardMove(move, displayedSession, options = {}) {
       // P1.2：联机客人拿到的命令响应只有摘要（无 session），权威状态随后由快照 + 长轮询送达；
       // 这里不能把 state.session 覆盖成 undefined，也不要用缺失的 session 计算反馈 revision。
       if (r.session) state.session = r.session
+      if (move.action === 'hubSetDeck' || move.action === 'hubAutoDeck') state.arkhamHubTab = 'deck'
       if (batchChoices) state.arkhamChoiceDraft = null
       state.arkhamSelection = null
       if (state.arkhamMapView) state.arkhamMapView.selectedId = null
@@ -1692,6 +1701,8 @@ function renderCardGame(s, autoPassing = false) {
     }),
     renderMechanicSummary(h, st, {
       seat: mySeat(s),
+      tdcOpen: state.arkhamTdcPanel === s.sessionId,
+      onTdcToggle: open => { state.arkhamTdcPanel = open ? s.sessionId : null },
       // 2026-11-13 P1-2：密钥面板的 Shift/移交按钮直接提交 legalMoves 里的引擎动作。
       moves: st.legalMoves || [],
       canAct: canAct(s, decisionSeatOf(s)),
@@ -1946,7 +1957,7 @@ function renderLocationNode(s, loc, opts = {}) {
   const choiceMove = choiceTargetMove(s, loc.id)
   const adjacent = !!(move && !current)
   const here = st.investigators.filter((i) => !i.defeated && !i.resigned && i.location === loc.id)
-  const enemiesHere = st.enemies.filter((e) => e.location === loc.id)
+  const enemiesHere = st.enemies.filter(e => e.location === loc.id && !e.partOf)
   const storyHere = (st.storyAssets || []).filter(asset => asset.location === loc.id)
   const attachedCards = locationAttachments(s, loc)
   const attachments = [...attachedCards, ...storyHere.map(asset => ({ ...ahCardDef(s,asset.code), ...asset }))]
@@ -2429,7 +2440,7 @@ function renderLocationMap(s, humanTurn) {
     if (loc.virtualEmptySpace) return h('div', {
       className: 'ah-map-node ah-map-void', 'data-location-id': loc.id,
       style: { left: point.x + 'px', top: point.y + 'px', width: MAP_CARD_WIDTH + 'px', padding: '8px', border: '1px dashed #8b80b8', borderRadius: '12px', background: '#171326' },
-    }, h('h3', {}, loc.name), st.enemies.filter(enemy => enemy.location === loc.id).map(enemy => renderEnemyChip(s, enemy, { map: true })))
+    }, h('h3', {}, loc.name), st.enemies.filter(enemy => enemy.location === loc.id && !enemy.partOf).map(enemy => renderEnemyChip(s, enemy, { map: true })))
     const node = renderLocationNode(s, loc, { humanTurn, onDragStart: startDrag, onPreview: focusLines,
       style: { left: point.x + 'px', top: point.y + 'px' } })
     node.classList.add('ah-map-node')

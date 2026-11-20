@@ -118,9 +118,13 @@ function runtimeApi(state, overrides = {}) {
       state.investigators[seat].assets.push(asset)
       return asset
     },
+    canDiscardAsset: (seat, assetId) => state.investigators[seat].assets.some(asset => asset.id === assetId),
     discardAsset: (seat, assetId) => {
       const inv = state.investigators[seat]
+      const asset = inv.assets.find(asset => asset.id === assetId)
+      if (!asset) return null
       inv.assets = inv.assets.filter(asset => asset.id !== assetId)
+      return asset.code
     },
     spendClues: (seat, n) => { state.investigators[seat].clues -= n },
     damageEnemy: (enemyId, amount) => {

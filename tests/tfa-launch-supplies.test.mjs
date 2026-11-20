@@ -33,6 +33,7 @@ function launch({ purchases = [], picks } = {}, players = [{ seat: 0, role: 'hum
   for (const player of players) {
     move(player.seat, { action: 'hubSelectInvestigator', code: ['04001', '04002'][player.seat] || '04001' })
     move(player.seat, { action: 'hubAutoDeck' })
+    move(player.seat, { action: 'hubConfirmDeck' })
     move(player.seat, { action: 'hubDoneSeat' })
   }
   move(0, { action: 'hubBeginScenario' })
@@ -78,6 +79,7 @@ test('M5 序幕：远征求领队在可选的调查员中产生', () => {
   otherStep({ action: 'hubGoSetup' })
   otherStep({ action: 'hubSelectInvestigator', code: '01001' })
   otherStep({ action: 'hubAutoDeck' })
+  otherStep({ action: 'hubConfirmDeck' })
   otherStep({ action: 'hubDoneSeat' })
   otherStep({ action: 'hubBeginScenario' })
   for (let guard = 0; other.pendingChoice && guard < 100; guard++) {

@@ -34,6 +34,7 @@ test('队长可在调查纪事二次确认后从历史关卡创建分支', async
     { action: 'hubGoSetup' },
     { action: 'hubSelectInvestigator', code: '01001' },
     { action: 'hubSetDeck', codes: deck },
+    { action: 'hubConfirmDeck' },
     { action: 'hubDoneSeat' },
     { action: 'hubBeginScenario' },
   ]) await submit(move)

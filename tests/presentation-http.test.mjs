@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import { after, before } from 'node:test'
 import { loadMods } from '../../../lib/mods.js'
 import { createServer } from '../../../lib/server.js'
+import { LOCALIZED_ART_SOURCE } from '../presentation/images.js'
 import { cardFaceText } from '../web/catalog.js'
 
 let base
@@ -39,7 +40,7 @@ test('目录元数据提供筛选口径、资源版本与图片语言来源', as
   assert.ok(body.availabilityStatuses.length >= 1)
   assert.equal(body.images.localizedLanguage, 'zh')
   assert.equal(body.images.verifiedRemoteImages, 0)
-  assert.equal(body.images.source.cardArts, 5065)
+  assert.equal(body.images.source.cardArts, LOCALIZED_ART_SOURCE.cardArts)
   assert.equal(body.types.reduce((sum, type) => sum + type.count, 0), 5930)
 })
 
@@ -222,10 +223,14 @@ test('对局响应只嵌入本局所需卡牌定义，图鉴不扩大运行许�
   }
   assert.equal(state.cards['09001'], undefined)
   assert.ok(!JSON.stringify(state).includes('"images"'))
+  const catalogOnly = await get('/api/mods/arkhamhorror/catalog?type=investigator&availability=catalog-only&limit=1')
+  assert.equal(catalogOnly.status, 200)
+  const [investigator] = catalogOnly.body.cards
+  assert.ok(investigator)
   const illegal = await get('/api/start', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ modId: 'arkhamhorror', settings: { opponents: [], teammates: 0, playerInvestigator: '10001' } }),
+    body: JSON.stringify({ modId: 'arkhamhorror', settings: { opponents: [], teammates: 0, playerInvestigator: investigator.code } }),
   })
   assert.equal(illegal.body.ok, false)
 })

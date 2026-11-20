@@ -90,6 +90,7 @@ test('P2 新战役局外流程、原子存档、显式读取、删除与另存�
     assert.ok(pickInvestigator, '局外准备阶段应至少留一个可选调查员')
     await submit({ action: 'hubSelectInvestigator', code: pickInvestigator.code })
     await submit({ action: 'hubAutoDeck' })
+    await submit({ action: 'hubConfirmDeck' })
     await submit({ action: 'hubDoneSeat' })
     assert.equal(session.state.uiState, 'scenarioSetup')
     assert.equal(session.state.hubReady, true)
@@ -200,6 +201,7 @@ test('P2 关卡结算停在局外页，升级完成后主动进入下一关', { 
       { action: 'hubSelectScenario', scenarioId: 'theGathering' },
       { action: 'hubGoSetup' }, { action: 'hubSelectInvestigator', code: '01001' },
       { action: 'hubSetDeck', codes: buildDeck(INVESTIGATORS['01001'], { seat: 0, seed: 1 }).deck.filter(code => PLAYER_CARD_CODES.includes(code)) },
+      { action: 'hubConfirmDeck' },
       { action: 'hubDoneSeat' }, { action: 'hubBeginScenario' },
     ]) await submit(move)
     for (let i = 0; session.state.uiState !== 'scenarioResult'; i++) {

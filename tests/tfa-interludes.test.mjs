@@ -22,6 +22,7 @@ function launch(purchases = ['provisions', 'provisions']) {
   step({ action: 'hubGoSetup' })
   step({ action: 'hubSelectInvestigator', code: '04001' })
   step({ action: 'hubAutoDeck' })
+  step({ action: 'hubConfirmDeck' })
   step({ action: 'hubDoneSeat' })
   step({ action: 'hubBeginScenario' })
   const bought = [...purchases]

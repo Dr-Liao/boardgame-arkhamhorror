@@ -15,23 +15,12 @@ import { describeArkhamDbDeck, fetchArkhamDbDeck, resolveArkhamDbDeck } from './
 import { findArkhamDbRecommendation } from './arkhamdb-recommendation.js'
 import recommendedDecks from './recommended-decks.json' with { type: 'json' }
 import { scenarioImageManifest } from './scenario-images.js'
+import { customizationPresentation } from './customization-presentation.js'
 
 const FILTER_KEYS = Object.freeze(['q', 'code', 'name', 'type', 'klass', 'packCode', 'cost', 'xp', 'campaign', 'sort', 'effectStatus', 'availability', 'offset', 'limit'])
-function customizationPresentation({ code, customizationOptions }) {
-  const textZh = ALL_CARDS[code]?.customizationTextZh || ''
-  const rows = [...textZh.matchAll(/^(□+)[ \t]*([^。\r\n]+)。[ \t]*(.*)$/gm)]
-  // Only use the localized rows when they align with the registered checklist.
-  const aligned = rows.length === customizationOptions.length
-    && customizationOptions.every((option, index) => rows[index][1].length === option.checks)
-  return customizationOptions.map(({ name, checks, text, implemented }, index) => ({
-    name, checks, text, implemented: implemented !== false,
-    ...(aligned ? { nameZh: rows[index][2], textZh: rows[index][3] } : {}),
-  }))
-}
-
 const CUSTOMIZATION_OPTIONS_BY_CODE = Object.fromEntries(CARD_ABILITY_ENTRIES
   .filter(entry => entry.customizationOptions?.length)
-  .map(entry => [entry.code, customizationPresentation(entry)]))
+  .map(entry => [entry.code, customizationPresentation(entry.code, entry.customizationOptions)]))
 // 目录卡面只含印刷值；「每名调查员 +X 生命」这类剧本常驻修正写在 content 里。
 // 图鉴详情补上它，浏览器才能按调查员人数算出有效生命（例如 02058：印刷 7 + 每人 3）。
 const ENEMY_RULES_BY_ORIGINAL = new Map()

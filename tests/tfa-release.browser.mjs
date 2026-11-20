@@ -76,6 +76,8 @@ for (const [viewport, width, height] of [['desktop', 1440, 950], ['mobile', 390,
     await hub.getByRole('button', { name: '选择调查员', exact: true }).click()
     await hub.getByRole('button', { name: /选择调查员：里奥/ }).click()
     await hub.getByRole('button', { name: /使用推荐卡组/ }).click()
+    await hub.getByRole('button', { name: '卡组构筑', exact: true }).click()
+    await hub.getByRole('button', { name: '最终确认牌组', exact: true }).first().click()
     await hub.getByRole('button', { name: '确认准备', exact: true }).first().click()
     await hub.getByRole('navigation', { name: '战役局外页面' })
       .getByRole('button', { name: '开始关卡', exact: true }).click()

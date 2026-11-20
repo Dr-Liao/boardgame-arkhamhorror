@@ -1,5 +1,5 @@
 import { putInHand } from './hand-entry.js'
-import { replacePlayerZoneCards } from './player-zones.js'
+import { replacePlayerZoneCards, splicePlayerDiscard } from './player-zones.js'
 // card-ops.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 卡与目标的具体操作：补充使用次数、装弹、按特性检索、选择调查员/敌人/猎物。
 // 读点：搜索类效果（api.searchDeck / lookAt）与敌人目标解析。
@@ -155,7 +155,7 @@ export function createCardOps(deps) {
     if (answer === 'skip') return
     const chosen = matches[Number(answer)]
     const idx = inv.discard.indexOf(chosen.code)
-    if (idx >= 0) inv.discard.splice(idx, 1)
+    if (idx >= 0) splicePlayerDiscard(inv, idx, 1)
     putInHand(state, inv, chosen.code)
     info(state, events, `${inv.name} 从弃牌堆取回「${cardName(chosen.code)}」。`)
   }

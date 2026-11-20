@@ -1,0 +1,454 @@
+{
+  "id": "theDoomOfArkhamPartII",
+  "campaignId": "theDrownedCity",
+  "locales": {
+    "en": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "The Doom of Arkham Part II",
+          "children": [
+            {
+              "id": "theDoomOfArkham1",
+              "text": "The Doom of Arkham 1: You and the others watch helplessly as Cthulhu levels the rest of Rivertown. Black water floods the streets and ruins in his wake. “Randall’s behind this. I don’t know how or why, but I think he wanted us to wake that thing up!” says Ruby. Hungry flames begin to lick at the wreckage as ruptured gas lines ignite, illuminating the legions of Cthulhu’s spawn as they descend on the city. “If that’s true, then we had better find a way to stop it,” Andy says. They look to you for direction."
+            },
+            {
+              "id": "mustDecide",
+              "text": "The investigators must decide (choose one):"
+            },
+            {
+              "id": "lastStand",
+              "text": "“We need to take a last stand and drive him out with sheer firepower.” Proceed to The Doom of Arkham 2."
+            },
+            {
+              "id": "anotherWay",
+              "text": "“There must be another way.” Skip to The Doom of Arkham 3. (You may only choose this option if there are 5 or more Artifacts checked/listed and not crossed off under “Artifacts Earned” in your Campaign Log.)"
+            },
+            {
+              "id": "theDoomOfArkham2",
+              "text": "The Doom of Arkham 2: “I like how you think,” Inspector Legrasse says as he loads his gun with a satisfying click. Together, you form a plan to fend off the ancient menace. Ruby suggests that some of you take to the rooftops, while Legrasse phones in some connections with the Arkham police. If you stand together, you may be able to draw Cthulhu’s ire away from Arkham itself. “This is the worst idea I’ve ever heard, but I don’t think we have any other choice,” Ruby says. You see a glimmer of something—is it fear?—in her eyes. You have no other choice but to fight."
+            },
+            {
+              "id": "recordStoodTogether",
+              "text": "In your Campaign Log, record the investigators stood together."
+            },
+            {
+              "id": "alliesIntoPlay",
+              "text": "Search the Expedition and The Doom of Arkham encounter sets, each investigator’s deck, and all in- and out-of-play areas for the following story assets: John Raymond Legrasse, Ruby Standish, and Andy Van Nortwick. Put each of these assets into play under the control of any investigator(s). Each of these assets does not take up an ally slot during this scenario."
+            },
+            {
+              "id": "theDoomOfArkham3",
+              "text": "The Doom of Arkham 3: Andy beckons you all into a deserted diner as the waters continue to rise. “This isn’t my field of expertise,” he says, laying a stack of loose papers on a table. “But I’ve been translating the glyphs from R’lyeh, and I think we might be able to stop this with, uhm…well, a ritual.” Ruby waves Inspector Legrasse’s objections aside as Andy outlines a “ritual of returning” he discovered in the ancient courts of R’lyeh. By using pieces of the ancient city of R’lyeh, you may be able to seal the ancient one away."
+            },
+            {
+              "id": "theDoomOfArkham3Continued",
+              "text": "“The glyphs I translated seemed to imply that Cthulhu and his, er, children are bound to R’lyeh itself—” he lays out a map of Arkham. “If we place these artifacts around the city like so, I can recite the ritual and banish him. However, I’ll need you all to draw his attention, keep his eyes on you, while I prepare.” Andy holds up one of the artifacts you recovered from Randall, turning it over in his hand. It glows with an unnatural light."
+            },
+            {
+              "id": "theDoomOfArkham3Ruby",
+              "text": "“I’ll head to the Arkham police department,” says Inspector Legrasse. “I’ve got some connections there. We should be able to get some officers out on the streets to help the survivors.” Ruby, who has been silent since Andy outlined the plan, crosses her arms. “So you want us to rile up the thing that is literally destroying the city so you can recite some words and hide some relics.” She takes a puff of her cigarette. “What could go wrong?”"
+            },
+            {
+              "id": "recordAlliesHaveAPlan",
+              "text": "In your Campaign Log, record your allies have a plan."
+            },
+            {
+              "id": "alliesSetAside",
+              "text": "Search the Expedition and The Doom of Arkham encounter sets, each investigator’s deck, and all in- and out-of-play areas for the following story assets: John Raymond Legrasse, Ruby Standish, and Andy Van Nortwick. Set them aside, out of play."
+            },
+            {
+              "id": "addToken",
+              "text": "Add 1 [elder_thing] token to the chaos bag for the remainder of the campaign."
+            },
+            {
+              "id": "proceedToSetup",
+              "text": "Proceed to Setup."
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "setup",
+          "children": [
+            {
+              "id": "gatherSets",
+              "text": "Gather all cards from the following encounter sets: The Doom of Arkham Part II, Domination, Elder Mist, Flood, Star Spawn, Agents of Cthulhu, and The Midnight Masks. "
+            },
+            {
+              "id": "midnightMasksLocations",
+              "text": "When gathering the The Midnight Masks encounter set, only gather the location cards. Do not gather any other cards from this set."
+            },
+            {
+              "id": "placeLocations",
+              "text": "Put each location into play according to the location placement diagram."
+            },
+            {
+              "id": "arkhamLocations",
+              "text": "Gather each location from the The Midnight Masks set along with the Eastern Rooftops and Western Rooftops. Put one of the two Downtown locations and one of the two Southside locations into play at random and remove the other versions of those locations from the game. Put Northside, Easttown, St. Mary’s Hospital, and Miskatonic University into play."
+            },
+            {
+              "id": "rivertownRuined",
+              "text": "Put Rivertown (Ruined) from the The Doom of Arkham Part II encounter set into play. Remove the other version of Rivertown from the game."
+            },
+            {
+              "id": "setAsideLocations",
+              "text": "Set each other location aside, out of play."
+            },
+            {
+              "id": "cthulhuAtRivertown",
+              "text": "Place the single-sided Cthulhu (Ancient Evil) enemy at Rivertown."
+            },
+            {
+              "id": "startAtRivertown",
+              "text": "Each investigator begins play at Rivertown."
+            },
+            {
+              "id": "cthulhuBoard",
+              "text": "Assemble the Cthulhu Board according to the diagram (See The Cthulhu Board)."
+            },
+            {
+              "id": "placeBoard",
+              "text": "Find the double-sided punchboard included in this box and place it above the act and agenda decks, Cthulhu side faceup."
+            },
+            {
+              "id": "placeFacets",
+              "text": "Place each copy of the three Cthulhu enemies (Hoary Wings, Fierce Visage, and Wicked Claw) on the Cthulhu Board, non-Enraged side faceup, so that they form a full picture of Cthulhu."
+            },
+            {
+              "id": "buildCthulhuDeck",
+              "text": "Shuffle the 18 Cthulhu Cards to assemble the Cthulhu deck (See The Cthulhu Deck). Place this deck next to the Cthulhu Board."
+            },
+            {
+              "id": "checkCampaignLogActAgenda",
+              "text": "Check your Campaign Log to build the act and agenda deck:"
+            },
+            {
+              "id": "fightBack",
+              "text": "If the investigators stood together, build the agenda deck using agenda 1a—“The Doom of Arkham” and the act deck using act 1a—“Fight Back!” Remove each other act and agenda from the game."
+            },
+            {
+              "id": "banishHim",
+              "text": "If your allies have a plan, build the agenda deck using agenda 1a—“The Doom of Arkham” and the act deck using act 1a—“Banish Him!” Set special agenda—“The Final Seal” aside, out of play. Remove each other act and agenda from the game."
+            },
+            {
+              "id": "checkCampaignLog",
+              "text": "Check your Campaign Log."
+            },
+            {
+              "id": "artifacts",
+              "text": "Gather all earned artifacts that are not crossed out under “Artifacts Earned.” Put each of them into play under an investigator’s control, divided as evenly as possible."
+            },
+            {
+              "id": "floodedNeighborhoods",
+              "text": "Add the flood tokens to the token pool and increase the flood level of each location listed under “Flooded Neighborhoods.”"
+            },
+            {
+              "id": "starSpawnAside",
+              "text": "Set the Star Spawn encounter set aside, out of play."
+            },
+            {
+              "id": "cthulhusRage",
+              "text": "Place 1 resource on the scenario reference card, under “Cthulhu’s Rage” (See Cthulhu’s Rage). If there are only 1 or 2 players, place 1 additional resource on the scenario reference card."
+            },
+            {
+              "id": "buildEncounterDeck",
+              "text": "Shuffle the remaining encounter cards to build the encounter deck."
+            },
+            {
+              "id": "readyToBegin",
+              "text": "The fate of Arkham rests in your hands. You are now ready to begin."
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "rules",
+          "children": [
+            {
+              "id": "cthulhuBoard",
+              "title": "The Cthulhu Board",
+              "text": "Cthulhu is represented on the map as a single enemy, but is made up of multiple enemy cards on the Cthulhu Board. Investigators that are engaged with Cthulhu (Ancient Evil) are also engaged with each card on the Cthulhu Board, as a single enemy. When interacting with Cthulhu (via fighting, evading, etc.), choose one of the double-sided enemy cards on the Cthulhu Board to interact with.\n\nCthulhu attacks each investigator at his location during the enemy phase using the combined damage and horror values of each Cthulhu enemy on the Cthulhu Board. This attack is performed in addition to any other attacks and/or effects prompted by the Cthulhu Deck (see below). If a card on the Cthulhu Board would attack via a keyword or other effect while fighting or evading, only that card attacks.\n\nCard effects that deal damage to multiple enemies at a location may deal damage to each individual enemy card on the Cthulhu Board."
+            },
+            {
+              "id": "cthulhuDeck",
+              "title": "The Cthulhu Deck",
+              "text": "During the setup of this scenario, a second deck with a different card back is constructed: the Cthulhu deck. This deck is a separate deck made up of only “action” cards. The Cthulhu deck is not an encounter deck and action cards are not treacheries.\n\nAfter moving and attacking as normal during the enemy phase, Cthulhu performs additional actions via action cards from the Cthulhu deck. At the end of the enemy phase, the agenda’s forced effect prompts investigators to draw the top card of the Cthulhu deck. When drawing cards from the Cthulhu deck, resolve each effect, one at a time, from top to bottom. After resolving an action card, it is discarded to the Cthulhu discard pile. If the Cthulhu deck is empty, immediately shuffle the Cthulhu discard pile back into the Cthulhu deck."
+            },
+            {
+              "id": "cthulhusRage",
+              "title": "Cthulhu’s Rage",
+              "text": "Throughout this scenario, the number of resources under “Cthulhu’s Rage” on the scenario reference card indicate Cthulhu’s anger toward the investigators. The higher Cthulhu’s Rage, the more dangerous and deadly the awakened sleeper becomes. Cthulhu’s Rage has no inherent game effect on its own; however, some encounter card effects may change or become stronger depending on the current level of Cthulhu’s Rage."
+            }
+          ]
+        },
+        {
+          "id": "errata",
+          "children": [
+            {
+              "id": "theFinalSeal",
+              "text": "The first sentence on the back of this agenda should read: “If this agenda advanced by reaching its doom threshold, each investigator is defeated. Otherwise…”"
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "xp",
+          "children": [
+            {
+              "id": "bonus",
+              "text": "放逐一名远古邪恶"
+            }
+          ]
+        },
+        {
+          "id": "noResolution",
+          "title": "无结局",
+          "text": "若未达成任何结局（每名调查员均撤退或被击败）：大地随着又一次震颤而摇晃，你挣扎着起身。强大的克苏鲁低头俯视着你，五只冷漠的红色眼睛凝视着你。你曾在梦中见过这一刻。他庞大的身躯遮蔽了头顶的星辰，泛着超凡的辉光。他腐臭的呼吸拂过你，搅动着水面。有一瞬间，当你迎上古神的目光时，喧嚣都沉寂下来。你感到他正在你的脑海中。没有愤怒，也没有狂怒，只有冰冷的漠然。\n\n这不是清算，不是审判，也不是毁灭。你和你这样的存在，不过是个恼人的小麻烦。克苏鲁脸上生出的粗厚鳞状触手在水面上蜿蜒，搜寻着你，搜寻着你和你的同类从他那里夺走的东西。你无力抵抗。你又为什么要抵抗？你的命运，以及你所有可悲同类的命运，早已写在星辰之间。毁灭已降临阿卡姆。\n\n• 在你的战役日志中记录 克苏鲁毁灭了阿卡姆城。\n\n• 调查员们，以及阿卡姆的其他所有人，都被杀死。\n\n• 调查员们输掉本次战役。\n\n• 前往 尾声。"
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "text": "结局 1：经过数小时的苦战，你们站在强大的克苏鲁面前，他低头俯视着你们，五只冷漠的红色眼睛凝视着你们。你们曾在梦中见过这一刻。他庞大的身躯遮蔽了头顶的星辰，泛着超凡的辉光。他腐臭的呼吸拂过你们，搅动着水面。有一瞬间，当你们迎上古神的目光时，喧嚣都沉寂下来。你们感到他正在你们的脑海中。没有愤怒，也没有狂怒，只有冰冷的漠然。\n\n一声枪响划破夜空，紧接着是十几声。在你的身后、附近的屋顶上以及周边的其他地方，一阵枪械与炸药的齐射轰击在古神松弛腐臭的血肉上。莱格拉斯督察朝同僚警员们大喊，催促他们不要停手。伟大的克苏鲁痛苦地呻吟着，纯粹的火力撕开了他甲壳般的血肉，黏稠的黑血淹没了街道。终于，局势似乎转向了对你们有利的一面。被这毫不留情的猛攻所慑，古神转身返回米斯卡塔尼克河，踉跄着没入水中，身后跟着一队怪异的生物。\n\n你能感觉到其他人屏住了呼吸，等待着某种报复，但什么也没有发生。随后，一声欢呼打破了寂静，接着是几十声欢呼。阿卡姆安全了……暂时如此。\n\n• 在你的战役日志中记录 克苏鲁被赶走了。\n\n• 每名调查员因与克苏鲁的战斗受到 3 点物理创伤和 3 点精神创伤。\n\n• 每名调查员获得等同于胜利区中每张卡牌胜利 X 值之和的经验。\n\n• 调查员们赢得了本次战役！但克苏鲁终将归来，那还要等多久？\n\n• 前往 尾声。"
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "text": "结局 2：就在克苏鲁准备发动攻击时，他身上的印记发出刺眼的光芒，他的四肢突然僵住了。安迪大胆地踏上街道，踉跄着念出另外两段粗粝的章节。你和露比也加入他，一同念诵咒语，仪式逐渐成形。古神再次咆哮，俯身倒地，仿佛被无形的绳索束缚。一道诡异的绿色与金色光晕划破云层，随后掀开，露出上方的夜空。在祖母绿与金色星云的核心中，嵌着一颗明亮闪耀的星辰。\n\n星光愈发强烈。在你眼前，古神的身躯像破碎的倒影一样扭曲弯折。就在那一瞬间，你看到拉莱耶的尖塔在阿卡姆破碎的天际线中闪烁，既陌生又熟悉。伴随着最后一声咆哮，克苏鲁消失在以太之中。\n\n远方星辰的光晕渐渐收缩，随后在一阵雷鸣般的轰响中坍缩。留下的只有可怕的寂静。\n\n你、露比和安迪爬上附近一栋建筑的屋顶，坐在边缘眺望这座残破的城市。河岸城和商人区的大部分都完全沉入水下，但阿卡姆的大部分仍然完好。你们三人凝视着这末日般的景象，风暴云渐渐散去，苍白的月光洒遍城市。一声孤零零的警笛在米斯卡塔尼克河涨满的河岸间回荡。安迪站起身，向你伸出一只手。\n\n“现在没有时间休息。阿卡姆的人们还需要我们，比以往任何时候都更需要。”\n\n• 在你的战役日志中记录 克苏鲁被放逐了。\n\n• 每名调查员因与克苏鲁的战斗受到 1 点物理创伤和 1 点精神创伤。\n\n• 每名调查员获得等同于胜利区中每张卡牌胜利 X 值之和的经验。由于将阿卡姆从远古邪恶手中拯救出来，每名调查员可以从其牌组中移除 1 个随机基础弱点（无视构筑要求）。\n\n• 调查员们赢得了本次战役！\n\n• 前往 尾声。"
+        },
+        {
+          "id": "resolution3",
+          "title": "结局 3",
+          "text": "结局 3：就在克苏鲁准备发动攻击时，他身上的印记发出刺眼的光芒，他的四肢突然僵住了。安迪大胆地踏上街道，踉跄着念出另外两段粗粝的章节。你和露比也加入他，一同念诵咒语，仪式逐渐成形。古神再次咆哮，俯身倒地，仿佛被无形的绳索束缚。一道诡异的绿色与金色光晕划破云层，随后掀开，露出上方的夜空。在祖母绿与金色星云的核心中，嵌着一颗明亮闪耀的星辰。\n\n星光愈发强烈。在你眼前，古神的身躯像破碎的倒影一样扭曲弯折。就在那一瞬间，你看到拉莱耶的尖塔在阿卡姆破碎的天际线中闪烁，既陌生又熟悉。伴随着最后一声咆哮，克苏鲁消失在以太之中。\n\n远方星辰的光晕渐渐收缩，随后在一阵雷鸣般的轰响中坍缩。留下的只有可怕的寂静。\n\n你、露比和安迪爬上附近一栋建筑的屋顶，坐在边缘眺望这座残破的城市。阿卡姆城是一幅满目疮痍的景象。河岸城完全沉入水下。独立广场和市政厅几乎只剩瓦砾，城市的其他街区也所剩无几。你只能想象死亡人数。你们三人怔怔地沉默着，风暴云渐渐散去，苍白的月光洒遍城市。你望向露比，看到她泪流满面。\n\n“我本以为我根本不在乎这座城市，可现在我就在这里，哭得像个孩子，”她抽泣着说。“我们还能怎么办呢？”\n\n• 在你的战役日志中记录 克苏鲁被放逐了，但 阿卡姆被毁灭了。\n\n• 每名调查员因与克苏鲁的战斗受到 2 点物理创伤和 2 点精神创伤。\n\n• 每名调查员获得等同于胜利区中每张卡牌胜利 X 值之和的经验。因放逐一名远古邪恶，每名调查员获得 5 点额外经验。\n\n• 调查员们赢得了本次战役，尽管阿卡姆已彻底沦为废墟。\n\n• 前往 尾声。"
+        }
+      ]
+    },
+    "zh": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "阿卡姆的毁灭 第二部分",
+          "children": [
+            {
+              "id": "theDoomOfArkham1",
+              "text": "阿卡姆的毁灭 1：你和其他人无助地看着克苏鲁将河岸城其余部分夷为平地。黑色的海水漫过街道，废墟在他身后一路铺展。“这一切都是兰道尔搞的鬼。我不知道他是怎么做到的，也不知道为什么，但我觉得他想让我们把那东西唤醒！”露比说。破裂的燃气管道被引燃，贪婪的火焰开始舔舐残骸，照亮了成群由克苏鲁的后裔组成的大军，他们正降临这座城市。“如果是这样，那我们最好想办法阻止它，”安迪说。他们望向你，等待你指明方向。"
+            },
+            {
+              "id": "mustDecide",
+              "text": "调查员们必须决定（选择一项）："
+            },
+            {
+              "id": "lastStand",
+              "text": "“我们需要背水一战，用纯粹的火力把他赶出去。”前往 阿卡姆的毁灭 2。"
+            },
+            {
+              "id": "anotherWay",
+              "text": "“一定有别的办法。”跳至 阿卡姆的毁灭 3。（只有当你的战役日志中“已获得文物”下已勾选/列出且未被划除的文物达到 5 件或更多时，你才能选择此选项。）"
+            },
+            {
+              "id": "theDoomOfArkham2",
+              "text": "阿卡姆的毁灭 2：“我喜欢你的思路，”莱格拉斯督察一边说，一边给枪上膛，发出清脆的咔哒声。你们一起制定计划，抵御这古老的威胁。露比建议你们中一些人爬上屋顶，而莱格拉斯则联系他在阿卡姆警局的关系。如果你们并肩作战，或许能把克苏鲁的怒火从阿卡姆本身引开。“这是我听过最糟糕的主意，但我觉得我们别无选择，”露比说。你看到她眼中闪过一丝什么——是恐惧吗？你已别无选择，只能战斗。"
+            },
+            {
+              "id": "recordStoodTogether",
+              "text": "在你的战役日志中记录 调查员们并肩而立。"
+            },
+            {
+              "id": "alliesIntoPlay",
+              "text": "从 远征 与 阿卡姆的毁灭 遭遇组、每名调查员的牌组，以及所有在场和离场区域中，搜寻以下剧情资产：约翰·雷蒙德·勒格拉斯、露比·斯坦迪什、安迪·范·诺特维克。将每项上述资产置于任意调查员的控制下并放入场中。在本剧本中，这些资产不会占用盟友槽位。"
+            },
+            {
+              "id": "theDoomOfArkham3",
+              "text": "阿卡姆的毁灭 3：水位还在上涨，安迪招手让你们都进一家废弃的餐馆。“这不是我的专业领域，”他说着，把一叠散乱的纸放在桌上。“但我一直在翻译拉莱耶的字形，我觉得我们或许可以用，呃……好吧，用一个仪式来阻止这一切。”露比挥手让莱格拉斯督察的反对意见打住，安迪则描述起他在拉莱耶的古代议庭里发现的一个“回归仪式”。利用拉莱耶古城的一部分，你们或许就能把这远古存在封印起来。"
+            },
+            {
+              "id": "theDoomOfArkham3Continued",
+              "text": "“我翻译的字形似乎暗示，克苏鲁和他的，呃，子嗣们，与拉莱耶本身相连——”他摊开一张阿卡姆地图。“如果我们像这样把那些文物分布到城里，我就能念诵仪式把他放逐。不过，我需要你们所有人去吸引他的注意，让他的目光一直落在你们身上，好让我做准备。”安迪举起一件你们从兰道尔那里夺回的文物，在手中翻来覆去。它散发着不自然的光芒。"
+            },
+            {
+              "id": "theDoomOfArkham3Ruby",
+              "text": "“我去阿卡姆警察局一趟，”莱格拉斯督察说。“我在那里有些关系。我们应该能派些警员上街帮助幸存者。”自从安迪说明计划后就一直沉默的露比抱起双臂。“所以你想让我们去惹毛那个正在把城市彻底毁掉的东西，好让你念几句咒语、藏几件遗物。”她吸了一口烟。“能出什么岔子呢？”"
+            },
+            {
+              "id": "recordAlliesHaveAPlan",
+              "text": "在你的战役日志中记录 你的盟友已有计划。"
+            },
+            {
+              "id": "alliesSetAside",
+              "text": "从 远征 与 阿卡姆的毁灭 遭遇组、每名调查员的牌组，以及所有在场和离场区域中，搜寻以下剧情资产：约翰·雷蒙德·勒格拉斯、露比·斯坦迪什、安迪·范·诺特维克。将它们放在一边，置于场外。"
+            },
+            {
+              "id": "addToken",
+              "text": "为战役的剩余部分，在混乱袋中加入 1 个 [elder_thing] 标记。"
+            },
+            {
+              "id": "proceedToSetup",
+              "text": "前往 设置。"
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "setup",
+          "children": [
+            {
+              "id": "gatherSets",
+              "text": "从以下遭遇组中收集所有卡牌：阿卡姆的毁灭 第二部分、支配、古老迷雾、淹没、星之眷族、克苏鲁的代理人 与 午夜假面。"
+            },
+            {
+              "id": "midnightMasksLocations",
+              "text": "收集 午夜假面 遭遇组时，只收集地点卡。不要收集该组中的任何其他卡牌。"
+            },
+            {
+              "id": "placeLocations",
+              "text": "按照地点布置图将每个地点放入场中。"
+            },
+            {
+              "id": "arkhamLocations",
+              "text": "收集 午夜假面 组中的每个地点，以及东侧屋顶和西侧屋顶。将两个商业区地点中的一个和两个南区地点中的一个随机放入场中，并把这两个地点的其他版本移出游戏。将北区、东镇、圣玛丽医院和米斯卡塔尼克大学放入场中。"
+            },
+            {
+              "id": "rivertownRuined",
+              "text": "将 阿卡姆的毁灭 第二部分 遭遇组中的河岸城（废墟）放入场中。将河岸城的其他版本移出游戏。"
+            },
+            {
+              "id": "setAsideLocations",
+              "text": "将其他每个地点放在一边，置于场外。"
+            },
+            {
+              "id": "cthulhuAtRivertown",
+              "text": "将单面的克苏鲁（远古邪恶）敌人放置在河岸城。"
+            },
+            {
+              "id": "startAtRivertown",
+              "text": "每名调查员从河岸城开始游戏。"
+            },
+            {
+              "id": "cthulhuBoard",
+              "text": "按照图示组装克苏鲁板块 （见 克苏鲁板块）。"
+            },
+            {
+              "id": "placeBoard",
+              "text": "找出本盒附带的双面冲切板，将其放在幕牌库和议程牌库上方，克苏鲁面朝上。"
+            },
+            {
+              "id": "placeFacets",
+              "text": "将三个克苏鲁敌人（苍白双翼、凶恶面容、邪恶之爪）的每一份复制都放在克苏鲁板块上，非狂怒面朝上，使它们拼成克苏鲁的完整形象。"
+            },
+            {
+              "id": "buildCthulhuDeck",
+              "text": "洗混 18 张克苏鲁卡牌以组建克苏鲁牌库 （见 克苏鲁牌库）。将此牌库放在克苏鲁板块旁。"
+            },
+            {
+              "id": "checkCampaignLogActAgenda",
+              "text": "查看你的战役日志以组建幕牌库和议程牌库："
+            },
+            {
+              "id": "fightBack",
+              "text": "若 调查员们并肩而立，使用议程 1a——“阿卡姆的毁灭”——组建议程牌库，并使用幕 1a——“反击！”——组建幕牌库。将其他每张幕和议程移出游戏。"
+            },
+            {
+              "id": "banishHim",
+              "text": "若 你的盟友已有计划，使用议程 1a——“阿卡姆的毁灭”——组建议程牌库，并使用幕 1a——“放逐他！”——组建幕牌库。将特殊议程——“最终封印”——放在一边，置于场外。将其他每张幕和议程移出游戏。"
+            },
+            {
+              "id": "checkCampaignLog",
+              "text": "查看你的战役日志。"
+            },
+            {
+              "id": "artifacts",
+              "text": "收集“已获得文物”下所有已获得且未被划除的文物。将它们分别置于某位调查员的控制下并放入场中，尽可能平均分配。"
+            },
+            {
+              "id": "floodedNeighborhoods",
+              "text": "将淹没标记加入标记池，并提高“淹没街区”下所列每个地点的淹没等级。"
+            },
+            {
+              "id": "starSpawnAside",
+              "text": "将 星之眷族 遭遇组放在一边，置于场外。"
+            },
+            {
+              "id": "cthulhusRage",
+              "text": "将 1 个资源放在剧本参考卡上“克苏鲁的狂怒”之下 （见 克苏鲁的狂怒）。若只有 1 或 2 名玩家，则在剧本参考卡上额外放置 1 个资源。"
+            },
+            {
+              "id": "buildEncounterDeck",
+              "text": "洗混剩余的遭遇卡以组建遭遇牌库。"
+            },
+            {
+              "id": "readyToBegin",
+              "text": "阿卡姆的命运掌握在你们手中。现在可以开始了。"
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "rules",
+          "children": [
+            {
+              "id": "cthulhuBoard",
+              "title": "克苏鲁板块",
+              "text": "克苏鲁在地图上表现为单个敌人，但在克苏鲁板块上由多张敌人卡牌组成。与克苏鲁（远古邪恶）交战的调查员，同时也与克苏鲁板块上的每张卡牌作为一个敌人交战。与克苏鲁互动时（通过战斗、躲避等），选择克苏鲁板块上的一张双面敌人卡牌进行互动。\n\n在敌人阶段，克苏鲁使用克苏鲁板块上每张克苏鲁敌人的伤害与恐惧值之和，攻击其所在地点的每名调查员。此攻击是在克苏鲁牌库所引发的任何其他攻击和／或效果之外的额外攻击（见下文）。若克苏鲁板块上的某张卡牌在战斗或躲避时因关键词或其他效果发动攻击，则只有该卡牌发动攻击。\n\n对某地点多个敌人造成伤害的卡牌效果，可以对克苏鲁板块上的每张敌人卡牌分别造成伤害。"
+            },
+            {
+              "id": "cthulhuDeck",
+              "title": "克苏鲁牌库",
+              "text": "在本剧本设置期间，会组建第二个牌背不同的牌库：克苏鲁牌库。这个牌库是独立的牌库，只由“行动”卡组成。克苏鲁牌库不是遭遇牌库，行动卡也不是诡计。\n\n在敌人阶段正常移动和攻击之后，克苏鲁会通过克苏鲁牌库中的行动卡执行额外行动。在敌人阶段结束时，议程的强制效果会促使调查员抽取克苏鲁牌库顶的卡牌。从克苏鲁牌库抽牌时，从上到下逐项结算每个效果。结算完一张行动卡后，将其弃入克苏鲁弃牌堆。若克苏鲁牌库为空，立即将克苏鲁弃牌堆洗回克苏鲁牌库。"
+            },
+            {
+              "id": "cthulhusRage",
+              "title": "克苏鲁的狂怒",
+              "text": "在本剧本中，剧本参考卡上“克苏鲁的狂怒”下的资源数量代表克苏鲁对调查员的怒火。克苏鲁的狂怒越高，这位苏醒的沉睡者就越危险、越致命。克苏鲁的狂怒本身没有固有的游戏效果；不过，某些遭遇卡效果可能会根据克苏鲁狂怒的当前等级而改变或增强。"
+            }
+          ]
+        },
+        {
+          "id": "errata",
+          "children": [
+            {
+              "id": "theFinalSeal",
+              "text": "本议程背面的第一句话应改为：“如果本议程因达到其毁灭阈值而推进，则每名调查员被击败。否则……”"
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "xp",
+          "children": [
+            {
+              "id": "bonus",
+              "text": "放逐一名远古邪恶"
+            }
+          ]
+        },
+        {
+          "id": "noResolution",
+          "title": "无结局",
+          "text": "若未达成任何结局（每名调查员均撤退或被击败）：大地随着又一次震颤而摇晃，你挣扎着起身。强大的克苏鲁低头俯视着你，五只冷漠的红色眼睛凝视着你。你曾在梦中见过这一刻。他庞大的身躯遮蔽了头顶的星辰，泛着超凡的辉光。他腐臭的呼吸拂过你，搅动着水面。有一瞬间，当你迎上古神的目光时，喧嚣都沉寂下来。你感到他正在你的脑海中。没有愤怒，也没有狂怒，只有冰冷的漠然。\n\n这不是清算，不是审判，也不是毁灭。你和你这样的存在，不过是个恼人的小麻烦。克苏鲁脸上生出的粗厚鳞状触手在水面上蜿蜒，搜寻着你，搜寻着你和你的同类从他那里夺走的东西。你无力抵抗。你又为什么要抵抗？你的命运，以及你所有可悲同类的命运，早已写在星辰之间。毁灭已降临阿卡姆。\n\n• 在你的战役日志中记录 克苏鲁毁灭了阿卡姆城。\n\n• 调查员们，以及阿卡姆的其他所有人，都被杀死。\n\n• 调查员们输掉本次战役。\n\n• 前往 尾声。"
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "text": "结局 1：经过数小时的苦战，你们站在强大的克苏鲁面前，他低头俯视着你们，五只冷漠的红色眼睛凝视着你们。你们曾在梦中见过这一刻。他庞大的身躯遮蔽了头顶的星辰，泛着超凡的辉光。他腐臭的呼吸拂过你们，搅动着水面。有一瞬间，当你们迎上古神的目光时，喧嚣都沉寂下来。你们感到他正在你们的脑海中。没有愤怒，也没有狂怒，只有冰冷的漠然。\n\n一声枪响划破夜空，紧接着是十几声。在你的身后、附近的屋顶上以及周边的其他地方，一阵枪械与炸药的齐射轰击在古神松弛腐臭的血肉上。莱格拉斯督察朝同僚警员们大喊，催促他们不要停手。伟大的克苏鲁痛苦地呻吟着，纯粹的火力撕开了他甲壳般的血肉，黏稠的黑血淹没了街道。终于，局势似乎转向了对你们有利的一面。被这毫不留情的猛攻所慑，古神转身返回米斯卡塔尼克河，踉跄着没入水中，身后跟着一队怪异的生物。\n\n你能感觉到其他人屏住了呼吸，等待着某种报复，但什么也没有发生。随后，一声欢呼打破了寂静，接着是几十声欢呼。阿卡姆安全了……暂时如此。\n\n• 在你的战役日志中记录 克苏鲁被赶走了。\n\n• 每名调查员因与克苏鲁的战斗受到 3 点物理创伤和 3 点精神创伤。\n\n• 每名调查员获得等同于胜利区中每张卡牌胜利 X 值之和的经验。\n\n• 调查员们赢得了本次战役！但克苏鲁终将归来，那还要等多久？\n\n• 前往 尾声。"
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "text": "结局 2：就在克苏鲁准备发动攻击时，他身上的印记发出刺眼的光芒，他的四肢突然僵住了。安迪大胆地踏上街道，踉跄着念出另外两段粗粝的章节。你和露比也加入他，一同念诵咒语，仪式逐渐成形。古神再次咆哮，俯身倒地，仿佛被无形的绳索束缚。一道诡异的绿色与金色光晕划破云层，随后掀开，露出上方的夜空。在祖母绿与金色星云的核心中，嵌着一颗明亮闪耀的星辰。\n\n星光愈发强烈。在你眼前，古神的身躯像破碎的倒影一样扭曲弯折。就在那一瞬间，你看到拉莱耶的尖塔在阿卡姆破碎的天际线中闪烁，既陌生又熟悉。伴随着最后一声咆哮，克苏鲁消失在以太之中。\n\n远方星辰的光晕渐渐收缩，随后在一阵雷鸣般的轰响中坍缩。留下的只有可怕的寂静。\n\n你、露比和安迪爬上附近一栋建筑的屋顶，坐在边缘眺望这座残破的城市。河岸城和商人区的大部分都完全沉入水下，但阿卡姆的大部分仍然完好。你们三人凝视着这末日般的景象，风暴云渐渐散去，苍白的月光洒遍城市。一声孤零零的警笛在米斯卡塔尼克河涨满的河岸间回荡。安迪站起身，向你伸出一只手。\n\n“现在没有时间休息。阿卡姆的人们还需要我们，比以往任何时候都更需要。”\n\n• 在你的战役日志中记录 克苏鲁被放逐了。\n\n• 每名调查员因与克苏鲁的战斗受到 1 点物理创伤和 1 点精神创伤。\n\n• 每名调查员获得等同于胜利区中每张卡牌胜利 X 值之和的经验。由于将阿卡姆从远古邪恶手中拯救出来，每名调查员可以从其牌组中移除 1 个随机基础弱点（无视构筑要求）。\n\n• 调查员们赢得了本次战役！\n\n• 前往 尾声。"
+        },
+        {
+          "id": "resolution3",
+          "title": "结局 3",
+          "text": "结局 3：就在克苏鲁准备发动攻击时，他身上的印记发出刺眼的光芒，他的四肢突然僵住了。安迪大胆地踏上街道，踉跄着念出另外两段粗粝的章节。你和露比也加入他，一同念诵咒语，仪式逐渐成形。古神再次咆哮，俯身倒地，仿佛被无形的绳索束缚。一道诡异的绿色与金色光晕划破云层，随后掀开，露出上方的夜空。在祖母绿与金色星云的核心中，嵌着一颗明亮闪耀的星辰。\n\n星光愈发强烈。在你眼前，古神的身躯像破碎的倒影一样扭曲弯折。就在那一瞬间，你看到拉莱耶的尖塔在阿卡姆破碎的天际线中闪烁，既陌生又熟悉。伴随着最后一声咆哮，克苏鲁消失在以太之中。\n\n远方星辰的光晕渐渐收缩，随后在一阵雷鸣般的轰响中坍缩。留下的只有可怕的寂静。\n\n你、露比和安迪爬上附近一栋建筑的屋顶，坐在边缘眺望这座残破的城市。阿卡姆城是一幅满目疮痍的景象。河岸城完全沉入水下。独立广场和市政厅几乎只剩瓦砾，城市的其他街区也所剩无几。你只能想象死亡人数。你们三人怔怔地沉默着，风暴云渐渐散去，苍白的月光洒遍城市。你望向露比，看到她泪流满面。\n\n“我本以为我根本不在乎这座城市，可现在我就在这里，哭得像个孩子，”她抽泣着说。“我们还能怎么办呢？”\n\n• 在你的战役日志中记录 克苏鲁被放逐了，但 阿卡姆被毁灭了。\n\n• 每名调查员因与克苏鲁的战斗受到 2 点物理创伤和 2 点精神创伤。\n\n• 每名调查员获得等同于胜利区中每张卡牌胜利 X 值之和的经验。因放逐一名远古邪恶，每名调查员获得 5 点额外经验。\n\n• 调查员们赢得了本次战役，尽管阿卡姆已彻底沦为废墟。\n\n• 前往 尾声。"
+        }
+      ]
+    }
+  }
+}

@@ -41,7 +41,6 @@ export default {
   "draft.replaceFor": "为 {name} 选择替换卡牌",
   "draft.noReplacement": "直接加入",
   "draft.unavailable": "经验不足或没有合法替换；可锁定整组留待下关购买。",
-  "draft.initialDone": "初始选牌完成，可以确认准备。",
   "draft.consumed": "本组选牌已完成。继续选牌需花费 1 XP 刷新。",
   "draft.upgradeNote": "每组仅选一张；0 经验卡免费替换。有经验卡另付升级费用，支持同名差价。同名升级刷新权重 ×2。可以跳过并随时返回。",
   "draft.deckTitle": "当前卡组 · {count} 张计入构筑大小",

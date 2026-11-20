@@ -1,0 +1,570 @@
+{
+  "id": "theWesternWall",
+  "campaignId": "theDrownedCity",
+  "sourceKind": "authored",
+  "officialChinese": false,
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "西墙",
+          "children": [
+            {
+              "id": "checkCampaignLog",
+              "text": "查看你的战役日志。"
+            },
+            {
+              "id": "headedWest",
+              "text": "若远征队向西进发，前往西墙 1。"
+            },
+            {
+              "id": "headedEast",
+              "text": "若远征队向东进发，跳至西墙 2。"
+            },
+            {
+              "id": "westernWall1",
+              "text": "西墙 1：向西行进时你越来越清楚，你正走的这片海滩其实是一道古老环形城墙的顶部。在下方数英寻深处，城墙形成一道陡直的落差，通往海床上的圆形广场。稍作筹划，你就能在古老废墟中从一处滞留空气的气囊移动到另一处，安全地下降到海床。只要足够小心，你或许能活着抵达海床。"
+            },
+            {
+              "id": "westernWall2",
+              "text": "西墙 2：随着拉莱耶继续上升，这座古城不稳的地基不断震颤。崩塌的砖石层与裸露的走廊构成一条通往水面的险路。为了安全上升，你需要攀爬这道古墙的陡直墙面，从一处滞留空气的气囊移动到另一处。深知减压病的危险，你不能简单地浮上水面。只要足够小心，你或许能活着抵达水面。"
+            },
+            {
+              "id": "resolveDoNoHarm",
+              "text": "若有调查员拥有“不伤害他人”任务，他们在右侧结算各自的故事。"
+            },
+            {
+              "id": "proceedToWesternSetup",
+              "text": "前往设置（v.I）——西线远征。"
+            },
+            {
+              "id": "proceedToEasternSetup",
+              "text": "前往设置（v.II）——东线远征。"
+            },
+            {
+              "id": "doNoHarm",
+              "title": "任务：不伤害他人",
+              "children": [
+                {
+                  "id": "instructions",
+                  "text": "仅当你拥有“不伤害他人”任务时阅读："
+                },
+                {
+                  "id": "body",
+                  "text": "你正准备穿越城墙时，发现黑沙上俯卧着一具躯体。那是个穿着破烂拼布斗篷的男人。你压下“他怎么到这里来的”这个疑问，走上前去探他的脉搏。他还活着，但伤得很重。黄色的脓液从他颈部、手臂和胸前的圆形吸盘印记中渗出。你尽力为他包扎伤口，然后用嗅盐把他弄醒。他的双眼颤动着睁开，嘶哑地吐出一个词：“母亲。”你看向其他人。这个人显然需要帮助。"
+                },
+                {
+                  "id": "choose",
+                  "text": "你必须决定（选择一项）："
+                },
+                {
+                  "id": "bringAlong",
+                  "text": "“带上他。我们还能救他。”设置完本剧本后，在议程上放置 1 点毁灭。在你的战役日志中记录远征队帮助了朝圣者。"
+                },
+                {
+                  "id": "leaveBehind",
+                  "text": "“把他留下。”在下一个剧本揭示起始地点时，不要在该地点上放置线索。在你的战役日志中记录远征队抛下了朝圣者。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "setup",
+          "children": [
+            {
+              "id": "west",
+              "title": "设置（v.I）——西线远征",
+              "children": [
+                {
+                  "id": "setLocationsAside",
+                  "text": "将黑曜石地基、淹没棚屋、沉没阶梯、破碎遗迹[runeV]和水下秘库[runeZ]放在一边，置于场外。"
+                },
+                {
+                  "id": "placeUpperWalkways",
+                  "text": "将剩余五个险恶道路地点与放在一边的淹没棚屋、沉没阶梯和破碎遗迹[runeV]洗混。将其中六个放入西墙下方第 2–4 层，未揭示面朝上。"
+                },
+                {
+                  "id": "buildActDeck",
+                  "text": "使用幕 1a“下潜深渊”组建幕牌库。将另一张幕移出游戏。"
+                },
+                {
+                  "id": "chooseExpeditionAsset",
+                  "text": "按玩家顺序，每名玩家可以选择远征遭遇组中的 1 张物品支援，以在其控制下开始游戏。该组以下列图标表示："
+                },
+                {
+                  "id": "placeBottomWalkways",
+                  "text": "将剩余两个险恶道路地点与放在一边的黑曜石地基洗混，使你不清楚哪个是哪个，并将它们放入第 5 层，未揭示面朝上。"
+                },
+                {
+                  "id": "floodLevels",
+                  "text": "提高第 2–5 层每个地点的洪水等级。"
+                },
+                {
+                  "id": "fullyFloodLevels",
+                  "text": "提高第 4 层和第 5 层的洪水等级，使其完全淹没。"
+                }
+              ]
+            },
+            {
+              "id": "east",
+              "title": "设置（v.II）——东线远征",
+              "children": [
+                {
+                  "id": "setLocationsAside",
+                  "text": "将西墙、淹没棚屋、沉没阶梯、破碎遗迹[runeV]和水下秘库[runeZ]放在一边，置于场外。"
+                },
+                {
+                  "id": "placeUpperWalkways",
+                  "text": "将剩余五个险恶道路地点与放在一边的淹没棚屋、沉没阶梯和破碎遗迹[runeV]洗混。将其中六个放入黑曜石地基下方第 2–4 层，未揭示面朝上。"
+                },
+                {
+                  "id": "buildActDeck",
+                  "text": "使用幕 1a“攀上高墙”组建幕牌库。将另一张幕移出游戏。"
+                },
+                {
+                  "id": "chooseExpeditionAsset",
+                  "text": "按玩家顺序，每名玩家可以选择 1 张已获得的神器支援，或远征遭遇组中的 1 张物品支援，以在其控制下开始游戏。该组以下列图标表示："
+                },
+                {
+                  "id": "placeBottomWalkways",
+                  "text": "将剩余两个险恶道路地点与放在一边的西墙洗混，使你不清楚哪个是哪个，并将它们放入第 5 层，未揭示面朝上。"
+                },
+                {
+                  "id": "floodLevels",
+                  "text": "提高第 1–4 层每个地点的洪水等级。"
+                },
+                {
+                  "id": "fullyFloodLevels",
+                  "text": "提高第 1 层和第 2 层的洪水等级，使其完全淹没。"
+                }
+              ]
+            },
+            {
+              "id": "gatherSets",
+              "text": "从以下遭遇组中收集所有卡牌：西墙、宇宙遗产、深潜者、洪水、拉莱耶、星之眷族、穷途异魔、海底生物与克苏鲁的使徒。这些组以下列图标表示："
+            },
+            {
+              "id": "gatherLocations",
+              "text": "收集西墙遭遇组中的每个地点。"
+            },
+            {
+              "id": "placeWesternWall",
+              "text": "如图所示，将西墙放入第 1 层。"
+            },
+            {
+              "id": "placeObsidianFoundations",
+              "text": "如图所示，将黑曜石地基放入第 1 层。"
+            },
+            {
+              "id": "removeWalkways",
+              "text": "收集其他每个险恶道路地点，并随机将其中两个移出游戏。"
+            },
+            {
+              "id": "beginAtWesternWall",
+              "text": "每名调查员从西墙开始游戏。"
+            },
+            {
+              "id": "beginAtObsidianFoundations",
+              "text": "每名调查员从黑曜石地基开始游戏。"
+            },
+            {
+              "id": "setCardsAside",
+              "text": "将穷途异魔敌人、猎食寄生虫弱点以及双面的海底壁画[runeW]诡计放在一边，置于场外。"
+            },
+            {
+              "id": "setAsideCoralStarSpawn",
+              "text": "在星之眷族遭遇组中搜寻珊瑚星之眷族敌人，将其放在一边，置于场外。将星之眷族遭遇组中其他每张卡移出游戏。"
+            },
+            {
+              "id": "addFloodTokens",
+              "text": "将洪水标记加入标记池。"
+            },
+            {
+              "id": "buildEncounterDeck",
+              "text": "洗混其余的遭遇卡，组建遭遇牌库。"
+            },
+            {
+              "id": "readyToBegin",
+              "text": "你现在可以开始游戏了。"
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "rules",
+          "children": [
+            {
+              "id": "locationAdjacency",
+              "title": "西墙中的地点相邻关系",
+              "text": "在本剧本中，地点按固定的 5 层格局排布。\n\n• 每个地点的位置各有自己的层级 1–5，从第 1 层的西墙开始，向下延伸到第 5 层最底部的地点。\n\n• 任何提到地点层级（level）的卡牌效果，都指其编号的行，如地点布置图所示。\n\n• 在本剧本中，每个地点都与其上一行和下一行的每个地点相连。同一行内的地点彼此不相连。"
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "xp",
+          "children": [
+            {
+              "id": "bonus",
+              "text": "随着远征队继续前进"
+            }
+          ]
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "text": "结局 1：海床是一幅梦幻般的幻景，尽是阴险的植物与梦魇般的生物。一条只能形容为“上古遗物”的变异灯笼鱼平静地游过一片深海水草林。另一只双眼发光、下颚参差的深海生物径直朝你游来，却在最后一刻从那道将海水阻隔在外的闪烁能量场前转身离去。\n\n• 在你的战役日志中，将拉莱耶地图上的“西墙”划掉。\n\n• 若有调查员拥有“不伤害他人”任务，他们在本页结算各自的故事。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 跳至结局 3。"
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "text": "结局 2：一阵震颤撼动古城，将你掀倒在地。你扶着一根倒下的石柱稳住身形时，露比骂了一句。拉莱耶城仍在继续上升。最终，震颤平息了。露比站到你身旁，望着那片黑色海湾完美的圆形。“该死，”她说。“我跟安迪打了赌，说我们会先回来。但那个软心肠的家伙，如果我假装摔断了腿，他肯定不敢来讨债，你觉得呢？”你叹了口气，领着大家回到卡桑德拉号，留下露比包扎她的小腿。回去的感觉真好。\n\n• 在你的战役日志中，将拉莱耶地图上的“西墙”划掉。\n\n• 若有调查员拥有不伤害他人任务，他们在本页结算各自的故事。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 前往沉睡者墓穴。"
+        },
+        {
+          "id": "noResolution",
+          "title": "无结局",
+          "text": "若无结局（每名调查员都被击败）：在远征队其余成员的帮助下，你跛行到目的地，在崩塌废墟中时有时无的空气气囊里避难。梦魇般的形影在城墙外的黑暗海洋中来回掠过。那些生活在拉莱耶地基之中与周围的生物扭曲而怪异；你有种感觉，你很快会在自己的噩梦中再次见到它们。\n\n• 在你的战役日志中，将拉莱耶地图上的“西墙”划掉。\n\n• 若有调查员拥有“不伤害他人”任务，他们在本页结算各自的故事。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 查看你的战役日志。\n• 若远征队向西进发，跳至结局 3。\n\n• 若远征队向东进发，前往沉睡者墓穴。"
+        },
+        {
+          "id": "doNoHarmResolution",
+          "title": "任务：不伤害他人",
+          "children": [
+            {
+              "id": "instructions",
+              "text": "仅当你拥有“不伤害他人”任务时阅读："
+            },
+            {
+              "id": "checkCampaignLog",
+              "text": "查看你的战役日志。"
+            },
+            {
+              "id": "helpedThePilgrim",
+              "text": "若远征队帮助了朝圣者，前往任务 1。"
+            },
+            {
+              "id": "otherwise",
+              "text": "否则，跳至任务 2。"
+            },
+            {
+              "id": "task1",
+              "text": "任务 1：那人的状况迅速恶化。到你艰难的跋涉结束时，他已咳出腐臭的黄色痰液。就在你走完险路时，他尖叫着弓起身子，抓挠自己的胸口和面孔。他颈部和肩膀周围的皮肤上出现了一些小孔，随后像腐果般裂开，一大群蠕动的虫状寄生虫倾泻而出。每条虫子的口中都长满细小的锯齿状牙齿，滴着从受害者体内涌出的同样恶心的黄色胆汁。那人残存的一切缓缓站起身来，像一具可怖的牵线木偶，伸出一只血淋淋的手指向你。一条橡胶般的虫子从他手臂中滑出，颤动着，仿佛在品尝空气。"
+            },
+            {
+              "id": "task1HuntingParasite",
+              "text": "找出放在一边的猎食寄生虫弱点，将其永久加入你的牌组。该牌不计入你调查员的牌组大小。"
+            },
+            {
+              "id": "task1Progress",
+              "text": "你已尽力帮助那名受害者。在你的战役日志中“不伤害他人”下标记 2 点进度。"
+            },
+            {
+              "id": "task2",
+              "text": "任务 2：即使翻过了城墙，你也无法停止回想那个被你抛下的人。他那恳求的眼神、他呼哧作响的咳嗽，将永远萦绕在你的梦中。你本可以救他吗？或者至少让他的死有几分尊严？"
+            },
+            {
+              "id": "task2Trauma",
+              "text": "你抛下了一个需要帮助的人。受到 1 点精神创伤。"
+            },
+            {
+              "id": "task2Progress",
+              "text": "在你的战役日志中擦除“不伤害他人”下的 1 点进度。"
+            }
+          ]
+        },
+        {
+          "id": "resolution3",
+          "title": "结局 3",
+          "text": "结局 3：海床上有一座古老圆顶诱人地闪烁着。你惊叹于这奇异景象时，一块黑曜石松脱，从上方坠落到海床圆顶上。圆顶并没有碎裂，而是柔韧地荡起波纹，让岩石带着雷鸣般的巨响穿透而过。圆顶中央的某个东西投射出一道排斥水、却允许固体通过的屏障。\n\n不管圆顶里是什么奇异技术，蒂林哈斯特多半会感兴趣。不过，你也可以继续深入拉莱耶：城墙基部的一扇圆形门扉笼罩在与圆顶相同的闪烁能量场下，正召唤你进入城中。\n\n• 调查员们必须决定（选择一项）：\n• 若要揭开海床圆顶的秘密，前往淹没城区。\n\n• 若要继续深入拉莱耶的地下，前往养育场。"
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "The Western Wall",
+          "children": [
+            {
+              "id": "checkCampaignLog",
+              "text": "Check your Campaign Log."
+            },
+            {
+              "id": "headedWest",
+              "text": "If the expedition headed west, proceed to The Western Wall 1."
+            },
+            {
+              "id": "headedEast",
+              "text": "If the expedition headed east, skip to The Western Wall 2."
+            },
+            {
+              "id": "westernWall1",
+              "text": "The Western Wall 1: It becomes increasingly clear as you proceed westward that the beach you are walking along is the top of an ancient ring wall. Fathoms below, the wall forms a sheer drop to a round plaza on the ocean floor. With some planning, you could descend safely to the ocean floor by moving from pocket to pocket of trapped air in the old ruins. If you’re careful, you may just be able to reach the sea floor alive."
+            },
+            {
+              "id": "westernWall2",
+              "text": "The Western Wall 2: The unsteady foundations of the ancient city shudder as R’lyeh continues to rise. Collapsing layers of crumbling masonry and exposed hallways form a treacherous path up to the surface. In order to safely ascend, you will need to climb the sheer face of the ancient wall by moving from pocket to pocket of trapped air. Knowing the dangers of pressure sickness, you can’t simply float to the top. If you’re careful, you may just be able to reach the surface alive."
+            },
+            {
+              "id": "resolveDoNoHarm",
+              "text": "If an investigator has the Do No Harm Task, they resolve their respective story to the right."
+            },
+            {
+              "id": "proceedToWesternSetup",
+              "text": "Proceed to Setup (v.I) - Western Expedition."
+            },
+            {
+              "id": "proceedToEasternSetup",
+              "text": "Proceed to Setup (v.II) - Eastern Expedition."
+            },
+            {
+              "id": "doNoHarm",
+              "title": "Task: Do No Harm",
+              "children": [
+                {
+                  "id": "instructions",
+                  "text": "Read only if you have the “Do No Harm” Task:"
+                },
+                {
+                  "id": "body",
+                  "text": "As you prepare to traverse the wall, you spot a body lying prone on the black sand. It is a man in a tattered patchwork cloak. Pushing aside questions of how he got here, you approach and take his pulse. He is still alive, though heavily wounded. Yellow pus oozes from round sucker marks on his neck, arms, and chest. You bandage his wounds as best you can, then wake him with some smelling salts. His eyes flutter open and he rasps one word: “Mother.” You look to the others. This man clearly needs help."
+                },
+                {
+                  "id": "choose",
+                  "text": "You must decide (choose one):"
+                },
+                {
+                  "id": "bringAlong",
+                  "text": "“Bring him along. We can still save him.” After setting up this scenario, place 1 doom on the agenda. In your Campaign Log, record the expedition helped the pilgrim."
+                },
+                {
+                  "id": "leaveBehind",
+                  "text": "“Leave him behind.” When you reveal the starting location in the next scenario, do not place clues on that location. In your Campaign Log, record the expedition left the pilgrim behind."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "setup",
+          "children": [
+            {
+              "id": "west",
+              "title": "Setup (v.I) — Western Expedition",
+              "children": [
+                {
+                  "id": "setLocationsAside",
+                  "text": "Set Obsidian Foundations, Drowned Shanty, Sunken Stairway, Shattered Ruins [runeV], and Undersea Vault [runeZ] aside, out of play."
+                },
+                {
+                  "id": "placeUpperWalkways",
+                  "text": "Shuffle the five remaining Walkway locations with the set-aside Drowned Shanty, Sunken Stairway, and Shattered Ruins [runeV]. Put six of them into play on levels 2–4 below Western Wall, unrevealed side faceup."
+                },
+                {
+                  "id": "buildActDeck",
+                  "text": "Build the act deck using act 1a—“Descend into the Abyss.” Remove the other act from the game."
+                },
+                {
+                  "id": "chooseExpeditionAsset",
+                  "text": "In player order, each player may choose 1 Item asset from the Expedition encounter set to begin in play under their control. This set is indicated by the following icon:"
+                },
+                {
+                  "id": "placeBottomWalkways",
+                  "text": "Shuffle the two remaining Walkway locations with the set-aside Obsidian Foundations so you do not know which is which and put them into play on level 5, unrevealed side faceup."
+                },
+                {
+                  "id": "floodLevels",
+                  "text": "Increase the flood level of each location on levels 2–5."
+                },
+                {
+                  "id": "fullyFloodLevels",
+                  "text": "Increase the flood level of levels 4 and 5 so that they are fully flooded."
+                }
+              ]
+            },
+            {
+              "id": "east",
+              "title": "Setup (v.II) — Western Expedition",
+              "children": [
+                {
+                  "id": "setLocationsAside",
+                  "text": "Set Western Wall, Drowned Shanty, Sunken Stairway, Shattered Ruins [runeV], and Undersea Vault [runeZ] aside, out of play."
+                },
+                {
+                  "id": "placeUpperWalkways",
+                  "text": "Shuffle the five remaining Walkway locations with the set-aside Drowned Shanty, Sunken Stairway, and Shattered Ruins [runeV]. Put six of them into play on levels 2–4 below Obsidian Foundations, unrevealed side faceup."
+                },
+                {
+                  "id": "buildActDeck",
+                  "text": "Build the act deck using act 1a—“Ascend the Wall.” Remove the other act from the game."
+                },
+                {
+                  "id": "chooseExpeditionAsset",
+                  "text": "In player order, each player may choose 1 earned Artifact asset or 1 Item asset from the Expedition encounter set to begin in play under their control. This set is indicated by the following icon:"
+                },
+                {
+                  "id": "placeBottomWalkways",
+                  "text": "Shuffle the two remaining Walkway locations with the set-aside Western Wall so you do not know which is which and put them into play on level 5, unrevealed side faceup."
+                },
+                {
+                  "id": "floodLevels",
+                  "text": "Increase the flood level of each location on levels 1–4."
+                },
+                {
+                  "id": "fullyFloodLevels",
+                  "text": "Increase the flood level of levels 1 and 2 so that they are fully flooded."
+                }
+              ]
+            },
+            {
+              "id": "gatherSets",
+              "text": "Gather all cards from the following encounter sets: The Western Wall, Cosmic Legacy, Deep Ones, Flood, R’lyeh, Star Spawn, The Inescapable, Undersea Creatures, and Agents of Cthulhu."
+            },
+            {
+              "id": "gatherLocations",
+              "text": "Gather each location in The Western Wall encounter set."
+            },
+            {
+              "id": "placeWesternWall",
+              "text": "Put Western Wall into play on Level 1 as shown."
+            },
+            {
+              "id": "placeObsidianFoundations",
+              "text": "Put Obsidian Foundations into play on Level 1 as shown."
+            },
+            {
+              "id": "removeWalkways",
+              "text": "Gather each other Walkway location and remove two from the game at random."
+            },
+            {
+              "id": "beginAtWesternWall",
+              "text": "Each investigator begins play at Western Wall."
+            },
+            {
+              "id": "beginAtObsidianFoundations",
+              "text": "Each investigator begins play at Obsidian Foundations."
+            },
+            {
+              "id": "setCardsAside",
+              "text": "Set the Inescapable enemy, the Hunting Parasite weakness, and the double-sided Seafloor Frieze [runeW] treachery aside, out of play."
+            },
+            {
+              "id": "setAsideCoralStarSpawn",
+              "text": "Search the Star Spawn encounter set for the Coral Star Spawn enemy and set it aside, out of play. Remove each other card in the Star Spawn encounter set from the game."
+            },
+            {
+              "id": "addFloodTokens",
+              "text": "Add the flood tokens to the token pool."
+            },
+            {
+              "id": "buildEncounterDeck",
+              "text": "Shuffle the remaining encounter cards to build the encounter deck."
+            },
+            {
+              "id": "readyToBegin",
+              "text": "You are now ready to begin."
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "rules",
+          "children": [
+            {
+              "id": "locationAdjacency",
+              "title": "Location Adjacency in The Western Wall",
+              "text": "During this scenario, locations are arranged in a set pattern of 5 levels.\n\n• The position of each location has its own level from 1–5, beginning at Western Wall at level 1 and descending to the bottommost locations at level 5.\n\n• Any card effects that refer to a location’s level refer to its numbered row, as shown in the location placement diagram.\n\n• During this scenario, each location is connected to each location in the row above it and the row below it. Locations in the same row are not connected to one another."
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "xp",
+          "children": [
+            {
+              "id": "bonus",
+              "text": "随着远征队继续前进"
+            }
+          ]
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "text": "结局 1：海床是一幅梦幻般的幻景，尽是阴险的植物与梦魇般的生物。一条只能形容为“上古遗物”的变异灯笼鱼平静地游过一片深海水草林。另一只双眼发光、下颚参差的深海生物径直朝你游来，却在最后一刻从那道将海水阻隔在外的闪烁能量场前转身离去。\n\n• 在你的战役日志中，将拉莱耶地图上的“西墙”划掉。\n\n• 若有调查员拥有“不伤害他人”任务，他们在本页结算各自的故事。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 跳至结局 3。"
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "text": "结局 2：一阵震颤撼动古城，将你掀倒在地。你扶着一根倒下的石柱稳住身形时，露比骂了一句。拉莱耶城仍在继续上升。最终，震颤平息了。露比站到你身旁，望着那片黑色海湾完美的圆形。“该死，”她说。“我跟安迪打了赌，说我们会先回来。但那个软心肠的家伙，如果我假装摔断了腿，他肯定不敢来讨债，你觉得呢？”你叹了口气，领着大家回到卡桑德拉号，留下露比包扎她的小腿。回去的感觉真好。\n\n• 在你的战役日志中，将拉莱耶地图上的“西墙”划掉。\n\n• 若有调查员拥有不伤害他人任务，他们在本页结算各自的故事。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 前往沉睡者墓穴。"
+        },
+        {
+          "id": "noResolution",
+          "title": "无结局",
+          "text": "若无结局（每名调查员都被击败）：在远征队其余成员的帮助下，你跛行到目的地，在崩塌废墟中时有时无的空气气囊里避难。梦魇般的形影在城墙外的黑暗海洋中来回掠过。那些生活在拉莱耶地基之中与周围的生物扭曲而怪异；你有种感觉，你很快会在自己的噩梦中再次见到它们。\n\n• 在你的战役日志中，将拉莱耶地图上的“西墙”划掉。\n\n• 若有调查员拥有“不伤害他人”任务，他们在本页结算各自的故事。\n\n• 每名调查员获得的经验等于胜利区每张卡的胜利 X 值。\n\n• 查看你的战役日志。\n• 若远征队向西进发，跳至结局 3。\n\n• 若远征队向东进发，前往沉睡者墓穴。"
+        },
+        {
+          "id": "doNoHarmResolution",
+          "title": "任务：不伤害他人",
+          "children": [
+            {
+              "id": "instructions",
+              "text": "仅当你拥有“不伤害他人”任务时阅读："
+            },
+            {
+              "id": "checkCampaignLog",
+              "text": "查看你的战役日志。"
+            },
+            {
+              "id": "helpedThePilgrim",
+              "text": "若远征队帮助了朝圣者，前往任务 1。"
+            },
+            {
+              "id": "otherwise",
+              "text": "否则，跳至任务 2。"
+            },
+            {
+              "id": "task1",
+              "text": "任务 1：那人的状况迅速恶化。到你艰难的跋涉结束时，他已咳出腐臭的黄色痰液。就在你走完险路时，他尖叫着弓起身子，抓挠自己的胸口和面孔。他颈部和肩膀周围的皮肤上出现了一些小孔，随后像腐果般裂开，一大群蠕动的虫状寄生虫倾泻而出。每条虫子的口中都长满细小的锯齿状牙齿，滴着从受害者体内涌出的同样恶心的黄色胆汁。那人残存的一切缓缓站起身来，像一具可怖的牵线木偶，伸出一只血淋淋的手指向你。一条橡胶般的虫子从他手臂中滑出，颤动着，仿佛在品尝空气。"
+            },
+            {
+              "id": "task1HuntingParasite",
+              "text": "找出放在一边的猎食寄生虫弱点，将其永久加入你的牌组。该牌不计入你调查员的牌组大小。"
+            },
+            {
+              "id": "task1Progress",
+              "text": "你已尽力帮助那名受害者。在你的战役日志中“不伤害他人”下标记 2 点进度。"
+            },
+            {
+              "id": "task2",
+              "text": "任务 2：即使翻过了城墙，你也无法停止回想那个被你抛下的人。他那恳求的眼神、他呼哧作响的咳嗽，将永远萦绕在你的梦中。你本可以救他吗？或者至少让他的死有几分尊严？"
+            },
+            {
+              "id": "task2Trauma",
+              "text": "你抛下了一个需要帮助的人。受到 1 点精神创伤。"
+            },
+            {
+              "id": "task2Progress",
+              "text": "在你的战役日志中擦除“不伤害他人”下的 1 点进度。"
+            }
+          ]
+        },
+        {
+          "id": "resolution3",
+          "title": "结局 3",
+          "text": "结局 3：海床上有一座古老圆顶诱人地闪烁着。你惊叹于这奇异景象时，一块黑曜石松脱，从上方坠落到海床圆顶上。圆顶并没有碎裂，而是柔韧地荡起波纹，让岩石带着雷鸣般的巨响穿透而过。圆顶中央的某个东西投射出一道排斥水、却允许固体通过的屏障。\n\n不管圆顶里是什么奇异技术，蒂林哈斯特多半会感兴趣。不过，你也可以继续深入拉莱耶：城墙基部的一扇圆形门扉笼罩在与圆顶相同的闪烁能量场下，正召唤你进入城中。\n\n• 调查员们必须决定（选择一项）：\n• 若要揭开海床圆顶的秘密，前往淹没城区。\n\n• 若要继续深入拉莱耶的地下，前往养育场。"
+        }
+      ]
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { scenarioPlaylistId } from './scenario-music.js'
+import { SCENARIO_MUSIC, scenarioPlaylistId } from './scenario-music.js'
 
 // 单一主题入口（新增循环 / 新视觉风格只改这里）：
 //   palette   循环专属的 7 个界面色，由 web/campaign-theme.css 统一映射到控件；
@@ -16,6 +16,7 @@ const DREAM_EATERS = `${ROOT}/img/campaigns/theDreamEaters`
 const INNSMOUTH = `${ROOT}/img/campaigns/theInnsmouthConspiracy`
 const EARTH_EDGE = `${ROOT}/img/campaigns/edgeOfTheEarth`
 const SCARLET_KEYS = `${ROOT}/img/campaigns/theScarletKeys`
+const HEMLOCK_VALE = `${ROOT}/img/campaigns/theFeastOfHemlockVale`
 
 const COMMON = Object.freeze({
   id: 'common',
@@ -39,6 +40,24 @@ const COMMON = Object.freeze({
 })
 
 const CAMPAIGNS = Object.freeze({
+  theFeastOfHemlockVale: Object.freeze({
+    id: 'theFeastOfHemlockVale',
+    palette: Object.freeze({
+      background: '#151911', panel: '#24281b', header: '#0d100b',
+      accent: '#d7b96f', accentStrong: '#f4dfa5', muted: '#b8b7a0', edge: '#b1935366',
+    }),
+    assets: Object.freeze({
+      hubHero: `${HEMLOCK_VALE}/hub/inlet.webp`,
+      tableOverlay: `${HEMLOCK_VALE}/table/fieldwork-desk.webp`,
+      storyDefault: `${HEMLOCK_VALE}/hub/inlet.webp`,
+    }),
+    musicPlaylist: 'theFeastOfHemlockVale',
+    scenarios: Object.freeze(Object.fromEntries(
+      Object.keys(SCENARIO_MUSIC.theFeastOfHemlockVale).map(id => [id, Object.freeze({ assets: Object.freeze({
+        storyDefault: `${HEMLOCK_VALE}/scenarios/${id}/scene.webp`,
+      }) })]),
+    )),
+  }),
   theScarletKeys: Object.freeze({
     id: 'theScarletKeys',
     palette: Object.freeze({

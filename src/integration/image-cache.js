@@ -6,12 +6,14 @@ import { existsSync } from 'node:fs'
 import { mkdir, rename, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import retiredLocalizedArts from '../../presentation/retired-localized-arts.json' with { type: 'json' }
 import { DEFAULT_IMAGE_HOST, remoteImagePath } from '../../web/images.js'
 
 export { DEFAULT_IMAGE_HOST }
 const DEFAULT_WEB_ROOT = fileURLToPath(new URL('../../web/', import.meta.url))
 const MAX_IMAGE_BYTES = 20 * 1024 * 1024
 const SAFE_IMAGE_PATH = /^img\/(?:zh\/)?(?:cards|backs)\/[A-Za-z0-9][A-Za-z0-9_.-]*\.(?:avif|webp|png|jpe?g|gif)$/
+const RETIRED_LOCALIZED_PATHS = new Set(retiredLocalizedArts.map(art => `img/zh/${art}`))
 
 function isImage(body, extension) {
   if (!body.length) return false
@@ -115,6 +117,7 @@ export function createImageAssetCache({
     const inside = path.relative(root, target)
     if (!inside || inside.startsWith('..') || path.isAbsolute(inside)) return false
     if (existsSync(target)) return true
+    if (RETIRED_LOCALIZED_PATHS.has(relative)) return false
     if (knownMiss(relative)) return false
     if (pending.has(relative)) return pending.get(relative)
 

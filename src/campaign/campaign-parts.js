@@ -393,6 +393,7 @@ function projectedInvestigator(record, observerSeat) {
     xp: record.xp ?? 0,
   }
   if (record.startingDeckReady === false) summary.startingDeckReady = false
+  if (record.startingDeckConfirmationPending) summary.startingDeckConfirmationPending = true
   const own = Number.isInteger(observerSeat) && record.seat === observerSeat
   if (!own) return summary
   return {

@@ -124,5 +124,120 @@
       "terminalState": "unchanged",
       "hashesChanged": true
     }
-  ]
+  ],
+  "maintenance": {
+    "goldenCommit": "9c09a9b3b130163122ae2009e4e53dc62b483535",
+    "goldenSha256": "19e63fcba8a5428123dd3f74404208e9e324ad06550999387028bdab65eac688",
+    "previousBaselineSha256": "edbbcc327154ab8358ba217842030c20153bf22323c1789bd92fd08c695127de",
+    "note": "八循环并入已重新采集共用基线。对照合入提交的父版本登记终局差异，并在当前引擎逐步重放 13 局。原《食梦者》验收快照继续保留。",
+    "fixtures": [
+      {
+        "id": "notz-gathering-hub-victory-r1",
+        "beforeSteps": 57,
+        "afterSteps": 57,
+        "terminalStateChanges": {}
+      },
+      {
+        "id": "notz-gathering-hub-victory-r2",
+        "beforeSteps": 56,
+        "afterSteps": 56,
+        "terminalStateChanges": {}
+      },
+      {
+        "id": "notz-gathering-defeat",
+        "beforeSteps": 25,
+        "afterSteps": 25,
+        "terminalStateChanges": {}
+      },
+      {
+        "id": "notz-gathering-resign",
+        "beforeSteps": 60,
+        "afterSteps": 66,
+        "terminalStateChanges": {}
+      },
+      {
+        "id": "notz-midnight-masks",
+        "beforeSteps": 157,
+        "afterSteps": 172,
+        "terminalStateChanges": {}
+      },
+      {
+        "id": "notz-midnight-masks-only",
+        "beforeSteps": 80,
+        "afterSteps": 80,
+        "terminalStateChanges": {
+          "pendingChoice": {
+            "before": null,
+            "after": "mulligan"
+          }
+        }
+      },
+      {
+        "id": "notz-gathering-pending-choice",
+        "beforeSteps": 12,
+        "afterSteps": 12,
+        "terminalStateChanges": {}
+      },
+      {
+        "id": "carcosa-curtain-call-hub",
+        "beforeSteps": 70,
+        "afterSteps": 70,
+        "terminalStateChanges": {
+          "scenario": {
+            "before": "echoesOfThePast",
+            "after": "curtainCall"
+          },
+          "pendingChoice": {
+            "before": "mulligan",
+            "after": null
+          }
+        }
+      },
+      {
+        "id": "carcosa-curtain-call-only",
+        "beforeSteps": 30,
+        "afterSteps": 30,
+        "terminalStateChanges": {
+          "pendingChoice": {
+            "before": "commit",
+            "after": "boost"
+          }
+        }
+      },
+      {
+        "id": "dunwich-extracurricular-hub",
+        "beforeSteps": 70,
+        "afterSteps": 122,
+        "terminalStateChanges": {}
+      },
+      {
+        "id": "tfa-untamed-wilds-hub",
+        "beforeSteps": 70,
+        "afterSteps": 70,
+        "terminalStateChanges": {}
+      },
+      {
+        "id": "tfa-untamed-wilds-only",
+        "beforeSteps": 30,
+        "afterSteps": 30,
+        "terminalStateChanges": {
+          "pendingChoice": {
+            "before": null,
+            "after": "turnOrder"
+          }
+        }
+      },
+      {
+        "id": "notz-strict-random-3p",
+        "beforeSteps": 80,
+        "afterSteps": 80,
+        "terminalStateChanges": {
+          "pendingChoice": {
+            "before": "turnOrder",
+            "after": "commit"
+          }
+        }
+      }
+    ]
+  }
 }

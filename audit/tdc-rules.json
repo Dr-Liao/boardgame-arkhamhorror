@@ -1,0 +1,270 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "theDrownedCity",
+  "scope": "audit/tdc-scope.json",
+  "sources": {
+    "officialGuide": "https://images-cdn.fantasyflightgames.com/filer_public/c1/3b/c13b0e74-62bb-49bc-bc85-036ab9d1ef10/ahc84_campaign_guide-web_1.pdf#page=3",
+    "referenceGuides": [
+      "frontend/src/locales/en/theDrownedCity/base.json",
+      "frontend/src/locales/en/theDrownedCity/interludes.json",
+      "frontend/src/locales/en/theDrownedCity/theWesternWall.json",
+      "frontend/src/locales/en/theDrownedCity/obsidianCanyons.json",
+      "frontend/src/locales/en/theDrownedCity/theDoomOfArkhamPartII.json"
+    ]
+  },
+  "web": "web/tdc-rules.js",
+  "tests": {
+    "node": "tests/tdc-rules.test.mjs",
+    "browser": "tests/tdc-rules.browser.mjs"
+  },
+  "keywords": [
+    {
+      "id": "tdcAlert",
+      "printedCards": [
+        "11511",
+        "11637",
+        "11702",
+        "11702b",
+        "11703",
+        "11703b"
+      ],
+      "relatedCards": [
+        "11052",
+        "11631",
+        "11727"
+      ],
+      "engine": [
+        "src/engine/combat.js"
+      ],
+      "sources": [
+        "https://images-cdn.fantasyflightgames.com/filer_public/c1/3b/c13b0e74-62bb-49bc-bc85-036ab9d1ef10/ahc84_campaign_guide-web_1.pdf#page=3",
+        "https://images-cdn.fantasyflightgames.com/filer_public/76/b3/76b332d5-7047-458f-91b6-82c8500cc445/arkham_grimoire.pdf#page=4"
+      ],
+      "test": "Alert attacks after a failed evade"
+    },
+    {
+      "id": "tdcPatrol",
+      "printedCards": [
+        "11537b",
+        "11551",
+        "11670",
+        "11701",
+        "11721"
+      ],
+      "relatedCards": [
+        "11688",
+        "11706",
+        "11707"
+      ],
+      "engine": [
+        "src/engine/enemy-keyword-movement.js",
+        "src/engine/turn.js"
+      ],
+      "sources": [
+        "https://images-cdn.fantasyflightgames.com/filer_public/c1/3b/c13b0e74-62bb-49bc-bc85-036ab9d1ef10/ahc84_campaign_guide-web_1.pdf#page=3"
+      ],
+      "test": "Patrol uses reachable"
+    },
+    {
+      "id": "tdcRelentless",
+      "printedCards": [
+        "11573",
+        "11671",
+        "11674b",
+        "11686",
+        "11725",
+        "11726",
+        "11727",
+        "11744"
+      ],
+      "relatedCards": [
+        "11025",
+        "11630",
+        "11675",
+        "11705",
+        "11724",
+        "11747"
+      ],
+      "engine": [
+        "src/engine/enemies.js",
+        "src/engine/turn.js"
+      ],
+      "sources": [
+        "https://images-cdn.fantasyflightgames.com/filer_public/c1/3b/c13b0e74-62bb-49bc-bc85-036ab9d1ef10/ahc84_campaign_guide-web_1.pdf#page=3"
+      ],
+      "test": "Relentless attempts exactly one additional attack"
+    },
+    {
+      "id": "tdcSeal",
+      "printedCards": [
+        "11028",
+        "11043",
+        "11060",
+        "11070"
+      ],
+      "relatedCards": [
+        "11007",
+        "11008",
+        "11009",
+        "11038",
+        "11046",
+        "11591",
+        "11604",
+        "11623",
+        "11691a",
+        "11691b",
+        "11715"
+      ],
+      "engine": [
+        "src/engine/seal-entry.js",
+        "src/engine/play-condition.js",
+        "src/engine/api-misc.js"
+      ],
+      "sources": [
+        "https://images-cdn.fantasyflightgames.com/filer_public/c1/3b/c13b0e74-62bb-49bc-bc85-036ab9d1ef10/ahc84_campaign_guide-web_1.pdf#page=3"
+      ],
+      "test": "Seal requires a matching token"
+    }
+  ],
+  "topics": [
+    {
+      "id": "tdcCampaign",
+      "related": [
+        "tdcTasks",
+        "tdcFlood",
+        "tdcArtifacts"
+      ],
+      "linkedCards": 425
+    },
+    {
+      "id": "tdcFlood",
+      "related": [
+        "tdcConnections",
+        "tdcPatrol"
+      ],
+      "linkedCards": 69
+    },
+    {
+      "id": "tdcTasks",
+      "related": [
+        "tdcCampaign"
+      ],
+      "linkedCards": 16
+    },
+    {
+      "id": "tdcArtifacts",
+      "related": [
+        "tdcGlyphs",
+        "tdcCampaign"
+      ],
+      "linkedCards": 23
+    },
+    {
+      "id": "tdcGlyphs",
+      "related": [
+        "tdcArtifacts",
+        "tdcCampaign"
+      ],
+      "linkedCards": 83
+    },
+    {
+      "id": "tdcConnections",
+      "related": [
+        "tdcFlood",
+        "tdcPatrol"
+      ],
+      "linkedCards": 78
+    },
+    {
+      "id": "tdcEnemyParts",
+      "related": [
+        "tdcSideDecks",
+        "tdcAlert"
+      ],
+      "linkedCards": 37
+    },
+    {
+      "id": "tdcSideDecks",
+      "related": [
+        "tdcEnemyParts",
+        "tdcCampaign"
+      ],
+      "linkedCards": 55
+    },
+    {
+      "id": "tdcAlert",
+      "related": [
+        "tdcEnemyParts",
+        "tdcRelentless"
+      ],
+      "linkedCards": 9
+    },
+    {
+      "id": "tdcPatrol",
+      "related": [
+        "tdcConnections",
+        "tdcFlood"
+      ],
+      "linkedCards": 8
+    },
+    {
+      "id": "tdcRelentless",
+      "related": [
+        "tdcAlert"
+      ],
+      "linkedCards": 14
+    },
+    {
+      "id": "tdcSeal",
+      "related": [
+        "tdcCampaign"
+      ],
+      "linkedCards": 15
+    }
+  ],
+  "acceptance": {
+    "nodePassed": 18,
+    "browserCases": [
+      "P3 desktop zh-CN rulebook",
+      "P3 desktop en rulebook",
+      "P3 desktop card link and focus",
+      "P3 mobile zh-CN rulebook",
+      "P3 mobile en rulebook",
+      "P3 mobile card link and focus"
+    ],
+    "replayMatches": true,
+    "fast": {
+      "tests": 8470,
+      "passed": 8467,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 3
+    },
+    "scriptSha256": {
+      "tests/tdc-rules.test.mjs": "541471492f102ef04f00c249498d1f4cd93173e554068f3cf86c1e1c26991e7b",
+      "tests/tdc-rules.browser.mjs": "d868e9f9729afbd9ddeb794bd5a68ed0f39b0f51266923311255d8b7b041737c",
+      "tests/playwright/playwright.tdc.config.mjs": "151ec7ef723010b1a7478e435f39b6e986fa4738e5b93c3537da3d9e68206d99",
+      "tools/run-tdc-rules-browser.mjs": "cb4aedce76c30a75b19b414cbb9af06853e333942d23a894ac594afa40147a04",
+      "web/tdc-rules.js": "65de6174d2438f4c50094a28cf7851b8cd5584a196e9a27d5e3608fd28d95f33",
+      "web/rulebook-data.js": "eb358d0b381aae56282c48244a6a0548a7691ad66f6b5db60847268f6da26f62",
+      "web/rulebook.js": "3e3327c81c44713c1870066912eac41501846391456a4ff6d370e58ddc55ee90",
+      "web/catalog.js": "e38e5ef0bbcef54159b6331ec8aa971592e7ee0b2afb74e347b12df32b934b89",
+      "web/card-text.js": "0b1b4f9999d61abd15c3300f04231fb6d3f15100348a6aeced232df3242f6a97",
+      "src/engine/ability.js": "24198faa5db5d3f14e7f22cb2d956c70ed4c8b880ca7a3c01dff96a9c5ae315d",
+      "src/engine/actions.js": "f3b3c81e7273e8d042e41b6c0f25ef7bdabee880c45df6c8faa89a34d1a95548",
+      "src/engine/combat.js": "d5cc5839cd944f72aa73c41ffb63dfe95c947104b0f752d443836d954eb80648",
+      "src/engine/enemy-keyword-movement.js": "786bcaab05903ac055f104775de1d83f480410f73190e0f4b104edb006d62b56",
+      "src/engine/turn.js": "06f2a02a62e6bb08a73eda9473f8d10ba2c6c8b48661aed4512bb8e6ab7596d5",
+      "src/engine/enemies.js": "dd1c4e17d660a42a00c65488e4fd462be0c6aa758cae128c52d3ce3dd8ce75d0",
+      "src/engine/seal-entry.js": "1e4d4150c8e3a608d54a71d91ff82a37ba5108014ebe01138f3e403b3a160efc",
+      "src/engine/play-condition.js": "2c6694ed78e3b701abfdbb0690e0f45c91409a066752366b261465abfb7dd2f4",
+      "src/engine/api-misc.js": "e0eb541596e93b5f03f7594ad60681dd277ad7366bc9110037ee8768b737b164"
+    },
+    "artifacts": {
+      "artifacts/migration/tdc/reports/p3-node.log": "4c587da477425fb19b5cf1b58f99c7d4d67e60055f1a32bd6decfd55b549a690",
+      "artifacts/migration/tdc/reports/p3-browser.json": "25a0541ae0c3005e06723af02c3d978d35c3b50d81bb3709a3b3d9b5b7179c80",
+      "artifacts/migration/tdc/reports/p3-replay.log": "38b3926ee993e94bb1c7bbbd5d751369d3512e5d36a0a65a9d7461a2098bb7b7",
+      "artifacts/migration/tdc/reports/p3-fast-accepted.log": "53fb811ac9ec2499756f5b0985ea38807ba3b6fcd17fe149e808d6a5fac83f55"
+    }
+  }
+}

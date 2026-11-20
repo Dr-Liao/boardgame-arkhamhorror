@@ -779,7 +779,7 @@ export function performAction(state, inv, move, api = {}) {
     const targets = lureTargets(state, inv)
     if (!targets.length) return false
     const chosen = typeof api.choose === 'function'
-      ? pickTarget(api, targets, '选择要拉到这里的敌人')
+      ? pickTarget(api, inv.seat, targets, '选择要拉到这里的敌人')
       : targets[0]
     if (!chosen) return false
     const from = chosen.location
@@ -793,8 +793,8 @@ export function performAction(state, inv, move, api = {}) {
   return false
 }
 
-function pickTarget(api, list, prompt) {
-  const answer = api.choose({ prompt, options: list.map((item, index) => ({ id: item.id, label: item.name || item.id, index })) })
+function pickTarget(api, seat, list, prompt) {
+  const answer = api.choose({ kind: 'enemy', seat, prompt, options: list.map((item, index) => ({ id: item.id, label: item.name || item.id, index })) })
   if (answer == null) return null
   const byId = list.find(item => item.id === answer)
   if (byId) return byId
@@ -851,7 +851,7 @@ export function beforeMove(state, inv, destination, api = {}, options = {}) {
         .some(trait => String(trait).toLowerCase() === 'item'))
       const answer = typeof api.choose === 'function'
         ? api.choose({
-          prompt: '乱藻海滩：取消移动，或弃掉一个[[道具]]支援',
+          kind: 'choice', seat: inv.seat, prompt: '乱藻海滩：取消移动，或弃掉一个[[道具]]支援',
           options: [
             { id: 'cancel', label: '取消移动效果' },
             ...(items.length ? [{ id: 'discard', label: '弃掉一个[[道具]]支援' }] : []),
@@ -1251,7 +1251,7 @@ export const CODEX_IDS = Object.freeze({
   drRosaMarquez: 'Theta',
 })
 
-export function codex(state, id, api = {}) {
+export function codex(state, id, api = {}, seat = state.currentSeat ?? state.campaign?.leadSeat ?? 0) {
   const records = recordsFor(state)
   records.codexRead ||= {}
   if (id === 'williamHemlock') {
@@ -1314,7 +1314,7 @@ export function codex(state, id, api = {}) {
     if (!top) return false
     const answer = typeof api.choose === 'function'
       ? api.choose({
-        prompt: '罗莎·马尔克斯：把岩穴牌库顶放到最近的[[洞穴]]地点旁，或放到牌库底',
+        kind: 'story', seat, prompt: '罗莎·马尔克斯：把岩穴牌库顶放到最近的[[洞穴]]地点旁，或放到牌库底',
         options: [{ id: 'place', label: '放到最近的洞穴旁' }, { id: 'bottom', label: '放到岩穴牌库底' }],
       })
       : 'place'
@@ -1344,9 +1344,9 @@ function addRelationship(state, resident, amount) {
 // 遭遇事件（treachery 条目的 encounterResolve 桥）
 // ---------------------------------------------------------------------------
 
-function askChoice(api, prompt, options) {
+function askChoice(api, seat, prompt, options) {
   if (typeof api?.choose !== 'function') return options[0]
-  const answer = api.choose({ prompt, options: options.map(id => ({ id, label: id })) })
+  const answer = api.choose({ kind: 'treachery', source: '10586', seat, prompt, options: options.map(id => ({ id, label: id })) })
   return options.includes(answer) ? answer : options[0]
 }
 
@@ -1382,7 +1382,7 @@ export const events = {
         harmInvestigator(state, inv, { horror: 2 }, api)
         return true
       }
-      const choice = askChoice(api, '重属自然（黑夜）：受到 2 点恐惧，或让这些敌人各治愈 1 点伤害', ['horror', 'heal'])
+      const choice = askChoice(api, inv.seat, '重属自然（黑夜）：受到 2 点恐惧，或让这些敌人各治愈 1 点伤害', ['horror', 'heal'])
       if (choice === 'heal') {
         for (const enemy of enemies) healEnemy(state, enemy, 1, api)
         info(api, '重属自然：所在地点与连接地点的每个敌人治愈 1 点伤害。')
@@ -1396,7 +1396,7 @@ export const events = {
       harmInvestigator(state, inv, { damage: 2 }, api)
       return true
     }
-    const choice = askChoice(api, '重属自然（白日）：受到 2 点伤害，或让最近的敌人攻击你', ['damage', 'attack'])
+    const choice = askChoice(api, inv.seat, '重属自然（白日）：受到 2 点伤害，或让最近的敌人攻击你', ['damage', 'attack'])
     if (choice === 'attack') {
       const attacked = safeCall(api, 'enemyAttacks', nearest, inv)
       if (attacked === false || attacked == null) {

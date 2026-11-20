@@ -113,6 +113,7 @@ function driveToMap (state, { maxSteps = 400 } = {}) {
       const seat = actingSeats(state)[0]
       const moves = legalMoves(state, seat)
       const move = moves.find(item => item.action === 'hubAutoDeck')
+        || moves.find(item => item.action === 'hubConfirmDeck')
         || moves.find(item => item.action === 'hubDoneSeat')
         || moves.find(item => item.action === 'hubSelectInvestigator')
         || moves.find(item => item.action === 'hubSetDeck')

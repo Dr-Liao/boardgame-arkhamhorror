@@ -6,6 +6,9 @@ import { renderRulesText } from './card-text.js'
 
 const paragraphs = text => String(text || '').split(/\n{2,}/).map(part => part.trim()).filter(Boolean)
 const stepsOf = text => String(text || '').split(/(?<=[。！？])/).map(part => part.trim()).filter(Boolean)
+const sections = ['intro', 'setup', 'specialRules', 'story', 'resolutions']
+const validBlocks = blocks => Array.isArray(blocks) && blocks.every(block => block && typeof block === 'object'
+  && !Array.isArray(block) && (block.children === undefined || validBlocks(block.children)))
 
 export function createScenarioSetupView(h, { render }) {
   let sessionId = null
@@ -22,7 +25,10 @@ export function createScenarioSetupView(h, { render }) {
         return response.json()
       })
       .then(guide => {
-        if (guide.id !== id || !guide.locales?.zh || !guide.locales?.en) throw new Error('Invalid adventure guide')
+        if (guide?.id !== id || !['zh', 'en'].every(language =>
+          sections.every(section => validBlocks(guide.locales?.[language]?.[section])))) {
+          throw new Error('Invalid adventure guide')
+        }
         guides.set(id, { guide })
       })
       .catch(() => guides.set(id, { error: true }))

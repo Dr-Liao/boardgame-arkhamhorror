@@ -465,6 +465,8 @@ async function prepareSeatThroughHub(page, request, session, testInfo, viewport,
 
   const deck = hub.getByRole('button', { name: '使用推荐卡组', exact: true }).first()
   await clickMoveButton(page, deck, '使用推荐卡组')
+  const finalize = hub.getByRole('button', { name: '最终确认牌组', exact: true })
+  await clickMoveButton(page, finalize, '最终确认牌组')
   const ready = hub.getByRole('button', { name: '确认准备', exact: true }).first()
   await clickMoveButton(page, ready, '确认准备')
   state = await fetchSession(request, sessionId)
@@ -1630,6 +1632,8 @@ for (const [viewport, width, height] of VIEWPORTS) {
       await act(0, 'hubAutoDeck')
       await act(1, 'hubSelectInvestigator', move => move.code === GUEST_CODE)
       await act(1, 'hubAutoDeck')
+      await act(0, 'hubConfirmDeck')
+      await act(1, 'hubConfirmDeck')
       await act(0, 'hubDoneSeat')
       await act(1, 'hubDoneSeat')
       const prepared = await waitForStatus(0, session => session.state.hubReady === true

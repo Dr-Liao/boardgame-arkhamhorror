@@ -14,10 +14,12 @@ export default {
     for (const target of state.investigators.filter(other =>
       !other.defeated && !other.resigned && other.location === inv.location)) {
       target.actionsLeft = Math.max(0, target.actionsLeft - 1)
-      if (target.damage >= 4 && target.assets.length) {
+      if (target.damage >= 4) {
+        const assets = target.assets.filter(asset => api.canDiscardAsset(target.seat, asset.id))
+        if (!assets.length) continue
         const choice = api.choose({ kind: 'target', source: code, seat: target.seat,
           prompt: '铁轨断裂：选择弃掉一张你控制的支援。',
-          options: target.assets.map(asset => ({ id: asset.id, label: ALL_CARDS[asset.code]?.nameZh || asset.code })) })
+          options: assets.map(asset => ({ id: asset.id, label: ALL_CARDS[asset.code]?.nameZh || asset.code })) })
         api.discardAsset(target.seat, choice)
       }
     }

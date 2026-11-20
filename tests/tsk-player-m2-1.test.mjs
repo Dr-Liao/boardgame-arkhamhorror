@@ -14,9 +14,11 @@ import { fixture, move, asset, enemy, settle, legalMoves } from './core-fixture.
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { registeredEntry, registerCardAbilities } from '../src/engine/ability.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
-import { executeDescriptor, getMaxSanity, getStat, playCost, reactionWindow } from '../src/engine/engine.js'
+import { actionPreview, applyHarm, executeDescriptor, getMaxSanity, getStat, playCost, reactionWindow, slotUsage } from '../src/engine/engine.js'
+import { modifierTotal } from '../src/engine/modifiers.js'
+import { expireEffects } from '../src/engine/effect-state.js'
 import { commitProfile } from '../src/engine/lifecycle.js'
-import { customizationChecked, upgradeCustomization } from '../src/engine/tsk-customizable.js'
+import { customizationChecked, recordCustomizationChoices, upgradeCustomization } from '../src/engine/tsk-customizable.js'
 
 import card09021 from '../src/cards/entries/09021.js'
 import card09022 from '../src/cards/entries/09022.js'
@@ -501,12 +503,8 @@ test('P6 09041 实证假设 回合开始选判据；达成判据横置加 1 证�
   me(state).hand = []
   me(state).deck = ['01088', '01088']
   windowProbe(state, 'roundStarts', { when: 'roundStarts' }, pending => pickId(pending, ['success', 'fail']))
-  assert.equal(state.scenarioFlags?.tskEmpiricalHypothesisCriteria?.criteria, 'success', '本轮判据已记录')
-  state.lastTestResult = { seat: 0, success: true, value: 6, difficulty: 2 }
-  resolveAbility(state, '09041', {
-    kind: 'reaction', assetCode: '09041',
-    context: { when: 'skillTestSuccess', seat: 0, location: me(state).location },
-  })
+  assert.equal(state.scenarioFlags[`tskEmpiricalHypothesisCriteria:${hypothesis.id}`].criteria, 'success', '本轮判据已记录')
+  windowProbe(state, 'skillTestSuccess', { when: 'skillTestSuccess', seat: 0, successBy: 4 }, pickDesc)
   assert.equal(freshAsset(state, '09041').markers?.evidence, 1, '达成判据：加 1 证据')
   withApi(state, api => api.ready(freshAsset(state, '09041')))
   resolveAbility(state, '09041', { kind: 'free', assetCode: '09041' })
@@ -515,22 +513,153 @@ test('P6 09041 实证假设 回合开始选判据；达成判据横置加 1 证�
   assert.ok(hypothesis.id, '实证假设实例存在')
 })
 
+test('09041 实证假设：试错识别支援承伤，备择假设可重整并切换到实地研究', () => {
+  const state = fixture()
+  const [here, destination] = twoLocations(state)
+  destination.shroud = 3
+  custom(state, '09041', [1, 3, 7, 7, 7, 7])
+  const hypothesis = asset(state, '09041')
+  asset(state, '01018')
+  me(state).location = here.id
+  windowProbe(state, 'roundStarts', { when: 'roundStarts' }, pending => pickId(pending, ['harm']))
+  probe(state, draft => applyHarm(draft, me(draft), 1, 0, [], false, null, true), pending => pickDesc(pending) || pickId(pending, ['field']))
+  assert.equal(me(state).damage || 0, 0, '伤害由调查员控制的支援承受')
+  assert.equal(freshAsset(state, '09041').markers?.evidence, 1)
+  assert.equal(freshAsset(state, '09041').exhausted, false)
+  assert.deepEqual(state.scenarioFlags[`tskEmpiricalHypothesisCriteria:${hypothesis.id}`].used, ['harm', 'field'])
+  move(state, { action: 'move', locationId: destination.id })
+  settle(state, pending => pending.options.some(option => option.id === 'skip') && pending.options.some(option => option.id === 'fail')
+    ? 'skip' : pickDesc(pending))
+  assert.equal(freshAsset(state, '09041').markers?.evidence, 2)
+})
+
+test('09041 实证假设：同地点队友可花证据，阶段结束或打出下一张卡时研究拨款消耗', () => {
+  const state = fixture('01001', 2)
+  const hypothesis = asset(state, '09041', { markers: { evidence: 7 } })
+  const peer = me(state, 1)
+  peer.location = me(state).location
+  state.currentSeat = 1
+  const abilities = () => legalMoves(state).filter(move => move.action === 'ability' && move.assetId === hypothesis.id)
+  custom(state, '09041', [4, 5, 5, 6, 6, 6])
+  assert.equal(abilities().length, 0, '同行评议只勾一格时队友无法使用卡牌')
+  custom(state, '09041', [4, 4, 5, 5, 6, 6, 6])
+  const grant = () => abilities().find(move => move.label.includes('研究拨款'))
+  const clue = () => abilities().find(move => move.label.includes('确凿证据'))
+  move(state, grant())
+  settle(state)
+  assert.equal(freshAsset(state, '09041').markers.evidence, 5)
+  assert.equal(playCost(state, me(state, 1), ALL_CARDS['01060']), 0)
+  assert.equal(playCost(state, me(state, 0), ALL_CARDS['01060']), 3)
+  me(state, 1).hand.push('01088')
+  move(state, { action: 'play', cardId: '01088' })
+  settle(state)
+  assert.equal(playCost(state, me(state, 1), ALL_CARDS['01060']), 3)
+  move(state, grant())
+  settle(state)
+  expireEffects(state, 'endOfPhase')
+  assert.equal(playCost(state, me(state, 1), ALL_CARDS['01060']), 3)
+  const here = state.locations.find(location => location.id === me(state, 1).location)
+  here.clues = 1
+  move(state, clue())
+  settle(state)
+  assert.equal(freshAsset(state, '09041').markers?.evidence || 0, 0)
+  assert.equal(me(state, 1).clues, 1)
+})
+
 // ── 09042 鸦翎羽毛笔 ────────────────────────────────────────────────────────
+test('09041 实证假设：前景惨淡只认最后一张手牌，独立变量只认从场上弃置', () => {
+  const state = fixture()
+  const hypothesis = asset(state, '09041')
+  custom(state, '09041', [0, 2])
+  me(state).hand = ['01088', '01088']
+  windowProbe(state, 'roundStarts', { when: 'roundStarts' }, pending => pickId(pending, ['hand']))
+  for (const evidence of [0, 1]) {
+    move(state, { action: 'play', cardId: '01088' })
+    settle(state, pickDesc)
+    assert.equal(freshAsset(state, '09041').markers?.evidence || 0, evidence)
+  }
+  state.round += 1
+  freshAsset(state, '09041').exhausted = false
+  windowProbe(state, 'roundStarts', { when: 'roundStarts' }, pending => pickId(pending, ['discard']))
+  const threat = { id: 'independent-variable-test', code: '01163' }
+  me(state).threat.push(threat)
+  withApi(state, (api, draft) => api.removeThreat(me(draft).threat.find(card => card.id === threat.id)), pickDesc)
+  assert.equal(freshAsset(state, '09041').id, hypothesis.id)
+  assert.equal(freshAsset(state, '09041').markers.evidence, 2)
+  assert.ok(!me(state).threat.some(card => card.id === threat.id))
+})
+
+test('09042 神奇记录：从手牌、弃牌堆或牌库正常付费打出指定支援并附属', () => {
+  for (const zone of ['hand', 'discard', 'deck']) {
+    const state = fixture('02002')
+    const owner = me(state)
+    owner.hand = ['09042']
+    owner[zone].push('01042')
+    owner.resources = 5
+    const baseActions = owner.actionsLeft
+    recordCustomizationChoices(state, 0, '09042', null, ['Encyclopedia'])
+    custom(state, '09042', [6, 6, 6])
+    assert.ok(!legalMoves(state).some(candidate => candidate.action === 'play' && candidate.cardId === '09042'))
+    custom(state, '09042', [6, 6, 6, 6])
+    move(state, { action: 'play', cardId: '09042' })
+    settle(state, pending => pending.options.find(option => option.cardCode === '01042')?.id)
+    assert.equal(me(state).resources, 0, zone)
+    assert.equal(me(state).actionsLeft, baseActions - 1, zone)
+    assert.equal(attachmentOf(state, '09042')?.host.code, '01042', zone)
+    assert.ok(!me(state)[zone].includes('01042'), zone)
+    assert.ok(!me(state).discard.includes('09042'), zone)
+  }
+})
+
 test('P6 09042 鸦翎羽毛笔 附属到你控制的[[书籍]]支援；墨力汲取把 1 充能移给所附属支援', () => {
   const state = fixture('01001')
   me(state).assets = []
-  const tome = asset(state, '10715')
+  const tome = asset(state, '10715', { uses: 0, usesType: 'charges' })
   const battery = asset(state, '09040', { uses: 3, usesType: 'supplies' })
+  const charge = asset(state, '01060', { uses: 3, usesType: 'charges' })
+  custom(state, '09042', [0, 1, 4])
   resolvePlayed(state, '09042', { choose: pending => pickId(pending, [tome.id]) })
   const host = state.investigators[0].assets.find(card => card.code === '10715')
   assert.ok((host.attachments || []).some(card => card.code === '09042'), '鸦翎羽毛笔附属到书籍支援')
-  custom(state, '09042', [4])
-  const attachment = host.attachments.find(card => card.code === '09042')
-  resolveAbility(state, '09042', { kind: 'free', source: attachment })
-  assert.equal(state.investigators[0].assets.find(card => card.code === '10715').attachments
-    .find(card => card.code === '09042').uses, undefined, '羽毛笔本身没有 uses 字段')
-  assert.equal(state.investigators[0].assets.find(card => card.code === '09040').uses, 2, '从另一张支援移走 1 充能')
-  assert.ok(battery.id, '充能支援实例存在')
+  const { attachment } = attachmentOf(state, '09042')
+  const use = () => legalMoves(state).find(move => move.action === 'ability' && move.assetId === attachment.id)
+  assert.equal(use(), undefined, '只勾 1 格时不会生成免费能力')
+  custom(state, '09042', [0, 1, 4, 4])
+  assert.ok(use(), '勾满后从正常行动列表发动附属卡的免费能力')
+  move(state, use())
+  assert.equal(freshAsset(state, battery.code).uses, 3, '补给不能转做充能')
+  assert.equal(freshAsset(state, charge.code).uses, 2, '从另一张支援移走 1 充能')
+  assert.equal(freshAsset(state, tome.code).uses, 1, '附属支援获得 1 充能')
+  assert.equal(attachmentOf(state, '09042').attachment.exhausted, true)
+  assert.equal(use(), undefined, '本卡横置时不能再次发动')
+})
+
+test('09042 鸦翎羽毛笔：附属宿主获得槽位豁免、检定加值及行动豁免，并能重整另一支援', () => {
+  const state = fixture('02002')
+  const tome = asset(state, '01042')
+  const spell = asset(state, '01060', { exhausted: true })
+  const foe = enemy(state, { damage: 1 })
+  const action = () => legalMoves(state).find(move => move.action === 'ability' && move.assetId === tome.id)
+  assert.equal(actionPreview(state, 0, action()).opportunityAttacks.at(0)?.id, foe.id)
+  assert.equal(slotUsage(me(state)).hand, 1)
+  custom(state, '09042', [0, 1, 2, 2, 5, 5, 5])
+  me(state).hand = ['09042']
+  move(state, { action: 'play', cardId: '09042' })
+  settle(state, pending => pickId(pending, [tome.id]))
+  assert.ok(attachmentOf(state, '09042'))
+  assert.ok(!me(state).discard.includes('09042'))
+  assert.equal(slotUsage(me(state)).hand || 0, 0)
+  const damageBefore = me(state).damage
+  assert.equal(actionPreview(state, 0, action()).opportunityAttacks.length, 0)
+  move(state, action())
+  settle(state, pickDesc)
+  assert.equal(me(state).damage, damageBefore)
+  assert.equal(freshAsset(state, spell.code).exhausted, false)
+  assert.equal(attachmentOf(state, '09042').attachment.exhausted, true)
+  state.skillTest = { seat: 0, source: { assetId: tome.id } }
+  assert.equal(modifierTotal(state, me(state), 'testValue'), 2)
+  state.skillTest.source.assetId = spell.id
+  assert.equal(modifierTotal(state, me(state), 'testValue'), 0)
 })
 
 // ── 09043 解剖工具 ──────────────────────────────────────────────────────────

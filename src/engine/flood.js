@@ -1,4 +1,5 @@
 import { integer, investigatorAt, locationAt, mechanicState } from './mechanic-state.js'
+import { nearestLocations } from './map-graph.js'
 import { eventWindowContext } from './event-window.js'
 import { registeredEntry } from './ability.js'
 function activeFloodBounds(location) {
@@ -12,6 +13,11 @@ export function canChangeFloodLevel(state, id, delta) {
   if (delta > 0 && mechanicState(state)?.floodPolicy?.locked?.includes(id)) return false
   const bounds = activeFloodBounds(location)
   return Math.max(bounds.min ?? 0, Math.min(bounds.max ?? 2, before + delta)) !== before
+}
+export function nearestFloodTargets(state, from, delta = 1) {
+  if (!Number.isSafeInteger(delta) || delta === 0) throw new TypeError('淹没变化必须为非零整数')
+  return nearestLocations(state.locations, from, location => canChangeFloodLevel(state, location.id, delta))
+    .map(location => location.id)
 }
 export function setFloodLevel(state, id, level, { cannotIncrease = false, ignoreRestrictions = false, onChange = null } = {}) {
   const location = locationAt(state, id); integer(level)

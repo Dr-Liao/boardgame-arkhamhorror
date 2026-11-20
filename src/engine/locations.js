@@ -13,6 +13,7 @@ import { hasWindowListener } from './window-listeners.js'
 import { removeEnemyLocation } from './enemy-location.js'
 import { discardHostedAssets } from './hosted-assets.js'
 import { discardPlayerCards } from './player-zones.js'
+import { discardEncounterAttachment } from './scenario-decks.js'
 
 // 地点卡自己的「揭示时」规则由条目声明（静态注册表，不进 state）。
 function locationRuleOf(loc) {
@@ -335,7 +336,8 @@ function removeLocation(state, id, events, options = {}) {
     forgetRoadLocation(state, loc.id)
     for (const attachment of loc.attachments || []) {
       const code = typeof attachment === 'string' ? attachment : attachment?.code
-      if (code && ALL_TREACHERIES[code]) state.encounterDiscard.push(code)
+      if (attachment?.discardToScenarioDeck) discardEncounterAttachment(state, attachment, code)
+      else if (code && ALL_TREACHERIES[code]) state.encounterDiscard.push(code)
     }
     discardBarricades(state, loc)
     // Phase 5（5a-14）：地点上的计数对应哪张遭遇卡在卡号规则数据里。
@@ -484,7 +486,16 @@ function discoverClueAt(state, inv, amount, events, opts = {}) {
     notifyCluesRemoved(state, loc, got, events)
     scenarioBehavior(state).cluesGained?.(state, inv, got, scenarioRuntime(state, events))
     // 能力层窗口：发现线索后（02061 沃伦·莱斯教授、05025 串联线索等）。
-    const clueContext = { when: 'clueDiscovered', seat: inv.seat,
+    let firstDiscovery
+    if (registeredEntry(inv.code)?.investigator?.trackClueDiscovery) {
+      const prior = inv.clueDiscovery
+      const ownTurn = state.phase === 'investigation' && state.currentSeat === inv.seat
+      const turn = ownTurn ? state.turnSerial : null
+      firstDiscovery = { firstThisRound: prior?.round !== state.round,
+        firstThisTurn: ownTurn && (prior?.round !== state.round || prior?.turn !== turn) }
+      inv.clueDiscovery = { round: state.round, turn }
+    }
+    const clueContext = { when: 'clueDiscovered', seat: inv.seat, ...firstDiscovery,
       location: loc.id, amount: got, lastClue: loc.clues === 0, shroud: loc.shroud,
       prompt: `${inv.name} 发现了 ${got} 个线索` }
     triggerReaction(state, inv.seat, 'clueDiscovered', events, clueContext)

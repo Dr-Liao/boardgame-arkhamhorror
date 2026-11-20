@@ -42,7 +42,7 @@ function driveHub (state, guardMax = 200) {
     settle(state)
     const moves = legalMoves(state)
     if (!moves.length) return false
-    const priority = ['hubBeginScenario', 'hubContinue', 'hubDoneSeat', 'hubAutoDeck', 'hubConfirmUpgrades',
+    const priority = ['hubBeginScenario', 'hubContinue', 'hubDoneSeat', 'hubConfirmDeck', 'hubAutoDeck', 'hubConfirmUpgrades',
       'hubAutoUpgrade', 'hubGoSetup', 'hubSelectInvestigator', 'hubSelectScenario', 'hubSetDifficulty', 'hubSetLeader']
     const candidates = priority.map(action => moves.find(move => move.action === action)).filter(Boolean)
     let applied = false

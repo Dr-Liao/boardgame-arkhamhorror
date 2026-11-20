@@ -17,6 +17,8 @@ import assert from 'node:assert/strict'
 import { createGameState, applyMove, legalMoves, actingSeats } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { viewState } from '../src/integration/observation.js'
+import { draftDeckStatus } from '../src/deck/draft-mode.js'
+import { migrateState } from '../src/engine/save-migration.js'
 
 const SAFE_IDS = ['done', 'skip', 'no', 'avoid', 'decline', 'cancel', 'none', 'leave', 'safe', 'continue']
 
@@ -50,11 +52,15 @@ function act (state, seat, move) {
 const findMove = (state, seat, action) => legalMoves(state, seat).find(move => move.action === action)
 const hasAction = (state, action) => legalMoves(state).some(move => move.action === action)
 
-/** 准备/关间窗口里推进一个座位：先选人/组牌，再确认（与真实界面顺序一致）。 */
+/** 准备/关间窗口里推进一个座位：三选一模式先补牌，普通模式先组牌，最后才确认（与真实界面顺序一致）。 */
 function prepareSeat (state, seat) {
   const moves = legalMoves(state, seat)
-  const move = moves.find(item => item.action === 'hubAutoDeck')
+  const move = moves.find(item => item.action === 'hubDraftRefill')
+    ?? moves.find(item => item.action === 'hubDraftPick')
+    ?? moves.find(item => item.action === 'hubAutoDeck')
+    ?? moves.find(item => item.action === 'hubConfirmDeck')
     ?? moves.find(item => item.action === 'hubDoneSeat')
+    ?? moves.find(item => item.action === 'hubDraftBuy')
     ?? moves.find(item => item.action === 'hubSelectInvestigator')
   return act(state, seat, move)
 }
@@ -89,9 +95,9 @@ function driveUntil (state, predicate, { maxSteps = 800 } = {}) {
   assert.fail('未在预期步数内到达目标状态')
 }
 
-function newGame (seed = 'tcu-interlude-windows') {
+function newGame (seed = 'tcu-interlude-windows', settings = {}) {
   return createGameState(
-    { campaignId: 'theCircleUndone', campaignHub: true, seed },
+    { campaignId: 'theCircleUndone', campaignHub: true, seed, ...settings },
     [{ seat: 0, role: 'human' }],
   )
 }
@@ -214,4 +220,84 @@ test('旧存档停在巫异时刻结算页：读档继续时补进新插入的�
   assert.equal(state.uiState, 'scenarioSetup')
   assert.equal(state.campaign.flow.nodeId, 'atDeathsDoorstep')
   assert.equal(state.hubReady, true)
+})
+
+// ---------------------------------------------------------------------------
+// 三选一（draft）模式：战役奖赏卡不计入 30 张 + 旧存档回退到漏掉的关间升级窗
+// ---------------------------------------------------------------------------
+test('三选一模式：巫异时刻的战役奖赏卡不计入 30 张，关间升级窗照常打开', () => {
+  const state = newGame('tcu-interlude-windows-draft', { deckMode: 'draft' })
+  driveUntil(state, current => current.uiState === 'inScenario'
+    && current.scenario?.id === 'disappearanceAtTheTwilightEstate')
+  // 序章交接会替换调查员实例，战役记录对象也可能被重建：断言时按座位重新读取。
+  const record = () => state.campaign.investigators[0]
+  assert.ok(record().draftMode, '三选一模式应在选人后初始化 draft 牌组')
+  assert.equal(draftDeckStatus(record()).ready, true, '序章前初始牌组应已补满')
+
+  act(state, 0, { action: 'debug', kind: 'endScenario', resolutionKey: 'noResolution' })
+  act(state, 0, findMove(state, 0, 'hubContinue'))
+  act(state, 0, findMove(state, 0, 'hubBeginScenario'))
+  // 《巫异时刻》介绍 2 会把「高塔·XVI」「权杖王牌」作为不计张数的战役奖赏加入牌组。
+  assert.ok(record().deck.includes('05040'), '介绍 2 应把权杖王牌加入战役牌组')
+  assert.ok((record().campaignCards || []).includes('05040'), '权杖王牌应标记为不计牌组的战役奖赏')
+  assert.equal(draftDeckStatus(record()).ready, true, '奖赏卡不能把三选一牌组顶成 31 张')
+  assert.equal(draftDeckStatus(record()).count, draftDeckStatus(record()).size)
+
+  act(state, 0, { action: 'debug', kind: 'endScenario', resolutionKey: 'resolution2' })
+  act(state, 0, findMove(state, 0, 'hubContinue'))
+  assert.equal(state.uiState, 'interlude')
+  assert.equal(state.campaign.flow.nodeId, 'restAfterWitchingHour')
+  assert.equal(state.campaign.upgradesAllowed, true)
+  assert.equal(draftDeckStatus(record()).ready, true)
+  assert.ok(record().xp >= 1, '三选一模式结算经验翻倍，应可在关间花掉')
+  prepareSeat(state, 0)
+  assert.equal(state.uiState, 'scenarioSetup')
+  assert.equal(state.campaign.flow.nodeId, 'atDeathsDoorstep')
+  const begin = findMove(state, 0, 'hubBeginScenario')
+  assert.ok(begin, '补记奖赏卡后应能开始《死亡门前》')
+  assert.equal(begin.disabled, undefined)
+})
+
+test('旧存档（修复前直接落到下一关准备页）：读档时回退款关间升级窗并补记奖赏卡', () => {
+  const state = newGame('tcu-interlude-windows-migrate', { deckMode: 'draft' })
+  driveUntil(state, current => current.uiState === 'inScenario'
+    && current.scenario?.id === 'disappearanceAtTheTwilightEstate')
+  act(state, 0, { action: 'debug', kind: 'endScenario', resolutionKey: 'noResolution' })
+  act(state, 0, findMove(state, 0, 'hubContinue'))
+  act(state, 0, findMove(state, 0, 'hubBeginScenario'))
+  act(state, 0, { action: 'debug', kind: 'endScenario', resolutionKey: 'resolution2' })
+  act(state, 0, findMove(state, 0, 'hubContinue'))
+  prepareSeat(state, 0)
+  assert.equal(state.campaign.flow.nodeId, 'atDeathsDoorstep')
+  const record = state.campaign.investigators[0]
+  // 还原成修复前的坏存档：流程直接进入下一关、没有 campaignCards 标记、draft 还停在 ready。
+  state.campaign.flow.history = state.campaign.flow.history.filter(visit => visit.nodeId !== 'restAfterWitchingHour')
+  delete state.campaign.flow.visits.restAfterWitchingHour
+  state.campaign.flow.nodeId = 'atDeathsDoorstep'
+  state.campaign.upgradesAllowed = undefined
+  state.uiState = state.phase = state.campaign.phase = 'scenarioSetup'
+  state.hubReady = true
+  state.hubSeatDone = { 0: true }
+  delete record.campaignCards
+  record.draftMode.phase = 'ready'
+  record.draftMode.options = []
+  assert.equal(draftDeckStatus(record).ready, false, '坏存档的牌组应被奖赏卡顶成 31 张')
+
+  const { state: repaired, changes } = migrateState(state)
+  assert.ok(changes.some(change => /关间升级窗/.test(change)), `缺少关间回退说明：${changes.join('；')}`)
+  assert.ok(changes.some(change => /战役奖赏卡/.test(change)), `缺少奖赏卡回填说明：${changes.join('；')}`)
+  assert.equal(repaired.uiState, 'interlude')
+  assert.equal(repaired.campaign.flow.nodeId, 'restAfterWitchingHour')
+  assert.equal(repaired.campaign.upgradesAllowed, true)
+  assert.deepEqual(repaired.campaign.investigators[0].campaignCards, ['05040'])
+  const repairedRecord = repaired.campaign.investigators[0]
+  assert.equal(draftDeckStatus(repairedRecord).ready, true, '读档后牌组应恢复合法')
+  assert.equal(repairedRecord.draftMode.phase, 'upgrade', '读档后应直接进入三选一升级')
+  const upgraded = structuredClone(repaired)
+  prepareSeat(upgraded, 0)
+  assert.equal(upgraded.uiState, 'scenarioSetup')
+  assert.equal(upgraded.campaign.flow.nodeId, 'atDeathsDoorstep')
+  const begin = findMove(upgraded, 0, 'hubBeginScenario')
+  assert.ok(begin, '修复后的存档应能开始《死亡门前》')
+  assert.equal(begin.disabled, undefined)
 })

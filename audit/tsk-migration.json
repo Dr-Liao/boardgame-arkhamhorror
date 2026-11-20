@@ -12,11 +12,11 @@
     "docs/campaign/theScarletKeys/README.md#P8",
     "docs/campaign/theScarletKeys/README.md#6-每章完成模板"
   ],
-  "status": "verified",
-  "playable": true,
+  "status": "pending",
+  "playable": false,
   "launchEnabled": true,
   "earlyAccess": false,
-  "equivalenceCertified": true,
+  "equivalenceCertified": false,
   "gates": {
     "registration": {
       "pass": true,
@@ -132,7 +132,7 @@
       }
     },
     "ledgers": {
-      "pass": true,
+      "pass": false,
       "checks": {
         "scope": {
           "pass": true,
@@ -168,7 +168,7 @@
         },
         "scan": {
           "pass": true,
-          "sha256": "4c5ce13cc09e88b6ad04a48f660a688d1eaf63dbbb4e060bfe9b0df48c859932",
+          "sha256": "1b821468bbb8ad5e8b85a715c0e9330cf7750d6d39f505a0d558813ba4fff702",
           "path": "audit/tsk-mechanism-scan.json",
           "gates": {
             "scopePassed": true,
@@ -191,7 +191,7 @@
         },
         "primitivePlan": {
           "pass": true,
-          "sha256": "d36c4a93b5f360e218a2a9648a7f3016892a207611136a2a4455d1006dfc3bd2",
+          "sha256": "4fdc0718b6b58e07cb5e18488e7e6b0624fcefa06cbdd41d98cb23a0f8863a5d",
           "path": "audit/tsk-primitive-plan.json",
           "gates": {
             "catalogEntriesCovered": true,
@@ -236,10 +236,10 @@
       },
       "commands": {
         "baseline": {
-          "pass": true,
+          "pass": false,
           "command": "node tools/scan-tsk-baseline.mjs --check-metadata",
-          "exitCode": 0,
-          "tail": "tsk baseline: check ok（gitHead fb7d536；replay 13 局 / 870 步 sha256=19e63fcba8a5…；rulesVersion n6.0 / schemaVersion 7；合规与 12 项指标一致；回放由发布门禁校验）\n"
+          "exitCode": 1,
+          "tail": "tsk baseline: FAILED：architectureMetrics 漂移：descriptorEntries, descriptorAbilities, windows, nonPlayerCards, behaviorLines；先运行 node tools/audit-abilities.mjs --write 并审阅，再显式 --write\n"
         },
         "nodeAcceptance": {
           "pass": true,
@@ -254,34 +254,34 @@
           "tail": "tsk rules: 复算一致（关键词 29 个 / 规则 17 条）\n"
         },
         "interactions": {
-          "pass": true,
+          "pass": false,
           "command": "node tools/audit-tsk-interactions.mjs --check",
-          "exitCode": 0,
-          "tail": "tsk interactions: 复算一致\ntsk interactions: verified（覆盖 6 组 × 2 视口：{\"desktop\":{\"concealed\":true,\"keys\":true,\"hollow\":true,\"map\":true,\"customizable\":true,\"crossSeat\":true},\"mobile\":{\"concealed\":true,\"keys\":true,\"hollow\":true,\"map\":true,\"customizable\":true,\"crossSeat\":true}}）\n"
+          "exitCode": 1,
+          "tail": "58\r\n      throw new Error(`${target} 漂移；审阅来源/实现变化后显式 --write`)\r\n            ^\r\n\r\nError: G:\\boardgame-hall-ai\\games\\arkhamhorror\\audit\\tsk-interactions.json 漂移；审阅来源/实现变化后显式 --write\r\n    at emit (file:///G:/boardgame-hall-ai/games/arkhamhorror/tools/tsk-migration-lib.mjs:58:13)\r\n    at file:///G:/boardgame-hall-ai/games/arkhamhorror/tools/audit-tsk-interactions.mjs:173:5\r\n    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)\r\n    at async node:internal/modules/esm/loader:643:26\r\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)\r\n\r\nNode.js v24.19.0\r\n"
         },
         "investigators": {
-          "pass": true,
+          "pass": false,
           "command": "node tools/audit-tsk-investigators.mjs --check",
-          "exitCode": 0,
-          "tail": "tsk investigators: 复算一致\n"
+          "exitCode": 1,
+          "tail": "file:///G:/boardgame-hall-ai/games/arkhamhorror/tools/audit-tsk-investigators.mjs:136\r\n    if (disk !== body) throw new Error('audit/tsk-investigators.json 与当前证据不一致：审阅后显式 --write')\r\n                             ^\r\n\r\nError: audit/tsk-investigators.json 与当前证据不一致：审阅后显式 --write\r\n    at file:///G:/boardgame-hall-ai/games/arkhamhorror/tools/audit-tsk-investigators.mjs:136:30\r\n\r\nNode.js v24.19.0\r\n"
         },
         "player": {
-          "pass": true,
+          "pass": false,
           "command": "node tools/audit-tsk-player.mjs --check",
-          "exitCode": 0,
-          "tail": "tsk player-acceptance: 复算一致\n"
+          "exitCode": 1,
+          "tail": ":58\r\n      throw new Error(`${target} 漂移；审阅来源/实现变化后显式 --write`)\r\n            ^\r\n\r\nError: G:\\boardgame-hall-ai\\games\\arkhamhorror\\audit\\tsk-player-acceptance.json 漂移；审阅来源/实现变化后显式 --write\r\n    at emit (file:///G:/boardgame-hall-ai/games/arkhamhorror/tools/tsk-migration-lib.mjs:58:13)\r\n    at file:///G:/boardgame-hall-ai/games/arkhamhorror/tools/audit-tsk-player.mjs:253:5\r\n    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)\r\n    at async node:internal/modules/esm/loader:643:26\r\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)\r\n\r\nNode.js v24.19.0\r\n"
         },
         "scenarios": {
-          "pass": true,
+          "pass": false,
           "command": "node tools/audit-tsk-scenarios.mjs --check",
-          "exitCode": 0,
-          "tail": "tsk scenarios: 复算一致\n"
+          "exitCode": 1,
+          "tail": "file:///G:/boardgame-hall-ai/games/arkhamhorror/tools/audit-tsk-scenarios.mjs:157\r\n    if (readFileSync(EVIDENCE_PATH, 'utf8') !== body) throw new Error('audit/tsk-scenario-acceptance.json 与复算不一致：审阅后 --write')\r\n                                                            ^\r\n\r\nError: audit/tsk-scenario-acceptance.json 与复算不一致：审阅后 --write\r\n    at file:///G:/boardgame-hall-ai/games/arkhamhorror/tools/audit-tsk-scenarios.mjs:157:61\r\n\r\nNode.js v24.19.0\r\n"
         },
         "guides": {
           "pass": true,
           "command": "node tools/import-scenario-guides.mjs",
           "exitCode": 0,
-          "tail": "Adventure guides: 72 scenarios verified.\n"
+          "tail": "Adventure guides: 94 scenarios verified.\n"
         },
         "story": {
           "pass": true,
@@ -323,7 +323,7 @@
     "allCards": {
       "pass": true,
       "path": "audit/tsk-all-card-acceptance.json",
-      "sha256": "6dd08aae19d563b40a6a30db5ace6e56ea78d797decf737740326c87fe2a3e2f",
+      "sha256": "559d85df6ce3944b7906400bfb6b3386a334068c39f710404c284088401ee1ea",
       "summary": {
         "total": 439,
         "verified": 161,
@@ -361,7 +361,7 @@
           "chapter": 121,
           "none": 0
         },
-        "staleEntryHashes": 0,
+        "staleEntryHashes": 6,
         "testFiles": 21,
         "testsPassed": 366,
         "testsFailed": 0,
@@ -531,44 +531,47 @@
       "sha256": "19e63fcba8a5428123dd3f74404208e9e324ad06550999387028bdab65eac688"
     },
     "guards": {
-      "pass": true,
+      "pass": false,
       "tests": {
         "command": "node --test tests/architecture-guard.test.mjs tests/suite-manifest.test.mjs tests/card-entries.test.mjs tests/encounter-entries.test.mjs tests/scenario-guides.test.mjs tests/tsk-all-cards.test.mjs",
         "tests": 58,
-        "pass": 58,
-        "fail": 0,
-        "failedTitles": []
+        "pass": 56,
+        "fail": 2,
+        "failedTitles": [
+          "证据形状与快照：来源可追溯、测试文件 sha256 与磁盘一致、0 失败",
+          "P8 TSK 逐卡账本"
+        ]
       },
       "commands": {
         "cardIndex": {
           "pass": true,
           "command": "node tools/build-card-index.mjs --check",
           "exitCode": 0,
-          "tail": "✔ entries/index.js 与目录一致（1042 张卡）\n"
+          "tail": "✔ entries/index.js 与目录一致（1315 张卡）\n"
         },
         "encounterIndex": {
           "pass": true,
           "command": "node tools/build-encounter-index.mjs --check",
           "exitCode": 0,
-          "tail": "✔ encounter-entries/index.js 与目录一致（1874 个条目）\n"
+          "tail": "✔ encounter-entries/index.js 与目录一致（2451 个条目）\n"
         },
         "compliance": {
           "pass": true,
           "command": "node tools/audit-card-entry-compliance.mjs --check",
           "exitCode": 0,
-          "tail": "卡条目合规审计通过（无基线外新增违规）\n{\n \"directStateWrite\": 112,\n \"singleCardField\": 21,\n \"reprintDuplicate\": 0,\n \"playConditionGap\": 0,\n \"testWrapper\": 24,\n \"revelationTestCards\": 87,\n \"selfCodeInstanceLookup\": 21\n}\n"
+          "tail": "卡条目合规审计通过（无基线外新增违规）\n{\n \"directStateWrite\": 112,\n \"singleCardField\": 21,\n \"reprintDuplicate\": 0,\n \"playConditionGap\": 0,\n \"testWrapper\": 25,\n \"revelationTestCards\": 123,\n \"selfCodeInstanceLookup\": 22\n}\n"
         },
         "presentation": {
           "pass": true,
           "command": "node tools/build-presentation.mjs --check",
           "exitCode": 0,
-          "tail": "t\": 2592,\n \"genericBacks\": {\n  \"encounter\": 1635,\n  \"player\": 1703\n },\n \"localizedArtEntries\": 6493,\n \"localImagesCopied\": 0,\n \"remoteManifestEntries\": 30895,\n \"referenceLocalMediaFiles\": 230,\n \"presentationVersion\": \"134c629d97e3990e4e6c274cc485113a2be4e2bc260065d14531e9c2030ef97c\",\n \"drift\": []\n}\n"
+          "tail": "t\": 2592,\n \"genericBacks\": {\n  \"encounter\": 1635,\n  \"player\": 1703\n },\n \"localizedArtEntries\": 6493,\n \"localImagesCopied\": 0,\n \"remoteManifestEntries\": 30895,\n \"referenceLocalMediaFiles\": 230,\n \"presentationVersion\": \"1fb167e0e7d9783dea135762b49f8815e82d1b73eedf88254742a75b319a546c\",\n \"drift\": []\n}\n"
         },
         "docs": {
           "pass": true,
           "command": "node tools/check-doc-links.mjs",
           "exitCode": 0,
-          "tail": "文档链接体检：65 个文件、299 条本地链接全部可解析\n"
+          "tail": "文档链接体检：82 个文件、429 条本地链接全部可解析\n"
         }
       }
     },
@@ -584,7 +587,7 @@
       "runtimeReferenceHits": [],
       "localImagesLedger": {
         "path": "audit/local-images.json",
-        "sha256": "745cd684dfbce12d09a2d95643cafe16d5aacd65b205ee1183a0e6ff3cb7d204"
+        "sha256": "2766cfe1c2eb79d9c56d8cef9e3978d6de90b2713001046c5db843f924a9e21c"
       }
     },
     "confirmations": {
@@ -612,7 +615,7 @@
         "pass": true,
         "command": "node tools/import-scenario-guides.mjs",
         "exitCode": 0,
-        "tail": "Adventure guides: 72 scenarios verified.\n"
+        "tail": "Adventure guides: 94 scenarios verified.\n"
       }
     },
     "flowDeclared": {
@@ -2660,7 +2663,7 @@
     },
     "allCards": {
       "path": "audit/tsk-all-card-acceptance.json",
-      "sha256": "6dd08aae19d563b40a6a30db5ace6e56ea78d797decf737740326c87fe2a3e2f",
+      "sha256": "559d85df6ce3944b7906400bfb6b3386a334068c39f710404c284088401ee1ea",
       "summary": {
         "total": 439,
         "verified": 161,
@@ -2698,7 +2701,7 @@
           "chapter": 121,
           "none": 0
         },
-        "staleEntryHashes": 0,
+        "staleEntryHashes": 6,
         "testFiles": 21,
         "testsPassed": 366,
         "testsFailed": 0,
@@ -2739,7 +2742,7 @@
       "pass": true,
       "command": "node tools/import-scenario-guides.mjs",
       "exitCode": 0,
-      "tail": "Adventure guides: 72 scenarios verified.\n"
+      "tail": "Adventure guides: 94 scenarios verified.\n"
     },
     "story": {
       "pass": true,
@@ -2763,11 +2766,11 @@
     },
     {
       "path": "audit/tsk-mechanism-scan.json",
-      "sha256": "4c5ce13cc09e88b6ad04a48f660a688d1eaf63dbbb4e060bfe9b0df48c859932"
+      "sha256": "1b821468bbb8ad5e8b85a715c0e9330cf7750d6d39f505a0d558813ba4fff702"
     },
     {
       "path": "audit/tsk-primitive-plan.json",
-      "sha256": "d36c4a93b5f360e218a2a9648a7f3016892a207611136a2a4455d1006dfc3bd2"
+      "sha256": "4fdc0718b6b58e07cb5e18488e7e6b0624fcefa06cbdd41d98cb23a0f8863a5d"
     },
     {
       "path": "audit/tsk-primitive-catalog.json",
@@ -2779,11 +2782,11 @@
     },
     {
       "path": "audit/tsk-rules.json",
-      "sha256": "fee8d49e6b71d0dfcee081e01376b52f09d0595714b705ee0ced4735035beaab"
+      "sha256": "3305df2f48c4f01ec1a548017be27c00fe604b42ff2c99c36064d4ee28ea3a95"
     },
     {
       "path": "audit/tsk-interactions.json",
-      "sha256": "fc293000144e631b81f08e618daac8a8edb11237787477a72bcf1f9523d07bd8"
+      "sha256": "b1b35cc8d99de01672f112f08860107a596c472a505c2e74ccc6798cc1b8dcd3"
     },
     {
       "path": "audit/tsk-investigators.json",
@@ -2791,7 +2794,7 @@
     },
     {
       "path": "audit/tsk-player-acceptance.json",
-      "sha256": "72b78cca6de9c54a400f677d265c3bc7e1e016ce17c0ee3881b2def1bfcbc807"
+      "sha256": "9eabf78ddcfdb571af93927d12cfc82fc99baae9e9d9e724fb9b274a06187538"
     },
     {
       "path": "audit/tsk-scenario-acceptance.json",
@@ -2811,7 +2814,7 @@
     },
     {
       "path": "audit/tsk-interactions-browser.json",
-      "sha256": "661cd1a61906e58cae6a22640be968ea13b0da8b764be9fa82a10cca8adf0c66"
+      "sha256": "f0f267a0e366ec28d2972d8fe474c1842e3a09fe8d76684730107344895b38f6"
     },
     {
       "path": "audit/tsk-investigators-browser.json",
@@ -2827,7 +2830,7 @@
     },
     {
       "path": "audit/tsk-all-card-acceptance.json",
-      "sha256": "6dd08aae19d563b40a6a30db5ace6e56ea78d797decf737740326c87fe2a3e2f"
+      "sha256": "559d85df6ce3944b7906400bfb6b3386a334068c39f710404c284088401ee1ea"
     },
     {
       "path": "audit/tsk-release-browser.json",
@@ -2843,7 +2846,7 @@
     },
     {
       "path": "audit/local-images.json",
-      "sha256": "745cd684dfbce12d09a2d95643cafe16d5aacd65b205ee1183a0e6ff3cb7d204"
+      "sha256": "2766cfe1c2eb79d9c56d8cef9e3978d6de90b2713001046c5db843f924a9e21c"
     },
     {
       "path": "tests/fixtures/replay/tsk-baseline.json",
@@ -2863,7 +2866,7 @@
     },
     {
       "path": "content/registered.js",
-      "sha256": "f3ac7ede6293a0ac8c30ad3a3c1ccb5f69017d5286d49ed02e03ba9e9d892abe"
+      "sha256": "8c9204dc062e13af8bf40327a4bb4ebdfda18f2cacef9a01f5936338d0cb8e5d"
     },
     {
       "path": "content/mechanics.js",
@@ -2885,11 +2888,18 @@
       "kind": "primitive-backlog",
       "count": 175,
       "note": "P8 裁决为 deferred，进入 P9 原语批次（audit/tsk-primitive-adjudication.json）"
+    },
+    {
+      "kind": "gate-pending",
+      "gates": [
+        "ledgers",
+        "guards"
+      ]
     }
   ],
   "gate": {
     "registration": true,
-    "ledgers": true,
+    "ledgers": false,
     "allCards": true,
     "campaignE2E": true,
     "releaseBrowser": true,
@@ -2897,7 +2907,7 @@
     "lobbyEpilogue": true,
     "regression": true,
     "replay": true,
-    "guards": true,
+    "guards": false,
     "assets": true,
     "confirmations": true,
     "storyGuides": true,

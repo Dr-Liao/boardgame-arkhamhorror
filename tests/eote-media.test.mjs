@@ -10,7 +10,11 @@ import {campaignPresentation,campaignPlaylistId} from '../web/campaign-presentat
 test('地球边缘八章各三首，实际旧曲复用低于 40%，循环内无重复',()=>{
  const config=SCENARIO_MUSIC.edgeOfTheEarth
  assert.deepEqual(Object.keys(config).sort(),chapters.map(c=>c.id).sort())
- const old=new Set(Object.entries(SCENARIO_MUSIC).filter(([id])=>id!=='edgeOfTheEarth').flatMap(([,c])=>Object.values(c).flatMap(r=>r.tracks)))
+ const earlierCampaigns=[
+  'nightOfTheZealot','theDunwichLegacy','thePathToCarcosa','theForgottenAge',
+  'theCircleUndone','theDreamEaters','theInnsmouthConspiracy',
+ ]
+ const old=new Set(earlierCampaigns.flatMap(id=>Object.values(SCENARIO_MUSIC[id]).flatMap(chapter=>chapter.tracks)))
  const sources=JSON.parse(readFileSync(new URL('../web/audio/music/sources.json',import.meta.url)))
  const assigned=[]
  for(const c of chapters){

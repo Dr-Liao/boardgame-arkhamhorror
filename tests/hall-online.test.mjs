@@ -97,7 +97,7 @@ test('Arkham human seats prepare investigators and decks at the same time', asyn
   const picked = await guest.command('move', { revision: stale, move: guestPick })
   assert.equal(picked.ok, true, picked.error)
   assert.equal(picked.session.state.investigators[1].code, guestPick.code)
-  for (const [hall, action] of [[guest, 'hubAutoDeck'], [host, 'hubAutoDeck'], [guest, 'hubDoneSeat']]) {
+  for (const [hall, action] of [[guest, 'hubAutoDeck'], [host, 'hubAutoDeck'], [guest, 'hubConfirmDeck'], [host, 'hubConfirmDeck'], [guest, 'hubDoneSeat']]) {
     const result = await hall.command('move', { revision: stale, move: { action } })
     assert.equal(result.ok, true, `${action}: ${result.error}`)
   }
@@ -230,7 +230,7 @@ test('Arkham human guests and an AI teammate complete preparation and opening ch
     const current = (await hall.call('status')).session
     const moves = current.state.legalMoves
     const move = current.state.pendingChoice ? moves.find(m => ['done', 'skip'].includes(m.optionId)) || moves[0]
-      : ['hubGoSetup', 'hubAutoDeck', 'hubDoneSeat', 'hubSelectInvestigator', 'hubBeginScenario', 'hubSetLeader'].map(action => moves.find(m => m.action === action)).find(Boolean)
+      : ['hubGoSetup', 'hubAutoDeck', 'hubConfirmDeck', 'hubDoneSeat', 'hubSelectInvestigator', 'hubBeginScenario', 'hubSetLeader'].map(action => moves.find(m => m.action === action)).find(Boolean)
     assert.ok(move)
     const result = await hall.command('move', { revision: current.state.revision, move })
     assert.equal(result.ok, true, result.error)
@@ -333,7 +333,7 @@ test('Arkham four humans: preparation, choices, private tests, round transitions
         reconnected = true
       }
     } else if (st.uiState !== 'inScenario') {
-      move = ['hubGoSetup', 'hubAutoDeck', 'hubDoneSeat', 'hubSelectInvestigator', 'hubBeginScenario', 'hubSetLeader']
+      move = ['hubGoSetup', 'hubAutoDeck', 'hubConfirmDeck', 'hubDoneSeat', 'hubSelectInvestigator', 'hubBeginScenario', 'hubSetLeader']
         .map(a => moves.find(m => m.action === a)).find(Boolean)
     } else {
       move = (!help || !privateTest ? moves.find(m => m.action === 'investigate') : null)
@@ -354,7 +354,7 @@ test('Arkham four humans: preparation, choices, private tests, round transitions
     for (let step = 0; step < 40 && final[0].state.uiState !== 'inScenario' && final[0].state.status === 'playing'; step++) {
       const seat = final[0].decisionSeat, st = final[seat].state, moves = st.legalMoves
       const move = st.pendingChoice ? moves.find(m => ['done', 'skip'].includes(m.optionId)) || moves[0]
-        : ['hubContinue', 'hubAutoDeck', 'hubDoneSeat', 'hubSelectInvestigator', 'hubBeginScenario', 'hubSetLeader']
+        : ['hubContinue', 'hubAutoDeck', 'hubConfirmDeck', 'hubDoneSeat', 'hubSelectInvestigator', 'hubBeginScenario', 'hubSetLeader']
           .map(a => moves.find(m => m.action === a)).find(Boolean)
       assert.ok(move, 'campaign continuation must offer an actionable choice')
       await act(seat, move, final)

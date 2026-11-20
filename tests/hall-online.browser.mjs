@@ -73,7 +73,7 @@ test('Arkham second player can prepare own investigator and see own deck', async
     const result = await command(index, 'move', { revision: session.state.revision, move })
     expect(result.ok, result.error).toBe(true)
   }
-  await act(0, 'hubGoSetup'); await act(0, 'hubSelectInvestigator'); await act(0, 'hubAutoDeck'); await act(0, 'hubDoneSeat')
+  await act(0, 'hubGoSetup'); await act(0, 'hubSelectInvestigator'); await act(0, 'hubAutoDeck'); await act(0, 'hubConfirmDeck'); await act(0, 'hubDoneSeat')
   const guest = await browser.newPage(), errors = []
   let hostOnline = true, statusSerial = 100000
   await guest.route('**/api/online/status*', async route => {
@@ -100,7 +100,7 @@ test('Arkham second player can prepare own investigator and see own deck', async
   const session = (await api(1, 'status')).session
   await expect(guest.locator('.ah-office-deck-heading h3')).toHaveText(session.state.investigators[1].name)
   await guest.screenshot({ path: 'artifacts/online-arkham-seat2.png', fullPage: true })
-  await act(1, 'hubDoneSeat'); await act(0, 'hubSetLeader'); await act(0, 'hubBeginScenario')
+  await act(1, 'hubConfirmDeck'); await act(1, 'hubDoneSeat'); await act(0, 'hubSetLeader'); await act(0, 'hubBeginScenario')
   await expect(guest.locator('.ah-hand[data-hand-seat="1"]')).toBeVisible()
   const playing = (await api(1, 'status')).session
   expect(playing.state.investigators[1].hand.length).toBeGreaterThan(0)

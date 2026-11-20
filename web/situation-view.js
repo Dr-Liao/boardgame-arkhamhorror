@@ -120,6 +120,8 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
       : st.investigators.filter(inv => !inv.defeated && !inv.resigned).reduce((sum, inv) => sum + (inv.clues || 0), 0)
     const bag = st.chaosBag || [], chaos = st.chaos || {}
     const encounter = st.encounterDeckSize ?? st.encounterDeck?.length ?? 0
+    const encounterTop = st.encounterTop
+    const encounterTopName = encounterTop && (cardDisplayName(encounterTop) || encounterTop.code)
     const doomProgress = (count, limit) => h('div', { className: 'ah-situ-progress is-doom' },
       h('span', {}, tableIcon('doom'), t('situation.doom.progress', { doom: count, threshold: limit ?? '?' })),
       h('span', { className: 'ah-situ-progress-track', 'aria-hidden': 'true' },
@@ -179,9 +181,12 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
               h('span', { className: 'ah-situ-bag-token', title: t('situation.bag.tokenTitle', { label: item.label, count: item.count }) },
                 item.src ? h('img', { src: item.src, alt: item.label, draggable: false }) : h('b', {}, item.label),
                 item.count > 1 ? h('i', {}, '×' + item.count) : null))))),
-        h('div', { className: 'ah-situ-encounter' },
-          h('img', { src: IMG + 'backs/back_encounter.webp', alt: t('situation.encounter.backAlt') }),
-          h('span', {}, h('strong', {}, t('situation.encounter.title')),
+        h(encounterTop ? 'button' : 'div', { className: 'ah-situ-encounter',
+          ...(encounterTop ? { type: 'button', 'data-encounter-top': encounterTop.code,
+            onclick: () => leave(() => openDetail(encounterTop, { runtime: false })) } : {}) },
+          encounterTop ? tableArt(h, encounterTop.originalCode || encounterTop.code, encounterTopName)
+            : h('img', { src: IMG + 'backs/back_encounter.webp', alt: t('situation.encounter.backAlt') }),
+          h('span', {}, h('strong', {}, encounterTop ? t('table.encounter.top', { name: encounterTopName }) : t('situation.encounter.title')),
             h('small', {}, t('situation.encounter.summary', { count: encounter, discard: st.encounterDiscard?.length || 0 }))))))
   }
 

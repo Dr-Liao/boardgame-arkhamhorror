@@ -22,6 +22,10 @@
 .ah-mechanic-summary { border-block: 1px solid var(--ah-theme-edge); color: var(--ah-theme-accent); padding: 1em; }
 .ah-mechanic-summary summary { cursor: pointer; }
 .ah-mechanic-summary p,.ah-mechanic-investigator p { margin: 0; overflow-wrap: anywhere; }
+.ah-mechanic-summary:has([data-tdc-summary]) { min-height: 0; max-height: 35dvh; overflow: auto; overscroll-behavior: contain; }
+.ah-tdc-glyphs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 8em), 1fr)); gap: .5em; list-style: none; padding: 0; }
+.ah-tdc-glyphs li { border: 1px solid var(--ah-theme-edge); padding: .5em; overflow-wrap: anywhere; }
+[data-tdc-part] .ah-tcu-actions span { display: grid; gap: .25em; }
 .ah-mechanic-air { display: block; color: var(--ah-theme-muted); }
 .ah-mechanic-air[data-air-required='true'] { color: var(--ah-theme-accent-strong); font-weight: bold; }
 .ah-mechanic-investigator .ah-threat-row { flex-wrap: wrap; }

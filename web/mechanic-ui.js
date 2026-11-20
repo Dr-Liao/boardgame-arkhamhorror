@@ -3,6 +3,7 @@ import { t } from './i18n.js'
 import { chaosTokenFace } from './chaos-token.js'
 import { tableIcon } from './table-components.js'
 import { cardDisplayName } from './catalog.js'
+import { renderTdcInteractionSummary } from './tdc-interaction-ui.js'
 
 const operations = {
   seal: 'mechanic.seal', release: 'mechanic.release', claimKey: 'mechanic.claimKey', giveKeys: 'mechanic.giveKeys',
@@ -18,6 +19,8 @@ const operations = {
   // 九循环《铁杉谷盛宴》交互操作（P4）：法典/序曲整备/网格与矿车/猎杀袋/坚毅形态/线索搬移。
   fhvCodex: 'mechanic.fhvCodex', fhvSurvey: 'mechanic.fhvSurvey', fhvGrid: 'mechanic.fhvGrid',
   fhvRail: 'mechanic.fhvRail', fhvPredation: 'mechanic.fhvPredation', fhvForm: 'mechanic.fhvForm', fhvClue: 'mechanic.fhvClue',
+  tdcTask: 'mechanic.tdcTask', tdcRoute: 'mechanic.tdcRoute', tdcGlyph: 'mechanic.tdcGlyph',
+  tdcArtifact: 'mechanic.tdcArtifact', tdcMap: 'mechanic.tdcMap',
 }
 // 寒霜标记没有打包卡图时退回 ❄ 字形；其它标记面保持原有 img 行为不变。
 const tokenChip = (h, token) => {
@@ -30,7 +33,8 @@ const tokenChip = (h, token) => {
 }
 const colors = { red: 'mechanic.key.red', yellow: 'mechanic.key.yellow', green: 'mechanic.key.green', blue: 'mechanic.key.blue',
   purple: 'mechanic.key.purple', white: 'mechanic.key.white', black: 'mechanic.key.black', unrevealed: 'mechanic.key.unrevealed' }
-const stages = { items: 'mechanic.stage.items', recipient: 'mechanic.stage.recipient', driver: 'mechanic.stage.driver', destination: 'mechanic.stage.destination' }
+const stages = { items: 'mechanic.stage.items', recipient: 'mechanic.stage.recipient', driver: 'mechanic.stage.driver',
+  destination: 'mechanic.stage.destination', route: 'mechanic.tdc.stageRoute', region: 'mechanic.tdc.stageRegion' }
 export const keyLabel = color => t(colors[color] || colors.unrevealed)
 export const floodLabel = level => t(['mechanic.flood.dry', 'mechanic.flood.partial', 'mechanic.flood.full'][level] || 'mechanic.flood.dry')
 let focusKey = null
@@ -106,11 +110,13 @@ export function renderMechanicChoice(h, session, { disabled, busy, onSubmit, ins
     if (!enabled || !option?.move) return
     const result = onSubmit(option.move)
     // 取消（Escape 或取消按钮）：等 HTTP move 结算并重渲染后，把焦点还给来源实体。
-    if (option.id === 'cancel') restoreAfterChoice(result, restoreKey)
+    if (option.id === 'cancel' || (option.id === 'confirm' && choice.source?.operation?.startsWith('tdc'))) {
+      restoreAfterChoice(result, restoreKey)
+    }
   }
   const tokenLabel = option => option.token != null ? chaosTokenFace(option.token).label
     : option.keyColor ? keyLabel(option.keyColor)
-      : option.cardCode ? cardDisplayName(state.cards?.[option.cardCode]) || option.cardCode : option.label
+      : option.cardCode ? cardDisplayName(state.cards?.[option.cardCode]) || option.label || option.cardCode : option.label
   const action = option => {
     const label = option.id === 'cancel' ? t('mechanic.cancel') : option.id === 'confirm' ? t('mechanic.confirm') : tokenLabel(option)
     return h('button', { type: 'button', className: 'ah-tcu-option' + (['cancel', 'confirm'].includes(option.id) ? ' is-secondary' : ''),
@@ -157,9 +163,14 @@ export function renderMechanicChoice(h, session, { disabled, busy, onSubmit, ins
   return panel
 }
 
-export function renderMechanicSummary(h, state, { seat = 0, moves = [], canAct = false, submit = null } = {}) {
+export function renderMechanicSummary(h, state, { seat = 0, moves = [], canAct = false, submit = null, tdcOpen, onTdcToggle } = {}) {
   const model = state.mechanics
-  if (!model || (!model.water && !model.keys && !model.vehicles && !model.eote && !model.tsk && !model.fhv)) return null
+  if (!model) return null
+  const tsk = model.tsk
+  // 定制勾选已在卡牌详情展示，单独出现时无需占用牌桌的一整栏。
+  const hasTskSummary = tsk && (tsk.concealed?.length || tsk.keys?.length || tsk.hollows || tsk.map
+    || tsk.scenarioFlags?.length || tsk.statusReports || tsk.dossiers || tsk.crossSeat?.length)
+  if (!model.water && !model.keys && !model.vehicles && !model.eote && !hasTskSummary && !model.fhv && !model.tdc) return null
   const water = model.water?.investigators.find(item => item.seat === seat)
   const holderName = holder => {
     const [kind, ...parts] = holder.split(':'), id = parts.join(':')
@@ -187,7 +198,6 @@ export function renderMechanicSummary(h, state, { seat = 0, moves = [], canAct =
     ? holderName(`location:${seal.locationId}`)
     : seal.placedBySeat != null ? seatName(seal.placedBySeat) : t('mechanic.eote.seal.unheld')
   // ── 八循环《绯红密钥》P4 交互摘要（公开/本人可见；未揭露迷你卡不显示真身）──────────────
-  const tsk = model.tsk
   const positionLabel = position => t({
     left: 'mechanic.tsk.positionLeft', middle: 'mechanic.tsk.positionMiddle', right: 'mechanic.tsk.positionRight',
   }[position] || 'mechanic.tsk.positionAtLocation')
@@ -347,7 +357,10 @@ export function renderMechanicSummary(h, state, { seat = 0, moves = [], canAct =
         'data-fhv-clue-asset': asset.id, 'data-fhv-asset-clues': String(asset.clues),
         'data-fhv-asset-traits': asset.traits.join(','),
       }, cardName(asset.code), ' · ', t('mechanic.fhv.clueCount', { count: asset.clues })))) : null) : null
-  return h('details', { className: 'ah-mechanic-summary ah-tcu-panel' }, h('summary', {}, t('mechanic.summary'),
+  return h('details', { className: 'ah-mechanic-summary ah-tcu-panel',
+    ...(model.tdc ? { open: !!tdcOpen, ontoggle: event => {
+      if (event.currentTarget.isConnected) onTdcToggle?.(event.currentTarget.open)
+    } } : {}) }, h('summary', {}, t('mechanic.summary'),
     water ? h('span', { className: 'ah-mechanic-air', 'data-air-required': String(water.airRequired) },
       floodLabel(water.level), ' · ', water.airRequired ? t('mechanic.airRisk', { damage: water.damage }) : t('mechanic.airSafe')) : null),
     renderTokenSequence(h, model.tokens),
@@ -396,5 +409,6 @@ export function renderMechanicSummary(h, state, { seat = 0, moves = [], canAct =
         (eote.droppedSupplies || []).map(row => h('p', { 'data-eote-dropped': row.locationId, 'data-dropped-count': String(row.count) },
           t('mechanic.eote.droppedSupplies', { location: holderName(`location:${row.locationId}`), count: row.count })))) : null) : null,
     tskSummary,
-    fhvSummary)
+    fhvSummary,
+    renderTdcInteractionSummary(h, state, { moves, canAct, submit }))
 }

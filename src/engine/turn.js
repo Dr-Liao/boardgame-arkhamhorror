@@ -1,6 +1,7 @@
 import { resetTskTurnTracking } from './tsk-investigator-support.js'
 import { hunterRouteCandidates } from './enemy-routes.js'
-import { resolvePatrol } from './enemy-keyword-movement.js'
+import { enemyHasAttackKeyword, recordEnemyPhaseAttack, resolvePatrol, trackEnemyPhaseAttacks } from './enemy-keyword-movement.js'
+import { enemyIsPart } from './enemy-parts.js'
 import { enemyCanEnterLocation } from './enemy-entry.js'
 import { mechanicState } from './mechanic-state.js'
 import { putInHand } from './hand-entry.js'
@@ -30,6 +31,26 @@ import { swarmGroup } from './swarm.js'
 import {
   clearAttackHistory, clearExpiredFlipAfterTestMarkers, resetRoundEvents, syncAllPassiveDeckTops,
 } from './eote-investigator-support.js'
+
+export function redirectMythosEncounterDraw(state, context, seat, options = {}) {
+  const inv = state.investigators[seat]
+  if (state.phase !== 'mythos' || context?.when !== 'mythosEncounterStep' || context.skip
+    || state.mythosEncounterReplacementRound === state.round || state.scenario?.mechanics?.noEncounterDeck
+    || !inv || inv.defeated || inv.resigned) return false
+  context.encounterDrawRedirect = {
+    seat, uncancelable: options.uncancelable === true, firstSurge: options.firstSurge === true,
+    skipNext: options.skipNext === true,
+  }
+  context.skip = true
+  return true
+}
+
+export function grantActionOnNextTurn(state, seat, amount = 1) {
+  const inv = state.investigators[seat]
+  if (!inv || inv.defeated || inv.resigned || !Number.isSafeInteger(amount) || amount < 1) return false
+  inv.bonusActionsOnNextTurn = (inv.bonusActionsOnNextTurn || 0) + amount
+  return true
+}
 
 export function createTurn(deps) {
   const {
@@ -145,39 +166,81 @@ function runMythos(state, repeated = false) {
   // 神话阶段「检查毁灭阈值」步骤结束后的剧本强制（04284 复仇等）。
   if (state.status === 'playing') scenarioBehavior(state).mythosDoomChecked?.(state, scenarioRuntime(state, events))
   if (state.status !== 'playing') return events
-  const encounterStep = reactionWindow(state, 'mythosEncounterStep', { when: 'mythosEncounterStep',
-    seat: state.campaign.leadSeat, prompt: '神话阶段：将要依次抽取遭遇卡。' }, events)
-  if (!encounterStep.skip && state.mythosEncounterReplacementRound !== state.round) for (const inv of aliveInvestigators(state)) drawEncounter(state, inv, events)
-  playerWindow(state, 'mythos.afterEncounter', events)
-  // 2026-10-25 第七轮修复 05021：神话阶段结束的 pay-or-discard 窗口。
-  // 仅当真的有带 mythosEnd 能力的卡时才开窗（避免空窗口改变重放指纹）。
-  for (const inv of aliveInvestigators(state)) {
-    const hasMythosEnd = [...(inv.assets || []), ...(inv.threat || []), ...(inv.attachments || [])]
-      .some(card => (registeredEntry(card.code)?.abilities || []).some(ability => ability.trigger?.includes('mythosEnd')))
-    if (!hasMythosEnd) continue
-    openAbilityWindow(state, 'mythosEnd', {
-      when: 'mythosEnd', seat: inv.seat, location: inv.location,
-      prompt: `${inv.name} 的神话阶段结束窗口`,
+  const previousDrawRule = state._mythosEncounterDrawRule
+  try {
+    const pendingSkip = state.mythosEncounterSkipNext
+    if (pendingSkip) delete state.mythosEncounterSkipNext
+    const skipStep = pendingSkip?.scenarioId === state.scenario?.id
+      && pendingSkip?.visit === (state.campaign.scenarioResults?.length || 0)
+    const encounterStep = skipStep ? { skip: true } : reactionWindow(state, 'mythosEncounterStep', {
+      when: 'mythosEncounterStep', seat: state.campaign.leadSeat, prompt: '神话阶段：将要依次抽取遭遇卡。',
     }, events)
-  }
-  // 神话阶段结束强制：数据中的 mythosEndDoom。
-  for (const enemy of state.enemies.slice()) {
-    const doom = enemyTextBlanked(state, enemy) ? 0
-      : (enemyDef(enemy.code)?.mythosEndDoom || enemyRuleFlags(enemy.code).mythosEndDoom || 0)
-    if (doom > 0) {
-      placeDoomOnCard(state, enemy, doom, events, { silent: true })
-      info(state, events, `🌑 「${enemy.name}」上放置 ${doom} 点毁灭（当前 ${enemy.doom}）。`)
+    const redirect = encounterStep.encounterDrawRedirect
+    if (redirect) {
+      const recipient = state.investigators[redirect.seat]
+      state._mythosEncounterDrawRule = { uncancelable: redirect.uncancelable, firstSurge: redirect.firstSurge }
+      if (redirect.skipNext) state.mythosEncounterSkipNext = {
+        scenarioId: state.scenario?.id, visit: state.campaign.scenarioResults?.length || 0,
+      }
+      for (const participant of aliveInvestigators(state)) {
+        if (recipient.defeated || recipient.resigned || state.status !== 'playing') break
+        const deck = scenarioBehavior(state).encounterDeckFor?.(state, participant) || 'encounter'
+        drawEncounter(state, recipient, events, { deck })
+      }
+    } else if (!encounterStep.skip && state.mythosEncounterReplacementRound !== state.round) {
+      const participants = aliveInvestigators(state)
+      const chooser = participants.find(inv => investigatorRule(inv.code)?.chooseMythosOrder && !investigatorTextBlanked(state, inv))
+      if (!chooser) {
+        for (const inv of participants) drawEncounter(state, inv, events)
+      } else {
+        while (participants.length && state.status === 'playing') {
+          const available = participants.filter(inv => !inv.defeated && !inv.resigned)
+          if (!available.length) break
+          const seat = available.length === 1 || chooser.defeated || chooser.resigned ? available[0].seat : Number(requestChoice(state, {
+            kind: 'investigator', source: chooser.code, seat: chooser.seat, prompt: '选择下一位抽取遭遇牌的调查员。',
+            options: available.map(inv => ({ id: String(inv.seat), label: inv.name })),
+          }))
+          const next = available.find(inv => inv.seat === seat)
+          if (!next) break
+          participants.splice(participants.indexOf(next), 1)
+          drawEncounter(state, next, events)
+        }
+      }
     }
-  }
-  for (const inv of aliveInvestigators(state)) {
-    for (const asset of inv.assets.slice()) {
-      if (!assetEffect(inv, asset)?.forcedMythosEndDiscard) continue
-      leaveAsset(state, inv, asset)
-      if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code)
-      info(state, events, `🌑 「${cardName(asset.code)}」在神话阶段结束时被弃掉。`)
+    playerWindow(state, 'mythos.afterEncounter', events)
+    // 2026-10-25 第七轮修复 05021：神话阶段结束的 pay-or-discard 窗口。
+    // 仅当真的有带 mythosEnd 能力的卡时才开窗（避免空窗口改变重放指纹）。
+    for (const inv of aliveInvestigators(state)) {
+      const hasMythosEnd = [...(inv.assets || []), ...(inv.threat || []), ...(inv.attachments || [])]
+        .some(card => (registeredEntry(card.code)?.abilities || []).some(ability => ability.trigger?.includes('mythosEnd')))
+      if (!hasMythosEnd) continue
+      openAbilityWindow(state, 'mythosEnd', {
+        when: 'mythosEnd', seat: inv.seat, location: inv.location,
+        prompt: `${inv.name} 的神话阶段结束窗口`,
+      }, events)
     }
+    // 神话阶段结束强制：数据中的 mythosEndDoom。
+    for (const enemy of state.enemies.slice()) {
+      const doom = enemyTextBlanked(state, enemy) ? 0
+        : (enemyDef(enemy.code)?.mythosEndDoom || enemyRuleFlags(enemy.code).mythosEndDoom || 0)
+      if (doom > 0) {
+        placeDoomOnCard(state, enemy, doom, events, { silent: true })
+        info(state, events, `🌑 「${enemy.name}」上放置 ${doom} 点毁灭（当前 ${enemy.doom}）。`)
+      }
+    }
+    for (const inv of aliveInvestigators(state)) {
+      for (const asset of inv.assets.slice()) {
+        if (!assetEffect(inv, asset)?.forcedMythosEndDiscard) continue
+        leaveAsset(state, inv, asset)
+        if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code)
+        info(state, events, `🌑 「${cardName(asset.code)}」在神话阶段结束时被弃掉。`)
+      }
+    }
+    scenarioBehavior(state).mythosEnded?.(state, scenarioRuntime(state, events))
+  } finally {
+    if (previousDrawRule === undefined) delete state._mythosEncounterDrawRule
+    else state._mythosEncounterDrawRule = previousDrawRule
   }
-  scenarioBehavior(state).mythosEnded?.(state, scenarioRuntime(state, events))
   return events
 }
 
@@ -227,6 +290,10 @@ function resolveEnemyPhaseOf(state, enemy, events = []) {
 }
 
 function enemyPhase(state) {
+  return trackEnemyPhaseAttacks(state, attempted => resolveEnemyPhase(state, attempted))
+}
+
+function resolveEnemyPhase(state, attempted) {
   const events = []
   for (const effect of expireEffects(state, 'endOfPhase')) {
     if (effect.label) info(state, events, `⌛ 「${effect.label}」到期（阶段结束）。`)
@@ -241,7 +308,7 @@ function enemyPhase(state) {
   // 1) 猎手移动
   if(state.scenario?.eventWindowInstances)resolveHunterMoves(state,events)
   else for (const enemy of state.enemies.slice()) {
-    if (enemy.hostId || !enemyHasHunter(state, enemy) || enemyTextBlanked(state, enemy) || enemy.engagedSeat != null || enemy.exhausted || enemy.immobile) continue
+    if (enemyIsPart(enemy) || enemy.hostId || !enemyHasHunter(state, enemy) || enemyTextBlanked(state, enemy) || enemy.engagedSeat != null || enemy.exhausted || enemy.immobile) continue
     if (scenarioBehavior(state).hunterMove?.(state, enemy, scenarioRuntime(state, events))) continue
     if (aliveInvestigators(state).some((inv) => inv.location === enemy.location && (enemy.prey !== 'bearer' || inv.seat === enemy.bearerSeat))) continue
     const target = hunterStep(state, enemy)
@@ -260,38 +327,16 @@ function enemyPhase(state) {
   autoEngageAll(state, events)
   playerWindow(state, 'enemy.afterHunters', events)
 
-  // Resolve each investigator's attacks in their chosen order. Massive enemies
-  // attack every eligible investigator before exhausting.
-  const attacked = new Set()
-  const seats = [...aliveInvestigators(state)].sort((a,b) =>
-    (a.seat - state.campaign.leadSeat + state.numInvestigators) % state.numInvestigators -
-    (b.seat - state.campaign.leadSeat + state.numInvestigators) % state.numInvestigators)
-  for (const inv of seats) {
-    // 「敌军阶段期间，每个处于重整状态的古神敌人可以攻击本地点的调查员，如同其已交战」
-    // （07327 缟玛瑙守卫）：未交战的本地敌人也进入本轮的待攻击名单。
-    const engaged = enemiesEngagedWith(state, inv)
-    const asIfEngaged = state.enemies.filter(enemy => enemyAttacksAsIfEngaged(state, enemy, inv))
-    const pending = [...new Set([...engaged, ...asIfEngaged])]
-      .filter(e => !e.exhausted && e.skipAttackRound !== state.round && e.attackProtection?.[inv.seat] !== state.round)
-      .map(e => e.id)
-    while (pending.length && !inv.defeated && !inv.resigned) {
-      const candidates = pending.map(id => state.enemies.find(e => e.id === id)).filter(e => e && !e.exhausted)
-      if (!candidates.length) break
-      const enemy = chooseAttack(state, inv, candidates, 'enemyPhase')
-      pending.splice(pending.indexOf(enemy.id), 1)
-      if (inv.onTheLam && !enemy.elite) continue
-      if (inv.infighting?.round === state.round && inv.infighting?.phase === 'enemy' && !enemy.elite) {
-        info(state, events, `🥊 「内讧」取消了「${enemy.name}」对 ${inv.name} 的攻击。`)
-        continue
-      }
-      const resolved = enemyAttack(state, enemy, inv, events)
-      attacked.add(enemy.id)
-      if (!enemy.massive && !enemy.hostId && !enemy.swarmCards?.length) enemy.exhausted = true
-      checkDefeated(state, inv.seat, events)
-      if (state.status !== 'playing') return events
-    }
+  if (!resolveEnemyPhaseAttacks(state, events)) return events
+  const repeat = new Set()
+  for (const enemy of state.enemies.slice()) {
+    if (enemyIsPart(enemy) || !attempted.has(enemy.id) || enemyTextBlanked(state, enemy)) continue
+    const printed = registeredEntry(enemy.originalCode || enemy.code)?.enemyRule?.relentless === true
+    if (!enemyHasAttackKeyword(state, enemy, 'relentless', printed, registeredEntry)) continue
+    if (scenarioRuntime(state, events).readyEnemy(enemy)) repeat.add(enemy.id)
   }
-  for (const enemy of state.enemies) if (attacked.has(enemy.id)) enemy.exhausted = true
+  if (repeat.size && !resolveEnemyPhaseAttacks(state, events, repeat)) return events
+
   playerWindow(state, 'enemy.afterAttacks', events)
   if (hasPlayerWindow(state, 'enemyPhaseEnds')) reactionWindow(state, 'enemyPhaseEnds', playerWindowContext(state, 'enemyPhaseEnds'), events)
   for (const attachment of (state.playerLocationAttachments || []).slice()) {
@@ -317,7 +362,46 @@ function enemyPhase(state) {
   return events
 }
 
+function resolveEnemyPhaseAttacks(state, events, repeat = null) {
+  // Resolve each investigator's attacks in their chosen order. Massive enemies
+  // attack every eligible investigator before exhausting.
+  const attacked = new Set()
+  const seats = [...aliveInvestigators(state)].sort((a,b) =>
+    (a.seat - state.campaign.leadSeat + state.numInvestigators) % state.numInvestigators -
+    (b.seat - state.campaign.leadSeat + state.numInvestigators) % state.numInvestigators)
+  for (const inv of seats) {
+    // 「敌军阶段期间，每个处于重整状态的古神敌人可以攻击本地点的调查员，如同其已交战」
+    // （07327 缟玛瑙守卫）：未交战的本地敌人也进入本轮的待攻击名单。
+    const engaged = enemiesEngagedWith(state, inv)
+    const asIfEngaged = repeat ? [] : state.enemies.filter(enemy => enemyAttacksAsIfEngaged(state, enemy, inv))
+    const pending = [...new Set([...engaged, ...asIfEngaged])]
+      .filter(e => (!repeat || repeat.has(e.id)) && !e.exhausted && e.skipAttackRound !== state.round && e.attackProtection?.[inv.seat] !== state.round)
+      .map(e => e.id)
+    while (pending.length && !inv.defeated && !inv.resigned) {
+      const current = repeat ? enemiesEngagedWith(state, inv) : state.enemies
+      const candidates = pending.map(id => current.find(e => e.id === id)).filter(e => e && !e.exhausted)
+      if (!candidates.length) break
+      const enemy = chooseAttack(state, inv, candidates, 'enemyPhase')
+      pending.splice(pending.indexOf(enemy.id), 1)
+      if (inv.onTheLam && !enemy.elite) continue
+      if (inv.infighting?.round === state.round && inv.infighting?.phase === 'enemy' && !enemy.elite) {
+        recordEnemyPhaseAttack(state, enemy)
+        info(state, events, `🥊 「内讧」取消了「${enemy.name}」对 ${inv.name} 的攻击。`)
+        continue
+      }
+      enemyAttack(state, enemy, inv, events)
+      attacked.add(enemy.id)
+      if (!enemy.massive && !enemy.hostId && !enemy.swarmCards?.length) enemy.exhausted = true
+      checkDefeated(state, inv.seat, events)
+      if (state.status !== 'playing') return false
+    }
+  }
+  for (const enemy of state.enemies) if (attacked.has(enemy.id)) enemy.exhausted = true
+  return true
+}
+
 function patrolMove(state, enemy, events) {
+  if (enemyIsPart(enemy)) return false
   const target = registeredEntry(enemy.originalCode || enemy.code)?.enemyRule?.patrolTarget
   if (!target) return false
   return resolvePatrol(state, enemy, target, { blanked: item => enemyTextBlanked(state, item),
@@ -346,14 +430,14 @@ function hunterRoute(state,enemy,targetIds,prompt) {
 }
 
 function resolveHunterMove(state,enemy,events=[],options={}) {
-  if(!enemy||!state.enemies.includes(enemy)||enemy.hostId||!enemyHasHunter(state,enemy)||enemy.exhausted||enemy.engagedSeat!=null||enemy.immobile||enemyTextBlanked(state,enemy))return {moved:false}
+  if(!enemy||!state.enemies.includes(enemy)||enemyIsPart(enemy)||enemy.hostId||!enemyHasHunter(state,enemy)||enemy.exhausted||enemy.engagedSeat!=null||enemy.immobile||enemyTextBlanked(state,enemy))return {moved:false}
   if(aliveInvestigators(state).some(inv=>inv.location===enemy.location&&(enemy.prey!=='bearer'||inv.seat===enemy.bearerSeat)&&!ruleIgnored(state,inv,'hunter')))return {moved:false}
   const target=hunterStep(state,enemy,{...options,barrierRouting:true})
   if(!target||dreamGateEntryError(null,state.locations.find(loc=>loc.id===target)))return {moved:false}
   return relocateEnemy(state,enemy,target,events,{cause:'hunter',phaseInstance:state.phaseInstance,routeSelected:true})||{moved:false}
 }
 function resolveHunterMoves(state,events=[],options={}) {
- const pending=state.enemies.filter(e=>!e.hostId&&enemyHasHunter(state,e)&&!e.exhausted&&e.engagedSeat==null&&!e.immobile&&!enemyTextBlanked(state,e)).map(e=>e.id),results=[]
+ const pending=state.enemies.filter(e=>!enemyIsPart(e)&&!e.hostId&&enemyHasHunter(state,e)&&!e.exhausted&&e.engagedSeat==null&&!e.immobile&&!enemyTextBlanked(state,e)).map(e=>e.id),results=[]
  while(pending.length){
   const available=pending.map(id=>state.enemies.find(e=>e.id===id)).filter(Boolean)
   if(!available.length)break
@@ -522,6 +606,10 @@ function turnBeginningWindow(state, events) {
   if (inv) {
     inv.turnEnded = false
     inv.actionsTakenThisTurn = 0
+    if (inv.bonusActionsOnNextTurn) {
+      inv.actionsLeft += inv.bonusActionsOnNextTurn
+      delete inv.bonusActionsOnNextTurn
+    }
     resetTskTurnTracking(state, inv)
     for (const asset of inv.assets) delete asset.restrictedActionSpent
     // 第 5 步 P6：回合开始时清理上一回合的「法术专用额外行动」授权，再按当前毁灭标记重新授权，
@@ -591,6 +679,9 @@ function beginInvestigationPhase(state, events, repeated = false) {
   // 这里保留旧的 phaseStatBonus 兼容清理（外部存档/测试可能仍有该字段）。
   for (const inv of aliveInvestigators(state)) inv.phaseStatBonus = null
   state.phase = 'investigation'
+  if (hasWindowListener(state, 'investigationPhaseStarting')) {
+    reactionWindow(state, 'investigationPhaseStarting', { when: 'investigationPhaseStarting', phase: 'investigation' }, events)
+  }
   phaseBeginningWindow(state, events)
   if (aliveInvestigators(state).some(inv => investigatorRule(inv.code)?.investigationStart)) {
     reactionWindow(state, 'investigationPhaseStarts', { when: 'investigationPhaseStarts', phase: 'investigation' }, events)
@@ -633,6 +724,15 @@ function runBetweenInvestigationPhases(state, events) {
     if (useGoldPocketWatch(state, 'end', 'upkeep', events)) events.push(...upkeepPhase(state))
   }
   if (state.status !== 'playing') return
+  for (const enemy of (state.setAsideEnemies || []).slice()) {
+    const until = enemy.asideUntilRoundEnd
+    if (until?.round !== state.round) continue
+    const restored = scenarioRuntime(state, events).restoreEnemyFromAside(enemy.id, until.location, { exhausted: true })
+    if (!restored) {
+      removeOne(state.setAsideEnemies, enemy)
+      scenarioRuntime(state, events).discardEnemy(enemy)
+    }
+  }
   state._roundEndWindow = true
   try { checkAct(state, events) } finally { delete state._roundEndWindow }
   if (state.status !== 'playing') return

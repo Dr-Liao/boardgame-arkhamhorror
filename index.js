@@ -59,7 +59,7 @@ import {
 const LOCALIZED_CAMPAIGN_OPTIONS = {}
 
 const MOVE_FORMAT = [
-  '局外：选择调查员 hubSelectInvestigator(code)；选人先看【决策资料】的 teamSummary，优先补齐尚未覆盖的职责，不要与队友重复同一职业定位；构筑 {"action":"hubSetDeck","codes":["卡号", "卡号", ...]}，按规定尺寸提交完整清单。',
+  '局外：选择调查员 hubSelectInvestigator(code)；选人先看【决策资料】的 teamSummary，优先补齐尚未覆盖的职责，不要与队友重复同一职业定位；构筑 {"action":"hubSetDeck","codes":["卡号", "卡号", ...]}，按规定尺寸提交完整清单。随后 hubConfirmDeck 抽取基础弱点并锁定牌组，最后 hubDoneSeat 确认准备。',
   '升级：hubPurchase(added,removed) 可以连续暂存；hubConfirmUpgrades 确认、hubCancelUpgrades 撤销；hubDoneSeat 完成。其余局外操作照抄合法列表。',
   '{"action":"<行动>"}，行动类型如下（具体可用行动见【可执行行动】列表，照抄其中的 JSON 即可）：',
   '- 回答待决选择：{"action":"choose","choiceId":"<当前选择 id>","optionId":"<合法选项 id>"}',
@@ -486,6 +486,7 @@ export default {
   // P3.2 A1′：viewState 不修改入参 state（含嵌套对象），因此大厅可以每 revision 只把权威 state
   // structuredClone 一次，作为隔离副本交给各席位视图共用；不声明该能力时大厅保持逐席位拷贝。
   viewStateSharesState: true,
+  localActionDeltas: true,
   // P1.4：会话级公共静态表（cards / investigatorDefs），大厅按 staticVersion 只下发一次。
   staticTables,
 

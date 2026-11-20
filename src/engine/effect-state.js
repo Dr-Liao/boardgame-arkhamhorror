@@ -58,7 +58,7 @@ export const EFFECT_DURATION_LABELS = Object.freeze({
 const EFFECT_ABILITIES_KEYS = new Set(['kind', 'trigger', 'label', 'effect', 'criteria', 'cost', 'limit'])
 const EFFECT_ABILITY_KINDS = new Set(['reaction', 'forced'])
 const EFFECT_KEYS = new Set(['duration', 'sourceCode', 'sourceInstanceId', 'controllerSeat', 'label',
-  'modifiers', 'abilities', 'createdAt'])
+  'modifiers', 'abilities', 'createdAt', 'nextPlayDiscount'])
 // Phase 2（C1/C2）：布尔修正与授予类修正也可以挂在持续效果上，因此 value 与 target 的超集
 // 一起进入白名单；具体目标是否已知由 modifiers.js 的 normalizeModifier 判定（单一事实源）。
 const MODIFIER_KEYS = new Set(['target', 'amount', 'condition', 'audience', 'value'])
@@ -163,6 +163,9 @@ export function createEffect(state, raw) {
   if (!EFFECT_DURATIONS.includes(raw.duration)) {
     throw new Error(`${origin}: 未知 duration ${JSON.stringify(raw.duration)}（可选：${EFFECT_DURATIONS.join(' / ')}）`)
   }
+  if (raw.nextPlayDiscount != null && (!Number.isSafeInteger(raw.nextPlayDiscount) || raw.nextPlayDiscount <= 0)) {
+    throw new Error(`${origin}: nextPlayDiscount 必须为正整数`)
+  }
   const controllerSeat = raw.controllerSeat ?? state.currentSeat
   if (!Number.isInteger(controllerSeat)) throw new Error(`${origin}: 缺少 controllerSeat`)
   state.effects ||= []
@@ -183,6 +186,7 @@ export function createEffect(state, raw) {
     label: raw.label ? String(raw.label) : null,
     modifiers: Object.freeze(modifiers),
     abilities,
+    ...(raw.nextPlayDiscount ? { nextPlayDiscount: raw.nextPlayDiscount } : {}),
     createdAt: {
       round: state.round ?? 0,
       phase: state.phase ?? null,
@@ -191,6 +195,15 @@ export function createEffect(state, raw) {
   })
   state.effects.push(record)
   return record
+}
+
+export function nextPlayDiscount(state, seat) {
+  return activeEffects(state, seat).reduce((sum, effect) => sum + (effect.nextPlayDiscount || 0), 0)
+}
+
+export function consumeNextPlayDiscount(state, seat) {
+  if (!state.effects?.some(effect => effect.controllerSeat === seat && effect.nextPlayDiscount)) return
+  state.effects = state.effects.filter(effect => effect.controllerSeat !== seat || !effect.nextPlayDiscount)
 }
 
 // 修正读点：modifiers.js 只关心「谁在什么条件下加多少」。

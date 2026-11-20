@@ -94,7 +94,7 @@ test('渐进式收窄可选调查员与自动牌组：核心战役只能拿核�
   choseRoland(state)
   applyMove(state, 0, { action: 'hubAutoDeck' })
   const record = state.campaign.investigators[0]
-  assert.ok(record.startingDeckReady)
+  assert.ok(record.startingDeckConfirmationPending)
   assert.deepEqual([...new Set(record.deck.map(code => code.slice(0, 2)))], ['01'])
 })
 
@@ -113,11 +113,11 @@ test('渐进式拒绝超过当前循环的卡牌，全部模式照常接受', { 
   assert.throws(() => applyMove(progressive, 0, { action: 'hubSetDeck', codes: outOfCycle }), /playerPool/)
   // 同一位调查员的核心包清单仍然合法。
   applyMove(progressive, 0, { action: 'hubSetDeck', codes: coreDeck })
-  assert.equal(progressive.campaign.investigators[0].startingDeckReady, true)
+  assert.equal(progressive.campaign.investigators[0].startingDeckConfirmationPending, true)
 
   const all = choseRoland(hubGame())
   applyMove(all, 0, { action: 'hubSetDeck', codes: outOfCycle })
-  assert.equal(all.campaign.investigators[0].startingDeckReady, true)
+  assert.equal(all.campaign.investigators[0].startingDeckConfirmationPending, true)
 })
 
 // 卡牌范围限制临时取消期间的行为：不按战役循环收窄调查员，也不拒绝循环外的已开放卡。
@@ -131,7 +131,7 @@ test('卡牌范围限制临时取消：渐进式同样接受循环外卡牌', { 
   assert.equal(coreDeck.length, 30)
   // 02016《金属棒》是第二循环、罗兰可用的 0 级守护者卡；限制取消后带它保存不再被拒。
   applyMove(progressive, 0, { action: 'hubSetDeck', codes: [...coreDeck.slice(0, -1), '02016'] })
-  assert.equal(progressive.campaign.investigators[0].startingDeckReady, true)
+  assert.equal(progressive.campaign.investigators[0].startingDeckConfirmationPending, true)
 })
 
 test('重放日志记录卡牌范围与回档开关，重放指纹一致', () => {

@@ -1,5 +1,6 @@
 import { discardPlayerCards } from './player-zones.js'
 import { transferControlledClues } from './asset-clues.js'
+import { discardControlledAsset } from './asset-departure.js'
 // 能力 API · 线索 / 毁灭 / 收尾（Phase 6 · 6d-9，abilityApi 第三批）。
 //
 // 这一组方法负责「调查结果的落账」：线索归还与搬运、毁灭放置与移除、威胁区操作、
@@ -120,9 +121,10 @@ export function createClueApi(state, events, deps) {
     // 剧本卡的 `scope: 'location'` 存储与写入口见 location-attachments.js / scenario-runtime。
     attachToLocation: (locationId, fields = {}) => {
       if (!locationId) return null
-      const shared = deps.registeredEntry(fields.code)?.assetRule?.sharedLocationAbility
+      const rule = deps.registeredEntry(fields.code)?.assetRule
+      const indexed = rule?.sharedLocationAbility || rule?.ownerLocationAttachmentAbility
       const attachment = attachLocationCard(state, locationId, { scope: 'player', ...fields,
-        ...(shared ? { extra: { id: deps.nextInstanceId(state, 'c'), ...fields.extra } } : {}) })
+        ...(indexed ? { extra: { id: deps.nextInstanceId(state, 'c'), ...fields.extra } } : {}) })
       if (!attachment) return null
       info(state, events, `📌 「${cardName(fields.code)}」附属到「${locName(state, locationId)}」。`)
       return attachment
@@ -148,14 +150,24 @@ export function createClueApi(state, events, deps) {
     enemyEvade: (enemy, seat = state.currentSeat) => enemyEvadeValue(state, enemy, state.investigators[seat]),
     // Phase 5（5c）：调查员当前的伤害上限（含被动与修正），「最多额外承受 N 点伤害」这类卡要用。
     maxHealth: (seat = state.currentSeat) => getMaxHealth(state.investigators[seat]),
-    // Phase 5（5c）：把一张支援弃掉（离场 + 进弃牌堆）。
-    discardAsset: (seat, card) => {
-      const owner = state.investigators[seat]
-      if (!owner || !card) return false
-      leaveAsset(state, owner, card, events)
-      if (!card.removedFromGame && !card.returnedToHand) owner.discard.push(card.code)
+    returnAssetToDeck: (seat, asset) => {
+      const controller = state.investigators[seat]
+      if (!controller?.assets.includes(asset)) return false
+      const owner = state.investigators[asset.ownerSeat ?? seat] || controller
+      if (leaveAsset(state, controller, asset, events) === false || controller.assets.includes(asset)
+        || asset.removedFromGame || asset.returnedToHand) return false
+      owner.deck.push(asset.code)
       return true
     },
+    addAmmo: (asset, amount = 1) => {
+      if (!asset || !state.investigators.some(owner => owner.assets.includes(asset))) return 0
+      if (asset.usesType && asset.usesType !== 'ammo') return 0
+      asset.usesType = 'ammo'
+      asset.uses = (asset.uses || 0) + amount
+      return asset.uses
+    },
+    // Phase 5（5c）：把一张支援弃掉（离场 + 进弃牌堆）。
+    discardAsset: (seat, card) => discardControlledAsset(state, state.investigators[seat], card, events, leaveAsset, info),
     // Phase 5（5c）：击败敌人（恐惧/战斗之外的效果，如「与你们同归于尽」）。
     defeatEnemy: (enemy, seat = state.currentSeat) => {
       if (!enemy || !state.enemies.includes(enemy)) return false

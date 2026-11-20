@@ -12,7 +12,8 @@ export default {
     {
       kind: 'played', label: '把盟友返回手牌，再从牌库顶 9 张免费打出 1 张盟友',
       resolve: ({ inv, api }) => {
-        const allies = inv.assets.filter(card => api.cardTraits(card.code).includes('ally'))
+        const allies = inv.assets.filter(card => api.cardTraits(card.code).includes('ally')
+          && api.investigatorTools.canReturnAsset(inv.seat, card))
         if (!allies.length) return
         const chosenId = allies.length === 1 ? allies[0].id : api.choice({ kind: 'target', source: '03158',
           seat: inv.seat, prompt: '选择返回手牌的盟友。',
@@ -20,7 +21,7 @@ export default {
         const ally = allies.find(card => card.id === chosenId)
         if (!ally) return
         const discount = api.cardCost(ally.code)
-        api.returnAssetToHand(inv.seat, ally)
+        if (!api.returnAssetToHand(inv.seat, ally)) return
         const before = inv.hand.length
         api.searchTop(inv.seat, { amount: 9, trait: 'Ally', source: '03158' })
         if (inv.hand.length > before) {

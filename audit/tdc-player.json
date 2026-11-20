@@ -1,0 +1,2271 @@
+{
+  "schemaVersion": 2,
+  "campaignId": "theDrownedCity",
+  "phase": "P6",
+  "status": "verified",
+  "pack": "tdcPlayer",
+  "scope": "audit/tdc-scope.json",
+  "counts": {
+    "total": 111,
+    "entryWritten": 111,
+    "noEntry": 0,
+    "verified": 111,
+    "pendingVerification": 0
+  },
+  "behaviorSpecs": [
+    {
+      "file": "tests/tdc-player.test.mjs",
+      "sha256": "c91d87a07b11731203bc3fc16236a3781b4a59e957de300deae6ede9e66084d1"
+    },
+    {
+      "file": "tests/tdc-player-guardian.test.mjs",
+      "sha256": "fcb9eb7eed8368236c75dc1f11c40b4cf6e30f4037467ee00aa43550da0c9dab"
+    },
+    {
+      "file": "tests/tdc-player-seeker.test.mjs",
+      "sha256": "ee09ded2dda84a7c4122ae9981232231b1c879768b22809bb5daafb33b15a074"
+    },
+    {
+      "file": "tests/tdc-player-survivor.test.mjs",
+      "sha256": "2ab49d19a48bb5d7cb4b26cacc1de2649ce63d80b34a4f890f47d79c3185cf13"
+    }
+  ],
+  "scenariosPassed": 119,
+  "browser": {
+    "report": "artifacts/migration/tdc/p6/browser.json",
+    "sha256": "06a5c52a80e16045a38655ce531e6ed6d5449467accca0ff5485c741c940597b",
+    "cases": 2,
+    "screenshots": [
+      {
+        "device": "desktop",
+        "path": "artifacts/migration/tdc/p6/screenshots/desktop-manual-deck.png",
+        "size": [
+          1440,
+          900
+        ],
+        "sha256": "db538b2ef39e6f8625b04020d269b674ea831e3296e4333e5612a631a50c8106"
+      },
+      {
+        "device": "mobile",
+        "path": "artifacts/migration/tdc/p6/screenshots/mobile-manual-deck.png",
+        "size": [
+          390,
+          844
+        ],
+        "sha256": "908ec98acb46808e64b9168ac8fef5e16058c1d2e9ddf317738a7a36e8ab4b33"
+      }
+    ]
+  },
+  "replay": {
+    "report": "artifacts/migration/tdc/reports/p6-replay-final.log",
+    "sha256": "38b3926ee993e94bb1c7bbbd5d751369d3512e5d36a0a65a9d7461a2098bb7b7",
+    "cases": 13,
+    "baseline": "artifacts/migration/tdc/replay-before-recovered.json",
+    "baselineSha256": "5351e8c9758f77a16d195c223ef42e39051033a64b3c86fedebb73ef29878af9"
+  },
+  "fast": {
+    "report": "artifacts/migration/tdc/reports/p6-fast.log",
+    "sha256": "ad6f0803bed5e81a3b32b4a3efa3c21b5464d8a4b94c842827c6e009455d838b",
+    "tests": 8597,
+    "pass": 8594,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 3
+  },
+  "shards": "artifacts/migration/tdc/p6/shards.json",
+  "workers": [
+    "artifacts/migration/tdc/p6/workers/guardian_rogue.json",
+    "artifacts/migration/tdc/p6/workers/seeker_mystic.json",
+    "artifacts/migration/tdc/p6/workers/survivor_multiclass.json"
+  ],
+  "requests": [
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11020.json",
+      "cards": [
+        "11020"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11022.json",
+      "cards": [
+        "11022"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11023.json",
+      "cards": [
+        "11023"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11024.json",
+      "cards": [
+        "11024"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11025.json",
+      "cards": [
+        "11025"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11026.json",
+      "cards": [
+        "11026"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11027.json",
+      "cards": [
+        "11027"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11030.json",
+      "cards": [
+        "11030"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11051.json",
+      "cards": [
+        "11051"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11052.json",
+      "cards": [
+        "11052"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11053.json",
+      "cards": [
+        "11053"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11056.json",
+      "cards": [
+        "11056"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11057.json",
+      "cards": [
+        "11057"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11058.json",
+      "cards": [
+        "11058"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11059.json",
+      "cards": [
+        "11059"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11061.json",
+      "cards": [
+        "11061"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11062.json",
+      "cards": [
+        "11062"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11063.json",
+      "cards": [
+        "11063"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11064.json",
+      "cards": [
+        "11064"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11095.json",
+      "cards": [
+        "11095"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11097.json",
+      "cards": [
+        "11097"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11098.json",
+      "cards": [
+        "11098"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11099.json",
+      "cards": [
+        "11099"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11100.json",
+      "cards": [
+        "11100"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-guardian-rogue-11101.json",
+      "cards": [
+        "11101"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-main-11125-collection-play.json",
+      "cards": [
+        "11125"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-survivor-additional-cost.json",
+      "cards": [
+        "11086"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-survivor-agenda-ongoing-event.json",
+      "cards": [
+        "11091"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-survivor-distinct-actions.json",
+      "cards": [
+        "11108"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-survivor-empty-hand-victory.json",
+      "cards": [
+        "11114"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-survivor-granted-ally-play.json",
+      "cards": [
+        "11116"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-survivor-hand-action.json",
+      "cards": [
+        "11081"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-survivor-investigate-success.json",
+      "cards": [
+        "11084"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-survivor-parley-window.json",
+      "cards": [
+        "11104"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-survivor-post-disposal-draw.json",
+      "cards": [
+        "11092"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-survivor-precommit-discard.json",
+      "cards": [
+        "11094"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-survivor-remote-commit.json",
+      "cards": [
+        "11088"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-survivor-round-action-history.json",
+      "cards": [
+        "11126"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-survivor-secrets-as-resources.json",
+      "cards": [
+        "11117"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-survivor-spell-event-test.json",
+      "cards": [
+        "11103"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-survivor-target-round-restrictions.json",
+      "cards": [
+        "11109"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-survivor-test-origin-failure.json",
+      "cards": [
+        "11111"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/p6-survivor-tome-host.json",
+      "cards": [
+        "11118"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/seeker-mystic-11033-currentLocationShroud.json",
+      "cards": [
+        "11033"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/seeker-mystic-11037-playCostFromAsset.json",
+      "cards": [
+        "11037"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/seeker-mystic-11038-chaosTokenChangedWindow.json",
+      "cards": [
+        "11038"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/seeker-mystic-11039-replaceTestTokenAndTrackSuccess.json",
+      "cards": [
+        "11039"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/seeker-mystic-11040-assetUseChoice.json",
+      "cards": [
+        "11040"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/seeker-mystic-11041-revealHandCardsAndPlay.json",
+      "cards": [
+        "11041"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/seeker-mystic-11046-maintainSeals.json",
+      "cards": [
+        "11046"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/seeker-mystic-11047-configureActionTestTokenReveal.json",
+      "cards": [
+        "11047"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/seeker-mystic-11048-configureActionTestTokenReveal.json",
+      "cards": [
+        "11048"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/seeker-mystic-11049-grantActionOnNextTurn.json",
+      "cards": [
+        "11049"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/seeker-mystic-11065-immediateInvestigatorAction.json",
+      "cards": [
+        "11065"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/seeker-mystic-11066-configureActionTestTokenReveal.json",
+      "cards": [
+        "11066"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/seeker-mystic-11067-configureActionTestTokenReveal.json",
+      "cards": [
+        "11067"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/seeker-mystic-11068a-campaignInvestigatorSuccessor.json",
+      "cards": [
+        "11068a"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/seeker-mystic-11069-configureActionTestTokenReveal.json",
+      "cards": [
+        "11069"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/seeker-mystic-11071-protectAttachedPlayerCard.json",
+      "cards": [
+        "11071"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/seeker-mystic-11073-revealEncounterDeckTop.json",
+      "cards": [
+        "11073"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/seeker-mystic-11075-repeatAssetAbilityAtLocation.json",
+      "cards": [
+        "11075"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/seeker-mystic-11076-temporaryInvestigatorFront.json",
+      "cards": [
+        "11076"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/seeker-mystic-11077-assetUseChoice.json",
+      "cards": [
+        "11077"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/seeker-mystic-11078-chargesProvidedToOtherAssets.json",
+      "cards": [
+        "11078"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/seeker-mystic-11079-modifyMythosEncounterDraw.json",
+      "cards": [
+        "11079"
+      ],
+      "status": "verified"
+    },
+    {
+      "path": "artifacts/migration/tdc/primitive-requests/seeker-mystic-11080-campaignDeckBrandedSpell.json",
+      "cards": [
+        "11080"
+      ],
+      "status": "verified"
+    }
+  ],
+  "cards": [
+    {
+      "code": "11020",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11020.js",
+      "sha256": "417da7ccebb12539b9e3d8af14e7643ac24f2ea4f96d7a93422cebb14dca666f",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11020 回合结束时返还刚弃置的策略事件，保留弃牌堆旧同码副本"
+        },
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11020 回合末返手可跟踪更早的弃牌被拾取后发生的索引移动"
+        }
+      ]
+    },
+    {
+      "code": "11021",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11021.js",
+      "sha256": "5c2262dac13019bd2e1a1fde4bca4d79005705e5ee226e622ad10f948e6246e9",
+      "behavior": [
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11021 通过战斗属性调查，重整后另一能力以战斗加值攻击"
+        }
+      ]
+    },
+    {
+      "code": "11022",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11022.js",
+      "sha256": "60786518fbd50a428fca80d2622593ecaffddae2b98c0ca6ab3d9770b1da050c",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11022 离场时零弹药仍可发动攻击，且离场实体仅弃置一次"
+        }
+      ]
+    },
+    {
+      "code": "11023",
+      "type": "event",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11023.js",
+      "sha256": "b78a47a260675adf40107f4b7c41f0c9537c9045c08944c0e5a0099ebf055f02",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11023 首次行动折扣打出新枪，升级优先落到实际新枪"
+        }
+      ]
+    },
+    {
+      "code": "11024",
+      "type": "event",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11024.js",
+      "sha256": "7e83017fdf145f7fb6b1e240254e62263a041ab78124ea7a8cbceea88d7ea7f4",
+      "behavior": [
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11024 若当轮已抽到敌人则抽两张牌，随后治疗恐惧"
+        }
+      ]
+    },
+    {
+      "code": "11025",
+      "type": "skill",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11025.js",
+      "sha256": "f9daf378cd6ac3122e25d61eb46aea88058623bcea7e5a2e832a1f5e3436bc15",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11025 本轮成功攻击使第二次攻击投入获得两枚额外图标，下一轮清除"
+        }
+      ]
+    },
+    {
+      "code": "11026",
+      "type": "event",
+      "category": "ordinary",
+      "level": 1,
+      "status": "verified",
+      "entry": "src/cards/entries/11026.js",
+      "sha256": "e8556e2d100739e430b315574544d62959f14cc3b6d08ee4811382056ee5ea1e",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11026 攻击被标记敌人获得战斗加值，另一位调查员可弃标记追加伤害"
+        }
+      ]
+    },
+    {
+      "code": "11027",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 2,
+      "status": "verified",
+      "entry": "src/cards/entries/11027.js",
+      "sha256": "833bc27b2139fdc5c652bcbd10ac7f4e8ad35bcf950e5ccf61c1a66012b3cb9c",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11027 当回合第一次调查免于借机攻击，发现线索后的反应可造成伤害"
+        },
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11027 可加入手动牌组，11126–11129 只作为基础弱点候选"
+        }
+      ]
+    },
+    {
+      "code": "11028",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 2,
+      "status": "verified",
+      "entry": "src/cards/entries/11028.js",
+      "sha256": "f4e7d1dc531fb3762c1d49873a2365fa89f72b2b2899b21414a27a9d050f1863",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11028 入场封印，在借机攻击时释放封印取消攻击并重整另一支援，击败敌人后可再封印"
+        }
+      ]
+    },
+    {
+      "code": "11029",
+      "type": "skill",
+      "category": "ordinary",
+      "level": 2,
+      "status": "verified",
+      "entry": "src/cards/entries/11029.js",
+      "sha256": "d4a14402aa96e2de1203bc00488d88efc8ae54ad193afea1c3aeb504e03810af",
+      "behavior": [
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11029 成功投入可重整并治疗同地点队友的盟友"
+        }
+      ]
+    },
+    {
+      "code": "11030",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 3,
+      "status": "verified",
+      "entry": "src/cards/entries/11030.js",
+      "sha256": "55fe3feea4d18429f5ab57e856c0e5b09e2ce9098ee32b08d2e9f69ce03c07e5",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11030 枪械打出时多获得一个弹药，普通支援的使用次数保持原量"
+        }
+      ]
+    },
+    {
+      "code": "11031",
+      "type": "event",
+      "category": "ordinary",
+      "level": 3,
+      "status": "verified",
+      "entry": "src/cards/entries/11031.js",
+      "sha256": "052c10fdfbddf8b59d04bfbcffa517e1b6023943994c0ea74c4e913735467689",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11031 只用抽牌反应免费打出刚抽到的副本并保留原手牌顺序"
+        },
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11031 一次抽牌效果抽到同码两张时，每张各有一次折扣反应"
+        }
+      ]
+    },
+    {
+      "code": "11032",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 4,
+      "status": "verified",
+      "entry": "src/cards/entries/11032.js",
+      "sha256": "2dfc5872ac8cac1a5f9ba62a9128ad227fb414279b24829d1109b539d8b19cc4",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11032 入场和离场都可忽略行动与弹药执行攻击"
+        }
+      ]
+    },
+    {
+      "code": "11033",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11033.js",
+      "sha256": "6be1527ac89ef5814b815b6d70657185b7ec83afab4a8d2c0425acf486956dbe",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11033 gains one evidence at exactly three above difficulty and pays the current shroud"
+        }
+      ]
+    },
+    {
+      "code": "11034",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11034.js",
+      "sha256": "cfdfb393fb4b4ae08675d2ffa1bf6df91d5c7087e180ab6898d63811de3c9d05",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11034 adjusts a revealed test by either one and replenishes by discarding a hand card"
+        }
+      ]
+    },
+    {
+      "code": "11035",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11035.js",
+      "sha256": "c037d942f0f14ffdacb5d80d9fcdee8af651affacd3f1cbb889777d480ac7304",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11035 records research on its fourth charge and unlocks 11046, 11047 and 11048 only as its replacement"
+        },
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11035 reacts once to each separate automatic or tested evade of the same enemy with a full log"
+        }
+      ]
+    },
+    {
+      "code": "11036",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11036.js",
+      "sha256": "bfe8e624a04a4e5c9e8888b7671add95faf28ea85c2c1fa777f24aff5638c1d6",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11036 investigates with agility and the printed bonus and heals only with an exhausted enemy"
+        }
+      ]
+    },
+    {
+      "code": "11037",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11037.js",
+      "sha256": "0f53b0002e7c650ff85a17e3873ee9d4559c81687cfcd3cd49da647c59457166",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11037 saves a clue reward resource and pays toward either a Spell asset or event"
+        }
+      ]
+    },
+    {
+      "code": "11038",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11038.js",
+      "sha256": "bf127078ad80a2d9502e813c9848c5c10ea301cf5d0973977590dd23a2167003",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11038 and 11070 gain evidence from a real seal, then spends it to discover and damage an attacking Geist"
+        }
+      ]
+    },
+    {
+      "code": "11039",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11039.js",
+      "sha256": "a3664367100f9f8dc7a3ac8eae925bede12492ab1cb8a0d26a1db4c32d49e04c",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11039 rerolls another investigator’s symbol and awards the asset owner the success draw"
+        }
+      ]
+    },
+    {
+      "code": "11040",
+      "type": "event",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11040.js",
+      "sha256": "4f9b4a2c84dab71b5ddb141d3338159650c670ee169b5d6192d5299d42002247",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11040 rerolls the first token and adds two charges after succeeding by exactly one"
+        }
+      ]
+    },
+    {
+      "code": "11041",
+      "type": "event",
+      "category": "ordinary",
+      "level": 1,
+      "status": "verified",
+      "entry": "src/cards/entries/11041.js",
+      "sha256": "1cc8f61c3a5385d48a2d2288cdfa82d328d31ff2a53111858f6b5db3bc3d455a",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11041 reveals the chosen parity and lets each investigator draw or pay to play in player order"
+        }
+      ]
+    },
+    {
+      "code": "11042",
+      "type": "skill",
+      "category": "ordinary",
+      "level": 1,
+      "status": "verified",
+      "entry": "src/cards/entries/11042.js",
+      "sha256": "0e0877e02fa0653860750376cd6826f3a1f585898abcb17a11d13466df44db17",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11042 gains an icon from each discarded copy and shuffles the other two back"
+        }
+      ]
+    },
+    {
+      "code": "11043",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 2,
+      "status": "verified",
+      "entry": "src/cards/entries/11043.js",
+      "sha256": "41691f5762bac7c5962727e5ecb5866355a2f49bd0e55e95c5136b11df583987",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11043 seals a token on entry and after the final clue, then spends one to cancel and move"
+        }
+      ]
+    },
+    {
+      "code": "11044",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 2,
+      "status": "verified",
+      "entry": "src/cards/entries/11044.js",
+      "sha256": "bd024108d1842dc62c63ac11f0089d64a517eb2f1b08fb153a18ba6cbc5683a3",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11044 accepts a two-handed Tool beside a two-handed Weapon and restricts a third Weapon"
+        }
+      ]
+    },
+    {
+      "code": "11045",
+      "type": "event",
+      "category": "ordinary",
+      "level": 2,
+      "status": "verified",
+      "entry": "src/cards/entries/11045.js",
+      "sha256": "6dd761f0656b05a4224f9dd9a43e41f832e4a3cdeebfdf410bb0e03aa65d16fa",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11045 is playable only for a revealed clue and discovers it remotely without spending an action"
+        }
+      ]
+    },
+    {
+      "code": "11046",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 4,
+      "status": "verified",
+      "entry": "src/cards/entries/11046.js",
+      "sha256": "1757f9402e6eba714870aad3cc74e53ec005ffb916c7a9969352c938fb55ace8",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11035 records research on its fourth charge and unlocks 11046, 11047 and 11048 only as its replacement"
+        },
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11046 seals a failed test’s revealed token, pays once to keep it, then releases it at round end"
+        }
+      ]
+    },
+    {
+      "code": "11047",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 4,
+      "status": "verified",
+      "entry": "src/cards/entries/11047.js",
+      "sha256": "519060abfaaf645e111a1996018188dfa50abb662e49aed62ba6cfafd6b9964e",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11035 records research on its fourth charge and unlocks 11046, 11047 and 11048 only as its replacement"
+        },
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11047 rerolls the upgraded device’s fight test and deals the extra damage after success"
+        }
+      ]
+    },
+    {
+      "code": "11048",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 4,
+      "status": "verified",
+      "entry": "src/cards/entries/11048.js",
+      "sha256": "1e47cc8f05db0582d66f00fea7dc32697782ec5eaa5e85a6305b4c7a71740903",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11035 records research on its fourth charge and unlocks 11046, 11047 and 11048 only as its replacement"
+        },
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11048 spends one charge without spending an action and selects among an extra token per local enemy"
+        }
+      ]
+    },
+    {
+      "code": "11049",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 5,
+      "status": "verified",
+      "entry": "src/cards/entries/11049.js",
+      "sha256": "10483e23f6e74b51230062bed4981a5fa97782eff5b3aaa60e0815b06cae0cb8",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11049 banks two additional actions until the owner’s next turn begins"
+        }
+      ]
+    },
+    {
+      "code": "11050",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11050.js",
+      "sha256": "0493780f88404063332a2781872bbd675ee23d3998c68f53dda73bada124734d",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11050 免费攻击消耗一枚弹药，装填费用为一个行动和一个资源"
+        }
+      ]
+    },
+    {
+      "code": "11051",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11051.js",
+      "sha256": "df37e41d94012ace29e7bba0f741a591470e774c47c063c75597e983e1491af7",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11051 弃置真实手枪后仍打开枪械响应，并可将攻击改指连接地点"
+        }
+      ]
+    },
+    {
+      "code": "11052",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11052.js",
+      "sha256": "d781081338b43ae553fdc5f0d9feec50444bba345829c7b3c43017f2e6f2301a",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11052 把躲避失败边界提升为成功，保留交战，抽牌并横置来源"
+        },
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11052 对原无警戒的直立敌人，失败时仍触发本次警戒攻击"
+        }
+      ]
+    },
+    {
+      "code": "11053",
+      "type": "event",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11053.js",
+      "sha256": "3d11b9f9042fd5a2c12ee31b511295cbbefac925f6415f01c0e718f2c6a34b8c",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11053 合并查找遭遇牌库和弃牌堆，可选弃牌敌人并横置交战生成"
+        }
+      ]
+    },
+    {
+      "code": "11054",
+      "type": "event",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11054.js",
+      "sha256": "76c61d1a504d3fdf9878a355fe9e38f71afe4eb2a36f355dc116d0b69950b340",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11054 连接地点受伤者自己的支付取消伤害与恐惧，事件拥有者不获得资源"
+        }
+      ]
+    },
+    {
+      "code": "11055",
+      "type": "event",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11055.js",
+      "sha256": "e4cde45d0207ed97c8d6987a5c6326232bc1cae6301e033bf5b1440bc30f7c15",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11055 将战斗加入躲避检定，达成成功差值后先伤害再移动非精英敌人"
+        }
+      ]
+    },
+    {
+      "code": "11056",
+      "type": "event",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11056.js",
+      "sha256": "2abab5bcf1cabd409cf0af741d57574c56466e4e56d15f274c279adf3e3c34f7",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11056 成功谈判按剩余生命检定，可将非精英洗回或伤害精英"
+        }
+      ]
+    },
+    {
+      "code": "11057",
+      "type": "skill",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11057.js",
+      "sha256": "738b18a0dc36336bfea0e99b6870280174b175a1fe5775cb735380ada996976f",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11057 普通攻击不可投入，控制的枪械印刷能力发起时可以投入"
+        }
+      ]
+    },
+    {
+      "code": "11058",
+      "type": "event",
+      "category": "ordinary",
+      "level": 1,
+      "status": "verified",
+      "entry": "src/cards/entries/11058.js",
+      "sha256": "b5eedc61a4172ad859dd550ad6ac9757076be56ea05a2637455dd6fca81cc6aa",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11058 老剧本中远处敌人离开附属地点时，所属调查员回手并远程躲避它"
+        },
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11058 老剧本中敌人进入附属地点后，所有者可从不相连地点立即移动过去"
+        }
+      ]
+    },
+    {
+      "code": "11059",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 2,
+      "status": "verified",
+      "entry": "src/cards/entries/11059.js",
+      "sha256": "fbd207baeda14ff2c1ffd7a5a62194023fcd4e96a176c1e3269c0788498967e0",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11059 在非法支援被弃置时盖放该卡，随后支付资源抽回原牌"
+        }
+      ]
+    },
+    {
+      "code": "11060",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 2,
+      "status": "verified",
+      "entry": "src/cards/entries/11060.js",
+      "sha256": "19a50b191a472272004c775247735274c3c2c134691e3c2497f5fc6824e233d5",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11060 与敌人交战后释放封印按帷幕攻击，揭示新地点后重新封印"
+        }
+      ]
+    },
+    {
+      "code": "11061",
+      "type": "skill",
+      "category": "ordinary",
+      "level": 3,
+      "status": "verified",
+      "entry": "src/cards/entries/11061.js",
+      "sha256": "7a120c03b3eb59ff4559c7020a8d9d8935b14a4abb84b6214268897fff67388c",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11061 押注费用与成功差值门槛，刚好成功无回报，超过一点获双倍资源"
+        }
+      ]
+    },
+    {
+      "code": "11062",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 4,
+      "status": "verified",
+      "entry": "src/cards/entries/11062.js",
+      "sha256": "302cdf22927e474ab9ff61149148c5dd6782cbf591fd95f2675ebdce0f71a589",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11062 展示手枪的攻击无费用，之后可弃掉抽牌或支付费用装备"
+        }
+      ]
+    },
+    {
+      "code": "11063",
+      "type": "event",
+      "category": "ordinary",
+      "level": 4,
+      "status": "verified",
+      "entry": "src/cards/entries/11063.js",
+      "sha256": "1a1a40b37477318618a5af9930d3475f32483e3c6e22cad1b0b164569a94b1c8",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11063 连接地点受伤者转交资源，取消对应数量的伤害与恐惧"
+        }
+      ]
+    },
+    {
+      "code": "11064",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 5,
+      "status": "verified",
+      "entry": "src/cards/entries/11064.js",
+      "sha256": "1167297e0f97e68c4ba5b04d1522f621046b2c9f5736f475f51af95634e86f47",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11064 花费选择的弹药，以同地点敌人战斗总值检定并分摊伤害"
+        },
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11064 失败时只由所选攻击目标反击，且不分摊伤害"
+        }
+      ]
+    },
+    {
+      "code": "11065",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11065.js",
+      "sha256": "140dc81e70b6856d24700de831c7f29a707cb65c82429f5ba4e68f5c1649185a",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11065 gains one offering for controlled doom and uses all offerings for a teammate action"
+        }
+      ]
+    },
+    {
+      "code": "11066",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11066.js",
+      "sha256": "ed5088f14ce5119f6580db321dc968300f31ec3d00e55301a2dc32b89acc0071",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11066 uses willpower, pays one charge, and deals +2 only when the chosen face matches an ignored token"
+        }
+      ]
+    },
+    {
+      "code": "11067",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11067.js",
+      "sha256": "e9746a2263623e2e8aa61cac1dc8959922d5b0d397fd633e96bcd92e3b114517",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11067 discovers the matching ignored token bonus in the same investigation"
+        }
+      ]
+    },
+    {
+      "code": "11068a",
+      "type": "asset",
+      "category": "identitySource",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11068a.js",
+      "sha256": "0168fbed356607302531448243c44241eb167ea61acd022f942b5713ea13955e",
+      "behavior": [
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11068a 在败退后接管牌组，替换签名与专属弱点，保持本局败退"
+        }
+      ]
+    },
+    {
+      "code": "11068b",
+      "type": "investigator",
+      "category": "identitySuccessor",
+      "status": "verified",
+      "entry": "src/cards/entries/11068b.js",
+      "sha256": "e00c570ef20dee08784bafcb851b23ede40b8a2c718a0b62f00f3cb63965feb6",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11068b adds two skill points only to a Spell check and draws a card on elder sign"
+        },
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11068b 不能作为起始调查员，牌组锁定，再次败退时死亡"
+        }
+      ]
+    },
+    {
+      "code": "11069",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11069.js",
+      "sha256": "e6a09f320d569157e189d0c447cea8d37968e1ccd98b6b62ec1fc733b5966676",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11069 resolves the first revealed symbol and returns all ignored numeric tokens"
+        }
+      ]
+    },
+    {
+      "code": "11070",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11070.js",
+      "sha256": "bd70ee785b5f32bde024e2593ec0bf44884eebfb695a26ebc275ed4f714d49f4",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11038 and 11070 gain evidence from a real seal, then spends it to discover and damage an attacking Geist"
+        }
+      ]
+    },
+    {
+      "code": "11071",
+      "type": "event",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11071.js",
+      "sha256": "7bac4f119e3d5b28f7c04f1ac0e804974fb20d13ed2dc68f24496d897076cf19",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11071 protects an investigator, removes the owner’s last charge, and then discards itself after cancellation"
+        }
+      ]
+    },
+    {
+      "code": "11072",
+      "type": "event",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11072.js",
+      "sha256": "39868d0101c9c7f544409deec576e62cfb558a842b3192a00c68ba1c700eedda",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11072 excludes weakness targets, defeats regular enemies, damages Elites and places doom on failure"
+        }
+      ]
+    },
+    {
+      "code": "11073",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 2,
+      "status": "verified",
+      "entry": "src/cards/entries/11073.js",
+      "sha256": "9a35140571242a663c072bca6b658edea4cc02ee9d47ac19e05ccba21be1f6ea",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11073 reveals only the actual encounter top to each observer while the asset is in play"
+        }
+      ]
+    },
+    {
+      "code": "11074",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 2,
+      "status": "verified",
+      "entry": "src/cards/entries/11074.js",
+      "sha256": "6974e872c50871c16e95584404e11d7324e0bea0df849045ab711d5c4730a7fc",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11074 enters fast, damages and fights without a cost, then pays an action to evade"
+        }
+      ]
+    },
+    {
+      "code": "11075",
+      "type": "event",
+      "category": "ordinary",
+      "level": 2,
+      "status": "verified",
+      "entry": "src/cards/entries/11075.js",
+      "sha256": "29c2ef5038909f1e5775e9838ea382383863c867526c4ffb95589f410075976a",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11075 repeats the same spell at the attached location, pays both charges and only one action"
+        }
+      ]
+    },
+    {
+      "code": "11076",
+      "type": "event",
+      "category": "ordinary",
+      "level": 2,
+      "status": "verified",
+      "entry": "src/cards/entries/11076.js",
+      "sha256": "c6f36baf9b6e44298b9c11b5f878bdc5a0cbaa0128faa1bfa32b965169ea8fb5",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11076 changes the printed front while preserving harm capacities, campaign identity and play limit"
+        }
+      ]
+    },
+    {
+      "code": "11077",
+      "type": "skill",
+      "category": "ordinary",
+      "level": 2,
+      "status": "verified",
+      "entry": "src/cards/entries/11077.js",
+      "sha256": "7d770894a9e28f024d1565568b16f3d0b6f37f43597557dc5e15716e79de6f1a",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11077 allows only one committed copy and distributes up to three uses across local assets"
+        }
+      ]
+    },
+    {
+      "code": "11078",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 3,
+      "status": "verified",
+      "entry": "src/cards/entries/11078.js",
+      "sha256": "280f22b2a6bdc97c3320079457bdf7aea1373bcef84ebc71de2197a190cbef94",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11078 funds an empty Spell and restores a charge when the last local clue is discovered"
+        }
+      ]
+    },
+    {
+      "code": "11079",
+      "type": "event",
+      "category": "ordinary",
+      "level": 3,
+      "status": "verified",
+      "entry": "src/cards/entries/11079.js",
+      "sha256": "37b4c620bf9d77331eaedc67cf3152e8131827ffa62ada4c085fa6543f19ae4a",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11079 draws both investigators’ cards for its player, gives the first surge and skips the next draw step"
+        }
+      ]
+    },
+    {
+      "code": "11080",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 5,
+      "status": "verified",
+      "entry": "src/cards/entries/11080.js",
+      "sha256": "85bd7af1ec46d4e16c60904508c59f4da11ba5d3be5be190561c0608cbfa5082",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-seeker.test.mjs",
+          "name": "11080 offers the branded Spell before drawing a starting hand and charges its regular price"
+        },
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11080 支付特殊经验费用后记下法术名，拒绝再次购买同名法术"
+        }
+      ]
+    },
+    {
+      "code": "11081",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11081.js",
+      "sha256": "49d7b09b39821a476da7ce8a0aa48ffa8814e3d1a5616754459a693131234e74",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11081 从手牌付费躲避，成功可额外弃牌阻止敌人补给重整"
+        }
+      ]
+    },
+    {
+      "code": "11082",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11082.js",
+      "sha256": "129d5369bbf3160c8ea484a2ccf4176d32b054ab5be9268a60673f027edfc62f",
+      "behavior": [
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11082 从手牌发动时只弃掉选择的副本，并且不支付印刷资源费用"
+        }
+      ]
+    },
+    {
+      "code": "11083",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11083.js",
+      "sha256": "16370684278512398a6af5272833d27d4d5c132078a7856663155d7ae0773cef",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11083 增加智识，并在自己的回合弃手牌后横置获得资源"
+        }
+      ]
+    },
+    {
+      "code": "11084",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11084.js",
+      "sha256": "31b1efc8b882c14e15d99458ac02a4370baff41056d34bf2b136c9611cb4bd89",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11084 在场时横置而不离场，弃 1 张手牌使本次调查多发现一个线索"
+        }
+      ]
+    },
+    {
+      "code": "11085",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11085.js",
+      "sha256": "821e98fc11e5013340a92b3dd652ee3b50781a2a6744ab1c916d0dffdd38eb97",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11085 只能从弃牌堆打出，被击败后单张洗回牌库"
+        }
+      ]
+    },
+    {
+      "code": "11086",
+      "type": "event",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11086.js",
+      "sha256": "ec36d2da9750593bbf326101873bcea36a2cc06145723eac277dc76532e51424",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11086 的额外费用检查手部道具，并区分手牌与场上支援"
+        }
+      ]
+    },
+    {
+      "code": "11087",
+      "type": "event",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11087.js",
+      "sha256": "33e56f36bdd8bec2b6ca68e4e689eb5de1f79f36f32d1801440018b5393782ba",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11087 正常调查，从场上弃置的费用让成功调查一次发现两个线索"
+        }
+      ]
+    },
+    {
+      "code": "11088",
+      "type": "skill",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11088.js",
+      "sha256": "6d28fb3ef4f02fc008ce873cb7929f62a71c9eaef3d584d923a92bc270e061db",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11088 允许连接地点的单张牌投入，额外线索交给检定者"
+        }
+      ]
+    },
+    {
+      "code": "11089",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 2,
+      "status": "verified",
+      "entry": "src/cards/entries/11089.js",
+      "sha256": "1205f1199371c8a9e98c65adb408a755a4f30aeb1a0b26e0cbc99e824a674942",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11089 弃手牌后横置增加一个补给，弃掉自身将补给转为资源"
+        }
+      ]
+    },
+    {
+      "code": "11090",
+      "type": "event",
+      "category": "ordinary",
+      "level": 2,
+      "status": "verified",
+      "entry": "src/cards/entries/11090.js",
+      "sha256": "6170ae01df3f98f185bc1e53f25b9cd56e3cc754b29ac2a4f9b3dfc7a2ae1260",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11090 只能从弃牌堆打出并收回包括不同等级在内的所有同名牌"
+        }
+      ]
+    },
+    {
+      "code": "11091",
+      "type": "event",
+      "category": "ordinary",
+      "level": 2,
+      "status": "verified",
+      "entry": "src/cards/entries/11091.js",
+      "sha256": "c7f3e9d14056637fd35fb992ce9d81ff0e28467098c08f9d6b1d490c6f378182",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11091 在阶段开始时快速打出，团队共享一种技能加值且下次阶段开始弃掉"
+        }
+      ]
+    },
+    {
+      "code": "11092",
+      "type": "event",
+      "category": "ordinary",
+      "level": 2,
+      "status": "verified",
+      "entry": "src/cards/entries/11092.js",
+      "sha256": "d2bbb1dc76b3f28d892eb03b06265e5daba229c970c14c372a00818acd3057b1",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11092 从弃牌堆攻击后先洗回再抽牌，空牌库时抽到自身"
+        }
+      ]
+    },
+    {
+      "code": "11093",
+      "type": "skill",
+      "category": "ordinary",
+      "level": 3,
+      "status": "verified",
+      "entry": "src/cards/entries/11093.js",
+      "sha256": "2c509dc786d01c596f9f02e2bdef5223e2734018a5cdc3d354c6d1aea6c278e1",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11093 独立投入，每张剩余手牌减一个百搭，成功抽两张"
+        }
+      ]
+    },
+    {
+      "code": "11094",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 5,
+      "status": "verified",
+      "entry": "src/cards/entries/11094.js",
+      "sha256": "cf2c4564657a6d2584598251992b71f6c63c9a6c42d4ff7c02f961fda7e68bad",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11094 从弃牌堆投入所选技能，付出手牌并把投入牌放到牌库底"
+        }
+      ]
+    },
+    {
+      "code": "11095",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11095.js",
+      "sha256": "11c39b2fbe5922f17a54d9d2d54ddc80236deb8079b814cd753fd5d2e8457e33",
+      "behavior": [
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11095 手动构筑提供 10 点起始 XP，之后禁止获取 XP 和再购买"
+        }
+      ]
+    },
+    {
+      "code": "11096",
+      "type": "event",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11096.js",
+      "sha256": "7d121d0879eacfca9323d2aa5d4634d836df3e0805afc702353f3e1dd2649d89",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11096 同地点另一调查员在自己的回合之外照付费用，连续打出小憩"
+        }
+      ]
+    },
+    {
+      "code": "11097",
+      "type": "skill",
+      "category": "ordinary",
+      "level": 0,
+      "status": "verified",
+      "entry": "src/cards/entries/11097.js",
+      "sha256": "266a8dbe41587d492a36a89745102d2c120a9182d2994d6e105933652ab54a7f",
+      "behavior": [
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11097 每多揭示一枚标记就增加一个投入图标，最多加三枚"
+        }
+      ]
+    },
+    {
+      "code": "11098",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 4,
+      "status": "verified",
+      "entry": "src/cards/entries/11098.js",
+      "sha256": "62c42e3b1310128b5545206ebd1a7fbed20cfab9d862704b838c5d1039b0d430",
+      "behavior": [
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11098 购买时选择一种创伤，取消草稿可撤销，确认后同步战役创伤"
+        }
+      ]
+    },
+    {
+      "code": "11099",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 1,
+      "status": "verified",
+      "entry": "src/cards/entries/11099.js",
+      "sha256": "9f9d323ef3c0f7426a4f12762ed67a17ad669ca10f3697b13b36417449f64fde",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11099 满手槽时仍可令手牌书籍实际入场，回合结束放在牌库底"
+        }
+      ]
+    },
+    {
+      "code": "11100",
+      "type": "skill",
+      "category": "ordinary",
+      "level": 1,
+      "status": "verified",
+      "entry": "src/cards/entries/11100.js",
+      "sha256": "b790d25b5e1d5ee3ee0a9f79e03c475ffef8a55fdfe65b3fe1472a50a62bc3e5",
+      "behavior": [
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11100 在诡计检定成功后留在游戏区域，再移出游戏取消非险境诡计显现"
+        }
+      ]
+    },
+    {
+      "code": "11101",
+      "type": "skill",
+      "category": "ordinary",
+      "level": 1,
+      "status": "verified",
+      "entry": "src/cards/entries/11101.js",
+      "sha256": "b15370df86c3d9558b08130142009ef7d3b8a972bd0b2b34f6f180cefa9219ac",
+      "behavior": [
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11101 可调整成功差值并把新差值交给实际检定结果"
+        }
+      ]
+    },
+    {
+      "code": "11102",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 2,
+      "status": "verified",
+      "entry": "src/cards/entries/11102.js",
+      "sha256": "3575cc0380b010997f53c64589a21ea1d28b630570524fbf5faffe596f371267",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11102 横置并弃手牌，免费移动到连接地点"
+        }
+      ]
+    },
+    {
+      "code": "11103",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 2,
+      "status": "verified",
+      "entry": "src/cards/entries/11103.js",
+      "sha256": "35b3c789c63b14648a4547f4851318fb7e89550d67e904e4d73ed73e2175a18f",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11103 法术事件检定的技能加值与自选额外揭示都生效"
+        }
+      ]
+    },
+    {
+      "code": "11104",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 2,
+      "status": "verified",
+      "entry": "src/cards/entries/11104.js",
+      "sha256": "b2e28a3fdef7ad7183f4f5ee10c40b4fccb1b77d8d395c78690244e6bcfcd199",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11104 提高谈判检定值，成功后才可横置获得资源"
+        }
+      ]
+    },
+    {
+      "code": "11105",
+      "type": "event",
+      "category": "ordinary",
+      "level": 2,
+      "status": "verified",
+      "entry": "src/cards/entries/11105.js",
+      "sha256": "47c43307c05f0a3ddb2b0925f395727e19d88769efe5e0ec1f60f4ffc39fa95a",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11105 对非精英与精英谈判分别造成 10 与 5 伤害，并将事件移出游戏"
+        }
+      ]
+    },
+    {
+      "code": "11106",
+      "type": "event",
+      "category": "ordinary",
+      "level": 2,
+      "status": "verified",
+      "entry": "src/cards/entries/11106.js",
+      "sha256": "09f4e3efa203bb8a49bea5c4fddd35bb2e8289d4c2976c4b285b7a5d3ce65e0c",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11106 按选择顺序结算两种不同效果，并在第二次选择隐藏已用效果"
+        }
+      ]
+    },
+    {
+      "code": "11107",
+      "type": "skill",
+      "category": "ordinary",
+      "level": 2,
+      "status": "verified",
+      "entry": "src/cards/entries/11107.js",
+      "sha256": "fec557d1fc528a63932a5530357d26e79f505fc9c845d5d1e421f8228628298e",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11107 每次仅投入一张，并按花费的资源每枚增加两枚百搭"
+        }
+      ]
+    },
+    {
+      "code": "11108",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 3,
+      "status": "verified",
+      "entry": "src/cards/entries/11108.js",
+      "sha256": "db490fe3526a77ff35518b8683119efc2add81d82e5c06d108c6d82c7c9cb6af",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11108 连续三种行动后奖励未用类型的额外行动，不扣普通行动"
+        }
+      ]
+    },
+    {
+      "code": "11109",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 3,
+      "status": "verified",
+      "entry": "src/cards/entries/11109.js",
+      "sha256": "5055e1da0ca8c4cfe891608f170d0ec483d6f8c6729231f4c5681b87dadc9bad",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-guardian.test.mjs",
+          "name": "11109 进入后阻止与非精英交战，并且只阻止发动者本轮造成的伤害"
+        }
+      ]
+    },
+    {
+      "code": "11110",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 3,
+      "status": "verified",
+      "entry": "src/cards/entries/11110.js",
+      "sha256": "3a5db0a221127ec123725217c54b533602d0010a94aa96d0bb8deb3989d7f5ae",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11110 横置盟友移动并交战，在生物所在地点获得两项技能值"
+        }
+      ]
+    },
+    {
+      "code": "11111",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 3,
+      "status": "verified",
+      "entry": "src/cards/entries/11111.js",
+      "sha256": "b191fb2893b10d66a433d923f3265b33faaeef3b396e10169d8dd1527cb13404",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11111 的工具检定失败补回刚刚花费的补给"
+        },
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11111 登记失败补偿后，即使自身先离场也仍结算"
+        }
+      ]
+    },
+    {
+      "code": "11112",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 3,
+      "status": "verified",
+      "entry": "src/cards/entries/11112.js",
+      "sha256": "38ec387521f4c53a4c88fd9f0fc02e2224622b940532fc5b6540216652e44e22",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11112 可以承受同地点队友的伤害和恐惧，并于持有者回合开始治疗其一"
+        }
+      ]
+    },
+    {
+      "code": "11113",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 3,
+      "status": "verified",
+      "entry": "src/cards/entries/11113.js",
+      "sha256": "c93338c336ae4e9723aec84e0600a017ba5a5caddefab6cc7e614dc777bfcc21",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11113 统计护甲入场前的趁乱攻击，并取消下一轮的首次攻击"
+        }
+      ]
+    },
+    {
+      "code": "11114",
+      "type": "event",
+      "category": "ordinary",
+      "level": 3,
+      "status": "verified",
+      "entry": "src/cards/entries/11114.js",
+      "sha256": "079126729b889e855bc9c135c83d65210dee5e60cc317bff5c3558fe907ebaf1",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11114 通过空手部槽位加值，并只将用此攻击击败的非精英和事件附属放入胜利区"
+        }
+      ]
+    },
+    {
+      "code": "11115",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 4,
+      "status": "verified",
+      "entry": "src/cards/entries/11115.js",
+      "sha256": "ed0c12a3b9aef200a814d02f59479322f040796345e9aeaed5ba62ba94e9e4a8",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11115 将意志加入攻击值，只在揭示符号时可横置伤害另一目标"
+        }
+      ]
+    },
+    {
+      "code": "11116",
+      "type": "event",
+      "category": "ordinary",
+      "level": 4,
+      "status": "verified",
+      "entry": "src/cards/entries/11116.js",
+      "sha256": "dcd60f7213b4cd03d7a462e49560d44e771b6d1227c35b5e897ed4b565f8f437",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11116 让同地点队友免费打出盟友，换槽后还能忽略弃置费用触发能力"
+        }
+      ]
+    },
+    {
+      "code": "11117",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 5,
+      "status": "verified",
+      "entry": "src/cards/entries/11117.js",
+      "sha256": "b8dab1eb4264e026df7887c2218e7366aaba3fdf718b09dcae9c3aef9ba4ea9c",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11117 能用另一件受控支援的秘密支付洞察事件，不能支付非洞察牌"
+        }
+      ]
+    },
+    {
+      "code": "11118",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 5,
+      "status": "verified",
+      "entry": "src/cards/entries/11118.js",
+      "sha256": "c736f9b1b16bca0dd95b2e9d06b8bfc55343cdf6596ef2b51eb4cfce6942034c",
+      "behavior": [
+        {
+          "file": "tests/tdc-player-survivor.test.mjs",
+          "name": "11118 满手部槽位可附属书籍，回合末将它放到牌库底"
+        }
+      ]
+    },
+    {
+      "code": "11119",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 5,
+      "status": "verified",
+      "entry": "src/cards/entries/11119.js",
+      "sha256": "51788749e5638775c5bc10e8cd6b4cd975a523c4316edb5151915bf1aca4116d",
+      "behavior": [
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11119 按调查员印刷特性筛选，并以炮弹和横置约束攻击、装填"
+        }
+      ]
+    },
+    {
+      "code": "11120",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 5,
+      "status": "verified",
+      "entry": "src/cards/entries/11120.js",
+      "sha256": "53e17401b29240ba898a1b0e0355e9a6ca00d9b28d7a97c2bc6fe2c118e6e875",
+      "behavior": [
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11120 进入有敌人的地点可支付线索标记并横置造成伤害"
+        }
+      ]
+    },
+    {
+      "code": "11121",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 5,
+      "status": "verified",
+      "entry": "src/cards/entries/11121.js",
+      "sha256": "e0decc0c5ed7d89688ed7f756346231e0b48200d3df740bc824a0f7f9a051334",
+      "behavior": [
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11121 11122 11123 三种誓约共用一个秘法槽，按各自特质取消诡计"
+        }
+      ]
+    },
+    {
+      "code": "11122",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 5,
+      "status": "verified",
+      "entry": "src/cards/entries/11122.js",
+      "sha256": "e6f98925d3976879e3c0783be5f2cbc1a270f4012c13e7244d9b42f3421c1717",
+      "behavior": [
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11121 11122 11123 三种誓约共用一个秘法槽，按各自特质取消诡计"
+        }
+      ]
+    },
+    {
+      "code": "11123",
+      "type": "asset",
+      "category": "ordinary",
+      "level": 5,
+      "status": "verified",
+      "entry": "src/cards/entries/11123.js",
+      "sha256": "8cda0103f87156ceb8ab28afefd4e80fb55fb46eb3dc9e9690e3db807a2113c9",
+      "behavior": [
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11121 11122 11123 三种誓约共用一个秘法槽，按各自特质取消诡计"
+        }
+      ]
+    },
+    {
+      "code": "11124",
+      "type": "event",
+      "category": "ordinary",
+      "level": 5,
+      "status": "verified",
+      "entry": "src/cards/entries/11124.js",
+      "sha256": "ad536e09ad7e0a2fc768bbe7be0a217bcb881ab2ea8a06aaaf7bb0b2925ca0fa",
+      "behavior": [
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11124 调查阶段起始只将所选地点的非精英敌人放到一旁"
+        }
+      ]
+    },
+    {
+      "code": "11125",
+      "type": "skill",
+      "category": "ordinary",
+      "level": 5,
+      "status": "verified",
+      "entry": "src/cards/entries/11125.js",
+      "sha256": "089fcd2a7ed3d4b4e5ae46ddbcc67a453e747a45b270d94ea7820ca913f6f69f",
+      "behavior": [
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11125 成功时免费打出收藏卡，技能移出游戏，战役牌组保持原状"
+        }
+      ]
+    },
+    {
+      "code": "11126",
+      "type": "treachery",
+      "category": "basicWeakness",
+      "status": "verified",
+      "entry": "src/cards/entries/11126.js",
+      "sha256": "4d9d9617f9cbe4c1a22ad15da5c6055586b9ba1f25ddecd62ea238e12c72007e",
+      "behavior": [
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11027 可加入手动牌组，11126–11129 只作为基础弱点候选"
+        },
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11126 未执行要求的行动时，恐惧与回洗各只结算一次"
+        },
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11126 允许同地点调查员清除，四张基础弱点保留各自要求"
+        }
+      ]
+    },
+    {
+      "code": "11127",
+      "type": "treachery",
+      "category": "basicWeakness",
+      "status": "verified",
+      "entry": "src/cards/entries/11127.js",
+      "sha256": "c1c6436a06e33909e9c0052ff0f3b668b6b42006583ece2474b8cfd3d8a89024",
+      "behavior": [
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11127 识别本轮成功的 investigate 检定并保留威胁区卡牌"
+        }
+      ]
+    },
+    {
+      "code": "11128",
+      "type": "treachery",
+      "category": "basicWeakness",
+      "status": "verified",
+      "entry": "src/cards/entries/11128.js",
+      "sha256": "bc372fe0adb4be80deb0445a3101910c7fff62edc2f614182274ae0aa62866f4",
+      "behavior": [
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11128 识别本轮成功的 evade 检定并保留威胁区卡牌"
+        }
+      ]
+    },
+    {
+      "code": "11129",
+      "type": "treachery",
+      "category": "basicWeakness",
+      "status": "verified",
+      "entry": "src/cards/entries/11129.js",
+      "sha256": "6d563f578f7216d7a603a6ddb7dd1dc3837c546ba0bc2e442ab991389e6c3ce3",
+      "behavior": [
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11027 可加入手动牌组，11126–11129 只作为基础弱点候选"
+        },
+        {
+          "file": "tests/tdc-player.test.mjs",
+          "name": "11129 识别本轮成功的 fight 检定并保留威胁区卡牌"
+        }
+      ]
+    }
+  ]
+}

@@ -39,9 +39,9 @@ const describeMove = move => move ? `${move.action}${move.cardId ? `(${move.card
 // 与 replay-fixtures.mjs#compactMoves 相同：展示字段（label/explanation）不进基线，
 // 否则改一句卡面文案就会变成一次全量基线重采。
 function compactMoves(moves) {
-  return moves.map(({ seat, move }) => {
+  return moves.map(({ move, ...entry }) => {
     const { label, explanation, ...rest } = move || {}
-    return { seat, move: rest }
+    return { ...entry, move: rest }
   })
 }
 

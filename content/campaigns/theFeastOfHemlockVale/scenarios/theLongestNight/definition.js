@@ -229,9 +229,9 @@ export const ENCOUNTER_DECK_CODES = Object.freeze([...new Set(ENCOUNTER_DECK)])
 // 放一边：五张 Fire! 诡计 + 埃阿斯剧情资产（参考 `setAsideEvery (cardIs fire)` / `setAside [ajax]`）。
 export const SET_ASIDE_CARDS = Object.freeze([...FIRE_CARDS, AJAX_CODE])
 
-// 遭遇定义：牌库卡 + 敌人牌库敌人 + 剧情资产（含「屏障、诱饵和陷阱」提示卡 10627）。
+// 遭遇定义也包含从放一边区域抽取的 Fire!。
 const definitions = encounterDefinitions([
-  ...ENCOUNTER_DECK_CODES, ...ENEMY_CARD_CODES, BARRIER_TOKENS_CODE, CAPTIVES_CODE, AJAX_CODE,
+  ...ENCOUNTER_DECK_CODES, ...ENEMY_CARD_CODES, FIRE_CODE, BARRIER_TOKENS_CODE, CAPTIVES_CODE, AJAX_CODE,
 ])
 
 // 幕/议程阶段：本章单幕单议程，都没有自动目标（幕面「不要推进场景，直到你受到指示」）。
@@ -321,7 +321,7 @@ export const SCENARIO_TEXT = Object.freeze({
   chineseGaps: [...(STORY.chineseGaps || [])],
 })
 
-// 结局键：4 个结局 + 调查员败北 + 无结局（全员撤退 → 结局 3）。
+// 结局键：4 个结局、调查员败北，以及引擎全员离场使用的无结局。
 export const RESOLUTION_KEYS = Object.freeze(['resolution1', 'resolution2', 'resolution3', 'resolution4'])
 export const NO_RESOLUTION = 'noResolution'
 export const INVESTIGATOR_DEFEAT = 'investigatorDefeat'
@@ -335,13 +335,14 @@ export const scenario = {
   specialRules: SCENARIO_TEXT.specialRules,
   rules: SCENARIO_TEXT.rules,
   startLocation: START_LOCATION,
+  resignAnywhere: true,
   locations: LOCATIONS,
   setAsideLocations: [...SET_ASIDE_LOCATIONS],
   acts: ACTS,
   agendas: AGENDAS,
   ...definitions,
   encounterDeck: [...ENCOUNTER_DECK],
-  resolutions: Object.fromEntries(['investigatorDefeat', ...RESOLUTION_KEYS]
+  resolutions: Object.fromEntries([NO_RESOLUTION, INVESTIGATOR_DEFEAT, ...RESOLUTION_KEYS]
     .map(key => [key, SCENARIO_TEXT.resolutions[key]?.body || ''])),
   tokenMeanings: {
     easy: { ...THE_LONGEST_NIGHT_TOKEN_MEANINGS.easy },

@@ -420,15 +420,15 @@
     },
     {
       "path": "src/deck/availability.js",
-      "sha256": "3929fd00249c222ded17233647e3ff3435575172d56a141d84877b86a3c44276"
+      "sha256": "f69169bed68b4f29e6a4173cebeba448b505804c2a166718effe0826f5000fe7"
     },
     {
       "path": "src/deck/deckbuilding.js",
-      "sha256": "250afbe3b0a59d3125cedbbc6ccb41381399f1d8e40310a5113d8d761c5d3dc5"
+      "sha256": "6b546f1f7c87014c4c2a687a81ce96cd1f7f651f2d031c768bbe6f45ffaab1e1"
     },
     {
       "path": "web/deck-rules.js",
-      "sha256": "794b8043f1a8032eb101c7f816b48979392a3977e70e60da9805b3c137230e08"
+      "sha256": "ab77908ae47e7fada8a33f63238517f9b4a2345db30990089e686b724760db71"
     }
   ],
   "evidence": [

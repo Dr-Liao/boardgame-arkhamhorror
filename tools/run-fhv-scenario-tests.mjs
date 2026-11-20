@@ -14,6 +14,7 @@ const SCENARIO_IDS = [
 ]
 const files = [
   ...SCENARIO_IDS.map(id => `tests/fhv-scenario-${id}.test.mjs`),
+  'tests/fhv-scenario-blockers.test.mjs',
   'tests/fhv-campaign-flow.test.mjs',
   'tests/fhv-story.test.mjs',
   'tests/fhv-campaign-records.test.mjs',

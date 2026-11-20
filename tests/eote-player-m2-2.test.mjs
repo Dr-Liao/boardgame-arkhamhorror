@@ -9,7 +9,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 
-import { fixture, asset, enemy, move, settle } from './core-fixture.mjs'
+import { fixture, asset, enemy, move, settle, validateMove } from './core-fixture.mjs'
 import { ALL_CARDS, INVESTIGATORS } from '../src/cards/cards-data.js'
 import { registerCardAbilities, registeredEntry, descriptorOfKind } from '../src/engine/ability.js'
 import { resolveTransaction, choiceError } from '../src/engine/resolution.js'
@@ -803,19 +803,82 @@ test('P6 08070 真法魔典：揭示手牌法术支援并结算其能力', () =>
   assert.ok(s.lastTestResult, '代理结算了法术卡上的技能检定能力')
 })
 
-test('P6 08072 沙夫纳的目录：花费秘密获得资源（近似秘密当资源）；秘密耗尽弃掉', () => {
+test('P6 08072 沙夫纳的目录：用自己的秘密支付道具费用，耗尽后弃掉', () => {
   const s = game()
-  const inv = s.investigators[0]
-  const catalogue = asset(s, '08072')
-  catalogue.uses = 5
-  inv.resources = 0
-  runDescriptor(s, '08072', 'free', { source: catalogue, ignoreCosts: false })
-  assert.equal(s.investigators[0].assets.find(item => item.id === catalogue.id).uses, 4, '花费 1 秘密')
-  assert.equal(s.investigators[0].resources, 1, '获得 1 资源')
-  // 耗尽：用掉最后 1 个秘密后条目 discardWhenEmpty 弃掉。
-  s.investigators[0].assets.find(item => item.id === catalogue.id).uses = 1
-  runDescriptor(s, '08072', 'free', { source: s.investigators[0].assets.find(item => item.id === catalogue.id), ignoreCosts: false })
-  assert.equal(s.investigators[0].assets.some(item => item.id === catalogue.id), false, '秘密耗尽后弃掉')
+  playEvent(s, '08072')
+  const catalogue = s.investigators[0].assets.find(item => item.code === '08072')
+  assert.equal(catalogue.uses, 5)
+  assert.equal(catalogue.usesType, 'secrets')
+  assert.equal(registeredEntry('08072').abilities.length, 0)
+
+  catalogue.uses = 2
+  s.investigators[0].resources = 0
+  const playItem = { action: 'play', cardId: '01087' } // 手电筒，2 费
+  s.investigators[0].hand.push(playItem.cardId)
+  assert.ok(legalMoves(s, 0).some(m => m.action === 'play' && m.cardId === playItem.cardId))
+  move(s, playItem)
+  settle(s, choice => choice.source === catalogue.id ? '2' : null)
+  assert.ok(s.investigators[0].assets.some(item => item.code === playItem.cardId))
+  assert.equal(s.investigators[0].resources, 0)
+  assert.equal(s.investigators[0].assets.some(item => item.id === catalogue.id), false)
+  assert.deepEqual(s.investigators[0].discard.filter(code => code === '08072'), ['08072'])
+})
+
+test('P6 08072 沙夫纳的目录：由同地点队友选择代付，可混合资源和多本目录', () => {
+  const s = fixture('01001', 2)
+  const [player, ally] = s.investigators
+  ally.location = player.location
+  player.resources = 1
+  const ownCatalogue = asset(s, '08072', { uses: 1 })
+  const allyCatalogue = asset(s, '08072', { uses: 1 }, 1)
+  const playItem = { action: 'play', cardId: '01020' } // 大砍刀，3 费
+  player.hand.push(playItem.cardId)
+  move(s, playItem)
+  settle(s, (choice) => {
+    if (choice.source === ownCatalogue.id) {
+      assert.equal(choice.seat, 0)
+      return '1'
+    }
+    if (choice.source === allyCatalogue.id) {
+      assert.equal(choice.seat, 1)
+      assert.ok(validateMove(s, 0, { action: 'choose', choiceId: choice.id, optionId: '1' }))
+      Object.assign(s, clone(s)) // 支付选择可以保存并恢复
+      return '1'
+    }
+  })
+  assert.ok(s.investigators[0].assets.some(item => item.code === playItem.cardId))
+  assert.equal(s.investigators[0].resources, 0)
+  assert.equal(s.investigators[1].resources, 30)
+  assert.ok(s.investigators.every(inv => inv.discard.includes('08072')))
+})
+
+test('P6 08072 沙夫纳的目录：不能支付非道具或远处的卡，拒绝代付后保留手牌和秘密', () => {
+  const s = fixture('01001', 2)
+  const [player, ally] = s.investigators
+  const playItem = { action: 'play', cardId: '01087' }
+  const playAlly = { action: 'play', cardId: '01021' }
+  player.resources = 0
+  player.hand = [playItem.cardId, playAlly.cardId]
+  ally.location = 'remote-test-location'
+  const catalogue = asset(s, '08072', {}, 1)
+  assert.equal(validateMove(s, 0, playItem), '资源不足')
+
+  ally.location = player.location
+  assert.equal(validateMove(s, 0, playAlly), '资源不足')
+  const actions = player.actionsLeft
+  move(s, playItem)
+  settle(s, choice => choice.source === catalogue.id ? 'skip' : null)
+  assert.ok(s.investigators[0].hand.includes(playItem.cardId))
+  assert.equal(s.investigators[0].actionsLeft, actions)
+  assert.equal(s.investigators[0].resources, 0)
+  assert.equal(s.investigators[1].assets.find(item => item.id === catalogue.id).uses, 5)
+
+  s.investigators[0].resources = 2
+  move(s, playItem)
+  settle(s, choice => choice.source === catalogue.id ? 'skip' : null)
+  assert.ok(s.investigators[0].assets.some(item => item.code === playItem.cardId))
+  assert.equal(s.investigators[0].resources, 0)
+  assert.equal(s.investigators[1].assets.find(item => item.id === catalogue.id).uses, 5)
 })
 
 test('P6 08074 应急装备：真实打出后声明式附属到道具支援（3 耐久）；宿主检定期间花 1 耐久 +2', () => {

@@ -190,7 +190,10 @@ test('behavior.js 总行数不超过 Phase 3 基线，且至少一个关卡已�
 // slot/symbol 的 content 侧读取包装（+8 行），实测 71066，按实测重锁；后续仍要求只减不增。
 // 2026-11-17 九循环 P8 发布修复：最终夜 lost 软锁、四档 Eldersign、升级窗/跳过勘察整备、
 // 传家宝 heirloomsAwarded 发放路径（+10 行），实测 71076，按实测重锁；后续仍要求只减不增。
-const BUDGET = 71076
+// 2026-11-19 十循环 P7：《沉没之城》10 个场景 behavior.js 落盘（阶段流程/网格/升降机/克苏鲁
+// 板块与独立牌库的章节钩子；逐卡规则仍在单卡条目），实测 82655，按批次实测重锁（+11579）；
+// 后续新增流程仍要求优先走 scenario-declaration，只减不增。
+const BUDGET = 82655
   assert.ok(data.phase3.behaviorLines <= BUDGET,
     `behavior.js 总行数 ${data.phase3.behaviorLines} 超过基线 ${BUDGET}：新增关卡流程请写 `
     + 'content/scenario-declaration.js 的声明，不要往 behavior.js 加命令式钩子。')

@@ -43,6 +43,7 @@ function newGame (players, seed = 'hub-replacement') {
 function prepareSeat (state, seat) {
   const moves = legalMoves(state, seat)
   const move = moves.find(item => item.action === 'hubAutoDeck')
+    ?? moves.find(item => item.action === 'hubConfirmDeck')
     ?? moves.find(item => item.action === 'hubDoneSeat')
     ?? moves.find(item => item.action === 'hubSelectInvestigator')
   assert.ok(move, `准备窗口卡住：座位 ${seat} 可用 ${moves.map(item => item.action).join(',')}`)
@@ -151,6 +152,7 @@ test('两关直接相邻时 AI 队友阵亡：下一关准备窗口重新开放�
   assert.notEqual(replacement, oldCode, '应换上新的调查员')
   assert.equal(state.campaign.investigators[1].status, 'active')
   assert.equal(state.campaign.investigators[1].xp, 0, '替补以 0 XP 起始牌组加入')
+  act(state, 1, autoHubMove(state, 1, true))
   act(state, 1, autoHubMove(state, 1, true))
   assert.equal(state.hubReady, true)
   assert.ok(state.campaign.retired.some(record => record.code === oldCode && record.status === 'insane'),

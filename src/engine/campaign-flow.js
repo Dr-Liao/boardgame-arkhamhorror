@@ -7,7 +7,7 @@
 // 依赖注入同前几批；本模块没有工厂产物依赖。
 
 import { isDraftMode, openDraftUpgrades } from '../deck/draft-mode.js'
-import { restoreInvestigatorForms } from './investigator-form.js'
+import { adoptInvestigatorIdentity, restoreInvestigatorForms } from './investigator-form.js'
 import { isStoryInvestigator, restoreStoryInvestigators } from './story-investigators.js'
 import { prepareSurvey } from './survey-preparation.js'
 import { changeChaosBag } from './chaos-bag.js'
@@ -37,6 +37,7 @@ export function createCampaignFlow(deps) {
     enterCampaignNode,
     getThreatEffect,
     info,
+    leaveAsset,
     initializeChaosBag,
     introduction,
     originalCardCode,
@@ -332,6 +333,18 @@ function finishScenario(state, resolutionKey, events) {
       addTrauma(state, inv.seat, 'mental', 1, events)
       info(state, events, `${inv.name} 手牌中的弱点在游戏结束时令其承受 1 点精神创伤。`)
     }
+    if (inv.defeated && !inv.resigned) {
+      const record = campaign.investigators[inv.seat]
+      if (registeredEntry(record.code)?.campaignDeck?.killedOnDefeat) {
+        record.status = 'killed'
+      } else {
+        const successor = inv.assets.find(asset => registeredEntry(asset.code)?.campaignDeck?.successorOnDefeat)
+        if (successor && inv.defeatCause !== 'killed'
+          && !inv.assets.some(asset => registeredEntry(asset.code)?.obolContract)) {
+          adoptCampaignSuccessor(state, inv, successor, events)
+        }
+      }
+    }
     updateCampaignStatus(campaign, inv.seat)
   }
   // 第 124 轮：关末的「战役弱点转交」由战役清单声明记录键
@@ -423,6 +436,8 @@ function applyResolutionEffects(state, resolutionKey, events) {
     // 故事调查员不参与战役经验结算（序章本身 `award: false`；这里兜住内容层以后写错 award）。
     if (isStoryInvestigator(state, inv)) continue
     let amount = state.victory + bonus + seatBonus(inv.seat) + (inv.scenarioXpBonus || 0)
+    amount += inv.assets.reduce((total, asset) =>
+      total + (registeredEntry(asset.code)?.campaignDeck?.scenarioExperience || 0), 0)
     // Phase 5（5b-9）：「卡戎的银币」这类结局加成由条目级 obolContract 声明。
     const obol = inv.assets.find(asset => registeredEntry(asset.code)?.obolContract)
     if (obol) {
@@ -451,11 +466,37 @@ function applyResolutionEffects(state, resolutionKey, events) {
       const label = ALL_CARDS[threat.code]?.nameZh || ALL_CARDS[threat.code]?.name || threat.code
       info(state, events, `「${label}」：${inv.name} 本场冒险少取得 ${Math.abs(modifier)} 点经验值。`)
     }
-    awardExperience(campaign, inv.seat, amount)
+    amount = awardExperience(campaign, inv.seat, amount) ?? amount
     info(state, events, `${inv.name} 获得 ${amount} XP，未花费 ${campaign.investigators[inv.seat].xp} XP。`)
   }
   result.afterExperience?.(state, scenarioRuntime(state, events))
   return result
+}
+
+function adoptCampaignSuccessor(state, inv, asset, events) {
+  const campaign = state.campaign
+  const record = campaign.investigators[inv.seat]
+  const code = registeredEntry(asset.code).campaignDeck.successorOnDefeat
+  const oldCode = record.code
+  const removed = new Set([asset.originalCode || asset.code, asset.code])
+  const weaknessPool = basicWeaknessPool(state).filter(card => !record.deck.includes(card))
+  const deck = record.deck.filter(card => !removed.has(card)).map(card => {
+    if (!ALL_CARDS[card]?.signatureFor?.includes(oldCode)) return card
+    const index = Math.floor(randomValue(state) * weaknessPool.length)
+    const replacement = weaknessPool.splice(index, 1)[0]
+    if (!replacement) throw new Error('基础弱点不足，无法替换签名卡牌')
+    return replacement
+  })
+  campaign.retired.push({ ...structuredClone(record), status: 'killed' })
+  leaveAsset(state, inv, asset, events, { reason: 'transform' })
+  adoptInvestigatorIdentity(state, inv, code)
+  record.code = code
+  record.name = inv.name
+  record.deck = deck.sort()
+  record.status = 'active'
+  record.removedCards.push(...removed)
+  delete record.upgradeDraft
+  info(state, events, `${inv.name} 接管了原调查员的牌组，签名卡已换成基础弱点。`)
 }
 
 function addTrauma(state, seat, kind, amount, events) {

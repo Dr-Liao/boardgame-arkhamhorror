@@ -9,6 +9,9 @@ import { investigatorRule } from '../cards/card-rules.js'
 import { isPublicBeneath } from './commit-origins.js'
 import { contentRegistry } from '../../content/registered.js'
 import { allowsCard, cardPoolContext } from '../deck/card-pool.js'
+import { assetTextBlanked, assetTextBlankedExceptForced } from './card-text.js'
+import { hasTrait } from './matcher.js'
+import { choiceOptionsFor, choiceSeats } from './resolution.js'
 
 export function createCardDefs(deps) {
   const {
@@ -204,6 +207,13 @@ export function createCardDefs(deps) {
     const filtered = Object.hasOwn(options, 'observerSeat')
     const seatVisible = seat => !filtered || seat === options.observerSeat
     const codes = new Set()
+    collectEmbeddedCardCodes(state, seatVisible, codes)
+    // 恢复待决选择需要从事务起点重算。该局面可能还持有行动中已移走的卡。
+    if (!filtered && state.continuation?.base) collectEmbeddedCardCodes(state.continuation.base, seatVisible, codes)
+    return allCardDefs({ runtimeOnly: true, campaignId, playerCodes: codes })
+  }
+
+  function collectEmbeddedCardCodes(state, seatVisible, codes) {
     // 附属可能是卡号字符串，也可能是 { code } / 卡实例；两种都收。
     const addAttached = list => {
       for (const item of list || []) {
@@ -246,8 +256,13 @@ export function createCardDefs(deps) {
     // 剧情资产不一定写在关卡 storyAssets 里（可能是战役奖赏或行为动态放入），
     // 但已经在场就同样需要卡定义（名称、反应开关、reactionIds 等）。
     for (const card of state.storyAssets || []) codes.add(card.code)
+    addAttached(state.agendaAside)
+    const choice = state.pendingChoice
+    for (const seat of choiceSeats(choice).filter(seatVisible)) {
+      if (choice.cardCode) codes.add(choice.cardCode)
+      for (const option of choiceOptionsFor(choice, seat)) if (option.cardCode) codes.add(option.cardCode)
+    }
     for (const code of [...(state.removedFromGame || []), ...(state.exiled || [])]) codes.add(code)
-    return allCardDefs({ runtimeOnly: true, campaignId, playerCodes: codes })
   }
 
   // P10（M5 全量开放）：战役 requiredPackIds 里已开放内容包中的可构筑玩家卡进入起始牌组池。
@@ -330,6 +345,14 @@ export function createCardDefs(deps) {
     const extraCharges = investigatorRule(inv.code)?.additionalChargeOnEnter || 0
     if (extraCharges && ['charge', 'charges'].includes(String(asset.usesType || '').toLowerCase())) {
       asset.uses = (asset.uses || 0) + extraCharges
+    }
+    if (uses != null && asset.usesType) {
+      const type = tokenType => String(tokenType || '').toLowerCase().replace(/s$/, '')
+      for (const source of inv.assets || []) {
+        const rule = registeredEntry(source.code)?.assetRule?.additionalStartingUses
+        if (rule && type(rule.type) === type(asset.usesType) && hasTrait(cardDef(code), rule.trait)
+          && !assetTextBlanked(source, inv) && !assetTextBlankedExceptForced(source)) asset.uses += rule.amount
+      }
     }
     return asset
   }

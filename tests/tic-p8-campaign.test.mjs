@@ -118,6 +118,8 @@ test('TIC P8 两真人真实大厅顺序开局：选人/自动牌组/确认/队�
     settleChoices(world, state)
     playMove(world, state, findMove(state, 'hubAutoDeck', seat), seat)
     settleChoices(world, state)
+    playMove(world, state, findMove(state, 'hubConfirmDeck', seat), seat)
+    settleChoices(world, state)
     assert.equal(state.campaign.investigators[seat].startingDeckReady, true)
     assert.ok(state.campaign.investigators[seat].deck.length >= 30, '自动牌组应有合法张数')
     playMove(world, state, findMove(state, 'hubDoneSeat', seat), seat)
@@ -635,8 +637,13 @@ test('TIC P8 条件记忆闪回：按章节门槛结算、重复结算不再发�
 test('TIC P8 存档恢复：章节中 JSON 往返后 legalMoves/状态一致，双方继续推进结果逐字节相同', () => {
   const state = hubSetup(world, createHubGame(world, { seed: 'tic-p8-save-mid', investigatorCodes: TWO_HUMANS }),
     { investigatorCodes: TWO_HUMANS })
-  const saved = saveAndRestore(world, state)
+  const stale = JSON.parse(JSON.stringify(state))
+  const cachedCard = Object.values(stale.cards)[0]
+  assert.ok(cachedCard, '存档应包含内嵌卡牌定义')
+  cachedCard.name = '旧版卡牌缓存'
+  const saved = saveAndRestore(world, stale)
   assert.deepEqual(saved.changes, ['刷新内嵌卡牌定义'], '首个迁移只应刷新派生卡表')
+  assert.deepEqual(saved.state.cards, state.cards, '旧卡表应重建为当前卡表')
   assert.deepEqual(saved.secondChanges, [], '第二次迁移必须完全幂等')
   assert.equal(saved.state.revision, state.revision)
   assert.equal(saved.state.pendingChoice, null)
@@ -646,7 +653,7 @@ test('TIC P8 存档恢复：章节中 JSON 往返后 legalMoves/状态一致，�
   // 用同一段脚本继续：结束第一章 → 幕间 → 下一章开局；两个独立恢复分支必须逐字节一致。
   const left = JSON.parse(JSON.stringify(saved.state))
   const right = JSON.parse(JSON.stringify(saved.state))
-  assert.notEqual(hashState(left), hashState(JSON.parse(JSON.stringify(state))), '迁移会刷新派生卡表，指纹不同于原状态')
+  assert.notEqual(hashState(left), hashState(stale), '迁移后的指纹应区别于带旧卡表的输入')
   finishScenario(world, left, 'resolution1')
   finishScenario(world, right, 'resolution1')
   assert.equal(hashState(left), hashState(right))

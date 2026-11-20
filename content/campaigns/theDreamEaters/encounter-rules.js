@@ -17,6 +17,7 @@
 // 本层是**内容层**（不是卡条目），可以 import 纯引擎模块（swarming/swarm/veiled）与 `card-rules.js` 读点；
 // 卡片文件不允许 import 本文件（卡条目只能拿 ctx.api）。
 import { ALL_CARDS } from '../../../src/cards/cards-data.js'
+import { canDiscardControlledAsset } from '../../../src/engine/asset-departure.js'
 import {
   actRuleFor, agendaRuleFor, enemyScriptFor, enemyStatRuleFor, encounterResolveFor, entryFlags,
   resolveDeclarativeTreacheryTest, threatActionByRule, threatActionFor, treacheryRuleFor,
@@ -744,6 +745,7 @@ export const encounterRules = Object.freeze({
       action: 'scenarioAction', actions: 1, rule: `locationAttachment:${card.id}`,
       label: `[行动] 摆脱「${ALL_CARDS[original(card)]?.nameZh || original(card)}」`,
     })
+    if (!inv.assets.some(asset => canDiscardControlledAsset(state, inv, asset))) return moves
     for (const asset of inv.assets) for (const card of asset.attachments || []) {
       if (!flagOf(card).discardControlledAssetToRemoveAttachment) continue
       moves.push({ action: 'scenarioAction', actions: 1, rule: `assetAttachment:${card.id}`,

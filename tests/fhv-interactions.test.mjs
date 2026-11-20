@@ -130,7 +130,7 @@ test('P4 机制操作表：既有 25 项保持不变，追加 FHV 7 项交互事
     ['eoteFrost', 'eotePartner', 'eoteSeal', 'eoteKey', 'eoteTekeli', 'eoteDeckTop', 'eoteCrossSeat', 'eoteDiscipline', 'eoteSupply'])
   assert.deepEqual([...MECHANIC_OPERATIONS.slice(19, 25)],
     ['tskConcealed', 'tskKey', 'tskHollow', 'tskMap', 'tskCustomizable', 'tskCrossSeat'])
-  assert.deepEqual([...MECHANIC_OPERATIONS.slice(25)],
+  assert.deepEqual([...MECHANIC_OPERATIONS.slice(25, 32)],
     ['fhvCodex', 'fhvSurvey', 'fhvGrid', 'fhvRail', 'fhvPredation', 'fhvForm', 'fhvClue'])
   assert.equal(new Set(MECHANIC_OPERATIONS).size, MECHANIC_OPERATIONS.length)
   // P1 扫描的 4 组交互机制都有对应的事务操作。

@@ -600,13 +600,20 @@ test('P7 fateOfTheVale v.III 引线与火势：放引线到隐藏值、点燃抽
   assert.equal(state.scenarioFlags.fateKindling.theCrossroads, 2)
   const fire = behavior.actions(state, inv).find(item => item.rule === 'fateDrawFire')
   assert.equal(fire.reason, undefined, '引线 ≥ 隐藏值可点燃')
-  assert.equal(behavior.performAction(state, inv, fire, quietApi()), true)
+  assert.equal(behavior.performAction(state, inv, fire, {
+    drawEncounter(seat, { code }) {
+      assert.equal(seat, inv.seat)
+      crossroads.attachments = [{ code }]
+    },
+  }), true)
   assert.equal(state.scenarioFlags.fateKindling.theCrossroads, 0, '移除全部引线')
-  assert.ok(state.encounterDiscard.includes(FIRE_CODE))
+  assert.equal(crossroads.attachments[0].code, FIRE_CODE)
   const again = behavior.actions(state, inv).find(item => item.rule === 'fateDrawFire')
   assert.equal(again.used, true, '团队每地点一次')
   // 5 张「着火了！」→ 轮末立即推进：幕 3a v.III 背面直接结算结局 4。
-  state.encounterDiscard = [FIRE_CODE, FIRE_CODE, FIRE_CODE, FIRE_CODE, FIRE_CODE]
+  state.encounterDiscard = Array(5).fill(FIRE_CODE)
+  assert.equal(behavior.objectiveStatus(state).satisfied, false)
+  for (const location of state.locations.slice(0, 5)) location.attachments = [{ code: FIRE_CODE }]
   behavior.roundEnded(state, api)
   assert.equal(api.finished, 'resolution4', '幕 3a v.III 背面 → 结局 4')
 })

@@ -41,6 +41,7 @@ for (const [id, label, kind] of [
   ['opportunityAttack', '趁乱攻击时', 'interrupt'],
   ['harmDealt', '伤害/恐惧分配时', 'interrupt'],
   ['harmAssigned', '实际受到伤害或恐惧后', 'reaction'],
+  ['harmDealtToInvestigator', '调查员或其控制的支援受到伤害或恐惧后', 'reaction'],
   ['threatEntered', '卡牌进入威胁区域后', 'reaction'],
   ['enemyReadied', '敌人重整后', 'reaction'],
   ['afterAlarmRaised', '警报等级提高后', 'reaction'],
@@ -53,6 +54,7 @@ for (const [id, label, kind] of [
   ['actionResolvedAtLocation', '本地点一次行动结算后', 'reaction'],
   ['consecutiveActions', '连续两次同类行动后', 'reaction'],
   ['assetActionResolved', '支援的行动能力结算后', 'reaction'],
+  ['assetAbilityActivated', '支援的行动或免费能力发动后', 'reaction'],
   ['enemyPhaseBegins', '敌人阶段开始时', 'reaction'],
   ['phaseBegins', '阶段开始时', 'reaction'],
   ['turnBegins', '回合开始时', 'reaction'],
@@ -62,6 +64,8 @@ for (const [id, label, kind] of [
 define('assetLeavesPlay', '支援离场后', 'reaction')
 define('wouldDiscardFromHand', '将要弃掉手牌时', 'interrupt')
 define('handCardDiscarded', '一张手牌被弃掉后', 'reaction')
+define('handEmptied', '调查员失去最后一张手牌后', 'reaction')
+define('encounterCardDiscardedFromPlay', '调查员从场上弃掉敌人或诡计后', 'reaction')
 define('treacheryWouldDiscard', '诡计结算后将要弃掉时', 'interrupt')
 // 八循环《绯红密钥》P7：隐匿揭露后 / 密钥变换后。内容条目按这两个时机声明强制能力；
 // 在此登记后 audit-abilities 的 unknownTriggers 归零（派发点随 P8 原语队列补齐）。
@@ -76,6 +80,7 @@ define('promiseBroken', '违背回合承诺后', 'reaction')
 define('chaosTokenResolved', '祝福或诅咒标记结算后', 'reaction')
 define('chaosRevealStepEnded', '混乱标记揭示步骤结束后', 'reaction')
 define('roundEnds', '一轮结束时', 'reaction')
+define('investigationPhaseStarting', '调查阶段开始时（强制）', 'interrupt')
 define('investigationPhaseStarts', '调查阶段开始时', 'reaction')
 // P7（印斯茅斯终章 07330a/07331a）：「调查阶段结束时」的强制能力需要真实窗口。
 // 调用点：turn.js#runBetweenInvestigationPhases（调查阶段结束、敌人阶段之前）。
@@ -93,11 +98,16 @@ define('testEnds', '技能检定结束时', 'reaction')
 define('sharedSuppliesSpent', '从另一支援支付补给后', 'reaction')
 define('assetCluesPlaced', '支援上放置线索后', 'reaction')
 define('assetDamageAssigned', '伤害分配至支援时', 'reaction')
+define('assignedHarm', '伤害或恐惧完成分配、将要放置时', 'interrupt')
 define('cardWouldBeDrawn', '将要抽到卡牌时', 'interrupt')
 define('doomWouldBePlaced', '将要放置毁灭时', 'interrupt')
 define('doomPlaced', '毁灭放置后', 'reaction')
 define('mythosEnd', '神话阶段结束时', 'reaction')
 define('tokenWouldResolve', '混乱标记将要结算时', 'interrupt')
+define('chaosTokenChanged', '封印、取消或忽略标记后', 'reaction')
+define('beforeCommitCards', '将要投入技能牌时', 'interrupt')
+define('performedAction', '完成行动后', 'reaction')
+define('parleySuccess', '谈判检定成功后', 'reaction')
 
 // 旧式 triggerReaction 通道使用的窗口（engine.js 与战役 behavior 的调用点）。
 // 它们与 reactionWindow 的窗口共享同一份注册表，能力层描述子因此也能挂在这些时机上。
@@ -174,6 +184,9 @@ define('enemyAttacked', '敌人攻击后', 'reaction', 70)
 define('agendaWouldAdvance', '密谋将要因毁灭阈值推进时', 'reaction', 71)
 // 第 5 步 P7：事件打出并结算后（05320 超级加倍）。调用点在 src/engine/actions.js#doPlay 的事件收尾段；
 // 卡面用 api.replayPlayedCode 重放刚打出的事件。没有卡面挂载时 reactionWindow 是 no-op。
+define('ammoSpent', '花费弹药后', 'reaction', 60)
+define('assetPlayed', '打出支援后', 'reaction', 72)
+define('encounterCardsLookedAt', '查看遭遇牌时', 'interrupt', 42)
 define('eventPlayed', '打出一张事件后', 'reaction', 72)
 // P7：调查阶段结束（07330a/07331a 沉睡古神的「调查阶段结束时放置毁灭」）。
 // 调用点在 src/engine/turn.js 的 runBetweenInvestigationPhases 起始处，且只在真有监听者时开窗。

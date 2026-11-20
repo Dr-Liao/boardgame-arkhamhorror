@@ -1,4 +1,4 @@
-import { mechanicState, integer, locationAt } from './mechanic-state.js'
+import { GRID_ADJACENCY, GRID_DIRECTIONS, mechanicState, integer, locationAt, validateGridPorts } from './mechanic-state.js'
 import { eoteScenarioState } from './eote-state.js'
 import { railNeighbors } from './rail-grid.js'
 function coordinate(x, y) { if (![x, y].every(Number.isSafeInteger)) throw new TypeError('Grid coordinates must be integers') }
@@ -8,6 +8,15 @@ export function gridLocations(state, { row = null, column = null, includeIsolate
   return state.locations.filter(loc => cells[loc.id] && (includeIsolated || !cells[loc.id].isolated)
     && (row == null || cells[loc.id].y === row) && (column == null || cells[loc.id].x === column))
 }
+function orthogonalPortsMatch(cell, target) {
+  const dx = target.x - cell.x, dy = target.y - cell.y
+  if (Math.abs(dx) + Math.abs(dy) !== 1) return false
+  if (cell.ports === undefined && target.ports === undefined) return true
+  const direction = dx > 0 ? 1 : dx < 0 ? 3 : dy > 0 ? 2 : 0
+  return (cell.ports === undefined || cell.ports.includes(GRID_DIRECTIONS[direction]))
+    && (target.ports === undefined || target.ports.includes(GRID_DIRECTIONS[(direction + 2) % 4]))
+}
+
 export function connectGrid(state) {
   const cells = mechanicState(state)?.grid || {}
   const policy = mechanicState(state)?.gridAdjacency || 'orthogonal'
@@ -19,8 +28,9 @@ export function connectGrid(state) {
       const target = cells[other.id]
       if (!target || target.isolated || other.id === loc.id) return false
       if (policy === 'row') return cell.y === target.y
+      if (policy === 'rows') return Math.abs(cell.y - target.y) === 1
       if (policy === 'columns') return Math.abs(cell.x - target.x) === 1
-      return policy === 'orthogonal' && Math.abs(cell.x - target.x) + Math.abs(cell.y - target.y) === 1
+      return policy === 'orthogonal' && orthogonalPortsMatch(cell, target)
     }).map(other => other.id) : []
     const traitLinks = (state.locationTraitLinks?.added || []).filter(([from]) => from === loc.id).map(([, to]) => to)
     loc.connections = (rail ? railNeighbors(rail, cells, loc.id).map(entry => entry.id)
@@ -29,7 +39,7 @@ export function connectGrid(state) {
   }
 }
 export function configureGrid(state, { adjacency = 'orthogonal' } = {}) {
-  if (!['orthogonal', 'row', 'columns', 'none'].includes(adjacency)) throw new TypeError('Invalid grid adjacency')
+  if (!GRID_ADJACENCY.includes(adjacency)) throw new TypeError('Invalid grid adjacency')
   mechanicState(state, true).gridAdjacency = adjacency
   connectGrid(state)
 }
@@ -42,7 +52,7 @@ export function adjacentGridSpaces(state, id) {
 }
 
 // All changed cells are validated against the final arrangement before any occupant or edge moves.
-export function relocateGridCells(state, changes, { protectStoryAssets = false } = {}) {
+function gridRelocation(state, changes, { protectStoryAssets = false } = {}) {
   if (!Array.isArray(changes) || !changes.length) throw new TypeError('网格移动需要地点')
   if (typeof protectStoryAssets !== 'boolean') throw new TypeError('无效网格保护选项')
   const cells = mechanicState(state)?.grid || {}
@@ -55,6 +65,15 @@ export function relocateGridCells(state, changes, { protectStoryAssets = false }
   }
   const positions = Object.entries(cells).filter(([, cell]) => !cell.isolated).map(([id, cell]) => byId.get(id) || cell)
   if (new Set(positions.map(({ x, y }) => `${x},${y}`)).size !== positions.length) return false
+  return byId
+}
+export function canRelocateGridCells(state, changes, options) {
+  return Boolean(gridRelocation(state, changes, options))
+}
+export function relocateGridCells(state, changes, options) {
+  const byId = gridRelocation(state, changes, options)
+  if (!byId) return false
+  const cells = mechanicState(state).grid
   for (const [id, point] of byId) {
     Object.assign(cells[id], point)
     locationAt(state, id).grid = { ...point }
@@ -62,9 +81,27 @@ export function relocateGridCells(state, changes, { protectStoryAssets = false }
   connectGrid(state)
   return true
 }
-export function placeGridLocation(state, id, x, y, { placeLocation }, { isolated = false, connections = [] } = {}) {
+export function gridPorts(state, id) {
+  const ports = mechanicState(state)?.grid?.[id]?.ports
+  return ports === undefined ? null : [...ports]
+}
+
+export function rotateGridPorts(state, id, turns = 1) {
+  if (!Number.isSafeInteger(turns)) throw new TypeError('网格转向次数必须是整数')
+  const cell = mechanicState(state)?.grid?.[id]
+  if (!cell || cell.isolated || cell.ports === undefined) return false
+  const offset = (turns % 4 + 4) % 4
+  if (offset) {
+    cell.ports = cell.ports.map(port => GRID_DIRECTIONS[(GRID_DIRECTIONS.indexOf(port) + offset) % 4])
+    connectGrid(state)
+  }
+  return [...cell.ports]
+}
+
+export function placeGridLocation(state, id, x, y, { placeLocation }, { isolated = false, connections = [], ports } = {}) {
   coordinate(x, y)
   if (typeof isolated !== 'boolean' || !Array.isArray(connections) || connections.some(id => typeof id !== 'string')) throw new TypeError('Invalid grid placement')
+  if (ports !== undefined) validateGridPorts(ports)
   const data = mechanicState(state, true); data.grid ||= {}
   if (!isolated && Object.entries(data.grid).some(([other, cell]) => other !== id && !cell.isolated && cell.x === x && cell.y === y)) return false
   if (!state.locations.some(loc => loc.id === id)) {
@@ -73,7 +110,7 @@ export function placeGridLocation(state, id, x, y, { placeLocation }, { isolated
     if (!placed || !state.locations.some(loc => loc.id === id)) return false
   }
   const loc = locationAt(state, id)
-  data.grid[id] = { x, y, isolated, connections: [...connections] }
+  data.grid[id] = { x, y, isolated, connections: [...connections], ...(ports === undefined ? {} : { ports: [...ports] }) }
   loc.grid = { x, y }
   connectGrid(state)
   return id

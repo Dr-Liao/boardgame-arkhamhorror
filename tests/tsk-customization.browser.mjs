@@ -4,8 +4,7 @@
 // docs/campaign/theScarletKeys/README.md P8 清单第 3 项的「构筑期初始勾选 + 关间升级勾选」：
 //
 //   1) 真实大厅 catalog → 绯红密钥（/api/start）→ 关卡选择（真实 hubSelectScenario）→
-//      hubGoSetup → 调查员 02002（雷克斯·墨菲，真实自动构筑必含定制卡 09042「鸦翎羽毛笔」）→
-//      真实 hubAutoDeck → 首章前 scenarioSetup；
+//      hubGoSetup → 调查员 02002（雷克斯·墨菲）→ 保存包含 09042「鸦翎羽毛笔」的合法牌组；
 //   2) 卡组构筑页顶部出现「定制升级卡」面板（真实观察投影 mechanics.tsk.customizationHub）：
 //      data-hub-customization、初始态、0 勾选、0 XP、**没有**勾选按钮（截图 custom-initial-*）；
 //   3) 真实 hubDoneSeat → 出发准备 → 真实 hubBeginScenario → 牌桌；
@@ -22,7 +21,7 @@
 // 真实刷新（服务端 GET /api/session）已足以证明勾选/经验落在服务端权威状态、不是前端缓存。
 //
 // 真实口径：不 page.route 改写 /api/start、/api/session、/api/move、/api/debug；不写 session.state；
-// 不注入牌组/勾选；定制卡进牌组走真实自动构筑，勾选走真实 legalMoves + /api/move。
+// 牌组保存和定制勾选均走真实 legalMoves + /api/move。
 // 跨过整章只用 host-only 调试通道（与大厅「结束这关」同一 finishScenario 路径），并在每个用例的
 // debugJump annotation 里披露。
 //
@@ -32,18 +31,16 @@ import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { contentRegistry } from '../content/registered.js'
 import {
   TSK_CAMPAIGN, FIRST_CHAPTER, openTskLobby, startTskGame, chooseScenarioThroughUi,
-  beginCurrentChapter, waitForPlayableTable, fetchSession, submitDebug, settlePendingChoices,
+  beginCurrentChapter, waitForPlayableTable, fetchSession, submitDebug, submitMove, settlePendingChoices,
   syncUiToState, hubTab, clickSettled, settleUi, shot, annotate,
 } from './tsk-browser-helpers.mjs'
 
 const SPEC_TIMEOUT = 480_000
-// 定制卡调查员：真实自动构筑必含 09042（Node 侧 120/120 种子 + 本 spec 每视口实跑复核）。
 const CUSTOM_INVESTIGATOR = '02002'
 const CUSTOM_CODE = '09042'
 const CUSTOM_NAME = ALL_CARDS[CUSTOM_CODE]?.nameZh || 'Quill of the Birds'
 const INVESTIGATOR_NAME = ALL_CARDS[CUSTOM_INVESTIGATOR]?.nameZh || CUSTOM_INVESTIGATOR
 const XP_GRANT = 3
-const CUSTOM_RE = /^定制：/
 
 function tskLaunchable() {
   try {
@@ -88,43 +85,39 @@ async function clickPrimary(page, hub, expectedAction, label) {
   return body.session
 }
 
-/**
- * 首章前准备：hubGoSetup → 选择调查员（含定制卡的 02002）→ 真实自动构筑。
- * 自动构筑的洗牌种子来自服务端随机状态；若本次牌组没有定制卡，重新选人 + 自动构筑重试
- * （仍是真实 UI 动作，不改牌组、不注入卡号）。返回最新会话。
- */
+/** 首章前用真实大厅提交一副包含鸦翎羽毛笔的合法牌组。 */
 async function prepareCustomSeat(page, hub, sessionId) {
   await clearOverlays(page)
   await clickPrimary(page, hub, 'hubGoSetup', '配置调查员与卡组')
-  let session = await sessionOf(page, sessionId)
-  expect(session.state.uiState, '配置调查员后应进入首章前 scenarioSetup').toBe('scenarioSetup')
+  await expect(hub).toHaveAttribute('data-ui-state', 'scenarioSetup')
+  const select = hub.getByRole('button', {
+    name: new RegExp(`^选择调查员：${escapeRegExp(INVESTIGATOR_NAME)}`),
+  }).first()
+  const selected = page.waitForResponse(response => response.url().endsWith('/api/move')
+    && response.request().postDataJSON()?.move?.action === 'hubSelectInvestigator')
+  await clickSettled(page, select, `选择调查员：${INVESTIGATOR_NAME}`)
+  const selectedBody = await (await selected).json()
+  expect(selectedBody.ok, selectedBody.error).toBe(true)
 
-  for (let attempt = 1; attempt <= 4; attempt += 1) {
-    const select = hub.getByRole('button', {
-      name: new RegExp(`^选择调查员：${escapeRegExp(INVESTIGATOR_NAME)}`),
-    }).first()
-    await expect(select, `真实候选里必须有 ${INVESTIGATOR_NAME}（${CUSTOM_INVESTIGATOR}）`).toBeVisible({ timeout: 30_000 })
-    const selected = page.waitForResponse(response => response.url().endsWith('/api/move')
-      && response.request().postDataJSON()?.move?.action === 'hubSelectInvestigator')
-    await clickSettled(page, select, `选择调查员：${INVESTIGATOR_NAME}`)
-    const selectedBody = await (await selected).json()
-    expect(selectedBody.ok, selectedBody.error).toBe(true)
+  const auto = hub.getByRole('button', { name: '使用推荐卡组', exact: true }).first()
+  const built = page.waitForResponse(response => response.url().endsWith('/api/move')
+    && response.request().postDataJSON()?.move?.action === 'hubSetDeck')
+  await clickSettled(page, auto, '使用推荐卡组')
+  const response = await built
+  const builtBody = await response.json()
+  expect(builtBody.ok, builtBody.error).toBe(true)
+  const session = builtBody.session
+  expect(session.state.investigators[0].code).toBe(CUSTOM_INVESTIGATOR)
+  if (deckOf(session).includes(CUSTOM_CODE)) return session
 
-    const auto = hub.getByRole('button', { name: '使用推荐卡组', exact: true }).first()
-    await expect(auto).toBeEnabled({ timeout: 30_000 })
-    const built = page.waitForResponse(response => response.url().endsWith('/api/move')
-      && response.request().postDataJSON()?.move?.action === 'hubSetDeck')
-    await clickSettled(page, auto, '使用推荐卡组')
-    const builtBody = await (await built).json()
-    expect(builtBody.ok, builtBody.error).toBe(true)
-    session = await sessionOf(page, sessionId)
-    expect(session.state.investigators[0].code).toBe(CUSTOM_INVESTIGATOR)
-    expect(session.state.hubSeatSelected?.[0], '选人后应记录座位已选').toBe(true)
-    if (deckOf(session).includes(CUSTOM_CODE)) return session
-    // 继续下一轮：重新选同一位调查员会重新构筑（真实 hubSelectInvestigator + hubAutoDeck）。
-    console.log(`[tsk-customization] 第 ${attempt} 次自动构筑未含 ${CUSTOM_CODE}，重试真实选人/构筑`)
-  }
-  throw new Error(`四次真实自动构筑都没有把定制卡 ${CUSTOM_CODE} 放进牌组（调查员 ${CUSTOM_INVESTIGATOR}）`)
+  const codes = response.request().postDataJSON().move.codes.slice()
+  const replacement = codes.findIndex(code => ALL_CARDS[code]?.klass === ALL_CARDS[CUSTOM_CODE].klass)
+  expect(replacement).toBeGreaterThanOrEqual(0)
+  codes[replacement] = CUSTOM_CODE
+  const saved = await submitMove(page, sessionId, session.state.revision, { action: 'hubSetDeck', codes })
+  expect(saved.payload.ok, saved.payload.error).toBe(true)
+  await syncUiToState(page, 'scenarioSetup')
+  return saved.payload.session
 }
 
 /** 首章前场景准备下的定制面板断言（初始态、0 勾选、无勾选按钮）。 */
@@ -149,6 +142,46 @@ async function assertInitialPanel(page, hub, session, testInfo, label) {
   await expect(panel).toContainText('初始勾选：0 格')
   await expect(panel.locator(`[data-hub-customize-level="0"]`)).toHaveCount(1)
   await expect(panel.locator('[data-hub-customize-card-xp="0"]')).toHaveCount(1)
+  const quill = panel.locator(`[data-hub-customize-card="${CUSTOM_CODE}"]`)
+  const namedAsset = quill.getByRole('combobox', { name: '选择书籍或法术支援 1' })
+  const deckTitles = new Set(deckOf(session).map(code => ALL_CARDS[code])
+    .filter(card => card?.type === 'asset' && card.traits?.some(trait => trait === 'Tome' || trait === 'Spell'))
+    .map(card => card.name))
+  expect(deckTitles.size).toBeGreaterThan(0)
+  await expect(namedAsset).toBeVisible()
+  const options = await namedAsset.locator('option').evaluateAll(items => items.map(item => item.value))
+  expect(options.slice(1).sort()).toEqual([...deckTitles].sort())
+  await settleUi(page)
+  await expect(async () => {
+    await namedAsset.selectOption(options[1], { timeout: 3000 })
+    await quill.getByRole('button', { name: '确认选择' }).click({ timeout: 3000 })
+  }).toPass({ timeout: 15_000 })
+  await expect(quill.getByText(/已记录/)).toBeVisible()
+  const preview = quill.locator(`button[data-zoom-code="${CUSTOM_CODE}"]`)
+  await expect(async () => {
+    await preview.scrollIntoViewIfNeeded({ timeout: 3000 })
+  }).toPass({ timeout: 15_000 })
+  await expect(preview.locator('.ah-table-art')).toHaveAttribute('data-image-state', 'displayable')
+  const artBounds = await preview.boundingBox()
+  const listBounds = await quill.locator('ul').boundingBox()
+  if (label === 'mobile') expect(artBounds.y + artBounds.height).toBeLessThanOrEqual(listBounds.y)
+  else expect(artBounds.x + artBounds.width).toBeLessThanOrEqual(listBounds.x)
+  await expect(quill.getByRole('checkbox')).toHaveCount(entry.options.reduce((sum, option) => sum + option.checks, 0))
+  await expect(quill.getByRole('checkbox', { checked: true })).toHaveCount(0)
+  const livingQuill = quill.locator('details').filter({ hasText: '笔如有神' })
+  await expect(livingQuill).toBeVisible()
+  await expect(livingQuill.locator('p')).toBeHidden()
+  await expect(livingQuill.locator('summary')).toHaveText('笔如有神')
+  await expect(quill.getByRole('checkbox', { name: '笔如有神第 1 格' })).toBeDisabled()
+  await livingQuill.locator('summary').click()
+  await expect(livingQuill.locator('p')).toBeVisible()
+  await expect(livingQuill.locator('p')).toContainText('不会触发趁乱攻击')
+  const supernatural = quill.locator('li').filter({ hasText: '神奇记录' })
+  await expect(supernatural).not.toContainText('Supernatural Record')
+  await expect(supernatural.locator('button')).toHaveCount(0)
+  await expect(supernatural.getByRole('checkbox', { checked: false })).toHaveCount(4)
+  await supernatural.locator('summary').click()
+  await expect(supernatural.locator('p')).toBeVisible()
   expect(await optionButtons(panel).count(), '初始构筑期不得渲染勾选按钮').toBe(0)
   const moves = (session.state.legalMoves || []).filter(move => move.action === 'hubCustomize')
   expect(moves, '0 XP 的初始构筑期不得给出 hubCustomize 候选').toEqual([])
@@ -171,12 +204,10 @@ async function upgradeThroughPanel(page, hub, sessionId, testInfo, label) {
   await expect(panel).toHaveAttribute('data-hub-customize-xp', String(XP_GRANT))
   await expect(panel.locator(`[data-hub-customize-card-xp="${XP_GRANT}"]`)).toHaveCount(1)
   await expect(panel).toContainText(`剩余经验 ${XP_GRANT} XP`)
-  const buttons = optionButtons(panel)
+  const buttons = optionButtons(panel.locator(`[data-hub-customize-card="${CUSTOM_CODE}"]`))
   await expect(buttons.first()).toBeVisible({ timeout: 30_000 })
-  expect(await buttons.count(), '每个仍有空位的选项都应有一个勾选按钮').toBeGreaterThanOrEqual(7)
-  const labelText = (await buttons.first().innerText()).trim()
-  expect(labelText, `按钮文案必须来自真实合法动作：${labelText}`).toMatch(CUSTOM_RE)
-  expect(labelText).toContain(CUSTOM_NAME)
+  expect(await buttons.count(), '每个仍有空位的选项都应有一个勾选按钮').toBe(7)
+  await expect(buttons.first()).toHaveAttribute('title', '为笔如有神勾选 1 格（1 XP）')
   // 幕间纪事在面板上方：把面板滚到吸顶头部/页签下方再截图（证据必须看得见勾选按钮）。
   await panel.evaluate(element => element.scrollIntoView({ block: 'start', behavior: 'instant' }))
   await page.waitForTimeout(150)
@@ -184,6 +215,7 @@ async function upgradeThroughPanel(page, hub, sessionId, testInfo, label) {
 
   const target = panel.locator(`[data-hub-customize-option="${CUSTOM_CODE}:0"]`)
   await expect(target).toBeVisible({ timeout: 30_000 })
+  await expect(target).toHaveAccessibleName('为笔如有神勾选 1 格（1 XP）')
   const responded = page.waitForResponse(response => response.url().endsWith('/api/move')
     && response.request().postDataJSON()?.move?.action === 'hubCustomize')
   await clickSettled(page, target, '定制勾选第一格')
@@ -210,6 +242,7 @@ async function upgradeThroughPanel(page, hub, sessionId, testInfo, label) {
   await expect(panel.locator('[data-hub-customize-level="1"]')).toHaveCount(1)
   await expect(panel.locator(`[data-hub-customize-card-xp="${XP_GRANT - 1}"]`)).toHaveCount(1)
   await expect(panel).toContainText(`剩余经验 ${XP_GRANT - 1} XP`)
+  await expect(panel.getByRole('checkbox', { name: '笔如有神第 1 格' })).toBeChecked()
   await panel.evaluate(element => element.scrollIntoView({ block: 'start', behavior: 'instant' }))
   await page.waitForTimeout(150)
   await shot(page, testInfo, `custom-interlude-upgraded-${label}`)
@@ -223,6 +256,7 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['mobile', 390, 84
   test(`P8 定制卡 ${label}：真实大厅构筑期 0 勾选 → 幕间用 XP 勾选一格 → 刷新保留`, async ({ page }, testInfo) => {
     test.skip(!tskLaunchable(), 'theScarletKeys 尚未在 content/registered.js 注册为可启动战役')
     testInfo.setTimeout(SPEC_TIMEOUT)
+    page.setDefaultTimeout(60_000)
     await page.setViewportSize({ width, height })
     annotate(testInfo, 'viewport', label)
     annotate(testInfo, 'phase', 'customization')
@@ -253,9 +287,9 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['mobile', 390, 84
     await expect(hub).toHaveAttribute('data-ui-state', 'campaignHub')
     await chooseScenarioThroughUi(page, hub, { chapter: FIRST_CHAPTER, index: 0 })
 
-    // b. 首章前准备：真实选人（含定制卡的调查员）+ 真实自动构筑。
+    // b. 首章前准备：真实选人并保存含定制卡的牌组。
     let current = await prepareCustomSeat(page, hub, sessionId)
-    expect(deckOf(current), `真实自动牌组必须含 ${CUSTOM_CODE}`).toContain(CUSTOM_CODE)
+    expect(deckOf(current)).toContain(CUSTOM_CODE)
 
     // c. 卡组构筑页顶部的定制面板：初始 0 勾选、0 XP、没有按钮。
     await hubTab(hub, '卡组构筑')
@@ -264,6 +298,12 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['mobile', 390, 84
 
     // d. 确认准备（真实 hubDoneSeat）→ 出发准备。
     current = await sessionOf(page, sessionId)
+    if (current.state.legalMoves.some(move => move.action === 'hubConfirmDeck')) {
+      const confirmed = await submitMove(page, sessionId, current.state.revision, { action: 'hubConfirmDeck' })
+      expect(confirmed.payload.ok, confirmed.payload.error).toBe(true)
+      await syncUiToState(page, 'scenarioSetup')
+      current = confirmed.payload.session
+    }
     if (!current.state.hubReady) {
       await clickPrimary(page, hub, 'hubDoneSeat', '确认准备')
       current = await sessionOf(page, sessionId)
@@ -331,6 +371,7 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['mobile', 390, 84
     await expect(refreshedPanel.locator(`[data-hub-customize-card-xp="${XP_GRANT - 1}"]`)).toHaveCount(1)
     await expect(refreshedPanel).toContainText(`剩余经验 ${XP_GRANT - 1} XP`)
     await expect(refreshedPanel).toContainText('已勾 1/')
+    await expect(refreshedPanel.getByRole('checkbox', { name: '笔如有神第 1 格' })).toBeChecked()
     await refreshedPanel.evaluate(element => element.scrollIntoView({ block: 'start', behavior: 'instant' }))
     await page.waitForTimeout(150)
     await shot(page, testInfo, `custom-refresh-${label}`)

@@ -27,7 +27,7 @@ export default {
   encounterResolve(state, inv, treachery, api) {
     api.test?.(inv.seat, 'agility', 4, result => {
       if (result.success) return
-      const assets = highestCostAssets(inv)
+      const assets = highestCostAssets(inv).filter(asset => api.canDiscardAsset(inv.seat, asset.id))
       const options = []
       if (assets.length) options.push({ id: 'discard', label: '弃掉你控制的印刷费用最高的支援' })
       options.push({ id: 'alarm', label: '你的警报等级 +1' })
@@ -42,9 +42,10 @@ export default {
             prompt: '选择要弃掉的支援（印刷费用最高）。',
             options: assets.map(item => ({ id: String(item.id), label: api.cardName?.(item.code) || item.code })),
           }))) || assets[0]
-        api.discardAsset?.(inv.seat, asset.id)
-        api.info?.(`👁️ 「严密监视」：${inv.name} 弃掉了「${api.cardName?.(asset.code) || asset.code}」。`)
-        return
+        if (api.discardAsset(inv.seat, asset.id)) {
+          api.info?.(`👁️ 「严密监视」：${inv.name} 弃掉了「${api.cardName?.(asset.code) || asset.code}」。`)
+          return
+        }
       }
       api.counters.add(inv.seat, ALARM, 1)
       api.info?.(`👁️ 「严密监视」：${inv.name} 的警报等级 +1。`)

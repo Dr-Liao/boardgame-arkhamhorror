@@ -20,6 +20,7 @@
 //   · 目标枚举只读 state，不修改任何东西，也没有随机性。
 
 import { all } from './matcher.js'
+import { canDiscardControlledAsset } from './asset-departure.js'
 import { effectSourceKindOfType, enemyIsSlumbering } from './effect-provenance.js'
 
 export const TARGET_KINDS = Object.freeze(['enemy', 'investigator', 'location', 'asset', 'cardInHand'])
@@ -72,12 +73,13 @@ function cardTraits(state, code) {
 }
 
 import { playerEffectCanAffect } from './effect-recipient.js'
+import { enemyIsBody } from './enemy-parts.js'
 
 function candidateList(state, inv, kind) {
   const location = inv?.location
   switch (kind) {
     case 'enemy':
-      return (state?.enemies || []).filter(enemy => enemy.location === location)
+      return (state?.enemies || []).filter(enemy => !enemyIsBody(enemy) && enemy.location === location)
         .map(enemy => ({ id: enemy.id, label: enemy.name || enemy.code, kind, entity: enemy }))
     case 'investigator':
       return (state?.investigators || [])
@@ -135,7 +137,11 @@ export function enumerateTargets(state, inv, target, ctx = {}) {
       return target.query({ ...base, candidate, entity: candidate.entity, cardTraits: code => cardTraits(state, code),
         enemyHealth: enemy => targetHooks.enemyHealth(state,enemy),
         canMoveTo: id => targetHooks.canMoveTo?.(state, inv.seat, id) === true,
-        helpers: { canMoveTo: (seat, id) => targetHooks.canMoveTo?.(state, seat, id) === true },
+        helpers: {
+          entityRuleActive: (entity, target) => targetHooks.entityRuleActive?.(state, entity, target) === true,
+          canMoveTo: (seat, id) => targetHooks.canMoveTo?.(state, seat, id) === true,
+          canDiscardAsset: asset => canDiscardControlledAsset(state, inv, asset),
+        },
         canDamageEnemy: (enemy, source = null) => targetHooks.canDamageEnemy?.(state, enemy, inv.seat, source) === true,
         enemyEvade: enemy => targetHooks.enemyEvade(state,enemy,inv.seat) }) === true
     } catch {

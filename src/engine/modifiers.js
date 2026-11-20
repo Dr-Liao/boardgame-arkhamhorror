@@ -359,9 +359,14 @@ function* modifierSourceRows(state) {
     if (investigator.defeated || investigator.resigned) continue
     for (const source of [...(investigator.assets || []), ...(investigator.threat || [])]) {
       const list = modifiersOf(source.code)
-      if (!list.length) continue
-      if (hooks.sourceBlanked(state, investigator, source)) continue
-      yield { controller: investigator, source, list }
+      if (list.length && !hooks.sourceBlanked(state, investigator, source)) yield { controller: investigator, source, list }
+      for (const attachment of source.attachments || []) {
+        if (attachment.assetReference) continue
+        const attachedModifiers = modifiersOf(attachment.code)
+        if (attachedModifiers.length && !hooks.sourceBlanked(state, investigator, attachment)) {
+          yield { controller: investigator, source: attachment, list: attachedModifiers }
+        }
+      }
     }
     const investigatorModifiers = modifiersOf(investigator.code)
     for (const code of new Set(investigator.hand || [])) {

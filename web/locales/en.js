@@ -41,7 +41,6 @@ export default {
   "draft.replaceFor": "Choose a replacement for {name}",
   "draft.noReplacement": "Add directly",
   "draft.unavailable": "Not enough XP or no legal replacement. Lock these offers to buy later.",
-  "draft.initialDone": "Initial draft complete. Confirm when ready.",
   "draft.consumed": "Offer consumed. Spend 1 XP to refresh and pick again.",
   "draft.upgradeNote": "Pick one per offer. Level 0 swaps are free; upgrades cost XP and support same-title credit. Same-title upgrades have double refresh weight. You may skip and return.",
   "draft.deckTitle": "Current deck · {count} cards toward deck size",

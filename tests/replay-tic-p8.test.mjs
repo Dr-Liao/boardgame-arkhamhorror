@@ -15,7 +15,8 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import { RULES_VERSION, STATE_SCHEMA_VERSION } from '../src/engine/rules-state.js'
-import { replayHashes, STATE_HASH_VERSION } from '../src/engine/replay.js'
+import { applyMove } from '../src/engine/engine.js'
+import { captureReplayLog, replayHashes, replayLog, STATE_HASH_VERSION, stateHash } from '../src/engine/replay.js'
 import {
   TIC_CAMPAIGN_ID, TIC_CHAPTER_IDS, TIC_CHAPTER_RECIPE_IDS, TIC_DIFFICULTIES, TIC_REPLAY_RECIPES,
 } from '../tools/replay-tic-recipes.mjs'
@@ -82,4 +83,25 @@ test('TIC P8 replay 基线：逐局重放出相同逐步指纹', () => {
     const mismatch = fixture.hashes.findIndex((hash, index) => hash !== replayed[index])
     assert.equal(mismatch, -1, `${fixture.id}：第 ${mismatch} 步指纹不一致——行为漂移，需重新采集基线`)
   }
+})
+
+test('暗流的团队免费能力保留新窗口，旧待决选择按原顺序续算', () => {
+  const { log } = fixtureOf('tic-inTooDeep-hub')
+  const start = log.moves[46]
+  const answer = log.moves[47]
+  const oldState = JSON.parse(JSON.stringify(replayLog(log, { until: 47 })))
+  applyMove(oldState, answer.seat, answer.move)
+  assert.equal(oldState.pendingChoice.id, log.moves[48].move.choiceId)
+  assert.equal(stateHash(oldState), fixtureOf('tic-inTooDeep-hub').hashes[48])
+
+  const newState = replayLog(log, { until: 46 })
+  applyMove(newState, start.seat, start.move)
+  const resumed = JSON.parse(JSON.stringify(newState))
+  applyMove(resumed, answer.seat, answer.move)
+  const skipped = resumed.continuation.answers.find(row => row.seat === 1 && row.kind === 'playerWindow')
+  assert.equal(skipped?.optionId, 'skip')
+  assert.equal(resumed.pendingChoice.kind, 'commit')
+  const newLog = JSON.parse(JSON.stringify(captureReplayLog(resumed)))
+  assert.equal(newLog.moves[46].sharedFreeWindows, true)
+  assert.equal(stateHash(replayLog(newLog)), stateHash(resumed))
 })

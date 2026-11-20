@@ -13,8 +13,8 @@ export default {
     kind: 'weakness',
     weakness: { type: 'threat' },
     label: '忒咳哩-哩（08729）',
-    resolve: ({ state, inv, api }) => {
-      const assets = (inv.assets || [])
+    resolve: ({ inv, api }) => {
+      const assets = (inv.assets || []).filter(asset => api.investigatorTools.canDiscardAsset(inv.seat, asset))
       if (assets.length) {
         const pick = assets.length === 1 ? assets[0] : assets.find(card => card.id === api.choice({ kind: 'asset', source: '08729', seat: inv.seat, prompt: '弃掉你控制的一张支援。', options: assets.map(card => ({ id: card.id, label: card.name || card.code })) })) || assets[0]
         api.discardAsset(inv.seat, pick)

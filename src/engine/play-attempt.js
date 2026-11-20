@@ -46,3 +46,9 @@ export function payBondedPlayCost(state, inv, code, deps) {
     inv.deck = deps.shuffle([...inv.deck, ...taken], () => deps.randomValue(state))
   return true
 }
+
+export function payAdditionalPlayHorror(state, inv, definition, events, deps) {
+  const horror = inv.threat.reduce((total, threat) =>
+    total + (deps.getThreatEffect(threat)?.playHorrorByType?.[definition?.type] || 0), 0)
+  if (horror > 0) deps.applyHorror(state, inv, horror, events)
+}

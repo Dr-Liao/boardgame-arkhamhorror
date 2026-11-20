@@ -615,7 +615,7 @@ export const behavior = {
       // 卡面：弃掉你控制的一张支援，或受到 1 点伤害。没有支援时只提供「受到 1 点伤害」。
       const inv = state.investigators?.[payload?.seat]
       if (!inv) return false
-      const assets = inv.assets || []
+      const assets = (inv.assets || []).filter(asset => api.canDiscardAsset(inv.seat, asset.id))
       const options = []
       if (assets.length) options.push({ id: 'asset', label: '弃掉你控制的一张支援' })
       options.push({ id: 'damage', label: '受到 1 点伤害' })
@@ -632,7 +632,7 @@ export const behavior = {
           prompt: '选择并弃掉你控制的一张支援。',
           options: assets.map(asset => ({ id: asset.id, cardCode: asset.code, label: api?.cardName?.(asset.code) || asset.name || asset.code })),
         })
-        api?.discardAsset?.(payload.seat, picked && assets.some(asset => asset.id === picked) ? picked : assets[0].id)
+        if (!api.discardAsset(payload.seat, picked ?? assets[0].id)) api.damage(payload.seat, 1)
       } else {
         api?.damage?.(payload.seat, 1)
       }

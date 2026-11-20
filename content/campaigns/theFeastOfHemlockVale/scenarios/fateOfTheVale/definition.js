@@ -117,7 +117,7 @@ export const SET_ASIDE_CARDS = Object.freeze([
   STORY_CARD_CODE,
   CRYSTAL_MIMIC_CODE, CRYSTAL_MIMIC_CODE,
   FRENZIED_REVELER_CODE,
-  FIRE_CODE,
+  ...Array(Math.max(1, Number(ALL_CARDS[FIRE_CODE]?.quantity) || 5)).fill(FIRE_CODE),
   ...RESIDENT_ASSET_CODES,
   ...RESIDENT_ENEMY_CODES,
 ])
@@ -307,7 +307,7 @@ export const ACT3_RULES = Object.freeze({
 // 遭遇定义
 // ---------------------------------------------------------------------------
 const definitions = encounterDefinitions([
-  ...ENCOUNTER_DECK_CODES,
+  ...ENCOUNTER_DECK_CODES, FIRE_CODE,
   ...RESIDENT_ENEMY_CODES,
   FRENZIED_REVELER_CODE,
   CRYSTAL_MIMIC_CODE,

@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { createGameState, applyMove, legalMoves, getStat, getMaxHealth, actionPreview, assetEffect, descriptorUsable, playerWindow } from '../src/engine/engine.js'
+import { createGameState, applyMove, legalMoves, getStat, getMaxHealth, actionPreview, assetEffect, descriptorUsable, playerWindow, scenarioRuntime } from '../src/engine/engine.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
 import { registeredEntry } from '../src/engine/ability.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
@@ -17,6 +17,7 @@ function launchTfa(seed = 'tfa-encounter-p1') {
   step({ action: 'hubGoSetup' })
   step({ action: 'hubSelectInvestigator', code: '04001' })
   step({ action: 'hubAutoDeck' })
+  step({ action: 'hubConfirmDeck' })
   step({ action: 'hubDoneSeat' })
   step({ action: 'hubBeginScenario' })
   for (let guard = 0; state.pendingChoice && guard < 200; guard++) {
@@ -27,6 +28,25 @@ function launchTfa(seed = 'tfa-encounter-p1') {
   state.chaosBag = ['0']
   return state
 }
+
+test('补给短缺探索：旧回放保留原选项，新对局过滤不可支付的弃置选项', () => {
+  for (const filterDiscardChoices of [false, true]) {
+    const state = launchTfa('tfa-supplies-replay')
+    me(state).assets = []
+    state.explorationDeck = ['04082']
+    const explore = legalMoves(state, 0).find(move => move.action === 'explore')
+    assert.ok(explore)
+    applyMove(state, 0, explore, { filterDiscardChoices })
+    const restored = JSON.parse(JSON.stringify(state))
+    const pending = restored.pendingChoice
+    assert.deepEqual(pending.options.map(option => option.id),
+      filterDiscardChoices ? ['resources', 'damage'] : ['resources', 'damage', 'asset'])
+    assert.equal(restored.actionLog.at(-1).filterDiscardChoices === true, filterDiscardChoices)
+    applyMove(restored, 0, { action: 'choose', choiceId: pending.id, optionId: 'damage' })
+    assert.equal(restored.pendingChoice, null)
+    assert.equal(me(restored).damage, 1)
+  }
+})
 
 test('「检定 A 或 B」拆成两个动作，选智识就检定智识', () => {
   const state = launchTfa()
@@ -190,7 +210,9 @@ function coreHarness(state, inv = state.investigators[0]) {
       const owner = state.investigators[seat]
       owner.traits = [...new Set([...(owner.traits || []), trait])]
     },
-    discardAsset: (seat, id) => { record.discarded = id },
+    canDiscardAsset: (seat, id) => scenarioRuntime(state, []).canDiscardAsset(seat, id),
+    filterAssetDiscardOptions: () => true,
+    discardAsset: (seat, id) => { record.discarded = id; return true },
     spawn: (code, location) => { record.spawned.push({ code, location }) },
     drawEncounter: () => { record.draws += 1 },
     drawCards: (seat, n) => { record.cards += n },
@@ -236,6 +258,20 @@ test('核心遭遇卡：01167 地窖寒风失败没有支援时受 2 点伤害',
   encounterRules.resolveEncounter(state, me(state), { code: '01167', originalCode: '01167' }, api)
   record.resolve({ success: false, value: 0 })
   assert.equal(record.damage, 2)
+  assert.equal(record.discarded, null)
+})
+
+test('04082 补给短缺：只有永久支援时不能选择全队弃支援', () => {
+  const state = launchTfa()
+  const inv = me(state)
+  inv.assets = [{ id: 'permanent', code: '08071' }]
+  const { api, record } = coreHarness(state)
+  api.choose = ({ options }) => {
+    assert.deepEqual(options.map(option => option.id), ['resources', 'damage'])
+    return 'damage'
+  }
+  encounterRules.resolveEncounter(state, inv, { code: '04082' }, api)
+  assert.equal(record.damage, 1)
   assert.equal(record.discarded, null)
 })
 

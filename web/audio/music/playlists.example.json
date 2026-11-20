@@ -138,7 +138,31 @@
         "tskGhostpocalypse1Departure",
         "tskNightmareMachine",
         "tskNightVigil",
-        "tskMovementProposition"
+        "tskMovementProposition",
+        "fhvFirefliesAndStardust",
+        "fhvAlmostBliss",
+        "fhvEternalTerminal",
+        "fhvIronHorseDistressed",
+        "fhvTheHouseOfLeaves",
+        "fhvGhostStory",
+        "fhvWillowAndTheLight",
+        "fhvCrowdHammer",
+        "fhvSkyeCuillin",
+        "fhvThunderbird",
+        "fhvWaterPrelude",
+        "fhvTenebrousBrothersCarnivalMermaid",
+        "fhvFolkRound",
+        "fhvZombieChase",
+        "fhvRainsWillFall",
+        "fhvFeatherWaltz",
+        "fhvSouthernGothic",
+        "fhvHidingYourReality",
+        "fhvAscendingTheVale",
+        "fhvCattails",
+        "fhvDuetMusette",
+        "fhvAncientMysteryWaltzAllegro",
+        "fhvVanes",
+        "fhvMagistar"
       ],
       "includeCustom": true
     },
@@ -948,6 +972,143 @@
         "tskNightVigil",
         "tskMovementProposition",
         "tcuFinalBattleOfTheDarkWizards"
+      ],
+      "includeCustom": true
+    },
+    "theFeastOfHemlockVale": {
+      "tracks": [
+        "fhvFirefliesAndStardust",
+        "fhvAlmostBliss",
+        "eoteEveningFallHarp",
+        "fhvEternalTerminal",
+        "fhvIronHorseDistressed",
+        "enterTheMaze",
+        "fhvTheHouseOfLeaves",
+        "fhvGhostStory",
+        "tcuThisHouse",
+        "fhvWillowAndTheLight",
+        "fhvCrowdHammer",
+        "tcuMystOnTheMoor",
+        "fhvSkyeCuillin",
+        "fhvThunderbird",
+        "lostFrontier",
+        "fhvWaterPrelude",
+        "fhvTenebrousBrothersCarnivalMermaid",
+        "ticDeepHaze",
+        "fhvFolkRound",
+        "fhvZombieChase",
+        "magicForest",
+        "fhvRainsWillFall",
+        "fhvFeatherWaltz",
+        "eoteLostTime",
+        "fhvSouthernGothic",
+        "fhvHidingYourReality",
+        "ticClashDefiant",
+        "fhvAscendingTheVale",
+        "fhvCattails",
+        "tdeDreamsBecomeReal",
+        "fhvDuetMusette",
+        "fhvAncientMysteryWaltzAllegro",
+        "ritual",
+        "fhvVanes",
+        "fhvMagistar",
+        "eoteBlackVortex"
+      ],
+      "includeCustom": true
+    },
+    "theFeastOfHemlockVale/welcomeToHemlockVale": {
+      "tracks": [
+        "fhvFirefliesAndStardust",
+        "fhvAlmostBliss",
+        "eoteEveningFallHarp"
+      ],
+      "includeCustom": true
+    },
+    "theFeastOfHemlockVale/writtenInRock": {
+      "tracks": [
+        "fhvEternalTerminal",
+        "fhvIronHorseDistressed",
+        "enterTheMaze"
+      ],
+      "includeCustom": true
+    },
+    "theFeastOfHemlockVale/hemlockHouse": {
+      "tracks": [
+        "fhvTheHouseOfLeaves",
+        "fhvGhostStory",
+        "tcuThisHouse"
+      ],
+      "includeCustom": true
+    },
+    "theFeastOfHemlockVale/theSilentHeath": {
+      "tracks": [
+        "fhvWillowAndTheLight",
+        "fhvCrowdHammer",
+        "tcuMystOnTheMoor"
+      ],
+      "includeCustom": true
+    },
+    "theFeastOfHemlockVale/theLostSister": {
+      "tracks": [
+        "fhvSkyeCuillin",
+        "fhvThunderbird",
+        "lostFrontier"
+      ],
+      "includeCustom": true
+    },
+    "theFeastOfHemlockVale/theThingInTheDepths": {
+      "tracks": [
+        "fhvWaterPrelude",
+        "fhvTenebrousBrothersCarnivalMermaid",
+        "ticDeepHaze"
+      ],
+      "includeCustom": true
+    },
+    "theFeastOfHemlockVale/theTwistedHollow": {
+      "tracks": [
+        "fhvFolkRound",
+        "fhvZombieChase",
+        "magicForest"
+      ],
+      "includeCustom": true
+    },
+    "theFeastOfHemlockVale/dawnOfTheSecondDay": {
+      "tracks": [
+        "fhvRainsWillFall",
+        "fhvFeatherWaltz",
+        "eoteLostTime"
+      ],
+      "includeCustom": true
+    },
+    "theFeastOfHemlockVale/theLongestNight": {
+      "tracks": [
+        "fhvSouthernGothic",
+        "fhvHidingYourReality",
+        "ticClashDefiant"
+      ],
+      "includeCustom": true
+    },
+    "theFeastOfHemlockVale/dawnOfTheFinalDay": {
+      "tracks": [
+        "fhvAscendingTheVale",
+        "fhvCattails",
+        "tdeDreamsBecomeReal"
+      ],
+      "includeCustom": true
+    },
+    "theFeastOfHemlockVale/preludeTheFinalEvening": {
+      "tracks": [
+        "fhvDuetMusette",
+        "fhvAncientMysteryWaltzAllegro",
+        "ritual"
+      ],
+      "includeCustom": true
+    },
+    "theFeastOfHemlockVale/fateOfTheVale": {
+      "tracks": [
+        "fhvVanes",
+        "fhvMagistar",
+        "eoteBlackVortex"
       ],
       "includeCustom": true
     }

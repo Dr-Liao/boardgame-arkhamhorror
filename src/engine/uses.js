@@ -11,11 +11,13 @@ export function resolveEmptyUses(state, api, registeredEntry) {
 export function afterUsesSpent(state, inv, asset, amount, events, deps) {
   if (!asset || !inv || !(amount > 0)) return
   const type = String(asset.usesType || deps.registeredEntry(asset.code)?.usesType || '').replace(/s$/, '')
-  if (type !== 'charge' || !deps.cardDef(asset.code)?.traits?.some(trait => trait.toLowerCase() === 'spell')) return
+  const when = type === 'ammo' ? 'ammoSpent'
+    : type === 'charge' && deps.cardDef(asset.code)?.traits?.some(trait => trait.toLowerCase() === 'spell') ? 'spellChargesSpent' : null
+  if (!when) return
   if (!state.investigators.some(owner => [owner, ...owner.assets, ...owner.threat].some(source =>
-    deps.registeredEntry(source.code)?.abilities?.some(descriptor => descriptor.trigger?.includes('spellChargesSpent'))))) return
+    deps.registeredEntry(source.code)?.abilities?.some(descriptor => descriptor.trigger?.includes(when))))) return
   state.usesWindowSerial = (state.usesWindowSerial || 0) + 1
-  deps.reactionWindow(state, 'spellChargesSpent', { when: 'spellChargesSpent', seat: inv.seat,
+  deps.reactionWindow(state, when, { when, seat: inv.seat,
     asset, amount, location: inv.location, windowInstance: `uses:${state.usesWindowSerial}` }, events, { allowNested: true })
 }
 

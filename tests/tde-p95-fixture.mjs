@@ -144,6 +144,8 @@ export function hubSetup(engine, {
       if (change) play(engine, state, change, seat)
       else if (state.campaign.seatParts[seat] !== part) throw new Error(`座位 ${seat} 不能改线到 ${part}`)
     }
+    const confirm = findMove(engine, state, 'hubConfirmDeck', seat)
+    if (confirm) play(engine, state, confirm, seat)
     const done = findMove(engine, state, 'hubDoneSeat', seat)
     if (done) play(engine, state, done, seat)
     settlePendingChoices(engine, state)

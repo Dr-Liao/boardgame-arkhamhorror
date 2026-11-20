@@ -2,6 +2,7 @@
 // 标记文案在 cardMarkerData()/placedCardMarkers() 调用期取 t()（模块顶层不调用 t()）。
 import { t } from './i18n.js'
 import { CARD_GLYPHS, SYMBOL_ALIASES, symbolFont } from './game-symbols.js'
+import { CARD_SYMBOL_OUTLINES } from './game-symbol-paths.js'
 // 生命/理智过去用参考项目的心形/脑部插画 PNG 做 CSS 蒙版：原图 2000px 宽，缩小到
 // 13–18px 后内部细节全糊成一团，还带着半透明的灰边。这里改成由同一张插画描摹出的
 // 单色矢量路径（32×32 网格、偶奇填充保留镂空），任意尺寸都清晰且保留卡面图形识别度。
@@ -35,18 +36,23 @@ export const TABLE_ICON_NAMES = Object.freeze([...new Set([
   ...Object.keys(FILLED_ICONS), ...Object.keys(CARD_GLYPHS), ...Object.keys(paths), ...Object.keys(SYMBOL_ALIASES),
 ])].sort())
 
-export function tableIcon(name) {
+export function tableIcon(name, { inline = false } = {}) {
   name = SYMBOL_ALIASES[name] || name
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
   svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('class', 'ah-icon')
-  if (Object.hasOwn(FILLED_ICONS, name)) {
-    // 生命/理智：实心矢量剪影（偶奇填充保留原插画的镂空），不再缩放位图蒙版。
+  const outline = Object.hasOwn(CARD_SYMBOL_OUTLINES, name) ? CARD_SYMBOL_OUTLINES[name] : null
+  if (outline || Object.hasOwn(FILLED_ICONS, name)) {
     svg.classList.add('ah-symbol-vector', 'ah-symbol-' + name)
     svg.dataset.gameSymbol = name
+    if (outline) {
+      const [width] = outline
+      svg.setAttribute('viewBox', `0 -17 ${width} 24`)
+      if (inline) svg.classList.add('ah-card-glyph')
+    }
     const path = document.createElementNS(svg.namespaceURI, 'path')
-    path.setAttribute('d', FILLED_ICONS[name])
+    path.setAttribute('d', outline ? outline[1] : FILLED_ICONS[name])
     path.setAttribute('fill', 'currentColor')
-    path.setAttribute('fill-rule', 'evenodd')
+    path.setAttribute('fill-rule', outline ? 'nonzero' : 'evenodd')
     svg.append(path)
     return svg
   }
@@ -124,6 +130,8 @@ export const USE_TOKEN_DISPLAY = Object.freeze({
   secret: Object.freeze({ icon: 'arcane', labelKey: 'table.marker.secret' }),
   charge: Object.freeze({ icon: 'star', labelKey: 'table.marker.charge' }),
   brilliance: Object.freeze({ icon: 'eye', labelKey: 'table.marker.brilliance' }),
+  // 十循环《沉没之城》任务卡「信仰之行」的征兆计数（11754a/b）。
+  signs: Object.freeze({ icon: 'star', labelKey: 'table.marker.signs' }),
 })
 export const LABEL_MARKER_DISPLAY = Object.freeze({
   overgrowth: Object.freeze({ icon: 'leaf', labelKey: 'table.marker.overgrowth' }),

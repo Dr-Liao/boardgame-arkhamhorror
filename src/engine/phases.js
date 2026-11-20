@@ -1,4 +1,5 @@
 import { discardPlayerCards } from './player-zones.js'
+import { discardEncounterAttachment } from './scenario-decks.js'
 import { hasPlayerWindow, playerWindowContext } from './player-mechanics.js'
 import { assetTextBlankedExceptForced } from './card-text.js'
 import { resolvePoolSchedules } from './chaos-token-pool.js'
@@ -102,7 +103,12 @@ function upkeepPhase(state) {
     inv.phaseStatBonuses = []
     inv.fearExtraPaid = false
     if (!assetsCannotReady(inv, state.round)) {
-      for (const a of inv.assets) if (assetTextBlankedExceptForced(a) || !registeredEntry(a.code)?.assetRule?.skipUpkeepReady) a.exhausted = false
+      for (const asset of inv.assets) {
+        if (assetTextBlankedExceptForced(asset) || !registeredEntry(asset.code)?.assetRule?.skipUpkeepReady) asset.exhausted = false
+        for (const attachment of asset.attachments || []) {
+          if (!attachment.assetReference && attachment.exhausted) attachment.exhausted = false
+        }
+      }
       // 2026-10-25 修复：威胁区的卡（如 05019 安息日男爵这类「[fast] 横置」资产）也应在
       // 重整阶段复位；旧实现只重置 inv.assets，导致威胁区卡的 exhaustion 永久保留、能力只能用一次。
       for (const threat of inv.threat) threat.exhausted = false
@@ -227,7 +233,7 @@ function upkeepPhase(state) {
   for (const agenda of state.agendas || []) for (const attachment of (agenda.attachments || []).slice()) {
     if (!registeredEntry(attachment.originalCode || attachment.code)?.treacheryRule?.discardAtRoundEnd) continue
     agenda.attachments.splice(agenda.attachments.indexOf(attachment), 1)
-    state.encounterDiscard.push(attachment.originalCode || attachment.code)
+    discardEncounterAttachment(state, attachment)
   }
   // 旁置卡（放在密谋牌库旁）的轮末弃置：
   //   · `discardOneAtRoundEnd`——印刷「从场上弃掉 1 张…（每轮最多一次）」，同轮最多弃 1 张；

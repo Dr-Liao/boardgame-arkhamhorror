@@ -20,11 +20,11 @@ const ownedHollows = (state, inv) => (state.scenarioFlags?.mechanics?.tsk?.hollo
   .filter(card => card.scope === 'team' || card.seat === inv.seat)
 
 // 手牌 + 场上支援里可被设为空洞的候选（非弱点）。
-function candidatesOf(inv) {
+function candidatesOf(inv, api) {
   const hand = (inv.hand || []).map((code, index) => ({ kind: 'hand', code, index }))
     .filter(item => !isWeaknessCode(item.code))
-  const assets = (inv.assets || []).map(asset => ({ kind: 'asset', code: asset.code, id: asset.id }))
-    .filter(item => !isWeaknessCode(item.code))
+  const assets = (inv.assets || []).filter(asset => !isWeaknessCode(asset.code) && api.canDiscardAsset(inv.seat, asset.id))
+    .map(asset => ({ kind: 'asset', code: asset.code, id: asset.id }))
   return [...hand, ...assets]
 }
 
@@ -32,8 +32,9 @@ const keyOf = item => (item.kind === 'hand' ? `hand:${item.index}` : `asset:${it
 
 function setAside(api, seat, item) {
   if (api.mechanics.tsk.hollow.isHollowed(item.code)) return false
-  if (item.kind === 'asset') api.discardAsset(seat, item.id)
-  else {
+  if (item.kind === 'asset') {
+    if (!api.discardAsset(seat, item.id) || !api.takeDiscardCard(seat, item.code)) return false
+  } else {
     api.putInDiscard(seat, item.code, { fromHand: true })
     api.takeDiscardCard(seat, item.code)
   }
@@ -50,14 +51,16 @@ export default {
       const assetCopies = (inv.assets || []).filter(asset => asset.code === hollow.code)
       if (!handCopies.length && !assetCopies.length) continue
       for (const code of handCopies) api.putInDiscard(inv.seat, code, { fromHand: true })
-      for (const asset of assetCopies) api.discardAsset(inv.seat, asset.id)
-      discarded += handCopies.length + assetCopies.length
+      const discardedAssets = assetCopies.filter(asset => api.discardAsset(inv.seat, asset.id))
+      const count = handCopies.length + discardedAssets.length
+      if (!count) continue
+      discarded += count
       api.harm(inv.seat, { damage: 1, horror: 1 })
       api.info?.(`🌫️ 空洞「${api.cardName(hollow.code)}」的同名卡牌被弃掉：${inv.name} 受到 1 点伤害和 1 点恐惧。`)
       if (inv.defeated || inv.resigned) return false
     }
     if (discarded > 0) return false
-    const candidates = candidatesOf(inv)
+    const candidates = candidatesOf(inv, api)
     if (!candidates.length) {
       api.info?.('🌫️ 「物质伪饰」：没有可放在一边的非弱点卡牌。')
       return false

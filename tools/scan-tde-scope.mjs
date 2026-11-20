@@ -15,12 +15,10 @@
 //
 // 状态不手写：三包清单读 content/packs/tde*/manifest.js 的导出码表，章节与遭遇组读
 // content/campaigns/theDreamEaters/shared.js；本工具只复算、对账并把不一致写成 gate 失败。
-// `gitHead` 不入账本（提交会变，账本要能长期复算）：基线提交存
-// artifacts/migration/tde/reports/baseline-git-head.txt。
+// 当前 Git 提交会变化，账本只引用复核记录中固定的基线来源。
 
 import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
-import { spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 
 import { ALL_CARDS } from '../src/cards/cards-data.js'
@@ -41,6 +39,7 @@ const SCOPE_FILE = 'artifacts/migration/tde/scope.json'
 // Lock the verified pre-completion replay hashes separately; retain M0 history.
 const REPLAY_BEFORE_FILE = 'tests/fixtures/replay/tde-baseline.json'
 const GOLDEN_FILE = 'tests/fixtures/replay/golden-replays.json'
+const REPLAY_REVIEW_FILE = 'audit/tde-replay-completion-review.json'
 const REFERENCE_ROOT = '参考资源/ArkhamHorror-main'
 const MODE = process.argv.includes('--write') ? 'write'
   : process.argv.includes('--check') ? 'check'
@@ -333,7 +332,7 @@ const readJson = relativePath => (existsSync(`${MOD_ROOT}${relativePath}`)
   ? JSON.parse(readFileSync(`${MOD_ROOT}${relativePath}`, 'utf8')) : null)
 const golden = readJson(GOLDEN_FILE)
 const replayBefore = readJson(REPLAY_BEFORE_FILE)
-const completionReview = readJson('audit/tde-replay-completion-review.json')
+const completionReview = readJson(REPLAY_REVIEW_FILE)
 const counters = fixtures => fixtures ? {
   fixtures: fixtures.length,
   steps: fixtures.reduce((sum, fixture) => sum + (fixture.steps ?? fixture.log?.moves?.length ?? 0), 0),
@@ -346,6 +345,22 @@ const replayIdsMatch = Boolean(golden && replayBefore)
 const replayHashesMatch = Boolean(golden && replayBefore)
   && golden.fixtures.map(fixture => (fixture.hashes || []).join(',')).join(';')
     === replayBefore.fixtures.map(fixture => (fixture.hashes || []).join(',')).join(';')
+const goldenSha256 = sha256(GOLDEN_FILE).sha256
+const replayBeforeSha256 = sha256(REPLAY_BEFORE_FILE).sha256
+const matchesReviewedFixtures = (payload, rows, stepCount) =>
+  Array.isArray(payload?.fixtures) && Array.isArray(rows) && rows.length > 0
+  && payload.fixtures.length === rows.length
+  && payload.fixtures.every((fixture, index) => {
+    const steps = stepCount(fixture)
+    return Number.isSafeInteger(steps) && steps >= 0 && fixture.id === rows[index].id
+      && steps === rows[index].afterSteps && fixture.hashes?.length === steps + 1
+  })
+const historicalReviewMatches = matchesReviewedFixtures(replayBefore, completionReview?.fixtures, fixture => fixture.steps)
+const maintenanceReview = completionReview?.maintenance
+const maintenanceReviewMatches = Boolean(maintenanceReview)
+  && maintenanceReview.previousBaselineSha256 === replayBeforeSha256
+  && maintenanceReview.goldenSha256 === goldenSha256
+  && matchesReviewedFixtures(golden, maintenanceReview.fixtures, fixture => fixture.log?.moves?.length)
 
 // ── 其余 M0 事实 ──────────────────────────────────────────────────────────
 const recordsWithRemoteImage = [...mainCodes, ...faceCodes]
@@ -366,10 +381,6 @@ const pairs = Array.from({ length: PAIR_COUNT }, (_, index) => {
   const inPair = chapterLedger.filter(chapter => chapter.pair === pair)
   return { pair, chapters: inPair.map(chapter => chapter.id), parts: [...new Set(inPair.map(chapter => chapter.part))].sort() }
 })
-const gitHead = (() => {
-  const run = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: MOD_ROOT, encoding: 'utf8' })
-  return run.status === 0 ? run.stdout.trim() : null
-})()
 
 const pending = [
   {
@@ -467,11 +478,10 @@ const gate = {
     replayBefore: Boolean(replayBefore),
     idsMatch: replayIdsMatch,
     hashesMatch: replayHashesMatch,
-    pass: Boolean(replayBefore) && replayIdsMatch && replayHashesMatch
-      && JSON.stringify(replayCounts) === JSON.stringify(goldenCounts)
-      && replayCounts?.fixtures === completionReview?.fixtures.length
-      && replayCounts?.steps === completionReview.fixtures.reduce((sum,item)=>sum+item.afterSteps,0)
-      && replayCounts?.hashes === replayCounts?.steps+replayCounts?.fixtures,
+    maintenanceReviewMatches,
+    pass: replayIdsMatch && historicalReviewMatches && (
+      (replayHashesMatch && JSON.stringify(replayCounts) === JSON.stringify(goldenCounts)) || maintenanceReviewMatches
+    ),
   },
   crossCycleGroups: {
     total: crossCycleGroups.length,
@@ -529,16 +539,14 @@ const scope = {
     rulesVersion: RULES_VERSION,
     stateSchemaVersion: STATE_SCHEMA_VERSION,
     goldenReplay: goldenCounts,
+    goldenReplaySha256: goldenSha256,
     replayBefore: replayCounts,
-    replayBeforeSha256: sha256(REPLAY_BEFORE_FILE).sha256,
+    replayBeforeSha256,
     replayBeforePath: REPLAY_BEFORE_FILE,
     history: 'Original M0 snapshot: artifacts/migration/tde/replay-before.json. Completion baseline captured and compared after TFA/TCU repairs on 2026-11-02.',
     replayBeforeIdsMatch: replayIdsMatch,
     replayBeforeHashesMatch: replayHashesMatch,
-    git: {
-      head: gitHead,
-      note: '提交会变，基线提交另存 artifacts/migration/tde/reports/baseline-git-head.txt；本账本不把 gitHead 纳入比对',
-    },
+    maintenance: maintenanceReview ? { path: REPLAY_REVIEW_FILE, goldenCommit: maintenanceReview.goldenCommit } : null,
   },
   cardImages: {
     remoteFallbackFields: ['imagesrc', 'backimagesrc'],

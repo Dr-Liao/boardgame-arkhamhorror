@@ -64,6 +64,7 @@ function pickGameInScenario() {
   for (const seat of [0, 1, 2]) {
     play(state, clean(movesOf(state, 'hubSelectInvestigator', seat)[0]), seat)
     play(state, clean(movesOf(state, 'hubAutoDeck', seat)[0]), seat)
+    play(state, clean(movesOf(state, 'hubConfirmDeck', seat)[0]), seat)
     play(state, clean(movesOf(state, 'hubDoneSeat', seat)[0]), seat)
   }
   play(state, clean(movesOf(state, 'hubBeginScenario')[0]))

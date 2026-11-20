@@ -179,6 +179,7 @@ function makeApi(state, options = {}) {
         inv.discard.push(inv.hand.splice(Math.floor(random() * inv.hand.length), 1)[0])
       }
     },
+    canDiscardAsset: (seat, assetId) => state.investigators[seat].assets.some(asset => asset.id === assetId),
     discardAsset: (seat, assetId) => {
       const inv = state.investigators[seat]
       inv.assets = inv.assets.filter(asset => asset.id !== assetId)

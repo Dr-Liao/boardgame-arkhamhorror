@@ -39,7 +39,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-      "sha256": "777ef47ea0544cf4b1613826567792d5c439b6f65160151a6fa1c69ff266af46"
+      "sha256": "c6dfa505d08f79472f2bea966902f3e5f70c4bff478cbb6c6384a58c718de2a7"
     }
   ],
   "implementationFiles": [
@@ -49,19 +49,19 @@
     },
     {
       "file": "games/arkhamhorror/src/deck/availability.js",
-      "sha256": "e5c3eb69cce3d56c41761d05fa876842ec18db31d44b217a5a058737faa459ad"
+      "sha256": "f69169bed68b4f29e6a4173cebeba448b505804c2a166718effe0826f5000fe7"
     },
     {
       "file": "games/arkhamhorror/src/campaign/campaign.js",
-      "sha256": "4290b9f42565e59adf985ef83364e5afb1efd218132e69800cecedc96dc3ea29"
+      "sha256": "7d1ad530a0ca1d9806cfc80f2f7432190aaee59af272937cc1760ca1a92c47c6"
     },
     {
       "file": "games/arkhamhorror/src/cards/entries/_shared.js",
-      "sha256": "e90a182c133f6eca054f075568c419ccb24baae66ea5eb974b61f5d5d0cb9804"
+      "sha256": "a2e6bebd988c64a151a936bcd4ec4b360481f7a9f8ac7d9a0ddbac529eddc1a3"
     },
     {
       "file": "games/arkhamhorror/tests/suites.mjs",
-      "sha256": "3464d075d5c37697d47ae13ddc734ac36161bc48c5a6a7ec0d499dc04181bf09"
+      "sha256": "65340a7e187daf1d7013fd9d2f3cc48c960c686b7c59c6e8b29d2ddd03456ce1"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
@@ -77,7 +77,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-      "sha256": "777ef47ea0544cf4b1613826567792d5c439b6f65160151a6fa1c69ff266af46"
+      "sha256": "c6dfa505d08f79472f2bea966902f3e5f70c4bff478cbb6c6384a58c718de2a7"
     }
   ],
   "entries": [

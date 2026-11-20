@@ -22,7 +22,7 @@ import e03222 from './thePathToCarcosa/aPhantomOfTruth/03222.js'
 import e03096 from './thePathToCarcosa/_shared/hasturs_gift/03096.js'
 import e04072 from './theForgottenAge/_shared/rainforest/04072.js'
 import e04074 from './theForgottenAge/_shared/rainforest/04074.js'
-import e01133 from './nightOfTheZealot/theMidnightMasks/01133.js'
+import e01133 from './shared/arkham/01133.js'
 import e01151 from './shared/tentacles/01151.js'
 import e01156 from './nightOfTheZealot/theDevourerBelow/01156.js'
 import e01121b from './nightOfTheZealot/theMidnightMasks/01121b.js'
@@ -2169,6 +2169,291 @@ import e10730 from './theFeastOfHemlockVale/_shared/refractions/10730.js'
 import e10731 from './theFeastOfHemlockVale/_shared/refractions/10731.js'
 import e10726 from './theFeastOfHemlockVale/_shared/transfiguration/10726.js'
 import e10727 from './theFeastOfHemlockVale/_shared/transfiguration/10727.js'
+import e11751 from './theDrownedCity/_shared/alien_machinery/11751.js'
+import e11752 from './theDrownedCity/_shared/alien_machinery/11752.js'
+import e11729 from './theDrownedCity/_shared/cosmic_legacy/11729.js'
+import e11730 from './theDrownedCity/_shared/cosmic_legacy/11730.js'
+import e11746 from './theDrownedCity/_shared/deep_ones/11746.js'
+import e11747 from './theDrownedCity/_shared/deep_ones/11747.js'
+import e11748 from './theDrownedCity/_shared/deep_ones/11748.js'
+import e11741 from './theDrownedCity/_shared/domination/11741.js'
+import e11742 from './theDrownedCity/_shared/domination/11742.js'
+import e11743 from './theDrownedCity/_shared/domination/11743.js'
+import e11749 from './theDrownedCity/_shared/dreams/11749.js'
+import e11750 from './theDrownedCity/_shared/dreams/11750.js'
+import e11731 from './theDrownedCity/_shared/elder_mist/11731.js'
+import e11732 from './theDrownedCity/_shared/elder_mist/11732.js'
+import e11723 from './theDrownedCity/_shared/pilgrims/11723.js'
+import e11724 from './theDrownedCity/_shared/pilgrims/11724.js'
+import e11739 from './theDrownedCity/_shared/rlyeh/11739.js'
+import e11740 from './theDrownedCity/_shared/rlyeh/11740.js'
+import e11725 from './theDrownedCity/_shared/star_spawn/11725.js'
+import e11726 from './theDrownedCity/_shared/star_spawn/11726.js'
+import e11727 from './theDrownedCity/_shared/star_spawn/11727.js'
+import e11728 from './theDrownedCity/_shared/star_spawn/11728.js'
+import e11721 from './theDrownedCity/_shared/stowaways/11721.js'
+import e11722 from './theDrownedCity/_shared/stowaways/11722.js'
+import e11736 from './theDrownedCity/_shared/tdc_flood/11736.js'
+import e11737 from './theDrownedCity/_shared/tdc_flood/11737.js'
+import e11738 from './theDrownedCity/_shared/tdc_flood/11738.js'
+import e11744 from './theDrownedCity/_shared/the_inescapable/11744.js'
+import e11745 from './theDrownedCity/_shared/the_inescapable/11745.js'
+import e11733 from './theDrownedCity/_shared/undersea_creatures/11733.js'
+import e11734 from './theDrownedCity/_shared/undersea_creatures/11734.js'
+import e11735 from './theDrownedCity/_shared/undersea_creatures/11735.js'
+import e11613 from './theDrownedCity/courtOfTheAncients/11613.js'
+import e11614 from './theDrownedCity/courtOfTheAncients/11614.js'
+import e11615 from './theDrownedCity/courtOfTheAncients/11615.js'
+import e11616 from './theDrownedCity/courtOfTheAncients/11616.js'
+import e11617 from './theDrownedCity/courtOfTheAncients/11617.js'
+import e11618 from './theDrownedCity/courtOfTheAncients/11618.js'
+import e11619 from './theDrownedCity/courtOfTheAncients/11619.js'
+import e11620 from './theDrownedCity/courtOfTheAncients/11620.js'
+import e11621 from './theDrownedCity/courtOfTheAncients/11621.js'
+import e11622 from './theDrownedCity/courtOfTheAncients/11622.js'
+import e11622b from './theDrownedCity/courtOfTheAncients/11622b.js'
+import e11623 from './theDrownedCity/courtOfTheAncients/11623.js'
+import e11624 from './theDrownedCity/courtOfTheAncients/11624.js'
+import e11625 from './theDrownedCity/courtOfTheAncients/11625.js'
+import e11626 from './theDrownedCity/courtOfTheAncients/11626.js'
+import e11627 from './theDrownedCity/courtOfTheAncients/11627.js'
+import e11628 from './theDrownedCity/courtOfTheAncients/11628.js'
+import e11629 from './theDrownedCity/courtOfTheAncients/11629.js'
+import e11630 from './theDrownedCity/courtOfTheAncients/11630.js'
+import e11631 from './theDrownedCity/courtOfTheAncients/11631.js'
+import e11632 from './theDrownedCity/courtOfTheAncients/11632.js'
+import e11633 from './theDrownedCity/courtOfTheAncients/11633.js'
+import e11634 from './theDrownedCity/courtOfTheAncients/11634.js'
+import e11635 from './theDrownedCity/courtOfTheAncients/11635.js'
+import e11636 from './theDrownedCity/courtOfTheAncients/11636.js'
+import e11637 from './theDrownedCity/courtOfTheAncients/11637.js'
+import e11638 from './theDrownedCity/courtOfTheAncients/11638.js'
+import e11640 from './theDrownedCity/obsidianCanyons/11640.js'
+import e11640b from './theDrownedCity/obsidianCanyons/11640b.js'
+import e11641 from './theDrownedCity/obsidianCanyons/11641.js'
+import e11642 from './theDrownedCity/obsidianCanyons/11642.js'
+import e11643 from './theDrownedCity/obsidianCanyons/11643.js'
+import e11644 from './theDrownedCity/obsidianCanyons/11644.js'
+import e11645 from './theDrownedCity/obsidianCanyons/11645.js'
+import e11646 from './theDrownedCity/obsidianCanyons/11646.js'
+import e11647 from './theDrownedCity/obsidianCanyons/11647.js'
+import e11648 from './theDrownedCity/obsidianCanyons/11648.js'
+import e11649 from './theDrownedCity/obsidianCanyons/11649.js'
+import e11650 from './theDrownedCity/obsidianCanyons/11650.js'
+import e11651 from './theDrownedCity/obsidianCanyons/11651.js'
+import e11652 from './theDrownedCity/obsidianCanyons/11652.js'
+import e11653 from './theDrownedCity/obsidianCanyons/11653.js'
+import e11654 from './theDrownedCity/obsidianCanyons/11654.js'
+import e11655 from './theDrownedCity/obsidianCanyons/11655.js'
+import e11656 from './theDrownedCity/obsidianCanyons/11656.js'
+import e11657 from './theDrownedCity/obsidianCanyons/11657.js'
+import e11658 from './theDrownedCity/obsidianCanyons/11658.js'
+import e11659 from './theDrownedCity/obsidianCanyons/11659.js'
+import e11660 from './theDrownedCity/obsidianCanyons/11660.js'
+import e11661 from './theDrownedCity/obsidianCanyons/11661.js'
+import e11662 from './theDrownedCity/obsidianCanyons/11662.js'
+import e11662b from './theDrownedCity/obsidianCanyons/11662b.js'
+import e11663 from './theDrownedCity/obsidianCanyons/11663.js'
+import e11663b from './theDrownedCity/obsidianCanyons/11663b.js'
+import e11664 from './theDrownedCity/obsidianCanyons/11664.js'
+import e11664b from './theDrownedCity/obsidianCanyons/11664b.js'
+import e11665 from './theDrownedCity/obsidianCanyons/11665.js'
+import e11666 from './theDrownedCity/obsidianCanyons/11666.js'
+import e11667 from './theDrownedCity/obsidianCanyons/11667.js'
+import e11669 from './theDrownedCity/obsidianCanyons/11669.js'
+import e11670 from './theDrownedCity/obsidianCanyons/11670.js'
+import e11671 from './theDrownedCity/obsidianCanyons/11671.js'
+import e11672a from './theDrownedCity/obsidianCanyons/11672a.js'
+import e11672b from './theDrownedCity/obsidianCanyons/11672b.js'
+import e11502 from './theDrownedCity/oneLastJob/11502.js'
+import e11503 from './theDrownedCity/oneLastJob/11503.js'
+import e11504 from './theDrownedCity/oneLastJob/11504.js'
+import e11504b from './theDrownedCity/oneLastJob/11504b.js'
+import e11505 from './theDrownedCity/oneLastJob/11505.js'
+import e11505b from './theDrownedCity/oneLastJob/11505b.js'
+import e11506 from './theDrownedCity/oneLastJob/11506.js'
+import e11507 from './theDrownedCity/oneLastJob/11507.js'
+import e11508 from './theDrownedCity/oneLastJob/11508.js'
+import e11509 from './theDrownedCity/oneLastJob/11509.js'
+import e11510 from './theDrownedCity/oneLastJob/11510.js'
+import e11511 from './theDrownedCity/oneLastJob/11511.js'
+import e11512 from './theDrownedCity/oneLastJob/11512.js'
+import e11513 from './theDrownedCity/oneLastJob/11513.js'
+import e11514 from './theDrownedCity/oneLastJob/11514.js'
+import e11515 from './theDrownedCity/oneLastJob/11515.js'
+import e11516 from './theDrownedCity/oneLastJob/11516.js'
+import e11674 from './theDrownedCity/sepulchreOfTheSleeper/11674.js'
+import e11674b from './theDrownedCity/sepulchreOfTheSleeper/11674b.js'
+import e11675 from './theDrownedCity/sepulchreOfTheSleeper/11675.js'
+import e11676 from './theDrownedCity/sepulchreOfTheSleeper/11676.js'
+import e11677 from './theDrownedCity/sepulchreOfTheSleeper/11677.js'
+import e11678 from './theDrownedCity/sepulchreOfTheSleeper/11678.js'
+import e11679 from './theDrownedCity/sepulchreOfTheSleeper/11679.js'
+import e11680 from './theDrownedCity/sepulchreOfTheSleeper/11680.js'
+import e11681 from './theDrownedCity/sepulchreOfTheSleeper/11681.js'
+import e11554 from './theDrownedCity/theApiary/11554.js'
+import e11555 from './theDrownedCity/theApiary/11555.js'
+import e11556 from './theDrownedCity/theApiary/11556.js'
+import e11557 from './theDrownedCity/theApiary/11557.js'
+import e11558 from './theDrownedCity/theApiary/11558.js'
+import e11559 from './theDrownedCity/theApiary/11559.js'
+import e11559b from './theDrownedCity/theApiary/11559b.js'
+import e11560 from './theDrownedCity/theApiary/11560.js'
+import e11561 from './theDrownedCity/theApiary/11561.js'
+import e11562 from './theDrownedCity/theApiary/11562.js'
+import e11563 from './theDrownedCity/theApiary/11563.js'
+import e11564 from './theDrownedCity/theApiary/11564.js'
+import e11565 from './theDrownedCity/theApiary/11565.js'
+import e11566 from './theDrownedCity/theApiary/11566.js'
+import e11567 from './theDrownedCity/theApiary/11567.js'
+import e11568 from './theDrownedCity/theApiary/11568.js'
+import e11569 from './theDrownedCity/theApiary/11569.js'
+import e11570 from './theDrownedCity/theApiary/11570.js'
+import e11571 from './theDrownedCity/theApiary/11571.js'
+import e11572 from './theDrownedCity/theApiary/11572.js'
+import e11573 from './theDrownedCity/theApiary/11573.js'
+import e11574 from './theDrownedCity/theApiary/11574.js'
+import e11575 from './theDrownedCity/theApiary/11575.js'
+import e11576 from './theDrownedCity/theApiary/11576.js'
+import e11577 from './theDrownedCity/theApiary/11577.js'
+import e11578 from './theDrownedCity/theApiary/11578.js'
+import e11579 from './theDrownedCity/theApiary/11579.js'
+import e11579b from './theDrownedCity/theApiary/11579b.js'
+import e11580 from './theDrownedCity/theApiary/11580.js'
+import e11580b from './theDrownedCity/theApiary/11580b.js'
+import e11581 from './theDrownedCity/theApiary/11581.js'
+import e11581b from './theDrownedCity/theApiary/11581b.js'
+import e11582 from './theDrownedCity/theApiary/11582.js'
+import e11583 from './theDrownedCity/theApiary/11583.js'
+import e11683 from './theDrownedCity/theDoomOfArkhamPartI/11683.js'
+import e11684 from './theDrownedCity/theDoomOfArkhamPartI/11684.js'
+import e11685 from './theDrownedCity/theDoomOfArkhamPartI/11685.js'
+import e11686 from './theDrownedCity/theDoomOfArkhamPartI/11686.js'
+import e11687 from './theDrownedCity/theDoomOfArkhamPartII/11687.js'
+import e11688 from './theDrownedCity/theDoomOfArkhamPartI/11688.js'
+import e11689 from './theDrownedCity/theDoomOfArkhamPartII/11689.js'
+import e11690 from './theDrownedCity/theDoomOfArkhamPartII/11690.js'
+import e11691a from './theDrownedCity/theDoomOfArkhamPartII/11691a.js'
+import e11691b from './theDrownedCity/theDoomOfArkhamPartII/11691b.js'
+import e11692 from './theDrownedCity/theDoomOfArkhamPartII/11692.js'
+import e11693 from './theDrownedCity/theDoomOfArkhamPartII/11693.js'
+import e11694 from './theDrownedCity/theDoomOfArkhamPartII/11694.js'
+import e11695 from './theDrownedCity/theDoomOfArkhamPartII/11695.js'
+import e11696 from './theDrownedCity/theDoomOfArkhamPartII/11696.js'
+import e11697 from './theDrownedCity/theDoomOfArkhamPartII/11697.js'
+import e11698 from './theDrownedCity/theDoomOfArkhamPartII/11698.js'
+import e11699 from './theDrownedCity/theDoomOfArkhamPartII/11699.js'
+import e11700 from './theDrownedCity/theDoomOfArkhamPartII/11700.js'
+import e11701 from './theDrownedCity/theDoomOfArkhamPartII/11701.js'
+import e11702 from './theDrownedCity/theDoomOfArkhamPartII/11702.js'
+import e11702b from './theDrownedCity/theDoomOfArkhamPartII/11702b.js'
+import e11703 from './theDrownedCity/theDoomOfArkhamPartII/11703.js'
+import e11703b from './theDrownedCity/theDoomOfArkhamPartII/11703b.js'
+import e11704 from './theDrownedCity/theDoomOfArkhamPartII/11704.js'
+import e11704b from './theDrownedCity/theDoomOfArkhamPartII/11704b.js'
+import e11705 from './theDrownedCity/theDoomOfArkhamPartII/11705.js'
+import e11706 from './theDrownedCity/theDoomOfArkhamPartII/11706.js'
+import e11707 from './theDrownedCity/theDoomOfArkhamPartII/11707.js'
+import e11708 from './theDrownedCity/theDoomOfArkhamPartII/11708.js'
+import e11709 from './theDrownedCity/theDoomOfArkhamPartII/11709.js'
+import e11710 from './theDrownedCity/theDoomOfArkhamPartII/11710.js'
+import e11711 from './theDrownedCity/theDoomOfArkhamPartII/11711.js'
+import e11712 from './theDrownedCity/theDoomOfArkhamPartII/11712.js'
+import e11713 from './theDrownedCity/theDoomOfArkhamPartII/11713.js'
+import e11714 from './theDrownedCity/theDoomOfArkhamPartII/11714.js'
+import e11715 from './theDrownedCity/theDoomOfArkhamPartII/11715.js'
+import e11716 from './theDrownedCity/theDoomOfArkhamPartII/11716.js'
+import e11717 from './theDrownedCity/theDoomOfArkhamPartII/11717.js'
+import e11719 from './theDrownedCity/theDoomOfArkhamPartII/11719.js'
+import e11720 from './theDrownedCity/theDoomOfArkhamPartII/11720.js'
+import e11537 from './theDrownedCity/theDrownedQuarter/11537.js'
+import e11537b from './theDrownedCity/theDrownedQuarter/11537b.js'
+import e11538 from './theDrownedCity/theDrownedQuarter/11538.js'
+import e11539 from './theDrownedCity/theDrownedQuarter/11539.js'
+import e11540 from './theDrownedCity/theDrownedQuarter/11540.js'
+import e11540b from './theDrownedCity/theDrownedQuarter/11540b.js'
+import e11541 from './theDrownedCity/theDrownedQuarter/11541.js'
+import e11542 from './theDrownedCity/theDrownedQuarter/11542.js'
+import e11543 from './theDrownedCity/theDrownedQuarter/11543.js'
+import e11544 from './theDrownedCity/theDrownedQuarter/11544.js'
+import e11545 from './theDrownedCity/theDrownedQuarter/11545.js'
+import e11546 from './theDrownedCity/theDrownedQuarter/11546.js'
+import e11547 from './theDrownedCity/theDrownedQuarter/11547.js'
+import e11548 from './theDrownedCity/theDrownedQuarter/11548.js'
+import e11549 from './theDrownedCity/theDrownedQuarter/11549.js'
+import e11549b from './theDrownedCity/theDrownedQuarter/11549b.js'
+import e11550 from './theDrownedCity/theDrownedQuarter/11550.js'
+import e11550b from './theDrownedCity/theDrownedQuarter/11550b.js'
+import e11551 from './theDrownedCity/theDrownedQuarter/11551.js'
+import e11552 from './theDrownedCity/theDrownedQuarter/11552.js'
+import e11588 from './theDrownedCity/theGrandVault/11588.js'
+import e11589 from './theDrownedCity/theGrandVault/11589.js'
+import e11590 from './theDrownedCity/theGrandVault/11590.js'
+import e11591 from './theDrownedCity/theGrandVault/11591.js'
+import e11592 from './theDrownedCity/theGrandVault/11592.js'
+import e11593 from './theDrownedCity/theGrandVault/11593.js'
+import e11594 from './theDrownedCity/theGrandVault/11594.js'
+import e11595 from './theDrownedCity/theGrandVault/11595.js'
+import e11596 from './theDrownedCity/theGrandVault/11596.js'
+import e11598 from './theDrownedCity/theGrandVault/11598.js'
+import e11599 from './theDrownedCity/theGrandVault/11599.js'
+import e11600 from './theDrownedCity/theGrandVault/11600.js'
+import e11601 from './theDrownedCity/theGrandVault/11601.js'
+import e11602 from './theDrownedCity/theGrandVault/11602.js'
+import e11603 from './theDrownedCity/theGrandVault/11603.js'
+import e11604 from './theDrownedCity/theGrandVault/11604.js'
+import e11605 from './theDrownedCity/theGrandVault/11605.js'
+import e11606 from './theDrownedCity/theGrandVault/11606.js'
+import e11607 from './theDrownedCity/theGrandVault/11607.js'
+import e11608 from './theDrownedCity/theGrandVault/11608.js'
+import e11608b from './theDrownedCity/theGrandVault/11608b.js'
+import e11609 from './theDrownedCity/theGrandVault/11609.js'
+import e11609b from './theDrownedCity/theGrandVault/11609b.js'
+import e11610 from './theDrownedCity/theGrandVault/11610.js'
+import e11610b from './theDrownedCity/theGrandVault/11610b.js'
+import e11611 from './theDrownedCity/theGrandVault/11611.js'
+import e11518 from './theDrownedCity/theWesternWall/11518.js'
+import e11519 from './theDrownedCity/theWesternWall/11519.js'
+import e11520 from './theDrownedCity/theWesternWall/11520.js'
+import e11521 from './theDrownedCity/theWesternWall/11521.js'
+import e11522 from './theDrownedCity/theWesternWall/11522.js'
+import e11523 from './theDrownedCity/theWesternWall/11523.js'
+import e11524 from './theDrownedCity/theWesternWall/11524.js'
+import e11525 from './theDrownedCity/theWesternWall/11525.js'
+import e11526 from './theDrownedCity/theWesternWall/11526.js'
+import e11527 from './theDrownedCity/theWesternWall/11527.js'
+import e11528 from './theDrownedCity/theWesternWall/11528.js'
+import e11529 from './theDrownedCity/theWesternWall/11529.js'
+import e11530 from './theDrownedCity/theWesternWall/11530.js'
+import e11531 from './theDrownedCity/theWesternWall/11531.js'
+import e11531b from './theDrownedCity/theWesternWall/11531b.js'
+import e11532 from './theDrownedCity/theWesternWall/11532.js'
+import e11532b from './theDrownedCity/theWesternWall/11532b.js'
+import e11533 from './theDrownedCity/theWesternWall/11533.js'
+import e11534 from './theDrownedCity/theWesternWall/11534.js'
+import e11535 from './theDrownedCity/theWesternWall/11535.js'
+import e11753a from './theDrownedCity/_shared/tasks/11753a.js'
+import e11753b from './theDrownedCity/_shared/tasks/11753b.js'
+import e11754a from './theDrownedCity/_shared/tasks/11754a.js'
+import e11754b from './theDrownedCity/_shared/tasks/11754b.js'
+import e11755a from './theDrownedCity/_shared/tasks/11755a.js'
+import e11755b from './theDrownedCity/_shared/tasks/11755b.js'
+import e11756a from './theDrownedCity/_shared/tasks/11756a.js'
+import e11756b from './theDrownedCity/_shared/tasks/11756b.js'
+import e11757a from './theDrownedCity/_shared/tasks/11757a.js'
+import e11757b from './theDrownedCity/_shared/tasks/11757b.js'
+import e11758a from './theDrownedCity/_shared/tasks/11758a.js'
+import e11758b from './theDrownedCity/_shared/tasks/11758b.js'
+import e11759a from './theDrownedCity/_shared/tasks/11759a.js'
+import e11759b from './theDrownedCity/_shared/tasks/11759b.js'
+import e11760a from './theDrownedCity/_shared/tasks/11760a.js'
+import e11760b from './theDrownedCity/_shared/tasks/11760b.js'
+import e11761 from './theDrownedCity/_shared/tdc_expedition/11761.js'
+import e11762 from './theDrownedCity/_shared/tdc_expedition/11762.js'
+import e11763 from './theDrownedCity/_shared/tdc_expedition/11763.js'
+import e11764 from './theDrownedCity/_shared/tdc_expedition/11764.js'
+import e11765 from './theDrownedCity/_shared/tdc_expedition/11765.js'
+import e11766 from './theDrownedCity/_shared/tdc_expedition/11766.js'
 
 export const NON_PLAYER_ENTRY_LIST = [
   ewolfManDrew,
@@ -4337,6 +4622,291 @@ export const NON_PLAYER_ENTRY_LIST = [
   e10731,
   e10726,
   e10727,
+  e11751,
+  e11752,
+  e11729,
+  e11730,
+  e11746,
+  e11747,
+  e11748,
+  e11741,
+  e11742,
+  e11743,
+  e11749,
+  e11750,
+  e11731,
+  e11732,
+  e11723,
+  e11724,
+  e11739,
+  e11740,
+  e11725,
+  e11726,
+  e11727,
+  e11728,
+  e11721,
+  e11722,
+  e11736,
+  e11737,
+  e11738,
+  e11744,
+  e11745,
+  e11733,
+  e11734,
+  e11735,
+  e11613,
+  e11614,
+  e11615,
+  e11616,
+  e11617,
+  e11618,
+  e11619,
+  e11620,
+  e11621,
+  e11622,
+  e11622b,
+  e11623,
+  e11624,
+  e11625,
+  e11626,
+  e11627,
+  e11628,
+  e11629,
+  e11630,
+  e11631,
+  e11632,
+  e11633,
+  e11634,
+  e11635,
+  e11636,
+  e11637,
+  e11638,
+  e11640,
+  e11640b,
+  e11641,
+  e11642,
+  e11643,
+  e11644,
+  e11645,
+  e11646,
+  e11647,
+  e11648,
+  e11649,
+  e11650,
+  e11651,
+  e11652,
+  e11653,
+  e11654,
+  e11655,
+  e11656,
+  e11657,
+  e11658,
+  e11659,
+  e11660,
+  e11661,
+  e11662,
+  e11662b,
+  e11663,
+  e11663b,
+  e11664,
+  e11664b,
+  e11665,
+  e11666,
+  e11667,
+  e11669,
+  e11670,
+  e11671,
+  e11672a,
+  e11672b,
+  e11502,
+  e11503,
+  e11504,
+  e11504b,
+  e11505,
+  e11505b,
+  e11506,
+  e11507,
+  e11508,
+  e11509,
+  e11510,
+  e11511,
+  e11512,
+  e11513,
+  e11514,
+  e11515,
+  e11516,
+  e11674,
+  e11674b,
+  e11675,
+  e11676,
+  e11677,
+  e11678,
+  e11679,
+  e11680,
+  e11681,
+  e11554,
+  e11555,
+  e11556,
+  e11557,
+  e11558,
+  e11559,
+  e11559b,
+  e11560,
+  e11561,
+  e11562,
+  e11563,
+  e11564,
+  e11565,
+  e11566,
+  e11567,
+  e11568,
+  e11569,
+  e11570,
+  e11571,
+  e11572,
+  e11573,
+  e11574,
+  e11575,
+  e11576,
+  e11577,
+  e11578,
+  e11579,
+  e11579b,
+  e11580,
+  e11580b,
+  e11581,
+  e11581b,
+  e11582,
+  e11583,
+  e11683,
+  e11684,
+  e11685,
+  e11686,
+  e11687,
+  e11688,
+  e11689,
+  e11690,
+  e11691a,
+  e11691b,
+  e11692,
+  e11693,
+  e11694,
+  e11695,
+  e11696,
+  e11697,
+  e11698,
+  e11699,
+  e11700,
+  e11701,
+  e11702,
+  e11702b,
+  e11703,
+  e11703b,
+  e11704,
+  e11704b,
+  e11705,
+  e11706,
+  e11707,
+  e11708,
+  e11709,
+  e11710,
+  e11711,
+  e11712,
+  e11713,
+  e11714,
+  e11715,
+  e11716,
+  e11717,
+  e11719,
+  e11720,
+  e11537,
+  e11537b,
+  e11538,
+  e11539,
+  e11540,
+  e11540b,
+  e11541,
+  e11542,
+  e11543,
+  e11544,
+  e11545,
+  e11546,
+  e11547,
+  e11548,
+  e11549,
+  e11549b,
+  e11550,
+  e11550b,
+  e11551,
+  e11552,
+  e11588,
+  e11589,
+  e11590,
+  e11591,
+  e11592,
+  e11593,
+  e11594,
+  e11595,
+  e11596,
+  e11598,
+  e11599,
+  e11600,
+  e11601,
+  e11602,
+  e11603,
+  e11604,
+  e11605,
+  e11606,
+  e11607,
+  e11608,
+  e11608b,
+  e11609,
+  e11609b,
+  e11610,
+  e11610b,
+  e11611,
+  e11518,
+  e11519,
+  e11520,
+  e11521,
+  e11522,
+  e11523,
+  e11524,
+  e11525,
+  e11526,
+  e11527,
+  e11528,
+  e11529,
+  e11530,
+  e11531,
+  e11531b,
+  e11532,
+  e11532b,
+  e11533,
+  e11534,
+  e11535,
+  e11753a,
+  e11753b,
+  e11754a,
+  e11754b,
+  e11755a,
+  e11755b,
+  e11756a,
+  e11756b,
+  e11757a,
+  e11757b,
+  e11758a,
+  e11758b,
+  e11759a,
+  e11759b,
+  e11760a,
+  e11760b,
+  e11761,
+  e11762,
+  e11763,
+  e11764,
+  e11765,
+  e11766,
 ]
 
 registerNonPlayerEntries(NON_PLAYER_ENTRY_LIST)

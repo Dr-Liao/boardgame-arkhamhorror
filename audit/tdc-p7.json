@@ -1,0 +1,2013 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "theDrownedCity",
+  "phase": "P7",
+  "status": "implementation-in-progress",
+  "scope": {
+    "path": "audit/tdc-scope.json",
+    "sha256": "6d298604d612cebd52aa07f9297933eaecad3da4ff20dab472a869b9d61f8433"
+  },
+  "counts": {
+    "sharedGroups": 15,
+    "sharedCards": 54,
+    "sharedBehaviorsRegistered": 54,
+    "scenarioCards": 231,
+    "scenarioBehaviorsRegistered": 231,
+    "scenarios": 10,
+    "scenariosRegistered": 10,
+    "bilingualGuides": 10,
+    "externalDependenciesCovered": 28
+  },
+  "shared": [
+    {
+      "group": "stowaways",
+      "codes": [
+        "11721",
+        "11722"
+      ],
+      "registeredBehaviors": [
+        "11721",
+        "11722"
+      ]
+    },
+    {
+      "group": "pilgrims",
+      "codes": [
+        "11723",
+        "11724"
+      ],
+      "registeredBehaviors": [
+        "11723",
+        "11724"
+      ]
+    },
+    {
+      "group": "star_spawn",
+      "codes": [
+        "11725",
+        "11726",
+        "11727",
+        "11728"
+      ],
+      "registeredBehaviors": [
+        "11725",
+        "11726",
+        "11727",
+        "11728"
+      ]
+    },
+    {
+      "group": "cosmic_legacy",
+      "codes": [
+        "11729",
+        "11730"
+      ],
+      "registeredBehaviors": [
+        "11729",
+        "11730"
+      ]
+    },
+    {
+      "group": "elder_mist",
+      "codes": [
+        "11731",
+        "11732"
+      ],
+      "registeredBehaviors": [
+        "11731",
+        "11732"
+      ]
+    },
+    {
+      "group": "undersea_creatures",
+      "codes": [
+        "11733",
+        "11734",
+        "11735"
+      ],
+      "registeredBehaviors": [
+        "11733",
+        "11734",
+        "11735"
+      ]
+    },
+    {
+      "group": "tdc_flood",
+      "codes": [
+        "11736",
+        "11737",
+        "11738"
+      ],
+      "registeredBehaviors": [
+        "11736",
+        "11737",
+        "11738"
+      ]
+    },
+    {
+      "group": "rlyeh",
+      "codes": [
+        "11739",
+        "11740"
+      ],
+      "registeredBehaviors": [
+        "11739",
+        "11740"
+      ]
+    },
+    {
+      "group": "domination",
+      "codes": [
+        "11741",
+        "11742",
+        "11743"
+      ],
+      "registeredBehaviors": [
+        "11741",
+        "11742",
+        "11743"
+      ]
+    },
+    {
+      "group": "the_inescapable",
+      "codes": [
+        "11744",
+        "11745"
+      ],
+      "registeredBehaviors": [
+        "11744",
+        "11745"
+      ]
+    },
+    {
+      "group": "deep_ones",
+      "codes": [
+        "11746",
+        "11747",
+        "11748"
+      ],
+      "registeredBehaviors": [
+        "11746",
+        "11747",
+        "11748"
+      ]
+    },
+    {
+      "group": "dreams",
+      "codes": [
+        "11749",
+        "11750"
+      ],
+      "registeredBehaviors": [
+        "11749",
+        "11750"
+      ]
+    },
+    {
+      "group": "alien_machinery",
+      "codes": [
+        "11751",
+        "11752"
+      ],
+      "registeredBehaviors": [
+        "11751",
+        "11752"
+      ]
+    },
+    {
+      "group": "tasks",
+      "codes": [
+        "11753a",
+        "11753b",
+        "11754a",
+        "11754b",
+        "11755a",
+        "11755b",
+        "11756a",
+        "11756b",
+        "11757a",
+        "11757b",
+        "11758a",
+        "11758b",
+        "11759a",
+        "11759b",
+        "11760a",
+        "11760b"
+      ],
+      "registeredBehaviors": [
+        "11753a",
+        "11753b",
+        "11754a",
+        "11754b",
+        "11755a",
+        "11755b",
+        "11756a",
+        "11756b",
+        "11757a",
+        "11757b",
+        "11758a",
+        "11758b",
+        "11759a",
+        "11759b",
+        "11760a",
+        "11760b"
+      ]
+    },
+    {
+      "group": "tdc_expedition",
+      "codes": [
+        "11761",
+        "11762",
+        "11763",
+        "11764",
+        "11765",
+        "11766"
+      ],
+      "registeredBehaviors": [
+        "11761",
+        "11762",
+        "11763",
+        "11764",
+        "11765",
+        "11766"
+      ]
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "oneLastJob",
+      "referenceCode": "11501",
+      "group": "one_last_job",
+      "cards": [
+        "11502",
+        "11503",
+        "11504",
+        "11504b",
+        "11505",
+        "11505b",
+        "11506",
+        "11507",
+        "11508",
+        "11509",
+        "11510",
+        "11511",
+        "11512",
+        "11513",
+        "11514",
+        "11515",
+        "11516"
+      ],
+      "registeredBehaviors": [
+        "11502",
+        "11503",
+        "11504",
+        "11504b",
+        "11505",
+        "11505b",
+        "11506",
+        "11507",
+        "11508",
+        "11509",
+        "11510",
+        "11511",
+        "11512",
+        "11513",
+        "11514",
+        "11515",
+        "11516"
+      ],
+      "setupDependencies": [
+        {
+          "group": "one_last_job",
+          "external": false,
+          "codes": [
+            "11501",
+            "11502",
+            "11503",
+            "11504",
+            "11504b",
+            "11505",
+            "11505b",
+            "11506",
+            "11507",
+            "11508",
+            "11509",
+            "11510",
+            "11511",
+            "11512",
+            "11513",
+            "11514",
+            "11515",
+            "11516"
+          ]
+        },
+        {
+          "group": "dreams",
+          "external": false,
+          "codes": [
+            "11749",
+            "11750"
+          ]
+        },
+        {
+          "group": "chilling_cold",
+          "external": true,
+          "codes": [
+            "01167",
+            "01168"
+          ]
+        },
+        {
+          "group": "locked_doors",
+          "external": true,
+          "codes": [
+            "01174"
+          ]
+        },
+        {
+          "group": "rats",
+          "external": true,
+          "codes": [
+            "01159"
+          ]
+        },
+        {
+          "group": "striking_fear",
+          "external": true,
+          "codes": [
+            "01163",
+            "01164",
+            "01165"
+          ]
+        },
+        {
+          "group": "arkham",
+          "external": true,
+          "codes": [
+            "01125",
+            "01129",
+            "01130",
+            "01132",
+            "01134"
+          ]
+        }
+      ],
+      "sourceGuideParagraphs": 26,
+      "scenarioStatus": "development",
+      "definition": "registered",
+      "guideStatus": "ready",
+      "guide": "web/scenario-guides/oneLastJob.json"
+    },
+    {
+      "id": "theWesternWall",
+      "referenceCode": "11517",
+      "group": "the_western_wall",
+      "cards": [
+        "11518",
+        "11519",
+        "11520",
+        "11521",
+        "11522",
+        "11523",
+        "11524",
+        "11525",
+        "11526",
+        "11527",
+        "11528",
+        "11529",
+        "11530",
+        "11531",
+        "11531b",
+        "11532",
+        "11532b",
+        "11533",
+        "11534",
+        "11535"
+      ],
+      "registeredBehaviors": [
+        "11518",
+        "11519",
+        "11520",
+        "11521",
+        "11522",
+        "11523",
+        "11524",
+        "11525",
+        "11526",
+        "11527",
+        "11528",
+        "11529",
+        "11530",
+        "11531",
+        "11531b",
+        "11532",
+        "11532b",
+        "11533",
+        "11534",
+        "11535"
+      ],
+      "setupDependencies": [
+        {
+          "group": "the_western_wall",
+          "external": false,
+          "codes": [
+            "11517",
+            "11518",
+            "11519",
+            "11520",
+            "11521",
+            "11522",
+            "11523",
+            "11524",
+            "11525",
+            "11526",
+            "11527",
+            "11528",
+            "11529",
+            "11530",
+            "11531",
+            "11531b",
+            "11532",
+            "11532b",
+            "11533",
+            "11534",
+            "11535"
+          ]
+        },
+        {
+          "group": "cosmic_legacy",
+          "external": false,
+          "codes": [
+            "11729",
+            "11730"
+          ]
+        },
+        {
+          "group": "deep_ones",
+          "external": false,
+          "codes": [
+            "11746",
+            "11747",
+            "11748"
+          ]
+        },
+        {
+          "group": "tdc_flood",
+          "external": false,
+          "codes": [
+            "11736",
+            "11737",
+            "11738"
+          ]
+        },
+        {
+          "group": "rlyeh",
+          "external": false,
+          "codes": [
+            "11739",
+            "11740"
+          ]
+        },
+        {
+          "group": "star_spawn",
+          "external": false,
+          "codes": [
+            "11725",
+            "11726",
+            "11727",
+            "11728"
+          ]
+        },
+        {
+          "group": "the_inescapable",
+          "external": false,
+          "codes": [
+            "11744",
+            "11745"
+          ]
+        },
+        {
+          "group": "undersea_creatures",
+          "external": false,
+          "codes": [
+            "11733",
+            "11734",
+            "11735"
+          ]
+        },
+        {
+          "group": "agents_of_cthulhu",
+          "external": true,
+          "codes": [
+            "01181",
+            "01182"
+          ]
+        }
+      ],
+      "sourceGuideParagraphs": 83,
+      "scenarioStatus": "development",
+      "definition": "registered",
+      "guideStatus": "ready",
+      "guide": "web/scenario-guides/theWesternWall.json"
+    },
+    {
+      "id": "theDrownedQuarter",
+      "referenceCode": "11536",
+      "group": "the_drowned_quarter",
+      "cards": [
+        "11537",
+        "11537b",
+        "11538",
+        "11539",
+        "11540",
+        "11540b",
+        "11541",
+        "11542",
+        "11543",
+        "11544",
+        "11545",
+        "11546",
+        "11547",
+        "11548",
+        "11549",
+        "11549b",
+        "11550",
+        "11550b",
+        "11551",
+        "11552"
+      ],
+      "registeredBehaviors": [
+        "11537",
+        "11537b",
+        "11538",
+        "11539",
+        "11540",
+        "11540b",
+        "11541",
+        "11542",
+        "11543",
+        "11544",
+        "11545",
+        "11546",
+        "11547",
+        "11548",
+        "11549",
+        "11549b",
+        "11550",
+        "11550b",
+        "11551",
+        "11552"
+      ],
+      "setupDependencies": [
+        {
+          "group": "the_drowned_quarter",
+          "external": false,
+          "codes": [
+            "11536",
+            "11537",
+            "11537b",
+            "11538",
+            "11539",
+            "11540",
+            "11540b",
+            "11541",
+            "11542",
+            "11543",
+            "11544",
+            "11545",
+            "11546",
+            "11547",
+            "11548",
+            "11549",
+            "11549b",
+            "11550",
+            "11550b",
+            "11551",
+            "11552"
+          ]
+        },
+        {
+          "group": "alien_machinery",
+          "external": false,
+          "codes": [
+            "11751",
+            "11752"
+          ]
+        },
+        {
+          "group": "cosmic_legacy",
+          "external": false,
+          "codes": [
+            "11729",
+            "11730"
+          ]
+        },
+        {
+          "group": "deep_ones",
+          "external": false,
+          "codes": [
+            "11746",
+            "11747",
+            "11748"
+          ]
+        },
+        {
+          "group": "elder_mist",
+          "external": false,
+          "codes": [
+            "11731",
+            "11732"
+          ]
+        },
+        {
+          "group": "tdc_flood",
+          "external": false,
+          "codes": [
+            "11736",
+            "11737",
+            "11738"
+          ]
+        },
+        {
+          "group": "rlyeh",
+          "external": false,
+          "codes": [
+            "11739",
+            "11740"
+          ]
+        },
+        {
+          "group": "undersea_creatures",
+          "external": false,
+          "codes": [
+            "11733",
+            "11734",
+            "11735"
+          ]
+        }
+      ],
+      "sourceGuideParagraphs": 56,
+      "scenarioStatus": "development",
+      "definition": "registered",
+      "guideStatus": "ready",
+      "guide": "web/scenario-guides/theDrownedQuarter.json"
+    },
+    {
+      "id": "theApiary",
+      "referenceCode": "11553",
+      "group": "the_apiary",
+      "cards": [
+        "11554",
+        "11555",
+        "11556",
+        "11557",
+        "11558",
+        "11559",
+        "11559b",
+        "11560",
+        "11561",
+        "11562",
+        "11563",
+        "11564",
+        "11565",
+        "11566",
+        "11567",
+        "11568",
+        "11569",
+        "11570",
+        "11571",
+        "11572",
+        "11573",
+        "11574",
+        "11575",
+        "11576",
+        "11577",
+        "11578",
+        "11579",
+        "11579b",
+        "11580",
+        "11580b",
+        "11581",
+        "11581b",
+        "11582",
+        "11583"
+      ],
+      "registeredBehaviors": [
+        "11554",
+        "11555",
+        "11556",
+        "11557",
+        "11558",
+        "11559",
+        "11559b",
+        "11560",
+        "11561",
+        "11562",
+        "11563",
+        "11564",
+        "11565",
+        "11566",
+        "11567",
+        "11568",
+        "11569",
+        "11570",
+        "11571",
+        "11572",
+        "11573",
+        "11574",
+        "11575",
+        "11576",
+        "11577",
+        "11578",
+        "11579",
+        "11579b",
+        "11580",
+        "11580b",
+        "11581",
+        "11581b",
+        "11582",
+        "11583"
+      ],
+      "setupDependencies": [
+        {
+          "group": "the_apiary",
+          "external": false,
+          "codes": [
+            "11553",
+            "11554",
+            "11555",
+            "11556",
+            "11557",
+            "11558",
+            "11559",
+            "11559b",
+            "11560",
+            "11561",
+            "11562",
+            "11563",
+            "11564",
+            "11565",
+            "11566",
+            "11567",
+            "11568",
+            "11569",
+            "11570",
+            "11571",
+            "11572",
+            "11573",
+            "11574",
+            "11575",
+            "11576",
+            "11577",
+            "11578",
+            "11579",
+            "11579b",
+            "11580",
+            "11580b",
+            "11581",
+            "11581b",
+            "11582",
+            "11583"
+          ]
+        },
+        {
+          "group": "cosmic_legacy",
+          "external": false,
+          "codes": [
+            "11729",
+            "11730"
+          ]
+        },
+        {
+          "group": "elder_mist",
+          "external": false,
+          "codes": [
+            "11731",
+            "11732"
+          ]
+        },
+        {
+          "group": "the_inescapable",
+          "external": false,
+          "codes": [
+            "11744",
+            "11745"
+          ]
+        },
+        {
+          "group": "striking_fear",
+          "external": true,
+          "codes": [
+            "01163",
+            "01164",
+            "01165"
+          ]
+        },
+        {
+          "group": "pilgrims",
+          "external": false,
+          "codes": [
+            "11723",
+            "11724"
+          ]
+        },
+        {
+          "group": "pentagram",
+          "external": true,
+          "codes": [
+            "01169",
+            "01170",
+            "01171"
+          ]
+        },
+        {
+          "group": "star_spawn",
+          "external": false,
+          "codes": [
+            "11726"
+          ]
+        },
+        {
+          "group": "stowaways",
+          "external": false,
+          "codes": [
+            "11721",
+            "11722"
+          ]
+        }
+      ],
+      "sourceGuideParagraphs": 126,
+      "scenarioStatus": "development",
+      "definition": "registered",
+      "guideStatus": "ready",
+      "guide": "web/scenario-guides/theApiary.json"
+    },
+    {
+      "id": "theGrandVault",
+      "referenceCode": "11587",
+      "group": "the_grand_vault",
+      "cards": [
+        "11588",
+        "11589",
+        "11590",
+        "11591",
+        "11592",
+        "11593",
+        "11594",
+        "11595",
+        "11596",
+        "11598",
+        "11599",
+        "11600",
+        "11601",
+        "11602",
+        "11603",
+        "11604",
+        "11605",
+        "11606",
+        "11607",
+        "11608",
+        "11608b",
+        "11609",
+        "11609b",
+        "11610",
+        "11610b",
+        "11611"
+      ],
+      "registeredBehaviors": [
+        "11588",
+        "11589",
+        "11590",
+        "11591",
+        "11592",
+        "11593",
+        "11594",
+        "11595",
+        "11596",
+        "11598",
+        "11599",
+        "11600",
+        "11601",
+        "11602",
+        "11603",
+        "11604",
+        "11605",
+        "11606",
+        "11607",
+        "11608",
+        "11608b",
+        "11609",
+        "11609b",
+        "11610",
+        "11610b",
+        "11611"
+      ],
+      "setupDependencies": [
+        {
+          "group": "the_grand_vault",
+          "external": false,
+          "codes": [
+            "11587",
+            "11588",
+            "11589",
+            "11590",
+            "11591",
+            "11592",
+            "11593",
+            "11594",
+            "11595",
+            "11596",
+            "11598",
+            "11599",
+            "11600",
+            "11601",
+            "11602",
+            "11603",
+            "11604",
+            "11605",
+            "11606",
+            "11607",
+            "11608",
+            "11608b",
+            "11609",
+            "11609b",
+            "11610",
+            "11610b",
+            "11611"
+          ]
+        },
+        {
+          "group": "alien_machinery",
+          "external": false,
+          "codes": [
+            "11751",
+            "11752"
+          ]
+        },
+        {
+          "group": "tdc_flood",
+          "external": false,
+          "codes": [
+            "11736",
+            "11737",
+            "11738"
+          ]
+        },
+        {
+          "group": "the_inescapable",
+          "external": false,
+          "codes": [
+            "11744",
+            "11745"
+          ]
+        },
+        {
+          "group": "rlyeh",
+          "external": false,
+          "codes": [
+            "11739",
+            "11740"
+          ]
+        },
+        {
+          "group": "star_spawn",
+          "external": false,
+          "codes": [
+            "11725",
+            "11726",
+            "11727",
+            "11728"
+          ]
+        }
+      ],
+      "sourceGuideParagraphs": 73,
+      "scenarioStatus": "development",
+      "definition": "registered",
+      "guideStatus": "ready",
+      "guide": "web/scenario-guides/theGrandVault.json"
+    },
+    {
+      "id": "courtOfTheAncients",
+      "referenceCode": "11612",
+      "group": "court_of_the_ancients",
+      "cards": [
+        "11613",
+        "11614",
+        "11615",
+        "11616",
+        "11617",
+        "11618",
+        "11619",
+        "11620",
+        "11621",
+        "11622",
+        "11622b",
+        "11623",
+        "11624",
+        "11625",
+        "11626",
+        "11627",
+        "11628",
+        "11629",
+        "11630",
+        "11631",
+        "11632",
+        "11633",
+        "11634",
+        "11635",
+        "11636",
+        "11637",
+        "11638"
+      ],
+      "registeredBehaviors": [
+        "11613",
+        "11614",
+        "11615",
+        "11616",
+        "11617",
+        "11618",
+        "11619",
+        "11620",
+        "11621",
+        "11622",
+        "11622b",
+        "11623",
+        "11624",
+        "11625",
+        "11626",
+        "11627",
+        "11628",
+        "11629",
+        "11630",
+        "11631",
+        "11632",
+        "11633",
+        "11634",
+        "11635",
+        "11636",
+        "11637",
+        "11638"
+      ],
+      "setupDependencies": [
+        {
+          "group": "court_of_the_ancients",
+          "external": false,
+          "codes": [
+            "11612",
+            "11613",
+            "11614",
+            "11615",
+            "11616",
+            "11617",
+            "11618",
+            "11619",
+            "11620",
+            "11621",
+            "11622",
+            "11622b",
+            "11623",
+            "11624",
+            "11625",
+            "11626",
+            "11627",
+            "11628",
+            "11629",
+            "11630",
+            "11631",
+            "11632",
+            "11633",
+            "11634",
+            "11635",
+            "11636",
+            "11637",
+            "11638"
+          ]
+        },
+        {
+          "group": "domination",
+          "external": false,
+          "codes": [
+            "11741",
+            "11742",
+            "11743"
+          ]
+        },
+        {
+          "group": "dreams",
+          "external": false,
+          "codes": [
+            "11749",
+            "11750"
+          ]
+        },
+        {
+          "group": "elder_mist",
+          "external": false,
+          "codes": [
+            "11731",
+            "11732"
+          ]
+        },
+        {
+          "group": "the_inescapable",
+          "external": false,
+          "codes": [
+            "11744",
+            "11745"
+          ]
+        },
+        {
+          "group": "rlyeh",
+          "external": false,
+          "codes": [
+            "11739",
+            "11740"
+          ]
+        },
+        {
+          "group": "star_spawn",
+          "external": false,
+          "codes": [
+            "11725",
+            "11726",
+            "11727",
+            "11728"
+          ]
+        },
+        {
+          "group": "stowaways",
+          "external": false,
+          "codes": [
+            "11721",
+            "11722"
+          ]
+        },
+        {
+          "group": "pilgrims",
+          "external": false,
+          "codes": [
+            "11723",
+            "11724"
+          ]
+        }
+      ],
+      "sourceGuideParagraphs": 73,
+      "scenarioStatus": "development",
+      "definition": "registered",
+      "guideStatus": "ready",
+      "guide": "web/scenario-guides/courtOfTheAncients.json"
+    },
+    {
+      "id": "obsidianCanyons",
+      "referenceCode": "11639",
+      "group": "obsidian_canyons",
+      "cards": [
+        "11640",
+        "11640b",
+        "11641",
+        "11642",
+        "11643",
+        "11644",
+        "11645",
+        "11646",
+        "11647",
+        "11648",
+        "11649",
+        "11650",
+        "11651",
+        "11652",
+        "11653",
+        "11654",
+        "11655",
+        "11656",
+        "11657",
+        "11658",
+        "11659",
+        "11660",
+        "11661",
+        "11662",
+        "11662b",
+        "11663",
+        "11663b",
+        "11664",
+        "11664b",
+        "11665",
+        "11666",
+        "11667",
+        "11669",
+        "11670",
+        "11671",
+        "11672a",
+        "11672b"
+      ],
+      "registeredBehaviors": [
+        "11640",
+        "11640b",
+        "11641",
+        "11642",
+        "11643",
+        "11644",
+        "11645",
+        "11646",
+        "11647",
+        "11648",
+        "11649",
+        "11650",
+        "11651",
+        "11652",
+        "11653",
+        "11654",
+        "11655",
+        "11656",
+        "11657",
+        "11658",
+        "11659",
+        "11660",
+        "11661",
+        "11662",
+        "11662b",
+        "11663",
+        "11663b",
+        "11664",
+        "11664b",
+        "11665",
+        "11666",
+        "11667",
+        "11669",
+        "11670",
+        "11671",
+        "11672a",
+        "11672b"
+      ],
+      "setupDependencies": [
+        {
+          "group": "obsidian_canyons",
+          "external": false,
+          "codes": [
+            "11639",
+            "11640",
+            "11640b",
+            "11641",
+            "11642",
+            "11643",
+            "11644",
+            "11645",
+            "11646",
+            "11647",
+            "11648",
+            "11649",
+            "11650",
+            "11651",
+            "11652",
+            "11653",
+            "11654",
+            "11655",
+            "11656",
+            "11657",
+            "11658",
+            "11659",
+            "11660",
+            "11661",
+            "11662",
+            "11662b",
+            "11663",
+            "11663b",
+            "11664",
+            "11664b",
+            "11665",
+            "11666",
+            "11667",
+            "11669",
+            "11670",
+            "11671",
+            "11672a",
+            "11672b"
+          ]
+        },
+        {
+          "group": "cosmic_legacy",
+          "external": false,
+          "codes": [
+            "11729",
+            "11730"
+          ]
+        },
+        {
+          "group": "elder_mist",
+          "external": false,
+          "codes": [
+            "11731",
+            "11732"
+          ]
+        },
+        {
+          "group": "the_inescapable",
+          "external": false,
+          "codes": [
+            "11744",
+            "11745"
+          ]
+        },
+        {
+          "group": "rlyeh",
+          "external": false,
+          "codes": [
+            "11739",
+            "11740"
+          ]
+        },
+        {
+          "group": "star_spawn",
+          "external": false,
+          "codes": [
+            "11725",
+            "11726",
+            "11727",
+            "11728"
+          ]
+        },
+        {
+          "group": "chilling_cold",
+          "external": true,
+          "codes": [
+            "01167",
+            "01168"
+          ]
+        },
+        {
+          "group": "nightgaunts",
+          "external": true,
+          "codes": [
+            "01172",
+            "01173"
+          ]
+        },
+        {
+          "group": "striking_fear",
+          "external": true,
+          "codes": [
+            "01163",
+            "01164",
+            "01165"
+          ]
+        },
+        {
+          "group": "ancient_evils",
+          "external": true,
+          "codes": [
+            "01166"
+          ]
+        }
+      ],
+      "sourceGuideParagraphs": 123,
+      "scenarioStatus": "development",
+      "definition": "registered",
+      "guideStatus": "ready",
+      "guide": "web/scenario-guides/obsidianCanyons.json"
+    },
+    {
+      "id": "sepulchreOfTheSleeper",
+      "referenceCode": "11673",
+      "group": "sepulchre_of_the_sleeper",
+      "cards": [
+        "11674",
+        "11674b",
+        "11675",
+        "11676",
+        "11677",
+        "11678",
+        "11679",
+        "11680",
+        "11681"
+      ],
+      "registeredBehaviors": [
+        "11674",
+        "11674b",
+        "11675",
+        "11676",
+        "11677",
+        "11678",
+        "11679",
+        "11680",
+        "11681"
+      ],
+      "setupDependencies": [
+        {
+          "group": "sepulchre_of_the_sleeper",
+          "external": false,
+          "codes": [
+            "11673",
+            "11674",
+            "11674b",
+            "11675",
+            "11676",
+            "11677",
+            "11678",
+            "11679",
+            "11680",
+            "11681"
+          ]
+        },
+        {
+          "group": "domination",
+          "external": false,
+          "codes": [
+            "11741",
+            "11742",
+            "11743"
+          ]
+        },
+        {
+          "group": "dreams",
+          "external": false,
+          "codes": [
+            "11749",
+            "11750"
+          ]
+        },
+        {
+          "group": "rlyeh",
+          "external": false,
+          "codes": [
+            "11739",
+            "11740"
+          ]
+        },
+        {
+          "group": "star_spawn",
+          "external": false,
+          "codes": [
+            "11725",
+            "11726",
+            "11727",
+            "11728"
+          ]
+        },
+        {
+          "group": "ancient_evils",
+          "external": true,
+          "codes": [
+            "01166"
+          ]
+        },
+        {
+          "group": "striking_fear",
+          "external": true,
+          "codes": [
+            "01163",
+            "01164",
+            "01165"
+          ]
+        }
+      ],
+      "sourceGuideParagraphs": 54,
+      "scenarioStatus": "development",
+      "definition": "registered",
+      "guideStatus": "ready",
+      "guide": "web/scenario-guides/sepulchreOfTheSleeper.json"
+    },
+    {
+      "id": "theDoomOfArkhamPartI",
+      "referenceCode": "11682",
+      "group": "the_doom_of_arkham_part_1",
+      "cards": [
+        "11683",
+        "11684",
+        "11685",
+        "11686",
+        "11687",
+        "11688"
+      ],
+      "registeredBehaviors": [
+        "11683",
+        "11684",
+        "11685",
+        "11686",
+        "11687",
+        "11688"
+      ],
+      "setupDependencies": [
+        {
+          "group": "the_doom_of_arkham_part_1",
+          "external": false,
+          "codes": [
+            "11682",
+            "11683",
+            "11684",
+            "11685",
+            "11686",
+            "11687",
+            "11688"
+          ]
+        },
+        {
+          "group": "deep_ones",
+          "external": false,
+          "codes": [
+            "11746",
+            "11747",
+            "11748"
+          ]
+        },
+        {
+          "group": "domination",
+          "external": false,
+          "codes": [
+            "11741",
+            "11742",
+            "11743"
+          ]
+        },
+        {
+          "group": "dreams",
+          "external": false,
+          "codes": [
+            "11749",
+            "11750"
+          ]
+        },
+        {
+          "group": "star_spawn",
+          "external": false,
+          "codes": [
+            "11725",
+            "11726",
+            "11727",
+            "11728"
+          ]
+        },
+        {
+          "group": "agents_of_cthulhu",
+          "external": true,
+          "codes": [
+            "01181",
+            "01182"
+          ]
+        },
+        {
+          "group": "arkham",
+          "external": true,
+          "codes": [
+            "01124",
+            "01125",
+            "01126",
+            "01127",
+            "01128",
+            "01129",
+            "01130",
+            "01131",
+            "01132",
+            "01133",
+            "01134",
+            "01135",
+            "01136"
+          ]
+        }
+      ],
+      "sourceGuideParagraphs": 45,
+      "scenarioStatus": "development",
+      "definition": "registered",
+      "guideStatus": "ready",
+      "guide": "web/scenario-guides/theDoomOfArkhamPartI.json"
+    },
+    {
+      "id": "theDoomOfArkhamPartII",
+      "referenceCode": "11688a",
+      "group": "the_doom_of_arkham_part_2",
+      "cards": [
+        "11689",
+        "11690",
+        "11691a",
+        "11691b",
+        "11692",
+        "11693",
+        "11694",
+        "11695",
+        "11696",
+        "11697",
+        "11698",
+        "11699",
+        "11700",
+        "11701",
+        "11702",
+        "11702b",
+        "11703",
+        "11703b",
+        "11704",
+        "11704b",
+        "11705",
+        "11706",
+        "11707",
+        "11708",
+        "11709",
+        "11710",
+        "11711",
+        "11712",
+        "11713",
+        "11714",
+        "11715",
+        "11716",
+        "11717",
+        "11719",
+        "11720"
+      ],
+      "registeredBehaviors": [
+        "11689",
+        "11690",
+        "11691a",
+        "11691b",
+        "11692",
+        "11693",
+        "11694",
+        "11695",
+        "11696",
+        "11697",
+        "11698",
+        "11699",
+        "11700",
+        "11701",
+        "11702",
+        "11702b",
+        "11703",
+        "11703b",
+        "11704",
+        "11704b",
+        "11705",
+        "11706",
+        "11707",
+        "11708",
+        "11709",
+        "11710",
+        "11711",
+        "11712",
+        "11713",
+        "11714",
+        "11715",
+        "11716",
+        "11717",
+        "11719",
+        "11720"
+      ],
+      "setupDependencies": [
+        {
+          "group": "the_doom_of_arkham_part_2",
+          "external": false,
+          "codes": [
+            "11688a",
+            "11689",
+            "11690",
+            "11691a",
+            "11691b",
+            "11692",
+            "11693",
+            "11694",
+            "11695",
+            "11696",
+            "11697",
+            "11698",
+            "11699",
+            "11700",
+            "11701",
+            "11702",
+            "11702b",
+            "11703",
+            "11703b",
+            "11704",
+            "11704b",
+            "11705",
+            "11706",
+            "11707",
+            "11708",
+            "11709",
+            "11710",
+            "11711",
+            "11712",
+            "11713",
+            "11714",
+            "11715",
+            "11716",
+            "11717",
+            "11719",
+            "11720"
+          ]
+        },
+        {
+          "group": "domination",
+          "external": false,
+          "codes": [
+            "11741",
+            "11742",
+            "11743"
+          ]
+        },
+        {
+          "group": "elder_mist",
+          "external": false,
+          "codes": [
+            "11731",
+            "11732"
+          ]
+        },
+        {
+          "group": "tdc_flood",
+          "external": false,
+          "codes": [
+            "11736",
+            "11737",
+            "11738"
+          ]
+        },
+        {
+          "group": "star_spawn",
+          "external": false,
+          "codes": [
+            "11725",
+            "11726",
+            "11727",
+            "11728"
+          ]
+        },
+        {
+          "group": "agents_of_cthulhu",
+          "external": true,
+          "codes": [
+            "01181",
+            "01182"
+          ]
+        },
+        {
+          "group": "arkham",
+          "external": true,
+          "codes": [
+            "01124",
+            "01125",
+            "01126",
+            "01127",
+            "01128",
+            "01129",
+            "01130",
+            "01131",
+            "01132",
+            "01133",
+            "01134"
+          ]
+        }
+      ],
+      "sourceGuideParagraphs": 78,
+      "scenarioStatus": "development",
+      "definition": "registered",
+      "guideStatus": "ready",
+      "guide": "web/scenario-guides/theDoomOfArkhamPartII.json"
+    }
+  ],
+  "unscopedScenarioIds": [],
+  "campaignPackStatus": "development",
+  "campaignFlowRegistered": true,
+  "flowCoverage": {
+    "explicit": true,
+    "terminalReachable": true,
+    "reachableChapters": [
+      "oneLastJob",
+      "theWesternWall",
+      "theDrownedQuarter",
+      "theApiary",
+      "theGrandVault",
+      "courtOfTheAncients",
+      "obsidianCanyons",
+      "sepulchreOfTheSleeper",
+      "theDoomOfArkhamPartI",
+      "theDoomOfArkhamPartII"
+    ],
+    "missingChapters": []
+  },
+  "verification": {
+    "infrastructure": {
+      "command": "npm run test:tdc:p7",
+      "report": "artifacts/migration/tdc/p7/targeted-parallel-final.log",
+      "sha256": "c27c141dfcca56fb661346405ddc48e93dc1a4010daa1cd6133a00fd8fb1ab25",
+      "cases": 139
+    },
+    "fast": {
+      "report": "artifacts/migration/tdc/p7/fast-final-verified.log",
+      "sha256": "7712b7fc999a9e654b76d8c0649552b5ea865d3e83eaea187a2563d70817569a",
+      "tests": 8892,
+      "pass": 8889,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 3
+    },
+    "replay": {
+      "report": "artifacts/migration/tdc/p7/replay-final-verified.log",
+      "sha256": "74861832bbac545ae17d3fc7c830c17ec9ebf2aa4e60917c8f2bd232bf42a1f2",
+      "cases": 13,
+      "moves": 905,
+      "originalBaseline": "artifacts/migration/tdc/replay-before.json",
+      "originalBaselineSha256": "a028a85323df3aec07247ccc6821f0f51253c53edc6bd92127140224dcc3ef7b",
+      "baseline": "artifacts/migration/tdc/replay-before-recovered.json",
+      "baselineSha256": "5351e8c9758f77a16d195c223ef42e39051033a64b3c86fedebb73ef29878af9"
+    }
+  },
+  "externalEncounterDependencies": [
+    "01124",
+    "01125",
+    "01126",
+    "01127",
+    "01128",
+    "01129",
+    "01130",
+    "01131",
+    "01132",
+    "01133",
+    "01134",
+    "01135",
+    "01136",
+    "01159",
+    "01163",
+    "01164",
+    "01165",
+    "01166",
+    "01167",
+    "01168",
+    "01169",
+    "01170",
+    "01171",
+    "01172",
+    "01173",
+    "01174",
+    "01181",
+    "01182"
+  ],
+  "externalReuse": [
+    {
+      "code": "01124",
+      "compatiblePacks": [
+        "notz"
+      ]
+    },
+    {
+      "code": "01125",
+      "compatiblePacks": [
+        "notz"
+      ]
+    },
+    {
+      "code": "01126",
+      "compatiblePacks": [
+        "notz"
+      ]
+    },
+    {
+      "code": "01127",
+      "compatiblePacks": [
+        "notz"
+      ]
+    },
+    {
+      "code": "01128",
+      "compatiblePacks": [
+        "notz"
+      ]
+    },
+    {
+      "code": "01129",
+      "compatiblePacks": [
+        "notz"
+      ]
+    },
+    {
+      "code": "01130",
+      "compatiblePacks": [
+        "notz"
+      ]
+    },
+    {
+      "code": "01131",
+      "compatiblePacks": [
+        "notz"
+      ]
+    },
+    {
+      "code": "01132",
+      "compatiblePacks": [
+        "notz"
+      ]
+    },
+    {
+      "code": "01133",
+      "compatiblePacks": [
+        "notz"
+      ]
+    },
+    {
+      "code": "01134",
+      "compatiblePacks": [
+        "notz"
+      ]
+    },
+    {
+      "code": "01135",
+      "compatiblePacks": [
+        "notz"
+      ]
+    },
+    {
+      "code": "01136",
+      "compatiblePacks": [
+        "notz"
+      ]
+    },
+    {
+      "code": "01159",
+      "compatiblePacks": [
+        "core"
+      ]
+    },
+    {
+      "code": "01163",
+      "compatiblePacks": [
+        "core"
+      ]
+    },
+    {
+      "code": "01164",
+      "compatiblePacks": [
+        "core"
+      ]
+    },
+    {
+      "code": "01165",
+      "compatiblePacks": [
+        "core"
+      ]
+    },
+    {
+      "code": "01166",
+      "compatiblePacks": [
+        "core"
+      ]
+    },
+    {
+      "code": "01167",
+      "compatiblePacks": [
+        "core"
+      ]
+    },
+    {
+      "code": "01168",
+      "compatiblePacks": [
+        "core"
+      ]
+    },
+    {
+      "code": "01169",
+      "compatiblePacks": [
+        "core"
+      ]
+    },
+    {
+      "code": "01170",
+      "compatiblePacks": [
+        "core"
+      ]
+    },
+    {
+      "code": "01171",
+      "compatiblePacks": [
+        "core"
+      ]
+    },
+    {
+      "code": "01172",
+      "compatiblePacks": [
+        "core"
+      ]
+    },
+    {
+      "code": "01173",
+      "compatiblePacks": [
+        "core"
+      ]
+    },
+    {
+      "code": "01174",
+      "compatiblePacks": [
+        "core"
+      ]
+    },
+    {
+      "code": "01181",
+      "compatiblePacks": [
+        "core"
+      ]
+    },
+    {
+      "code": "01182",
+      "compatiblePacks": [
+        "core"
+      ]
+    }
+  ],
+  "ownedContentInputsPending": [
+    "encounterContent"
+  ]
+}

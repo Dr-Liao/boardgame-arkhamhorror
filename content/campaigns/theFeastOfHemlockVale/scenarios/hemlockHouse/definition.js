@@ -215,7 +215,7 @@ function enemyLocationFace(locationId) {
     health: Number(card.health) || 1, damage: Number(card.damage) || 0, horror: Number(card.horror) || 0,
     victory: Number(card.victory) || 0, shroud: Number(card.shroud) || 0,
     traits: [...(card.traits || [])],
-    massive: true, retaliate: /Retaliate\./.test(String(card.text || '')),
+    retaliate: /Retaliate\./.test(String(card.text || '')),
     elite: true,
   })
 }
@@ -489,7 +489,7 @@ export const SCENARIO_TEXT = Object.freeze({
 // ---------------------------------------------------------------------------
 
 const definitions = encounterDefinitions([
-  ...ENCOUNTER_DECK_CODES,
+  ...ENCOUNTER_DECK_CODES, ...SET_ASIDE_TREACHERY_CODES,
   GRAPPLING_SPAWN_CODE,
   LITTLE_SYLVIE_CODE,
   PREDATORY_HOUSE_CODE,

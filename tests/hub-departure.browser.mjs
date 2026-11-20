@@ -72,6 +72,8 @@ test('真实四人流程：三个队友自动组牌与准备，玩家点击开�
     await route.fulfill({response})
   })
   const prepared = page.waitForResponse(response => response.url().endsWith('/api/move') && response.request().postDataJSON()?.move?.action === 'hubDoneSeat')
+  await hub.getByRole('button', { name: '卡组构筑', exact: true }).click()
+  await hub.getByRole('button', { name: '最终确认牌组', exact: true }).first().click()
   await hub.getByRole('button', { name: '确认准备', exact: true }).first().click()
   await expect(hub.locator('.ah-hub-preparing')).toBeVisible()
   await expect(hub.getByRole('navigation', { name: '战役局外页面' }).getByRole('button', { name: '开始关卡', exact: true })).toHaveAttribute('aria-current','page')

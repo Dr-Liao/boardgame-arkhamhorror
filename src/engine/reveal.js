@@ -1,5 +1,11 @@
+import { payAdditionalPlayHorror } from './play-attempt.js'
+import { splicePlayerDiscard } from './player-zones.js'
 import { availableResources } from './resource-bank.js'
+import { choosePlayUses, spendPlayUses } from './play-payment.js'
 import { payTokenCost } from './token-cost.js'
+import { consumeNextPlayDiscount } from './effect-state.js'
+import { afterHandEmptied } from './hand-discard-window.js'
+import { hasWindowListener } from './window-listeners.js'
 // 揭示与描述子执行（runActReveal / runAgendaForced / resolveTreacheryEffect /
 // executeDescriptor）从 engine.js 拆出的模块（Phase 6 · 6d-26）。
 //
@@ -197,7 +203,7 @@ function flushDeferredBeneath(state, events = []) {
     if (!owner) continue
     // 同名牌可能已经在弃牌堆里（上一张没被取走的残留）。取最近打出的那张。
     const discardIndex = (owner.discard || []).lastIndexOf(item.code)
-    if (discardIndex >= 0) owner.discard.splice(discardIndex, 1)
+    if (discardIndex >= 0) splicePlayerDiscard(owner, discardIndex, 1)
     if (item.host) {
       // The event is now in discard; use the same physical origin store as ordinary cards.
       owner.discard.push(item.code)
@@ -222,7 +228,7 @@ function executeDescriptor(state, params) {
   }
 }
 
-function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, events, windowId = null, fromHandIndex = null, effect = null, legacyAbilityLog = false, alreadyPaid = false, ignoreCosts = false, ignoreActionCost = false, silent = false, channelDiscount = 0, fromChannel = null, repeatedEffect = false }) {
+function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, events, windowId = null, fromHandIndex = null, effect = null, legacyAbilityLog = false, alreadyPaid = false, ignoreCosts = false, ignoreActionCost = false, silent = false, channelDiscount = 0, fromChannel = null, repeatedEffect = false, suppressAssetActivationWindow = false }) {
   if (state.locations.includes(source) && ['forced', 'reaction'].includes(descriptor.kind)
     && ignoreLocationTrigger(state, source.id, requestChoice, descriptor.label)) return false
   const cost = descriptorCost(descriptor, ignoreActionCost)
@@ -234,7 +240,7 @@ function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, ev
   // 2026-10-27「如同手牌」通道统一原语：窗口用 takeToHand 把来源取进手牌后再调用这里，
   // 折扣（直觉牌库 -2 等）由 channelDiscount 显式给出，不再写 inv.playDiscount。
   let handCode = null
-  if (!alreadyPaid && descriptor.fromHand && !descriptor.noPlayCost) {
+  if (!alreadyPaid && descriptor.fromHand && descriptor.kind !== 'action' && !descriptor.noPlayCost) {
     const index = Number.isInteger(fromHandIndex) && inv.hand[fromHandIndex] === descriptor.code
       ? fromHandIndex
       : (inv.hand || []).indexOf(descriptor.code)
@@ -243,15 +249,20 @@ function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, ev
     const def = cardDef(handCode)
     if (!def) return false
     const price = Math.max(0, playCost(state, inv, def) - (channelDiscount || 0))
-    if (availableResources(inv) < price) return false
+    const { remaining, payments } = choosePlayUses(state, inv, def, price, deps)
+    if (availableResources(inv) < remaining) return false
     if (!payTokenCost(state, inv, registeredEntry(handCode)?.additionalTokenCost)) return false
     inv.hand.splice(index, 1)
-    resourceBank.spendFromPool(inv, price, state)
+    resourceBank.spendFromPool(inv, remaining, state)
+    spendPlayUses(state, payments, events, deps)
+    consumeNextPlayDiscount(state, inv.seat)
+    payAdditionalPlayHorror(state, inv, def, events, deps)
     consumePlayThreatResources(state, inv, events)
     info(state, events, fromChannel?.channel === 'hunch'
       ? `🔮 ${inv.name} 从直觉牌库快速打出「${cardName(handCode)}」。`
       : `⚡ ${inv.name} 快速打出「${cardName(handCode)}」。`)
   }
+  if (handCode && !fromChannel) afterHandEmptied(state, inv, events, reactionWindow)
   const scenarioBeforeCost = state.scenario
   if (!alreadyPaid && !ignoreCosts && !payAbilityCost(state, inv, source, cost, events, descriptor)) return false
   if (cost?.drawEncounter && (inv.defeated || inv.resigned || state.status !== 'playing' || state.scenario !== scenarioBeforeCost)) return false
@@ -372,6 +383,14 @@ function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, ev
     leaveAsset(state, inv, source)
     if (!source.removedFromGame && !source.returnedToHand) inv.discard.push(source.code)
     info(state, events, `「${cardName(source.code)}」充能耗尽，弃掉。`)
+  }
+  if (!suppressAssetActivationWindow && !repeatedEffect && sourceAsset && !descriptor.fromHand
+    && ['action', 'free'].includes(descriptor.kind) && hasWindowListener(state, 'assetAbilityActivated')) {
+    reactionWindow(state, 'assetAbilityActivated', {
+      when: 'assetAbilityActivated', seat: inv.seat, location: inv.location,
+      assetId: sourceAsset.id, assetCode: sourceAsset.code, descriptorId: descriptor.id, kind: descriptor.kind,
+      prompt: `已发动「${cardName(sourceAsset.code)}」的能力。`,
+    }, events, { allowNested: true })
   }
   return true
 }

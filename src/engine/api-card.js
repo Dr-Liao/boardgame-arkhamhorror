@@ -1,4 +1,4 @@
-import { discardPlayerCards } from './player-zones.js'
+import { discardPlayerCards, splicePlayerDiscard } from './player-zones.js'
 import { bondedSetKey } from './bonded.js'
 import { notifyPlacedAsset } from './investigator-mechanics.js'
 import { putInHand } from './hand-entry.js'
@@ -69,6 +69,7 @@ export function createCardApi(state, events, deps) {
     if (!inv || !source) return []
     return (registeredEntry(source.code)?.abilities || []).map((descriptor, index) => ({ descriptor, index }))
       .filter(({ descriptor }) => (options.actionOnly ? descriptor.kind === 'action' : ['action', 'free'].includes(descriptor.kind))
+        && (!options.countsAs || (descriptor.countsAs || descriptor.actionKind || descriptor.effect?.type) === options.countsAs)
         && descriptorUsable(state, inv, source, descriptor, { mode: 'action', ignoreCosts: options.ignoreCosts === true,
           ignoreActionCost: options.ignoreActionCost === true })
         && (!descriptor.effect || !effectError(state, inv, descriptor.effect))
@@ -76,11 +77,11 @@ export function createCardApi(state, events, deps) {
           || enumerateTargets(state, inv, descriptor.target, { source }).length))
   }
 
-  const resolveCardAbility = (seat, source, { abilityIndex, ignoreCosts = false, ignoreActionCost = false, actionOnly = false } = {}) => {
+  const resolveCardAbility = (seat, source, { abilityIndex, ignoreCosts = false, ignoreActionCost = false, actionOnly = false, countsAs = null } = {}) => {
     const inv = state.investigators[seat]
-    const revealed = typeof source === 'string'
+    const revealed = typeof source === 'string' || (source && !inv?.assets.includes(source) && source.id)
     source = abilitySource(source)
-    const picked = abilityOptions(seat, source, { ignoreCosts, ignoreActionCost, actionOnly }).find(item => item.index === abilityIndex)
+    const picked = abilityOptions(seat, source, { ignoreCosts, ignoreActionCost, actionOnly, countsAs }).find(item => item.index === abilityIndex)
     if (!picked) return false
     const { descriptor } = picked
     const targets = enumerateTargets(state, inv, descriptor.target, { source })
@@ -100,7 +101,38 @@ export function createCardApi(state, events, deps) {
     }
   }
 
+  const putIntoPlay = (seat, code, { attachToAssetId = null, handIndex = null } = {}) => {
+    const inv = state.investigators[seat]
+    const index = handIndex ?? (inv?.hand.indexOf(code) ?? -1)
+    if (!inv || index < 0 || inv.hand[index] !== code) return null
+    const host = attachToAssetId == null ? null : inv.assets.find(card => card.id === attachToAssetId)
+    if (attachToAssetId != null && (!host || inv.assets.some(card => card.attachedToAsset === host.id)
+      || cardDef(code)?.type !== 'asset')) return null
+    if (scenarioBehavior(state).canPlaceAsset?.(state, inv, code) === false) {
+      info(state, events, `⛔ 「${cardName(code)}」当前不能放置入场。`)
+      return null
+    }
+    inv.hand.splice(index, 1)
+    const asset = newPlayerAssetInstance(state, inv, code)
+    if (host) {
+      asset.attachedToAsset = host.id
+      ;(host.attachments ||= []).push({ id: asset.id, code: asset.code, ownerSeat: seat, assetReference: true })
+    }
+    inv.assets.push(asset)
+    scenarioBehavior(state).assetEntered?.(state, inv, asset, scenarioRuntime(state, events))
+    notifyPlacedAsset(state, seat, asset, events, reactionWindow)
+    info(state, events, `🎴 ${inv.name} 将「${cardName(code)}」放置入场。`)
+    return asset
+  }
+
   return {
+    putIntoPlay,
+    putHandAssetOnHost: (seat, target, host) => {
+      const handIndex = /^hand:(\d+)$/.exec(String(target))?.[1]
+      const index = handIndex == null ? null : Number(handIndex)
+      const code = index == null ? target : state.investigators[seat]?.hand[index]
+      return host ? putIntoPlay(seat, code, { attachToAssetId: host.id, handIndex: index }) : null
+    },
     attachControlledAsset: (seat, assetId, kind, hostId) => attachControlledAsset(state, seat, assetId, kind, hostId),
     claimHostedAsset: (seat, kind, hostId, assetId) => claimHostedAsset(state, seat, kind, hostId, assetId, { canEquip, cardDef }),
     attachOrSwapControlledAsset: (seat, hostId, assetId) => {
@@ -269,7 +301,7 @@ export function createCardApi(state, events, deps) {
       if (!owner) return false
       const index = (owner.discard || []).lastIndexOf(code)
       if (index < 0) return false
-      owner.discard.splice(index, 1)
+      splicePlayerDiscard(owner, index, 1)
       state.removedFromGame ||= []
       state.removedFromGame.push(code)
       return true
@@ -446,21 +478,14 @@ export function createCardApi(state, events, deps) {
       notifyCluesRemoved(state, location, got, events)
       return got
     },
-    putIntoPlay: (seat, code) => {
+    putCommittedIntoPlay: (seat, code) => {
       const inv = state.investigators[seat]
-      const index = inv?.hand.indexOf(code) ?? -1
-      if (!inv || index < 0) return null
-      if (scenarioBehavior(state).canPlaceAsset?.(state, inv, code) === false) {
-        info(state, events, `⛔ 「${cardName(code)}」当前不能放置入场。`)
-        return null
-      }
-      inv.hand.splice(index, 1)
-      const asset = newPlayerAssetInstance(state, inv, code)
-      inv.assets.push(asset)
-      scenarioBehavior(state).assetEntered?.(state, inv, asset, scenarioRuntime(state, events))
-      notifyPlacedAsset(state, seat, asset, events, reactionWindow)
-      info(state, events, `🎴 ${inv.name} 将「${cardName(code)}」放置入场。`)
-      return asset
+      if (!inv || cardDef(code)?.type !== 'skill' || !state.skillTest?.committed.some(card => card.seat === seat && card.code === code)
+        || scenarioBehavior(state).canPlaceAsset?.(state, inv, code) === false) return null
+      const card = newPlayerAssetInstance(state, inv, code)
+      inv.assets.push(card)
+      notifyPlacedAsset(state, seat, card, events, reactionWindow)
+      return card
     },
   }
 }

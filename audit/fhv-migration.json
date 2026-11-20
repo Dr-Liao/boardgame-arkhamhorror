@@ -456,38 +456,38 @@
           "pass": true,
           "command": "node tools/build-card-index.mjs --check",
           "exitCode": 0,
-          "tail": "✔ entries/index.js 与目录一致（1182 张卡）\n"
+          "tail": "✔ entries/index.js 与目录一致（1315 张卡）\n"
         },
         "encounterIndex": {
           "pass": true,
           "command": "node tools/build-encounter-index.mjs --check",
           "exitCode": 0,
-          "tail": "✔ encounter-entries/index.js 与目录一致（2166 个条目）\n"
+          "tail": "✔ encounter-entries/index.js 与目录一致（2451 个条目）\n"
         },
         "compliance": {
           "pass": true,
           "command": "node tools/audit-card-entry-compliance.mjs --check",
           "exitCode": 0,
-          "tail": "卡条目合规审计通过（无基线外新增违规）\n{\n \"directStateWrite\": 112,\n \"singleCardField\": 21,\n \"reprintDuplicate\": 0,\n \"playConditionGap\": 0,\n \"testWrapper\": 24,\n \"revelationTestCards\": 108,\n \"selfCodeInstanceLookup\": 21\n}\n"
+          "tail": "卡条目合规审计通过（无基线外新增违规）\n{\n \"directStateWrite\": 112,\n \"singleCardField\": 21,\n \"reprintDuplicate\": 0,\n \"playConditionGap\": 0,\n \"testWrapper\": 25,\n \"revelationTestCards\": 123,\n \"selfCodeInstanceLookup\": 22\n}\n"
         },
         "presentation": {
           "pass": true,
           "command": "node tools/build-presentation.mjs --check",
           "exitCode": 0,
-          "tail": " \"resolvedDescriptors\": 5930,\n \"unresolved\": 0,\n \"localizedFrontCandidates\": 5211,\n \"cardsWithBackArt\": 2592,\n \"genericBacks\": {\n  \"encounter\": 1635,\n  \"player\": 1703\n },\n \"localizedArtEntries\": 6493,\n \"localImagesCopied\": 0,\n \"remoteManifestEntries\": 30895,\n \"referenceLocalMediaFiles\": 230,\n \"presentationVersion\": \"e34723c7516840eccdceecb1e6b2ef39ba1e589be5c421cd1a2b1fb0bdf59782\",\n \"drift\": []\n}\n"
+          "tail": " \"resolvedDescriptors\": 5930,\n \"unresolved\": 0,\n \"localizedFrontCandidates\": 5211,\n \"cardsWithBackArt\": 2592,\n \"genericBacks\": {\n  \"encounter\": 1635,\n  \"player\": 1703\n },\n \"localizedArtEntries\": 6493,\n \"localImagesCopied\": 0,\n \"remoteManifestEntries\": 30895,\n \"referenceLocalMediaFiles\": 230,\n \"presentationVersion\": \"1fb167e0e7d9783dea135762b49f8815e82d1b73eedf88254742a75b319a546c\",\n \"drift\": []\n}\n"
         },
         "docs": {
           "pass": true,
           "command": "node tools/check-doc-links.mjs",
           "exitCode": 0,
-          "tail": "文档链接体检：73 个文件、363 条本地链接全部可解析\n"
+          "tail": "文档链接体检：82 个文件、429 条本地链接全部可解析\n"
         }
       }
     },
     "assets": {
       "pass": true,
       "path": "audit/fhv-assets.json",
-      "sha256": "cc39aef94a5e18b3f4a6652f51d1691dd8469d80831ea8bb097f67650d574eaf",
+      "sha256": "8fe11471754736d63bbadbfc4a31aa1b2c92cb1b4c93e15c1ae745426da7a95c",
       "status": "verified",
       "images": {
         "total": 441,
@@ -1220,7 +1220,7 @@
   "evidence": {
     "node": {
       "path": "audit/fhv-node-acceptance.json",
-      "sha256": "171220294c1912d02bc7b50804ab1e5732b23f3d9635e0eb3ff3165b9e06b08c",
+      "sha256": "5ba46baea25335004f44e104714a1f7278ea70a17aa3bcfd09769148d77ebcbe",
       "pass": true,
       "command": "node tools/verify-fhv.mjs --node --check",
       "exitCode": 0,
@@ -1240,7 +1240,7 @@
     },
     "rules": {
       "path": "audit/fhv-rules.json",
-      "sha256": "4de1db708d7b1b6236fd617b08366643bac98927d75d9e7a9d63e511e9444b69",
+      "sha256": "514ed12acbb86c0298e226457f89d1b1f3ba9d334a8227cadac7e295948b4bcc",
       "pass": true,
       "command": "node tools/audit-fhv-rules.mjs --check",
       "exitCode": 0,
@@ -1263,7 +1263,7 @@
     },
     "interactions": {
       "path": "audit/fhv-interactions.json",
-      "sha256": "95c6b7aa0bf18b336cc992ea0e07cb379d3f5a0aa83e5f47407a3534ef3aefdf",
+      "sha256": "c28d7ea4c4eb41bae006f3d1faa60476c8db427691f512c04dbb11177f609810",
       "pass": true,
       "command": "node tools/audit-fhv-interactions.mjs --check",
       "exitCode": 0,
@@ -1282,7 +1282,7 @@
     },
     "investigators": {
       "path": "audit/fhv-investigators.json",
-      "sha256": "92b04b7edd59b52d47a4126ab88b3637554151ceea62aec157b23e4ec162f111",
+      "sha256": "869f75d82e8885507b7f407cd27314276cc95a773bac81762bd39c74496d68dc",
       "pass": true,
       "command": "node tools/audit-fhv-investigators.mjs --check",
       "exitCode": 0,
@@ -1474,31 +1474,31 @@
           "pass": true,
           "command": "node tools/build-card-index.mjs --check",
           "exitCode": 0,
-          "tail": "✔ entries/index.js 与目录一致（1182 张卡）\n"
+          "tail": "✔ entries/index.js 与目录一致（1315 张卡）\n"
         },
         "encounterIndex": {
           "pass": true,
           "command": "node tools/build-encounter-index.mjs --check",
           "exitCode": 0,
-          "tail": "✔ encounter-entries/index.js 与目录一致（2166 个条目）\n"
+          "tail": "✔ encounter-entries/index.js 与目录一致（2451 个条目）\n"
         },
         "compliance": {
           "pass": true,
           "command": "node tools/audit-card-entry-compliance.mjs --check",
           "exitCode": 0,
-          "tail": "卡条目合规审计通过（无基线外新增违规）\n{\n \"directStateWrite\": 112,\n \"singleCardField\": 21,\n \"reprintDuplicate\": 0,\n \"playConditionGap\": 0,\n \"testWrapper\": 24,\n \"revelationTestCards\": 108,\n \"selfCodeInstanceLookup\": 21\n}\n"
+          "tail": "卡条目合规审计通过（无基线外新增违规）\n{\n \"directStateWrite\": 112,\n \"singleCardField\": 21,\n \"reprintDuplicate\": 0,\n \"playConditionGap\": 0,\n \"testWrapper\": 25,\n \"revelationTestCards\": 123,\n \"selfCodeInstanceLookup\": 22\n}\n"
         },
         "presentation": {
           "pass": true,
           "command": "node tools/build-presentation.mjs --check",
           "exitCode": 0,
-          "tail": " \"resolvedDescriptors\": 5930,\n \"unresolved\": 0,\n \"localizedFrontCandidates\": 5211,\n \"cardsWithBackArt\": 2592,\n \"genericBacks\": {\n  \"encounter\": 1635,\n  \"player\": 1703\n },\n \"localizedArtEntries\": 6493,\n \"localImagesCopied\": 0,\n \"remoteManifestEntries\": 30895,\n \"referenceLocalMediaFiles\": 230,\n \"presentationVersion\": \"e34723c7516840eccdceecb1e6b2ef39ba1e589be5c421cd1a2b1fb0bdf59782\",\n \"drift\": []\n}\n"
+          "tail": " \"resolvedDescriptors\": 5930,\n \"unresolved\": 0,\n \"localizedFrontCandidates\": 5211,\n \"cardsWithBackArt\": 2592,\n \"genericBacks\": {\n  \"encounter\": 1635,\n  \"player\": 1703\n },\n \"localizedArtEntries\": 6493,\n \"localImagesCopied\": 0,\n \"remoteManifestEntries\": 30895,\n \"referenceLocalMediaFiles\": 230,\n \"presentationVersion\": \"1fb167e0e7d9783dea135762b49f8815e82d1b73eedf88254742a75b319a546c\",\n \"drift\": []\n}\n"
         },
         "docs": {
           "pass": true,
           "command": "node tools/check-doc-links.mjs",
           "exitCode": 0,
-          "tail": "文档链接体检：73 个文件、363 条本地链接全部可解析\n"
+          "tail": "文档链接体检：82 个文件、429 条本地链接全部可解析\n"
         }
       }
     }
@@ -1522,11 +1522,11 @@
     },
     {
       "path": "audit/fhv-primitive-catalog.json",
-      "sha256": "bf76a4862d455cbe92ab449f73d10c5d66729cad273c80ec9c9aea705d236cd2"
+      "sha256": "9fdd2cfb809162c432833c72730b110fa21dae7b49033ec764b7c0272eae39fe"
     },
     {
       "path": "audit/fhv-rules.json",
-      "sha256": "4de1db708d7b1b6236fd617b08366643bac98927d75d9e7a9d63e511e9444b69"
+      "sha256": "514ed12acbb86c0298e226457f89d1b1f3ba9d334a8227cadac7e295948b4bcc"
     },
     {
       "path": "audit/fhv-rules-browser.json",
@@ -1534,7 +1534,7 @@
     },
     {
       "path": "audit/fhv-interactions.json",
-      "sha256": "95c6b7aa0bf18b336cc992ea0e07cb379d3f5a0aa83e5f47407a3534ef3aefdf"
+      "sha256": "c28d7ea4c4eb41bae006f3d1faa60476c8db427691f512c04dbb11177f609810"
     },
     {
       "path": "audit/fhv-interactions-browser.json",
@@ -1542,7 +1542,7 @@
     },
     {
       "path": "audit/fhv-investigators.json",
-      "sha256": "92b04b7edd59b52d47a4126ab88b3637554151ceea62aec157b23e4ec162f111"
+      "sha256": "869f75d82e8885507b7f407cd27314276cc95a773bac81762bd39c74496d68dc"
     },
     {
       "path": "audit/fhv-investigators-browser.json",
@@ -1574,7 +1574,7 @@
     },
     {
       "path": "audit/fhv-node-acceptance.json",
-      "sha256": "171220294c1912d02bc7b50804ab1e5732b23f3d9635e0eb3ff3165b9e06b08c"
+      "sha256": "5ba46baea25335004f44e104714a1f7278ea70a17aa3bcfd09769148d77ebcbe"
     },
     {
       "path": "audit/fhv-regression.json",
@@ -1590,7 +1590,7 @@
     },
     {
       "path": "audit/fhv-assets.json",
-      "sha256": "cc39aef94a5e18b3f4a6652f51d1691dd8469d80831ea8bb097f67650d574eaf"
+      "sha256": "8fe11471754736d63bbadbfc4a31aa1b2c92cb1b4c93e15c1ae745426da7a95c"
     },
     {
       "path": "tests/fixtures/replay/golden-replays.json",
@@ -1614,7 +1614,7 @@
     },
     {
       "path": "content/registered.js",
-      "sha256": "35b871f6a8441fd19201171da7bf2d1f19314cf7a7e0d7fea4a9d746f6510f34"
+      "sha256": "8c9204dc062e13af8bf40327a4bb4ebdfda18f2cacef9a01f5936338d0cb8e5d"
     }
   ],
   "remaining": [

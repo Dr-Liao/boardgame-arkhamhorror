@@ -181,6 +181,19 @@ export function createTableRegions(h, { openDetail, openChaosBag, openAgendaAsid
     return pageProgress(h, 'doom', agendaDoomValue(state), agenda.doomThreshold,
       text => t('table.progress.doomAria', { value: text }))
   }
+  const encounterPile = state => {
+    const count = state.encounterDeckSize ?? state.encounterDeck?.length ?? 0
+    const summary = t('table.encounter.summary', { count, discard: state.encounterDiscard?.length || 0 })
+    const top = state.encounterTop
+    if (!top) return h('div', { className: 'ah-encounter-deck', role: 'group', 'aria-label': t('table.encounter.aria', { count }) },
+      h('img', { src: '/mods/arkhamhorror/img/backs/back_encounter.webp', alt: t('table.encounter.back') }),
+      h('span', {}, t('table.encounter.deck')), h('small', {}, summary))
+    const name = cardDisplayName(top) || top.code
+    const label = t('table.encounter.top', { name })
+    return h('button', { type: 'button', className: 'ah-encounter-deck', title: label, 'aria-label': label,
+      'data-encounter-top': top.code, onclick: () => openDetail(top, { runtime: false }) },
+      tableArt(h, top.originalCode || top.code, name), h('span', {}, label), h('small', {}, summary))
+  }
   return {
     // 剧本区从左到右：剧本书（密谋/场景）→ 提示卡 → 当前场景/密谋的可执行操作。
     // agendaAside：放在密谋牌库旁的公开卡（state.agendaAside），画成挂在剧本书下沿的卡堆。
@@ -200,9 +213,7 @@ export function createTableRegions(h, { openDetail, openChaosBag, openAgendaAsid
         h('div', { className: 'ah-scenario-reference' }, referenceCard(state), setupButton), scriptActions),
       h('div', { className: 'ah-command-deck' },
       h('div', { className: 'ah-command-resources', role: 'group', 'aria-label': t('table.resources.aria') },
-      h('div', { className: 'ah-encounter-deck', role: 'group', 'aria-label': t('table.encounter.aria', { count: state.encounterDeckSize ?? state.encounterDeck?.length ?? 0 }) },
-        h('img', { src: '/mods/arkhamhorror/img/backs/back_encounter.webp', alt: t('table.encounter.back') }),
-        h('span', {}, t('table.encounter.deck')), h('small', {}, t('table.encounter.summary', { count: state.encounterDeckSize ?? state.encounterDeck?.length ?? 0, discard: state.encounterDiscard?.length || 0 }))),
+      encounterPile(state),
       h('button', { className: 'ah-chaos-bag', type:'button', 'aria-label': t('table.chaos.aria'), 'aria-haspopup':'dialog', onclick:openChaosBag, title: t('table.chaos.title', { count: state.chaosBag?.length || 0 }) },
         h('img', { src: '/mods/arkhamhorror/img/ui/chaos-bag.webp', alt: '' }),
         h('span', {}, t('table.chaos.label')), h('small', {}, t('table.chaos.count', { count: state.chaosBag?.length || 0 })))),

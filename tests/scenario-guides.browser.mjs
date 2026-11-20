@@ -75,11 +75,16 @@ test('指南加载失败可重试，键盘可进入折叠的结局说明', async
   let attempts = 0
   await page.route('**/scenario-guides/theGathering.json', async route => {
     if (++attempts === 1) await route.fulfill({ status: 503, body: 'Unavailable' })
+    else if (attempts === 2) await route.fulfill({ json: { id: 'theGathering', locales: { zh: {}, en: {} } } })
     else await route.continue()
   })
   await openTable(page)
   await page.locator('[data-scenario-setup]').click()
   const panel = page.getByRole('dialog', { name: '关卡设置', exact: true })
+  await expect(panel.getByRole('status')).toContainText('加载失败')
+  const incompleteGuide = page.waitForResponse(response => response.ok() && response.url().endsWith('/scenario-guides/theGathering.json'))
+  await panel.getByRole('button', { name: '重新加载指南' }).click()
+  await incompleteGuide
   await expect(panel.getByRole('status')).toContainText('加载失败')
   await panel.getByRole('button', { name: '重新加载指南' }).click()
   await expect(panel.getByRole('status')).toHaveCount(0)
@@ -89,5 +94,5 @@ test('指南加载失败可重试，键盘可进入折叠的结局说明', async
   await expect(panel.locator('summary').first()).toBeFocused()
   await page.keyboard.press('Enter')
   await expect(panel.locator('details[open]')).toHaveCount(1)
-  expect(attempts).toBe(2)
+  expect(attempts).toBe(3)
 })

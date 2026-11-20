@@ -223,8 +223,23 @@ export function woodsDeckCards(state) {
   return [...woodsState(state).deck]
 }
 
+function takeAsideHollow(state) {
+  if (findLocation(state, TWISTED_HOLLOW_LOCATION_ID)) return false
+  const locations = state.scenarioZones?.setAsideLocations
+  const index = locations?.indexOf(TWISTED_HOLLOW_LOCATION_ID) ?? -1
+  if (index < 0) return takeFromSetAside(state, TWISTED_HOLLOW_LOCATION_ID)
+  locations.splice(index, 1)
+  return true
+}
+
 function drawWoods(state, count = 1) {
   const woods = woodsState(state)
+  // 已结算法典 Σ 的旧存档可能仍把目标地点留在放一边区域。
+  if (currentActCode(state) === ACT_CODES[1] && !woods.deck.includes(TWISTED_HOLLOW_LOCATION_ID)
+    && takeAsideHollow(state)) {
+    const bottom = woods.deck.splice(0, 3)
+    woods.deck.unshift(...shuffled(state, [...bottom, TWISTED_HOLLOW_LOCATION_ID]))
+  }
   const drawn = []
   for (let index = 0; index < Math.max(0, Math.floor(count)); index++) {
     const code = woods.deck.pop()
@@ -357,19 +372,16 @@ export function rebuildWoodsFromLocations(state, api = {}) {
     delete gridOf(state)[location.id]
   }
   // 空[[黑暗]]地点本来就已经离场（不在 state.locations 里）。
-  const woodsDeckCodes = [...removed, ...woodsDeckCards(state)]
+  const woodsDeckCodes = [...removed, ...woodsDeckCards(state)].filter(id => id !== keep)
   if (!findLocation(state, keep)) {
     // 扭曲空洞可能在放一边区域：放到中央并揭示。
+    takeAsideHollow(state)
     assignSlot(state, keep, START_SLOT)
     placeNow(state, keep, api, { revealed: true })
   } else {
     assignSlot(state, keep, START_SLOT)
   }
-  // 底部 4 张 = 扭曲空洞 + 3 张随机西部树林（一起洗）；其余全部在顶（保持背面朝上）。
-  const shuffledRemainder = shuffled(state, woodsDeckCodes)
-  const bottom = shuffled(state, [...shuffledRemainder.slice(0, 3), keep])
-  const top = shuffledRemainder.slice(3)
-  setWoodsDeck(state, [...bottom, ...top])
+  setWoodsDeck(state, shuffled(state, woodsDeckCodes))
   const placed = []
   for (const offset of ACT2_GRID_OFFSETS) {
     const [id] = drawWoods(state, 1)
@@ -1331,8 +1343,7 @@ function rebuildWoodsFromCodex(state, api, { seat }) {
   const rest = shuffled(state, [...codes, ...woodsDeckCards(state)])
   const bottomWoods = rest.slice(0, 3)
   const top = rest.slice(3)
-  const hollowAside = hasSetAside(state, TWISTED_HOLLOW_LOCATION_ID) && !findLocation(state, TWISTED_HOLLOW_LOCATION_ID)
-  if (hollowAside) takeFromSetAside(state, TWISTED_HOLLOW_LOCATION_ID)
+  const hollowAside = takeAsideHollow(state)
   const bottom = shuffled(state, hollowAside ? [...bottomWoods, TWISTED_HOLLOW_LOCATION_ID] : bottomWoods)
   setWoodsDeck(state, [...bottom, ...top])
   syncConnections(state)
@@ -2062,6 +2073,9 @@ export const behavior = {
   enemyAttackResolved,
   enemyDefeated,
   actReveal,
+  actIndexAfterAdvance(state, previous) {
+    if (codeOf(previous) === ACT_CODES[1] && currentActCode(state) === SPECIAL_AGENDA_CODE) return state.actIndex
+  },
   agendaReveal,
   checkObjectives,
   allResigned,

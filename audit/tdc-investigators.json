@@ -1,0 +1,451 @@
+{
+  "schemaVersion": 2,
+  "campaignId": "theDrownedCity",
+  "phase": "P5",
+  "status": "verified",
+  "productionStatus": "playable",
+  "pack": "tdcInvestigators",
+  "source": "audit/tdc-scope.json",
+  "investigators": [
+    [
+      {
+        "code": "11001",
+        "dependencies": [
+          [
+            "11002"
+          ],
+          [
+            "11003"
+          ]
+        ],
+        "deckSize": 30,
+        "signatureCards": [
+          "11002",
+          "11002"
+        ],
+        "signatureWeaknesses": [
+          "11003"
+        ],
+        "selectable": true
+      }
+    ],
+    [
+      {
+        "code": "11004",
+        "dependencies": [
+          [
+            "11005"
+          ],
+          [
+            "11006"
+          ]
+        ],
+        "deckSize": 30,
+        "signatureCards": [
+          "11005"
+        ],
+        "signatureWeaknesses": [
+          "11006"
+        ],
+        "selectable": true
+      }
+    ],
+    [
+      {
+        "code": "11007",
+        "dependencies": [
+          [
+            "11009"
+          ],
+          [
+            "11010"
+          ]
+        ],
+        "deckSize": 35,
+        "signatureCards": [
+          "11009"
+        ],
+        "signatureWeaknesses": [
+          "11010"
+        ],
+        "selectable": true
+      },
+      {
+        "code": "11008",
+        "dependencies": [
+          [
+            "11009"
+          ],
+          [
+            "11010"
+          ]
+        ],
+        "deckSize": 35,
+        "signatureCards": [
+          "11009"
+        ],
+        "signatureWeaknesses": [
+          "11010"
+        ],
+        "selectable": true
+      }
+    ],
+    [
+      {
+        "code": "11011",
+        "dependencies": [
+          [
+            "11012"
+          ],
+          [
+            "11013"
+          ]
+        ],
+        "deckSize": 30,
+        "signatureCards": [
+          "11012"
+        ],
+        "signatureWeaknesses": [
+          "11013"
+        ],
+        "selectable": true
+      }
+    ],
+    [
+      {
+        "code": "11014",
+        "dependencies": [
+          [
+            "11015",
+            "98020"
+          ],
+          [
+            "11016",
+            "98021"
+          ]
+        ],
+        "deckSize": 30,
+        "signatureCards": [
+          "11015",
+          "11015",
+          "11015"
+        ],
+        "signatureWeaknesses": [
+          "11016",
+          "11016",
+          "11016"
+        ],
+        "selectable": true
+      }
+    ],
+    [
+      {
+        "code": "11017",
+        "dependencies": [
+          [
+            "11018"
+          ],
+          [
+            "11019"
+          ]
+        ],
+        "deckSize": 35,
+        "signatureCards": [
+          "11018",
+          "11018",
+          "11018"
+        ],
+        "signatureWeaknesses": [
+          "11019"
+        ],
+        "selectable": true
+      }
+    ]
+  ],
+  "relatedEditions": [
+    {
+      "relatedTo": "11014",
+      "code": "98019",
+      "dependencies": [
+        [
+          "11015",
+          "98020"
+        ],
+        [
+          "11016",
+          "98021"
+        ]
+      ],
+      "deckSize": 30,
+      "signatureCards": [
+        "98020"
+      ],
+      "signatureWeaknesses": [
+        "98021"
+      ],
+      "selectable": true
+    }
+  ],
+  "dependencies": [
+    "11002",
+    "11003",
+    "11005",
+    "11006",
+    "11009",
+    "11010",
+    "11012",
+    "11013",
+    "11015",
+    "11016",
+    "11018",
+    "11019",
+    "98020",
+    "98021"
+  ],
+  "tests": {
+    "behavior": "tests/tdc-investigators.test.mjs",
+    "identity": "tests/hub-concurrent.test.mjs",
+    "browser": "tests/tdc-investigators.browser.mjs"
+  },
+  "pending": [],
+  "acceptance": {
+    "nodeCases": 17,
+    "replayCases": 13,
+    "browserCases": 16,
+    "fast": {
+      "passed": 8467,
+      "skipped": 3
+    },
+    "latestReplay": {
+      "passed": 13,
+      "failures": []
+    },
+    "screenshots": [
+      {
+        "device": "desktop",
+        "code": "11001",
+        "path": "artifacts/migration/tdc/p5/screenshots/desktop-11001.png",
+        "size": [
+          1440,
+          900
+        ],
+        "sha256": "85783480f9b0e1a6aa5a17724aade81d337a34ec9e557fff73617810b054123d"
+      },
+      {
+        "device": "desktop",
+        "code": "11004",
+        "path": "artifacts/migration/tdc/p5/screenshots/desktop-11004.png",
+        "size": [
+          1440,
+          900
+        ],
+        "sha256": "bee4ae946db708d8f80cdfd738183cb5bc6591fe8f2a94a2fe7b255a71308ca6"
+      },
+      {
+        "device": "desktop",
+        "code": "11007",
+        "path": "artifacts/migration/tdc/p5/screenshots/desktop-11007.png",
+        "size": [
+          1440,
+          900
+        ],
+        "sha256": "5f0f4b2dfd80602ec0a9fff0c0a480f07dbb139fb251c2e7d488e7f002722681"
+      },
+      {
+        "device": "desktop",
+        "code": "11008",
+        "path": "artifacts/migration/tdc/p5/screenshots/desktop-11008.png",
+        "size": [
+          1440,
+          900
+        ],
+        "sha256": "35bef43417457db4f9d675f050f4f7b73def078873d149cce715d8156eb2257a"
+      },
+      {
+        "device": "desktop",
+        "code": "11011",
+        "path": "artifacts/migration/tdc/p5/screenshots/desktop-11011.png",
+        "size": [
+          1440,
+          900
+        ],
+        "sha256": "82a82ec54805c2ccd17c63bed88ad3dd4ab32dd4f64c63c77cc2c59da623e89f"
+      },
+      {
+        "device": "desktop",
+        "code": "11014",
+        "path": "artifacts/migration/tdc/p5/screenshots/desktop-11014.png",
+        "size": [
+          1440,
+          900
+        ],
+        "sha256": "63f7d89512ec0c4d744e376211432e7074235b04405e7109f74c91f16fc172e6"
+      },
+      {
+        "device": "desktop",
+        "code": "11017",
+        "path": "artifacts/migration/tdc/p5/screenshots/desktop-11017.png",
+        "size": [
+          1440,
+          900
+        ],
+        "sha256": "c2af628a9f216d274a5ce47ffb7409b92f1c41927ddb4914a09372bf69908a53"
+      },
+      {
+        "device": "desktop",
+        "code": "98019",
+        "path": "artifacts/migration/tdc/p5/screenshots/desktop-98019.png",
+        "size": [
+          1440,
+          900
+        ],
+        "sha256": "9b36db46ba8fe667d1484b3aaad59244c9835232221cfc517aaf22e812e4b3fd"
+      },
+      {
+        "device": "mobile",
+        "code": "11001",
+        "path": "artifacts/migration/tdc/p5/screenshots/mobile-11001.png",
+        "size": [
+          390,
+          844
+        ],
+        "sha256": "dfde20b492e3eedf2d841a820f10520f3f7042c6ce87deead33ea0b3cbac5099"
+      },
+      {
+        "device": "mobile",
+        "code": "11004",
+        "path": "artifacts/migration/tdc/p5/screenshots/mobile-11004.png",
+        "size": [
+          390,
+          844
+        ],
+        "sha256": "58e97ca3cf061a5e717605868a7018e1bdba394d576ced715b72343127816b1b"
+      },
+      {
+        "device": "mobile",
+        "code": "11007",
+        "path": "artifacts/migration/tdc/p5/screenshots/mobile-11007.png",
+        "size": [
+          390,
+          844
+        ],
+        "sha256": "ee63105a7ebba9f55c741f38f813d1f4b3faffa79e06bdc8226f40101cb86cb8"
+      },
+      {
+        "device": "mobile",
+        "code": "11008",
+        "path": "artifacts/migration/tdc/p5/screenshots/mobile-11008.png",
+        "size": [
+          390,
+          844
+        ],
+        "sha256": "4751ff528998d56125dce458c759c1a428b4a67d959babf98c42b2b0f6a6975c"
+      },
+      {
+        "device": "mobile",
+        "code": "11011",
+        "path": "artifacts/migration/tdc/p5/screenshots/mobile-11011.png",
+        "size": [
+          390,
+          844
+        ],
+        "sha256": "1fd0ff6d9839db15832b3d4631fb7f82f49ab4a238ae3d0a9e17e8ae8296b0ed"
+      },
+      {
+        "device": "mobile",
+        "code": "11014",
+        "path": "artifacts/migration/tdc/p5/screenshots/mobile-11014.png",
+        "size": [
+          390,
+          844
+        ],
+        "sha256": "c053954d85729ad7994d6f64888a18b575c3d2d09487fe8d19cdc21b1bdb27af"
+      },
+      {
+        "device": "mobile",
+        "code": "11017",
+        "path": "artifacts/migration/tdc/p5/screenshots/mobile-11017.png",
+        "size": [
+          390,
+          844
+        ],
+        "sha256": "e5ed00ca6c9c113a237ae3af2d2f1dd208b6c9367564581048471576c84beaa4"
+      },
+      {
+        "device": "mobile",
+        "code": "98019",
+        "path": "artifacts/migration/tdc/p5/screenshots/mobile-98019.png",
+        "size": [
+          390,
+          844
+        ],
+        "sha256": "c736430368ea0129c09b8b1a52cc752572d0ad7bed4ccdfb1db43ee99cacfee9"
+      }
+    ],
+    "implementationSha256": {
+      "src/cards/entries/11001.js": "c76864e7378cc0226487adf991c0150edf7c13122ac837878b7bf0ba78eecbf4",
+      "src/cards/entries/11004.js": "3be5106334c5d26943c893ab1c51014effe100345cbc5d4a80574c35a614dd25",
+      "src/cards/entries/11007.js": "34a3aac992c46273b8565e7d2a4649dbc61ba9b0f09a151c021382315b94fb39",
+      "src/cards/entries/11008.js": "2814d2964868fa8080f9984fbc2922578a1f57164120068bd83b6285108c16d6",
+      "src/cards/entries/11011.js": "83e5afa00393bb9c8b9c05eed8950097d2481e6c5e1c427c1c7c146bd7c55dd0",
+      "src/cards/entries/11014.js": "410d73de24f3907181510c9b3cfd0e1d4fbc22a33c0179f4511f7ae6028f7342",
+      "src/cards/entries/11017.js": "fb98c82acedb4a9314a503d03fc186f96806948d87aac47358cb0d1ccb148d9a",
+      "src/cards/entries/98019.js": "91587d3c22247a006b8e4b2ede1994ed130ac97b3eeddb8d1336b3a4bbc8c309",
+      "src/cards/entries/11002.js": "4923403aabf7123af22f3ce857e700ab57717d5c5cdad99fa4e89eb51304a5bb",
+      "src/cards/entries/11003.js": "5025b14dd0e2a8188a2bf3448b21e44fa13d9872139e5835ca80205ce7ebf43b",
+      "src/cards/entries/11005.js": "1f2ceedc4cce91412a5a2fd708d2f8895b4b9477e101ee333af6cd31914c8838",
+      "src/cards/entries/11006.js": "a73fcd12399a82fbdfd852a89445a0601cc321df17a872b1d80c3328590f84b6",
+      "src/cards/entries/11009.js": "8d51265369fce9a5093e7e8518e6e448934fdbe54c5c65c1abd8ed9d23580dbf",
+      "src/cards/entries/11010.js": "e5c670d54acda3a7638737bf46868e469cf017e31bc53201c8813bed7ea867fa",
+      "src/cards/entries/11012.js": "55faafae62ae0bdc52af2993431b16391f5f05d60f97cca7c593b5dd30dd16d3",
+      "src/cards/entries/11013.js": "ace6f10aa1fa5f823169557c7883ca8fd3d612b5dd98f597a0a8777f6662f389",
+      "src/cards/entries/11015.js": "8f4252c94e3707a9921c3c52c70e7179b0448e1a61b9a52dadd4898a4c6061ed",
+      "src/cards/entries/11016.js": "22e00d32972004c08301481e2dc5c09ad457167520a789128e29351ba8f27052",
+      "src/cards/entries/11018.js": "c3ec6394e1b46b52ad506d9ee5a4acf8b51513c226f269811c9b22a73afa17d5",
+      "src/cards/entries/11019.js": "a868b78b81c1fc3b55809b8f9a58f87ff4ac70776d3185563fc431913f933c29",
+      "src/cards/entries/98020.js": "8bd29b04dbaad17af1c9c682ec49d671ea6bd7a6a23132961b60065fef480272",
+      "src/cards/entries/98021.js": "82b49ab50efac8f3a25a60c7a51e133a76177f59d609fbd9cac4194021391a78",
+      "src/deck/availability.js": "f69169bed68b4f29e6a4173cebeba448b505804c2a166718effe0826f5000fe7",
+      "src/deck/deckbuilding.js": "6b546f1f7c87014c4c2a687a81ce96cd1f7f651f2d031c768bbe6f45ffaab1e1",
+      "web/deck-rules.js": "ab77908ae47e7fada8a33f63238517f9b4a2345db30990089e686b724760db71",
+      "src/engine/ability-rules.js": "5b52fa95a4425d2991227476a7b97955ad87db0d84b00ea3cae83c990a58069b",
+      "src/engine/ability.js": "24198faa5db5d3f14e7f22cb2d956c70ed4c8b880ca7a3c01dff96a9c5ae315d",
+      "src/engine/actions.js": "f3b3c81e7273e8d042e41b6c0f25ef7bdabee880c45df6c8faa89a34d1a95548",
+      "src/engine/asset-search-play.js": "69062216eb9ef93eb084a1071b12ba92d4eafccfe7ad440ef31f7223ee5adead",
+      "src/engine/assets.js": "ae0deb8b7c76f21bd515ae0c63390a0a70639f14850b85d364603d0a7dd03811",
+      "src/engine/api-clue.js": "e5d98e1c8b629734a0d880519777bbca187408ced926f6c5cae95df22e702fcd",
+      "src/engine/api-mechanics.js": "4d01f0331919f7dd1a5b4419a9c1f557fb3ceb85f10721aaaf762d96b7c20273",
+      "src/engine/api-test.js": "71e823599c26a5f9d330917c3c6d00ef26c2115145ca664019bff6acc4908dc2",
+      "src/engine/chaos-bag.js": "b3c755695a6794c8f3228d55126ad33415095ae1dfbb734d46dbeef595afdabe",
+      "src/engine/combat.js": "d5cc5839cd944f72aa73c41ffb63dfe95c947104b0f752d443836d954eb80648",
+      "src/engine/commit-origins.js": "7338e8d63d332868b49e98327ccc618cecc35f5e41d0cb78e3b783e7c566b1b5",
+      "src/engine/deck-ops.js": "39b471bd55604ab494ab7f21d81724841299c276bfb1196072f73ff26bdbb875",
+      "src/engine/discard-costs.js": "75b14ebcbd6d62ebfb590ea38675d85caf2542917aacaf1b1f24998e1984c263",
+      "src/engine/encounter.js": "59bffab206ba0df67edaefd8447e8417546bdef0c8706d48cbda60b6ea6ffd44",
+      "src/engine/encounter-look.js": "d6a9f8ade7fc32518f3032c754a8d39ad943c92182c16d978fef2529c75e5d50",
+      "src/engine/engine.js": "cc0d10eebddc3b6ab70a1ad604e43c14f8044e8dc95733418a90d1805c71615f",
+      "src/engine/limits.js": "0c75acde92103f61b888c0e65b5664fefd0b5f8f4c355e2565a18baba709aba5",
+      "src/engine/locations.js": "7afbb6d5c9d51c8700bdc0ada1a3ca095ee131a94adb95806ee8c8f624a20ae7",
+      "src/engine/play-attempt.js": "ba77f44e95884b9c7341e09fa4061b433eb241e841cb1b40c19dc4dc532a8a92",
+      "src/engine/play-channels.js": "3810236adf3607f965ebfc6de9cd706a959155e25db7aedfb65c5b381dd90590",
+      "src/engine/reveal.js": "16ba926e100c7e86b1d96405ab0523ab59c6163d34fa68035cc39560f259ded8",
+      "src/engine/setup.js": "a669b2435e1df07714a5eecccfec64b33bccf333367d86a71abd08260d43f4d9",
+      "src/engine/stats.js": "cc72939b1c602b16dcce81f750f18c9f3e44e58af3b4975e1a2b772c170cb200",
+      "src/engine/tests.js": "f2d6cc10da325ad1e5e75638a9e8f4c0276168a4351cc198b458734e9394da5b",
+      "src/engine/turn-flow.js": "12e95e15ce0b98961c48f34d114ace397dbaed81ddb78227e5c2e9b3d0b34a5b",
+      "src/engine/turn.js": "06f2a02a62e6bb08a73eda9473f8d10ba2c6c8b48661aed4512bb8e6ab7596d5",
+      "src/engine/uses.js": "5c7fa169bac6e1a531f21e9e6db264c0cc2b8c95ecb80f3813558089e45ba6cc",
+      "src/engine/windows.js": "56112d9f3c04c1dfcfb01e6bbcd38e120fb90e0a6f422ced8cc60de4e73bf26b",
+      "content/packs/tdcInvestigators/manifest.js": "19a02a4692cd6ab7271f748988916db8dd94f61dbecdaf8e911bcf89783e664c",
+      "tests/tdc-investigators.test.mjs": "8caeff86348bfb9e398b57cdc2c1c54b648d563be121ca3effcd76358c9340d0",
+      "tests/tdc-investigators.browser.mjs": "a97b233c8926c3389c7147e21f2ce7bc4bab3202e40e0880223ed4629b926422"
+    },
+    "reports": {
+      "artifacts/migration/tdc/reports/p5-investigators-targeted.log": "149e8bed9b26fe33523b74ba94797f6559fcc2b39c1f5c4bfd978e1d413994f9",
+      "artifacts/migration/tdc/reports/p5-investigators-replay-before-shared-edits.log": "74861832bbac545ae17d3fc7c830c17ec9ebf2aa4e60917c8f2bd232bf42a1f2",
+      "artifacts/migration/tdc/reports/p5-investigators-replay.log": "38b3926ee993e94bb1c7bbbd5d751369d3512e5d36a0a65a9d7461a2098bb7b7",
+      "artifacts/migration/tdc/reports/p5-investigators-fast-verified.log": "53fb811ac9ec2499756f5b0985ea38807ba3b6fcd17fe149e808d6a5fac83f55",
+      "artifacts/migration/tdc/p5/browser.json": "da2be376815f7f461a174521f11798f1b73a614edeac64f25b27b0a99c97efe2"
+    }
+  }
+}

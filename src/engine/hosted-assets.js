@@ -30,8 +30,8 @@ export function claimHostedAsset(state, seat, kind, hostId, assetId, { canEquip,
   return asset
 }
 
-export function discardHostedAssets(state, host, discard) {
-  for (const card of (host?.attachments || []).filter(item => item.hostedPlayerAsset)) {
+export function discardHostedAssets(state, host, discard, { keepAssets = false } = {}) {
+  for (const card of (host?.attachments || []).filter(item => item.committedSkill || (!keepAssets && item.hostedPlayerAsset))) {
     const owner = state.investigators[card.ownerSeat]
     discard(owner, card.originalCode || card.code)
     host.attachments.splice(host.attachments.indexOf(card), 1)

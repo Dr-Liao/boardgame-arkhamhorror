@@ -5,13 +5,18 @@ import { discardPlayerCards, replacePlayerZoneCards } from './player-zones.js'
 // 读点：legalMoves（actingSeats / actionPreview）、validateHubMove、runMulligans。
 import { investigatorRule } from '../cards/card-rules.js'
 import { allowsCard, cardPoolContext } from '../deck/card-pool.js'
+import { campaignInvestigatorRecords, investigatorIdentity } from '../deck/investigator-identity.js'
 import { locationEntryNotice } from './location-facts.js'
 // P6（食梦者调查员）：托尼·摩尔根的「只能用于交战/攻击带赏金敌人的额外行动」需要读赏金计数。
 import { cardCounterOf } from './card-counters.js'
 // P5 批次 3：开局先手可能从章对门（partGate）起步，需要按双线条件过滤选项。
 import { flowCondition } from '../campaign/campaign-flow.js'
+import { takeStartingAdjustments } from '../campaign/starting-adjustments.js'
 import { mulliganCandidates } from './tarot-slot.js'
 import { actionEntityById, entityActionDescriptors } from './parley.js'
+import { attachmentIgnoresOpportunityAttack } from './attachment-rules.js'
+import { teamCanActivate } from './team-abilities.js'
+import { firstActionExemptsOpportunityAttack } from './action-history.js'
 
 export function createTableDecisions(deps) {
   const {
@@ -123,22 +128,17 @@ export function createTableDecisions(deps) {
   function hubInvestigatorChoices(state, seat) {
     // P5 批次 2：跨线重复选人校验必须同时看两条线的记录（另一条线在 parts 快照里），
     // 同一名调查员不能同时出现在 A/B 两线。
-    const campaign = state.campaign
-    const records = [...Object.values(campaign?.investigators || {}), ...(campaign?.retired || [])]
-    for (const snapshot of Object.values(campaign?.parts || {})) {
-      if (!snapshot || typeof snapshot !== 'object') continue
-      records.push(...Object.values(snapshot.investigators || {}), ...(snapshot.retired || []))
-    }
-    const unavailable = new Set(records
-      .filter(record => record.seat !== seat || record.status !== 'active').map(record => record.code))
+    const identity = code => investigatorIdentity(code, ALL_INVESTIGATORS)
+    const unavailable = new Set(campaignInvestigatorRecords(state.campaign)
+      .filter(record => record.seat !== seat || record.status !== 'active').map(record => identity(record.code)))
     // Teammates preparing at the same time reserve a pick before saving a deck.
     for (const inv of state.investigators) {
-      if (inv.seat !== seat && state.hubSeatSelected?.[inv.seat]) unavailable.add(inv.code)
+      if (inv.seat !== seat && state.hubSeatSelected?.[inv.seat]) unavailable.add(identity(inv.code))
     }
     const context = cardPoolContext(state)
     // P10：真人候选含 SELECTABLE（第五循环食梦者 5 人在大厅可选）；AI 自动选人仍走
     // PLAYABLE_INVESTIGATORS（pickAiInvestigator 的默认池），避免既有种子对局选人漂移。
-    return SELECTABLE_INVESTIGATORS.filter(code => !unavailable.has(code) && allowsCard(code, context))
+    return SELECTABLE_INVESTIGATORS.filter(code => !unavailable.has(identity(code)) && allowsCard(code, context))
   }
 
   function initialHubPreparation(state) {
@@ -146,7 +146,8 @@ export function createTableDecisions(deps) {
   }
 
   function hubStartingDeckReady(record) {
-    return !!record?.deck?.length && record.startingDeckReady !== false && (!record.draftMode || draftDeckStatus(record).ready)
+    return !!record?.deck?.length && record.startingDeckReady !== false && !record.startingDeckConfirmationPending
+      && (!record.draftMode || draftDeckStatus(record).ready)
   }
 
   function validateHubMove(state, seat, move) {
@@ -164,7 +165,8 @@ export function createTableDecisions(deps) {
       // 里能选的卡（例如当前战役内容包之外的已开放循环卡）误报成
       // 「未获运行时许可 / 不在 playerPool 白名单内」，玩家保存自定义牌组被假阳性挡住。
       const built = buildDeckFromList(ALL_INVESTIGATORS[state.investigators[seat].code], move.codes,
-        { seat, seed: 1, playerPool: availablePlayerPool(state), basicWeaknessPool: basicWeaknessPool(state) })
+        { seat, seed: 1, deferBasicWeakness: !state._legacyStartingDeckRules,
+          playerPool: availablePlayerPool(state), basicWeaknessPool: basicWeaknessPool(state) })
       return built.errors?.length ? `自定义卡组无效：${built.errors.join('；')}` : null
     }
     return hubLegalMoves(state, seat).some(legal => Object.entries(legal)
@@ -185,8 +187,8 @@ export function createTableDecisions(deps) {
       const pick = moves.find(move => move.action === 'hubDraftRefill') || moves.find(move => move.action === 'hubDraftPick') || moves.find(move => move.action === 'hubDraftBuy')
       if (pick) return pick
     }
-    const priority = state.hubSeatSelected?.[seat] ? ['hubAutoDeck', 'hubAutoUpgrade', 'hubDoneSeat', 'hubSelectInvestigator']
-      : ['hubSelectInvestigator', 'hubAutoDeck', 'hubAutoUpgrade', 'hubDoneSeat']
+    const priority = state.hubSeatSelected?.[seat] ? ['hubConfirmDeck', 'hubAutoDeck', 'hubAutoUpgrade', 'hubDoneSeat', 'hubSelectInvestigator']
+      : ['hubConfirmDeck', 'hubSelectInvestigator', 'hubAutoDeck', 'hubAutoUpgrade', 'hubDoneSeat']
     for (const action of priority) {
       if (action === 'hubAutoUpgrade' && state.hubUpgradedSeats?.[seat]) continue
       const move = moves.find(item => item.action === action)
@@ -257,7 +259,7 @@ export function createTableDecisions(deps) {
     if (!card && Number.isInteger(move.ownerSeat)) {
       const owner = state.investigators[move.ownerSeat]
       const candidate = owner && controlledAbilityCard(owner, move.assetId)
-      if (candidate && registeredEntry(candidate.code)?.teamActivatable === true && !owner.defeated && !owner.resigned && owner.location === inv.location) {
+      if (teamCanActivate(state, inv, owner, candidate)) {
         card = candidate
       }
     }
@@ -346,7 +348,10 @@ export function createTableDecisions(deps) {
     if (!inv || state.pendingChoice || inHub(state)) return { actions: 0 }
     const ability = abilityOfMove(state, inv, move)
     const kind = actionKind(state, inv, move)
-    const provoking = actionCost(state, inv, move, false) > 0 && !['fight', 'evade', 'resign', 'parley', 'parleyCultist', 'parleyLita'].includes(kind)
+    const provoking = actionCost(state, inv, move, false) > 0
+      && !firstActionExemptsOpportunityAttack(state, inv, kind, registeredEntry)
+      && !attachmentIgnoresOpportunityAttack(state, inv, move)
+      && !['fight', 'evade', 'resign', 'parley', 'parleyCultist', 'parleyLita'].includes(kind)
     const attacks = provoking ? enemiesEngagedWith(state, inv).filter(e => !e.exhausted && !(inv.onTheLam && !e.elite)
       && enemyCanOpportunityAttack(state, e)) : []
     const enemy = state.enemies.find(e => e.id === move.enemyId)
@@ -368,17 +373,23 @@ export function createTableDecisions(deps) {
   }
 
   function consumeStartingAdjustments(state, inv, events = null) {
-    const adjustment = state.campaign.startingAdjustments?.[inv.seat]
+    const previous = state.campaign.startingAdjustments?.[inv.seat]
+    const scheduled = takeStartingAdjustments(state, inv)
+    const adjustment = previous && scheduled ? {
+      resources: (previous.resources || 0) + scheduled.resources,
+      clues: (previous.clues || 0) + scheduled.clues,
+    } : previous || scheduled
+    const reason = scheduled ? '战役结转' : '幕间结算'
     if (!adjustment) return null
     if (adjustment.resources) {
       inv.resources = Math.max(0, inv.resources + adjustment.resources)
-      if (events !== null) info(state, events, `${inv.name} 因幕间结算以 ${inv.resources} 点资源开始本关（${adjustment.resources}）。`)
+      if (events !== null) info(state, events, `${inv.name} 因${reason}以 ${inv.resources} 点资源开始本关（${adjustment.resources}）。`)
     }
     if (adjustment.clues) {
       inv.clues = Math.max(0, inv.clues + adjustment.clues)
-      if (events !== null) info(state, events, `${inv.name} 因幕间结算额外获得 ${adjustment.clues} 个线索。`)
+      if (events !== null) info(state, events, `${inv.name} 因${reason}额外获得 ${adjustment.clues} 个线索。`)
     }
-    delete state.campaign.startingAdjustments[inv.seat]
+    if (previous) delete state.campaign.startingAdjustments[inv.seat]
     return adjustment
   }
 

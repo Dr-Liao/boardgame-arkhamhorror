@@ -14,8 +14,12 @@ const INVENTORY = path.join(GAME, 'audit', 'local-images.json')
 const REGISTRY = path.join(GAME, 'presentation', 'generated-localized-arts.json')
 const SAFE_NAME = /^[0-9A-Za-z_-]+\.avif$/
 
-export function installTranslatedImages() {
-  const names = readdirSync(STAGED).filter(name => SAFE_NAME.test(name)).sort()
+export function installTranslatedImages({ arts } = {}) {
+  const available = readdirSync(STAGED).filter(name => SAFE_NAME.test(name)).sort()
+  if (arts && (!Array.isArray(arts) || arts.some(art => typeof art !== 'string' || !/^cards\/[0-9A-Za-z_-]+\.avif$/.test(art)))) throw new Error('卡面清单格式无效')
+  const selected = arts && new Set(arts.map(art => path.basename(art)))
+  const names = selected ? available.filter(name => selected.has(name)) : available
+  if (selected && names.length !== selected.size) throw new Error('卡面清单中有尚未暂存的中文卡图')
   if (!names.length) throw new Error('没有可迁入的中文卡图')
   mkdirSync(LOCAL_CARDS, { recursive: true })
 

@@ -19,7 +19,7 @@ import { applyCampaignEffect } from '../campaign/campaign-effects.js'
 import { initializeChaosBag } from '../engine/chaos-bag.js'
 import { enterLaneRuntime } from '../engine/lane-runtime.js'
 import {
-  applyMove, decisionSeat, describeParts, executeCommand, legalMoves, seatLocalMove, validateMove,
+  applyMove, decisionSeat, describeParts, executeCommand, legalMoves, seatLocalMove, syncRuntimeCardTable, validateMove,
 } from '../engine/engine.js'
 import { resolveTransaction, requestChoice, choiceMoves, choiceError, choiceSeats } from '../engine/resolution.js'
 import { viewState } from './observation.js'
@@ -73,6 +73,7 @@ function startSharedInterlude(state, pair) {
   coordinator.campaign.flow = { nodeId: '', visits: {}, history: clone(parallel.sharedHistory || []) }
   enterCampaignNode(coordinator.campaign, manifest, manifest.parallelInterludes[pair])
   coordinator.sharedPair = pair
+  syncRuntimeCardTable(coordinator)
   parallel.interlude = { pair, state: coordinator }
   resolveTransaction(coordinator, coordinator.campaign.leadSeat ?? 0, { action: 'sharedInterlude' }, executeSharedInterlude)
 }
@@ -595,6 +596,7 @@ export function launchParallelLanes(state, events = []) {
     laneState.phase = 'investigation'
     campaign.phase = 'scenario'
     resolveTransaction(laneState, 0, { action: 'setup' }, executeCommand, { initial: true })
+    syncRuntimeCardTable(laneState)
     // 事务重建 state 时会丢掉 `legalMoves` 派生缓存（resolution.js#dynamicState 的 omitted 名单），
     // 建局路径在 setup.js#createGameState 里补算一次；并行 lane 也必须同口径补算。
     // 否则第一处待决选择若正好问本线真人（没有 AI 先提交动作刷新缓存），观察投影会按缓存给
@@ -613,6 +615,7 @@ export function launchParallelLanes(state, events = []) {
   state.parallel = parallel
   // 容器本身不再走 hub：大厅的局内视图由各线的 laneState 投影（parallelView）。
   state.uiState = 'inScenario'
+  syncRuntimeCardTable(state)
   state.phase = 'investigation'
   state.status = 'playing'
   state.legalMoves = []

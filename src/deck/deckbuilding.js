@@ -1,3 +1,5 @@
+import { TDC_INVESTIGATOR_CODES } from '../../content/packs/tdcInvestigators/manifest.js'
+import { TDC_PLAYER_BUILDABLE_CODES, TDC_PLAYER_RESEARCHED_CODES } from '../../content/packs/tdcPlayer/manifest.js'
 import { deckRules, matchesCardRule, matchesFixedDeckOption, deckCardLimit, validateDeckRules, optionExcluded } from './deck-rules.js'
 import { TSK_BONUS_XP } from '../../content/campaigns/theScarletKeys/investigator-data.js'
 // 诡镇奇谈：卡牌版（Arkham Horror LCG）· 牌组构筑引擎
@@ -19,6 +21,7 @@ import { PHASE5_MIGRATED_CODES } from '../cards/card-abilities.js'
 import { abilityShim, modifiersFor, registeredEntry } from '../engine/ability.js'
 import { validateMyriadLimit } from '../engine/myriad.js'
 import { playedEffect } from '../engine/lifecycle.js'
+import { brandedSpellOptions } from './branded-spell.js'
 import {
   CORE_INVESTIGATOR_CODES, SIMPLIFIED_PLAYER_CARD_CODES, PLAYER_CARD_CODES, CORE_UPGRADE_CODES,
   PLAYABLE_INVESTIGATOR_CODES,
@@ -77,11 +80,11 @@ const FHV_DECK_CARD_CODES = Object.freeze(FHV_PLAYER_BUILDABLE_CODES.filter(code
   const card = ALL_CARDS[code]
   return Boolean(card) && cardLimit(card) > 0
 }))
-export const EXPANDED_PLAYER_CARD_CODES = Object.freeze([...PLAYER_CARD_CODES, ...TFA_DECK_CARD_CODES, ...TCU_DECK_CARD_CODES, ...TDE_DECK_CARD_CODES, ...TIC_PLAYER_BUILDABLE_CODES, ...EOTE_DECK_CARD_CODES, ...TSK_DECK_CARD_CODES, ...FHV_DECK_CARD_CODES])
+export const EXPANDED_PLAYER_CARD_CODES = Object.freeze([...PLAYER_CARD_CODES, ...TFA_DECK_CARD_CODES, ...TCU_DECK_CARD_CODES, ...TDE_DECK_CARD_CODES, ...TIC_PLAYER_BUILDABLE_CODES, ...EOTE_DECK_CARD_CODES, ...TSK_DECK_CARD_CODES, ...FHV_DECK_CARD_CODES, ...TDC_PLAYER_BUILDABLE_CODES])
 // 关间升级候选/普通卡判定 = 全部已开放玩家卡 + 核心包仅升级卡（`CORE_UPGRADE_CODES`）。
 // 与 `web/deck-rules.js` 的 `cardPoolScope` 口径一致：跨循环可见性由开局设置
 // （全部 / 渐进式）在 `filterCardCodes(context)` 一层统一收窄，不再按调查员所属循环硬编码。
-export const UPGRADE_PLAYER_CARD_CODES = Object.freeze([...new Set([...EXPANDED_PLAYER_CARD_CODES, ...CORE_UPGRADE_CODES])])
+export const UPGRADE_PLAYER_CARD_CODES = Object.freeze([...new Set([...EXPANDED_PLAYER_CARD_CODES, ...CORE_UPGRADE_CODES, ...TDC_PLAYER_RESEARCHED_CODES])])
 export const DRAFT_PLAYER_CARD_CODES = UPGRADE_PLAYER_CARD_CODES
 const EXPANDED_PLAYER_CODE_SET = new Set(EXPANDED_PLAYER_CARD_CODES)
 // Phase 5 机械迁移的卡号：评分口径对这些卡改用能力层读点（其余卡保持旧口径）。
@@ -398,6 +401,10 @@ export function buildDeck(invDef, options = {}) {
     }
   }
 
+  if (options.deferBasicWeakness) {
+    const { errors } = validateDeckRules(invDef, deck, ALL_CARDS)
+    if (errors.length) throw new Error(errors.join('；'))
+  }
   const sig = signatureAndWeaknesses(invDef, rng, options)
   const full = [...deck, ...sig.signatureCards, ...sig.signatureWeaknesses, ...sig.basicWeaknesses]
   return {
@@ -409,6 +416,12 @@ export function buildDeck(invDef, options = {}) {
 }
 
 // 抽取专属签名卡 / 专属弱点 / 随机基础弱点（自动构筑与手动构筑共用）。
+function signaturePrinting(invDef, primary) {
+  if (!TDC_INVESTIGATOR_CODES.includes(invDef.code)) return primary
+  const alternatives = Object.keys(invDef.deckRequirements.card?.[primary] || {})
+  return alternatives.find(code => ALL_CARDS[code]?.pack === invDef.pack) || primary
+}
+
 export function signatureAndWeaknesses(invDef, rng, options = {}) {
   const signatureCards = []
   const signatureWeaknesses = []
@@ -435,7 +448,8 @@ export function signatureAndWeaknesses(invDef, rng, options = {}) {
     if (burdenDef.quantity != null && burdenCount > burdenDef.quantity) throw new Error('命运重担数量超过印刷份数')
     signatureWeaknesses.push(...Array(burdenCount).fill(burden))
   }
-  for (const code of deckRules(invDef).signatureCards) {
+  for (const primary of deckRules(invDef).signatureCards) {
+    const code = signaturePrinting(invDef, primary)
     if (eoteBuild && code === eoteBuild.burdenCode) continue
     const def = ALL_CARDS[code]
     if (!def || def.code !== code
@@ -451,7 +465,11 @@ export function signatureAndWeaknesses(invDef, rng, options = {}) {
   }
 
 
-  const basicPool = options.basicWeaknessPool === undefined ? BASIC_WEAKNESS_CODES : options.basicWeaknessPool
+  const basicWeaknesses = options.deferBasicWeakness ? [] : drawBasicWeaknesses(invDef, rng, options.basicWeaknessPool)
+  return { signatureCards, signatureWeaknesses, basicWeaknesses }
+}
+
+export function drawBasicWeaknesses(invDef, rng, basicPool = BASIC_WEAKNESS_CODES) {
   if (!Array.isArray(basicPool) || !basicPool.length) throw new Error('基础弱点依赖缺失：候选池不能为空')
   for (const code of basicPool) {
     const def = ALL_CARDS[code]
@@ -470,8 +488,7 @@ export function signatureAndWeaknesses(invDef, rng, options = {}) {
   const candidates = [...new Set(basicPool)]
   const requests = deckRules(invDef).random || []
   if (requests.some(rule => rule.target !== 'subtype' || rule.value !== 'basicweakness' || !Number.isSafeInteger(rule.count ?? 1) || (rule.count ?? 1) < 0)) throw new Error('未支持的随机构筑依赖')
-  const basicWeaknesses = requests.flatMap(rule => Array.from({ length: rule.count ?? 1 }, () => candidates[Math.floor(rng() * candidates.length)]))
-  return { signatureCards, signatureWeaknesses, basicWeaknesses }
+  return requests.flatMap(rule => Array.from({ length: rule.count ?? 1 }, () => candidates[Math.floor(rng() * candidates.length)]))
 }
 
 // ---------------------------------------------------------------------------
@@ -501,6 +518,10 @@ export function buildDeckFromList(invDef, cardCodes, options = {}) {
     seen.set(code, (seen.get(code) || 0) + 1)
   }
 
+  const startingExperience = [...seen.keys()].reduce((total, code) =>
+    total + (registeredEntry(code)?.campaignDeck?.startingExperience || 0), 0)
+  budget += startingExperience
+
   let spentXp = 0
   for (const [code, n] of seen) {
     if (!Object.hasOwn(ALL_CARDS, code)) { errors.push('未知卡牌：' + code); continue }
@@ -517,6 +538,9 @@ export function buildDeckFromList(invDef, cardCodes, options = {}) {
     spentXp += n * (card.xp ?? 0) * (card.exceptional ? 2 : 1)
   }
   errors.push(...validateDeckRules(invDef, codes, ALL_CARDS).errors)
+  if (codes.some(code => registeredEntry(code)?.campaignDeck?.brandSpellOnPurchase) && !brandedSpellOptions(codes).length) {
+    errors.push('牌组必须有一张可烙印的单张非签名法术支援')
+  }
   // P5：陈丽丽的演武由 options.disciplines 选择并作为专属依赖自动加入，不进入 30 张玩家卡清单。
   // P7（食梦者 M2）：「多重」同名至多 3 张，走 P3 原语 deck.myriadLimit。
   // 浏览器侧 validateDeckRules 的同一口径也拦，这里保证 Node 侧（存档/导入/服务端）不可绕过。
@@ -543,7 +567,8 @@ export function buildDeckFromList(invDef, cardCodes, options = {}) {
   }
   if (errors.length) return emptyDeck(errors)
   const full = [...codes, ...sig.signatureCards, ...sig.signatureWeaknesses, ...sig.basicWeaknesses]
-  return { deck: shuffle(full, rng), playerCards: codes, ...sig, errors }
+  return { deck: shuffle(full, rng), playerCards: codes, ...sig, errors,
+    ...(startingExperience ? { startingExperience, startingExperienceSpent: spentXp } : {}) }
 }
 
 // 固定的 Core 58 张简化模式玩家卡；缺少定义或效果时明确报错，不静默缩小。
@@ -563,7 +588,7 @@ export function deckBuilderData() {
     validateInvestigator(inv)
     signatureAndWeaknesses(inv, () => 0)
     const req = { ...inv.deckRequirements, ...deckRules(inv) }
-    const sigs = req.signatureCards.map((c) => {
+    const sigs = req.signatureCards.map(primary => signaturePrinting(inv, primary)).map((c) => {
       const d = ALL_CARDS[c]
       return {
         code: c,
@@ -600,6 +625,8 @@ export function deckBuilderData() {
     pack: c.pack || null, campaignCode: c.campaignCode || null,
     cost: c.cost, xp: c.xp ?? 0, icons: c.icons || {}, slot: c.slot || null, slots: c.slots || [],
     traits: c.traits || [], traitsZh: c.traitsZh || [],
+    ...(c.restrictions?.trait?.length ? { restrictions: { trait: [...c.restrictions.trait] } } : {}),
+    ...(c.deckTags?.length ? { deckTags: [...c.deckTags] } : {}),
     textEn: c.text || '',
     text: c.textZh || c.text || '', flavor: c.flavorZh || c.flavor || '',
     subname: c.subnameZh || c.subname || '',
@@ -608,6 +635,9 @@ export function deckBuilderData() {
     // P7（食梦者 M2）：多重卡在构筑界面显示「同名 n/3」（见 web/hub.js 的 cardMeta）。
     myriad: c.myriad === true,
     ...(registeredEntry(c.code)?.deckConstruction ? { deckConstruction: registeredEntry(c.code).deckConstruction } : {}),
+    ...(registeredEntry(c.code)?.campaignDeck?.startingExperience
+      ? { startingExperience: registeredEntry(c.code).campaignDeck.startingExperience } : {}),
+    ...(!EXPANDED_PLAYER_CODE_SET.has(c.code) ? { upgradeOnly: true } : {}),
     doubleSided: !!c.doubleSided, subtype: c.subtype || null,
   }))
 

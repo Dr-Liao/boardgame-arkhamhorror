@@ -81,6 +81,8 @@
       "activateFirearmFight",
       "afterAlarmRaised",
       "agendaWouldAdvance",
+      "ammoSpent",
+      "assetAbilityActivated",
       "assetActionResolved",
       "assetCluesPlaced",
       "assetDamageAssigned",
@@ -89,8 +91,11 @@
       "assetExhausted",
       "assetHarmPlaced",
       "assetLeavesPlay",
+      "assetPlayed",
+      "assignedHarm",
       "attackFail",
       "beforeChaosTokenReveal",
+      "beforeCommitCards",
       "beforePlayAttempt",
       "beforePlayCost",
       "blessTokensWouldReturnToPool",
@@ -99,6 +104,7 @@
       "cardWouldBeDrawn",
       "cardsDrawn",
       "chaosRevealStepEnded",
+      "chaosTokenChanged",
       "chaosTokenResolved",
       "chaosTokenRevealed",
       "clueDiscovered",
@@ -112,7 +118,9 @@
       "discoverClue",
       "doomPlaced",
       "doomWouldBePlaced",
+      "encounterCardDiscardedFromPlay",
       "encounterCardWouldDraw",
+      "encounterCardsLookedAt",
       "encounterDrawn",
       "enemy.afterAttacks",
       "enemy.afterHunters",
@@ -136,8 +144,10 @@
       "eventPlayed",
       "floodChanged",
       "handCardDiscarded",
+      "handEmptied",
       "harmAssigned",
       "harmDealt",
+      "harmDealtToInvestigator",
       "haunted",
       "horrorHealed",
       "horrorPlaced",
@@ -145,6 +155,7 @@
       "investigateSuccess",
       "investigation.afterAction",
       "investigationPhaseEnds",
+      "investigationPhaseStarting",
       "investigationPhaseStarts",
       "locationPlaced",
       "locationRevealed",
@@ -155,6 +166,8 @@
       "mythosEnd",
       "negativeTokenRevealed",
       "opportunityAttack",
+      "parleySuccess",
+      "performedAction",
       "phaseBegins",
       "promiseBroken",
       "revelationTest",
@@ -338,6 +351,7 @@
         "beneath",
         "commit",
         "store",
+        "swap",
         "take",
         "withdraw"
       ],
@@ -426,6 +440,7 @@
         "seal",
         "seals",
         "supply",
+        "tdc",
         "tekeli",
         "tsk",
         "vehicle"
@@ -458,11 +473,20 @@
         "extendRoad",
         "initializeRoad",
         "locations",
+        "nearest",
         "neighbors",
         "paths",
         "place",
+        "ports",
         "position",
-        "relocate"
+        "relocate",
+        "rotatePorts"
+      ],
+      "progress": [
+        "change",
+        "claim",
+        "forSeat",
+        "settle"
       ],
       "rail": [
         "advance",
@@ -511,6 +535,9 @@
         "camp",
         "of"
       ],
+      "startingAdjustments": [
+        "defer"
+      ],
       "tekeli": [
         "draw",
         "initialize",
@@ -555,6 +582,7 @@
         "endAirTurn",
         "level",
         "lock",
+        "nearestTargets",
         "set",
         "setRevealPolicy"
       ]

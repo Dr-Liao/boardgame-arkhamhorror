@@ -16,7 +16,7 @@ export default {
     const x = Math.max(0, (location?.shroud || 0) + (location?.shroudMod || 0) + (state.fogMod || 0))
     const isItem = candidate => ALL_CARDS[candidate]?.traits?.includes('Item')
     const assets = inv.assets.filter(asset => isItem(asset.code)
-      && !asset.cannotLeavePlay && !ALL_CARDS[asset.code]?.permanent)
+      && api.canDiscardAsset(inv.seat, asset.id))
     const handItems = () => inv.hand.map((cardCode, index) => ({ cardCode, index }))
       .filter(entry => isItem(entry.cardCode))
     const totalItemsCost = () => assets.reduce((sum, asset) => sum + (ALL_CARDS[asset.code]?.cost || 0), 0)
@@ -54,7 +54,7 @@ export default {
         const asset = assets.find(item => item.id === assetId)
         if (asset) {
           assets.splice(assets.indexOf(asset), 1)
-          api.discardAsset(inv.seat, asset.id)
+          if (!api.discardAsset(inv.seat, asset.id)) continue
         }
       }
       remaining -= picked.cost

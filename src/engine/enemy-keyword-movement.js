@@ -1,8 +1,27 @@
 import { enemyCanEnterLocation, enemyHasLocationKeyword } from './enemy-entry.js'
 import { shortestPaths } from './map-graph.js'
+import { canChangeFloodLevel, floodLevel } from './flood.js'
+import { enemyIsPart } from './enemy-parts.js'
 
 const active = investigator => !investigator.defeated && !investigator.resigned
-const editableKeywords = ['alert', 'aloof', 'elusive', 'retaliate']
+const editableKeywords = ['alert', 'aloof', 'elusive', 'retaliate', 'relentless']
+const phaseAttacks = new WeakMap()
+
+export function trackEnemyPhaseAttacks(state, resolve) {
+  const previous = phaseAttacks.get(state)
+  const attempted = new Set()
+  phaseAttacks.set(state, attempted)
+  try {
+    return resolve(attempted)
+  } finally {
+    if (previous) phaseAttacks.set(state, previous)
+    else phaseAttacks.delete(state)
+  }
+}
+
+export function recordEnemyPhaseAttack(state, enemy) {
+  if (state.phase === 'enemy') phaseAttacks.get(state)?.add(enemy.id)
+}
 
 export function setEnemyKeywords(state, enemy, keywords, { enabled, throughRound = state.round } = {}) {
   if (!Array.isArray(keywords) || !keywords.length || new Set(keywords).size !== keywords.length
@@ -40,14 +59,20 @@ export function enemyHasAttackKeyword(state, enemy, keyword, printed, entryOf) {
 
 export function normalizePatrolTarget(spec) {
   if (!spec || typeof spec !== 'object' || Array.isArray(spec)) throw new TypeError('巡逻目标需要对象')
-  const fields = { named: ['locationId'], trait: ['trait', 'minClues'], nearestEmpty: [], resident: ['assetCode'] }
+  const fields = { named: ['locationId'], trait: ['trait', 'minClues'], nearestEmpty: ['trait'], resident: ['assetCode'],
+    flood: ['below', 'canIncrease'], enemy: ['maxDoom'] }
   if (!Object.hasOwn(fields, spec.kind) || Object.keys(spec).some(key => !['kind', ...fields[spec.kind]].includes(key))) {
     throw new TypeError('未知巡逻目标')
   }
-  for (const key of fields[spec.kind].filter(key => key !== 'minClues')) {
+  const required = { named: ['locationId'], trait: ['trait'], resident: ['assetCode'] }
+  for (const key of required[spec.kind] || []) {
     if (typeof spec[key] !== 'string' || !spec[key].trim()) throw new TypeError(`巡逻目标缺少 ${key}`)
   }
   if (spec.minClues != null && (!Number.isSafeInteger(spec.minClues) || spec.minClues < 0)) throw new TypeError('巡逻线索门槛无效')
+  if (spec.trait != null && (typeof spec.trait !== 'string' || !spec.trait.trim())) throw new TypeError('巡逻特性无效')
+  if (spec.below != null && ![1, 2].includes(spec.below)) throw new TypeError('巡逻淹没门槛无效')
+  if (spec.canIncrease != null && typeof spec.canIncrease !== 'boolean') throw new TypeError('巡逻淹没条件无效')
+  if (spec.maxDoom != null && (!Number.isSafeInteger(spec.maxDoom) || spec.maxDoom < 0)) throw new TypeError('巡逻毁灭门槛无效')
   return { ...spec }
 }
 
@@ -69,10 +94,19 @@ function qualifyingTargets(state, enemy, spec) {
     return [...(state.storyAssets || []).filter(asset => codeOf(asset) === spec.assetCode).map(asset => asset.location),
       ...state.investigators.filter(inv => active(inv) && inv.assets?.some(asset => codeOf(asset) === spec.assetCode)).map(inv => inv.location)]
   }
+  if (spec.kind === 'flood') {
+    return state.locations.filter(location => floodLevel(state, location.id) < (spec.below ?? 2)
+      && (!spec.canIncrease || canChangeFloodLevel(state, location.id, 1))).map(location => location.id)
+  }
+  if (spec.kind === 'enemy') {
+    return state.enemies.filter(other => other !== enemy && !enemyIsPart(other)
+      && !other.defeated && other.location != null && (other.doom || 0) <= (spec.maxDoom ?? Infinity)).map(other => other.location)
+  }
+  const matchesTrait = location => !spec.trait || location.traits?.some(trait => trait.toLowerCase() === spec.trait.toLowerCase())
   return state.locations.filter(location => spec.kind === 'nearestEmpty'
     ? location.id !== enemy.location && !state.investigators.some(inv => active(inv) && inv.location === location.id)
-      && !state.enemies.some(other => other.location === location.id)
-    : location.traits?.some(trait => trait.toLowerCase() === spec.trait.toLowerCase()) && (location.clues || 0) >= (spec.minClues || 0))
+      && !state.enemies.some(other => other.location === location.id) && matchesTrait(location)
+    : matchesTrait(location) && (location.clues || 0) >= (spec.minClues || 0))
     .map(location => location.id)
 }
 
@@ -83,7 +117,8 @@ export function resolvePatrol(state, enemy, spec, deps) {
   const reachable = targetIds.map(id => ({ id, paths: shortestPaths(state.locations, enemy.location, id, to => canEnterLocation(state, enemy, to)) }))
     .filter(row => row.paths.length)
   const closest = Math.min(...reachable.map(row => row.paths[0].length))
-  const available = targetSpec.kind === 'nearestEmpty' ? reachable.filter(row => row.paths[0].length === closest) : reachable
+  const nearest = ['nearestEmpty', 'flood', 'enemy'].includes(targetSpec.kind)
+  const available = nearest ? reachable.filter(row => row.paths[0].length === closest) : reachable
   const selected = destinationChoice(state, enemy, available.map(row => row.id), deps, '选择巡逻的目标地点。')
   if (!selected || selected === enemy.location) return false
   const steps = [...new Set(available.find(row => row.id === selected).paths.map(path => path[1]))]

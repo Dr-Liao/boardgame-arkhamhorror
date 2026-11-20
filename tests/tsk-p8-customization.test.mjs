@@ -11,7 +11,7 @@
 //   ④ 真人座位各勾各的：座位 1 用自己 XP 只能写 bySeat[1]；座位 0 伪造跨座位提交被拒（P2-3 修）；
 //   ⑤ 至少 3 张定制卡（09021 猎人护甲 / 09060 狐朋狗友 / 09042 鸦翎羽毛笔，含多选项卡）真走一次勾选；
 //   ⑥ 选项容量边界：4 格选项勾满后不再为该选项生成候选，继续提交被拒；
-//   ⑦ P2-3：多格选项必须勾满才生效（读点矩阵）+ implemented:false 的近似选项不可购买。
+//   ⑦ 多格选项必须勾满才生效，含勾满时记录名称的定制选项。
 //
 // 近似/夹具口径（逐条披露）：
 //   · approximation: 定制卡进入牌组走**真实自动构筑**（hubAutoDeck）——16 张定制卡是 0 级卡，
@@ -36,7 +36,7 @@ import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { actingSeats, applyMove, createGameState, legalMoves } from '../src/engine/engine.js'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import {
-  customizationLevel, customizationOptionCheckedCount, customizationOptionFullyChecked,
+  customizationChoiceValues, customizationLevel, customizationOptionCheckedCount, customizationOptionFullyChecked,
   customizationOptions, customizationsOfSeat,
 } from '../src/engine/tsk-customizable.js'
 import { mechanicView } from '../src/integration/mechanic-view.js'
@@ -59,8 +59,7 @@ const SAFE_CHOICES = ['done', 'skip', 'no', 'tell', 'continue', 'decline', 'canc
 // 真实自动构筑会选中定制卡的「调查员 + 开局种子」组合（见文件头 approximation 1）。
 const CASES = Object.freeze({
   hunterArmor: { investigator: '09001', seed: 3, code: '09021' },
-  // 负向用例：09041 的定制勾选格均 implemented:false（不可购买）。
-  empirical: { investigator: '06002', seed: 1, code: '09041' },
+  empirical: { investigator: '02002', seed: 1, code: '09041' },
   quill: { investigator: '09015', seed: 1, code: '09042' },
 })
 
@@ -87,6 +86,13 @@ function act(state, seat, move) {
   return events
 }
 
+function configureBaseChoices(state, seat) {
+  for (const move of legalMoves(state, seat).filter(move => move.action === 'hubConfigureCustomization' && !move.disabled)) {
+    const choices = entryOf(state, move.code, seat).choices
+    act(state, seat, { ...move, values: choices.catalog.slice(0, choices.base).map(item => item.value) })
+  }
+}
+
 const findMove = (state, seat, action, predicate = () => true) =>
   legalMoves(state, seat).find(move => move.action === action && predicate(move))
 const customizeMoves = (state, seat = 0) => legalMoves(state, seat).filter(move => move.action === 'hubCustomize')
@@ -94,7 +100,7 @@ const hubPanel = (state, seat = 0) => mechanicView(state, seat)?.tsk?.[HUB] || n
 const entryOf = (state, code, seat = 0) => hubPanel(state, seat)?.entries.find(entry => entry.code === code) || null
 
 /** 真实大厅流程推进到首章前的 scenarioSetup（选人 + 自动构筑），返回状态。 */
-function scenarioSetup({ seed, investigator, seats = 1 }) {
+function scenarioSetup({ seed, investigator, code, seats = 1 }) {
   const players = Array.from({ length: seats }, (_, seat) => ({ seat, role: 'human' }))
   const state = createGameState({ campaignId: CAMPAIGN_ID, campaignHub: true, seed, difficulty: 'standard' }, players)
   assert.equal(state.uiState, 'campaignHub')
@@ -110,6 +116,14 @@ function scenarioSetup({ seed, investigator, seats = 1 }) {
     .filter(move => move.action === 'hubSelectInvestigator').length} 个候选）`)
   act(state, 0, candidate)
   act(state, 0, findMove(state, 0, 'hubAutoDeck'))
+  if (code && !deckOf(state).includes(code)) {
+    const codes = deckOf(state).filter(cardCode => !ALL_CARDS[cardCode]?.signatureFor
+      && !['weakness', 'basicweakness'].includes(ALL_CARDS[cardCode]?.subtype))
+    const index = codes.findIndex(cardCode => ALL_CARDS[cardCode]?.klass === ALL_CARDS[code].klass)
+    assert.ok(index >= 0, `没有和 ${code} 同职业的牌组替换项`)
+    codes[index] = code
+    act(state, 0, { action: 'hubSetDeck', codes })
+  }
   return state
 }
 
@@ -118,6 +132,9 @@ function driveToInterlude(state) {
   assert.equal(state.uiState, 'scenarioSetup')
   if (!state.hubReady) {
     const seat = actingSeats(state)[0]
+    configureBaseChoices(state, seat)
+    const confirm = findMove(state, seat, 'hubConfirmDeck')
+    if (confirm) act(state, seat, confirm)
     const done = findMove(state, seat, 'hubDoneSeat')
     assert.ok(done, `准备阶段应可确认准备（座位 ${seat}）：${legalMoves(state, seat).map(move => move.action).join(',')}`)
     act(state, seat, done)
@@ -176,7 +193,18 @@ test('P8 TSK 定制卡：首章前构筑期投影显示 0 勾选，0 XP 不产�
   // 投影只给 observer 本人：别的座位没有牌组 ⇒ 没有面板。
   assert.equal(mechanicView(state, 1)?.tsk?.[HUB] ?? null, null)
   // 初始构筑期仍然可确认准备/开始关卡（面板不挡主路径）。
-  assert.ok(legalMoves(state, 0).some(move => move.action === 'hubDoneSeat'))
+  assert.ok(legalMoves(state, 0).some(move => ['hubConfirmDeck', 'hubDoneSeat'].includes(move.action)))
+
+  assert.deepEqual(entry.choices.catalog, [])
+  assert.equal(findMove(state, 0, 'hubConfigureCustomization', move => move.code === entry.code).disabled, true)
+  const confirm = findMove(state, 0, 'hubConfirmDeck')
+  if (confirm) act(state, 0, confirm)
+  assert.ok(findMove(state, 0, 'hubDoneSeat'))
+
+  state.campaign.investigators[0].deck.push('01031', '01031', '01059', '01060')
+  assert.deepEqual(entryOf(state, entry.code).choices.catalog.map(choice => choice.value),
+    ['Old Book of Lore', 'Shrivelling'])
+  assert.ok(!findMove(state, 0, 'hubConfigureCustomization', move => move.code === entry.code).disabled)
 })
 
 // ---------------------------------------------------------------------------
@@ -251,7 +279,7 @@ test('P8 TSK 定制卡：幕间提交一格写入 bySeat、扣 1 XP、等级与�
 // ---------------------------------------------------------------------------
 // 3. 三张定制卡各走一次真实勾选（含多选项卡）＋容量边界
 // ---------------------------------------------------------------------------
-test('P8 TSK 定制卡：至少 3 张定制卡真实勾选，4 格选项勾满后不再给候选', () => {
+test('P8 TSK 定制卡：至少 3 张定制卡真实勾选，多格选项勾满后不再给候选', () => {
   const covered = []
   // 09021（猎人护甲）：一次勾选。
   {
@@ -274,16 +302,15 @@ test('P8 TSK 定制卡：至少 3 张定制卡真实勾选，4 格选项勾满�
     assert.deepEqual(state.campaign.tsk.customizations.bySeat[0]['09060'], [0])
     covered.push({ code: '09060', checked: [0] })
   }
-  // 09042（鸦翎羽毛笔）：4 格选项勾满 → 容量边界。
+  // 09042（鸦翎羽毛笔）：交织墨水勾满后不再提供候选。
   {
     const state = driveToInterlude(scenarioSetup(CASES.quill))
     const options = customizationOptions('09042')
-    const capacityIndex = options.findIndex(option => option.checks === 4)
-    assert.ok(capacityIndex >= 0, '09042 必须有 4 格选项（Supernatural Record）')
-    assert.equal(options[capacityIndex].checks, 4)
-    awardXp(state, 6)
+    const capacityIndex = options.findIndex(option => option.name === 'Interwoven Ink')
+    const capacity = options[capacityIndex].checks
+    awardXp(state, capacity + 2)
     const submitted = []
-    for (let step = 0; step < 4; step += 1) {
+    for (let step = 0; step < capacity; step += 1) {
       const move = customizeMoves(state)
         .find(item => item.code === '09042' && item.optionIndex === capacityIndex)
       assert.ok(move, `第 ${step + 1} 格应仍有候选`)
@@ -291,10 +318,10 @@ test('P8 TSK 定制卡：至少 3 张定制卡真实勾选，4 格选项勾满�
       submitted.push(capacityIndex)
     }
     assert.deepEqual(state.campaign.tsk.customizations.bySeat[0]['09042'], submitted)
-    assert.equal(state.campaign.investigators[0].xp, 2, '6 XP 勾 4 格后剩 2')
+    assert.equal(state.campaign.investigators[0].xp, 2)
     const entry = entryOf(state, '09042')
-    assert.equal(entry.options[capacityIndex].checkedCount, 4)
-    assert.equal(entry.checked.length, 4)
+    assert.equal(entry.options[capacityIndex].checkedCount, capacity)
+    assert.equal(entry.checked.length, capacity)
     assert.equal(entry.level, 2)
     assert.ok(!customizeMoves(state).some(item => item.code === '09042' && item.optionIndex === capacityIndex),
       '勾满的选项不得再生成候选')
@@ -317,9 +344,11 @@ test('P8 TSK 定制卡：非房主没有候选且伪造提交被拒；XP 不足�
   while (!state.hubReady && guard < 12) {
     guard += 1
     const seat = actingSeats(state)[0]
+    configureBaseChoices(state, seat)
     const moves = legalMoves(state, seat)
     const move = moves.find(item => item.action === 'hubDoneSeat')
       || moves.find(item => item.action === 'hubAutoDeck')
+      || moves.find(item => item.action === 'hubConfirmDeck')
       || moves.find(item => item.action === 'hubSelectInvestigator')
     assert.ok(move, `座位 ${seat} 准备阶段缺少动作：${moves.map(item => item.action).join(',')}`)
     act(state, seat, move)
@@ -353,9 +382,11 @@ function prepareAllSeats(state) {
   while (!state.hubReady && guard < 12) {
     guard += 1
     const seat = actingSeats(state)[0]
+    configureBaseChoices(state, seat)
     const moves = legalMoves(state, seat)
     const move = moves.find(item => item.action === 'hubDoneSeat')
       || moves.find(item => item.action === 'hubAutoDeck')
+      || moves.find(item => item.action === 'hubConfirmDeck')
       || moves.find(item => item.action === 'hubSelectInvestigator')
     assert.ok(move, `座位 ${seat} 准备阶段缺少动作：${moves.map(item => item.action).join(',')}`)
     act(state, seat, move)
@@ -478,21 +509,40 @@ test('P2-3 TSK 定制卡：费用修正与效果闸门在勾满前不生效（09
 // ---------------------------------------------------------------------------
 // 7. P2-3：implemented:false 的近似定制选项不可购买（09041 实证假设）
 // ---------------------------------------------------------------------------
-test('P2-3 TSK 定制卡：implemented:false 的勾选格展示文本但不生成候选、不扣 XP', () => {
+test('TSK 定制卡：实证假设的两项判据可以通过大厅购买', () => {
   const state = driveToInterlude(scenarioSetup(CASES.empirical))
   assert.ok(deckOf(state).includes('09041'), '真实自动构筑的牌组必须含 09041')
   awardXp(state, 2)
-  assert.deepEqual(customizeMoves(state).filter(move => move.code === '09041'), [],
-    'implemented:false 的选项不得生成可购买候选')
   const panel = hubPanel(state)
   const entry = panel.entries.find(item => item.code === '09041')
   assert.ok(entry, '面板仍应展示 09041 的定制项文本')
-  assert.ok(entry.options.length > 0)
-  assert.ok(entry.options.every(option => option.implemented === false), '全部选项标记为未实现')
-  assert.throws(() => applyMove(state, 0, { action: 'hubCustomize', code: '09041', optionIndex: 0, cost: 1, availableXp: 2 }),
-    /当前不可执行该局外操作|尚未实现/)
-  assert.equal(state.campaign.investigators[0].xp, 2, '被拒绝时不扣 XP')
-  assert.equal(customizationsOfSeat(state, 0)['09041'], undefined)
+  assert.equal(entry.options[0].nameZh, '前景惨淡')
+  assert.match(entry.options[0].textZh, /手牌耗尽/)
+  assert.equal(entry.options[0].implemented, true)
+  for (const optionIndex of [0, 2]) act(state, 0, customizeMoves(state).find(move => move.code === '09041' && move.optionIndex === optionIndex))
+  assert.equal(state.campaign.investigators[0].xp, 0)
+  assert.deepEqual(customizationsOfSeat(state, 0)['09041'], [0, 2])
 })
 
+test('TSK 定制卡：无尽墨瓶勾满时原子记录两个新名称，非法选择不会扣经验', () => {
+  const state = scenarioSetup(CASES.quill)
+  const config = findMove(state, 0, 'hubConfigureCustomization', move => move.code === '09042')
+  act(state, 0, { ...config, values: ['Encyclopedia'] })
+  driveToInterlude(state)
+  awardXp(state, 3)
+  const candidate = () => customizeMoves(state).find(move => move.code === '09042' && move.optionIndex === 3)
+  act(state, 0, candidate())
+  assert.deepEqual(customizationChoiceValues(state, 0, '09042'), ['Encyclopedia'])
+  assert.throws(() => applyMove(state, 0, plainMove({ ...candidate(), values: ['Encyclopedia', 'Shrivelling'] })), /重复/)
+  assert.equal(state.campaign.investigators[0].xp, 2)
+  act(state, 0, { ...candidate(), values: ['Shrivelling', 'Old Book of Lore'] })
+  assert.equal(state.campaign.investigators[0].xp, 1)
+  const restored = jsonRoundtrip(state)
+  const titles = ['Encyclopedia', 'Shrivelling', 'Old Book of Lore']
+  assert.deepEqual(customizationChoiceValues(restored, 0, '09042'), titles)
+  restored.campaign.investigators[0].deck = deckOf(restored).filter(code => !titles.includes(ALL_CARDS[code]?.name))
+  const choices = entryOf(restored, '09042').choices
+  assert.ok(choices.catalog.every(choice => !titles.includes(choice.value)))
+  assert.deepEqual(choices.selected.map(choice => choice.value), titles)
+})
 

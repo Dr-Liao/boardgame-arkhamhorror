@@ -82,7 +82,7 @@ function originalSnapshot(state, inv, def) {
 }
 
 // 把 inv 换成 code 这张调查员卡。可重复调用：已有快照时只刷新卡面读数，不覆盖原身份。
-export function applyInvestigatorForm(state, inv, { code, form = 'yithian', healingProhibited = false } = {}) {
+export function applyInvestigatorForm(state, inv, { code, form = 'yithian', healingProhibited = false, keepHarmCapacity = false } = {}) {
   if (!inv || !code) throw new Error('换身需要调查员实例与目标调查员卡号')
   const def = cardDefinition(code)
   if (!def) throw new Error(`换身目标不是调查员卡：${code}`)
@@ -100,12 +100,14 @@ export function applyInvestigatorForm(state, inv, { code, form = 'yithian', heal
   inv.combat = def.combat
   inv.agility = def.agility
   // 印刷生命/理智：当前伤害/恐惧标记保留（创伤随卡面转移），有效上限由 getMaxHealth/getMaxSanity 叠加。
-  inv.baseHealth = def.health
-  inv.maxHealth = def.health
-  inv.health = def.health
-  inv.baseSanity = def.sanity
-  inv.maxSanity = def.sanity
-  inv.sanity = def.sanity
+  if (!keepHarmCapacity) {
+    inv.baseHealth = def.health
+    inv.maxHealth = def.health
+    inv.health = def.health
+    inv.baseSanity = def.sanity
+    inv.maxSanity = def.sanity
+    inv.sanity = def.sanity
+  }
   if (form === 'yithian') inv.yithianBody = true
   return inv
 }
@@ -138,6 +140,14 @@ export function replaceLethalHarmWithForm(state, inv, context, spec) {
   inv.damage = 0
   inv.horror = 0
   context.replacedDefeat = true
+  return inv
+}
+
+export function adoptInvestigatorIdentity(state, inv, code) {
+  applyInvestigatorForm(state, inv, { code, form: 'successor' })
+  delete inv.form
+  delete inv.cardCode
+  delete inv.formOriginal
   return inv
 }
 

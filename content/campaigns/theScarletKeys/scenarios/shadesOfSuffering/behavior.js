@@ -22,6 +22,7 @@
 import { exposeWithReaction } from '../../concealed.js'
 import { concealedMiniCards, distributeConcealed, exposeMiniCard } from '../../../../../src/engine/tsk-concealed.js'
 import { isPendingChoice } from '../../../../../src/engine/resolution.js'
+import { canDiscardControlledAsset } from '../../../../../src/engine/asset-departure.js'
 import { randomValue } from '../../../../../src/engine/rules-state.js'
 import { assetRuleFor, enemyRuleFor, treacheryRuleFor } from '../../../../../src/cards/card-rules.js'
 import { campaignCardChange } from '../../../../../src/campaign/campaign.js'
@@ -458,7 +459,7 @@ export function resolveGeistParley(state, inv, enemy, api) {
     safeCall(api, 'directHorror', inv.seat, amount)
     paid = amount
   } else if (spec.cost === 'discardAsset') {
-    const assets = [...(inv.assets || [])]
+    const assets = (inv.assets || []).filter(asset => canDiscardControlledAsset(state, inv, asset))
     if (!assets.length) {
       api?.info?.('没有可弃掉的支援：无法支付谈判费用。')
       return false
@@ -470,7 +471,7 @@ export function resolveGeistParley(state, inv, enemy, api) {
     })
     const asset = assets.find(item => item.id === chosen) || assets[0]
     paid = Number(ALL_CARDS[codeOf(asset)]?.cost) || 0
-    safeCall(api, 'discardAsset', inv.seat, asset.id)
+    if (!api.discardAsset(inv.seat, asset.id)) return false
   }
   const difficulty = Math.max(0, (Number(spec.difficulty) || 6) - paid)
   api?.test?.(inv.seat, spec.skill || 'willpower', difficulty, result => {
@@ -869,7 +870,7 @@ function performEastWingFast(state, inv, api) {
 function performEastWingKitten(state, inv, api) {
   const data = chapterState(state)
   if (data.kittenUsed) return false
-  const assets = [...(inv.assets || [])]
+  const assets = (inv.assets || []).filter(asset => canDiscardControlledAsset(state, inv, asset))
   if (!assets.length) return false
   const picked = assets.length === 1 ? assets[0].id : choiceFor(api, {
     kind: 'asset', source: RAW_CODES.stationEastWing, seat: inv.seat,
@@ -878,7 +879,7 @@ function performEastWingKitten(state, inv, api) {
   })
   const asset = assets.find(item => item.id === picked) || assets[0]
   const gain = Math.floor((Number(ALL_CARDS[codeOf(asset)]?.cost) || 0) / 2)
-  safeCall(api, 'discardAsset', inv.seat, asset.id)
+  if (!api.discardAsset(inv.seat, asset.id)) return false
   if (gain > 0) safeCall(api, 'gainResources', inv.seat, gain)
   rememberFact(state, REMEMBERED.tradedForAKitten, api)
   data.kittenUsed = true
@@ -1546,7 +1547,7 @@ export const behavior = {
         action: 'scenarioAction', rule: 'loc:eastWingKitten', locationId,
         label: '[行动] 弃掉一个你控制的支援：获得半价资源并记住「换到了一只小猫」（团队每场游戏一次）',
         ...(data.kittenUsed ? { reason: '团队本场游戏已经用过' }
-          : !(inv.assets || []).length ? { reason: '没有可弃掉的支援' } : {}),
+          : !inv.assets.some(asset => canDiscardControlledAsset(state, inv, asset)) ? { reason: '没有可弃掉的支援' } : {}),
       })
     }
     if (locationId === STATION_WEST_WING) {
@@ -1604,6 +1605,8 @@ export const behavior = {
           action: 'scenarioAction', rule: `parley:${enemy.id}`, enemyId: enemy.id, locationId,
           label: `谈判：${cardNameOf(codeOf(enemy))}（${parleyCostLabel(spec)}；检定难度 ${spec.difficulty}）`,
           noOpportunityAttack: true,
+          ...(spec.cost === 'discardAsset' && !inv.assets.some(asset => canDiscardControlledAsset(state, inv, asset))
+            ? { reason: '没有可弃掉的支援' } : {}),
         })
       }
     }
@@ -1710,7 +1713,7 @@ export function resolvePainfulHistory(state, api = null) {
     (Number(ALL_CARDS[codeOf(right.asset)]?.cost) || 0) - (Number(ALL_CARDS[codeOf(left.asset)]?.cost) || 0))[0] || null
   const lead = alive.find(inv => inv.seat === state.campaign?.leadSeat) || alive[0] || null
   const options = []
-  if (highest) options.push({ id: 'ally', label: `弃掉「${cardNameOf(codeOf(highest.asset))}」并检定意志` })
+  if (highest && canDiscardControlledAsset(state, highest.owner, highest.asset)) options.push({ id: 'ally', label: `弃掉「${cardNameOf(codeOf(highest.asset))}」并检定意志` })
   options.push({ id: 'doom', label: '在朱三娘上放置 1 个毁灭' })
   const answer = options.length === 1 ? options[0].id : (choiceFor(api, {
     kind: 'story', source: RAW_CODES.agenda1, seat: lead?.seat ?? 0,

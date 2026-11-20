@@ -227,7 +227,7 @@ test('选人阶段：AI 上下文给出队伍职责缺口，未选座位不展�
   const state = createGameState({ campaignHub: true, campaignId: 'nightOfTheZealot', seed: 'hub-team-summary', playerInvestigator: '01003' },
     [{ seat: 0, role: 'human' }, { seat: 1, role: 'ai' }, { seat: 2, role: 'ai' }])
   for (const move of [{ action: 'hubGoSetup' }, { action: 'hubSelectInvestigator', code: '01003' },
-    { action: 'hubAutoDeck' }, { action: 'hubDoneSeat' }]) applyMove(state, 0, move)
+    { action: 'hubAutoDeck' }, { action: 'hubConfirmDeck' }, { action: 'hubDoneSeat' }]) applyMove(state, 0, move)
 
   const data = context(state)
   assert.equal(data.team[0].picked, true)
@@ -248,7 +248,7 @@ test('选人阶段：AI 上下文给出队伍职责缺口，未选座位不展�
 
   // 队友选完守卫后再看：摘要要计入守卫，缺口移到调查/线索。
   for (const move of [{ action: 'hubSelectInvestigator', code: '01001' },
-    { action: 'hubAutoDeck' }, { action: 'hubDoneSeat' }]) applyMove(state, 1, move)
+    { action: 'hubAutoDeck' }, { action: 'hubConfirmDeck' }, { action: 'hubDoneSeat' }]) applyMove(state, 1, move)
   const next = context(state)
   assert.deepEqual(next.teamSummary.pendingSeats, [2])
   assert.equal(next.teamSummary.classCounts.guardian, 1)
@@ -464,7 +464,7 @@ test('AI HTTP: model selects and builds, retries invalid deck, persists plans, m
   process.env.DSH_HOME=home;process.env.AI_API_KEY='local-stub';process.env.AI_MAX_RETRIES='2';process.env.AI_TIMEOUT_MS='3000'
   const deck=buildDeck(INVESTIGATORS['01002'],{seed:'authored-test'}).playerCards
   const queue=[{action:'hubSelectInvestigator',code:'01002'},{action:'hubSetDeck',codes:['01016']},
-    {action:'hubSetDeck',codes:deck},{action:'hubDoneSeat'}]
+    {action:'hubSetDeck',codes:deck},{action:'hubConfirmDeck'},{action:'hubDoneSeat'}]
   const prompts=[];let hall
   const model=http.createServer((req,res)=>{let body='';req.on('data',b=>body+=b);req.on('end',()=>{
     prompts.push(JSON.parse(body));const move=queue.shift()
@@ -476,14 +476,14 @@ test('AI HTTP: model selects and builds, retries invalid deck, persists plans, m
     const base=`http://127.0.0.1:${hall.address().port}`
     const post=async(url,body)=>{const r=await fetch(base+url,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});const d=await r.json();assert.equal(r.status,200,d.error);return d}
     let s=(await post('/api/start',{modId:arkham.id,settings:{playerCount:2,aiRoutineSpeechFrequency:100}})).session
-    for(const move of [{action:'hubGoSetup'},{action:'hubSelectInvestigator',code:'01001'},{action:'hubAutoDeck'},{action:'hubDoneSeat'}]) {
+    for(const move of [{action:'hubGoSetup'},{action:'hubSelectInvestigator',code:'01001'},{action:'hubAutoDeck'},{action:'hubConfirmDeck'}, {action:'hubDoneSeat'}]) {
       s=(await post('/api/move',{sessionId:s.sessionId,revision:s.state.revision,move})).session
     }
-    assert.equal(queue.length,0);assert.equal(prompts.length,4)
+    assert.equal(queue.length,0);assert.equal(prompts.length,5)
     const messages = s.events.filter(e => e.type === 'chat' && e.origin === 'action')
-    assert.equal(messages.length, 3, 'only three committed moves publish messages; rejected deck publishes none')
+    assert.equal(messages.length, 4, 'only four committed moves publish messages; rejected deck publishes none')
     assert.ok(messages.every(e => e.seat === 1 && e.to === null && e.text === '我来调查。' && e.replyRequested === false))
-    assert.equal(new Set(messages.map(e => e.revision)).size, 3)
+    assert.equal(new Set(messages.map(e => e.revision)).size, 4)
     assert.ok(prompts[2].messages.some(m=>m.content.includes('不合法')))
     assert.ok(prompts[1].messages.some(m=>m.content.includes('buildPool')))
     const saved=JSON.parse(fs.readFileSync(snapshotPath(s.sessionId),'utf8')).session
@@ -505,7 +505,7 @@ test('AI HTTP: model selects and builds, retries invalid deck, persists plans, m
     const entered=(await post('/api/move',{sessionId:loaded.sessionId,revision:loaded.state.revision,move:{action:'hubBeginScenario'}})).session
     assert.equal(entered.state.uiState,'inScenario')
     assert.equal(entered.state.pendingChoice.kind,'mulligan')
-    assert.equal(prompts.length,4,'等待玩家换牌，不额外调用队友模型')
+    assert.equal(prompts.length,5,'等待玩家换牌，不额外调用队友模型')
   } finally {
     if(hall)await close(hall);await close(model)
     for(const key of keys)old[key]===undefined?delete process.env[key]:process.env[key]=old[key]
@@ -516,7 +516,7 @@ test('AI HTTP: model selects and builds, retries invalid deck, persists plans, m
 test('AI fallback remains available without allowing model to silently delegate deckbuilding',async()=>{
   const state=arkham.createState({},[{seat:0},{seat:1}])
   applyMove(state,0,{action:'hubGoSetup'});applyMove(state,0,{action:'hubSelectInvestigator',code:'01001'})
-  applyMove(state,0,{action:'hubAutoDeck'});applyMove(state,0,{action:'hubDoneSeat'})
+  applyMove(state,0,{action:'hubAutoDeck'});applyMove(state,0,{action:'hubConfirmDeck'}); applyMove(state,0,{action:'hubDoneSeat'})
   const session={modId:arkham.id,sessionId:'no-key-ai-test',state,players:[{seat:0,role:'human'},{seat:1,role:'ai'}],events:[]}
   const agent=createAgent({modById:()=>arkham,getAi:()=>({}),getConfig:()=>({apiKey:''})})
   let result=await agent.agentPlay(session,1);assert.equal(result.fallback,true)

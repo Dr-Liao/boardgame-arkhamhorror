@@ -5,7 +5,7 @@
 // 以及「删除本人手牌卡面」与「删除公共区资产卡面」两种自愈路径。
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { createGameState, applyMove, validateMove, decisionSeat, legalMoves } from '../src/engine/engine.js'
+import { createGameState, applyMove, validateMove, decisionSeat, legalMoves, syncRuntimeCardTable } from '../src/engine/engine.js'
 import { viewState, staticTables } from '../src/integration/observation.js'
 
 const SEATS = 4
@@ -134,4 +134,19 @@ test('公共区自愈卡面走 cardsPatch（所有席位一致）；合并进公
   state.investigators[0].assets.shift()
   const clean = slimView(state, 0, statics)
   assert.equal(clean.cardsPatch?.[code], undefined)
+})
+
+test('战役关卡收窄后的卡表按座位下发，联机公共表与私有手牌无关', () => {
+  const state = settle(createGameState({ seed: 'view-static-scoped', campaignHub: false }, players(2)))
+  state.hubFlow = true
+  const code = '10070'
+  const before = staticTables({ ...state, _scenarioCardTable: true })
+  state.investigators[0].hand.push(code)
+  assert.equal(syncRuntimeCardTable(state), true)
+  assert.ok(state.cards[code])
+  assert.ok(viewState(state, 0, { local: true }).cards[code])
+  assert.equal(viewState(state, 1, { local: true }).cards[code], undefined)
+  const statics = staticTables(state)
+  assert.deepEqual(statics, before)
+  assertHydratesToFull(state, statics, '收窄后的战役关卡')
 })

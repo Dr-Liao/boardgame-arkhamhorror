@@ -47,7 +47,7 @@ function startWithCards(cardCodes, { investigator = '01001', seed = 'tcu-m2-4' }
   const state = createGameState({ campaignHub: true, seed }, [{ seat: 0, role: 'human' }])
   move(state, { action: 'hubGoSetup' })
   move(state, { action: 'hubSelectInvestigator', code: investigator })
-  move(state, { action: 'hubAutoDeck' })
+  for (const action of ['hubAutoDeck', 'hubConfirmDeck']) move(state, { action })
   for (const code of cardCodes) campaignCardChange(state.campaign, 0, code, 'add', 'tcu-m2-4-test')
   move(state, { action: 'hubDoneSeat' })
   move(state, { action: 'hubBeginScenario' })

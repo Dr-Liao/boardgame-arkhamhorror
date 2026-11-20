@@ -22,6 +22,7 @@ export const HAUNTED_CLAUSES = Object.freeze([
 ])
 
 import { ignoreLocationTrigger } from './location-effect-scope.js'
+import { canDiscardControlledAsset } from './asset-departure.js'
 
 const AMOUNT_CLAUSES = new Set([
   'damage', 'horror', 'directDamage', 'directHorror', 'damageAssets',
@@ -229,7 +230,7 @@ export function createHaunted(deps) {
       case 'discardChosen':
         return inv.hand.length > 0
       case 'discardAsset':
-        return inv.assets.length > 0
+        return inv.assets.some(asset => canDiscardControlledAsset(state, inv, asset))
       case 'placeClue':
         return (inv.clues || 0) >= (clause.amount || 1)
       case 'spawn':
@@ -304,15 +305,15 @@ export function createHaunted(deps) {
       case 'discardAsset': {
         // 2026-10-25 第四轮修复 05081：无支援时该条款不可结算（返回 false，由选择项过滤剔除，
         // 而不是进 requestChoice 空 options 抛错）。
-        if (!inv.assets.length) return false
-        const options = inv.assets.map(asset => ({ id: asset.id, cardCode: asset.code, label: api.cardName(asset.code) }))
+        const options = inv.assets.filter(asset => canDiscardControlledAsset(state, inv, asset))
+          .map(asset => ({ id: asset.id, cardCode: asset.code, label: api.cardName(asset.code) }))
+        if (!options.length) return false
         const chosen = options.length === 1 ? options[0].id : requestChoice(state, {
           kind: 'target', source: 'haunted', seat,
           prompt: `闹鬼：选择并弃掉你控制的 ${clause.amount} 个支援。`,
           options,
         })
-        api.discardAsset(seat, chosen)
-        return true
+        return Boolean(api.discardAsset(seat, chosen))
       }
       case 'placeClue': {
         const target = state.locations.find(location => location.id === loc.id)

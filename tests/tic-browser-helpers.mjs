@@ -106,6 +106,8 @@ export async function prepareSeatThroughUi(page, hub, { investigatorName, code =
   const deckBody = await (await deckResponse).json()
   expect(deckBody.ok, deckBody.error).toBe(true)
 
+  await hub.getByRole('button', { name: '卡组构筑', exact: true }).click()
+  await hub.getByRole('button', { name: '最终确认牌组', exact: true }).click()
   const ready = hub.getByRole('button', { name: '确认准备', exact: true }).first()
   await expect(ready).toBeEnabled({ timeout: 30_000 })
   const readyResponse = page.waitForResponse(response => response.url().endsWith('/api/move')

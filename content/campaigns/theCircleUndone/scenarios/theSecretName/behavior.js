@@ -2,7 +2,7 @@
 // locationRule/enemyRule/treacheryRule 里，behavior 只做分派与跨卡流程）。
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import {
-  actRuleFor, agendaRuleFor, locationRuleFor, threatActionFor, threatActionByRule,
+  actRuleFor, agendaRuleFor, locationRuleFor, threatActionByRule,
 } from '../../../../../src/cards/card-rules.js'
 import { recordMemento } from '../../../../../src/campaign/mementos.js'
 import { symbolConnections } from '../../card-data.js'
@@ -258,16 +258,6 @@ export const behavior = {
     }
     const location = here(state, inv)
     if (location) locationRuleFor(String(codeOf(location)))?.actions?.({ moves, state, inv, location })
-    // 威胁区「[action]：检定 X 弃掉本卡」。
-    for (const threat of inv.threat || []) {
-      const spec = threatActionFor(codeOf(threat))
-      if (!spec) continue
-      moves.push({
-        action: 'encounterAction', rule: spec.rule, threatId: threat.id,
-        actions: spec.actions ?? 1, label: spec.label || '处理威胁',
-        ...(spec.skills ? { skill: spec.skills[0] } : {}),
-      })
-    }
     return moves
   },
 

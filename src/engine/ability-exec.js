@@ -1,4 +1,5 @@
 import { availableResources } from './resource-bank.js'
+import { availablePlayResources } from './play-payment.js'
 // 能力执行（doAbility / openAbilityWindow / effectError）从 engine.js 拆出的模块
 // （Phase 6 · 6d-16）。
 //
@@ -14,6 +15,9 @@ import { NON_PLAYER_SCOPES } from './ability.js'
 import { actionEntityById, entityActionDescriptors, parleyTargetError, entityAbilityInRange } from './parley.js'
 import { afterSuppliesSubstituted, afterUsesSpent } from './uses.js'
 import { availableUseCost, payUseCost } from './use-transfer.js'
+import { teamCanActivate } from './team-abilities.js'
+import { withAbilityLocation } from './as-if-location.js'
+import { enumerateTargets } from './targets.js'
 
 export function createAbilityExecution(deps) {
   const {
@@ -101,7 +105,7 @@ function doAbility(state, seat, assetId, abilityIndex, targetId, optionIndex, ev
   if (!asset && Number.isInteger(ownerSeat)) {
     const owner = state.investigators[ownerSeat]
     const candidate = owner && controlledAbilityCard(owner, assetId)
-    if (candidate && registeredEntry(candidate.code)?.teamActivatable === true && !owner.defeated && !owner.resigned && owner.location === inv.location) {
+    if (teamCanActivate(state, inv, owner, candidate)) {
       asset = candidate
     }
   }
@@ -118,7 +122,7 @@ function doAbility(state, seat, assetId, abilityIndex, targetId, optionIndex, ev
     if (!descriptorUsable(state, inv, asset, descriptor, { windowId: state.timingWindow, mode: 'action' })) return
     executeDescriptor(state, { inv, source: asset, descriptor, context: { targetId, optionIndex },
       events, windowId: state.timingWindow, legacyAbilityLog: true })
-    if (descriptor.kind === 'action') reactionWindow(state, 'assetActionResolved', {
+    if (descriptor.kind === 'action' && !descriptor.fromHand) reactionWindow(state, 'assetActionResolved', {
       when: 'assetActionResolved', seat, assetId: asset.id, assetCode: asset.code,
       descriptorId: descriptor.id, location: inv.location,
     }, events, { allowNested: true })
@@ -153,7 +157,7 @@ function doAbility(state, seat, assetId, abilityIndex, targetId, optionIndex, ev
     syncClues(state)
   }
   if (cost.discardHand) {
-    if (discardableHandCards(inv, cost.discardHandIcon).length < cost.discardHand) return
+    if (discardableHandCards(inv, cost.discardHandIcon, cost.discardHandType).length < cost.discardHand) return
     discardChosenCards(state, inv, cost.discardHand, events, asset.code, cost.discardHandIcon)
   }
   if (cost.horror) applyHorror(state, inv, cost.horror, events)
@@ -296,7 +300,7 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
     for (const inv of aliveInvestigators(state)) {
       if (context?.cancelled) break
       const candidates = []
-      for (const { source, code, fromHandIndex, entry, effect, controlled, fromChannel } of descriptorSources(state, inv)) {
+      for (const { source, code, fromHandIndex, entry, effect, controlled, fromChannel } of descriptorSources(state, inv, { includeDiscard: opts.quickEventWindow === true })) {
         // 非玩家实体的反应在下面的专用块里统一询问一次；受控剧情支援按玩家卡来源询问。
         if (NON_PLAYER_SCOPES.includes(entry.scope) && !controlled) continue
         for (const descriptor of descriptorsInEntry(entry, windowId, 'reaction')) {
@@ -310,6 +314,8 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
           // 手牌/资产来源的判定保持不变。
           if (fromChannel && !descriptor.fromHand) continue
           if (descriptor.fromHand && !fromChannel && !(inv.hand || []).includes(code)) continue
+          if (descriptor.fromHand && context.when === 'cardDrawn' && context.handIndex != null && context.cardCode === code
+            && (inv.seat !== context.seat || fromHandIndex !== context.handIndex)) continue
           // 手牌来源（source 为 null）只允许显式 fromHand 描述子；资产/调查员能力不能从手里发动。
           if (!source && !descriptor.fromHand) continue
           if (!descriptorUsable(state, inv, source, descriptor, { windowId, context, fromChannel })) continue
@@ -320,6 +326,15 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
       // descriptorSources 枚举不到它；从窗口 context.asset 的 attachments 补一次能力源。
       const orphanHost = context?.asset
       if (orphanHost && context.seat != null && inv.seat === context.seat) {
+        if (windowId === 'assetLeavesPlay' && !inv.assets.includes(orphanHost)) {
+          const entry = registeredEntry(orphanHost.code)
+          for (const descriptor of descriptorsInEntry(entry, windowId, 'reaction')) {
+            if (descriptor.legacyReaction || descriptor.fromHand) continue
+            if (descriptorUsable(state, inv, orphanHost, descriptor, { windowId, context })) {
+              candidates.push({ source: orphanHost, code: orphanHost.code, descriptor })
+            }
+          }
+        }
         for (const attachment of orphanHost.attachments || []) {
           const attachedEntry = registeredEntry(attachment.code)
           if (!attachedEntry?.abilities.length) continue
@@ -558,8 +573,8 @@ function effectError(state, inv, effect) {
   if (effect.type === 'carcosaInvestigator' && effect.action === 'yorickPlayAsset'
     && (discardLocked(state, inv) || !inv.discard.some(code => {
       const def = cardDef(code)
-      return def?.type === 'asset' && !isWeaknessCard(def) && availableResources(inv) >= playCost(state, inv, def)
-        && assetReplacementPlans(inv, def).length > 0
+      return def?.type === 'asset' && !isWeaknessCard(def) && availablePlayResources(state, inv, def) >= playCost(state, inv, def)
+        && assetReplacementPlans(inv, def, state).length > 0
     }))) return '弃牌堆中没有可打出的支援'
   if (effect.type === 'carcosaInvestigator' && effect.action === 'sefinaDrawBeneath' && !inv.beneath?.length) return '赛菲娜下方没有事件'
   if (effect.type === 'targetedEffect' && effect.effect) {
@@ -594,5 +609,47 @@ function doFreeDescriptor(state, seat, code, index, targetId, events, sourceId =
   return false
 }
 
-  return { doAbility, doEntityAbility, doFreeDescriptor, openAbilityWindow, effectError }
+function repeatableAbility(state, context, { locationId, ignoreActionCost = false } = {}) {
+  if (context?.when !== 'assetAbilityActivated' || !state.locations.some(location => location.id === locationId && location.inPlay !== false)) return null
+  const inv = state.investigators[context.seat]
+  if (!inv || inv.defeated || inv.resigned) return null
+  const owner = state.investigators.find(other => other.assets.some(card => card.id === context.assetId))
+  const asset = owner?.assets.find(card => card.id === context.assetId)
+  const descriptor = registeredEntry(asset?.code)?.abilities.find(row => row.id === context.descriptorId
+    && ['action', 'free'].includes(row.kind) && !row.fromHand)
+  if (!descriptor || !lolaCanUseCard(inv, asset.code)) return null
+
+  const virtualInvestigator = { ...inv, location: locationId }
+  const virtualState = { ...state, investigators: state.investigators.map(other => other === inv ? virtualInvestigator : other) }
+  if (owner !== inv && !teamCanActivate(virtualState, virtualInvestigator, owner, asset)) return null
+  const options = { mode: 'action', windowId: state.timingWindow, ignoreActionCost }
+  if (!descriptorUsable(virtualState, virtualInvestigator, asset, descriptor, options)) return null
+  if (descriptor.effect && effectError(virtualState, virtualInvestigator, { ...descriptor.effect, assetId: asset.id })) return null
+  const targets = enumerateTargets(virtualState, virtualInvestigator, descriptor.target, { source: asset })
+  if (descriptor.target && !descriptor.target.optional && !targets.length) return null
+  return { inv, asset, descriptor, targets }
+}
+
+function canRepeatAssetAbility(state, context, options) {
+  return Boolean(repeatableAbility(state, context, options))
+}
+
+function repeatAssetAbility(state, context, options, events) {
+  const candidate = repeatableAbility(state, context, options)
+  if (!candidate) return false
+  const { inv, asset, descriptor, targets } = candidate
+  const targetId = targets.length === 1 ? targets[0].id : targets.length > 1 ? requestChoice(state, {
+    kind: 'target', source: asset.id, seat: inv.seat,
+    prompt: '重新选择要结算的能力目标。',
+    options: targets.map(({ id, label, entity }) => ({ id, label, cardCode: entity?.code })),
+  }) : null
+  return withAbilityLocation(state, inv, options.locationId, () => executeDescriptor(state, {
+    inv, source: asset, descriptor, events, windowId: state.timingWindow,
+    context: { targetId },
+    ignoreActionCost: options.ignoreActionCost === true, suppressAssetActivationWindow: true,
+  }))
+}
+
+  return { doAbility, doEntityAbility, doFreeDescriptor, openAbilityWindow, effectError,
+    canRepeatAssetAbility, repeatAssetAbility }
 }

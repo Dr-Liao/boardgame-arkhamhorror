@@ -949,7 +949,7 @@ export function enemyAttackResolved(state, enemy, inv, api = {}, attack = null) 
   void attack
   if (!enemy) return false
   // 10563 无彩幼虫：攻击后击败它。
-  if (codeOf(enemy) === COLORLESS_LARVA_CODE || flagIs(COLORLESS_LARVA_CODE, 'defeatAfterAttack')) {
+  if (flagIs(codeOf(enemy), 'defeatAfterAttack')) {
     if (!(state.enemies || []).includes(enemy)) return false
     const defeated = typeof api.defeatEnemy === 'function' ? api.defeatEnemy(enemy) : false
     if (!defeated) {

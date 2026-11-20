@@ -29,6 +29,7 @@ export function createTreacheryTokens(deps) {
     cardName,
     checkDefeated,
     chooseAmong,
+    discardChosenCards,
     discardRandomAsset,
     disengageEnemy,
     drawCards,
@@ -58,7 +59,7 @@ export function createTreacheryTokens(deps) {
     totalDoom,
   } = deps
 
-  function resolveTreachery(state, inv, t, events) {
+  function resolveTreachery(state, inv, t, events, scenarioDeckId) {
     if (t.hidden) {
       privateInfo(state, events, inv.seat, `🃏 你抽到隐私诡计「${t.name}」：${t.text || ''}`)
     } else {
@@ -67,7 +68,7 @@ export function createTreacheryTokens(deps) {
     const previousTreachery = state._treacheryResolving
     state._treacheryResolving = t.code
     // 2026-10-25 第五轮修复 05049：「正在结算显现效果」的统一读点（进程内作用域，不写 state）。
-    pushRevelation(t.code)
+    pushRevelation(t.code, scenarioDeckId, t.originalCode)
     try {
       return resolveTreacheryBody(state, inv, t, events)
     } finally {
@@ -119,7 +120,7 @@ export function createTreacheryTokens(deps) {
       if (entry?.encounterResolve) return entry.encounterResolve(state, inv, t, api, {
         location: state.locations.find(location => location.id === inv.location) || null,
       })
-      if (entry?.treacheryRule?.test) return resolveDeclarativeTreacheryTest(state, inv, t, api)
+      if (entry?.treacheryRule?.test) return resolveDeclarativeTreacheryTest(state, inv, t, api, null, { forcedPeril })
     }
     if (t.effect?.kind === 'campaignRule') return scenarioBehavior(state).resolveEncounter(state, inv, t, scenarioRuntime(state, events, { type: 'encounter', label: '诡计检定', code: t.originalCode || t.code }))
     if (t.rulesPending) throw new Error(`遭遇效果尚未迁移：${t.originalCode || t.code}`)
@@ -185,10 +186,16 @@ export function createTreacheryTokens(deps) {
     else if (fail.kind === 'takeHorror') { log(`${inv.name} 受到 ${fail.amount} 点恐惧。`); applyHorror(state, inv, fail.amount, events) }
     else if (fail.kind === 'damageByAmount') { const n = failedBy; log(`${inv.name} 受到 ${n} 点伤害。`); applyDamage(state, inv, n, events) }
     else if (fail.kind === 'horrorByAmount') { const n = failedBy; log(`${inv.name} 受到 ${n} 点恐惧。`); applyHorror(state, inv, n, events) }
-    else if (fail.kind === 'discardAsset') { discardRandomAsset(state, inv, events); log(`${inv.name} 弃掉了一件资产。`) }
+    else if (fail.kind === 'discardChosenByAmount') {
+      const count = Math.min(failedBy, fail.max)
+      if (count > 0) discardChosenCards(state, inv, count, events, options.source || 'discardChosenByAmount')
+    }
+    else if (fail.kind === 'discardAsset') { if (discardRandomAsset(state, inv, events)) log(`${inv.name} 弃掉了一件资产。`) }
     else if (fail.kind === 'discardAssetOrDamage') {
-      if (inv.assets.length) discardRandomAsset(state, inv, events)
-      else { log(`${inv.name} 没有资产可弃，受到 ${fail.damage} 点伤害。`); applyDamage(state, inv, fail.damage, events) }
+      if (!discardRandomAsset(state, inv, events)) {
+        log(`${inv.name} 没有资产可弃，受到 ${fail.damage} 点伤害。`)
+        applyDamage(state, inv, fail.damage, events)
+      }
     }
     else if (fail.kind === 'horrorAndDrawMadness') {
       applyHorror(state, inv, fail.horror, events)

@@ -23,7 +23,7 @@ export default {
         api.moveInvestigator(inv.seat, destination)
         const token = state.chaosBag[Math.floor(api.random() * state.chaosBag.length)]
         if (!CHAOS_SYMBOLS.includes(token)) return
-        const candidates = inv.assets.filter(card => api.cardTraits(card.code)
+        const candidates = inv.assets.filter(card => api.investigatorTools.canDiscardAsset(inv.seat, card) && api.cardTraits(card.code)
           .some(trait => ['item', 'ally'].includes(String(trait).toLowerCase())))
         if (!candidates.length) { api.damage(inv.seat, 1); return }
         const chosen = candidates.length === 1 ? candidates[0].id
@@ -31,7 +31,7 @@ export default {
             prompt: '选择弃置一件物品或盟友；若没有则受到 1 点伤害。',
             options: candidates.map(card => ({ id: card.id, label: api.cardName(card.code) })) })
         const target = candidates.find(card => card.id === chosen) || candidates[0]
-        api.discardAsset(inv.seat, target)
+        if (!api.discardAsset(inv.seat, target)) api.damage(inv.seat, 1)
       },
     },
   ],

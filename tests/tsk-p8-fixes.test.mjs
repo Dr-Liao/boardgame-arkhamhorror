@@ -61,6 +61,7 @@ function driveToMap (state, { maxSteps = 400 } = {}) {
       const seat = actingSeats(state)[0]
       const moves = legalMoves(state, seat)
       act(state, seat, moves.find(item => item.action === 'hubAutoDeck')
+        || moves.find(item => item.action === 'hubConfirmDeck')
         || moves.find(item => item.action === 'hubDoneSeat')
         || moves.find(item => item.action === 'hubSelectInvestigator')
         || moves.find(item => item.action === 'hubSetDeck'))
@@ -100,6 +101,7 @@ function startChapterFromMap (state, chapterId) {
       const seat = actingSeats(state)[0]
       const moves = legalMoves(state, seat)
       act(state, seat, moves.find(item => item.action === 'hubAutoDeck')
+        || moves.find(item => item.action === 'hubConfirmDeck')
         || moves.find(item => item.action === 'hubDoneSeat')
         || moves.find(item => item.action === 'hubSelectInvestigator')
         || moves.find(item => item.action === 'hubSetDeck'))
@@ -165,7 +167,7 @@ test('P8 TSK 修复：双面密钥基础号 09519 可解析，章节结算后存
     if (state.uiState === 'scenarioSetup' || state.uiState === 'interlude') {
       const seat = actingSeats(state)[0]
       const moves = legalMoves(state, seat)
-      act(state, seat, moves.find(item => item.action === 'hubAutoDeck') || moves.find(item => item.action === 'hubDoneSeat')
+      act(state, seat, moves.find(item => item.action === 'hubAutoDeck') || moves.find(item => item.action === 'hubConfirmDeck') || moves.find(item => item.action === 'hubDoneSeat')
         || moves.find(item => item.action === 'hubSelectInvestigator') || moves.find(item => item.action === 'hubSetDeck'))
       continue
     }
@@ -200,15 +202,16 @@ test('P8 TSK 修复：手动构筑 hubSetDeck 可保存（TSK 基础弱点 09124
       act(state, seat, moves.find(move => move.action === 'hubAutoDeck'))
       continue
     }
-    if (record?.startingDeckReady && moves.some(move => move.action === 'hubSetDeck')) {
-      // 用自动构筑产出的玩家卡重存一次：真实手动构筑入口（含基础弱点依赖校验）。
+    if (record?.startingDeckConfirmationPending && moves.some(move => move.action === 'hubSetDeck')) {
+      // 用自动构筑产出的玩家卡重存一次，再通过最终确认抽取基础弱点。
       const codes = record.deck.filter(code => getAvailability(code).deckbuilding === true)
       act(state, seat, { action: 'hubSetDeck', codes })
       const rebuilt = state.campaign.investigators[seat]
-      assert.ok(rebuilt.startingDeckReady)
-      assert.equal(rebuilt.deck.length, codes.length + 3, '30 张玩家卡 + 签名卡 + 基础弱点')
-      // 自动构筑的基础弱点来自 core 池；手动保存必须保留一张合法基础弱点（依赖校验通过）。
-      assert.ok(rebuilt.deck.some(code => cardDef(code)?.subtype === 'basicweakness'))
+      assert.ok(rebuilt.startingDeckConfirmationPending)
+      assert.equal(rebuilt.deck.length, codes.length + 2, '普通玩家卡、签名卡与专属弱点')
+      assert.ok(!rebuilt.deck.some(code => cardDef(code)?.subtype === 'basicweakness'))
+      act(state, seat, findMove(state, seat, 'hubConfirmDeck'))
+      assert.equal(state.campaign.investigators[seat].deck.filter(code => cardDef(code)?.subtype === 'basicweakness').length, 1)
       // 战役清单的 5 张 TSK 基础弱点必须被构筑规则接受（真实 basicWeaknessPool 来源）。
       const tskPack = contentRegistry.getPack('tskPlayer')
       assert.deepEqual(tskPack.basicWeaknessCodes, ['09124', '09125', '09126', '09127', '09128'])

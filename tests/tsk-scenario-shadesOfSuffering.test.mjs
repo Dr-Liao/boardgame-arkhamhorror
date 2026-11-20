@@ -182,8 +182,10 @@ function apiStub(state, overrides = {}) {
       return removed
     },
     discardAsset: (seat, assetId) => {
-      const inv = state.investigators[seat]
+      const inv = state.investigators[seat], asset = inv.assets.find(asset => asset.id === assetId)
+      if (!asset) return null
       inv.assets = inv.assets.filter(asset => asset.id !== assetId)
+      return asset.code
     },
     moveInvestigator: (seat, destination) => { state.investigators[seat].location = destination },
     loseActions: (seat, amount) => {

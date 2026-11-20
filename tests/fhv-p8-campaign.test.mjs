@@ -238,7 +238,7 @@ function driveCampaign (state, {
       if (state.uiState === 'scenarioSetup') {
         if (state.hubReady) { step(0, findMove(state, 0, 'hubBeginScenario')); continue }
         const seat = actingSeats(state)[0]
-        step(seat, findMove(state, seat, 'hubAutoDeck', 'hubDoneSeat', 'hubSelectInvestigator', 'hubSetDeck'))
+        step(seat, findMove(state, seat, 'hubAutoDeck', 'hubConfirmDeck', 'hubDoneSeat', 'hubSelectInvestigator', 'hubSetDeck'))
         continue
       }
       if (state.uiState === 'inScenario') {

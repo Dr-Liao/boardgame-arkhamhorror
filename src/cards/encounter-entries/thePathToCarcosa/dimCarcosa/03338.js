@@ -21,7 +21,8 @@ export default {
         ...inv.hand.map((code, index) => ({ id: `h${index}`, kind: 'hand', code,
           label: `${api.cardName(code)}（${ALL_CARDS[code]?.cost || 0}资源）`, cost: ALL_CARDS[code]?.cost || 0 })),
         ...inv.assets.map((asset, index) => ({ id: `a${index}`, kind: 'asset', code: asset.code, asset,
-          label: `${api.cardName(asset.code)}（${ALL_CARDS[asset.code]?.cost || 0}资源）`, cost: ALL_CARDS[asset.code]?.cost || 0 })),
+          label: `${api.cardName(asset.code)}（${ALL_CARDS[asset.code]?.cost || 0}资源）`, cost: ALL_CARDS[asset.code]?.cost || 0 }))
+          .filter(option => api.canDiscardAsset(inv.seat, option.asset.id)),
       ]
       if (!options.length) break
       const answer = options.length === 1 ? options[0].id : api.choose({
@@ -35,7 +36,7 @@ export default {
         const handIndex = inv.hand.indexOf(picked.code)
         if (handIndex >= 0) inv.hand.splice(handIndex, 1)
         inv.discard.push(picked.code)
-      } else api.discardAsset(inv.seat, picked.asset.id)
+      } else if (!api.discardAsset(inv.seat, picked.asset.id)) break
       total += picked.cost
       discarded += 1
     }

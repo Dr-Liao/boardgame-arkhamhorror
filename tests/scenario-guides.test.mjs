@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { contentRegistry } from '../content/registered.js'
-import { scenarioGuide, scenarioSetupText } from '../content/scenario-guides.js'
+import { scenarioGuide, scenarioSetupNote, scenarioSetupText } from '../content/scenario-guides.js'
 import { createGameState } from '../src/engine/engine.js'
 import { viewState } from '../src/integration/observation.js'
 import { readFileSync } from 'node:fs'
@@ -69,10 +69,9 @@ test('每关的设置面板都有布置文本和说明', () => {
   assert.ok(ids.length >= 30)
   for (const id of ids) {
     const scenario = contentRegistry.getScenarioData(id)
-    const guide = scenarioGuide(id)
     const setup = scenarioSetupText(scenario)
     assert.ok(setup.length > 20, `${id} 缺少设置文本`)
-    assert.ok(guide?.note && guide.note.length > 20, `${id} 缺少设置说明`)
+    assert.ok(scenarioSetupNote(scenario).length > 20, `${id} 缺少设置说明`)
     assert.doesNotMatch(setup, /gaps/, `${id} 的设置文本还带着开发备注`)
   }
 })

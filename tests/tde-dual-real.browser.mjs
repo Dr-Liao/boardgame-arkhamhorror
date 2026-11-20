@@ -151,7 +151,7 @@ function prepareHub (world, state) {
     const selectMove = candidates.find(move => TDE_INVESTIGATOR_CODES.includes(move.code))
       || candidates[0]
     const deckMove = moves.find(move => move.action === 'hubAutoDeck')
-    const doneMove = moves.find(move => move.action === 'hubDoneSeat')
+    const doneMove = moves.find(move => ['hubConfirmDeck', 'hubDoneSeat'].includes(move.action))
     // 与大厅 AI 的 autoHubMove 同一顺序：未选人 → 选人；牌组未存 → 自动构筑；最后确认席位。
     // hubSelectInvestigator 在选完后仍会作为「换人」候选下发，必须先看 hubSeatSelected。
     const next = (!selected && selectMove)

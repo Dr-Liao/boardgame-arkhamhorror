@@ -20,8 +20,6 @@
 //   · Armored Carapace（3 生命 + 替同地点调查员承受伤害）与 Jaws「忽略警戒」没有对应读点，未实现
 //     （note 披露）。
 //   · 定制行动按 limit oncePerTurn 逐个记账（引擎没有「每个支援每回合 1 个行动」的共享预算）。
-import { ALL_CARDS } from '../../cards/cards-data.js'
-
 const CUSTOM_CHECKS = Object.freeze([
   { name: 'Armored Carapace', checks: 1, text: 'Summoned Servitor gains a health value of 3. It can be assigned damage dealt to any investigator at its location.' },
   { name: 'Claws that Catch', checks: 1, text: 'Add this action: "- Fight. You fight any enemy at this location with a base [combat] of 4. Ignore the aloof and retaliate keywords for this attack."' },
@@ -38,10 +36,6 @@ const checked = (state, inv, index) => {
   return Array.isArray(list) && list.filter(value => value === index).length > 0
 }
 
-// 「可被弃掉来支付额外费用的另一个支援」：永久的支援不能被弃置（数据层读点）。
-const discardableAssets = (state, inv) => (inv?.assets || []).filter(asset =>
-  ALL_CARDS[asset.code]?.permanent !== true)
-
 export default {
   code: '09080',
   simplified: true,
@@ -52,7 +46,7 @@ export default {
   // 打出条件：「必须能弃掉另一个支援」——引擎打出费用管线不读 cost 的 discardControlledAsset，
   // 这里用唯一可用性读点挡住「无支援可弃也打出」的情况。
   playCondition: [
-    { when: ({ state, inv }) => discardableAssets(state, inv).length > 0,
+    { when: ({ inv, helpers }) => inv.assets.some(asset => helpers.canDiscardAsset(asset)),
       message: '「召来的仆从」需要弃掉另一个你控制的支援' },
   ],
   abilities: [
@@ -62,8 +56,8 @@ export default {
       label: '作为额外费用弃掉另一个支援；召来的仆从在你的地点入场',
       // 声明式费用：引擎打出管线未读（见文件头注释），保留给主进程接线。
       cost: { discardControlledAsset: 1 },
-      resolve: ({ state, inv, source, api }) => {
-        const candidates = discardableAssets(state, inv).filter(asset => asset !== source)
+      resolve: ({ inv, source, api }) => {
+        const candidates = inv.assets.filter(asset => asset !== source && api.investigatorTools.canDiscardAsset(inv.seat, asset))
         if (!candidates.length) {
           api.info('「召来的仆从」：没有可以弃掉的另一个支援。')
           return
@@ -74,7 +68,7 @@ export default {
           options: candidates.map(asset => ({ id: asset.id, label: api.cardName(asset.code) })),
         })
         const paid = candidates.find(asset => asset.id === picked) || candidates[0]
-        api.discardAsset(inv.seat, paid)
+        if (!api.discardAsset(inv.seat, paid)) return
         api.info(`👁️ 「召来的仆从」：弃掉「${api.cardName(paid.code)}」作为额外费用，在你的地点入场。`)
       },
     },

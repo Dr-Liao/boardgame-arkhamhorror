@@ -4,12 +4,11 @@ export default {
   // Feedback entry (feedbackEntry)
   'game.feedback': 'Feedback',
 
-  // Reaction prompt toggle (renderReactionToggle / renderPendingChoice): card faces/details show
-  // only the tappable lightning icon (no "Reactions on/off" text); the two-state hover uses the lines below.
+  // Accessible label and tooltips for the two-state reaction button.
   'game.reaction.aria': 'Quick reaction for {name}',
   'game.reaction.on.title': 'Quick reactions are on for this game. Click to turn the prompts off.',
   'game.reaction.off.title': 'Quick reactions are off. Click to restore the prompts.',
-  'game.reaction.muteTitle': 'Dismiss the reaction prompts for these cards; turn them back on with the lightning icon on the card.',
+  'game.reaction.muteTitle': 'Dismiss the reaction prompts for these cards. Use the reaction icon on each card to turn its prompts back on.',
   'game.reaction.mute': 'Do not ask again this game',
   // Tri-state control (investigator panel)
   'game.reaction.mode.aria': 'Reaction mode: {state}. Press to switch to {next}.',

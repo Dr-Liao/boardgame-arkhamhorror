@@ -1,0 +1,162 @@
+{
+  "campaignId": "theFeastOfHemlockVale",
+  "created": "2026-11-18",
+  "source": "Original artwork generated using the OpenAI built-in image_gen tool.",
+  "palette": "hemlock green, weathered wood, harvest gold and location-specific colors",
+  "assets": [
+    {
+      "id": "hub",
+      "title": "铁杉谷盛宴",
+      "file": "hub/inlet.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original landscape game presentation illustration for a 1920s coastal folk-horror tabletop mod, 3:2 landscape 1536×1024. Panoramic coastal New England valley in 1926: a distant cluster of clapboard buildings around a bell tower, ochre orchard rows, gray-blue sea and a dark band of hemlocks. A modest ferry in the far inlet. Late afternoon copper light against sea fog. Quiet sense of invitation and unease. Painterly cinematic realism, matte oil paint and fine paper grain, strong simple shapes that remain legible in small UI crops. Keep a subdued vintage palette and atmospheric perspective. Original environment, no logos, no lettering, no borders, no watermarks, no reproduction of existing artwork or maps.",
+      "original": "artifacts/fhv-media/originals/hub.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 392800,
+      "sha256": "0983223ab8b5207c4e67d8725fd554f1061f1d61bcb0706589de939ef4e7f7c5"
+    },
+    {
+      "id": "table",
+      "title": "田野调查牌桌",
+      "file": "table/fieldwork-desk.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original landscape game presentation illustration for a 1920s coastal folk-horror tabletop mod, 3:2 landscape 1536×1024. Strict orthographic top-down of a worn near-black wooden field research desk from the 1920s. Broad clean low-contrast dark center, muted papers, dry pine needles, brass hand lens and a specimen envelope arranged only near the peripheral edges. Soft, low candle illumination along the edges. Readable as a dark game tabletop texture under cards. Painterly cinematic realism, matte oil paint and fine paper grain, strong simple shapes that remain legible in small UI crops. Keep a subdued vintage palette and atmospheric perspective. Original environment, no logos, no lettering, no borders, no watermarks, no reproduction of existing artwork or maps.",
+      "original": "artifacts/fhv-media/originals/table.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 199608,
+      "sha256": "4b3b3736dc6984bec4697a9e61c1b358d30754d2d348bdf3e9cb7faf501bf5df"
+    },
+    {
+      "id": "welcomeToHemlockVale",
+      "title": "欢迎来到铁杉谷",
+      "file": "scenarios/welcomeToHemlockVale/scene.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original landscape game presentation illustration for a 1920s coastal folk-horror tabletop mod, 3:2 landscape 1536×1024. View from an old wooden dock in a small coastal New England town, houses and orchard uphill, yellow harvest bunting strung by a boathouse, calm water in the foreground and a mist bank swallowing the far shore. Amber late afternoon with an uneasy stillness. Painterly cinematic realism, matte oil paint and fine paper grain, strong simple shapes that remain legible in small UI crops. Keep a subdued vintage palette and atmospheric perspective. Original environment, no logos, no lettering, no borders, no watermarks, no reproduction of existing artwork or maps.",
+      "original": "artifacts/fhv-media/originals/welcomeToHemlockVale.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 329052,
+      "sha256": "6ad306533086136a8954bf5848b855e6af1a031ec07c920cf84a25f7f39dc68a"
+    },
+    {
+      "id": "writtenInRock",
+      "title": "岩间密语",
+      "file": "scenarios/writtenInRock/scene.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original landscape game presentation illustration for a 1920s coastal folk-horror tabletop mod, 3:2 landscape 1536×1024. An abandoned coastal quarry tunnel, narrow rusty mine-cart rails plunging between wet slate pillars into an underground chamber. A lone electric lantern reflects in a shallow puddle. Tiny traces of cold mineral fluorescence at the tunnel bend. Strong perspective and tension. Painterly cinematic realism, matte oil paint and fine paper grain, strong simple shapes that remain legible in small UI crops. Keep a subdued vintage palette and atmospheric perspective. Original environment, no logos, no lettering, no borders, no watermarks, no reproduction of existing artwork or maps.",
+      "original": "artifacts/fhv-media/originals/writtenInRock.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 295708,
+      "sha256": "6fa0413bbbb4c1850435e9496bf5282ec130a2d95e6936a94b9775ab209d7b13"
+    },
+    {
+      "id": "hemlockHouse",
+      "title": "汉洛克庄园",
+      "file": "scenarios/hemlockHouse/scene.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original landscape game presentation illustration for a 1920s coastal folk-horror tabletop mod, 3:2 landscape 1536×1024. Abandoned Victorian rural manor interior from the threshold of a stair hall, peeling wallpaper and heavy wallpaper-colored shadows, patterned parquet, old curtains stirred by an invisible draft, dull gold light from an upper landing. Skewed architectural tension without a visible creature. Painterly cinematic realism, matte oil paint and fine paper grain, strong simple shapes that remain legible in small UI crops. Keep a subdued vintage palette and atmospheric perspective. Original environment, no logos, no lettering, no borders, no watermarks, no reproduction of existing artwork or maps.",
+      "original": "artifacts/fhv-media/originals/hemlockHouse.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 204056,
+      "sha256": "b0b9e48b7ae8981e345d87420f190459754fd83154cfd68f31ddd8d939936725"
+    },
+    {
+      "id": "theSilentHeath",
+      "title": "寂静荒野",
+      "file": "scenarios/theSilentHeath/scene.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original landscape game presentation illustration for a 1920s coastal folk-horror tabletop mod, 3:2 landscape 1536×1024. Wide open windswept coastal heath covered in rust-red heather and pale grasses, low split granite, a winding track and a distant tree line dissolving into a lid of cool gray clouds. Still air at ground level and a faint green cast in hollows. Daylight folk horror. Painterly cinematic realism, matte oil paint and fine paper grain, strong simple shapes that remain legible in small UI crops. Keep a subdued vintage palette and atmospheric perspective. Original environment, no logos, no lettering, no borders, no watermarks, no reproduction of existing artwork or maps.",
+      "original": "artifacts/fhv-media/originals/theSilentHeath.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 353766,
+      "sha256": "24e4c20530ef7c425de03d3130e04870260b287c4e8653246576595ccf1357ae"
+    },
+    {
+      "id": "theLostSister",
+      "title": "消失的姐妹",
+      "file": "scenarios/theLostSister/scene.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original landscape game presentation illustration for a 1920s coastal folk-horror tabletop mod, 3:2 landscape 1536×1024. Fog-bound rocky headland overlooking a narrow channel between two distant New England islands. A small empty skiff near flooded black steps, seaweed, and the beam of a distant weathered coastal light. Pale lavender twilight, sea-mist blue and cold slate. Painterly cinematic realism, matte oil paint and fine paper grain, strong simple shapes that remain legible in small UI crops. Keep a subdued vintage palette and atmospheric perspective. Original environment, no logos, no lettering, no borders, no watermarks, no reproduction of existing artwork or maps.",
+      "original": "artifacts/fhv-media/originals/theLostSister.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 281526,
+      "sha256": "61f1bc4df592221691b7f94987458ffbb01b13e09f6332e8c3bad22711d9d1ec"
+    },
+    {
+      "id": "theThingInTheDepths",
+      "title": "深沼之物",
+      "file": "scenarios/theThingInTheDepths/scene.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original landscape game presentation illustration for a 1920s coastal folk-horror tabletop mod, 3:2 landscape 1536×1024. Still freshwater bog at twilight, dark water under bent pines, cattails and submerged tree trunks, intricate concentric ripples and a few phosphorescent motes beyond the reeds. Use muted teal and brown; immense depth suggested under the water. Painterly cinematic realism, matte oil paint and fine paper grain, strong simple shapes that remain legible in small UI crops. Keep a subdued vintage palette and atmospheric perspective. Original environment, no logos, no lettering, no borders, no watermarks, no reproduction of existing artwork or maps.",
+      "original": "artifacts/fhv-media/originals/theThingInTheDepths.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 250574,
+      "sha256": "e88b78c626a757c88a4af562049d76cc57cfb281fecca4a4a1aedffcd9b09899"
+    },
+    {
+      "id": "theTwistedHollow",
+      "title": "扭曲空洞",
+      "file": "scenarios/theTwistedHollow/scene.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original landscape game presentation illustration for a 1920s coastal folk-horror tabletop mod, 3:2 landscape 1536×1024. Midnight forest hollow seen from ground level, strangled hemlock trunks leaning across an uneven footpath, damp bark twisting into an arch, pinpricks of sickly green fungal light and a narrow ribbon of moonlit fog. Clear silhouette and deep shadows. Painterly cinematic realism, matte oil paint and fine paper grain, strong simple shapes that remain legible in small UI crops. Keep a subdued vintage palette and atmospheric perspective. Original environment, no logos, no lettering, no borders, no watermarks, no reproduction of existing artwork or maps.",
+      "original": "artifacts/fhv-media/originals/theTwistedHollow.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 259042,
+      "sha256": "ca67fc61523640fe4267c57da27d35a8a8b7306db7f3a8b5d5d302584d16a765"
+    },
+    {
+      "id": "dawnOfTheSecondDay",
+      "title": "第二日黎明",
+      "file": "scenarios/dawnOfTheSecondDay/scene.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original landscape game presentation illustration for a 1920s coastal folk-horror tabletop mod, 3:2 landscape 1536×1024. Rainy early morning in a quiet 1920s village, seen across an empty wet square from the shelter of an eave. Puddles mirror a small chapel and dark clapboard roofs, a single amber window glows in the blue gray downpour. Calm, expectant, restrained. Painterly cinematic realism, matte oil paint and fine paper grain, strong simple shapes that remain legible in small UI crops. Keep a subdued vintage palette and atmospheric perspective. Original environment, no logos, no lettering, no borders, no watermarks, no reproduction of existing artwork or maps.",
+      "original": "artifacts/fhv-media/originals/dawnOfTheSecondDay.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 308718,
+      "sha256": "38bdb34c9c68a477cba740743bd067630535cbc828f74b0a133b9536ee5f9062"
+    },
+    {
+      "id": "theLongestNight",
+      "title": "最长一夜",
+      "file": "scenarios/theLongestNight/scene.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original landscape game presentation illustration for a 1920s coastal folk-horror tabletop mod, 3:2 landscape 1536×1024. A remote weathered New England farmhouse late at night, boarded windows leak orange lamplight onto muddy fields while a raw wooden fence sharply frames openings in tall brush. Cold storm clouds and shadows evoke a tense siege. No people or creatures. Painterly cinematic realism, matte oil paint and fine paper grain, strong simple shapes that remain legible in small UI crops. Keep a subdued vintage palette and atmospheric perspective. Original environment, no logos, no lettering, no borders, no watermarks, no reproduction of existing artwork or maps.",
+      "original": "artifacts/fhv-media/originals/theLongestNight.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 296626,
+      "sha256": "1e4e069d6e18c591cd1bb58567f5c996dabe114aada1879b63426fcb25e8b8ff"
+    },
+    {
+      "id": "dawnOfTheFinalDay",
+      "title": "最终日黎明",
+      "file": "scenarios/dawnOfTheFinalDay/scene.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original landscape game presentation illustration for a 1920s coastal folk-horror tabletop mod, 3:2 landscape 1536×1024. Low morning sun across a harvest orchard, long still shadows and an empty track to a sunlit rural village. Dew and fine dust hang in warm gold light. Harvest baskets lie waiting at the frame edge. Beautiful light with subtly sickly yellow highlights and a restrained air of anticipation. Painterly cinematic realism, matte oil paint and fine paper grain, strong simple shapes that remain legible in small UI crops. Keep a subdued vintage palette and atmospheric perspective. Original environment, no logos, no lettering, no borders, no watermarks, no reproduction of existing artwork or maps.",
+      "original": "artifacts/fhv-media/originals/dawnOfTheFinalDay.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 398530,
+      "sha256": "509d876300a53d82e1ce5d2709e5a25e5351dc4ca4a3bddf5f38df2431b21619"
+    },
+    {
+      "id": "preludeTheFinalEvening",
+      "title": "最终夜",
+      "file": "scenarios/preludeTheFinalEvening/scene.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original landscape game presentation illustration for a 1920s coastal folk-horror tabletop mod, 3:2 landscape 1536×1024. Long empty harvest supper tables outdoors in a 1920s coastal hamlet, white linen, apples, dried flowers and small candles, garlands meeting over the aisle, encroaching purple dusk and forest silhouettes. The feast looks prepared but eerily deserted. Painterly cinematic realism, matte oil paint and fine paper grain, strong simple shapes that remain legible in small UI crops. Keep a subdued vintage palette and atmospheric perspective. Original environment, no logos, no lettering, no borders, no watermarks, no reproduction of existing artwork or maps.",
+      "original": "artifacts/fhv-media/originals/preludeTheFinalEvening.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 309076,
+      "sha256": "1e789da0570bc4ad59e5a185ccc4a2fdc6d27bae694d98e31ffaf207712b5c09"
+    },
+    {
+      "id": "fateOfTheVale",
+      "title": "山谷的命运",
+      "file": "scenarios/fateOfTheVale/scene.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original landscape game presentation illustration for a 1920s coastal folk-horror tabletop mod, 3:2 landscape 1536×1024. Wide rural valley at night with an orchard and a distant chapel silhouette under an unnatural luminous break in storm clouds. Iridescent violet and muted yellow-green light refracts through drifting pollen over the empty fields. Cosmic-scale unease, painterly and restrained. Painterly cinematic realism, matte oil paint and fine paper grain, strong simple shapes that remain legible in small UI crops. Keep a subdued vintage palette and atmospheric perspective. Original environment, no logos, no lettering, no borders, no watermarks, no reproduction of existing artwork or maps.",
+      "original": "artifacts/fhv-media/originals/fateOfTheVale.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 243488,
+      "sha256": "c13a0dd4b667aac8aa710a30b7de54e232d9523f087c3a4b25a8086424fc7ef3"
+    }
+  ]
+}

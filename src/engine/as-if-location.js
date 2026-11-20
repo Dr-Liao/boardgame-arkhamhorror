@@ -7,6 +7,28 @@
 // 因此结束时必须解除**所有**在目标地点上与他交战的敌人，而不只是开始时临时接管的那批：
 // 结算期间新生成/新交战的敌人（spawnEnemy → engageEnemy）同样不能把交战带出这次结算。
 
+// The borrowed location does not grant Luke's separate temporary-engagement benefit.
+export function withAbilityLocation(state, inv, locationId, resolve) {
+  if (inv.location === locationId) return resolve()
+  const previous = inv.location
+  const existingEngagements = new Set(state.enemies.filter(enemy => enemy.engagedSeat === inv.seat).map(enemy => enemy.id))
+  inv.location = locationId
+  try {
+    return resolve()
+  } finally {
+    if (inv.location === locationId) {
+      inv.location = previous
+      const newEngagements = new Set()
+      for (const enemy of state.enemies) {
+        if (enemy.location !== locationId || enemy.engagedSeat !== inv.seat || existingEngagements.has(enemy.id)) continue
+        newEngagements.add(enemy.id)
+        enemy.engagedSeat = null
+      }
+      if (newEngagements.size) inv.engaged = inv.engaged.filter(id => !newEngagements.has(id))
+    }
+  }
+}
+
 export function canAsIfPlay(inv, state) {
   return inv?.asIfEventTurn !== state?.turnSerial
 }

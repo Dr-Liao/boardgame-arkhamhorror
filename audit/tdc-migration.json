@@ -1,0 +1,453 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "theDrownedCity",
+  "status": "catalog-only",
+  "stages": {
+    "P0": {
+      "status": "verified",
+      "scope": "audit/tdc-scope.json",
+      "baseline": "audit/tdc-baseline.json",
+      "replayBaselineVerified": true
+    },
+    "P1": {
+      "status": "verified",
+      "scan": "audit/tdc-mechanism-scan.json",
+      "coverage": {
+        "cards": 425,
+        "unclassified": [],
+        "guideFiles": 12,
+        "guideParagraphs": 1014,
+        "ruleLinesAwaitingSemanticReview": 0
+      },
+      "pendingDecisions": []
+    },
+    "P2": {
+      "status": "verified",
+      "plan": "audit/tdc-primitive-plan.json",
+      "catalog": "audit/tdc-primitive-catalog.json",
+      "implemented": [
+        "tasks",
+        "handoff",
+        "topology",
+        "separateDeck",
+        "multipartEnemy"
+      ],
+      "pending": [],
+      "fastNoNewFailures": true
+    },
+    "P3": {
+      "status": "verified",
+      "rules": "audit/tdc-rules.json",
+      "replayMatches": true,
+      "fastPassed": true
+    },
+    "P4": {
+      "status": "verified",
+      "interactions": "audit/tdc-interactions.json",
+      "desktop": 4,
+      "mobile": 4,
+      "replayCases": 13
+    },
+    "P5": {
+      "status": "verified",
+      "investigators": "audit/tdc-investigators.json",
+      "pending": []
+    },
+    "P6": {
+      "status": "verified",
+      "player": "audit/tdc-player.json",
+      "counts": {
+        "total": 111,
+        "entryWritten": 111,
+        "noEntry": 0,
+        "verified": 111,
+        "pendingVerification": 0
+      }
+    },
+    "P7": {
+      "status": "implementation-in-progress",
+      "p7": "audit/tdc-p7.json",
+      "counts": {
+        "sharedGroups": 15,
+        "sharedCards": 54,
+        "sharedBehaviorsRegistered": 54,
+        "scenarioCards": 231,
+        "scenarioBehaviorsRegistered": 231,
+        "scenarios": 10,
+        "scenariosRegistered": 10,
+        "bilingualGuides": 10,
+        "externalDependenciesCovered": 28
+      }
+    }
+  },
+  "confirmations": {
+    "scenarios": {
+      "status": "pending",
+      "items": [
+        {
+          "id": "oneLastJob",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": false,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "tests/tdc-scenario-oneLastJob.test.mjs",
+            "audit/tdc-p7-scenarios.json",
+            "content/scenario-guide-sources/oneLastJob.json",
+            "artifacts/migration/tdc/p7/workers/scenario-alpha.md",
+            "audit/tdc-p7.json",
+            "audit/tdc-scope.json"
+          ]
+        },
+        {
+          "id": "theWesternWall",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": false,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "tests/tdc-scenario-theWesternWall.test.mjs",
+            "audit/tdc-p7-scenarios.json",
+            "content/scenario-guide-sources/theWesternWall.json",
+            "artifacts/migration/tdc/p7/workers/scenario-alpha.md",
+            "audit/tdc-p7.json",
+            "audit/tdc-scope.json"
+          ]
+        },
+        {
+          "id": "theDrownedQuarter",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": false,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "tests/tdc-scenario-theDrownedQuarter.test.mjs",
+            "audit/tdc-p7-scenarios.json",
+            "content/scenario-guide-sources/theDrownedQuarter.json",
+            "artifacts/migration/tdc/p7/workers/scenario-beta.md",
+            "audit/tdc-p7.json",
+            "audit/tdc-scope.json"
+          ]
+        },
+        {
+          "id": "theApiary",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": false,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "tests/tdc-scenario-theApiary.test.mjs",
+            "audit/tdc-p7-scenarios.json",
+            "content/scenario-guide-sources/theApiary.json",
+            "artifacts/migration/tdc/p7/workers/scenario-beta.md",
+            "audit/tdc-p7.json",
+            "audit/tdc-scope.json"
+          ]
+        },
+        {
+          "id": "theGrandVault",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": false,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "tests/tdc-scenario-theGrandVault.test.mjs",
+            "audit/tdc-p7-scenarios.json",
+            "content/scenario-guide-sources/theGrandVault.json",
+            "artifacts/migration/tdc/p7/workers/scenario-gamma.md",
+            "audit/tdc-p7.json",
+            "audit/tdc-scope.json"
+          ]
+        },
+        {
+          "id": "courtOfTheAncients",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": false,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "tests/tdc-scenario-courtOfTheAncients.test.mjs",
+            "audit/tdc-p7-scenarios.json",
+            "content/scenario-guide-sources/courtOfTheAncients.json",
+            "artifacts/migration/tdc/p7/workers/scenario-gamma.md",
+            "audit/tdc-p7.json",
+            "audit/tdc-scope.json"
+          ]
+        },
+        {
+          "id": "obsidianCanyons",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": false,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "tests/tdc-scenario-obsidianCanyons.test.mjs",
+            "audit/tdc-p7-scenarios.json",
+            "content/scenario-guide-sources/obsidianCanyons.json",
+            "artifacts/migration/tdc/p7/workers/scenario-delta.md",
+            "audit/tdc-p7.json",
+            "audit/tdc-scope.json"
+          ]
+        },
+        {
+          "id": "sepulchreOfTheSleeper",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": false,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "tests/tdc-scenario-sepulchreOfTheSleeper.test.mjs",
+            "audit/tdc-p7-scenarios.json",
+            "content/scenario-guide-sources/sepulchreOfTheSleeper.json",
+            "artifacts/migration/tdc/p7/workers/scenario-delta.md",
+            "audit/tdc-p7.json",
+            "audit/tdc-scope.json"
+          ]
+        },
+        {
+          "id": "theDoomOfArkhamPartI",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": false,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "tests/tdc-scenario-theDoomOfArkhamPartI.test.mjs",
+            "audit/tdc-p7-scenarios.json",
+            "content/scenario-guide-sources/theDoomOfArkhamPartI.json",
+            "artifacts/migration/tdc/p7/workers/scenario-epsilon.md",
+            "audit/tdc-p7.json",
+            "audit/tdc-scope.json"
+          ]
+        },
+        {
+          "id": "theDoomOfArkhamPartII",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": false,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+            "audit/tdc-p7-scenarios.json",
+            "content/scenario-guide-sources/theDoomOfArkhamPartII.json",
+            "artifacts/migration/tdc/p7/workers/scenario-epsilon.md",
+            "audit/tdc-p7.json",
+            "audit/tdc-scope.json"
+          ]
+        }
+      ]
+    },
+    "keywords": {
+      "status": "verified",
+      "items": [
+        {
+          "id": "tdcAlert",
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "evidence": [
+            "audit/tdc-rules.json",
+            "web/tdc-rules.js",
+            "tests/tdc-rules.test.mjs",
+            "tests/tdc-rules.browser.mjs",
+            "https://images-cdn.fantasyflightgames.com/filer_public/c1/3b/c13b0e74-62bb-49bc-bc85-036ab9d1ef10/ahc84_campaign_guide-web_1.pdf#page=3",
+            "https://images-cdn.fantasyflightgames.com/filer_public/76/b3/76b332d5-7047-458f-91b6-82c8500cc445/arkham_grimoire.pdf#page=4",
+            "src/engine/combat.js"
+          ]
+        },
+        {
+          "id": "tdcPatrol",
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "evidence": [
+            "audit/tdc-rules.json",
+            "web/tdc-rules.js",
+            "tests/tdc-rules.test.mjs",
+            "tests/tdc-rules.browser.mjs",
+            "https://images-cdn.fantasyflightgames.com/filer_public/c1/3b/c13b0e74-62bb-49bc-bc85-036ab9d1ef10/ahc84_campaign_guide-web_1.pdf#page=3",
+            "src/engine/enemy-keyword-movement.js",
+            "src/engine/turn.js"
+          ]
+        },
+        {
+          "id": "tdcRelentless",
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "evidence": [
+            "audit/tdc-rules.json",
+            "web/tdc-rules.js",
+            "tests/tdc-rules.test.mjs",
+            "tests/tdc-rules.browser.mjs",
+            "https://images-cdn.fantasyflightgames.com/filer_public/c1/3b/c13b0e74-62bb-49bc-bc85-036ab9d1ef10/ahc84_campaign_guide-web_1.pdf#page=3",
+            "src/engine/enemies.js",
+            "src/engine/turn.js"
+          ]
+        },
+        {
+          "id": "tdcSeal",
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "evidence": [
+            "audit/tdc-rules.json",
+            "web/tdc-rules.js",
+            "tests/tdc-rules.test.mjs",
+            "tests/tdc-rules.browser.mjs",
+            "https://images-cdn.fantasyflightgames.com/filer_public/c1/3b/c13b0e74-62bb-49bc-bc85-036ab9d1ef10/ahc84_campaign_guide-web_1.pdf#page=3",
+            "src/engine/seal-entry.js",
+            "src/engine/play-condition.js",
+            "src/engine/api-misc.js"
+          ]
+        }
+      ]
+    },
+    "rulebook": {
+      "status": "verified",
+      "checks": {
+        "campaignOverview": true,
+        "scenarioMechanics": true,
+        "keywordEntries": true,
+        "cardLinks": true,
+        "desktopBrowser": true,
+        "mobileBrowser": true
+      },
+      "evidence": [
+        "audit/tdc-rules.json",
+        "web/tdc-rules.js",
+        "tests/tdc-rules.test.mjs",
+        "tests/tdc-rules.browser.mjs"
+      ]
+    }
+  }
+}

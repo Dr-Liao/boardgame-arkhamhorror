@@ -20,12 +20,12 @@
     "total": 108,
     "verified": 108,
     "missing": 0,
-    "simplified": 61,
-    "simplifiedDisclosed": 61,
+    "simplified": 59,
+    "simplifiedDisclosed": 59,
     "buildable": 103,
     "dependencyOnly": 5,
     "basicWeaknesses": 5,
-    "testsPassed": 127
+    "testsPassed": 134
   },
   "shards": [
     {
@@ -1445,11 +1445,11 @@
     },
     {
       "path": "src/cards/entries/09041.js",
-      "sha256": "19a14c154e00baba6e3b7681cb7d5ebaef3cfc0ae9aacb14cbfde1db2a8e85f6"
+      "sha256": "a015f2be4ea7ce14aaa7c66e4ca55e2aab7e5128f37482a72be49f7b02b52b2b"
     },
     {
       "path": "src/cards/entries/09042.js",
-      "sha256": "20f64f6f1cc2add8514258bf10b52c50003854d14baf502399805ea36b8e4cca"
+      "sha256": "bdd5ec31e38f46cb56e8a2ac2bb85918a5ea8ef7da454d2822774d046c091cf2"
     },
     {
       "path": "src/cards/entries/09043.js",
@@ -1601,7 +1601,7 @@
     },
     {
       "path": "src/cards/entries/09080.js",
-      "sha256": "9f5213df09917e74ada292309f743b61ba1ea2983ad72c2601d68b8e84a268a3"
+      "sha256": "08646f74ae70b3e306772fa70133a18680d4094e5084c7cbda7a09b15dd26faa"
     },
     {
       "path": "src/cards/entries/09081.js",
@@ -1629,7 +1629,7 @@
     },
     {
       "path": "src/cards/entries/09087.js",
-      "sha256": "31a85e388b0eed0774c88653e425438f68e3e092ade8e75ecf6bf52ce5703a50"
+      "sha256": "495a889488546db755ed15bb697e3ce2bec0a0127997431f73d9d464acc8665d"
     },
     {
       "path": "src/cards/entries/09088.js",
@@ -1661,7 +1661,7 @@
     },
     {
       "path": "src/cards/entries/09095.js",
-      "sha256": "107795dec4201b70bf2efdc6e55a2e603f9346c392275a2d3b6a3f1214215e33"
+      "sha256": "25493c255dd69a78c79dd467a94ea334d1c673af53f2b440ca1ab7d1b79ee272"
     },
     {
       "path": "src/cards/entries/09096.js",
@@ -1685,7 +1685,7 @@
     },
     {
       "path": "src/cards/entries/09101.js",
-      "sha256": "b3a5f6d4a26fe59304dfc839648295961d8d177f34d0c8fa8a35e4bba1929cbb"
+      "sha256": "10b09315285a0e50626996208f9a01f0c230a3804dc87d5a2945121772997d29"
     },
     {
       "path": "src/cards/entries/09102.js",
@@ -1843,7 +1843,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 145,
+          "line": 147,
           "test": "P6 09021 猎人护甲 定制面板 7 项契约；轻量刻印 -1 费用；伤害优先分配给护甲"
         }
       ]
@@ -1878,7 +1878,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 166,
+          "line": 168,
           "test": "P6 09022 符文斧 攻击 +1[combat]；花 1 充能灌注精准再 +2；每轮开始补满 1 充能"
         }
       ]
@@ -1949,7 +1949,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 191,
+          "line": 193,
           "test": "P6 09023 定制改良 附属到[[枪械]]支援；攻击时揭示标记可取消并重抽"
         }
       ]
@@ -1984,7 +1984,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 212,
+          "line": 214,
           "test": "P6 09024 黑曜石手串 同地点其他调查员的伤害可以分配给本卡"
         }
       ]
@@ -2030,7 +2030,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 226,
+          "line": 228,
           "test": "P6 09025 绊脚索 用[combat]躲避；成功且非精英时附属，敌人躲避值 -1 且横置"
         }
       ]
@@ -2053,7 +2053,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 247,
+          "line": 249,
           "test": "P6 09026 强势破门 检定[combat](1)：成功附属到地点，超难度每点放 1 迹象并使隐藏值 -1"
         }
       ]
@@ -2094,7 +2094,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 262,
+          "line": 264,
           "test": "P6 09027 深度伤痛 附属到非精英敌人；轮末对附属敌人造成 1 点伤害"
         }
       ]
@@ -2129,7 +2129,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 277,
+          "line": 279,
           "test": "P6 09028 励志演讲 谈判：同地点一位调查员以 -3 费用从手牌打出[[盟友]]支援"
         }
       ]
@@ -2170,7 +2170,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 291,
+          "line": 293,
           "test": "P6 09029 还剩一枪 给打空弹药的[[枪械]]补 1 发；本轮攻击 +3 技能值"
         }
       ]
@@ -2193,7 +2193,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 306,
+          "line": 308,
           "test": "P6 09030 战斗课程 只能投入攻击/躲避检定；任意地点调查员的检定可投入"
         }
       ]
@@ -2216,7 +2216,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 320,
+          "line": 322,
           "test": "P6 09031 援助之手 可投入任意检定且每次限 1 张；其他投入卡的图标翻倍"
         }
       ]
@@ -2257,7 +2257,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 341,
+          "line": 343,
           "test": "P6 09032 鼓舞决心 技能检定开始时花 1 充能：把一张非弱点手牌投入检定（图标视为[wild]）"
         }
       ]
@@ -2280,7 +2280,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 360,
+          "line": 362,
           "test": "P6 09033 外勤特工 +1[智力]；横置并受 1 点恐惧：发现所在地点 1 个线索"
         }
       ]
@@ -2303,7 +2303,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 375,
+          "line": 377,
           "test": "P6 09034 看门狗 横置与同地点敌人交战并让它攻击你；受攻击伤害后反咬 1 点"
         }
       ]
@@ -2344,7 +2344,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 391,
+          "line": 393,
           "test": "P6 09035 手铐 用[combat]躲避[[类人]]敌人：成功清空其毁灭并附属，非精英不能重整"
         }
       ]
@@ -2367,7 +2367,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 410,
+          "line": 412,
           "test": "P6 09036 最坏的打算 从牌库顶 9 张找出[[武器]]支援加入手牌并混洗牌库"
         }
       ]
@@ -2390,7 +2390,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 423,
+          "line": 425,
           "test": "P6 09037 殉道者护臂 显现结算时 +1 技能值；把同地点队友抽到的非险境遭遇改由你结算"
         }
       ]
@@ -2413,7 +2413,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 439,
+          "line": 441,
           "test": "P6 09038 吉里什·卡达贾 承接同地点他人的伤害；横置令本次检定 +2，成功治愈自身 1 点"
         }
       ]
@@ -2448,7 +2448,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 456,
+          "line": 458,
           "test": "P6 09039 时刻警惕 依次以 -1 费用打出最多 4 张手牌支援"
         }
       ]
@@ -2489,7 +2489,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 471,
+          "line": 473,
           "test": "P6 09040 炼金蒸馏 花 1 补给：检定[智力](1) 成功让调查员抽 2 张；精炼入场 +2 补给"
         }
       ]
@@ -2506,31 +2506,13 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment",
-          "note"
-        ],
-        "count": 2,
-        "disclosures": [
-          {
-            "source": "note",
-            "path": "note",
-            "detail": "approximation: 只实现两项印刷判据（失败 ≥2 / 成功 ≥3）与「花 1 证据抽 1」；8 个定制勾选格规则未接读点，已标记 implemented:false（展示文本、不可购买，避免无效 XP 支出）；见 primitive-requests/09041.json"
-          },
-          {
-            "source": "comment",
-            "line": 15,
-            "detail": "// approximation：自定义判据（Pessimistic Outlook 等 4 项）与 Peer Review / Research Grant /"
-          }
-        ]
-      },
-      "implementation": "19a14c154e00baba6e3b7681cb7d5ebaef3cfc0ae9aacb14cbfde1db2a8e85f6",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "a015f2be4ea7ce14aaa7c66e4ca55e2aab7e5128f37482a72be49f7b02b52b2b",
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 497,
+          "line": 499,
           "test": "P6 09041 实证假设 回合开始选判据；达成判据横置加 1 证据；花 1 证据抽 1 张"
         }
       ]
@@ -2550,38 +2532,22 @@
       "simplified": true,
       "simplification": {
         "kinds": [
-          "comment",
           "note"
         ],
-        "count": 4,
+        "count": 1,
         "disclosures": [
           {
             "source": "note",
             "path": "note",
-            "detail": "approximation: 只实现「附属到已指定的书籍/法术支援」与 Energy Sap 的移标记；撤退/游戏结束的勾选与升级经验 -1、以及另 5 项定制效果缺读点未实现（见 primitive-requests/09042.json）"
-          },
-          {
-            "source": "comment",
-            "line": 15,
-            "detail": "// approximation：撤退/游戏结束没有玩家卡可用的窗口，且「升级经验 -1」属于战役升级报价层"
-          },
-          {
-            "source": "comment",
-            "line": 16,
-            "detail": "//   （campaign-flow 的 XP 计算），本条目未实现；Living Quill / Spectral Binding / Mystic Vane /"
-          },
-          {
-            "source": "comment",
-            "line": 17,
-            "detail": "//   Interwoven Ink / Supernatural Record 缺「按勾选条件改槽位/改检定值/改触发」的读点，未实现。"
+            "detail": "approximation: 尚无撤退或游戏结束时的战役奖励。"
           }
         ]
       },
-      "implementation": "20f64f6f1cc2add8514258bf10b52c50003854d14baf502399805ea36b8e4cca",
+      "implementation": "bdd5ec31e38f46cb56e8a2ac2bb85918a5ea8ef7da454d2822774d046c091cf2",
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 519,
+          "line": 614,
           "test": "P6 09042 鸦翎羽毛笔 附属到你控制的[[书籍]]支援；墨力汲取把 1 充能移给所附属支援"
         }
       ]
@@ -2627,7 +2593,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 537,
+          "line": 666,
           "test": "P6 09043 解剖工具 同地点敌人被击败后放 1 证据；1/2 证据分别 +1[敏捷]/+1[战斗]"
         }
       ]
@@ -2650,7 +2616,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 557,
+          "line": 686,
           "test": "P6 09044 凄惨传略 花 1 秘密调查 +2[智力]；成功超过 2 点抽 1 张"
         }
       ]
@@ -2691,7 +2657,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 576,
+          "line": 705,
           "test": "P6 09045 研究笔记 检定[智力](0)：成功每超出 1 点可花 1 证据发现 1 个线索"
         }
       ]
@@ -2714,7 +2680,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 593,
+          "line": 722,
           "test": "P6 09046 诡异诊断 把 1 个线索放到所在地点，然后治愈同地点调查员 3 点伤害"
         }
       ]
@@ -2737,7 +2703,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-1.test.mjs",
-          "line": 606,
+          "line": 735,
           "test": "P6 09047 震撼发现 查找牌库顶 6 张：放 1 个线索从查找牌里取 2 张入手并混洗"
         }
       ]
@@ -3700,7 +3666,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 93,
+          "line": 94,
           "test": "P6 09075 扒手行窃工具：花 1 补给用敏捷调查，成功按差值获得 1~2 资源"
         }
       ]
@@ -3752,7 +3718,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 115,
+          "line": 116,
           "test": "P6 09076 职业枪手：入场后把手中违法支援附属到场，并能免费结算其攻击行动"
         }
       ]
@@ -3804,7 +3770,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 141,
+          "line": 142,
           "test": "P6 09077 地下市场：牌库 +10；回合开始揭示 2 张，花 1 资源抽 1 张其余放底"
         }
       ]
@@ -3827,7 +3793,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 160,
+          "line": 161,
           "test": "P6 09078 全身而退：每个横置的非蜂拥敌人给出一个不同选项"
         }
       ]
@@ -3889,7 +3855,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 178,
+          "line": 179,
           "test": "P6 09079 传神佳墨：3 充能、回合开始移除 1 充能并在耗尽时弃掉；所选技能 +1"
         }
       ]
@@ -3942,11 +3908,11 @@
           }
         ]
       },
-      "implementation": "9f5213df09917e74ada292309f743b61ba1ea2983ad72c2601d68b8e84a268a3",
+      "implementation": "08646f74ae70b3e306772fa70133a18680d4094e5084c7cbda7a09b15dd26faa",
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 193,
+          "line": 194,
           "test": "P6 09080 召来的仆从：行动把它移动到已揭示的连接地点；定制面板声明 8 项"
         }
       ]
@@ -3993,7 +3959,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 208,
+          "line": 209,
           "test": "P6 09081 号令真言：对同地点非精英敌人下「蹲下」命令使其横置"
         }
       ]
@@ -4016,7 +3982,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 222,
+          "line": 223,
           "test": "P6 09082 仪式镰刀：横置放毁灭换 +1 技能值与 +1 伤害；击败敌人移除 1 毁灭"
         }
       ]
@@ -4039,7 +4005,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 252,
+          "line": 253,
           "test": "P6 09083 寻龙尺：横置放毁灭移动到连接地点，发现最后线索时移除毁灭"
         }
       ]
@@ -4062,7 +4028,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 284,
+          "line": 285,
           "test": "P6 09084 圣杯：横置放毁灭治疗 2 点；治疗 1 点完全治愈时移除毁灭"
         }
       ]
@@ -4085,7 +4051,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 312,
+          "line": 313,
           "test": "P6 09085 缟玛瑙五芒星：横置放毁灭可躲避连接地点敌人；成功 2 点移除毁灭"
         }
       ]
@@ -4132,7 +4098,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 343,
+          "line": 344,
           "test": "P6 09086 惊悚皈依：每个法术槽抽 1 张；每个被占用的法术槽弃 1 张手牌"
         }
       ]
@@ -4175,11 +4141,11 @@
           }
         ]
       },
-      "implementation": "31a85e388b0eed0774c88653e425438f68e3e092ade8e75ecf6bf52ce5703a50",
+      "implementation": "495a889488546db755ed15bb697e3ce2bec0a0127997431f73d9d464acc8665d",
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 359,
+          "line": 360,
           "test": "P6 09087 爆炸结界：X 对交战的非精英敌人造成伤害，X 受空法术槽限制"
         }
       ]
@@ -4226,7 +4192,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 377,
+          "line": 378,
           "test": "P6 09088 诅咒连连：按毁灭标记击败敌人并获得等量资源；或自动躲避并发现线索"
         }
       ]
@@ -4249,7 +4215,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 403,
+          "line": 404,
           "test": "P6 09089 束敌宝罐：罐底每个敌人 +1 法术槽；可取消有相同特性敌人的攻击"
         }
       ]
@@ -4296,7 +4262,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 431,
+          "line": 432,
           "test": "P6 09090 恐灵附身：投入后放毁灭换 2 图标，或移除毁灭/补半使用"
         }
       ]
@@ -4343,12 +4309,12 @@
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 455,
+          "line": 456,
           "test": "P6 09091 星界映射：每个空法术槽 +1 手槽；额外行动打出手中手部槽位支援"
         },
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 471,
+          "line": 472,
           "test": "P6 09091 星界映射：不是自己的回合时玩家窗口不提供额外行动"
         }
       ]
@@ -4405,7 +4371,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 491,
+          "line": 492,
           "test": "P6 09092 艾勒·鲁巴什：把带毁灭支援附属到自身，并在其技能检定上 +1"
         }
       ]
@@ -4428,7 +4394,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 506,
+          "line": 507,
           "test": "P6 09093 月光仪式：移除同地点非精英卡牌上所有毁灭标记"
         }
       ]
@@ -4451,7 +4417,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 517,
+          "line": 518,
           "test": "P6 09094 食罪者：把支援上的 1 毁灭移到自身并重整它；行动清空自身毁灭"
         }
       ]
@@ -4470,11 +4436,11 @@
       "channel": "descriptor",
       "simplified": false,
       "simplification": null,
-      "implementation": "107795dec4201b70bf2efdc6e55a2e603f9346c392275a2d3b6a3f1214215e33",
+      "implementation": "25493c255dd69a78c79dd467a94ea334d1c673af53f2b440ca1ab7d1b79ee272",
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 535,
+          "line": 536,
           "test": "P6 09095 解锢灵魂：弃掉法术支援，从手牌打出法术卡并减 3 费"
         }
       ]
@@ -4497,7 +4463,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 552,
+          "line": 553,
           "test": "P6 09096 仪式镰刀（4 级）：击败敌人后重整并移除所有毁灭"
         }
       ]
@@ -4520,7 +4486,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 570,
+          "line": 571,
           "test": "P6 09097 寻龙尺（4 级）：移动并 +2 技能值；发现最后线索后重整清毁灭"
         }
       ]
@@ -4543,7 +4509,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 604,
+          "line": 605,
           "test": "P6 09098 缟玛瑙五芒星（4 级）：躲避连接地点敌人；成功 2 点重整清毁灭"
         }
       ]
@@ -4590,7 +4556,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 635,
+          "line": 636,
           "test": "P6 09099 便携万能工具：真实攻击检定窗口横置 +1 技能值；勾选尖刀再 +1"
         }
       ]
@@ -4647,7 +4613,7 @@
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 677,
+          "line": 678,
           "test": "P6 09100 简易陷阱：以 2 计时入场，每轮结束移除 1 计时，耗尽后弃掉"
         }
       ]
@@ -4664,42 +4630,13 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment",
-          "flag",
-          "note"
-        ],
-        "count": 4,
-        "disclosures": [
-          {
-            "source": "flag",
-            "path": "entry.simplified",
-            "detail": "entry.simplified=true"
-          },
-          {
-            "source": "note",
-            "path": "note",
-            "detail": "approximation: 见 primitive-request/09101.json（购买时所选特性用占位 Monster/Humanoid；5 个定制勾选格规则未接读点，已标记 implemented:false（展示文本、不可购买））"
-          },
-          {
-            "source": "comment",
-            "line": 9,
-            "detail": "// approximation（已写 primitive-request/09101.json）："
-          },
-          {
-            "source": "comment",
-            "line": 24,
-            "detail": "// 占位的购买时所选特性（见文件头 approximation）。"
-          }
-        ]
-      },
-      "implementation": "b3a5f6d4a26fe59304dfc839648295961d8d177f34d0c8fa8a35e4bba1929cbb",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "10b09315285a0e50626996208f9a01f0c230a3804dc87d5a2945121772997d29",
       "evidence": [
         {
           "file": "tsk-player-m2-3.test.mjs",
-          "line": 694,
+          "line": 695,
           "test": "P6 09101 饱经风霜：对遭遇卡的检定每个匹配的所选特性获得双百搭图标"
         }
       ]

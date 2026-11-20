@@ -10,6 +10,7 @@ import { EOTE_STORY_META, EOTE_STORY_TEXT } from '../content/campaigns/edgeOfThe
 import { TDE_STORY_TEXT } from '../content/campaigns/theDreamEaters/story-text.js'
 import { chapters as tskChapters } from '../content/campaigns/theScarletKeys/shared.js'
 import { TSK_STORY_META, TSK_STORY_TEXT } from '../content/campaigns/theScarletKeys/story-text.js'
+import { buildAuthoredScenarioGuide } from './authored-scenario-guide.mjs'
 
 const source = new URL('../../../参考资源/ArkhamHorror-main/frontend/src/locales/', import.meta.url)
 const destination = new URL('../web/scenario-guides/', import.meta.url)
@@ -296,6 +297,17 @@ export async function buildScenarioGuides() {
     .map(chapter => ({ id: chapter.id, campaignId: 'theScarletKeys', tskChapter: chapter }))
   const scenarios = [...registeredScenarios, ...innsmouthChapters.filter(ch => !registeredScenarios.some(s => s.id === ch.id))
     .map(ch => ({ ...ch, campaignId: 'theInnsmouthConspiracy' })), ...eoteScenarioEntries, ...tskScenarioEntries]
+  const authored = new Map()
+  for (const scenario of registeredScenarios) {
+    let input
+    try {
+      input = await json(new URL(`../content/scenario-guide-sources/${scenario.id}.json`, import.meta.url))
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error
+      continue
+    }
+    authored.set(scenario.id, buildAuthoredScenarioGuide(scenario, input))
+  }
   const documents = {}
   const translations = await json(new URL('../content/scenario-guide-translations.json', import.meta.url))
   const dreamTranslations = {}
@@ -304,6 +316,7 @@ export async function buildScenarioGuides() {
     Object.assign(dreamTranslations, (await json(new URL(file, batches))).entries)
   }
   for (const scenario of scenarios) {
+    if (authored.has(scenario.id)) continue
     if (scenario.campaignId === 'edgeOfTheEarth') continue
     // 九循环《铁杉谷盛宴》：指南由 tools/build-fhv-guides.mjs 生成（源文件平铺，无 scenarios/ 子目录）。
     if (scenario.campaignId === 'theFeastOfHemlockVale') continue
@@ -342,6 +355,7 @@ export async function buildScenarioGuides() {
     return referenceNode
   }
   for (const scenario of scenarios) {
+    if (authored.has(scenario.id)) continue
     if (scenario.campaignId !== 'theDreamEaters') continue
     const sections = TDE_STORY_TEXT.chapters?.[scenario.id]?.sections
     if (!sections) continue
@@ -362,6 +376,10 @@ export async function buildScenarioGuides() {
   const results = new Map()
   const missing = []
   for (const scenario of scenarios) {
+    if (authored.has(scenario.id)) {
+      results.set(`${scenario.id}.json`, `${JSON.stringify(authored.get(scenario.id), null, 2)}\n`)
+      continue
+    }
     if (scenario.campaignId === 'edgeOfTheEarth') {
       results.set(`${scenario.id}.json`, `${JSON.stringify(buildEoteGuide(scenario.id), null, 2)}\n`)
       continue

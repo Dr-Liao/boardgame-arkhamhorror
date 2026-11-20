@@ -100,6 +100,7 @@ test('P5-2 单线 A：模式化章节顺序，选人/牌组后可以真正开始
     const auto = movesOf(state, 'hubAutoDeck', seat).find(move => move.sessionId == null) || movesOf(state, 'hubAutoDeck', seat)[0]
     assert.ok(auto, `座位 ${seat} 应能自动构筑`)
     play(state, cleanMove(auto), seat)
+    play(state, cleanMove(movesOf(state, 'hubConfirmDeck', seat)[0]), seat)
     const done = movesOf(state, 'hubDoneSeat', seat)[0]
     assert.ok(done, `座位 ${seat} 应能确认准备`)
     play(state, cleanMove(done), seat)
@@ -138,10 +139,12 @@ test('P5-2 分选：改线受两条线下限约束，按线准备把 record 写�
   play(state, cleanMove(movesOf(state, 'hubGoSetup')[0]))
   play(state, cleanMove(movesOf(state, 'hubSelectInvestigator', 0)[0]), 0)
   play(state, cleanMove(movesOf(state, 'hubAutoDeck', 0)[0]), 0)
+  play(state, cleanMove(movesOf(state, 'hubConfirmDeck', 0)[0]), 0)
   play(state, cleanMove(movesOf(state, 'hubDoneSeat', 0)[0]), 0)
   const seatOneChoice = movesOf(state, 'hubSelectInvestigator', 1)[0]
   play(state, cleanMove(seatOneChoice), 1)
   play(state, cleanMove(movesOf(state, 'hubAutoDeck', 1)[0]), 1)
+  play(state, cleanMove(movesOf(state, 'hubConfirmDeck', 1)[0]), 1)
   play(state, cleanMove(movesOf(state, 'hubDoneSeat', 1)[0]), 1)
   const lineB = state.campaign.parts?.B
   assert.ok(lineB, '另一条线的快照必须存在')
@@ -174,6 +177,7 @@ test('P5-2 并行：4 人准备完成后，大厅边界启动双运行时（纯�
     if (!movesOf(state, 'hubSelectInvestigator', seat).length) continue
     play(state, cleanMove(movesOf(state, 'hubSelectInvestigator', seat)[0]), seat)
     play(state, cleanMove(movesOf(state, 'hubAutoDeck', seat)[0]), seat)
+    play(state, cleanMove(movesOf(state, 'hubConfirmDeck', seat)[0]), seat)
     play(state, cleanMove(movesOf(state, 'hubDoneSeat', seat)[0]), seat)
   }
   assert.equal(state.hubReady, true)
@@ -207,6 +211,7 @@ test('并行自由分线：每座位可改线，人数不等时「开始」置�
   for (const seat of [0, 1, 2, 3]) {
     play(state, cleanMove(movesOf(state, 'hubSelectInvestigator', seat)[0]), seat)
     play(state, cleanMove(movesOf(state, 'hubAutoDeck', seat)[0]), seat)
+    play(state, cleanMove(movesOf(state, 'hubConfirmDeck', seat)[0]), seat)
     play(state, cleanMove(movesOf(state, 'hubDoneSeat', seat)[0]), seat)
   }
   const begin = movesOf(state, 'hubBeginScenario', 0)[0]

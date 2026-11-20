@@ -6,9 +6,18 @@ import { validateAssetClueSave } from './asset-clues.js'
 import { validateRailGrid } from './rail-grid.js'
 import { validateEnemyLocations } from './enemy-location.js'
 import { validateEnemyKeywords } from './enemy-keyword-movement.js'
+import { validateEnemyParts } from './enemy-parts.js'
 import { validateHostedAssets } from './hosted-assets.js'
 import { normalizeSurveyPreparation, validateSurveyPreparation } from './survey-preparation.js'
 import { normalizeResidentList } from './resident-record.js'
+export const GRID_ADJACENCY = Object.freeze(['orthogonal', 'row', 'rows', 'columns', 'none'])
+export const GRID_DIRECTIONS = Object.freeze(['north', 'east', 'south', 'west'])
+
+export function validateGridPorts(ports) {
+  if (!Array.isArray(ports) || new Set(ports).size !== ports.length
+    || [...ports].some(port => !GRID_DIRECTIONS.includes(port))) throw new TypeError('无效网格地点出口')
+}
+
 // Optional JSON extension inside the existing scenarioFlags store. Reads never initialize it.
 export function mechanicState(state, create = false) {
   if (!create) return state.scenarioFlags?.mechanics || null
@@ -33,9 +42,47 @@ export function assertFields(value, allowed) {
   for (const key of Object.keys(value)) if (!allowed.includes(key)) throw new TypeError(`未知机制字段 ${key}`)
   return value
 }
+const scenarioOptionId = /^[a-zA-Z][a-zA-Z0-9_-]*$/
+
+function validateScenarioChoices(choices, group, additionalFields = []) {
+  if (choices === undefined) return new Set()
+  if (!Array.isArray(choices)) throw new TypeError(`tdc.${group} 必须是列表`)
+  const seen = new Set()
+  for (const option of choices) {
+    assertFields(option, ['id', 'label', ...additionalFields])
+    if (typeof option.id !== 'string' || !scenarioOptionId.test(option.id) || option.id === 'constructor'
+      || seen.has(option.id) || typeof option.label !== 'string' || !option.label.trim()) {
+      throw new TypeError(`tdc.${group} 有无效或重复的选项`)
+    }
+    if (option.code != null && (typeof option.code !== 'string' || !option.code.trim())) {
+      throw new TypeError(`tdc.${group} 的卡牌编号无效`)
+    }
+    seen.add(option.id)
+  }
+  return seen
+}
+
+function validateTdcMechanics(spec) {
+  if (spec == null) return
+  assertFields(spec, ['tasks', 'routes', 'regions', 'glyphs'])
+  validateScenarioChoices(spec.tasks, 'tasks', ['code'])
+  const routes = validateScenarioChoices(spec.routes, 'routes')
+  validateScenarioChoices(spec.regions, 'regions', ['route'])
+  for (const region of spec.regions || []) {
+    if (region.route != null && !routes.has(region.route)) throw new TypeError('tdc.regions 引用了未知路线')
+  }
+  if (spec.glyphs != null) {
+    assertFields(spec.glyphs, [...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'])
+    for (const text of Object.values(spec.glyphs)) {
+      if (typeof text !== 'string' || !text.trim()) throw new TypeError('tdc.glyphs 字形文本无效')
+    }
+  }
+}
+
 export function normalizeScenarioMechanics(spec) {
   if (spec == null) return null
-  assertFields(spec, ['water', 'keys', 'vehicles', 'calendar', 'codex', 'residents', 'defenses', 'survey', 'noEncounterDeck', 'protectInvestigators'])
+  assertFields(spec, ['water', 'keys', 'vehicles', 'calendar', 'codex', 'residents', 'defenses', 'survey', 'noEncounterDeck', 'protectInvestigators', 'tdc'])
+  validateTdcMechanics(spec.tdc)
   normalizeScenarioCalendar(spec.calendar)
   normalizeCodex(spec.codex)
   normalizeResidentList(spec.residents)
@@ -75,6 +122,7 @@ export function validateMechanicState(state) {
   validateAssetClueSave(state)
   validateEnemyLocations(state)
   validateEnemyKeywords(state)
+  validateEnemyParts(state)
   validateHostedAssets(state)
   validateSurveyPreparation(state)
   const data = mechanicState(state)
@@ -87,7 +135,7 @@ export function validateMechanicState(state) {
   validateEnemyZones(state,data.enemyZones)
   validateCaptured(state, data.captured)
   if (data.version !== 1) throw new TypeError('不支持的可选机制存档版本')
-  if (data.gridAdjacency != null && !['orthogonal', 'row', 'columns', 'none'].includes(data.gridAdjacency)) throw new TypeError('Invalid grid adjacency save')
+  if (data.gridAdjacency != null && !GRID_ADJACENCY.includes(data.gridAdjacency)) throw new TypeError('Invalid grid adjacency save')
   if (data.floodPolicy != null) {
     assertFields(data.floodPolicy, ['reveal', 'locked'])
     if (data.floodPolicy.reveal != null) {
@@ -104,9 +152,10 @@ export function validateMechanicState(state) {
     if (typeof data.grid !== 'object' || Array.isArray(data.grid)) throw new TypeError('Invalid grid save')
     const positions = new Set()
     for (const [id, cell] of Object.entries(data.grid)) {
-      locationAt(state, id); assertFields(cell, ['x', 'y', 'isolated', 'connections'])
+      locationAt(state, id); assertFields(cell, ['x', 'y', 'isolated', 'connections', 'ports'])
       if (![cell.x, cell.y].every(Number.isSafeInteger) || typeof cell.isolated !== 'boolean'
         || !Array.isArray(cell.connections) || cell.connections.some(to => typeof to !== 'string')) throw new TypeError('Invalid grid cell')
+      if (cell.ports !== undefined) validateGridPorts(cell.ports)
       if (!cell.isolated) {
         const key = `${cell.x},${cell.y}`
         if (positions.has(key)) throw new TypeError('Overlapping grid cells')

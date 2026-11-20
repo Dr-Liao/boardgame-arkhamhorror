@@ -151,6 +151,8 @@ function prepareHumanSeat(world, state, seat, code) {
   settleChoices(world, state)
   playMove(world, state, legalFor(world, state, seat).find(move => move.action === 'hubAutoDeck'), seat)
   settleChoices(world, state)
+  playMove(world, state, legalFor(world, state, seat).find(move => move.action === 'hubConfirmDeck'), seat)
+  settleChoices(world, state)
   playMove(world, state, legalFor(world, state, seat).find(move => move.action === 'hubDoneSeat'), seat)
   settleChoices(world, state)
 }

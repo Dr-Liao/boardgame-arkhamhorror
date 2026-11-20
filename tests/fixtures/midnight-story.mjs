@@ -17,7 +17,7 @@ export function midnightConclusion() {
   const s = createGameState({ campaignHub: true, seed: 'midnight-story' }, [{ seat: 0, role: 'human' }])
   for (const command of [
     { action: 'hubGoSetup' }, { action: 'hubSelectInvestigator', code: '01001' },
-    { action: 'hubAutoDeck' }, { action: 'hubDoneSeat' }, { action: 'hubBeginScenario' },
+    { action: 'hubAutoDeck' }, { action: 'hubConfirmDeck' }, { action: 'hubDoneSeat' }, { action: 'hubBeginScenario' },
   ]) move(s, command)
   settle(s)
   s.actIndex = 2; s.enemies = []; s.investigators[0].hand = []

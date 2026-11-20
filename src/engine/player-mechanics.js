@@ -1,4 +1,5 @@
 import { putInHand } from './hand-entry.js'
+import { splicePlayerDiscard } from './player-zones.js'
 import { registeredEntry } from './ability.js'
 import { cardDef } from './card-lookup.js'
 import { revealSealedToken, sealPoolTokens } from './chaos-token-pool.js'
@@ -79,7 +80,7 @@ export function createPlayerApi(state, events, deps) {
             api().discardAsset(controller.seat, source)
             if (controller.seat !== owner) {
               const index = controller.discard.lastIndexOf(source.code)
-              if (index >= 0) { controller.discard.splice(index, 1); state.investigators[owner].discard.push(source.code) }
+              if (index >= 0) { splicePlayerDiscard(controller, index, 1); state.investigators[owner].discard.push(source.code) }
             }
           }
           api().harm(owner, { damage: context.damage || 0, horror: context.horror || 0 })
@@ -117,7 +118,7 @@ export function createPlayerApi(state, events, deps) {
         const selected = choice(seat, 'recoverDiscard', '选择取回的弃牌。', [{ id: 'done', label: '完成' }, ...cards.map((code, index) => ({ id: String(index), cardCode: code, label: code }))])
         if (selected === 'done') break
         const code = cards[Number(selected)]
-        inv.discard.splice(inv.discard.lastIndexOf(code), 1); putInHand(state, inv, code)
+        splicePlayerDiscard(inv, inv.discard.lastIndexOf(code), 1); putInHand(state, inv, code)
         recovered.push(code); level += cardDef(code)?.xp || 0
       }
       return recovered
@@ -308,10 +309,9 @@ export function createPlayerApi(state, events, deps) {
     },
     removeAssetFromGame(seat, id) {
       const inv = state.investigators[seat], card = inv.assets.find(card => card.id === id)
-      if (!card || !api().discardAsset(seat, card)) return false
-      const index = inv.discard.lastIndexOf(card.code)
-      if (index >= 0) inv.discard.splice(index, 1)
-      ;(state.removedFromGame ||= []).push(card.code)
+      // 卡面明示的移出游戏走离场流程，允许「不能离场」的支援执行自身的流放条款。
+      if (!card || deps.leaveAsset(state, inv, card, events, { reason: 'effect' }) === false || card.returnedToHand) return false
+      if (!card.removedFromGame) (state.removedFromGame ||= []).push(card.code)
       return true
     },
     captureWeakness(context, id) {

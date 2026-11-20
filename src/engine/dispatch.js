@@ -1,4 +1,7 @@
 import { isDraftMode, startInitialDraft, applyDraftMove } from '../deck/draft-mode.js'
+import { applyStartingDeckExperience, campaignDeckLocked } from '../campaign/campaign.js'
+import { drawBasicWeaknesses } from '../deck/deckbuilding.js'
+import { requestChoice } from './resolution.js'
 // 行动分派（applyMove / executeCommand / executeAction / executeHubMove / applyMoveUnchecked）
 // 从 engine.js 拆出的模块（Phase 6 · 6d-19）。
 //
@@ -13,6 +16,7 @@ import { investigatorRule } from '../cards/card-rules.js'
 import { cardPoolContext } from '../deck/card-pool.js'
 
 import { isParleyDescriptor } from './parley.js'
+import { attachmentIgnoresOpportunityAttack } from './attachment-rules.js'
 // P8：世界地图启程 / 状况报告（《绯红密钥》）的局外动作。
 // 引擎不 import 内容模块：地图图结构、目的地→流程节点、节点 id 与强制终点都从战役清单读；
 // 记录同步通过重演 `map` 节点声明的 embark 效果完成（内容层 syncMapRecords + 排队状况报告）。
@@ -21,7 +25,8 @@ import { applyCampaignEffect } from '../campaign/campaign-effects.js'
 import { FORCED_TIME_THRESHOLD, forcedDestination, mapTime, mergeMapTime, statusReportState, travelTo, useExpeditedTicket, worldMapState } from './tsk-map.js'
 // P8：定制升级卡（Customizable）的关间勾选。勾选校验/经验结算完全复用 tsk-customizable 原语，
 // dispatch 只负责「房主 + 相位 + 牌组归属」的越权校验、经验扣减与日志（与 hubPurchase 同口径）。
-import { customizationOptions, customizationsOfSeat, upgradeCustomization } from './tsk-customizable.js'
+import { customizationChoiceCount, customizationOptionFullyChecked, customizationOptions, customizationsOfSeat, recordCustomizationChoices,
+  upgradeCustomization, validateCustomizationChoices } from './tsk-customizable.js'
 // 暂存升级草稿时的「有效记录」口径与 campaign.js#upgradeRecord 一致（不在这里重写一遍）。
 import { upgradeRecord } from '../campaign/campaign.js'
 // 第 5 步 P6：法术专用额外行动的算术在 spell-actions.js（纯函数，无依赖）。
@@ -42,7 +47,8 @@ import { flipVeiledLocation } from './veiled.js'
 import { cardDef, cardName } from './card-lookup.js'
 import { beginAsIf, endAsIf } from './as-if-location.js'
 import { discardSpawnedEnemy, spawnHiddenEnemy, takeHiddenEnemyFromHand } from './hidden-enemy.js'
-import { recordPerformedAction } from './action-history.js'
+import { firstActionExemptsOpportunityAttack, recordPerformedAction, recordRoundAction } from './action-history.js'
+import { hasWindowListener } from './window-listeners.js'
 import { preparePlayAttempt } from './play-attempt.js'
 // ---------------------------------------------------------------------------
 // P8：世界地图启程 / 状况报告（战役级 hub 动作）
@@ -61,6 +67,10 @@ import { preparePlayAttempt } from './play-attempt.js'
 //   4. 状况报告正文与效果仍由内容处理器的 statusReport 节点结算；dispatch 只负责进入清单映射的
 //      节点并推进流程（不复制任何报告效果）。
 const MAP_WINDOW_STATES = Object.freeze(['interlude', 'scenarioSetup'])
+export const STARTING_DECK_RULE_ACTIONS = new Set([
+  'hubSelectInvestigator', 'hubAutoDeck', 'hubSetDeck', 'hubDraftPick', 'hubReopenSetup',
+  'hubCustomize', 'hubConfigureCustomization', 'hubPurchase', 'hubAutoUpgrade',
+])
 
 /** 校验「房主 + 地图窗口 + 当前 flow 节点 = 清单 map 节点」。 */
 function requireWorldMapPhase (state, seat, manifest) {
@@ -315,12 +325,13 @@ export function createDispatch(deps) {
     selectInitialHubScenario,
     stagePurchase,
     startScenario,
+    syncRuntimeCardTable,
     syncClues,
     unpaidExtraActionThreats,
     validateMove,
   } = deps
 
-function applyMove(state, seat, move) {
+function applyMove(state, seat, move, { sharedFreeWindows = true, filterDiscardChoices = true } = {}) {
   const error = validateMove(state, seat, move)
   if (error) throw new Error(error)
   // 调试跳关 / 重开本关允许在待决选择存在时直接打断旧事务并重建关卡。
@@ -331,18 +342,25 @@ function applyMove(state, seat, move) {
   // 事务会用"本次动作开始前"的快照重建整个 state（见 resolution.js），
   // 所以动作日志必须由这里持有，事务结束后再挂回去。
   const actionLog = state.actionLog || []
+  const startsSharedFreeWindowTransaction = sharedFreeWindows && !state.continuation
+  const startsFilteredChoiceTransaction = filterDiscardChoices && !state.continuation
   let events
   try {
-    events = resolveTransaction(state, seat, move, executeCommand)
+    events = resolveTransaction(state, seat, move, executeCommand, { sharedFreeWindows, filterDiscardChoices })
   } finally {
     state.actionLog = actionLog
   }
   // 对局级动作日志：重放、撤销与 AI 决策回归都读它（见 src/engine/replay.js）。
   // 只记成功提交的动作；内容是可 JSON 存档的纯数据，不含闭包。
-  actionLog.push({ seat, move: { ...move } })
+  const usesStartingDeckRules = !state._legacyStartingDeckRules && STARTING_DECK_RULE_ACTIONS.has(move.action)
+  actionLog.push({ seat, move: { ...move },
+    ...(usesStartingDeckRules ? { startingDeckConfirmation: true } : {}),
+    ...(startsSharedFreeWindowTransaction ? { sharedFreeWindows: true } : {}),
+    ...(startsFilteredChoiceTransaction ? { filterDiscardChoices: true } : {}) })
   // 公共线索是个人线索之和的派生值；内容层直接写 inv.clues 时在这里统一收敛，
   // 避免「公共线索 0 / 个人线索 1」导致共同支付与幕推进读错。
   if (!inHub(state) && state.uiState === 'inScenario') syncClues(state)
+  syncRuntimeCardTable(state)
   state.legalMoves = legalMoves(state)
   if (!inHub(state)) events.push({ type: 'presentation', kind: 'checkpoint', tableState: captureTableState(state, getStat, getMaxSanity, { enemyHealth, enemyFightValue, enemyEvadeValue }) })
   return events
@@ -484,6 +502,7 @@ function executePaidAction(state, seat, move, events) {
     const usedAbility = ['ability', 'entityAbility'].includes(move.action) ? abilityOfMove(state, inv, move) : null
     const abilityNoAoO = usedAbility?.descriptor?.noOpportunityAttack === true
       || usedAbility?.noOpportunityAttack === true
+      || attachmentIgnoresOpportunityAttack(state, inv, move)
       // 第 2 步 P2.7：谈判行动按规则不引发借机攻击；非玩家实体的通用行动同理。
       || isParleyDescriptor(usedAbility?.descriptor)
     // 03147 双刃短刀：控制者的「交战」行动不引发借机攻击。
@@ -498,6 +517,7 @@ function executePaidAction(state, seat, move, events) {
       : []
     if (totalCost && !noOpportunityAttack && !playNoAoO && !abilityNoAoO && !engageNoAoO && !scenarioNoAoOAll
       && !ruleIgnored(state, inv, 'opportunityAttack')
+      && !firstActionExemptsOpportunityAttack(state, inv, kind, registeredEntry)
       && !jakeSkipsOpportunityAttack(state, inv, kind)
       && !['fight', 'evade', 'resign', 'parley', 'parleyCultist', 'parleyLita'].includes(kind) && !['fightConcealed', 'evadeConcealed'].includes(move.action)) {
       const scenarioExempt = enemy => scenarioNoAoOFrom.includes(String(enemy.originalCode || enemy.code))
@@ -510,8 +530,10 @@ function executePaidAction(state, seat, move, events) {
         const enemy = chooseAttack(state, inv, candidates, 'opportunity')
         pending.splice(pending.indexOf(enemy.id), 1)
         if (inv.onTheLam && !enemy.elite) continue
+        const firstThisRound = inv.roundActionHistory?.round !== state.round || !inv.roundActionHistory.opportunityAttacks
+        recordRoundAction(state, inv, 'opportunityAttacks', null, registeredEntry)
         const opportunity = reactionWindow(state, 'opportunityAttack', {
-          when: 'opportunityAttack', seat, location: inv.location, enemy, prompt: `「${enemy.name}」对 ${inv.name} 发动借机攻击`,
+          when: 'opportunityAttack', seat, location: inv.location, enemy, firstThisRound, prompt: `「${enemy.name}」对 ${inv.name} 发动借机攻击`,
         }, events)
         if (opportunity.cancelled) {
           info(state, events, `${inv.name} 取消了「${enemy.name}」的借机攻击。`)
@@ -538,6 +560,9 @@ function executePaidAction(state, seat, move, events) {
             when: 'consecutiveActions', seat, actionKinds: repeatedActionKinds,
             location: inv.location, prompt: `${inv.name} 连续完成了两次同类行动`,
           }, events)
+          if (hasWindowListener(state, 'performedAction')) reactionWindow(state, 'performedAction', {
+            when: 'performedAction', seat, actionKind: kind, location: inv.location,
+          }, events, { allowNested: true })
         }
         reactionWindow(state, 'actionResolvedAtLocation', {
           when: 'actionResolvedAtLocation', seat, location: inv.location, prompt: `${inv.name} 完成了一次行动`,
@@ -644,13 +669,12 @@ function executeHubMove(state, seat, move, events) {
         const previous = campaign.investigators[seat]
         if (previous?.status === 'active' && !initialHubPreparation(state)) throw new Error('现役调查员不能更换；只有死亡或疯狂后才能挑选替补')
         if (previous?.status === 'active' && previous.code !== move.code) {
-          // Before the first scenario the player may reconsider their investigator.
-          // Keep the already generated basic weakness, but require a new legal deck
-          // so repeatedly previewing investigators cannot reroll that weakness.
+          // 旧存档可能在重选前已抽到基础弱点，继续保留原结果。
           previous.code = move.code
           previous.name = ALL_INVESTIGATORS[move.code].nameZh || ALL_INVESTIGATORS[move.code].name
           previous.deck = previous.deck.filter(code => ALL_CARDS[code]?.subtype === 'basicweakness')
           previous.startingDeckReady = false
+          delete previous.startingDeckConfirmationPending
         } else if (previous && previous.status !== 'active') {
           campaign.retired.push(structuredClone(previous))
           delete campaign.investigators[seat]
@@ -666,8 +690,8 @@ function executeHubMove(state, seat, move, events) {
         state.hubSeatSelected[seat] = true
         if (isDraftMode(state)) startInitialDraft(state, seat)
       }
-      const part = campaign.seatParts?.[seat]
-      if (isDraftMode(state) && part && part !== campaign.currentPart) inPart(state, part, select)
+      const part = campaign.seatParts?.[state.laneRuntime?.roomSeats?.[seat] ?? seat]
+      if ((!state._legacyStartingDeckRules || isDraftMode(state)) && part && part !== campaign.currentPart) inPart(state, part, select)
       else select()
       break
     }
@@ -691,11 +715,13 @@ function executeHubMove(state, seat, move, events) {
     case 'hubAutoDeck':
     case 'hubSetDeck': {
       const inv = state.investigators[seat]
+      const deferBasicWeakness = !state._legacyStartingDeckRules
+      const seed = Math.floor(randomValue(state) * 4294967296)
       const built = move.action === 'hubSetDeck'
         ? buildDeckFromList(ALL_INVESTIGATORS[inv.code], move.codes,
-          { seat, seed: Math.floor(randomValue(state) * 4294967296), playerPool: availablePlayerPool(state), basicWeaknessPool: basicWeaknessPool(state) })
+          { seat, seed, deferBasicWeakness, playerPool: availablePlayerPool(state), basicWeaknessPool: basicWeaknessPool(state) })
         : buildDeck(ALL_INVESTIGATORS[inv.code], {
-          seat, seed: Math.floor(randomValue(state) * 4294967296), playerPool: corePlayerPool(state),
+          seat, seed, deferBasicWeakness, playerPool: corePlayerPool(state),
         })
       if (built.errors?.length) throw new Error(`牌组无效：${built.errors.join('；')}`)
       // P5 批次 2：非活动线座位的 campaign record 写进该线快照（parts[part]），
@@ -703,30 +729,63 @@ function executeHubMove(state, seat, move, events) {
       const saveDeck = () => {
         const existing = campaign.investigators[seat]
         if (existing) {
-          // Editing or rebuilding a starting deck keeps the generated basic
-          // weakness and identity while replacing investigator-specific cards.
+          // 旧存档可能已抽到基础弱点，保留原抽取结果。
           const retained = existing.deck.filter(code => ALL_CARDS[code]?.subtype === 'basicweakness')
           existing.code = inv.code
           existing.name = inv.name
           existing.deck = [...built.playerCards, ...built.signatureCards, ...built.signatureWeaknesses,
             ...(retained.length ? retained : built.basicWeaknesses)].sort()
-          existing.startingDeckReady = true
-        } else {
-          const created = registerCampaignInvestigator(campaign, inv, built.deck)
-          created.startingDeckReady = true
         }
+        const record = existing || registerCampaignInvestigator(campaign, inv, built.deck)
+        applyStartingDeckExperience(campaign, record, built, { choosePurchaseEffect: spec => requestChoice(state, spec) })
+        record.startingDeckReady = !deferBasicWeakness
+        if (deferBasicWeakness) record.startingDeckConfirmationPending = true
       }
-      const lanePart = state.campaign.seatParts?.[seat]
+      const lanePart = campaign.seatParts?.[state.laneRuntime?.roomSeats?.[seat] ?? seat]
       if (lanePart && lanePart !== campaign.currentPart) inPart(state, lanePart, saveDeck)
       else saveDeck()
       inv.autoBuilt = move.action === 'hubAutoDeck'
-      if (inv.autoBuilt) info(state, events, `${inv.name}：按调查员属性与卡牌能力评分组牌，并通过尺寸、职业、等级、限额、重复张数和 0 XP 预算检查；签名卡与随机基础弱点另行加入。`)
+      if (inv.autoBuilt) info(state, events, deferBasicWeakness
+        ? `${inv.name} 的自动构筑已完成，等待最终确认。`
+        : `${inv.name}：按调查员属性与卡牌能力评分组牌，并通过尺寸、职业、等级、限额、重复张数和 0 XP 预算检查；签名卡与随机基础弱点另行加入。`)
       info(state, events, `${inv.name} 的战役牌组已保存。`)
       break
     }
+    case 'hubConfirmDeck': {
+      const inv = state.investigators[seat]
+      const confirm = () => {
+        const record = campaign.investigators[seat]
+        if (!record.deck.some(code => ALL_CARDS[code]?.subtype === 'basicweakness')) {
+          const pool = inv.autoBuilt || record.draftMode ? undefined : basicWeaknessPool(state)
+          const weaknesses = drawBasicWeaknesses(ALL_INVESTIGATORS[inv.code], () => randomValue(state), pool)
+          record.deck.push(...weaknesses)
+          record.deck.sort()
+        }
+        record.startingDeckReady = true
+        delete record.startingDeckConfirmationPending
+      }
+      const part = campaign.seatParts?.[state.laneRuntime?.roomSeats?.[seat] ?? seat]
+      if (part && part !== campaign.currentPart) inPart(state, part, confirm)
+      else confirm()
+      info(state, events, `${inv.name} 的起始牌组已确认并锁定，基础弱点已加入。`)
+      break
+    }
     case 'hubPurchase': {
-      const purchase = stagePurchase(campaign, seat, move.added, move.removed, cardPoolContext(state))
+      const purchase = stagePurchase(campaign, seat, move.added, move.removed, {
+        ...cardPoolContext(state), choosePurchaseEffect: spec => requestChoice(state, spec),
+      })
       info(state, events, `${state.investigators[seat].name} 暂存升级（${purchase.cost} XP），等待确认。`)
+      break
+    }
+    case 'hubConfigureCustomization': {
+      const optionIndex = move.optionIndex ?? null
+      if (!customizationChoiceCount(move.code, optionIndex)
+        || (optionIndex != null && !customizationOptionFullyChecked(state, seat, move.code, optionIndex))) {
+        throw new Error('当前不能记录该定制选择')
+      }
+      validateCustomizationChoices(state, seat, move.code, optionIndex, move.values)
+      recordCustomizationChoices(state, seat, move.code, optionIndex, move.values)
+      info(state, events, `已记录「${cardName(move.code)}」的定制选择。`)
       break
     }
     case 'hubCustomize': {
@@ -740,7 +799,7 @@ function executeHubMove(state, seat, move, events) {
       }
       if (campaign.upgradesAllowed === false) throw new Error('本次关间不允许升级')
       const record = campaign.investigators[seat]
-      if (!record || record.status !== 'active') throw new Error('当前座位没有可升级的调查员')
+      if (!record || record.status !== 'active' || campaignDeckLocked(record)) throw new Error('当前座位没有可升级的调查员')
       // 未保存的升级草稿把经验暂存在草稿记录上；先保存/撤销，避免两套账重复扣减。
       if (record.upgradeDraft) throw new Error('请先保存或撤销本轮升级方案，再进行定制升级')
       const code = typeof move.code === 'string' ? move.code : ''
@@ -757,12 +816,15 @@ function executeHubMove(state, seat, move, events) {
       const checked = [...(customizationsOfSeat(state, seat)[code] || [])]
       const filled = checked.filter(index => index === optionIndex).length
       if (filled >= option.checks) throw new Error(`「${option.name}」已经勾满 ${option.checks} 格`)
+      const completesChoice = filled + 1 === option.checks && customizationChoiceCount(code, optionIndex) > 0
+      if (completesChoice) validateCustomizationChoices(state, seat, code, optionIndex, move.values)
       checked.push(optionIndex)
       const availableXp = Math.max(0, Number(upgradeRecord(record)?.xp) || 0)
       // 2026-11-16 P2-3：exceptional 定制卡每格 2 XP（与 legalMoves 的 cost/availableXp 同口径）。
       const costPerCheck = cardDef(code)?.exceptional === true ? 2 : 1
       // 原语只校验/结算，不写 `record.xp`；这里扣一次（hubPurchase 经 purchaseCard 扣一次，同一口径）。
       const result = upgradeCustomization(state, { seat, code, checked, availableXp, costPerCheck })
+      if (completesChoice) recordCustomizationChoices(state, seat, code, optionIndex, move.values)
       record.xp -= result.xpCost
       record.spentXp = (record.spentXp || 0) + result.xpCost
       campaign.xp = Object.values(campaign.investigators).reduce((sum, item) => sum + item.xp, 0)
@@ -775,7 +837,9 @@ function executeHubMove(state, seat, move, events) {
       const advice = recommendUpgrade(campaign.investigators[seat], campaign.records, cardPoolContext(state))
       campaign.investigators[seat].upgradeAdvice = advice
       if (advice.added) {
-        stagePurchase(campaign, seat, advice.added, advice.removed, cardPoolContext(state))
+        stagePurchase(campaign, seat, advice.added, advice.removed, {
+          ...cardPoolContext(state), choosePurchaseEffect: spec => requestChoice(state, spec),
+        })
         finishUpgradeDraft(campaign, seat, true)
       }
       state.hubUpgradedSeats[seat] = true
@@ -803,7 +867,8 @@ function executeHubMove(state, seat, move, events) {
       state.hubReady = false
       state.hubSeatDone = {}
       state.currentSeat = 0
-      info(state, events, '首关尚未开始，已重新开放调查员、牌组与席位准备。')
+      info(state, events, state._legacyStartingDeckRules
+        ? '首关尚未开始，已重新开放调查员、牌组与席位准备。' : '首关尚未开始，请重新确认席位准备。')
       break
     case 'hubBeginScenario': {
       // P9.5：并行 lane 内部运行时由 mod 边界选定队长（线队长可以是 AI），不再要求真人。
@@ -978,7 +1043,8 @@ function applyMoveUnchecked(state, seat, move, events) {
         const previousBeneath = state._playedFromBeneath
         if (channelTaken.playedFromBeneath) state._playedFromBeneath = { seat, cardCode: m.cardId }
         try {
-          doPlay(state, seat, m.cardId, events, false, false, null, null, null, null, channelTaken.playDiscount || 0)
+          doPlay(state, seat, m.cardId, events, false, false, null, null, null, null, channelTaken.playDiscount || 0, null, null,
+            { syntheticHand: true, cancelUnpaidPlay: true })
         } finally {
           if (channelTaken.playedFromBeneath) {
             if (previousBeneath === undefined) delete state._playedFromBeneath
@@ -992,7 +1058,8 @@ function applyMoveUnchecked(state, seat, move, events) {
       if (m.asIfLocation) beginAsIf(state, inv, m.asIfLocation)
       try {
         doPlay(state, seat, m.cardId, events, !!m.fromDiscard, false, m.copyCode,
-          m.fromPlanAssetId, m.fromBackpackId, m.threatId, 0, m.fastSourceId || null, m.fromDiscardProviderId)
+          m.fromPlanAssetId, m.fromBackpackId, m.threatId, 0, m.fastSourceId || null, m.fromDiscardProviderId,
+          { cancelUnpaidPlay: true })
       } finally {
         if (m.asIfLocation) endAsIf(state, inv)
       }

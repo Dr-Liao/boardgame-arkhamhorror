@@ -10,6 +10,7 @@
 //   · 旧存档迁移常量，只在 save-migration 里使用。
 
 import { registeredEntry, registeredEntries } from '../engine/ability.js'
+import { SKILL_NAMES } from '../engine/presentation-constants.js'
 import { CARD_ABILITY_ENTRIES } from './card-abilities.js'
 import { investigatorRule } from './investigator-abilities.js'
 import { NON_PLAYER_ABILITY_ENTRIES } from './encounter-abilities.js'
@@ -50,7 +51,7 @@ export function treacheryRuleFor(code) {
 }
 
 // 声明式「显现 - 检定」：数据在条目的 `treacheryRule.test`。
-// 形状 `{ skill, difficulty: number | { base, plus }, fail, penaltyKind? }`；
+// 用 skill 指定技能，或用 skills 令该座位选择一项。
 // 读点与结算入口是下面的 resolveDeclarativeTreacheryTest（各战役 encounter-rules 共用）。
 export function treacheryTestFor(code) {
   return (code && entryOf(code)?.treacheryRule?.test) || null
@@ -75,7 +76,7 @@ export function declarativeTestDifficulty(state, inv, spec) {
 // 结算一条声明式遭遇检定：`api.test` 走引擎的检定生命周期，失败分支交给引擎的 applyPenalty
 // （与旧 DSL 的 t.test 同一口径：失败差值下限 0、拒绝/取消/伤害分配全在引擎里）。
 // 各战役的 encounter-rules.resolveEncounter 在条目没有 encounterResolve 时调用这里。
-export function resolveDeclarativeTreacheryTest(state, inv, card, api, rule = null) {
+export function resolveDeclarativeTreacheryTest(state, inv, card, api, rule = null, { forcedPeril = false } = {}) {
   const code = card?.originalCode || card?.code
   const test = rule || treacheryTestFor(code)
   if (!test) return false
@@ -83,14 +84,22 @@ export function resolveDeclarativeTreacheryTest(state, inv, card, api, rule = nu
     throw new Error(`声明式遭遇检定 ${code} 需要 api.applyPenalty（剧本运行时未接线）`)
   }
   const difficulty = declarativeTestDifficulty(state, inv, test.difficulty)
-  // 不传自定义 source：与结算前的手写 `api.test(seat, skill, difficulty, cb)` 完全同形，
-  // 检定来源仍由剧本运行时注入（type=scenario / ability=true），重放指纹与日志不变。
-  api.test(inv.seat, test.skill, difficulty, result => {
+  let skill = test.skill
+  if (test.skills) {
+    skill = api.choose({ kind: 'skill', seat: inv.seat, source: code, prompt: '选择本次检定的技能。',
+      options: test.skills.map(id => ({ id, label: SKILL_NAMES[id] })) })
+    if (!test.skills.includes(skill)) throw new RangeError('无效检定技能')
+  }
+  const resolve = result => {
     if (result.success) return
     const failedBy = Math.max(0, difficulty - Number(result.value || 0))
     const fail = test.penaltyKind ? { ...test.fail, kind: test.penaltyKind } : test.fail
-    api.applyPenalty(inv.seat, fail, failedBy, { silent: true })
-  })
+    const options = fail.kind === 'discardChosenByAmount' ? { silent: true, source: code } : { silent: true }
+    api.applyPenalty(inv.seat, fail, failedBy, options)
+  }
+  // Preserve the established call shape for existing single-skill encounters.
+  if (test.skills && (card?.peril || forcedPeril)) api.test(inv.seat, skill, difficulty, resolve, { peril: true })
+  else api.test(inv.seat, skill, difficulty, resolve)
   return false
 }
 

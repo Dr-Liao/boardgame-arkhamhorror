@@ -10,6 +10,8 @@
 // 判定由引擎注入（本模块不 import 引擎，避免循环依赖），并且只在入场卡确实下调了
 // 生命/神智上限时才做：上限没变时提示「已致命」只会在嵌套结算里提前判负、改变既有顺序。
 // 放在反应窗口之后，让窗口里的反应先把卡处理掉（例如取消显现），再做判定。
+import { takeRevelationScenarioDeck } from './resolution-scope.js'
+
 let hooks = { checkLimitDefeat: null }
 
 export function setThreatEntryHooks(next) {
@@ -17,6 +19,8 @@ export function setThreatEntryHooks(next) {
 }
 
 export function afterThreatEntered(state, inv, card, events, reactionWindow) {
+  const scenarioDeckId = takeRevelationScenarioDeck(card.code)
+  if (scenarioDeckId) card.discardToScenarioDeck = scenarioDeckId
   if (typeof reactionWindow === 'function') {
     reactionWindow(state, 'threatEntered', {
       when: 'threatEntered', seat: inv.seat, card, cardCode: card.code, location: inv.location,

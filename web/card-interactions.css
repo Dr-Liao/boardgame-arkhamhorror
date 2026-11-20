@@ -106,7 +106,7 @@
 .ah-visual-choices:not(:has(.ah-visual-option:not([hidden]))) { display: none; }
 .ah-visual-option[hidden] { display: none !important; }
 .ah-visual-cell[hidden] { display: none !important; }
-/* 反应提示开关：卡面/详情/角色面板统一成一颗闪电图标按钮（无文字）。
+/* 反应提示开关：卡面、详情和角色面板共用图标按钮。
    定位/配色见 player-dashboard.css 的 .ah-reaction-mode，这里只补小卡与详情里的尺寸。 */
 .ah-minicard > .ah-reaction-mode { position: absolute; right: 1px; top: 3px; z-index: 6; width: 22px; height: 22px; border-radius: 4px; }
 .ah-minicard > .ah-reaction-mode .ah-icon { width: 14px; height: 14px; }

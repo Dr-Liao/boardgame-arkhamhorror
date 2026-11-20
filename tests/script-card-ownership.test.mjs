@@ -48,6 +48,7 @@ function launch() {
   move({ action: 'hubGoSetup' })
   move({ action: 'hubSelectInvestigator', code: '04001' })
   move({ action: 'hubAutoDeck' })
+  move({ action: 'hubConfirmDeck' })
   move({ action: 'hubDoneSeat' })
   move({ action: 'hubBeginScenario' })
   settle(state)

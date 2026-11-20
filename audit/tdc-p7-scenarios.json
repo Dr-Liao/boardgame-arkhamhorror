@@ -1,0 +1,657 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "theDrownedCity",
+  "phase": "P7",
+  "phaseName": "共享遭遇、剧本与战役流程",
+  "status": "content-complete",
+  "counts": {
+    "chapters": 10,
+    "chaptersContentComplete": 10,
+    "moduleLoaded": 10,
+    "manifestComplete": 10,
+    "registered": 10,
+    "cardEntries": 231,
+    "missingCardEntries": 0,
+    "guidesReady": 10,
+    "scenarioTests": 152,
+    "sharedGroups": 15,
+    "sharedCards": 54,
+    "sharedMissing": 0
+  },
+  "checks": {
+    "campaignRegistered": true,
+    "campaignPackDevelopment": true,
+    "flowExplicit": true,
+    "allChaptersReachable": true,
+    "terminalReachable": true,
+    "prologue": true,
+    "interludes": true,
+    "epilogue": true,
+    "records": true,
+    "storyText": true,
+    "storyCheck": true,
+    "campaignTests": true,
+    "sharedEntries": true,
+    "sharedTests": true
+  },
+  "flowCoverage": {
+    "explicit": true,
+    "terminalReachable": true,
+    "reachableChapters": [
+      "oneLastJob",
+      "theWesternWall",
+      "theDrownedQuarter",
+      "theApiary",
+      "theGrandVault",
+      "courtOfTheAncients",
+      "obsidianCanyons",
+      "sepulchreOfTheSleeper",
+      "theDoomOfArkhamPartI",
+      "theDoomOfArkhamPartII"
+    ],
+    "missingChapters": []
+  },
+  "scenarios": [
+    {
+      "id": "oneLastJob",
+      "referenceCode": "11501",
+      "group": "one_last_job",
+      "modulePath": "content/campaigns/theDrownedCity/scenarios/oneLastJob/index.js",
+      "cardCount": 17,
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "registered": true,
+        "cardEntries": true,
+        "behaviorFile": true,
+        "chaosFile": true,
+        "layoutFile": true,
+        "guide": true,
+        "tests": true
+      },
+      "status": "content-complete",
+      "guide": {
+        "status": "ready",
+        "sourcePath": "content/scenario-guide-sources/oneLastJob.json",
+        "outputPath": "web/scenario-guides/oneLastJob.json",
+        "sourceSha256": "4fe425a7c8a9d817a51d8db7b59009074e61e1d00c2f17ef5d8c0b58768f440c",
+        "outputSha256": "66131ca1a5b49c1e11dbe9c03ee7bbb5f31b23a13719ad89cc4f1fdae9ffd88c"
+      },
+      "tests": {
+        "count": 14,
+        "titles": [
+          "P7 oneLastJob 章节结构：17 张条目、8 地点、3 幕、2 议程、development manifest",
+          "P7 oneLastJob manifest 通过 schema 校验，地点连接对称且布局边真实",
+          "P7 oneLastJob 遭遇牌库守恒：31 张固定牌库，头目/执行者/幕放一边",
+          "P7 oneLastJob 布置：6 地点入场、起始蒂林哈斯特密所、两间酒馆等待幕 1 背面",
+          "P7 oneLastJob 幕 1 目标 / 背面：线索放上幕、酒馆入场、头目生成、幕牌库补齐",
+          "P7 oneLastJob 幕 2/幕 3：头目伤害推进、对手帮派找上门、精英在胜利区进入结局 1",
+          "P7 oneLastJob 议程背面：议程 1 生成执行者并洗回弃牌；议程 2 全员击败 + 无结局",
+          "P7 oneLastJob 地点行动：外星语言（蒂林哈斯特密所）与幕 1 谈判",
+          "P7 oneLastJob 混乱标记：四档符号（cultist 不在战役袋）与追加效果",
+          "P7 oneLastJob [elder_thing] 失败：弃遭遇牌、生成罪犯敌人并交战（困难面立刻攻击）",
+          "P7 oneLastJob 结局：无结局记露比赢、结局 1 记露比输、外星语言翻符文 A",
+          "P7 oneLastJob 只读投影与 JSON 存档往返",
+          "P7 oneLastJob 单卡条目：17 张注册、code 唯一、数据条目 flags 与读点",
+          "P7 oneLastJob 议程反应：阿卡姆地点最后一个线索后弃顶 3 张并生成罪犯"
+        ]
+      }
+    },
+    {
+      "id": "theWesternWall",
+      "referenceCode": "11517",
+      "group": "the_western_wall",
+      "modulePath": "content/campaigns/theDrownedCity/scenarios/theWesternWall/index.js",
+      "cardCount": 20,
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "registered": true,
+        "cardEntries": true,
+        "behaviorFile": true,
+        "chaosFile": true,
+        "layoutFile": true,
+        "guide": true,
+        "tests": true
+      },
+      "status": "content-complete",
+      "guide": {
+        "status": "ready",
+        "sourcePath": "content/scenario-guide-sources/theWesternWall.json",
+        "outputPath": "web/scenario-guides/theWesternWall.json",
+        "sourceSha256": "c5b63247fd072704f0671c20ee1d7944be2a5640dbc2e0971a52567b7ef3a336",
+        "outputSha256": "2146255ef39d0b4171b64e4274772463e6223a7c6ad5dba743ead442dc23a556"
+      },
+      "tests": {
+        "count": 18,
+        "titles": [
+          "P7 theWesternWall 章节结构：20 张条目、13 地点实例、2 幕、1 议程、4 结局键",
+          "P7 theWesternWall manifest 通过 schema 校验，5 层静态连接与布局边合法",
+          "P7 theWesternWall 遭遇牌库守恒：35 张固定牌库，放一边/移出固定卡",
+          "P7 theWesternWall 西线：起点西墙、10 地点入场、行走路线移出 2、层 2–5 淹没 1/1/2/2",
+          "P7 theWesternWall 东线：起点黑曜石地基、层 1–2 完全淹没、方向相反",
+          "P7 theWesternWall 按行连通：相邻整层全互通、同层不连通（运行期）",
+          "P7 theWesternWall 沉没阶梯：揭示后把水下秘库放到上一行或下一行",
+          "P7 theWesternWall 险恶道路：不能从有线索的地点进入；进入效果按上下方向结算",
+          "P7 theWesternWall 深潜者主母进场：从遭遇牌库找出深潜者敌人并生成",
+          "P7 theWesternWall 混乱标记：四档符号、层级/淹没相关修正与自动失败",
+          "P7 theWesternWall 标记效果：完全淹没受伤、提高淹没等级",
+          "P7 theWesternWall 幕目标：西线全员到黑曜石地基、东线全员到西墙",
+          "P7 theWesternWall 幕背面：西线 R1 → 结局 3（战役跳章）、东线 → 结局 2；西线无结局也绑结局 3",
+          "P7 theWesternWall Do No Harm（帮助）：记录 helped、议程 +1 毁灭、结局加寄生虫与 2 点进度",
+          "P7 theWesternWall Do No Harm（抛弃）：起始地点无线索、结局 1 点精神创伤与 -1 进度",
+          "P7 theWesternWall 结局：拉莱耶地图划除「西墙」、结局 2/东线无结局去沉睡者之墓、结局 3 跳章由战役流程决定",
+          "P7 theWesternWall 单卡条目：20 张注册、code 唯一、剧情/敌人/诡计 flags",
+          "P7 theWesternWall 只读投影与 JSON 存档往返"
+        ]
+      }
+    },
+    {
+      "id": "theDrownedQuarter",
+      "referenceCode": "11536",
+      "group": "the_drowned_quarter",
+      "modulePath": "content/campaigns/theDrownedCity/scenarios/theDrownedQuarter/index.js",
+      "cardCount": 20,
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "registered": true,
+        "cardEntries": true,
+        "behaviorFile": true,
+        "chaosFile": true,
+        "layoutFile": true,
+        "guide": true,
+        "tests": true
+      },
+      "status": "content-complete",
+      "guide": {
+        "status": "ready",
+        "sourcePath": "content/scenario-guide-sources/theDrownedQuarter.json",
+        "outputPath": "web/scenario-guides/theDrownedQuarter.json",
+        "sourceSha256": "c909e2f47c81fabdff37b8e9231795b2c1f732350a840cae3ba7bcb1fd255241",
+        "outputSha256": "7f92458c2d753e08efc04df28a1ba64ce68304a53ce81cefae4feaf13506de7d"
+      },
+      "tests": {
+        "count": 19,
+        "titles": [
+          "P7 theDrownedQuarter 章节结构：20 张条目、11 处地点、1 幕 2 议程与 development manifest",
+          "P7 theDrownedQuarter 单卡条目：20 个文件、code = 文件名、身份都是真实卡号且注册唯一",
+          "P7 theDrownedQuarter 遭遇牌库：36 张、8 组、水下寄生虫/利维坦不进牌库",
+          "P7 theDrownedQuarter Setup：放一边 3 张、遭遇牌库 36 张、屏障核心未激活在场",
+          "P7 theDrownedQuarter 随机海床：两组二选一各移出 1 张，8 张洗牌进环位（未揭示）",
+          "P7 theDrownedQuarter 网格相邻即相连：核心 4 条、环角 2 条、环边 3 条且双向",
+          "P7 theDrownedQuarter 屏障核心：≥6 处已揭示且未淹没海床 → 已激活；≤5 → 翻回",
+          "P7 theDrownedQuarter 海床漫入：进入海床时提高本地点与一处相邻地点淹没，每地点一次",
+          "P7 theDrownedQuarter 行动：幕 1 [fast] 降淹没、核心改道放线索、已激活核心取屏障节点",
+          "P7 theDrownedQuarter 幕 1 目标与背面：全队轮末在已激活核心 → 有节点结局 1 / 无节点结局 2",
+          "P7 theDrownedQuarter 议程背面：沉没遗迹生成海底利维坦（生命 4+3/人），崩塌圆顶击败全队",
+          "P7 theDrownedQuarter 敌军阶段强制：水母/利维坦重整时提高所在地点淹没，不能则放毁灭",
+          "P7 theDrownedQuarter 混乱标记：四档取值（已揭示地点数 / 淹没状态）",
+          "P7 theDrownedQuarter 标记追加效果：[tablet] 失败放线索、[cultist] 淹没伤害",
+          "P7 theDrownedQuarter 水下寄生虫：攻击后翻面移动到连接地点；被击败 → 符文 X + 胜利区",
+          "P7 theDrownedQuarter 黑曜石遗物与屏障节点：符文 Y、资产不可离场与回合自愈",
+          "P7 theDrownedQuarter 结局链：结局 2 记录供能改导并在结局 3 发奖励经验；划掉拉莱耶地图",
+          "P7 theDrownedQuarter 跳章出口：西向 → theApiary，东向 → theWesternWall（manifest 一致）",
+          "P7 theDrownedQuarter JSON 存档往返：布局/淹没/放一边/记录读回后行为继续可用"
+        ]
+      }
+    },
+    {
+      "id": "theApiary",
+      "referenceCode": "11553",
+      "group": "the_apiary",
+      "modulePath": "content/campaigns/theDrownedCity/scenarios/theApiary/index.js",
+      "cardCount": 34,
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "registered": true,
+        "cardEntries": true,
+        "behaviorFile": true,
+        "chaosFile": true,
+        "layoutFile": true,
+        "guide": true,
+        "tests": true
+      },
+      "status": "content-complete",
+      "guide": {
+        "status": "ready",
+        "sourcePath": "content/scenario-guide-sources/theApiary.json",
+        "outputPath": "web/scenario-guides/theApiary.json",
+        "sourceSha256": "92c9b16164fc577d7f0062bbf869952e84f106f061492ba2ecabedd86dccd9c3",
+        "outputSha256": "95a965c7fb495b8ec14a0431721fb7ab11a96fb200c20c957ae58209db8f2bf7"
+      },
+      "tests": {
+        "count": 23,
+        "titles": [
+          "P7 theApiary 章节结构：34 张条目、14 处地点、3 幕 2 议程、5 个结局与 development manifest",
+          "P7 theApiary 单卡条目：34 个文件、code = 文件名、身份真实且注册唯一 / 显现接线",
+          "P7 theApiary 遭遇牌库：西向 34 / 东向 35 + 3 张地点；放一边与移出游戏按方向",
+          "P7 theApiary Setup 西向：朝圣者线幕组、移出主母、玛莉亚放一边、隐藏地点洗入牌库底 10 张",
+          "P7 theApiary Setup 东向：蜂巢思维幕组、移出玛莉亚、主母放一边、隐藏地点为攫噬长廊",
+          "P7 theApiary 符号连接：入口 6 条、环位符号链、中央腔室动态面朝且全部对称",
+          "P7 theApiary 地点从遭遇牌库显现：全部入场后从入口可达、网格与遮挡一致",
+          "P7 theApiary 地点显现效果：增生原野带出隐藏秘库、翻涌裂隙生成带鳞寄生虫",
+          "P7 theApiary 地点显现：荧光通道把繁殖地/腐化秘库洗入牌库底 10，并洗入朝圣者组",
+          "P7 theApiary 中央腔室：初始面朝酸性体腔，顺时针 → 攫噬长廊，逆时针转回，连接随面朝更新",
+          "P7 theApiary 幕 1 背面·西向幕间：入口翻危险出口、异教徒叠到营地下、玛莉亚与穷途异魔入场",
+          "P7 theApiary 幕 1 背面·东向幕间：重排环位、移除其余地点、中央腔室朝酸性体腔、主母生成",
+          "P7 theApiary 幕 2 西向：异教徒卡牌 ≥5 轮末必须推进 → 幕下 ≥3 张进入结局 1，否则结局 2",
+          "P7 theApiary 幕 2 东向：主母被击败立刻推进 → 结局 3",
+          "P7 theApiary 议题：1 背面放线索并把奇丑混种洗入牌库底；2 正面毁灭生成敌人；2 背面击败全场",
+          "P7 theApiary 混乱标记：四档取值（毁灭标记总数 / 异教徒敌人 / 技能）",
+          "P7 theApiary 标记追加效果：[cultist] 再揭示、[tablet] 放毁灭、[elder_thing] 伤害或恐惧",
+          "P7 theApiary 敌人：主母生命 8/人、偷渡者伤害转嫁；带鳞寄生虫被击败 → 符文 T + 胜利区",
+          "P7 theApiary 剧情资产与符文：古代遗物 → S，隐藏秘库 → U，符文去重",
+          "P7 theApiary 骇人「面具」：仍被控制时结局记录 grislyMask",
+          "P7 theApiary 结局 1/2/3/4 与无结局：记录、寄生变形、奖励经验与跳章",
+          "P7 theApiary 牌库底 10 张：shuffleIntoBottom 把卡放进数组前端（引擎栈底）",
+          "P7 theApiary JSON 存档往返：方向/幕/放一边/面朝读回后行为继续可用"
+        ]
+      }
+    },
+    {
+      "id": "theGrandVault",
+      "referenceCode": "11587",
+      "group": "the_grand_vault",
+      "modulePath": "content/campaigns/theDrownedCity/scenarios/theGrandVault/index.js",
+      "cardCount": 26,
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "registered": true,
+        "cardEntries": true,
+        "behaviorFile": true,
+        "chaosFile": true,
+        "layoutFile": true,
+        "guide": true,
+        "tests": true
+      },
+      "status": "content-complete",
+      "guide": {
+        "status": "ready",
+        "sourcePath": "content/scenario-guide-sources/theGrandVault.json",
+        "outputPath": "web/scenario-guides/theGrandVault.json",
+        "sourceSha256": "1c76198854500aaf5c1ef305ef5aa3cb9d68d2bccb08a51cb2f5ace8955571fc",
+        "outputSha256": "398e1241513f0bde060f3f6ce5b65b4f1ed64a6743c89a513580a18f25725beb"
+      },
+      "tests": {
+        "count": 15,
+        "titles": [
+          "P7 theGrandVault 结构：26 条目、12 规则地点、2 幕 3 议程、development manifest",
+          "P7 theGrandVault 地点与 layout：4 固定 + 8 候选、网格坐标、展示坐标覆盖全部地点",
+          "P7 theGrandVault 遭遇牌库：固定 6 组、放一边 15 张、Star Spawn 2 张移出",
+          "P7 theGrandVault 布置：11 处地点入场，7 张秘库房间随机填充剩余槽位，底部一排部分淹没",
+          "P7 theGrandVault 供能分支：thePowerWasDiverted 时只激活左下腔室",
+          "P7 theGrandVault 激活账本：激活/失活经 scenarioFlags 记录，秘库核心在全部秘库激活后解封",
+          "P7 theGrandVault 移动平台：共同花费线索后与相邻[[秘库]]交换网格位置并重算连接",
+          "P7 theGrandVault 符文：翻译 3 个符文揭示封印腔室，符文卡加入胜利区",
+          "P7 theGrandVault 碑匾：碑匾腔室最后一个线索后发现并交付潮汐碑匾",
+          "P7 theGrandVault 幕间「秘库核心」：共同花费 3[per] 线索，按键记录 theInnerSanctumWasUnsealed",
+          "P7 theGrandVault 幕 1：轮末且控制潮汐碑匾时推进；幕 2 全员撤退推进并进入结局",
+          "P7 theGrandVault 议程背面：议程 1 生成穷途异魔，议程 3 全体被击败",
+          "P7 theGrandVault 混乱标记：四档取值（含淹没加成/已激活数量）与 [cultist]/[elder_thing] 追加效果",
+          "P7 theGrandVault 结局：R'lyeh 地图、Tidal Tablet、Good Money 下一章起始资源",
+          "P7 theGrandVault JSON 存档往返：网格 / 激活账本 / 符文 / 放一边保持"
+        ]
+      }
+    },
+    {
+      "id": "courtOfTheAncients",
+      "referenceCode": "11612",
+      "group": "court_of_the_ancients",
+      "modulePath": "content/campaigns/theDrownedCity/scenarios/courtOfTheAncients/index.js",
+      "cardCount": 27,
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "registered": true,
+        "cardEntries": true,
+        "behaviorFile": true,
+        "chaosFile": true,
+        "layoutFile": true,
+        "guide": true,
+        "tests": true
+      },
+      "status": "content-complete",
+      "guide": {
+        "status": "ready",
+        "sourcePath": "content/scenario-guide-sources/courtOfTheAncients.json",
+        "outputPath": "web/scenario-guides/courtOfTheAncients.json",
+        "sourceSha256": "1384dfb3d857b5540a5db283efc1d6737de26a459849f67391ddc28d58e22ee0",
+        "outputSha256": "13eaada24cdcbee21c0b96137770eee3af1c3aec0f575997148a9fd326ec3bac"
+      },
+      "tests": {
+        "count": 17,
+        "titles": [
+          "P7 courtOfTheAncients 结构：27 条目、11 规则地点（12 张地点卡）、2 幕 2 议程、development manifest",
+          "P7 courtOfTheAncients 地点与 layout：竖直 4 层塔、静态连接只有东侧前厅 ↔ 古代祭坛",
+          "P7 courtOfTheAncients 遭遇牌库：固定组 33 张 + 路线组 + 1 名 Star Spawn 残余；放一边 5 张声明",
+          "P7 courtOfTheAncients 向西布置：大升降机第 1 层、东侧前厅开场、崩塌档案库 5 张按环位入场",
+          "P7 courtOfTheAncients 向东布置：大升降机第 4 层、扭曲栈桥开场、1 层全淹没/2 层部分淹没",
+          "P7 courtOfTheAncients 大升降机滑动：牌与标记随行、左右邻接与路径即时更新、层级边界",
+          "P7 courtOfTheAncients 不稳地基：大升降机移动后其上调查员敏捷(2)检定，失败 1 伤害",
+          "P7 courtOfTheAncients 大升降机翻面：最后一个线索 → 已激活面（保留标记）→ 立刻推进幕 1",
+          "P7 courtOfTheAncients 已激活面调查：改为不发现线索、滑动升降机一次（可花线索再滑一次）",
+          "P7 courtOfTheAncients 符文：击败守护者译符文、胜利区符文驱动 [skull]、祭坛进入限制与破封取碎片",
+          "P7 courtOfTheAncients 地点隐藏值修正：梦之档案库按胜利区符文 -1、历史档案库按附属符文 +1",
+          "P7 courtOfTheAncients 幕 2 撤离：全员撤退推进并按路线进入结局 1/2",
+          "P7 courtOfTheAncients 议程背面：淹没档案塔降低淹没并洗回预兆/符文；不稳地基全体被击败",
+          "P7 courtOfTheAncients 结局：R'lyeh 地图 + Shard of Y'ch'lecht 记录；幕 1 弃牌数量",
+          "P7 courtOfTheAncients 混乱标记：四档取值（cultist 偷渡者 / tablet 淹没再揭示 / elder_thing 战斗）",
+          "P7 courtOfTheAncients 事件：符文诡计附属到地点、宇宙预兆失败结算",
+          "P7 courtOfTheAncients JSON 存档往返：网格 / 升降机层级 / 符文 / 放一边保持"
+        ]
+      }
+    },
+    {
+      "id": "obsidianCanyons",
+      "referenceCode": "11639",
+      "group": "obsidian_canyons",
+      "modulePath": "content/campaigns/theDrownedCity/scenarios/obsidianCanyons/index.js",
+      "cardCount": 37,
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "registered": true,
+        "cardEntries": true,
+        "behaviorFile": true,
+        "chaosFile": true,
+        "layoutFile": true,
+        "guide": true,
+        "tests": true
+      },
+      "status": "content-complete",
+      "guide": {
+        "status": "ready",
+        "sourcePath": "content/scenario-guide-sources/obsidianCanyons.json",
+        "outputPath": "web/scenario-guides/obsidianCanyons.json",
+        "sourceSha256": "14b3a26f7015ede9ce1227ba09c14a68ef0a3449725f6584d4f6719e3f35935e",
+        "outputSha256": "b8d9ac96f4c8154a95190ba9164d295015a85e0637b04c3a3cc28a69f32307ff"
+      },
+      "tests": {
+        "count": 10,
+        "titles": [
+          "P7 obsidianCanyons 章节结构：37 张条目、21 张地点、两分支幕议程、development manifest",
+          "P7 obsidianCanyons 西征布置：幕/议程/风卡、3×4 正交网格、开阔天空与峰顶牌库",
+          "P7 obsidianCanyons 东征布置：2 幕、议程 11641、西风面、11 张开阔天空、穷途异魔整组放一边",
+          "P7 obsidianCanyons 峰顶牌库：初始化顺序固定，take from bottom，缺位用牌库底补",
+          "P7 obsidianCanyons 幕共有行动：花线索从峰顶牌库底揭示并可放进相邻开阔天空",
+          "P7 obsidianCanyons 网格出口旋转与吹风滑动：东风向左/西风向右，边格回峰顶牌库顶",
+          "P7 obsidianCanyons 幕背面重排：3×5（中央尖塔为锚点）与 4×5（漂浮尖塔为锚点）",
+          "P7 obsidianCanyons 混乱标记：四档、风暴强度 / 相邻开阔天空 / 最近敌人毁灭 / 再揭示",
+          "P7 obsidianCanyons 证明你的价值：记录 helpedWithTheRopes / wasHelpedWithTheRopes，结局读记录",
+          "P7 obsidianCanyons 整关直调：布置/行动/结局可 JSON 往返"
+        ]
+      }
+    },
+    {
+      "id": "sepulchreOfTheSleeper",
+      "referenceCode": "11673",
+      "group": "sepulchre_of_the_sleeper",
+      "modulePath": "content/campaigns/theDrownedCity/scenarios/sepulchreOfTheSleeper/index.js",
+      "cardCount": 9,
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "registered": true,
+        "cardEntries": true,
+        "behaviorFile": true,
+        "chaosFile": true,
+        "layoutFile": true,
+        "guide": true,
+        "tests": true
+      },
+      "status": "content-complete",
+      "guide": {
+        "status": "ready",
+        "sourcePath": "content/scenario-guide-sources/sepulchreOfTheSleeper.json",
+        "outputPath": "web/scenario-guides/sepulchreOfTheSleeper.json",
+        "sourceSha256": "717c71bddcc736c01f7793000e272b768869053db86cdb2b3e9d925e052b8f02",
+        "outputSha256": "596f176354821381c06d5c1e44571df9ba0569fb2b645d0515101804258ee41d"
+      },
+      "tests": {
+        "count": 10,
+        "titles": [
+          "P7 sepulchreOfTheSleeper 章节结构：9 张条目、6 张地点、特殊议程牌库、结局键逐字一致",
+          "P7 sepulchreOfTheSleeper 地点连接：梦者安息地与 5 张刻印壁龛相连且对称",
+          "P7 sepulchreOfTheSleeper 入场/跳过：神器与字形门槛、内殿解封、知道得更清楚记录",
+          "P7 sepulchreOfTheSleeper 布置：6 地点入场、神器平均分配、远征物品可选、扰动 0",
+          "P7 sepulchreOfTheSleeper 扰动：毁灭改为扰动，达阈值立刻推进并生成克苏鲁",
+          "P7 sepulchreOfTheSleeper 克苏鲁：神器削弱 -1 战斗/-1 躲避，败退附加结算与结局",
+          "P7 sepulchreOfTheSleeper 结局：resolution1 写记录并直接结束战役（+10 经验/2 精神创伤），无结局失败",
+          "P7 sepulchreOfTheSleeper 混乱标记：四档、扰动上限、失败追加",
+          "P7 sepulchreOfTheSleeper 刻印壁龛：检定成功在对应神器上放 1 毁灭（团队线索追加 1）",
+          "P7 sepulchreOfTheSleeper 状态投影与 JSON 往返"
+        ]
+      }
+    },
+    {
+      "id": "theDoomOfArkhamPartI",
+      "referenceCode": "11682",
+      "group": "the_doom_of_arkham_part_1",
+      "modulePath": "content/campaigns/theDrownedCity/scenarios/theDoomOfArkhamPartI/index.js",
+      "cardCount": 6,
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "registered": true,
+        "cardEntries": true,
+        "behaviorFile": true,
+        "chaosFile": true,
+        "layoutFile": true,
+        "guide": true,
+        "tests": true
+      },
+      "status": "content-complete",
+      "guide": {
+        "status": "ready",
+        "sourcePath": "content/scenario-guide-sources/theDoomOfArkhamPartI.json",
+        "outputPath": "web/scenario-guides/theDoomOfArkhamPartI.json",
+        "sourceSha256": "874909ac8b1bebaf3ded32661fba8f21a33948c795eb8b21bd402ed88152f758",
+        "outputSha256": "cbb22c158ca75e90f36c9945416b343b5ae45c396c6e60feed6fd20901fce855"
+      },
+      "tests": {
+        "count": 9,
+        "titles": [
+          "P7 theDoomOfArkhamPartI 章节结构：6 张条目、12 地点、1 幕 1 议程、4 结局键",
+          "P7 theDoomOfArkhamPartI 遭遇牌库：按印刷份数展开，商店/兰道尔/午夜假面诡计不入库",
+          "P7 theDoomOfArkhamPartI Setup：变体地点、6 处暗牌、勒格拉斯入场、星之眷族随机移除",
+          "P7 theDoomOfArkhamPartI 地点连接：午夜假面印刷连接 + 布局投影",
+          "P7 theDoomOfArkhamPartI 商店显现：放在抽出的地点旁、生成兰道尔、神器暗堆",
+          "P7 theDoomOfArkhamPartI 幕 1 行动：共同支付线索抽暗牌，控制支援/神器",
+          "P7 theDoomOfArkhamPartI 幕 1 背面：≥5 神器 → 结局 1，否则 +1 额外经验 → 结局 2",
+          "P7 theDoomOfArkhamPartI 结局：神器划除、黏土恐怖、淹没街区记录",
+          "P7 theDoomOfArkhamPartI 四档混乱符号与失败效果"
+        ]
+      }
+    },
+    {
+      "id": "theDoomOfArkhamPartII",
+      "referenceCode": "11688a",
+      "group": "the_doom_of_arkham_part_2",
+      "modulePath": "content/campaigns/theDrownedCity/scenarios/theDoomOfArkhamPartII/index.js",
+      "cardCount": 35,
+      "checks": {
+        "moduleLoaded": true,
+        "manifestComplete": true,
+        "registered": true,
+        "cardEntries": true,
+        "behaviorFile": true,
+        "chaosFile": true,
+        "layoutFile": true,
+        "guide": true,
+        "tests": true
+      },
+      "status": "content-complete",
+      "guide": {
+        "status": "ready",
+        "sourcePath": "content/scenario-guide-sources/theDoomOfArkhamPartII.json",
+        "outputPath": "web/scenario-guides/theDoomOfArkhamPartII.json",
+        "sourceSha256": "51195029ca3b04620587dedf0b5a78f90966c3bc821364738bbce7e26a43ed6a",
+        "outputSha256": "9c02387b9e8c03af031435d6860e0aaa0a2f5257e2ca99196e2433dd70ebbbed"
+      },
+      "tests": {
+        "count": 17,
+        "titles": [
+          "P7 theDoomOfArkhamPartII 章节结构：35 张条目、17 地点、两幕、特殊议程、4 结局键",
+          "P7 theDoomOfArkhamPartII 牌库：克苏鲁牌库 18 张 action 卡，遭遇牌库排除克苏鲁牌/星之眷族",
+          "P7 theDoomOfArkhamPartII Setup：坚守阵线分支 → 反击！幕 + 盟友入场 + 克苏鲁面板",
+          "P7 theDoomOfArkhamPartII Setup：仪式分支 → 放逐他！幕 + 最终封印/盟友放在一边",
+          "P7 theDoomOfArkhamPartII 淹没街区继承：按卡号/同名地点提高水位",
+          "P7 theDoomOfArkhamPartII 克苏鲁部位：战斗/躲避 = 狂怒值，狂怒面生命 = 狂怒值",
+          "P7 theDoomOfArkhamPartII 部位翻面与胜利区回面板",
+          "P7 theDoomOfArkhamPartII 克苏鲁牌库：从顶抽、结算后弃回，空库时把弃牌洗回",
+          "P7 theDoomOfArkhamPartII 克苏鲁牌库：第五只眼/拆毁保留，标记抽牌每轮上限",
+          "P7 theDoomOfArkhamPartII 四档混乱符号：skull 随怒气、cultist 淹没伤害、elder thing 抽牌",
+          "P7 theDoomOfArkhamPartII 反击！背面：怒气 ≤4 翻回 1a，≥5 → 结局 1",
+          "P7 theDoomOfArkhamPartII 放逐他！背面：怒气 ≥4 → 最终封印，怒气设 5/4 并翻狂怒面",
+          "P7 theDoomOfArkhamPartII 最终封印：目标推进 → 结局 2/3，毁灭阈值推进 → 无结局（勘误）",
+          "P7 theDoomOfArkhamPartII 议程背面：克苏鲁移动到完全淹没地点并交换为废墟版本",
+          "P7 theDoomOfArkhamPartII 7 处废墟：议程背面全员阵亡 → 无结局",
+          "P7 theDoomOfArkhamPartII 结局记录：结局 1/2/3 与无结局的战役记录",
+          "P7 theDoomOfArkhamPartII 怒气投影与存档往返"
+        ]
+      }
+    }
+  ],
+  "shared": [
+    {
+      "group": "stowaways",
+      "cards": 2,
+      "missing": [],
+      "status": "present"
+    },
+    {
+      "group": "pilgrims",
+      "cards": 2,
+      "missing": [],
+      "status": "present"
+    },
+    {
+      "group": "star_spawn",
+      "cards": 4,
+      "missing": [],
+      "status": "present"
+    },
+    {
+      "group": "cosmic_legacy",
+      "cards": 2,
+      "missing": [],
+      "status": "present"
+    },
+    {
+      "group": "elder_mist",
+      "cards": 2,
+      "missing": [],
+      "status": "present"
+    },
+    {
+      "group": "undersea_creatures",
+      "cards": 3,
+      "missing": [],
+      "status": "present"
+    },
+    {
+      "group": "tdc_flood",
+      "cards": 3,
+      "missing": [],
+      "status": "present"
+    },
+    {
+      "group": "rlyeh",
+      "cards": 2,
+      "missing": [],
+      "status": "present"
+    },
+    {
+      "group": "domination",
+      "cards": 3,
+      "missing": [],
+      "status": "present"
+    },
+    {
+      "group": "the_inescapable",
+      "cards": 2,
+      "missing": [],
+      "status": "present"
+    },
+    {
+      "group": "deep_ones",
+      "cards": 3,
+      "missing": [],
+      "status": "present"
+    },
+    {
+      "group": "dreams",
+      "cards": 2,
+      "missing": [],
+      "status": "present"
+    },
+    {
+      "group": "alien_machinery",
+      "cards": 2,
+      "missing": [],
+      "status": "present"
+    },
+    {
+      "group": "tasks",
+      "cards": 16,
+      "missing": [],
+      "status": "present"
+    },
+    {
+      "group": "tdc_expedition",
+      "cards": 6,
+      "missing": [],
+      "status": "present"
+    }
+  ],
+  "verification": {
+    "scenarioTests": {
+      "files": [
+        "tests/tdc-scenario-oneLastJob.test.mjs",
+        "tests/tdc-scenario-theWesternWall.test.mjs",
+        "tests/tdc-scenario-theDrownedQuarter.test.mjs",
+        "tests/tdc-scenario-theApiary.test.mjs",
+        "tests/tdc-scenario-theGrandVault.test.mjs",
+        "tests/tdc-scenario-courtOfTheAncients.test.mjs",
+        "tests/tdc-scenario-obsidianCanyons.test.mjs",
+        "tests/tdc-scenario-sepulchreOfTheSleeper.test.mjs",
+        "tests/tdc-scenario-theDoomOfArkhamPartI.test.mjs",
+        "tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs"
+      ],
+      "passed": 152,
+      "failed": 0,
+      "missing": []
+    },
+    "campaignTests": {
+      "files": [
+        "tests/tdc-p7-campaign-layer.test.mjs",
+        "tests/tdc-p7-story.test.mjs"
+      ],
+      "passed": 36,
+      "failed": 0,
+      "missing": []
+    },
+    "sharedTests": {
+      "files": [
+        "tests/tdc-p7-shared-encounters.test.mjs",
+        "tests/tdc-p7-shared-assets.test.mjs"
+      ],
+      "passed": 57,
+      "failed": 0,
+      "missing": []
+    },
+    "p7LedgerSha256": "17140ba0390b00756af7e1d4a2a707100f37f1ed62a7bb23fdff039ccdde8244"
+  },
+  "evidence": [
+    "audit/tdc-scope.json",
+    "audit/tdc-p7.json",
+    "artifacts/migration/tdc/p7/CONTRACT.md",
+    "content/campaigns/theDrownedCity/",
+    "src/cards/encounter-entries/theDrownedCity/",
+    "content/scenario-guide-sources/",
+    "web/scenario-guides/"
+  ]
+}
