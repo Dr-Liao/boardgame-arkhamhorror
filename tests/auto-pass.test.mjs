@@ -5,8 +5,12 @@
 
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { createGameState, allCardDefs, applyMove, validateMove, refreshStateResources } from '../src/engine/engine.js'
-import { reactionSkipPlan, reactionDisabledCodes, setReactionEnabled } from '../web/reaction-preferences.js'
+import { createGameState, allCardDefs, applyMove, validateMove, refreshStateResources, legalMoves, startScenario } from '../src/engine/engine.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
+import { stateHash } from '../src/engine/replay.js'
+import { viewState } from '../src/integration/observation.js'
+import { chapters } from '../content/campaigns/theCircleUndone/shared.js'
+import { reactionAutoPlan, reactionSkipPlan, reactionDisabledCodes, setReactionEnabled } from '../web/reaction-preferences.js'
 import arkham from '../index.js'
 
 // 与 reaction-preferences.test.mjs 同一套「拾荒」窗口：01073 在场上、卡面自带 scavenging 反应。
@@ -79,6 +83,52 @@ test('Mod autoPassChoice：只对本人座位的全关闭窗口返回普通 choo
 
   // 返回的 move 是普通动作，必须能过大厅的 validateMove（随后由 commitMove 走 applyMove/actionLog）。
   assert.equal(arkham.validateMove(structuredClone(st), 0, skip), null)
+})
+
+test('异端者的快速谈判按本局座位代答，旧待决窗口仍能识别来源', () => {
+  const st = createGameState({ campaignId: 'theCircleUndone', legacyAutoStart: true, seed: 'wages-reaction' },
+    [{ seat: 0, role: 'human' }, { seat: 1, role: 'human' }])
+  while (st.pendingChoice) {
+    const { seat } = st.pendingChoice
+    const moves = legalMoves(st, seat)
+    applyMove(st, seat, moves.find(move => ['skip', 'done', 'keep'].includes(move.optionId)) || moves[0])
+  }
+  const index = chapters.findIndex(chapter => chapter.id === 'theWagesOfSin')
+  resolveTransaction(st, 0, { action: 'startWages' }, current => startScenario(current, index, []))
+  st.currentSeat = 0
+  st.phase = 'investigation'
+  for (const inv of st.investigators) Object.assign(inv, { clues: 1, assets: [], hand: [], hunchDeck: [], hunchRevealed: null })
+  const code = '05178a'
+  applyMove(st, 0, { action: 'debug', kind: 'spawn', code, targetSeat: 0 })
+  const enemy = st.enemies.find(item => item.code === code)
+  for (const inv of st.investigators) inv.location = enemy.location
+  assert.ok(viewState(st, 0).reactionPromptCodes.includes(code), '开窗前即可从敌人卡关闭')
+
+  applyMove(st, 0, legalMoves(st, 0).find(move => move.action === 'resource'))
+  const offer = st.pendingChoice.options.find(option => option.id.startsWith('scenario-fast:hereticParley:'))
+  assert.equal(offer.reactionSourceCode, code)
+  const restored = JSON.parse(JSON.stringify(st))
+  delete restored.pendingChoice.options.find(option => option.id === offer.id).reactionSourceCode
+  assert.equal(stateHash(restored), stateHash(st), '偏好来源字段不改变重放指纹')
+  assert.deepEqual(codesOf(restored), [code])
+  assert.deepEqual(viewState(st, 1).pendingChoice.options, [], '仅向应答座位投影候选')
+
+  const sessionId = 'heretic-reaction-online'
+  setReactionEnabled(sessionId, 0, [code], false)
+  const local = reactionAutoPlan({ sessionId, state: viewState(st, 0) }, 0)
+  const hosted = arkham.autoChoice({ state: st, seat: 0, states: { [code]: 'skip' } })
+  assert.equal(local.move.optionId, hosted.optionId)
+  assert.equal(validateMove(st, 0, hosted), null)
+  applyMove(st, 0, hosted)
+
+  assert.equal(st.investigators[0].clues, 1, '跳过不会支付谈判费用')
+  assert.equal(st.pendingChoice.seat, 1, '队友仍应收到同一张牌的提示')
+  assert.equal(arkham.autoChoice({ state: st, seat: 1, states: {} }), null)
+  setReactionEnabled(sessionId, 1, [code], true)
+  assert.equal(reactionAutoPlan({ sessionId, state: viewState(st, 1) }, 1), null)
+  applyMove(st, 1, legalMoves(st, 1).find(move => move.optionId === 'skip'))
+  assert.ok(legalMoves(st, 0).some(move => move.action === 'scenarioAction' && move.enemyId === enemy.id),
+    '关闭提示后仍能主动发起谈判')
 })
 
 test('真实窗口：autoPassChoice 返回的 skip 能直接被引擎提交（不是合成状态的假窗口）', () => {

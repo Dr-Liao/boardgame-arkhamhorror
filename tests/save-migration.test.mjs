@@ -4,6 +4,7 @@ import { createGameState, allCardDefs, applyMove, validateMove, legalMoves, deci
 import { migrateState } from '../src/engine/save-migration.js'
 import { STATE_SCHEMA_VERSION, RULES_VERSION, stateCompatibilityError } from '../src/engine/rules-state.js'
 import { META } from '../src/cards/cards-data.js'
+import { fixture } from './core-fixture.mjs'
 
 const players = count => Array.from({ length: count }, (_, seat) => ({ seat, role: seat ? 'ai' : 'human' }))
 const restore = state => JSON.parse(JSON.stringify(state))
@@ -27,6 +28,18 @@ test('当前版本存档无需迁移，返回原对象且不复制', () => {
   assert.deepEqual(result.changes, [])
   const forced = migrateState(restore(state), { force: true })
   assert.deepEqual(forced.changes, [], '健康存档强制修复检查不产生改动')
+})
+
+test('TCU 05042 高塔·XVI 读档时恢复旧行动缓存里缺失的打出行动', () => {
+  const state = restore(fixture('01001'))
+  state.investigators[0].hand = ['05042']
+  const isTowerPlay = option => option.action === 'play' && option.cardId === '05042'
+  state.legalMoves = legalMoves(state, 0).filter(option => !isTowerPlay(option))
+
+  const restored = migrateState(state)
+  assert.ok(restored.changes.includes('重算合法行动'))
+  assert.ok(restored.state.legalMoves.some(isTowerPlay))
+  assert.equal(state.legalMoves.some(isTowerPlay), false, '原存档对象保留旧缓存')
 })
 
 test('旧卡面缺少自动反应字段时刷新内嵌卡牌定义', () => {

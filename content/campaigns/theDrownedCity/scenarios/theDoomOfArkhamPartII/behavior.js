@@ -43,6 +43,15 @@ import {
   canDrawCthulhuFromToken, markCthulhuDrawnFromToken, fullyFloodedLocationIds,
 } from './chaos.js'
 import { STORY } from './story.js'
+import { tdcCannotGainUpkeepResources } from '../../campaign-rules.js'
+
+// ---------------------------------------------------------------------------
+// 跨章规则：Good Money（11611）playBothSides 失败 → 下一章补给阶段不能获得资源。
+// 读点：phases.js#201 的 scenarioBehavior(state).canGainResources（引擎补给阶段收入分支）。
+// ---------------------------------------------------------------------------
+export function canGainResources(state, inv) {
+  return !tdcCannotGainUpkeepResources(state, inv)
+}
 
 // ---------------------------------------------------------------------------
 // 基础工具
@@ -233,7 +242,8 @@ export function resolveCthulhuCard(state, code, api = {}) {
   const attackByFacet = (facetCode, inv) => {
     const enemy = facetsInPlay(state).find(item => codeOf(item) === facetCode)
     if (!enemy || !inv) return false
-    if (typeof api.attack === 'function') api.attack(enemy, inv)
+    if (typeof api.attack !== 'function') return false
+    api.attack(enemy, inv)
     return true
   }
   const hurt = (inv, kind = 'damage') => {
@@ -248,6 +258,34 @@ export function resolveCthulhuCard(state, code, api = {}) {
     inv.hand.splice(Math.max(0, inv.hand.length - lost), lost)
     return lost
   }
+  // 「弃掉其控制的一张非剧情支援」：优先 api.discardAsset，缺失时回退为资产区移除 + 进弃牌堆。
+  const discardAssetById = (inv, assetId) => {
+    if (!inv || !assetId) return false
+    if (typeof api.discardAsset === 'function' && api.discardAsset(inv.seat, assetId)) return true
+    const index = (inv.assets || []).findIndex(asset => asset.id === assetId)
+    if (index < 0) return false
+    const [asset] = inv.assets.splice(index, 1)
+    ;(inv.discard ||= []).push(asset.code)
+    return true
+  }
+  // 在「受伤/受恐」与「弃一张自己控制的资产」之间选择。
+  const chooseHarmOrAsset = (inv, source, prompt, harmKind = 'damage') => {
+    if (!inv) return false
+    const assets = inv.assets || []
+    const options = [
+      { id: harmKind, label: harmKind === 'horror' ? '受到 1 点恐惧' : '受到 1 点伤害' },
+      ...assets.map(asset => ({
+        id: `asset:${asset.id}`,
+        label: `弃掉「${ALL_CARDS[codeOf(asset)]?.nameZh || codeOf(asset)}」`,
+      })),
+    ]
+    const choice = typeof api.choose === 'function'
+      ? String(api.choose({ kind: 'effect', source, seat: inv.seat, prompt, options }))
+      : harmKind
+    if (choice.startsWith('asset:')) return discardAssetById(inv, choice.slice(6))
+    hurt(inv, harmKind)
+    return true
+  }
   const testFor = (inv, skills, resolve) => {
     if (!inv) return null
     if (typeof api.test === 'function') return api.test(inv.seat, skills, rage, resolve)
@@ -255,15 +293,19 @@ export function resolveCthulhuCard(state, code, api = {}) {
     return null
   }
   const highest = skill => [...here].sort((a, b) => (Number(b[skill]) || 0) - (Number(a[skill]) || 0))[0] || null
+  // 部分卡面只说「[技能]最高的调查员」（不限克苏鲁所在地点）。
+  const highestAny = skill => [...activeInvestigators(state)]
+    .sort((a, b) => (Number(b[skill]) || 0) - (Number(a[skill]) || 0))[0] || null
 
   switch (code) {
     case '11705': { // 无情冲锋
       if (facetInPlay('11702')) for (const inv of here) randomDiscard(inv, 1)
       if (facetInPlay('11703')) {
         const target = highest('willpower')
+        // 凶恶面容：攻击克苏鲁地点意志最高者；若没有进行攻击，该调查员抽遭遇牌库顶，
+        // 且该卡效果不能取消、失去涌动（drawEncounter 的 cannotCancel / suppressSurge 读点）。
         if (!attackByFacet('11703', target) && target) {
-          if (typeof api.drawEncounter === 'function') api.drawEncounter(target.seat)
-          else { state.encounterDiscard ||= []; state.encounterDiscard.push(state.encounterDeck?.pop?.() || '') }
+          if (typeof api.drawEncounter === 'function') api.drawEncounter(target.seat, { cannotCancel: true, suppressSurge: true })
         }
       }
       if (facetInPlay('11704')) {
@@ -274,10 +316,9 @@ export function resolveCthulhuCard(state, code, api = {}) {
     }
     case '11706': { // 飓风之力
       if (facetInPlay('11702')) {
-        // 额外结算一次巡逻：把克苏鲁移到最近的可提高水位地点。
-        const target = nearestFloodTarget(state, api)
+        // 额外结算一次克苏鲁的巡逻关键词（与敌人阶段同一个 patrolMove 实现，成功移动记录 lastPatrolRound）。
         const body = (state.enemies || []).find(enemy => codeOf(enemy) === CTHULHU_BODY_CODE)
-        if (target && body && typeof api.moveEnemy === 'function') api.moveEnemy(body, target)
+        if (body && typeof api.runEnemyPatrol === 'function') api.runEnemyPatrol(body)
       }
       if (facetInPlay('11703')) {
         const target = nearestInvestigatorToCthulhu(state)
@@ -286,10 +327,20 @@ export function resolveCthulhuCard(state, code, api = {}) {
       if (facetInPlay('11704')) {
         const target = here[0] || activeInvestigators(state)[0]
         testFor(target, 'agility', result => {
-          if (result?.success !== true) {
-            const changed = cthulhuAt && changeFloodLevel(state, cthulhuAt, 1, api)
-            if (!changed) hurt(target, Math.random() < 0.5 ? 'damage' : 'horror')
-          }
+          if (result?.success === true) return
+          // 失败：必须提高克苏鲁所在地点的淹没等级，或受到 1 点伤害或 1 点恐惧（调查员选择）。
+          const canFlood = Boolean(cthulhuAt) && !NON_FULLY_FLOODABLE_IDS.includes(cthulhuAt)
+            && floodLevelOf(state, cthulhuAt, api) < 2
+          const options = [
+            ...(canFlood ? [{ id: 'flood', label: '提高克苏鲁所在地点的淹没等级' }] : []),
+            { id: 'damage', label: '受到 1 点伤害' },
+            { id: 'horror', label: '受到 1 点恐惧' },
+          ]
+          const choice = typeof api.choose === 'function'
+            ? String(api.choose({ kind: 'effect', source: '11706', seat: target?.seat, prompt: '飓风之力：选择一项', options }))
+            : 'damage'
+          if (choice === 'flood' && changeFloodLevel(state, cthulhuAt, 1, api)) return
+          hurt(target, choice === 'horror' ? 'horror' : 'damage')
         })
       }
       return 'resolved'
@@ -297,23 +348,40 @@ export function resolveCthulhuCard(state, code, api = {}) {
     case '11707': { // 凶险狂风
       if (facetInPlay('11702')) {
         for (const inv of here) randomDiscard(inv, 1)
-        const target = nearestFloodTarget(state, api)
+        // 额外结算一次巡逻（与敌人阶段同一 patrolMove 实现）。
         const body = (state.enemies || []).find(enemy => codeOf(enemy) === CTHULHU_BODY_CODE)
-        if (target && body && typeof api.moveEnemy === 'function') api.moveEnemy(body, target)
+        if (body && typeof api.runEnemyPatrol === 'function') api.runEnemyPatrol(body)
       }
       if (facetInPlay('11703')) {
-        const target = highest('willpower')
-        testFor(target, 'willpower', result => { if (result?.success !== true) hurt(target, 'horror') })
+        const target = highestAny('willpower')
+        testFor(target, 'willpower', result => {
+          if (result?.success === true) return
+          // 失败：必须受到 1 点恐惧，或选择并弃掉其控制的一张（非剧情）支援。
+          chooseHarmOrAsset(target, '11707', '凶险狂风：选择一项', 'horror')
+        })
       }
-      if (facetInPlay('11704') && flagsFor(state).cthulhuPatrolledThisRound !== true) {
+      // 「如果克苏鲁本轮未以其巡逻关键词移动」：只读 enemy.lastPatrolRound（引擎 patrolMove 成功时写入）。
+      const bodyNow = (state.enemies || []).find(enemy => codeOf(enemy) === CTHULHU_BODY_CODE)
+      const patrolledThisRound = bodyNow?.lastPatrolRound === state.round
+      if (facetInPlay('11704') && !patrolledThisRound) {
         for (const inv of here) attackByFacet('11704', inv)
       }
       return 'resolved'
     }
     case '11708': { // 恐惧凝视
       if (facetInPlay('11702')) {
-        const target = highest('agility')
-        testFor(target, 'agility', result => { if (result?.success !== true) hurt(target, Math.random() < 0.5 ? 'damage' : 'horror') })
+        const target = highestAny('agility')
+        testFor(target, 'agility', result => {
+          if (result?.success === true) return
+          const choice = typeof api.choose === 'function'
+            ? String(api.choose({
+              kind: 'effect', source: '11708', seat: target?.seat,
+              prompt: '恐惧凝视：选择受到 1 点伤害或 1 点恐惧',
+              options: [{ id: 'damage', label: '受到 1 点伤害' }, { id: 'horror', label: '受到 1 点恐惧' }],
+            }))
+            : 'damage'
+          hurt(target, choice === 'horror' ? 'horror' : 'damage')
+        })
       }
       if (facetInPlay('11703')) for (const inv of here) { inv.resources = Math.max(0, (Number(inv.resources) || 0) - 2) }
       if (facetInPlay('11704')) {
@@ -328,16 +396,33 @@ export function resolveCthulhuCard(state, code, api = {}) {
           })
           : 'horror'
         if (choice === 'attack') for (const inv of here) attackByFacet('11704', inv)
-        else if (choice === 'action') setFlag(state, 'cthulhuLostActionNextRound', true)
-        else for (const inv of activeInvestigators(state)) hurt(inv, 'horror')
+        else if (choice === 'action') {
+          // 引擎读点：api.loseActions（调查阶段外排队为 pendingActionLoss，下个回合行动数 -1）。
+          for (const inv of activeInvestigators(state)) {
+            if (typeof api.loseActions === 'function') api.loseActions(inv.seat, 1)
+            else setFlag(state, 'cthulhuLostActionNextRound', true)
+          }
+        } else for (const inv of activeInvestigators(state)) {
+          // 「直接恐惧」不吃支援伤害分配（引擎读点 api.directHorror）。
+          if (typeof api.directHorror === 'function') api.directHorror(inv.seat, 1)
+          else hurt(inv, 'horror')
+        }
       }
       return 'resolved'
     }
     case DEMOLITION_CODE: { // 拆毁
-      const rooftop = nearestRooftop(state, cthulhuAt)
+      const rooftop = nearestRooftopFor(state, cthulhuAt, api)
       if (!rooftop) return 'retained'
       const ruins = (flagsFor(state).demolitionRuins ||= {})
-      ruins[rooftop.id] = (Number(ruins[rooftop.id]) || 0) + 1
+      // 「作为废墟标记」：实体计数器落在最近屋顶实例上（scenarioRuntime 的 api.addCardCounter/cardCounterOf，
+      // 'ruin' 已在 CARD_COUNTER_IDS 白名单）。
+      const before = Number(ruins[rooftop.id]) || 0
+      let counter = 0
+      if (typeof api.addCardCounter === 'function') {
+        api.addCardCounter(rooftop, 'ruin', 1, { source: DEMOLITION_CODE })
+        counter = Number(api.cardCounterOf?.(rooftop, 'ruin')) || 0
+      }
+      ruins[rooftop.id] = Math.max(before + 1, counter)
       info(api, `拆毁：在「${rooftop.name}」放置 1 个废墟标记（${ruins[rooftop.id]}）。`)
       if (Number(ruins[rooftop.id]) >= 2) {
         for (const inv of activeInvestigators(state)) {
@@ -366,8 +451,17 @@ export function resolveCthulhuCard(state, code, api = {}) {
       if (!here.length) { drawCthulhuCard(state, leadSeat(state), api, { source: '地震踩踏' }); return 'resolved' }
       for (const inv of here) testFor(inv, 'agility', result => {
         if (result?.success === true) return
-        if (Math.random() < 0.5) randomDiscard(inv, 1)
-        else hurt(inv, Math.random() < 0.5 ? 'damage' : 'horror')
+        // 失败：受到 1 点伤害/恐惧，或随机弃掉手牌中的 1 张卡牌（调查员选择）。
+        const options = [
+          { id: 'damage', label: '受到 1 点伤害' },
+          { id: 'horror', label: '受到 1 点恐惧' },
+          { id: 'discard', label: '随机弃掉手牌中的 1 张卡牌' },
+        ]
+        const choice = typeof api.choose === 'function'
+          ? String(api.choose({ kind: 'effect', source: '11711', seat: inv.seat, prompt: '地震踩踏：选择一项', options }))
+          : 'damage'
+        if (choice === 'discard') randomDiscard(inv, 1)
+        else hurt(inv, choice === 'horror' ? 'horror' : 'damage')
       })
       return 'resolved'
     }
@@ -382,14 +476,24 @@ export function resolveCthulhuCard(state, code, api = {}) {
       return 'resolved'
     }
     case '11713': { // 灵能斥责
-      if (!cthulhuEnemiesInVictory(state).length) { drawCthulhuCard(state, leadSeat(state), api, { source: '灵能斥责' }); return 'resolved' }
-      const target = here[0] || activeInvestigators(state)[0]
-      testFor(target, 'willpower', result => {
+      const inVictory = cthulhuEnemiesInVictory(state)
+      if (!inVictory.length) { drawCthulhuCard(state, leadSeat(state), api, { source: '灵能斥责' }); return 'resolved' }
+      const candidates = activeInvestigators(state)
+      const pickInvestigator = candidates.length <= 1 || typeof api.choose !== 'function' ? candidates[0] : candidates[Number(api.choose({
+        kind: 'investigator', source: '11713', seat: leadSeat(state),
+        prompt: '灵能斥责：选择一位调查员进行检定',
+        options: candidates.map((inv, index) => ({ id: String(index), label: inv.name })),
+      })) || 0] || candidates[0]
+      testFor(pickInvestigator, 'willpower', result => {
         if (result?.success === true) return
-        const entry = cthulhuEnemiesInVictory(state)[0]
-        if (!entry) return
-        state.victoryDisplay = state.victoryDisplay.filter(item => item !== entry)
-        const front = String(entry.code).slice(0, 5)
+        const pickEnemy = inVictory.length === 1 || typeof api.choose !== 'function' ? inVictory[0] : inVictory[Number(api.choose({
+          kind: 'enemy', source: '11713', seat: leadSeat(state),
+          prompt: '灵能斥责：选择胜利区一名[[克苏鲁]]敌人放回面板',
+          options: inVictory.map((entry, index) => ({ id: String(index), label: ALL_CARDS[entry.code]?.nameZh || entry.code })),
+        })) || 0] || inVictory[0]
+        if (!pickEnemy) return
+        state.victoryDisplay = state.victoryDisplay.filter(item => item !== pickEnemy)
+        const front = String(pickEnemy.code).slice(0, 5)
         const enragedCode = `${front}b`
         if (typeof api.spawn === 'function') api.spawn(enragedCode, cthulhuAt || START_LOCATION, { ignoreSpawn: true })
         linkCthulhuParts(state, api)
@@ -398,24 +502,54 @@ export function resolveCthulhuCard(state, code, api = {}) {
     }
     case '11714': { // 涨潮
       if (cthulhuAt) changeFloodLevel(state, cthulhuAt, -1, api)
+      const fullyFlooded = new Set(fullyFloodedIds(state, api))
       const candidates = (state.locations || []).filter(location => location.id !== cthulhuAt)
-        .sort((a, b) => (fullyFloodedIds(state, api).includes(a.id) ? 1 : 0) - (fullyFloodedIds(state, api).includes(b.id) ? 1 : 0))
-      const withInv = candidates.find(location => activeInvestigators(state).some(inv => inv.location === location.id)) || candidates[0]
-      if (withInv) changeFloodLevel(state, withInv.id, 1, api)
+      const withInvestigators = candidates.filter(location => activeInvestigators(state)
+        .some(inv => inv.location === location.id))
+      // 印刷「另一处可提高淹没等级地点（尽可能有调查员）」：优先有调查员的地点作为候选池。
+      const pool = withInvestigators.length ? withInvestigators : candidates
+      const chosen = pool.length <= 1 || typeof api.choose !== 'function' ? pool[0] : pool[Number(api.choose({
+        kind: 'location', source: '11714', seat: leadSeat(state),
+        prompt: '涨潮：选择一处提高淹没等级的地点',
+        options: pool.map((location, index) => ({ id: String(index), label: `${location.name}${fullyFlooded.has(location.id) ? '（已完全淹没）' : ''}` })),
+      })) || 0] || pool[0]
+      if (chosen) changeFloodLevel(state, chosen.id, 1, api)
       for (const inv of activeInvestigators(state)) {
         if (!fullyFloodedIds(state, api).includes(inv.location)) continue
         testFor(inv, 'agility', result => {
           if (result?.success === true) return
-          hurt(inv, 'damage')
+          // 失败：受到 1 点伤害，或弃掉其控制的一张（非剧情）支援。
+          chooseHarmOrAsset(inv, '11714', '涨潮：选择一项', 'damage')
         })
       }
       return 'resolved'
     }
     case HOPE_FADES_CODE: { // 希望消逝
-      state.storyAssets ||= []
-      state.storyAssets.push({ id: `cthulhuStory:${code}`, code, originalCode: code, location: null, nextToAgenda: true, sealsElderSign: true })
+      // 放在密谋牌库旁：优先 api.attachToAgenda（引擎读点），否则退回剧情资产区。
+      const attach = api.attachToAgenda || api.scenario?.attachToAgenda
+      const attached = typeof attach === 'function' ? attach(HOPE_FADES_CODE, { sealsElderSign: true }) : null
+      if (!attached) {
+        state.storyAssets ||= []
+        state.storyAssets.push({ id: `cthulhuStory:${code}`, code, originalCode: code, location: null, nextToAgenda: true, sealsElderSign: true })
+      }
+      const instance = attached
+        || (state.storyAssets || []).find(asset => codeOf(asset) === HOPE_FADES_CODE)
+      if (instance?.id) setFlag(state, 'hopeFadesCardId', instance.id)
+      // 先找 [elder_sign]；若没有（或被封印）则取混乱袋中「最高正数数值标记」。
+      const token = selectHopeFadesSealToken(state)
+      let sealed = null
+      if (token != null && instance && typeof api.sealChaosTokenFromBag === 'function') {
+        sealed = api.sealChaosTokenFromBag(token, instance)
+        // 卡面显示用：把封印标记记在卡实例上（引擎封印区以 card.id 为 source）。
+        if (sealed != null) {
+          instance.sealedToken = sealed
+          instance.sealedTokens = [sealed]
+        }
+      }
       setFlag(state, 'hopeFadesInPlay', true)
-      info(api, '希望消逝：放在密谋牌库旁，封印 [elder_sign]（近似：标记封印不接混乱袋封印原语）。')
+      if (token == null) info(api, '希望消逝：放在密谋牌库旁（混乱袋里没有 [elder_sign] 或正数数值标记可封印）。')
+      else if (sealed != null) info(api, `希望消逝：放在密谋牌库旁，封印「${token}」标记。`)
+      else info(api, `希望消逝：放在密谋牌库旁（混乱袋里没有可封印的标记）。`)
       return 'retained'
     }
     default:
@@ -423,27 +557,62 @@ export function resolveCthulhuCard(state, code, api = {}) {
   }
 }
 
-function nearestFloodTarget(state, api = {}) {
-  const cthulhuAt = cthulhuLocationId(state)
-  const candidates = (state.locations || []).filter(location => location.id !== cthulhuAt
-    && !UNFLOODABLE_IDS.includes(location.id) && floodLevelOf(state, location.id, api) < 2)
-  if (!candidates.length) return null
-  if (cthulhuAt && typeof api?.mechanics?.map?.nearest === 'function') {
-    const nearest = api.mechanics.map.nearest(cthulhuAt, candidates.map(location => location.id))
-    if (nearest?.length) return nearest[0]
+/** 11715：先找 [elder_sign]；没有（或被封印）时取混乱袋中「最高正数数值标记」。 */
+export function selectHopeFadesSealToken(state) {
+  const bag = Array.isArray(state?.chaosBag) ? state.chaosBag : []
+  const elderSign = bag.find(token => /elder/i.test(String(token)))
+  if (elderSign != null) return elderSign
+  let best = null
+  let bestValue = -Infinity
+  for (const token of bag) {
+    const match = /^\+?(\d+)$/.exec(String(token).trim())
+    if (!match) continue
+    const value = Number(match[1])
+    if (value > bestValue) { bestValue = value; best = token }
   }
-  return candidates[0].id
+  return best
 }
+/**
+ * 希望消逝离场（幕推进）：弃掉卡/悬挂的附件并释放封印标记。
+ * 读点：api.detachEncounterAttachmentById + api.releaseSealedToken(card, token)（scenarioRuntime 直接暴露）。
+ */
+export function discardHopeFadesCard(state, api = {}) {
+  const cardId = flagsFor(state).hopeFadesCardId
+  const pendingToken = flagsFor(state).hopeFadesSealedTokenPending
+  // 找附件实例（议程附属或剧情资产区），释放封印需要 card 对象。
+  const pools = [
+    ...(state.agendas || []).flatMap(agenda => agenda.attachments || []),
+    ...(state.storyAssets || []),
+  ]
+  const instance = pools.find(card => card?.id === cardId) || (cardId ? { id: cardId } : null)
+  const token = instance?.sealedToken ?? pendingToken ?? '0'
+  if (instance && typeof api.releaseSealedToken === 'function') api.releaseSealedToken(instance, token)
+  if (cardId && typeof api.detachEncounterAttachmentById === 'function') api.detachEncounterAttachmentById(cardId)
+  else {
+    for (const agenda of state.agendas || []) {
+      agenda.attachments = (agenda.attachments || []).filter(asset => (asset?.id || asset) !== cardId)
+    }
+  }
+  state.storyAssets = (state.storyAssets || []).filter(asset => codeOf(asset) !== HOPE_FADES_CODE)
+  delete flagsFor(state).hopeFadesCardId
+  delete flagsFor(state).hopeFadesSealedTokenPending
+  setFlag(state, 'hopeFadesInPlay', false)
+}
+
 function nearestInvestigatorToCthulhu(state) {
   const cthulhuAt = cthulhuLocationId(state)
   return activeInvestigators(state).find(inv => inv.location === cthulhuAt) || activeInvestigators(state)[0] || null
 }
-function nearestRooftop(state, fromId) {
+/** 拆毁用：优先经 api.mechanics.map.nearest 取最近屋顶，缺失时回退固定顺序。 */
+function nearestRooftopFor(state, fromId, api = {}) {
   const rooftops = (state.locations || []).filter(location => ROOFTOP_LOCATION_IDS.includes(location.id))
   if (!rooftops.length) return null
   if (!fromId) return rooftops[0]
-  const path = typeof state?.__nearest === 'function' ? null : null
-  void path
+  if (typeof api?.mechanics?.map?.nearest === 'function') {
+    const eligible = new Set(rooftops.map(location => location.id))
+    const nearest = api.mechanics.map.nearest(fromId, id => eligible.has(id))
+    if (nearest?.length) return rooftops.find(location => location.id === nearest[0]) || rooftops[0]
+  }
   return rooftops[0]
 }
 function removeLocationFromAll(state, locationId) {
@@ -615,21 +784,38 @@ export function inheritFloodedNeighborhoods(state, api = {}) {
 }
 
 export function putAlliesIntoPlay(state, api = {}) {
-  const branch = battleBranch(state)
-  if (branch !== 'standTogether') return []
   const investigators = activeInvestigators(state)
   const placed = []
-  ALLY_CODES.forEach((code, index) => {
-    const inv = investigators[index % Math.max(1, investigators.length)]
-    if (!inv) return
-    const asset = typeof api.giveAsset === 'function' ? api.giveAsset(inv.seat, code) : null
+  const remaining = [...ALLY_CODES]
+  // 印刷：按玩家顺序，每名调查员**可选**控制 1 张放在一边的盟友剧情支援（不占盟友槽）。
+  for (const inv of investigators) {
+    if (!remaining.length) break
+    let chosen = remaining[0]
+    if (typeof api.choose === 'function') {
+      const answer = String(api.choose({
+        kind: 'effect', source: currentActCode(state), seat: inv.seat,
+        prompt: `${inv.name}：可控制 1 张放在一边的盟友剧情支援（可选）`,
+        options: [
+          { id: 'skip', label: '不控制' },
+          ...remaining.map((code, index) => ({ id: String(index), label: ALL_CARDS[code]?.nameZh || code })),
+        ],
+      }))
+      if (answer === 'skip') chosen = null
+      else {
+        const index = Number(answer)
+        chosen = Number.isInteger(index) && index >= 0 && index < remaining.length ? remaining[index] : remaining[0]
+      }
+    }
+    if (!chosen) continue
+    remaining.splice(remaining.indexOf(chosen), 1)
+    const asset = typeof api.giveAsset === 'function' ? api.giveAsset(inv.seat, chosen) : null
     if (asset) {
       if (typeof api.exemptAssetSlot === 'function') api.exemptAssetSlot(asset, 'ally')
       asset.ignoredSlots = [...new Set([...(asset.ignoredSlots || []), 'ally'])]
-      placed.push(code)
+      placed.push(chosen)
     }
-  })
-  info(api, `盟友入场：${placed.length} 张（不占盟友槽）。`)
+  }
+  info(api, `盟友入场：${placed.length} 张（按玩家选择分配，不占盟友槽）。`)
   return placed
 }
 
@@ -660,7 +846,7 @@ export function setupCthulhuDeck(state, api = {}) {
 export function afterDeckSetup(state, events = null, helper = {}) {
   void events
   const api = helper?.api || {}
-  putAlliesIntoPlay(state, api)
+  if (battleBranch(state) === 'standTogether') putAlliesIntoPlay(state, api)
   putArtifactsIntoPlay(state, api)
   inheritFloodedNeighborhoods(state, api)
   setupCthulhuBoard(state, api)
@@ -763,7 +949,8 @@ export function agendaDoomBackEffect(state, api = {}) {
   if (candidates.length) {
     let target = candidates[0]
     if (cthulhuAt && typeof api?.mechanics?.map?.nearest === 'function') {
-      const nearest = api.mechanics.map.nearest(cthulhuAt, candidates.map(location => location.id))
+      const eligible = new Set(candidates.map(location => location.id))
+      const nearest = api.mechanics.map.nearest(cthulhuAt, id => eligible.has(id))
       if (nearest?.length) target = locationOf(state, nearest[0]) || target
     }
     // 移动克苏鲁并降低该地点水位。
@@ -911,9 +1098,36 @@ export function placeSigil(state, inv, api = {}) {
 // 阶段 / 幕 / 议程揭示
 // ---------------------------------------------------------------------------
 export function phaseBegan(state, phase, api = {}) {
-  if (String(phase) !== 'mythos') return false
-  flagsFor(state).cthulhuPatrolledThisRound = false
+  const name = String(phase)
+  // 11710 第五只眼：强制「调查阶段结束时」——引擎在敌人阶段开始时调用本钩子（phaseBegan('enemy')），
+  // 正好是调查阶段结束之后。
+  if (name === 'enemy') return resolveFifthEyeForced(state, api)
+  if (name !== 'mythos') return false
   return agendaEnemyPhaseEnd(state, api)
+}
+
+/** 11710 第五只眼：在克苏鲁面板上一名没有毁灭标记的敌人上放 1 毁灭并弃掉本卡。 */
+function resolveFifthEyeForced(state, api = {}) {
+  const storyAssets = state.storyAssets || []
+  const card = storyAssets.find(asset => codeOf(asset) === FIFTH_EYE_CODE)
+  if (!card) return false
+  const boardEnemies = (state.enemies || []).filter(enemy => {
+    const code = codeOf(enemy)
+    return code === CTHULHU_BODY_CODE || CTHULHU_ENEMY_CODES.includes(code)
+  })
+  const candidates = boardEnemies.filter(enemy => !(Number(enemy.doom) || 0))
+  if (!candidates.length) return false
+  const pick = candidates.length === 1 ? candidates[0] : candidates[Number(api.choose?.({
+    kind: 'enemy', source: FIFTH_EYE_CODE, seat: leadSeat(state),
+    prompt: '第五只眼：选择一名其上没有毁灭标记的[[克苏鲁]]敌人',
+    options: candidates.map((enemy, index) => ({ id: String(index), label: enemy.name || codeOf(enemy) })),
+  })) || 0] || candidates[0]
+  if (!pick) return false
+  if (typeof api.placeDoomOnCard === 'function') api.placeDoomOnCard(pick, 1)
+  else pick.doom = (Number(pick.doom) || 0) + 1
+  state.storyAssets = storyAssets.filter(asset => asset !== card)
+  info(api, `第五只眼：调查阶段结束，在「${pick.name || codeOf(pick)}」上放置 1 个毁灭标记并弃掉本卡。`)
+  return true
 }
 
 export function actIndexAfterAdvance(state, cur, api) {
@@ -936,10 +1150,9 @@ const FACET_BY_FRONT = Object.freeze({ 11702: '11702b', 11703: '11703b', 11704: 
 export function actReveal(state, act, api = {}) {
   const code = codeOf(act)
   if (![ACT_FIGHT_BACK_CODE, ACT_BANISH_HIM_CODE].includes(code)) return false
-  // 希望消逝：幕推进时弃掉（释放封印标记的近似）。
-  if (flagsFor(state).hopeFadesInPlay) {
-    state.storyAssets = (state.storyAssets || []).filter(asset => codeOf(asset) !== HOPE_FADES_CODE)
-    setFlag(state, 'hopeFadesInPlay', false)
+  // 希望消逝：幕推进时弃掉并释放封印标记（detach/release 读点见 discardHopeFadesCard）。
+  if (flagsFor(state).hopeFadesInPlay || flagsFor(state).hopeFadesCardId) {
+    discardHopeFadesCard(state, api)
     info(api, '希望消逝：幕推进，弃掉本卡并释放封印标记。')
   } else {
     state.storyAssets = (state.storyAssets || []).filter(asset => codeOf(asset) !== HOPE_FADES_CODE)
@@ -964,17 +1177,22 @@ export function actReveal(state, act, api = {}) {
     info(api, `放逐他！背面：狂怒 ${rage} ≤ 3，翻回场景 1a。`)
     return 'flipBack'
   }
-  // 怒气设为 5（1–2 人局为 4），把每名克苏鲁敌人翻至狂怒面（忽略强制效果）。
+  // 怒气设为 5（1–2 人局为 4），把每名克苏鲁敌人翻至狂怒面（印刷：忽略其强制效果）。
+  // 抑制标记保证引擎回调的 enemyFaceFlipped 不结算「翻至本面后」三条强制。
   setCthulhuRage(state, investigatorCount(state) <= 2 ? 4 : CTHULHU_RAGE_MAX)
-  for (const enemy of facetsInPlay(state)) {
-    const front = codeOf(enemy)
-    if (String(front).endsWith('b')) continue
-    const enraged = FACET_BY_FRONT[front]
-    if (enraged && typeof api.flipEnemy === 'function') api.flipEnemy(enemy, enraged)
+  flagsFor(state).suppressEnemyFaceFlipped = true
+  try {
+    for (const enemy of facetsInPlay(state)) {
+      const front = codeOf(enemy)
+      if (String(front).endsWith('b')) continue
+      const enraged = FACET_BY_FRONT[front]
+      if (enraged && typeof api.flipEnemy === 'function') api.flipEnemy(enemy, enraged)
+    }
+  } finally {
+    delete flagsFor(state).suppressEnemyFaceFlipped
   }
   placeCluesOnRevealedLocations(state, api)
   // 按玩家顺序每名调查员可控制 1 张放在一边的盟友剧情支援；
-  // 近似：这里直接分配（略去「可选」询问），并豁免盟友槽。
   putAlliesIntoPlay(state, api)
   // 特殊议程「最终封印」同时为当前幕与当前议程。
   const finalSeal = clone((state.scenario?.stageCards || STAGE_CARDS)[AGENDA_FINAL_SEAL_CODE])
@@ -1135,6 +1353,89 @@ export function resolution(state, key, events = null, api = {}) {
 }
 
 // ---------------------------------------------------------------------------
+// 克苏鲁部位：翻至[[狂怒]]面后的强制（引擎钩子 enemyFaceFlipped，PRIMITIVES 已落地）
+// ---------------------------------------------------------------------------
+const ENRAGED_FORCED = Object.freeze({
+  '11702b': 'drawCthulhuCard',
+  '11703b': 'discardRandomHand',
+  '11704b': 'placeDoomOnFacet',
+})
+
+/**
+ * 引擎在 `api.flipEnemy` 换面成功（changed）后调用一次（scenario-runtime.js#1738）。
+ * 只结算「你将本敌人翻至本面后」的三条强制；Banish Him! 的强制翻面按印刷「忽略其强制效果」，
+ * 由 actReveal 置 `suppressEnemyFaceFlipped` 抑制。
+ */
+export function enemyFaceFlipped(state, enemy, fromCode, toCode, api = {}) {
+  if (flagsFor(state).suppressEnemyFaceFlipped === true) return false
+  const forced = ENRAGED_FORCED[String(toCode)]
+  if (!forced) return false
+  const controllerSeat = state.currentSeat ?? leadSeat(state)
+  const inv = (state.investigators || [])[controllerSeat] || (state.investigators || [])[0] || null
+  if (forced === 'drawCthulhuCard') {
+    drawCthulhuCard(state, inv?.seat ?? leadSeat(state), api, { source: '灰白双翼翻至狂怒面' })
+  } else if (forced === 'discardRandomHand') {
+    if (inv) {
+      if (typeof api.discardRandom === 'function') api.discardRandom(inv.seat, 1)
+      else if ((inv.hand || []).length) inv.hand.pop()
+    }
+    info(api, `${inv?.name || '调查员'} 随机弃掉 1 张手牌（凶恶面容翻至狂怒面）。`)
+  } else if (forced === 'placeDoomOnFacet') {
+    const target = facetsInPlay(state).find(item => !(Number(item.doom) || 0)) || null
+    if (target) {
+      if (typeof api.placeDoomOnCard === 'function') api.placeDoomOnCard(target, 1)
+      else target.doom = (Number(target.doom) || 0) + 1
+      info(api, `邪恶利爪翻至狂怒面：在「${target.name || codeOf(target)}」上放置 1 个毁灭标记。`)
+    }
+  }
+  info(api, `「${enemy?.name || toCode}」翻至[[狂怒]]面（${fromCode} → ${toCode}）。`)
+  return true
+}
+
+/** 引擎在「攻击命中敌人后」调用（combat.js 的两条攻击结算路径）：只负责翻面。 */
+export function enemyAttackedSuccessfully(state, inv, enemy, api = {}, infoArg = {}) {
+  void state
+  void inv
+  if (!enemy || infoArg?.defeated === true) return false
+  const code = codeOf(enemy)
+  const pair = CTHULHU_FACET_PAIRS.find(([front]) => front === code)
+  if (!pair) return false
+  if (typeof api.flipEnemy !== 'function') return false
+  // 翻面成功后的强制效果由引擎回调 enemyFaceFlipped 结算（不在本函数里重复结算）。
+  return api.flipEnemy(enemy, pair[1]) != null
+}
+
+/**
+ * 引擎在「普通躲避成功」后调用一次（combat.js；自动躲避不算）。
+ * 非[[狂怒]]面：翻至[[狂怒]]面（翻面后的强制由 enemyFaceFlipped 结算）；
+ * [[狂怒]]面：对其造成 1 点伤害。
+ */
+export function enemyEvadedSuccessfully(state, inv, enemy, api = {}) {
+  if (!enemy) return false
+  const code = codeOf(enemy)
+  const frontPair = CTHULHU_FACET_PAIRS.find(([front]) => front === code)
+  if (frontPair) {
+    if (typeof api.flipEnemy !== 'function') return false
+    // 翻面成功后的强制效果由引擎回调 enemyFaceFlipped 结算（不在本函数里重复结算）。
+    return api.flipEnemy(enemy, frontPair[1]) != null
+  }
+  const enragedPair = CTHULHU_FACET_PAIRS.find(([, enraged]) => enraged === code)
+  if (enragedPair) {
+    if (typeof api.scenario?.damageEnemy === 'function') {
+      api.scenario.damageEnemy(enemy.id, 1, inv?.seat ?? null, '11702-11704 躲避成功')
+    } else if (typeof api.damageEnemy === 'function') {
+      api.damageEnemy(enemy.id, 1, inv?.seat ?? null, '11702-11704 躲避成功')
+    } else {
+      enemy.damageTaken = (Number(enemy.damageTaken) || 0) + 1
+    }
+    info(api, `「${enemy.name || code}」被躲避成功，受到 1 点伤害。`)
+    return true
+  }
+  void state
+  return false
+}
+
+// ---------------------------------------------------------------------------
 // 诡计（11716/11717/11719/11720）：单卡条目 encounterResolve → 本 events
 // ---------------------------------------------------------------------------
 function testSpecOf(code) {
@@ -1174,7 +1475,10 @@ export function eyesOfYchlecht(state, inv, api = {}) {
   runRageTest(state, inv, '11717', api, result => {
     if (result?.success === true) return
     failed = true
-    hurt(inv, 'horror', api)
+    // 「直接恐惧」：不吃支援伤害分配（引擎读点 api.scenario.directHorror / api.directHorror）。
+    const direct = api.scenario?.directHorror || api.directHorror
+    if (typeof direct === 'function') direct(inv.seat, 1)
+    else hurt(inv, 'horror', api)
     if (typeof api.discardRandom === 'function') api.discardRandom(inv.seat, 1)
     else if ((inv.hand || []).length) inv.hand.pop()
     info(api, `伊克雷希特之眼：${inv.name} 受到 1 点直接恐惧并随机弃 1 张手牌。`)
@@ -1202,7 +1506,19 @@ export function grossPlasticity(state, inv, api = {}) {
   } else if (choice === 'flood') {
     changeFloodLevel(state, inv.location, 1, api)
     info(api, '恶心可塑性：提高所在地点的淹没等级。')
-  } else for (const item of activeInvestigators(state)) hurt(item, 'damage', api)
+  } else {
+    // 第三项：每位调查员各自选择 1 点伤害或 1 点恐惧。
+    for (const item of activeInvestigators(state)) {
+      const harm = typeof api.choose === 'function'
+        ? String(api.choose({
+          kind: 'effect', source: '11719', seat: item.seat,
+          prompt: '恶心可塑性：选择受到 1 点伤害或 1 点恐惧',
+          options: [{ id: 'damage', label: '受到 1 点伤害' }, { id: 'horror', label: '受到 1 点恐惧' }],
+        }))
+        : 'damage'
+      hurt(item, harm === 'horror' ? 'horror' : 'damage', api)
+    }
+  }
   return true
 }
 /** 11720 阿卡姆遭袭：每位调查员意志(X)；1 人以上失败 → 抽克苏鲁牌库顶 1 张。 */
@@ -1262,6 +1578,7 @@ export const behavior = {
   referenceCode: REFERENCE_CODE,
   startLocation: () => START_LOCATION,
   locationsStartRevealed: true,
+  canGainResources,
   introduction(sc, records = {}, context = null) {
     void context
     const branch = records.theInvestigatorsStoodTogether ? 'theDoomOfArkham2'
@@ -1292,6 +1609,9 @@ export const behavior = {
   actions,
   performAction,
   enemyStatModifier,
+  enemyAttackedSuccessfully,
+  enemyFaceFlipped,
+  enemyEvadedSuccessfully,
   resolveChaosToken,
   chaosTokenValue,
   applyTokenEffect,
@@ -1337,6 +1657,8 @@ export const behavior = {
   eyesOfYchlecht,
   grossPlasticity,
   arkhamUnderAssault,
+  selectHopeFadesSealToken,
+  discardHopeFadesCard,
 }
 
 export {

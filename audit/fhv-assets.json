@@ -3233,7 +3233,7 @@
       "path": "audit/presentation-report.json",
       "phase": "N2",
       "schemaVersion": 1,
-      "sha256": "860da5aacbd58c21226b80044324b020c9405895d44eb08261b0295cab1b81e5",
+      "sha256": "3a7476805b1fa34ba900fc274b2bbe517f959fed05cee3b1c434428f0618dc93",
       "verifiedCounts": {
         "localImagesCopied": 0,
         "note": "本阶段没有下载或复制媒体；可展示与缺图数量需由浏览器验收记录，不由候选数推断",

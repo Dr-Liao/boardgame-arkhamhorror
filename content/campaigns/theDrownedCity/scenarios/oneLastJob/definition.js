@@ -181,6 +181,7 @@ export function encounterDefinitions(codes) {
         ...(c.healthPerInvestigator ? { healthPerInvestigator: c.health } : {}),
         ...(c.victory != null ? { victory: c.victory } : {}),
         ...(PREY_KEYS[preyText] ? { prey: PREY_KEYS[preyText] } : {}),
+        ...(/(不能移动|cannot move)/i.test(String(c.textZh || c.text || '')) ? { immobile: true } : {}),
         ...Object.fromEntries(['Hunter', 'Aloof', 'Massive', 'Retaliate', 'Alert', 'Swarming']
           .filter(k => new RegExp(`\\b${k}\\.`).test(keywords)).map(k => [k.toLowerCase(), true])),
         elite: (c.traits || []).includes('Elite'),

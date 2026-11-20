@@ -197,7 +197,7 @@ export function createTableRegions(h, { openDetail, openChaosBag, openAgendaAsid
   return {
     // 剧本区从左到右：剧本书（密谋/场景）→ 提示卡 → 当前场景/密谋的可执行操作。
     // agendaAside：放在密谋牌库旁的公开卡（state.agendaAside），画成挂在剧本书下沿的卡堆。
-    script: (state, act, agenda, players = [], advanceButton = null, activity = {}, scriptActions = null, attachments = {}, setupButton = null, agendaAside = []) => {
+    script: (state, act, agenda, players = [], advanceButton = null, activity = {}, scriptActions = null, attachments = {}, scenarioControls = null, agendaAside = []) => {
       const dual = dualStory(state, act, attachments)
       const pages = dual ? dual.pages.map(page => sceneCard(page.item, page.type, page.label, page.attached, page.interaction,
         page.type === 'act' ? clueMark(state, act) : doomMark(state, page)))
@@ -210,7 +210,7 @@ export function createTableRegions(h, { openDetail, openChaosBag, openAgendaAsid
       h('div', { className: 'ah-story-group' },
         h('div', { className: 'ah-script-cards ah-story-book' + (aside ? ' has-agenda-aside' : ''), role: 'group', 'data-story-pages': dual ? 'agendas' : 'agenda-act', 'aria-label': dual ? dual.aria : t('table.script.booksAria') },
           ...pages, aside),
-        h('div', { className: 'ah-scenario-reference' }, referenceCard(state), setupButton), scriptActions),
+        h('div', { className: 'ah-scenario-reference' }, referenceCard(state), scenarioControls), scriptActions),
       h('div', { className: 'ah-command-deck' },
       h('div', { className: 'ah-command-resources', role: 'group', 'aria-label': t('table.resources.aria') },
       encounterPile(state),

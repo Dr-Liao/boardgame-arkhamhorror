@@ -3,9 +3,30 @@ import { withAgendaAdvanceFrame } from './agenda-advance-frame.js'
 // 幕与议程的推进：目标判定、花费线索推进、密谋揭示与毁灭累积。
 // 读点：checkAct / checkAgenda 由阶段机与效果共同调用；addDoom 是毁灭的唯一入口。
 // 第 5 步 P6：放置毁灭可能新增「法术专用额外行动」（玛丽·朗博），授权逻辑在 spell-actions.js。
-import { grantSpellCredit } from './spell-actions.js'
+import { grantSpellCredit, syncSpellCredit } from './spell-actions.js'
 import { releaseChaosTokens } from './chaos-bag.js'
 import { checkParallelActObjectives } from './parallel-acts.js'
+
+// 毁灭标记减少后，重新检查支援控制者尚未使用的法术行动额度。
+export function setCardDoom(state, card, amount) {
+  if (!card) return 0
+  const before = card.doom || 0
+  card.doom = Math.max(0, amount)
+  if (card.doom < before) {
+    const owner = (state.investigators || []).find(inv => (inv.assets || []).includes(card))
+    if (owner) syncSpellCredit(state, owner)
+  }
+  return card.doom
+}
+
+export function removeDoomFromCard(state, card, amount = 1) {
+  if (!card) return 0
+  const before = Number(card.doom) || 0
+  const removed = Math.min(Math.max(0, Number(amount) || 0), before)
+  if (!removed) return 0
+  setCardDoom(state, card, before - removed)
+  return removed
+}
 
 export function createActAgenda(deps) {
   const {
@@ -263,6 +284,8 @@ export function createActAgenda(deps) {
   //   'locations'：04055/04211「在本密谋推进时：不要从场上任何地点移除毁灭标记」
   //   'enemies'：05326/05327/05328「在本密谋推进时，不要移除敌人的毁灭标记」
   //   'self'：05044「推进时不要移除其上任何毁灭标记」、05149 那赫卜「推进时不移除其毁灭」
+  //   'storyAssets'：P7 TDC 11674「城市之下」推进时保留场上剧情资产（神器）上的毁灭标记，
+  //     供「移除神器上的毁灭以削弱克苏鲁」在结局前继续累计。
   const doomKeepOf = card => registeredEntry(card?.originalCode || card?.code)?.doomKeptOnAgendaAdvance || null
 
   function clearDoomInPlay(state, agenda = state.agendas?.[state.agendaIndex]) {
@@ -285,7 +308,7 @@ export function createActAgenda(deps) {
         if (!keepSelf(card)) card.doom = 0
       }
     }
-    for (const asset of state.storyAssets || []) if (!keepSelf(asset)) asset.doom = 0
+    for (const asset of state.storyAssets || []) if (!keepKind(asset, 'storyAssets')) asset.doom = 0
     const clearAttachments=host=>{for(const card of host?.attachments||[]){if(Object.hasOwn(card,'doom')&&!keepSelf(card))card.doom=0;clearAttachments(card)}}
     for(const host of [agenda,state.acts?.[state.actIndex],...(state.enemies||[]),...(state.storyAssets||[]),...state.investigators.flatMap(inv=>[...(inv.assets||[]),...(inv.threat||[])])])clearAttachments(host)
     for (const card of state.agendaAside || []) if (!keepSelf(card)) card.doom = 0

@@ -50,10 +50,10 @@ const encounterGroupId = group => String(group || '')
 const externalGroupIds = new Set(scope.scenarios.flatMap(chapter =>
   (chapter.gather || []).filter(entry => entry.external).map(entry => encounterGroupId(entry.group))))
 
-test('P7 战役 theDrownedCity 以 development 注册 10 章与四档混乱袋', () => {
+test('战役 theDrownedCity 可启动并注册 10 章与四档混乱袋', () => {
   assert.ok(campaign, 'contentRegistry.getCampaign("theDrownedCity") 必须存在')
   assert.equal(campaign.id, campaignId)
-  assert.equal(campaign.status, 'development')
+  assert.equal(contentRegistry.assertLaunchable(campaignId).id, campaignId)
 
   assert.equal(campaign.scenarioIds.length, 10)
   assert.deepEqual([...campaign.scenarioIds].sort(), [...scopeScenarioIds].sort(),
@@ -79,7 +79,7 @@ test('P7 十章清单：身份、状态、参考卡号与遭遇闭包齐备', ()
   assert.deepEqual(scenarios.map(manifest => manifest.id).sort(), [...scopeScenarioIds].sort())
 
   for (const manifest of scenarios) {
-    assert.equal(manifest.status, 'development', `${manifest.id} 必须是 development（不得提前 verified）`)
+    assert.equal(manifest.status, 'playable', `${manifest.id} 必须允许开局`)
     assert.equal(manifest.campaignId, campaignId, `${manifest.id}.campaignId 必须是 theDrownedCity`)
     assert.equal(manifest.referenceCode, scopeReferenceCode[manifest.id],
       `${manifest.id}.referenceCode 必须等于 scope 的剧本参考卡号`)
@@ -147,7 +147,7 @@ test('P7 tdcCampaign 包：development、目录身份、行为与遭遇组覆盖
   const campaignNow = contentRegistry.getCampaign(campaignId)
   const pack = contentRegistry.getPack('tdcCampaign')
   assert.ok(pack, 'contentRegistry.getPack("tdcCampaign") 必须存在')
-  assert.equal(pack.status, 'development')
+  assert.equal(pack.status, 'playable')
   assert.ok(Array.isArray(pack.behaviorIds) && pack.behaviorIds.length > 0, 'pack.behaviorIds 必须非空')
   assert.ok(pack.cards.length > 0, 'pack.cards 必须非空')
   const offenders = pack.cards

@@ -47,7 +47,7 @@
 .ah-engagement-empty .ah-slot-backdrop { inset: 4px; color: #d29b88; }
 .ah-table.ah-calm.ah-noir .ah-engagement-cards .ah-enemy { position: relative; flex: none; width: var(--surface-card-w); height: var(--surface-card-h); min-width: 0; margin: 0; padding: 0; overflow: hidden; border-radius: 4px; border: 1px solid #bd7969; }
 .ah-table.ah-calm.ah-noir .ah-engagement-cards .ah-enemy .ah-table-art { width: 100%; height: 100%; border: 0; }
-.ah-table.ah-calm.ah-noir .ah-engagement-cards .ah-enemy > :not(.ah-table-art):not(.ah-card-markers), .ah-table.ah-calm.ah-noir .ah-engagement-cards .ah-enemy::after { display: none; }
+.ah-table.ah-calm.ah-noir .ah-engagement-cards .ah-enemy > :not(.ah-table-art, .ah-card-markers, .ah-reaction-mode), .ah-table.ah-calm.ah-noir .ah-engagement-cards .ah-enemy::after { display: none; }
 .ah-table.ah-calm.ah-noir .ah-engagement-cards .ah-enemy.is-exhausted { filter: saturate(.4); border-style: dashed; }
 .ah-table.ah-calm.ah-noir .ah-map-investigator { position: relative; width: 32px; height: 38px; border: 2px solid var(--investigator-color); border-radius: 45% 45% 4px 4px; padding: 0; background: #12261e; overflow: hidden; box-shadow: 0 2px 6px #000b; }
 .ah-table.ah-calm.ah-noir .ah-map-node .ah-map-investigator > .ah-table-art { position: relative; inset: auto; width: 100%; height: 100%; border: 0; border-radius: 0; }

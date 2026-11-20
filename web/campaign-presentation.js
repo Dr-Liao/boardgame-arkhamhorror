@@ -17,6 +17,7 @@ const INNSMOUTH = `${ROOT}/img/campaigns/theInnsmouthConspiracy`
 const EARTH_EDGE = `${ROOT}/img/campaigns/edgeOfTheEarth`
 const SCARLET_KEYS = `${ROOT}/img/campaigns/theScarletKeys`
 const HEMLOCK_VALE = `${ROOT}/img/campaigns/theFeastOfHemlockVale`
+const DROWNED_CITY = `${ROOT}/img/campaigns/theDrownedCity`
 
 const COMMON = Object.freeze({
   id: 'common',
@@ -40,6 +41,24 @@ const COMMON = Object.freeze({
 })
 
 const CAMPAIGNS = Object.freeze({
+  theDrownedCity: Object.freeze({
+    id: 'theDrownedCity',
+    palette: Object.freeze({
+      background: '#101b1e', panel: '#18292c', header: '#090f12',
+      accent: '#91c8bd', accentStrong: '#cceee3', muted: '#a6bab7', edge: '#70b2a766',
+    }),
+    assets: Object.freeze({
+      hubHero: `${DROWNED_CITY}/hub/drowned-city.webp`,
+      tableOverlay: `${DROWNED_CITY}/table/expedition-desk.webp`,
+      storyDefault: `${DROWNED_CITY}/hub/drowned-city.webp`,
+    }),
+    musicPlaylist: 'theDrownedCity',
+    scenarios: Object.freeze(Object.fromEntries(
+      Object.keys(SCENARIO_MUSIC.theDrownedCity).map(id => [id, Object.freeze({ assets: Object.freeze({
+        storyDefault: `${DROWNED_CITY}/scenarios/${id}/scene.webp`,
+      }) })]),
+    )),
+  }),
   theFeastOfHemlockVale: Object.freeze({
     id: 'theFeastOfHemlockVale',
     palette: Object.freeze({

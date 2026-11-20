@@ -702,6 +702,9 @@ function discardEnemyCard(state, enemy, events = [], { seat = state._resolvingSe
   if (isWeaknessCode(enemy.code) && owner) owner.discard.push(enemy.code)
   else if (!routeEnemyDiscardToScenarioDeck(state, enemy)) state.encounterDiscard.push(enemy.code)
   if (enemy.enemyLocation) removeLocation(state, enemy.id, [])
+  // P7 统一「敌人离场（非击败）」钩子：discarded / setAside / removed 三种原因共用；
+  // 章节 behavior 可据此翻面为剧情资产或加入胜利区（enemyDiscarded 保留给旧章节）。
+  scenarioBehavior(state).enemyLeftPlay?.(state, enemy, 'discarded', scenarioRuntime(state, []))
   scenarioBehavior(state).enemyDiscarded?.(state, enemy, scenarioRuntime(state, []))
   if (Number.isSafeInteger(seat)) reactionWindow(state, 'encounterCardDiscardedFromPlay', {
     when: 'encounterCardDiscardedFromPlay', seat, code: enemy.code, targetId: enemy.id, location: enemy.location,
@@ -1963,7 +1966,16 @@ function hunchDeckApi() {
 
 let resourceBankImpl = null
 function resourceBankApi() {
-  resourceBankImpl ||= createResourceBank({ cardName, info, requestChoice })
+  resourceBankImpl ||= createResourceBank({
+    cardName, info, requestChoice,
+    // P7 TDC 11756a：获得资源后的卡级窗口。注意：该窗口在资源获得事务内派发，
+    // 只有 forced（自动结算）条目可安全消费；可选 reaction 会打断事务选择恢复账
+    // （engine-needs/shared 已登记该限制），内容侧按 forced 接线并如实近似。
+    onResourcesGained: (state, inv, amount, events) => reactionWindow(state, 'resourcesGained', {
+      when: 'resourcesGained', seat: inv.seat, location: inv.location, amount,
+      prompt: `${inv.name} 获得了 ${amount} 点资源。`,
+    }, events),
+  })
   return resourceBankImpl
 }
 
@@ -2088,6 +2100,8 @@ export function scenarioRuntime(state, events, testSource = null) {
   mechanicsEntryError: (state, seat, destination) => investigatorEntryError(state, destination, seat)
     || movementError(state, state.investigators[seat], destination, { vehicle: true }),
   resolveEnemyPhaseOf: (...args) => turnApi().resolveEnemyPhaseOf(...args),
+  // P7 TDC 11706/11707：内容层「额外执行一次巡逻」的读点（与敌人阶段同一个 patrolMove 实现）。
+  runEnemyPatrol: (state2, enemy, events2 = []) => turnApi().runEnemyPatrol(state2, enemy, events2),
   // 第 2 步 P2.12：异端者多面/放逐（deps 注入卡面定义与胜利区结算）。
   flipEnemyFace: (state2, enemy, nextCode, deps) => flipEnemyFace(state2, enemy, nextCode, { ...deps, defOf: code => enemyDef(code), reactionWindow }),
   banishEnemyToVictory: (state2, enemy, deps) => banishEnemyToVictory(state2, enemy, { addVictory, ...deps }),
@@ -2883,6 +2897,7 @@ function hubApi() {
     info,
     randomValue,
     requestChoice,
+    reactionWindow,
     shuffle,
     ALL_CARDS,
     ALL_ENEMIES,

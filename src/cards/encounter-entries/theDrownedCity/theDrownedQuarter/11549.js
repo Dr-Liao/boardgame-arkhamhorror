@@ -6,6 +6,6 @@ export default {
   scope: 'enemy',
   implemented: true,
   flags: {"setAside":true},
-  note: "印刷：冷漠、反击；攻击后 / 将要离场时翻面结算故事（11549b）。行为在 behavior：enemyAttackResolved（攻击后 → 翻面移动到一处连接地点并横置）与 enemyDefeated（离场 → 符文 X + 胜利区）。近似：「将要离场」只挂在被击败路径上，未被「移出游戏」类效果覆盖。",
+  note: "印刷：冷漠、反击；攻击后 / 将要离场时翻面结算故事（11549b）。行为在 behavior：enemyAttackResolved（攻击后 → 翻面移动到一处连接地点并横置）、enemyDefeated（被击败 → 符文 X + 胜利区）、enemyLeftPlay（非击败离场：discarded/setAside/removed → 翻面结算故事面：符文 X + 胜利区；与既有 enemyDiscarded 择一消费，本章只实现 enemyLeftPlay）。P7 第三轮原语 `scenarioBehavior.enemyWouldBeSetAside`：放一边路径下，enemyLeftPlay('setAside') 完成翻面/符文/胜利区后返回 true，引擎因此在压入 setAsideEnemies 之前跳过默认入列——故事面与「放一边」不再并存。全部子句已接线（discard / removed / setAside 三条引擎路径均有测试）。",
   abilities: [],
 }

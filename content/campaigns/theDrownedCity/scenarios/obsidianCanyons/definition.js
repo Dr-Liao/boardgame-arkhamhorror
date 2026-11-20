@@ -76,6 +76,26 @@ export const SKY_RELIC_GLYPH = Object.freeze({ rune: 'rune_f', word: 'Stars' })
 export const ERODED_FRIEZE_GLYPH = Object.freeze({ rune: 'rune_e', word: 'Darkness' })
 
 // ---------------------------------------------------------------------------
+// 开阔天空（合成地点）：印刷上由 Ancient Evils / Chilling Cold / Striking Fear 的遭遇卡充当，
+// 没有实体地点卡。按 P7 合成地点 schema 登记为 code 'xsky' 的地点（openSky1..14），
+// 参与 manifest.locations（synthetic:true/name/traits）并跳过「必须属于已装卡包」校验。
+// ---------------------------------------------------------------------------
+export const OPEN_SKY_CODE = 'xsky'
+export const OPEN_SKY_NAME = '开阔天空'
+export const OPEN_SKY_NAME_EN = 'Open Sky'
+export const OPEN_SKY_TRAITS = Object.freeze(['Open Sky'])
+export const SYNTHETIC_LOCATION_IDENTITY = Object.freeze({
+  originalCode: OPEN_SKY_CODE,
+  synthetic: true,
+  name: OPEN_SKY_NAME,
+  nameEn: OPEN_SKY_NAME_EN,
+  traits: OPEN_SKY_TRAITS,
+})
+export const OPEN_SKY_POOL_SIZE = 14
+export const OPEN_SKY_POOL_IDS = Object.freeze(Array.from({ length: OPEN_SKY_POOL_SIZE },
+  (_, index) => `openSky${index + 1}`))
+
+// ---------------------------------------------------------------------------
 // gather 组
 // ---------------------------------------------------------------------------
 export const COMMON_GATHER_GROUPS = Object.freeze([
@@ -114,6 +134,9 @@ export const LOCATION_SPECS = Object.freeze([
   Object.freeze(['magneticSpires1', '11661', Object.freeze({ summit: true, magneticSpires: true })]),
   Object.freeze(['magneticSpires2', '11661', Object.freeze({ summit: true, magneticSpires: true })]),
   Object.freeze(['glyphOrrery', '11662', Object.freeze({ summit: true, glyph: 'rune_d', glyphWord: 'Wave', glyphLocation: 'glyphOrrery', glyphOrrery: true })]),
+  // 开阔天空：每张物理「开阔天空」卡一个合成地点 id（无实体卡）。
+  ...OPEN_SKY_POOL_IDS.map(id => Object.freeze([id, OPEN_SKY_CODE,
+    Object.freeze({ openSky: true, synthetic: true })])),
 ])
 export const LOCATION_IDS = Object.freeze(LOCATION_SPECS.map(([id]) => id))
 export const LOCATION_OPTIONS = Object.freeze(Object.fromEntries(LOCATION_SPECS.map(([id, , options]) => [id, options])))
@@ -124,6 +147,19 @@ export const SUMMIT_LOCATION_IDS = Object.freeze(LOCATION_IDS.filter(id => LOCAT
 export const IMMOVABLE_LOCATION_IDS = Object.freeze(LOCATION_IDS.filter(id => LOCATION_OPTIONS[id].immovable))
 
 function makeLocation(id, code, extra = {}) {
+  if (code === OPEN_SKY_CODE || extra.synthetic === true) {
+    return {
+      ...SYNTHETIC_LOCATION_IDENTITY,
+      id, code: OPEN_SKY_CODE, originalCode: OPEN_SKY_CODE, type: 'location',
+      name: extra.name || OPEN_SKY_NAME, nameEn: extra.nameEn || OPEN_SKY_NAME_EN,
+      traits: [...(extra.traits || OPEN_SKY_TRAITS)], shroud: 0, clues: 0, cluesFixed: 0,
+      synthetic: true, openSky: true,
+      // 11641/11642：弱点敌人不能进入开阔天空（与 entries/xsky.js 的 locationRule 同一份声明）。
+      locationRule: { weaknessEnemiesCannotEnter: true },
+      connections: extra.connections ? [...extra.connections] : [],
+      unrevealedName: OPEN_SKY_NAME, unrevealedNameEn: OPEN_SKY_NAME_EN,
+    }
+  }
   const card = ALL_CARDS[code]
   if (!card) throw new RangeError(`Unknown Obsidian Canyons location: ${code}`)
   return location({
@@ -186,7 +222,7 @@ export const LOCATION_COORDINATES = Object.freeze(Object.fromEntries(
 const expandCodes = codes => codes.flatMap(code => Array(Math.max(1, Number(ALL_CARDS[code]?.quantity) || 1)).fill(code))
 const OPEN_SKY_WEST_CODES = Object.freeze(expandCodes(['01167', '01168', '01163', '01164', '01165', '01166']))
 const OPEN_SKY_EAST_CODES = Object.freeze(expandCodes(['01167', '01168', '01163', '01164', '01165']))
-export const OPEN_SKY_POOL_IDS = Object.freeze(Array.from({ length: OPEN_SKY_WEST_CODES.length }, (_, index) => `openSky${index + 1}`))
+// 西征 14 / 东征 11 张物理开阔天空卡；合成地点池统一按西征 14 个 id 声明（东征取前 11 个）。
 
 export const EXPEDITIONS = Object.freeze({
   west: Object.freeze({
@@ -334,6 +370,11 @@ export const scenario = {
 scenario.acts = (scenario.acts || []).map(entry => structuredClone(entry))
 scenario.agendas = (scenario.agendas || []).map(entry => structuredClone(entry))
 export const identities = identitiesFor(scenario)
+// 合成地点（开阔天空）身份：scenarioManifest 依据 synthetic/name/traits 生成 manifest 地点条目；
+// content/registry.js 对 x 开头卡号跳过卡包归属校验。
+for (const id of OPEN_SKY_POOL_IDS) {
+  identities.locations[id] = { ...SYNTHETIC_LOCATION_IDENTITY, traits: [...OPEN_SKY_TRAITS] }
+}
 bindScenarioIdentities(scenario, identities)
 
 export const CARD_DATA = Object.freeze(Object.fromEntries([
@@ -343,4 +384,4 @@ export const CARD_DATA = Object.freeze(Object.fromEntries([
   WEST_WINDS_CODE, EAST_WINDS_CODE, GLYPH_ORRERY_STORY_CODE, SKY_RELIC_STORY_CODE, ERODED_FRIEZE_STORY_CODE,
   SKY_RELIC_CODE, ERODED_FRIEZE_CODE, ...OBSIDIAN_CLAW_CODES,
   ...ENCOUNTER_DECK_CODES, ...STAR_SPAWN_CODES, INESCAPABLE_CODE,
-].filter(Boolean).map(code => [code, ALL_CARDS[code]])))
+].filter(code => ALL_CARDS[code]).map(code => [code, ALL_CARDS[code]])))

@@ -140,10 +140,16 @@ define('spellChargesSpent', '花费法术支援的充能后', 'reaction', 60)
 define('mythosEncounterStep', '神话阶段抽取遭遇卡步骤开始前', 'reaction', 60)
 define('tokenEffectWouldResolve', '揭示的混乱标记效果结算前', 'reaction', 60)
 define('clueDiscovered', '发现线索后', 'reaction', 61)
+// P7 TDC 11624/11625/11627：弃掉遭遇牌库顶的牌后（reaction 或 forced 均可监听）。
+define('encounterCardsDiscardedFromTop', '弃掉遭遇牌库顶的牌后', 'reaction', 61)
 define('investigateSuccess', '调查成功后', 'reaction', 62)
 define('skillTestSuccess', '技能检定成功后', 'reaction', 62)
 define('discoverClue', '发现线索前', 'interrupt', 63)
 define('scenarioStarts', '冒险开始时', 'reaction', 64)
+// P7 TDC 共享任务卡：战役结束时判定「任务成功/失败」的卡级窗口（11753a–11760a）。
+define('gameEnds', '战役结束时', 'reaction', 64)
+// P7 TDC 11756a：获得资源后的反应（把其中 1 个资源放到任务卡上）。
+define('resourcesGained', '获得资源后', 'reaction', 64)
 define('enemyEngaged', '与敌人交战后', 'reaction', 65)
 // 「被击败时」的强制效果（黑山羊眷族的临死反噬）在敌人离场后、剧本结算/胜利区之前开窗。
 define('enemyWouldBeDefeated','敌人将要被击败','interrupt',38)

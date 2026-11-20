@@ -199,6 +199,20 @@ export function assertScenarioManifest(scenario) {
   for (const [i, location] of scenario.locations.entries()) {
     string(location.frontCode, `scenario.locations[${i}].frontCode`)
     string(location.backCode, `scenario.locations[${i}].backCode`)
+    // P7 TDC：合成地点（xsky 开阔天空）没有实体卡，必须显式声明 synthetic + 展示名称；
+    // 卡号以 x 开头，注册表对它跳过卡包归属校验。
+    if (location.synthetic != null && typeof location.synthetic !== 'boolean') {
+      fail(`scenario.locations[${i}].synthetic`, '必须是布尔值')
+    }
+    if (location.synthetic === true) {
+      if (!/^x[a-z0-9]/i.test(location.frontCode)) {
+        fail(`scenario.locations[${i}].frontCode`, '合成地点卡号必须以 x 开头')
+      }
+      string(location.name, `scenario.locations[${i}].name`)
+      if (!Array.isArray(location.traits) || location.traits.length === 0) {
+        fail(`scenario.locations[${i}].traits`, '合成地点必须声明展示用特性')
+      }
+    }
     refs(location.connections, `scenario.locations[${i}].connections`)
     for (const target of location.connections) {
       if (!locations.has(target) || target === location.id) fail(`scenario.locations[${i}].connections`, `无效地点 ${target}`)

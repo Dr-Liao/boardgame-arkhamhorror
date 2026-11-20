@@ -13,14 +13,14 @@
     "cardEntries": 231,
     "missingCardEntries": 0,
     "guidesReady": 10,
-    "scenarioTests": 152,
+    "scenarioTests": 271,
     "sharedGroups": 15,
     "sharedCards": 54,
     "sharedMissing": 0
   },
   "checks": {
     "campaignRegistered": true,
-    "campaignPackDevelopment": true,
+    "campaignPackRegistered": true,
     "flowExplicit": true,
     "allChaptersReachable": true,
     "terminalReachable": true,
@@ -78,7 +78,7 @@
         "outputSha256": "66131ca1a5b49c1e11dbe9c03ee7bbb5f31b23a13719ad89cc4f1fdae9ffd88c"
       },
       "tests": {
-        "count": 14,
+        "count": 25,
         "titles": [
           "P7 oneLastJob 章节结构：17 张条目、8 地点、3 幕、2 议程、development manifest",
           "P7 oneLastJob manifest 通过 schema 校验，地点连接对称且布局边真实",
@@ -93,7 +93,18 @@
           "P7 oneLastJob 结局：无结局记露比赢、结局 1 记露比输、外星语言翻符文 A",
           "P7 oneLastJob 只读投影与 JSON 存档往返",
           "P7 oneLastJob 单卡条目：17 张注册、code 唯一、数据条目 flags 与读点",
-          "P7 oneLastJob 议程反应：阿卡姆地点最后一个线索后弃顶 3 张并生成罪犯"
+          "P7 oneLastJob saveReplay：saveSnapshot/readSnapshot 恢复后状态等价，外星语言动作结果一致",
+          "P7 oneLastJob 第二轮接线：11513 执行者每轮强制、11514 线人生成与发现线索代价、头目 immobile/retaliate/alert",
+          "P7 oneLastJob 第二轮接线：11511 首次被躲避后重整，同地点调查员可受 1 伤害取消",
+          "P7 oneLastJob Good Money 跨章限制：补给阶段 canGainResources 按 campaign.ruleFlags 命中",
+          "P7 oneLastJob 议程反应（条目 abilities）：lastClue + Arkham 地点才触发，非最后线索/非 Arkham 不触发",
+          "P7 oneLastJob 议程反应（条目 abilities）：弃遭遇顶 3 张并把罪犯敌人生成到最近空地点",
+          "P7 oneLastJob 11515 卷入交火：失败减 1 伤害 + 1 直接伤害 + 弃卡；成功不减",
+          "P7 oneLastJob 11516 谈判破裂：附属最近罪犯敌人 / 无目标涌动 / 谈判后攻击 / 意志行动弃卡",
+          "P7 oneLastJob 11506/11507 幕 2 背面：转移至多 2 个线索到非精英敌人 + 有线索罪犯敌人冷漠同步",
+          "P7 oneLastJob 11506/11507 冷漠同步：phaseBegan/enemySpawned 按线索有无续期",
+          "P7 oneLastJob 11508 面对后果：谈判移除线索让该敌人把伤害值造成给同地点另一敌人",
+          "P7 oneLastJob 11514 帮派线人生成：无图距离原语时本地 BFS 仍取最近的有线索[[阿卡姆]]地点"
         ]
       }
     },
@@ -123,7 +134,7 @@
         "outputSha256": "2146255ef39d0b4171b64e4274772463e6223a7c6ad5dba743ead442dc23a556"
       },
       "tests": {
-        "count": 18,
+        "count": 27,
         "titles": [
           "P7 theWesternWall 章节结构：20 张条目、13 地点实例、2 幕、1 议程、4 结局键",
           "P7 theWesternWall manifest 通过 schema 校验，5 层静态连接与布局边合法",
@@ -136,13 +147,22 @@
           "P7 theWesternWall 深潜者主母进场：从遭遇牌库找出深潜者敌人并生成",
           "P7 theWesternWall 混乱标记：四档符号、层级/淹没相关修正与自动失败",
           "P7 theWesternWall 标记效果：完全淹没受伤、提高淹没等级",
-          "P7 theWesternWall 幕目标：西线全员到黑曜石地基、东线全员到西墙",
+          "P7 theWesternWall 幕目标：西线全员到黑曜石地基、东线全员到西墙（达成后询问推进）",
           "P7 theWesternWall 幕背面：西线 R1 → 结局 3（战役跳章）、东线 → 结局 2；西线无结局也绑结局 3",
           "P7 theWesternWall Do No Harm（帮助）：记录 helped、议程 +1 毁灭、结局加寄生虫与 2 点进度",
           "P7 theWesternWall Do No Harm（抛弃）：起始地点无线索、结局 1 点精神创伤与 -1 进度",
           "P7 theWesternWall 结局：拉莱耶地图划除「西墙」、结局 2/东线无结局去沉睡者之墓、结局 3 跳章由战役流程决定",
           "P7 theWesternWall 单卡条目：20 张注册、code 唯一、剧情/敌人/诡计 flags",
-          "P7 theWesternWall 只读投影与 JSON 存档往返"
+          "P7 theWesternWall 只读投影与 JSON 存档往返",
+          "P7 theWesternWall saveReplay：saveSnapshot/readSnapshot 恢复后状态等价，西墙抽 3 张动作结果一致",
+          "P7 theWesternWall 第二轮接线：11535 敌军阶段末放毁灭弃自身、11534 失败入威胁区并按轮恐惧",
+          "P7 theWesternWall 其余专属卡：淹没棚屋动态连接、破碎遗迹符文 V、黑曜石地基抽海底壁画、水下秘库/海底壁画翻面",
+          "P7 theWesternWall 第二轮阶段2：11525 珊瑚星之眷族调用 preventEnemyReadyNextUpkeep，11535 敌军阶段末用 placeDoomOnCard",
+          "P7 theWesternWall Good Money 跨章限制：补给阶段 canGainResources 按 campaign.ruleFlags 命中",
+          "P7 theWesternWall 幕目标：达成后询问推进/跳过（skip 不推进且本幕本回合不重复询问）",
+          "P7 theWesternWall 11524 致命通道：淹没无法提高时由玩家选择弃掉自己控制的[[盟友]]支援",
+          "P7 theWesternWall 11535 猎食寄生虫：敌军阶段末由领队选择所在地点的一张玩家卡放毁灭",
+          "P7 theWesternWall 11531 海底壁画不能离场：条目声明 cannotLeavePlay、背面 11531b 不声明"
         ]
       }
     },
@@ -172,7 +192,7 @@
         "outputSha256": "7f92458c2d753e08efc04df28a1ba64ce68304a53ce81cefae4feaf13506de7d"
       },
       "tests": {
-        "count": 19,
+        "count": 30,
         "titles": [
           "P7 theDrownedQuarter 章节结构：20 张条目、11 处地点、1 幕 2 议程与 development manifest",
           "P7 theDrownedQuarter 单卡条目：20 个文件、code = 文件名、身份都是真实卡号且注册唯一",
@@ -192,7 +212,18 @@
           "P7 theDrownedQuarter 黑曜石遗物与屏障节点：符文 Y、资产不可离场与回合自愈",
           "P7 theDrownedQuarter 结局链：结局 2 记录供能改导并在结局 3 发奖励经验；划掉拉莱耶地图",
           "P7 theDrownedQuarter 跳章出口：西向 → theApiary，东向 → theWesternWall（manifest 一致）",
-          "P7 theDrownedQuarter JSON 存档往返：布局/淹没/放一边/记录读回后行为继续可用"
+          "P7 theDrownedQuarter JSON 存档往返：布局/淹没/放一边/记录读回后行为继续可用",
+          "P7 theDrownedQuarter 真实 saveSnapshot/readSnapshot 存档重放：读回状态等价且后续动作确定",
+          "P7 theDrownedQuarter enemyLeftPlay：水下寄生虫非击败离场（弃牌 / 移出游戏）翻面结算故事面",
+          "P7 theDrownedQuarter enemyWouldBeSetAside：11549 放一边路径翻面进胜利区且不进入放一边区",
+          "P7 theDrownedQuarter 深渊沟壑：帷幕 X = 已揭示[[海底]]地点数的一半（向下取整）",
+          "P7 theDrownedQuarter 11550 受控剧情资产：合法动作 + 真实智力(8) 结算 + 图标翻倍 + 离场故事面",
+          "P7 theDrownedQuarter 战役级维护禁资源：标记命中 → 补给阶段不获得资源；不命中 → 正常",
+          "P7 theDrownedQuarter 海床地点 11542–11545：回合结束强制（提高淹没或受恐惧/伤害）",
+          "P7 theDrownedQuarter 海床地点 11542–11545 行动：提高自身淹没并降低目标淹没（团队 2 次 / 每轮 1 次 + 付费）",
+          "P7 theDrownedQuarter 11546 雕像花园 / 11548 古代展廊：抽牌与资源 / 放一边遗物入场",
+          "P7 theDrownedQuarter 11547 觅食地：揭示后弃到敌人生成 + 发现线索生成放一边寄生虫",
+          "P7 theDrownedQuarter 11541 深渊沟壑：成功攻击或躲避后降低本地点淹没（每场团队一次）"
         ]
       }
     },
@@ -222,7 +253,7 @@
         "outputSha256": "95a965c7fb495b8ec14a0431721fb7ab11a96fb200c20c957ae58209db8f2bf7"
       },
       "tests": {
-        "count": 23,
+        "count": 45,
         "titles": [
           "P7 theApiary 章节结构：34 张条目、14 处地点、3 幕 2 议程、5 个结局与 development manifest",
           "P7 theApiary 单卡条目：34 个文件、code = 文件名、身份真实且注册唯一 / 显现接线",
@@ -246,7 +277,29 @@
           "P7 theApiary 骇人「面具」：仍被控制时结局记录 grislyMask",
           "P7 theApiary 结局 1/2/3/4 与无结局：记录、寄生变形、奖励经验与跳章",
           "P7 theApiary 牌库底 10 张：shuffleIntoBottom 把卡放进数组前端（引擎栈底）",
-          "P7 theApiary JSON 存档往返：方向/幕/放一边/面朝读回后行为继续可用"
+          "P7 theApiary JSON 存档往返：方向/幕/放一边/面朝读回后行为继续可用",
+          "P7 theApiary 敌军阶段结束：幕 2 西向每名异教徒按同地点偷渡者数量受伤",
+          "P7 theApiary 真实 saveSnapshot/readSnapshot 存档重放：读回状态等价且后续动作确定",
+          "P7 theApiary 幕 1 目标与行动：全队圣所轮末支付 2/人线索推进；弃线索换遭遇牌库顶地点显现",
+          "P7 theApiary 失落的朝圣者谈判：成功超出 n 点让 n 名不同异教徒各移动一次",
+          "P7 theApiary 外星虫卵：最近的无毁灭非精英敌人被放置 1 个毁灭标记",
+          "P7 theApiary enemyLeftPlay：带鳞寄生虫非击败离场（弃牌 / 移出游戏）放一边场外",
+          "P7 theApiary 11571 酸性体腔：移动到养育场入口额外受 1 点伤害（其他出发地不收费）",
+          "P7 theApiary 11576 饥饿的墙壁：离开宿主地点检定；失败按技能结算并弃置诡计，成功无惩罚",
+          "P7 theApiary 11582 骇人“面具”：[fast] 解除交战 / 受 1 点直接恐惧并造成 2 点伤害（真实 legalMoves + 结算）",
+          "P7 theApiary 11581 古代遗物：controlledAsset 身份；离场由章节钩子放一边场外",
+          "P7 theApiary 战役级维护禁资源：标记命中 → 补给阶段不获得资源；不命中 → 正常",
+          "P7 theApiary 11574 奇丑混种：用[[武器]]支援攻击它后，在该支援上放 1 个毁灭标记（真实 damageEnemy 窗口）",
+          "P7 theApiary 11575 养育场看守：本地点卡牌放置毁灭 → 重整 / 失去冷漠 / 交战立刻攻击（doomPlaced 钩子）",
+          "P7 theApiary 11577 危险的好奇心：失败受 1 伤害、弃到偷渡者敌人并抽取、弃掉的地点洗回遭遇牌库",
+          "P7 theApiary 11583 寄生变形：敌人交战后在其上放 1 毁灭；[action][action] 弃掉本卡",
+          "P7 theApiary 11568 玛莉亚·里维拉：异教徒敌人伤害改道 / 毁灭转嫁为伤害（真实引擎读点）",
+          "P7 theApiary 11581 古代遗物：你受到 1 点或更多伤害后，对它造成 1 点伤害",
+          "P7 theApiary 11557 失落的朝圣者：[[异教徒]]敌人获得胜利 0 与冷漠（已在场/后续生成）",
+          "P7 theApiary 11559 引诱之光：[action] 共同花费线索把遭遇弃牌堆中的地点洗入牌库底 10 张",
+          "P7 theApiary 11559b 危险出口：[[偷渡者]]敌人生成到入口；[action] 把异教徒支援/敌人放到场景下方",
+          "P7 theApiary 11581 古代遗物：控制它结束游戏时翻面（符文 S + 胜利区）",
+          "P7 theApiary 11582 骇人“面具”：直到下个回合开始不能移动/造成伤害/交战（api.addEffect）+ 字形门槛"
         ]
       }
     },
@@ -276,7 +329,7 @@
         "outputSha256": "398e1241513f0bde060f3f6ce5b65b4f1ed64a6743c89a513580a18f25725beb"
       },
       "tests": {
-        "count": 15,
+        "count": 29,
         "titles": [
           "P7 theGrandVault 结构：26 条目、12 规则地点、2 幕 3 议程、development manifest",
           "P7 theGrandVault 地点与 layout：4 固定 + 8 候选、网格坐标、展示坐标覆盖全部地点",
@@ -285,14 +338,28 @@
           "P7 theGrandVault 供能分支：thePowerWasDiverted 时只激活左下腔室",
           "P7 theGrandVault 激活账本：激活/失活经 scenarioFlags 记录，秘库核心在全部秘库激活后解封",
           "P7 theGrandVault 移动平台：共同花费线索后与相邻[[秘库]]交换网格位置并重算连接",
-          "P7 theGrandVault 符文：翻译 3 个符文揭示封印腔室，符文卡加入胜利区",
+          "P7 theGrandVault 符文：翻译 3 个符文揭示封印腔室；地点符文走地点胜利、秘库翻面剧情卡进胜利区",
           "P7 theGrandVault 碑匾：碑匾腔室最后一个线索后发现并交付潮汐碑匾",
           "P7 theGrandVault 幕间「秘库核心」：共同花费 3[per] 线索，按键记录 theInnerSanctumWasUnsealed",
           "P7 theGrandVault 幕 1：轮末且控制潮汐碑匾时推进；幕 2 全员撤退推进并进入结局",
           "P7 theGrandVault 议程背面：议程 1 生成穷途异魔，议程 3 全体被击败",
+          "P8 11587 困难邪教徒等到检定结算后，忽略符号时不触发",
           "P7 theGrandVault 混乱标记：四档取值（含淹没加成/已激活数量）与 [cultist]/[elder_thing] 追加效果",
           "P7 theGrandVault 结局：R'lyeh 地图、Tidal Tablet、Good Money 下一章起始资源",
-          "P7 theGrandVault JSON 存档往返：网格 / 激活账本 / 符文 / 放一边保持"
+          "P7 theGrandVault JSON 存档往返：网格 / 激活账本 / 符文 / 放一边保持",
+          "P7 theGrandVault 未揭示封锁与内殿强制：不能进入核心/封印腔室；穷途异魔在核心被击败记录并移出「仍在你身后」",
+          "P7 theGrandVault 11605 敌军阶段：攻击连接地点[战斗]最低调查员，否则移动到最近移动平台的淹没地点",
+          "P7 theGrandVault 生成落点：11605 最近的淹没地点、11606 与猎物交战",
+          "P7 theGrandVault literal 覆盖：26 张条目的印刷关键子句断言",
+          "P7 theGrandVault saveReplay：真实 saveSnapshot/readSnapshot 恢复后状态等价、后续动作确定",
+          "P7 theGrandVault 受控剧情资产 11611 [fast]：legalMoves 出现横置能力并真实结算淹没操作",
+          "P7 theGrandVault 受控剧情资产 11611 [reaction]：所在地点淹没等级提高时移动到一处连接地点",
+          "P7 theGrandVault Good Money：campaignRuleFlag 跨章标记只让下一章维护阶段禁止获得资源（campaign-rules helper 判定，越章后 stale 无害）",
+          "P7 theGrandVault 11605 不能进入未淹没地点：enemyRule.enterOnlyFlooded（进入/生成/猎人移动共用读点）",
+          "P7 theGrandVault 11606 猎手连接：behavior.enemyConnections 返回全部已激活地点",
+          "P7 theGrandVault 11608/11609/11610 翻译费用：弃支援/受伤害恐惧/弃手牌按印刷支付后翻面并加入胜利区",
+          "P7 theGrandVault 11607 致命机械：失败按当前幕选择（第一幕选 1 项，第二幕改选 2 项）",
+          "P7 theGrandVault 11596 隐蔽蓄水池：淹没等级不能降低（floodBounds.min + cannotDecreaseFlood 双层约束）"
         ]
       }
     },
@@ -322,7 +389,7 @@
         "outputSha256": "13eaada24cdcbee21c0b96137770eee3af1c3aec0f575997148a9fd326ec3bac"
       },
       "tests": {
-        "count": 17,
+        "count": 36,
         "titles": [
           "P7 courtOfTheAncients 结构：27 条目、11 规则地点（12 张地点卡）、2 幕 2 议程、development manifest",
           "P7 courtOfTheAncients 地点与 layout：竖直 4 层塔、静态连接只有东侧前厅 ↔ 古代祭坛",
@@ -340,7 +407,26 @@
           "P7 courtOfTheAncients 结局：R'lyeh 地图 + Shard of Y'ch'lecht 记录；幕 1 弃牌数量",
           "P7 courtOfTheAncients 混乱标记：四档取值（cultist 偷渡者 / tablet 淹没再揭示 / elder_thing 战斗）",
           "P7 courtOfTheAncients 事件：符文诡计附属到地点、宇宙预兆失败结算",
-          "P7 courtOfTheAncients JSON 存档往返：网格 / 升降机层级 / 符文 / 放一边保持"
+          "P7 courtOfTheAncients JSON 存档往返：网格 / 升降机层级 / 符文 / 放一边保持",
+          "P7 courtOfTheAncients 敌军阶段钩子：11637 移动到猎物、11635 对相邻地点直接恐惧、11621 战后弃手牌",
+          "P7 courtOfTheAncients 地点行动收口：[[通道]]移动与搜索遭遇弃牌堆[[符文]]卡",
+          "P7 courtOfTheAncients 生成落点：11637 最高层且没有调查员处",
+          "P7 courtOfTheAncients 遭遇抽牌来源：弃牌堆抽取 → 附属到所在地点",
+          "P7 courtOfTheAncients 遭遇抽牌来源：牌库顶抽取 → 弃掉并获得涌动",
+          "P7 courtOfTheAncients literal 覆盖：27 张条目的印刷关键子句断言",
+          "P7 courtOfTheAncients saveReplay：真实 saveSnapshot/readSnapshot 恢复后状态等价、后续动作确定",
+          "P7 courtOfTheAncients 11623 进入费用：同地点组线索不足拒绝，支付 4×人数后进入",
+          "P7 courtOfTheAncients 11638 [reaction]：星之眷族敌人进入地点时横置碎片并横置该敌人",
+          "P7 courtOfTheAncients Good Money 标记读点：下一章维护阶段禁止获得资源（campaign-rules helper 判定，越章后 stale 无害）",
+          "P7 courtOfTheAncients 11635 不能移动：enemyRule.immobile 拦下移动，setEnemyKeywords 关闭后恢复移动",
+          "P7 courtOfTheAncients 11624 [reaction] 弃顶：弃 1 手牌后额外弃 2 张（encounterCardsDiscardedFromTop 窗口）",
+          "P7 courtOfTheAncients 11625 [reaction] 弃顶：受到 1 点直接恐惧并额外弃 3 张",
+          "P7 courtOfTheAncients 11627 强制弃顶：最近的重整非精英敌人解除交战并移动到高空栈道",
+          "P7 courtOfTheAncients 11630/11631 动态关键词：<10 不加、≥10 加、跌破后移除并随 phaseBegan/enemySpawned/victoryChanged 同步",
+          "P7 courtOfTheAncients 11638 被动：每轮首次[[星之眷族]]攻击可忽略（ignoredAttackRound 记账）",
+          "P7 courtOfTheAncients 11628 [fast]：花 X 次行动搜索弃牌堆符文（X=1/2 扣行动、抽取数量正确）",
+          "P7 courtOfTheAncients 11629 强制：调查阶段结束时把附属[[符文]]诡计混洗入遭遇牌库",
+          "P7 courtOfTheAncients 11625 费用口径：直接恐惧作为反应费用在额外弃牌前结算"
         ]
       }
     },
@@ -370,7 +456,7 @@
         "outputSha256": "b8d9ac96f4c8154a95190ba9164d295015a85e0637b04c3a3cc28a69f32307ff"
       },
       "tests": {
-        "count": 10,
+        "count": 20,
         "titles": [
           "P7 obsidianCanyons 章节结构：37 张条目、21 张地点、两分支幕议程、development manifest",
           "P7 obsidianCanyons 西征布置：幕/议程/风卡、3×4 正交网格、开阔天空与峰顶牌库",
@@ -381,7 +467,17 @@
           "P7 obsidianCanyons 幕背面重排：3×5（中央尖塔为锚点）与 4×5（漂浮尖塔为锚点）",
           "P7 obsidianCanyons 混乱标记：四档、风暴强度 / 相邻开阔天空 / 最近敌人毁灭 / 再揭示",
           "P7 obsidianCanyons 证明你的价值：记录 helpedWithTheRopes / wasHelpedWithTheRopes，结局读记录",
-          "P7 obsidianCanyons 整关直调：布置/行动/结局可 JSON 往返"
+          "P7 obsidianCanyons 整关直调：布置/行动/结局可 JSON 往返",
+          "P7 obsidianCanyons saveReplay：saveSnapshot/readSnapshot 恢复等价且后续动作确定",
+          "P7 obsidianCanyons 内容收口：议程地点离场强制、揭示强制、目标选择与顺序放回、原初恐怖",
+          "P7 obsidianCanyons 无情关键词：setEnemyKeywords 覆盖在生成/轮始同步",
+          "P7 obsidianCanyons Good Money 跨章标记：命中时不获得补给资源、不匹配正常获得",
+          "P7 obsidianCanyons 注册表：合成开阔天空地点通过注册校验",
+          "P7 obsidianCanyons 引擎读点：合成地点注册、不能离场/移动、巡逻与借机攻击",
+          "P7 obsidianCanyons 内容闭合：解除交战、遭遇搜索、幕 X 选择、撤退、悬浮礁石、剥蚀壁画",
+          "P7 obsidianCanyons 合成地点弱点限制 + 11671 猎物 mostRemainingHealth",
+          "P7 obsidianCanyons 枪械封锁、离场去向、黑曜石之爪",
+          "P7 obsidianCanyons 入场费用三分支 + 符文星盘仪引擎翻面"
         ]
       }
     },
@@ -411,8 +507,9 @@
         "outputSha256": "596f176354821381c06d5c1e44571df9ba0569fb2b645d0515101804258ee41d"
       },
       "tests": {
-        "count": 10,
+        "count": 16,
         "titles": [
+          "P8 11673 邪教徒：失败差值达到 3 时仅本次遭遇附加险境与涌动",
           "P7 sepulchreOfTheSleeper 章节结构：9 张条目、6 张地点、特殊议程牌库、结局键逐字一致",
           "P7 sepulchreOfTheSleeper 地点连接：梦者安息地与 5 张刻印壁龛相连且对称",
           "P7 sepulchreOfTheSleeper 入场/跳过：神器与字形门槛、内殿解封、知道得更清楚记录",
@@ -422,7 +519,12 @@
           "P7 sepulchreOfTheSleeper 结局：resolution1 写记录并直接结束战役（+10 经验/2 精神创伤），无结局失败",
           "P7 sepulchreOfTheSleeper 混乱标记：四档、扰动上限、失败追加",
           "P7 sepulchreOfTheSleeper 刻印壁龛：检定成功在对应神器上放 1 毁灭（团队线索追加 1）",
-          "P7 sepulchreOfTheSleeper 状态投影与 JSON 往返"
+          "P7 sepulchreOfTheSleeper 状态投影与 JSON 往返",
+          "P7 sepulchreOfTheSleeper saveReplay：saveSnapshot/readSnapshot 恢复等价且后续动作确定",
+          "P7 sepulchreOfTheSleeper 内容收口：梦者安息地失败扰动、克苏鲁躲避强制、壁龛毁灭走引擎入口",
+          "P7 sepulchreOfTheSleeper 无情关键词：生成同步 + 神器削弱本轮关闭",
+          "P7 sepulchreOfTheSleeper 城市之下推进：神器毁灭保留、其他卡清空",
+          "P7 sepulchreOfTheSleeper Good Money 跨章标记：命中时不获得补给资源、不匹配正常获得"
         ]
       }
     },
@@ -452,7 +554,7 @@
         "outputSha256": "cbb22c158ca75e90f36c9945416b343b5ae45c396c6e60feed6fd20901fce855"
       },
       "tests": {
-        "count": 9,
+        "count": 11,
         "titles": [
           "P7 theDoomOfArkhamPartI 章节结构：6 张条目、12 地点、1 幕 1 议程、4 结局键",
           "P7 theDoomOfArkhamPartI 遭遇牌库：按印刷份数展开，商店/兰道尔/午夜假面诡计不入库",
@@ -462,7 +564,9 @@
           "P7 theDoomOfArkhamPartI 幕 1 行动：共同支付线索抽暗牌，控制支援/神器",
           "P7 theDoomOfArkhamPartI 幕 1 背面：≥5 神器 → 结局 1，否则 +1 额外经验 → 结局 2",
           "P7 theDoomOfArkhamPartI 结局：神器划除、黏土恐怖、淹没街区记录",
-          "P7 theDoomOfArkhamPartI 四档混乱符号与失败效果"
+          "P7 theDoomOfArkhamPartI 四档混乱符号与失败效果",
+          "P7 theDoomOfArkhamPartI 真实存档重放：saveSnapshot/readSnapshot 读回等价，续动作确定",
+          "P7 theDoomOfArkhamPartI 补给阶段：tdcNoUpkeepResources 命中且 scenarioIndex/seat 匹配时不获得资源"
         ]
       }
     },
@@ -492,7 +596,7 @@
         "outputSha256": "9c02387b9e8c03af031435d6860e0aaa0a2f5257e2ca99196e2433dd70ebbbed"
       },
       "tests": {
-        "count": 17,
+        "count": 32,
         "titles": [
           "P7 theDoomOfArkhamPartII 章节结构：35 张条目、17 地点、两幕、特殊议程、4 结局键",
           "P7 theDoomOfArkhamPartII 牌库：克苏鲁牌库 18 张 action 卡，遭遇牌库排除克苏鲁牌/星之眷族",
@@ -510,7 +614,22 @@
           "P7 theDoomOfArkhamPartII 议程背面：克苏鲁移动到完全淹没地点并交换为废墟版本",
           "P7 theDoomOfArkhamPartII 7 处废墟：议程背面全员阵亡 → 无结局",
           "P7 theDoomOfArkhamPartII 结局记录：结局 1/2/3 与无结局的战役记录",
-          "P7 theDoomOfArkhamPartII 怒气投影与存档往返"
+          "P7 theDoomOfArkhamPartII 怒气投影与存档往返",
+          "P7 theDoomOfArkhamPartII 克苏鲁部位：非狂怒面不可伤害/横置/击败，狂怒面失效，文本空白失效",
+          "P7 theDoomOfArkhamPartII 攻击成功 → 部位翻至狂怒面并结算翻面强制",
+          "P7 theDoomOfArkhamPartII 放逐他！强制翻面忽略「翻至本面后」三条强制",
+          "P7 theDoomOfArkhamPartII 11699/11700 屋顶：位于屋顶可攻击/躲避连接地点敌人，普通地点不含",
+          "P7 theDoomOfArkhamPartII 11688：受控时星之眷族获得猎手/猎物=控制者，[fast] 进合法动作且文本空白后消失",
+          "P7 theDoomOfArkhamPartII 躲避成功：非狂怒面翻至狂怒面且只翻一次，狂怒面受到 1 点伤害",
+          "P7 theDoomOfArkhamPartII 躲避成功：引擎普通躲避派发章节钩子（非自动躲避）",
+          "P7 theDoomOfArkhamPartII 诡计 11716/11717/11719/11720：显现效果按狂怒值结算",
+          "P7 theDoomOfArkhamPartII 克苏鲁行动卡 11706/11708/11710/11713：选择与阶段读点接线",
+          "P7 theDoomOfArkhamPartII 11705/11709/11715：无情冲锋攻击、拆毁废墟计数器、希望消逝封印读点",
+          "P7 theDoomOfArkhamPartII 11706/11707 额外巡逻与 lastPatrolRound 判定（真实 runEnemyPatrol）",
+          "P7 theDoomOfArkhamPartII 11690/11691a [fast] 攻击线索加伤：有线索出现加伤变体，结算扣 1 线索且伤害 +1",
+          "P7 theDoomOfArkhamPartII 11690/11691a [fast] 攻击线索加伤：无线索不出现加伤变体且 validateMove 拒绝",
+          "P7 theDoomOfArkhamPartII 真实存档重放：saveSnapshot/readSnapshot 读回等价，续动作确定",
+          "P7 theDoomOfArkhamPartII 补给阶段：tdcNoUpkeepResources 命中且 scenarioIndex/seat 匹配时不获得资源"
         ]
       }
     }
@@ -621,7 +740,7 @@
         "tests/tdc-scenario-theDoomOfArkhamPartI.test.mjs",
         "tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs"
       ],
-      "passed": 152,
+      "passed": 271,
       "failed": 0,
       "missing": []
     },
@@ -630,7 +749,7 @@
         "tests/tdc-p7-campaign-layer.test.mjs",
         "tests/tdc-p7-story.test.mjs"
       ],
-      "passed": 36,
+      "passed": 41,
       "failed": 0,
       "missing": []
     },
@@ -639,11 +758,11 @@
         "tests/tdc-p7-shared-encounters.test.mjs",
         "tests/tdc-p7-shared-assets.test.mjs"
       ],
-      "passed": 57,
+      "passed": 70,
       "failed": 0,
       "missing": []
     },
-    "p7LedgerSha256": "17140ba0390b00756af7e1d4a2a707100f37f1ed62a7bb23fdff039ccdde8244"
+    "p7LedgerSha256": "c1f582222a33620dce6f7d34a57af2c30bd119f5a5b477759ddda5d55ad8be63"
   },
   "evidence": [
     "audit/tdc-scope.json",

@@ -4,6 +4,7 @@ const keyFor = (session, seat) => `arkham-reactions:${sessionKey(session)}:${sea
 const VALID_STATES = new Set(['skip', 'ask', 'auto'])
 // 没有覆盖时的内置默认：原来的纯收益自动奖励（autoByDefault）自动触发，其余每次询问。
 export const defaultReactionState = def => (def?.autoByDefault ? 'auto' : 'ask')
+export const scenarioReactionKey = st => st.scenario?.id ? `scenario:${st.scenario.id}` : null
 
 function preferences(session, seat) {
   const key = keyFor(session, seat)
@@ -94,9 +95,26 @@ const fastCardOptionCode = id => {
 // 否则「本局不再询问」既过滤不掉选项、也不会整窗让过——06013 门之匣被 04099 毒蛇灾厄
 // 空白化后旧 DSL 通道已清空，窗口只剩这条描述子候选，实机复现「关了开关仍然弹」。
 const freeDescriptorOptionCode = id => {
-  // 卡号是 5 位数字，剧情支援/双面卡可能带面后缀（07274a）；条目下标一定是数字。
-  const match = /^free-descriptor:(\d{5}[a-z]?):\d+/.exec(String(id || ''))
+  // 非玩家卡也可能用规则代号。能力下标之前的一段是来源卡号。
+  const match = /^free-descriptor:([^:]+):\d+(?::|$)/.exec(String(id || ''))
   return match ? match[1] : null
+}
+
+// 旧存档可能正停在没有来源字段的剧本玩家窗口。保留原选项 id 和恢复凭据。
+function legacyScenarioOptionCode(st, id) {
+  if (!id.startsWith('scenario-fast:')) return null
+  const enemyId = id.slice(id.lastIndexOf(':') + 1)
+  if (!enemyId) return scenarioReactionKey(st)
+  const enemy = st.enemies?.find(item => item.id === enemyId)
+  return enemy?.originalCode || enemy?.code || null
+}
+
+function reactionSourceCard(st, source) {
+  if (!source) return null
+  const publicCards = [st.acts?.[st.actIndex], st.agendas?.[st.agendaIndex],
+    ...(st.locations || []), ...(st.enemies || []), ...(st.storyAssets || [])]
+  const card = publicCards.find(item => item && [item.id, item.code, item.originalCode].includes(source))
+  return card?.originalCode || card?.code || (Object.hasOwn(st.cards || {}, source) || /^\d{5}[a-z]?$/.test(source) ? source : null)
 }
 
 export function reactionChoices(st) {
@@ -106,12 +124,15 @@ export function reactionChoices(st) {
   if (!inv) return []
   const assets = [...(inv.assets || []), ...(inv.threat || [])]
   const source = typeof choice.source === 'string' ? choice.source : choice.source?.id
+  const encounterSource = choice.kind === 'reaction' && (reactionSourceCard(st, choice.source?.code || source)
+    || (source && source === st.scenario?.id ? scenarioReactionKey(st) : null))
   const sourceCard = choice.cardCode || assets.find(asset => asset.id === source)?.code
     || [inv.code, ...assets.map(asset => asset.code)].find(code => code === source || st.cards?.[code]?.reactionIds?.includes(source))
   return (st.legalMoves || []).filter(move => move.action === 'choose' && move.choiceId === choice.id && move.optionId !== 'skip').map(move => {
     const option = choice.options?.find(option => option.id === move.optionId)
-    const code = option?.cardCode || fastCardOptionCode(move.optionId)
-      || freeDescriptorOptionCode(move.optionId)
+    const code = option?.reactionSourceCode || option?.cardCode || fastCardOptionCode(move.optionId)
+      || freeDescriptorOptionCode(move.optionId) || legacyScenarioOptionCode(st, move.optionId)
+      || encounterSource
       || (choice.kind === 'reaction' && /^\d+$/.test(move.optionId) ? inv.hand?.[Number(move.optionId)] : null)
       || assets.find(asset => move.optionId === asset.id || move.optionId.startsWith(asset.id + ':'))?.code || sourceCard
     return { move, code }
@@ -172,12 +193,13 @@ export function reactionPassPlan(session, seat, ready = true) {
   return { ...plan, move: plan.skip, key: `${session.sessionId}:${st.revision}:${choice.id}`, submit: !!ready }
 }
 
-export function reactionView(session) {
-  const st = session.state, choice = st.pendingChoice, items = reactionChoices(st)
+export function reactionView(session, seat = session.mySeat ?? session.observerSeat) {
+  const st = session.state, choice = st.pendingChoice
+  if (seat != null && choice?.seat !== seat) return session
+  const items = reactionChoices(st)
   if (!items.length) return session
-  const seat = choice.seat
   const disabled = new Set(items.filter(item => item.code
-    && (reactionState(session.sessionId, seat, item.code) ?? defaultReactionState(st.cards?.[item.code])) === 'skip')
+    && reactionState(session.sessionId, choice.seat, item.code) === 'skip')
     .map(item => item.move.optionId))
   if (!disabled.size) return session
   return { ...session, state: { ...st, legalMoves: st.legalMoves.filter(move => !disabled.has(move.optionId)) } }

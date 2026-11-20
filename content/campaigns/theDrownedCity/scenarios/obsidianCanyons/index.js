@@ -65,7 +65,7 @@ export const behaviorEntryCodes = Object.freeze([
 // v.I（西征）静态基线：CONTRACT §6 的结局键；两条分支差异见 manifest.expeditionBranches。
 export const manifest = scenarioManifest(scenario, identities, {
   campaignId: 'theDrownedCity',
-  status: 'development',
+  status: 'playable',
   layout,
   requiredPackIds: ['core', 'tdcCampaign'],
   requiredEncounterGroupIds: [
@@ -126,7 +126,8 @@ manifest.summitLocationDeck = {
   from: 'bottom',
   candidateCodes: LOCATION_IDS.filter(id => !['rlyehStreets', 'centralSpire'].includes(id)
     && !EXPEDITIONS.west.removedLocationIds.includes(id)
-    && !EXPEDITIONS.west.asideLocationIds.includes(id)).map(id => LOCATION_CODE[id]),
+    && !EXPEDITIONS.west.asideLocationIds.includes(id)
+    && !LOCATION_OPTIONS[id]?.openSky).map(id => LOCATION_CODE[id]),
   openSkyPoolIds: [...OPEN_SKY_POOL_IDS],
   initialOpenSkyCells: [...INITIAL_OPEN_SKY_CELLS],
   actRebuilds: { act1: ACT_TWO_LAYOUT, act2: ACT_THREE_LAYOUT },

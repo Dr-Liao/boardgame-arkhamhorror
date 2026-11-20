@@ -5,7 +5,9 @@
 //       其在下个补给阶段不能重整。
 // 背面：如果你所在地点有线索，你不能进入险恶道路。
 // 印刷：shroud = 层级（X）、每调查员 1 条线索、特性 [[R'lyeh]][[Walkway]]。
-// 读点：behavior.locationRevealed 读 flags.spawnCoralStarSpawnOnReveal（珊瑚星之眷族 = 11727，放一边）。
+// 读点：behavior.locationRevealed 读 flags.spawnCoralStarSpawnOnReveal（珊瑚星之眷族 = 11727，放一边）；
+//       「下个补给阶段不能重整」调用 P7 已落地原语 api.preventEnemyReadyNextUpkeep(enemy)
+//       （phases.js 消费 skipNextUpkeepReady 一次后清除；无运行时 api 时 behavior 退回写同一引擎读点）。
 export default {
   code: '11525',
   scope: 'location',
@@ -14,7 +16,7 @@ export default {
     treacherousPath: true, cannotEnterFromClues: true, shroudIsLevel: true,
     spawnCoralStarSpawnOnReveal: true, coralStarSpawnCode: '11727',
   },
-  note: '数据型条目：揭示时生成横置的珊瑚星之眷族由 behavior.locationRevealed 实现。'
-    + 'approximation：「下个补给阶段不能重整」没有通用敌人读点，只记录 enemy.doesNotReadyDuringUpkeep 等 Lead/引擎补读点。',
+  note: '数据型条目：揭示时生成横置的珊瑚星之眷族由 behavior.locationRevealed 实现；'
+    + '「下个补给阶段不能重整」走 P7 已落地原语 api.preventEnemyReadyNextUpkeep（引擎既有读点）。',
   abilities: [],
 }

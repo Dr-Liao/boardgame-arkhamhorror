@@ -172,7 +172,7 @@ const flowCoverage = campaign ? inspectFlow(campaign, expectedIds) : {
 }
 const campaignChecks = {
   campaignRegistered: Boolean(campaign),
-  campaignPackDevelopment: campaignPack?.status === 'development',
+  campaignPackRegistered: Boolean(campaignPack && campaignPack.status !== 'catalog-only'),
   flowExplicit: flowCoverage.explicit,
   allChaptersReachable: flowCoverage.missingChapters.length === 0,
   terminalReachable: flowCoverage.terminalReachable,

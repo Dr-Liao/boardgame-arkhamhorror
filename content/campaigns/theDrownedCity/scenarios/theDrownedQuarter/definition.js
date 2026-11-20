@@ -203,7 +203,9 @@ const locationRows = [
   }],
 ]
 for (const [id, code] of SEA_FLOOR_TABLE) {
-  locationRows.push([id, code, { seaFloor: true, unrevealed: true }])
+  // 深渊沟壑（11541）印刷帷幕为 X = 已揭示[[海底]]地点数的一半（向下取整）：
+  // 卡表 shroud -2 只是占位，运行期由 behavior.locationShroudModifier 供给；基底固定 0。
+  locationRows.push([id, code, { seaFloor: true, unrevealed: true, ...(code === '11541' ? { shroud: 0 } : {}) }])
 }
 
 export const LOCATIONS = Object.freeze(Object.fromEntries(locationRows.map(([id, code, extra]) => {

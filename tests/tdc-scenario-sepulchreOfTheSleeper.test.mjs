@@ -8,6 +8,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import * as chapter from '../content/campaigns/theDrownedCity/scenarios/sepulchreOfTheSleeper/index.js'
+import { enemyKeywordOverride, enemyHasAttackKeyword } from '../src/engine/enemy-keyword-movement.js'
 import {
   scenario, LOCATIONS, LOCATION_IDS, LOCATION_CONNECTIONS, START_LOCATION, ALCove_IDS, ALCove_OPTIONS,
   AGENDA_CODES, AGENDA_STAGES, BENEATH_THE_CITY_CODE, CTHULHU_AWAKENED_CODE, CTHULHU_CODE,
@@ -48,9 +49,28 @@ const stateFor = (records = {}, { count = 1, difficulty = 'standard' } = {}) => 
   phase: 'investigation', round: 1, status: 'playing', rngState: 999,
 })
 
+test('P8 11673 邪教徒：失败差值达到 3 时仅本次遭遇附加险境与涌动', () => {
+  const state = stateFor()
+  const draws = []
+  const api = { drawEncounter: (seat, options) => draws.push({ seat, options }) }
+  for (const failedBy of [2, 3]) {
+    behavior.applyTokenEffect(state, state.investigators[0], { mode: 'drawEncounterOnFail', test: { failedBy } }, api)
+  }
+  assert.deepEqual(draws, [{ seat: 0, options: undefined }, { seat: 0, options: { peril: true, grantSurge: true } }])
+})
+
 const makeApi = (state, options = {}) => {
   const api = {
     state, info: () => {}, finished: null,
+    scenario: {
+      setEnemyKeywords: (enemy, keywords, keywordOptions) => {
+        enemy.keywordOverrides ||= {}
+        for (const keyword of keywords) {
+          enemy.keywordOverrides[keyword] = { enabled: keywordOptions.enabled, throughRound: keywordOptions.throughRound }
+        }
+        return true
+      },
+    },
     choose: options.choose || (() => null),
     shuffle: options.shuffle || (list => [...list]),
     test: (seat, skill, difficulty, resolve) => {
@@ -102,7 +122,7 @@ const setup = ({ records = {}, ...options } = {}) => {
 test('P7 sepulchreOfTheSleeper 章节结构：9 张条目、6 张地点、特殊议程牌库、结局键逐字一致', () => {
   assert.equal(chapter.scenario.id, 'sepulchreOfTheSleeper')
   assert.equal(chapter.scenario.originalCode, '11673')
-  assert.equal(chapter.manifest.status, 'development')
+  assert.equal(chapter.manifest.status, 'playable')
   assert.equal(chapter.manifest.campaignId, 'theDrownedCity')
   assert.equal(chapter.manifest.referenceCode, '11673')
   assert.equal(chapter.implementedEncounterCodes.length, 9)
@@ -255,17 +275,15 @@ test('P7 sepulchreOfTheSleeper 结局：resolution1 写记录并直接结束战�
   state.status = 'playing'
   const award = behavior.resolution(state, 'resolution1', null, api)
   assert.equal(state.campaign.records.theInvestigatorsHaltedCthulhusAwakening, true)
-  assert.equal(state.status, 'won')
+  assert.equal(state.status, 'playing')
   assert.equal(award.campaignWin, true)
   assert.equal(award.next, 'epilogue')
   assert.equal(state.campaign.trauma[0].mental, 2)
-  assert.equal(state.investigators[0].scenarioXpBonus, 10)
+  assert.equal(award.bonus, 10)
 
   const failed = setup({ count: 1 }).state
   failed.investigators[0].defeated = true
   const failedAward = behavior.resolution(failed, 'noResolution')
-  assert.equal(failed.status, 'lost')
-  assert.equal(failed.gameOver, true)
   assert.equal(failedAward.campaignWin, false)
   assert.equal(failed.investigators[0].drivenInsane, true)
 })
@@ -342,4 +360,184 @@ test('P7 sepulchreOfTheSleeper 状态投影与 JSON 往返', () => {
   assert.equal(cthulhuDefeated(state), false)
   behavior.enemyDefeated(state, cthulhuInPlay(state), api)
   assert.equal(api.finished, 'resolution1')
+})
+
+// ---------------------------------------------------------------------------
+// 10. 真实存档（lib/sessions.js saveSnapshot/readSnapshot）重放
+// ---------------------------------------------------------------------------
+test('P7 sepulchreOfTheSleeper saveReplay：saveSnapshot/readSnapshot 恢复等价且后续动作确定', async () => {
+  const { mkdtempSync, rmSync } = await import('node:fs')
+  const { tmpdir } = await import('node:os')
+  const { join } = await import('node:path')
+  const { saveSnapshot, readSnapshot, persistEnabled } = await import('../../../lib/sessions.js')
+  const originalHome = process.env.DSH_HOME
+  const originalPersist = process.env.BOARDGAME_PERSIST
+  const home = mkdtempSync(join(tmpdir(), 'tdc-sepulchre-save-'))
+  delete process.env.BOARDGAME_PERSIST
+  process.env.DSH_HOME = home
+  const records = Object.fromEntries(ARTIFACT_RECORD_KEYS.map(key => [key, true]))
+  try {
+    assert.equal(persistEnabled(), true, 'BOARDGAME_PERSIST 默认开启路径')
+    const sessionId = 'tdc-sepulchre-save-replay'
+    const { state } = setup({ records, count: 2 })
+    state.investigators.forEach(inv => { inv.location = 'sigilCarvedAlcoveAmbition'; inv.clues = 2 })
+    const session = { sessionId, modId: 'arkhamhorror', state,
+      players: state.investigators.map(inv => ({ seat: inv.seat, name: inv.name })),
+      events: [], settings: { difficulty: 'standard' } }
+    const file = saveSnapshot(session)
+    assert.equal(typeof file, 'string')
+    const restored = readSnapshot(sessionId)
+    assert.ok(restored, `readSnapshot 未返回记录；磁盘文件：${file}`)
+    const persisted = restored.session ?? restored
+    const normalized = value => JSON.parse(JSON.stringify(value))
+    assert.deepEqual(normalized(persisted.state), normalized(state), '读回状态与内存状态深度相等')
+    const actOn = (target, api) => {
+      const inv = target.investigators[0]
+      inv.location = 'sigilCarvedAlcoveAmbition'
+      inv.clues = 2
+      return behavior.performAction(target, inv, { rule: 'sepulchreAlcove', locationId: 'sigilCarvedAlcoveAmbition' }, api)
+    }
+    const restoredApi = makeApi(persisted.state)
+    const freshState = setup({ records, count: 2 }).state
+    const freshApi = makeApi(freshState)
+    freshState.investigators.forEach(inv => { inv.location = 'sigilCarvedAlcoveAmbition'; inv.clues = 2 })
+    const fromSaved = actOn(persisted.state, restoredApi)
+    const fromFresh = actOn(freshState, freshApi)
+    assert.deepEqual(normalized(fromSaved), normalized(fromFresh), '恢复后动作与未存档同起点的动作结果一致')
+    assert.deepEqual(normalized(persisted.state.investigators[0]), normalized(freshState.investigators[0]))
+    assert.equal(persisted.modId, 'arkhamhorror')
+    assert.equal(persisted.sessionId, sessionId)
+  } finally {
+    if (originalHome === undefined) delete process.env.DSH_HOME
+    else process.env.DSH_HOME = originalHome
+    if (originalPersist === undefined) delete process.env.BOARDGAME_PERSIST
+    else process.env.BOARDGAME_PERSIST = originalPersist
+    rmSync(home, { recursive: true, force: true })
+  }
+})
+
+// ---------------------------------------------------------------------------
+// 11. 内容侧收口（第二轮）
+// ---------------------------------------------------------------------------
+test('P7 sepulchreOfTheSleeper 内容收口：梦者安息地失败扰动、克苏鲁躲避强制、壁龛毁灭走引擎入口', () => {
+  const records = Object.fromEntries(ARTIFACT_RECORD_KEYS.map(key => [key, true]))
+  const { state, api } = setup({ records, count: 2 })
+  const inv = state.investigators[0]
+  const other = state.investigators[1]
+  // 11676 梦者安息地：本地点检定失败 → +1 扰动。
+  inv.location = 'dreamersRest'
+  const before = disturbance(state)
+  assert.equal(behavior.afterTest(state, inv, { success: false }, api), true)
+  assert.equal(disturbance(state), before + 1)
+  inv.location = 'sigilCarvedAlcoveAmbition'
+  assert.equal(behavior.afterTest(state, inv, { success: false }, api), false, '非本地点失败不加扰动')
+
+  // 11674b 克苏鲁：被躲避后二选一。
+  const cthulhu = spawnCthulhu(state, api)
+  inv.location = 'dreamersRest'
+  other.location = 'dreamersRest'
+  api.choose = () => 'damage'
+  const damageBefore = other.damage
+  assert.equal(behavior.afterEvade(state, inv, cthulhu, null, api), true)
+  assert.equal(other.damage, damageBefore + 1, '选择伤害：所在地点每位调查员 1 点直接伤害')
+  api.choose = () => 'ready'
+  cthulhu.exhausted = true
+  assert.equal(behavior.afterEvade(state, inv, cthulhu, null, api), true)
+  assert.equal(cthulhu.exhausted, false, '选择重整：横置状态解除')
+
+  // 刻印壁龛：毁灭走引擎 placeDoomOnCard 读点（会触发 doomPlaced/替换拦截）。
+  const placed = []
+  api.placeDoomOnCard = (card, amount) => { placed.push([card.code, amount]); card.doom = (card.doom || 0) + amount }
+  const artifact = artifactInPlay(state, 'obsidianClaw')
+  inv.location = 'sigilCarvedAlcoveAmbition'
+  other.location = 'sigilCarvedAlcoveAmbition'
+  inv.clues = 2
+  other.clues = 0
+  api.test = (seat, skill, difficulty, resolve) => { resolve({ success: true, failedBy: 0 }) }
+  api.choose = options => (options.prompt?.includes('额外') ? 'skip' : null)
+  assert.equal(behavior.performAction(state, inv, { rule: 'sepulchreAlcove', locationId: 'sigilCarvedAlcoveAmbition' }, api), true)
+  assert.deepEqual(placed, [[artifact.code, 1]])
+  assert.equal(artifact.doom, 1)
+})
+
+// ---------------------------------------------------------------------------
+// 12. 关键词覆盖（setEnemyKeywords 已落地）
+// ---------------------------------------------------------------------------
+test('P7 sepulchreOfTheSleeper 无情关键词：生成同步 + 神器削弱本轮关闭', () => {
+  const records = Object.fromEntries(ARTIFACT_RECORD_KEYS.map(key => [key, true]))
+  const { state, api } = setup({ records, count: 2 })
+  const cthulhu = spawnCthulhu(state, api)
+  assert.equal(cthulhu.keywordOverrides.relentless.enabled, true, '生成时同步印刷无情')
+  assert.equal(enemyHasAttackKeyword(state, cthulhu, 'relentless', true, () => null), true)
+  const artifact = artifactInPlay(state, 'obsidianClaw')
+  artifact.doom = 1
+  assert.equal(weakenCthulhu(state, state.investigators[artifact.controllerSeat ?? 0], api), true)
+  assert.equal(cthulhu.keywordOverrides.relentless.enabled, false, '本轮失去无情')
+  assert.equal(enemyHasAttackKeyword(state, cthulhu, 'relentless', true, () => null), false)
+  state.round += 1
+  assert.equal(enemyKeywordOverride(state, cthulhu, 'relentless'), null)
+  assert.equal(enemyHasAttackKeyword(state, cthulhu, 'relentless', true, () => null), true, '下一轮恢复无情')
+  assert.equal(behavior.phaseBegan(state, 'mythos', api), true)
+  assert.equal(behavior.phaseBegan(state, 'investigation', api), false)
+})
+
+// ---------------------------------------------------------------------------
+// 13. 议程推进保留神器毁灭（doomKeptOnAgendaAdvance: 'storyAssets'）
+// ---------------------------------------------------------------------------
+test('P7 sepulchreOfTheSleeper 城市之下推进：神器毁灭保留、其他卡清空', () => {
+  const records = Object.fromEntries(ARTIFACT_RECORD_KEYS.map(key => [key, true]))
+  const { state, api } = setup({ records, count: 2 })
+  // 声明键已注册（引擎 clearDoomInPlay 读点）。
+  assert.equal(registeredEntry('11674').doomKeptOnAgendaAdvance, 'storyAssets')
+  // 准备：两件神器上有毁灭；敌人/地点上也放毁灭（应被清空）。
+  const claw = artifactInPlay(state, 'obsidianClaw')
+  const node = artifactInPlay(state, 'barrierNode')
+  claw.doom = 2
+  node.doom = 1
+  state.enemies.push({ id: 'e-doom', code: '11741', originalCode: '11741', name: '敌人', location: START_LOCATION, doom: 2, traits: [] })
+  state.locations.find(location => location.id === START_LOCATION).doom = 1
+  const agenda = state.agendas[state.agendaIndex]
+  assert.equal(behavior.agendaAdvancing(state, agenda, api), true)
+  assert.equal(state.scenarioFlags.sepulchreArtifactDoomBeforeAdvance.length, 2)
+  // 模拟引擎 advanceAgenda 的 clearDoomInPlay：玩家资产/敌人/地点毁灭清空（神器快照在 behavior 里保留）。
+  for (const inv of state.investigators) for (const asset of inv.assets || []) asset.doom = 0
+  for (const enemy of state.enemies) enemy.doom = 0
+  for (const location of state.locations) location.doom = 0
+  // 议程背面结算：生成克苏鲁 + 回填神器毁灭。
+  assert.equal(behavior.agendaReveal(state, agenda, api), true)
+  assert.equal(claw.doom, 2, '黑曜石之爪上的 2 点毁灭保留')
+  assert.equal(node.doom, 1, '屏障节点上的 1 点毁灭保留')
+  assert.equal(state.enemies.find(enemy => enemy.id === 'e-doom').doom, 0, '敌人上的毁灭按规则清空')
+  assert.equal(state.locations.find(location => location.id === START_LOCATION).doom, 0, '地点上的毁灭按规则清空')
+  assert.equal(cthulhuInPlay(state)?.location, START_LOCATION)
+  assert.equal(state.agendas.length, 2, '议程牌库为城市之下 → 克苏鲁苏醒（索引由引擎 advanceAgenda 递增）')
+})
+
+// ---------------------------------------------------------------------------
+// 14. Good Money 跨章标记（content/campaigns/theDrownedCity/campaign-rules.js）
+// ---------------------------------------------------------------------------
+test('P7 sepulchreOfTheSleeper Good Money 跨章标记：命中时不获得补给资源、不匹配正常获得', () => {
+  const records = Object.fromEntries(ARTIFACT_RECORD_KEYS.map(key => [key, true]))
+  const { state } = setup({ records, count: 2 })
+  state.campaign.scenarioIndex = 3
+  state.campaign.ruleFlags = { tdcNoUpkeepResources: { originScenario: 'theGrandVault', seats: [0], appliesToScenarioIndex: 3 } }
+  // phases.js 维护阶段补给读点：scenarioBehavior(state).canGainResources?.(state, inv) !== false 才 +supply。
+  const supply = inv => { if (behavior.canGainResources(state, inv) !== false) inv.resources += 1; return inv.resources }
+  const first = state.investigators[0]
+  const second = state.investigators[1]
+  const firstBefore = first.resources
+  supply(first)
+  assert.equal(first.resources, firstBefore, '命中（章节索引+座位）：不获得资源')
+  const secondBefore = second.resources
+  supply(second)
+  assert.equal(second.resources, secondBefore + 1, '座位不匹配：正常获得资源')
+  // 章节索引不匹配 → 不生效（stale 标记无害）。
+  state.campaign.scenarioIndex = 4
+  supply(first)
+  assert.equal(first.resources, firstBefore + 1, '章节索引不匹配：正常获得资源')
+  // 无标记 → 正常获得。
+  delete state.campaign.ruleFlags.tdcNoUpkeepResources
+  supply(first)
+  assert.equal(first.resources, firstBefore + 2, '无标记：正常获得资源')
+  assert.equal(behavior.canGainResources(state, first), true)
 })

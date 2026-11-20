@@ -12,5 +12,5 @@ export default {
   encounterResolve(state, inv, card, api) {
     return api.resolveScenarioEvent('doomOfArkhamPartTwoArkhamUnderAssault', { seat: inv.seat }) === true
   },
-  note: 'approximation：恶心可塑性的三选一由 behavior.grossPlasticity 处理；其余按卡面结算。',
+  note: "显现：每位调查员检定[意志](X=狂怒值)；1 人以上失败则抽克苏鲁牌库顶 1 张（behavior.drawCthulhuCard）。",
 }

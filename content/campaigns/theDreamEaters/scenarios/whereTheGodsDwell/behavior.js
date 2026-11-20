@@ -524,7 +524,7 @@ function restlessJourneyMoves(state, inv, moves) {
     const data = entryFlags(code)?.restlessJourney
     if (!data) continue
     moves.push({
-      action: 'scenarioAction', rule: `restlessJourney:${code}`, actions: 0, fast: true,
+      action: 'scenarioAction', rule: `restlessJourney:${code}`, actions: 0, fast: true, reactionSourceCode: code,
       label: `😴 弃掉无眠之旅并检定${SKILL_LABELS[data.skill] || data.skill}(${data.difficulty})；失败在当前密谋放 1 毁灭`,
     })
   }
@@ -547,12 +547,12 @@ function performRestlessJourney(state, inv, move, api) {
 function collectActions(state, inv) {
   const moves = [...(encounterRules.actions?.(state, inv) || [])]
   const mentioned=(inv.hiddenCards || []).find(code=>entryFlags(code)?.mentionDrivesInsane && inv.hand.includes(code))
-  if (mentioned) moves.push({action:'scenarioAction',rule:`reportHiddenMention:${mentioned}`,actions:0,fast:true,
+  if (mentioned) moves.push({action:'scenarioAction',rule:`reportHiddenMention:${mentioned}`,actions:0,fast:true,reactionSourceCode:mentioned,
     label:'我提到了手中的隐私卡：执行发疯后果'})
-  const location = here(state, inv)
-  if (location) locationRuleFor(originalOf(location))?.actions?.({ moves, state, inv, location })
+  const location = here(state, inv), localMoves = []
+  if (location) locationRuleFor(originalOf(location))?.actions?.({ moves: localMoves, state, inv, location })
   const tower = towerActionMove(state, inv, location)
-  if (tower) moves.push(tower)
+  moves.push(...localMoves.map(move => move.fast && location.revealed ? { ...move, reactionSourceCode: originalOf(location) } : move), ...[tower].filter(Boolean))
   actActionMoves(state, inv, moves)
   restlessJourneyMoves(state, inv, moves)
   return moves

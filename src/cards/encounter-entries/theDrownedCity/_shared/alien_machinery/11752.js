@@ -30,6 +30,10 @@ export default {
     test: { skills: ['intellect', 'agility'], difficulty: DIFFICULTY },
     cannotTriggerCardAbilitiesWithTraits: ['Glyph', 'Artifact'],
   },
+  // 第二轮：Lead 落地读点 src/engine/ability-rules.js#traitTriggerBlocked（由 descriptorUsable 调用）：
+  // 威胁区卡的 threatEffect.cannotTriggerAbilityTraits 命中触发源卡片特性时，拒绝 action/free/reaction，
+  // forced 不受影响；flags.cannotTriggerCardAbilitiesWithTraits 保留为兼容/内容层可读数据（引擎二者都认）。
+  threatEffect: { cannotTriggerAbilityTraits: ['Glyph', 'Artifact'] },
   encounterResolve(state, inv, card, api) {
     api.threat(inv.seat, CODE)
     api.info?.(`⚙️ 「地狱机械」进入 ${inv.name} 的威胁区域：不能触发[[符文]]或[[神器]]卡牌的能力。`)
@@ -62,6 +66,7 @@ export default {
     },
   }],
   note: '威胁区入场与摆脱行动已接线（二选一技能 + 检定成功弃卡）。'
-    + '近似：「不能触发[[符文]]/[[神器]]卡牌的能力」没有按特性封锁能力的引擎读点，目前只有 flags 数据；'
-    + '已登记 primitive request shared-3（pending）。',
+    + '「不能触发[[符文]]/[[神器]]卡牌的能力」由条目 threatEffect.cannotTriggerAbilityTraits 声明：'
+    + '读点 src/engine/ability-rules.js#traitTriggerBlocked（descriptorUsable 对 action/free/reaction 统一拒绝，'
+    + 'forced 不受影响，第二轮 Lead 落地）；移出威胁区后立即恢复。',
 }

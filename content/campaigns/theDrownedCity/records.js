@@ -27,6 +27,7 @@ export const TDC_RECORD_KEYS = Object.freeze([
   'rubyWonTheBet', 'rubyLostTheBet', 'theInvestigatorsDiscoveredAnAlienLanguage',
   // Expedition to R'lyeh
   'theExpeditionHeadedWest', 'theExpeditionHeadedEast',
+  'theDrownedQuarterWasSkipped',
   'theExpeditionHelpedThePilgrim', 'theExpeditionLeftThePilgrim',
   // The Inescapable
   'theCreatureWasDefeated',
@@ -178,6 +179,7 @@ const FALLBACK_LABELS = Object.freeze({
   rubyLostTheBet: '露比输了赌局',
   theInvestigatorsDiscoveredAnAlienLanguage: '调查员发现了外星语言',
   theExpeditionHeadedWest: '远征队向西前进',
+  theDrownedQuarterWasSkipped: '远征队绕过了淹没城区',
   theExpeditionHeadedEast: '远征队向东前进',
   theExpeditionHelpedThePilgrim: '远征队帮助了朝圣者',
   theExpeditionLeftThePilgrim: '远征队抛下了朝圣者',

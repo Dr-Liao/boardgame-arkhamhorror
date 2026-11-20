@@ -8,8 +8,10 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { zoneApi } from './tcu-zone-api.mjs'
-import { investigatorEntryError } from '../src/engine/engine.js'
+import { investigatorEntryError, startScenario } from '../src/engine/engine.js'
 import { registeredEntry } from '../src/engine/ability.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
+import { chapters } from '../content/campaigns/theCircleUndone/shared.js'
 import * as secretName from '../content/campaigns/theCircleUndone/scenarios/theSecretName/index.js'
 import {
   scenario as definition, NAHAB, BROWN_JENKIN, THE_BLACK_BOOK, GHOSTLY_PRESENCE,
@@ -18,7 +20,7 @@ import {
 import act1 from '../src/cards/encounter-entries/theCircleUndone/theSecretName/05125.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { createHaunted } from '../src/engine/haunted.js'
-import { fixture, asset, legalMoves, validateMove, move, settle } from './core-fixture.mjs'
+import { fixture, asset, enemy, legalMoves, validateMove, move, settle } from './core-fixture.mjs'
 import act2 from '../src/cards/encounter-entries/theCircleUndone/theSecretName/05126.js'
 import act3 from '../src/cards/encounter-entries/theCircleUndone/theSecretName/05127.js'
 import hermit from '../src/cards/encounter-entries/theCircleUndone/theSecretName/05121.js'
@@ -841,6 +843,50 @@ test('05137/05138/05141/05142 的行动：治愈/移动/移除毁灭/离开古�
   const leave = geometryMoves.find(move => move.rule === 'leaveStrangeGeometry')
   assert.equal(leave.actions, 0)
   assert.equal(leave.fast, true, '玩家窗口需要 fast:true 才能使用 [free] 行动')
+})
+
+test('05141 献祭场所：实际行动支付团队线索并移除那赫卜的毁灭，移除最后一个后推进', () => {
+  const state = fixture('01001', 2, { campaignId: 'theCircleUndone' })
+  const index = chapters.findIndex(chapter => chapter.id === 'theSecretName')
+  state.campaign.flow.nodeId = 'theSecretName'
+  resolveTransaction(state, 0, { action: 'startSecretName' }, current => startScenario(current, index, []))
+  settle(state)
+  assert.equal(state.scenario.id, 'theSecretName')
+
+  const site = placeFromDefinition(state, 'siteOfTheSacrifice')
+  state.actIndex = 2
+  state.currentSeat = 0
+  for (const inv of state.investigators) {
+    inv.location = site.id
+    inv.clues = 1
+  }
+  const nahab = enemy(state, { code: NAHAB, name: '那赫卜', doom: 2, damage: 1, horror: 1 })
+  const other = enemy(state, { doom: 1, damage: 1 })
+  const spend = () => {
+    const action = legalMoves(state, 0).find(candidate => candidate.rule === 'removeNahabDoom')
+    assert.ok(action, '有足够线索时应能执行献祭场所行动')
+    move(state, action)
+    settle(state)
+  }
+
+  const actionsBefore = state.investigators[0].actionsLeft
+  const damageBefore = state.investigators[0].damage
+  const horrorBefore = state.investigators[0].horror
+  spend()
+  assert.deepEqual(state.investigators.map(inv => inv.clues), [0, 0])
+  assert.equal(state.investigators[0].actionsLeft, actionsBefore - 1)
+  assert.equal(state.enemies.find(entry => entry.id === nahab.id).doom, 1)
+  assert.equal(state.enemies.find(entry => entry.id === other.id).doom, 1)
+  assert.equal(state.investigators[0].damage, damageBefore + 1, '其他交战敌人仍会借机攻击')
+  assert.equal(state.investigators[0].horror, horrorBefore, '那赫卜的借机攻击被豁免')
+  assert.equal(state.actIndex, 2)
+  assert.ok(!legalMoves(state, 0).some(candidate => candidate.rule === 'removeNahabDoom'))
+
+  state.investigators[0].clues = 2
+  spend()
+  const result = state.campaign.scenarioResults.at(-1)
+  assert.equal(result?.scenarioId, 'theSecretName')
+  assert.equal(result.resolution, 'resolution2')
 })
 
 test('05139 物理教室：成功超难度 ≥2 时在另一地点发现 1 线索（每轮一次）', () => {

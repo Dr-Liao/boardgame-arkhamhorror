@@ -798,5 +798,105 @@
     "id": "fhvMagistar",
     "title": "Magistar",
     "file": "common/magistar.mp3"
+  },
+  {
+    "id": "tdcCoolVibes",
+    "title": "Cool Vibes",
+    "file": "common/cool-vibes.mp3"
+  },
+  {
+    "id": "tdcSmokingGun",
+    "title": "Smoking Gun",
+    "file": "common/smoking-gun.mp3"
+  },
+  {
+    "id": "tdcDeepNoise",
+    "title": "Deep Noise",
+    "file": "common/deep-noise.mp3"
+  },
+  {
+    "id": "tdcDrumsOfTheDeep",
+    "title": "Drums of the Deep",
+    "file": "common/drums-of-the-deep.mp3"
+  },
+  {
+    "id": "tdcWithTheSea",
+    "title": "With the Sea",
+    "file": "common/with-the-sea.mp3"
+  },
+  {
+    "id": "tdcAftermath",
+    "title": "Aftermath",
+    "file": "common/aftermath.mp3"
+  },
+  {
+    "id": "tdcSimplex",
+    "title": "Simplex",
+    "file": "common/simplex.mp3"
+  },
+  {
+    "id": "tdcSatiate",
+    "title": "Satiate",
+    "file": "common/satiate.mp3"
+  },
+  {
+    "id": "tdcCheeZeeCavesV2",
+    "title": "Chee Zee Caves V2",
+    "file": "common/chee-zee-caves-v2.mp3"
+  },
+  {
+    "id": "tdcTheChamber",
+    "title": "The Chamber",
+    "file": "common/the-chamber.mp3"
+  },
+  {
+    "id": "tdcVulcan",
+    "title": "Vulcan",
+    "file": "common/vulcan.mp3"
+  },
+  {
+    "id": "tdcDragonAndToast",
+    "title": "Dragon and Toast",
+    "file": "common/dragon-and-toast.mp3"
+  },
+  {
+    "id": "tdcRiverOfIo",
+    "title": "River of Io",
+    "file": "common/river-of-io.mp3"
+  },
+  {
+    "id": "tdcUndaunted",
+    "title": "Undaunted",
+    "file": "common/undaunted.mp3"
+  },
+  {
+    "id": "tdcHallsOfTheUndead",
+    "title": "Halls of the Undead",
+    "file": "common/halls-of-the-undead.mp3"
+  },
+  {
+    "id": "tdcTheSecondComingInstrumental",
+    "title": "The Second Coming Instrumental",
+    "file": "common/the-second-coming-instrumental.mp3"
+  },
+  {
+    "id": "tdcDisquiet",
+    "title": "Disquiet",
+    "file": "common/disquiet.mp3"
+  },
+  {
+    "id": "tdcDarkDance",
+    "title": "Dark Dance",
+    "file": "common/dark-dance.mp3"
+  },
+  {
+    "id": "tdcUnlight",
+    "title": "Unlight",
+    "file": "common/unlight.mp3"
+  },
+  {
+    "id": "tdcColossus",
+    "title": "Colossus",
+    "file": "common/colossus.mp3"
   }
 ]

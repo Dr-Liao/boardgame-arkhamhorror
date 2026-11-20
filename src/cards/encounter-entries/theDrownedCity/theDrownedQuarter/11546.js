@@ -6,6 +6,6 @@ export default {
   scope: 'location',
   implemented: true,
   flags: {"seaFloor":true},
-  note: "data-type（[[海底]]地点，双面：背面 = 海床）。behavior.locationRevealed 执行「进入海床时提高本地点'\n      + '与一处相邻地点的淹没」；本卡其余印刷能力尚未接线（近似）：珊瑚礁·雕像花园（victory 1；[action][action] 抽 2 张牌 + 2 资源并生成放一边的水下寄生虫，每场团队一次）。",
+  note: "data-type（[[海底]]地点，双面：背面 = 海床；victory 1）。已接线：进入海床提高本地点与一处相邻地点的淹没（behavior.locationRevealed）；[action][action]「抽取 2 张卡牌并获得 2 个资源，将放一边的水下寄生虫生成在本地点」走 behavior.actions（动作点 2）/performAction + api.drawCards/gainResources/spawnEngaged（每场游戏团队限一次，scenarioFlags 记账）。全部子句已接线。",
   abilities: [],
 }

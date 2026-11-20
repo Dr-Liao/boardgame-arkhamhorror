@@ -1091,7 +1091,7 @@
       ],
       "ledger": {
         "path": "audit/tcu-scenario-acceptance.json",
-        "sha256": "9dd93baeaecd5f191f4bd42e3560512033e27f8bfb11a798cddc0c58cb5a277d"
+        "sha256": "32aebb32aabc6e4f9d2f8a3ab0b79985d87e7fe6d8dd4d9282930f612943dba8"
       },
       "sourceLock": {
         "path": "audit/tcu-scenario-source-lock.json",
@@ -5410,11 +5410,11 @@
       "simplified": [],
       "ledger": {
         "path": "audit/tcu-player-acceptance.json",
-        "sha256": "5cc487aad4daea115d1de3ca23cd3ea31bce9d228698419268543c45ed080fc9"
+        "sha256": "66e84a93b48877999e582d0828c3c8410e261c8120ecf07431eadccdd7a89c43"
       },
       "generatedModule": {
         "path": "src/cards/tcu-player-acceptance.js",
-        "sha256": "cefbeb6701a1ed237eb3f24f00ab3532d74464ce1f1fda126df88bd2610dd011"
+        "sha256": "b99c21f53c7d7b80cbde5c4d9a9c5234f97c70e2d401ef1bae505ec90029cf82"
       },
       "evidence": [
         "content/packs/tcuPlayer/manifest.js",
@@ -5642,13 +5642,13 @@
       "content/packs/tcuInvestigators/manifest.js": "9d405c622f407f5b07222e41c857452cacd0c0cb6e3f4538588058042a0920b3",
       "tests/tcu-investigators.test.mjs": "28ab385e67397f62b92a394ee7794e8587281c6695efc1bd5ca39bb4e6a1c23e",
       "src/engine/hunch-deck.js": "483ebb65f69a239ccfbfb5ed4b1e78b5d5ce3ef931e638a4fd07b1d280ba25a2",
-      "src/engine/resource-bank.js": "f5355de2e60bc8d19dec23f7938e66884d7e8c6fa7c31b1b5a162d18a3fb0df9",
+      "src/engine/resource-bank.js": "045056f308695188820dc41e320963954fd7f633e8f678b62cc7b2cc71c43d8d",
       "src/engine/spell-actions.js": "1df1497d2df8ac621206fb09c8c9824d19ad3c2f1962b195ae97c97b18739eb7",
       "src/engine/cancel-note.js": "c048a6b87483d59c201213da84f893739c1093513358c286a1ce497a9ece23b1",
       "content/packs/tcuPlayer/manifest.js": "0586f51b0199a5c4e392e7343e14341d10e62e335cd3b75178c7256c4e3e2bee",
       "tools/audit-tcu-player.mjs": "abb4638a880cf20940435454d518cfd31007f89cac95280e62c7318639c54054",
-      "audit/tcu-player-acceptance.json": "5cc487aad4daea115d1de3ca23cd3ea31bce9d228698419268543c45ed080fc9",
-      "src/cards/tcu-player-acceptance.js": "cefbeb6701a1ed237eb3f24f00ab3532d74464ce1f1fda126df88bd2610dd011",
+      "audit/tcu-player-acceptance.json": "66e84a93b48877999e582d0828c3c8410e261c8120ecf07431eadccdd7a89c43",
+      "src/cards/tcu-player-acceptance.js": "b99c21f53c7d7b80cbde5c4d9a9c5234f97c70e2d401ef1bae505ec90029cf82",
       "tests/tcu-player-ledger.test.mjs": "a0a9ea259b155bade59cfa86328db3d9a67cf13332d418f7a0d999649f2a277d",
       "src/deck/availability.js": "f69169bed68b4f29e6a4173cebeba448b505804c2a166718effe0826f5000fe7",
       "src/campaign/campaign.js": "7d1ad530a0ca1d9806cfc80f2f7432190aaee59af272937cc1760ca1a92c47c6",
@@ -5657,14 +5657,14 @@
       "tests/tcu-player-m2-3.test.mjs": "96600f3e7e76725560f719638d8003ae11edea57a56ac0245cad3478c168b1f6",
       "tests/tcu-player-m2-4.test.mjs": "c6dfa505d08f79472f2bea966902f3e5f70c4bff478cbb6c6384a58c718de2a7",
       "tools/audit-tcu-scenarios.mjs": "692246267c1f2538d158eefe4ec85a35aa293188015e04114ed70c87e968914b",
-      "audit/tcu-scenario-acceptance.json": "9dd93baeaecd5f191f4bd42e3560512033e27f8bfb11a798cddc0c58cb5a277d",
+      "audit/tcu-scenario-acceptance.json": "32aebb32aabc6e4f9d2f8a3ab0b79985d87e7fe6d8dd4d9282930f612943dba8",
       "audit/tcu-scenario-source-lock.json": "b018cf3daf7573aebb489248af0c1f2b21041d846ef762353124dce3eb0e0c8e",
       "tests/tcu-scenario-acceptance.test.mjs": "143dba78052e960bb731fa33b11cb61bcbea33038b6b11eaf0c4f98823736450",
       "tests/tcu-scenarios.browser.mjs": "fb7767027f02017bc4eba0c72b42f8db92bf9ae8834dcb1f535a4322b1706b4d",
       "tests/tcu-prologue.test.mjs": "c261c97fdb35f7f5222e074d0db08e44d975deaf1cec51836ab441203bc41d75",
       "tests/tcu-witching-hour.test.mjs": "25632efd14a00f2f3ed99e63b42945b240109c24946c7335fee042257067fa00",
       "tests/tcu-deaths-doorstep.test.mjs": "267d4bb6da1ab3398b98e8a43aacc63d8d06c4e035a2400c52f2656aeb50b49c",
-      "tests/tcu-secret-name.test.mjs": "8728a1d1603f4bae445ff78d9483fcf74dacaa1692c3d62c363139f54df5930f",
+      "tests/tcu-secret-name.test.mjs": "734ee9169d2e99b3d5a00ee2e6f80e40e960ece700c8df9c5d46057b4b76f5b7",
       "tests/tcu-wages-of-sin.test.mjs": "90be688d1eec88a604f55b94bd643513f73d82cd7596135896d648da8a870712",
       "tests/tcu-greater-good.test.mjs": "dc9e8191a1a0dda58cf9c72f3a1c45f599ff98baf17bdcb6646b5a5aee319886",
       "tests/tcu-union-disillusion.test.mjs": "b9fda7c050a9ab42d1f055ee9bbcfbbb2a5e871d5d72b4bec7e1249e0bd1861f",
@@ -5676,8 +5676,8 @@
       "content/campaigns/theCircleUndone/interludes.js": "d7d0e5e0e2240255bff94c44c2f23e76d474eb7be6ba4c13c2114cfab4fd0cf3",
       "content/campaigns/theCircleUndone/manifest.js": "98972ec426b0e5ead29e46f259eed0434d4c1a3857e2a42ea8f130641692d08b",
       "src/campaign/story.js": "18d45706d660a03dc0bb163d255a864dbf0cfd7a65d54b84c9393a2f58c9f0fb",
-      "src/campaign/campaign-effects.js": "7948177b0997cc26f0b3f82e9352dcd85094512eb7fdd47f8cadce16b20cb749",
-      "src/campaign/campaign-flow.js": "2bac6dce36fcdf43103c134dcffeddcb474616b5c9aeba4b702fd8b145cd8dc1",
+      "src/campaign/campaign-effects.js": "8e7c0edd54606ebe2d775c0d7137f27427433741ee8da52c3793fed2cd418405",
+      "src/campaign/campaign-flow.js": "88e2f53d332ac80e4a8bd7c28b9eaa5645a84a81a8debaebf0ba146bb91a7890",
       "tools/audit-tcu-all-cards.mjs": "b434697282c38233eb284a5b5fb3fddf1e132385491bec5b71ca809cbd7ce4be",
       "audit/tcu-all-card-acceptance.json": "897acc452052260d2a1af47eafb3e5a7e3941e1a6f1325bb6462ae4c14feda0d",
       "src/cards/tcu-campaign-acceptance.js": "b0a77aa9b4569e0a44e0143872ec89988d9eedba0596d7af753138ec2bea2555",
@@ -5690,10 +5690,10 @@
       "audit/tcu-completion-review.json": "8ad111be427e52be4171bc33053da4b27d0d167adbeb8c9ad46c3a2fbc094b87",
       "tests/tcu-release.browser.mjs": "857111224cf9dfe4e8a29820078a377f09bea35b6b04df3170b0cd63899f6bb2",
       "tests/tcu-media.browser.mjs": "fdd003c5d9e1518d6e6ebc4a9f03476c25bbc956deaadc657b990516d9a54e63",
-      "web/campaign-presentation.js": "e6bc6023d183caf783f46b69f1175bf81fda03b0f2a38d925db5fa32cdb72ef8",
-      "web/music-player.js": "32183f6f2f7d08ed503271733c1114f8ae65fb78515b6bfd8b67571608932045",
-      "web/scenario-music.js": "f574ab0955d248f012ec569faaa79d620b3e73e726532ac2f26a8355d367b8d0",
-      "web/audio/music/sources.json": "3743416252e87d57b89c8a69189fd1e959731003eea59e1bedc220547fef7192",
+      "web/campaign-presentation.js": "222811b00b53130c18a418d13f26fc058620b78cfcc70f833f1f93cf88b7dbe0",
+      "web/music-player.js": "d10991d315ee870f0121649505aebd7f162d020dc61d01cf35ba3ed8c9c5ffee",
+      "web/scenario-music.js": "4a8bde054f16eaf7f11ca00545fa4b92547e453bf90d55a70345104752e1d323",
+      "web/audio/music/sources.json": "e5d73e5d0ce783b12dba254a8093ae79d7fcc64c53ab3535dbfd4322fa1fe3d9",
       "web/img/campaigns/theCircleUndone/scenarios/disappearanceAtTheTwilightEstate/scene.webp": "a9708ddada4b98c72213fc79f27bad6f6475484ab0e06d126f3483d50dcee7d1",
       "web/img/campaigns/theCircleUndone/table/investigation-desk.webp": "1c61bc1fabfafc603b35eadfcb207070759c2dcd67c6a879ea6f364040eb550f",
       "web/img/campaigns/theCircleUndone/scenarios/theWitchingHour/scene.webp": "1ebfc057109e204162751c54c4d3750d2f758630ac2df8924889d6947ccdb2ea",
@@ -5762,7 +5762,7 @@
         "totalEncounterCards": 293,
         "pendingEncounterCards": 0,
         "gaps": 0,
-        "testCases": 448
+        "testCases": 449
       }
     },
     "scenarioLedgerAcceptance": {
@@ -6095,7 +6095,7 @@
       ],
       "ledger": {
         "path": "audit/tcu-scenario-acceptance.json",
-        "sha256": "9dd93baeaecd5f191f4bd42e3560512033e27f8bfb11a798cddc0c58cb5a277d"
+        "sha256": "32aebb32aabc6e4f9d2f8a3ab0b79985d87e7fe6d8dd4d9282930f612943dba8"
       },
       "sourceLock": {
         "path": "audit/tcu-scenario-source-lock.json",

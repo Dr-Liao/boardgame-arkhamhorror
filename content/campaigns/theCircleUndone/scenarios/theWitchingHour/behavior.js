@@ -353,12 +353,12 @@ export const behavior = {
   // 本章的 05058/05060 是地点条目的 [free] 行动（actions:0、fast:true）——在任意玩家窗口都能发动，
   // 选中后引擎调 behavior.performAction，再分派到地点条目的 performAction。
   fastActions(state, inv) {
-    const moves = []
-    const location = here(state, inv)
+    const location = here(state, inv), moves = []
     if (location) {
       locationRuleFor(String(codeOf(location)))?.actions?.({ moves, state, inv, location })
     }
     return moves.filter(move => move.actions === 0 && move.fast === true)
+      .map(move => ({ ...move, reactionSourceCode: location.revealed ? codeOf(location) : null }))
   },
 
   performAction(state, inv, move, api) {

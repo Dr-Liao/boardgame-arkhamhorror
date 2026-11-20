@@ -6,13 +6,15 @@
 // 计数，单数字段），因此单列一个通用具名计数器。
 //
 // 状态形状（纯 JSON，随存档往返）：`card.markers = { [counterId]: number }`。
+// 当实例也有剧本标签时，旧数组迁入同一对象的 `labels`。
 // 只写 `markers` 这一个键，未使用本原语的卡不会新增字段（replay 指纹不变）。
 //
 // 引擎不认卡号：所有计数按 id 读写，条目层用 `api.addCardCounter` / `api.moveCardCounters`。
 
 // 八循环 P2 扩展：`evidence`（达雷尔的证据）与 `hollow`（空洞卡上的计数）复用同一套具名计数器，
 // 不新增字段形状；counter id 全部走白名单（未知 id 拒绝）。
-export const CARD_COUNTER_IDS = Object.freeze(['bounty', 'evidence', 'hollow'])
+// P7 TDC 11709：`ruin`（拆毁：最近 [[Rooftop]] 地点上的废墟标记，≥2 时击毙所有调查员）。
+export const CARD_COUNTER_IDS = Object.freeze(['bounty', 'evidence', 'hollow', 'ruin'])
 
 export function assertCardCounterId(id) {
   if (!CARD_COUNTER_IDS.includes(id)) {
@@ -48,10 +50,16 @@ export function addCardCounter(card, id, amount = 1, { max = null } = {}) {
   let next = current + Math.trunc(Number(amount) || 0)
   next = Math.max(0, next)
   if (Number.isFinite(max)) next = Math.min(next, Math.max(0, max))
+  if (Array.isArray(card.markers)) {
+    if (!next) return 0
+    card.markers = card.markers.length ? { labels: card.markers } : {}
+  }
   card.markers ||= {}
   if (next > 0) card.markers[id] = next
   else delete card.markers[id]
-  if (!Object.keys(card.markers).length) delete card.markers
+  const keys = Object.keys(card.markers)
+  if (!keys.length) delete card.markers
+  else if (keys.length === 1 && keys[0] === 'labels') card.markers = card.markers.labels
   return next
 }
 

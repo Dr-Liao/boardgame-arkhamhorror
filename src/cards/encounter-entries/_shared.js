@@ -19,6 +19,7 @@ import { entryByCode } from './_lookup.js'
 import { traitLabel } from '../trait-labels.js'
 
 export { vehicleOf, vehiclePassengers, vehicleRecord, vehicleCard }
+export { markerLabelsOf } from '../card-marker-labels.js'
 
 // 「如果你是本载具的司机」的读法：司机记在 mechanicState.vehicles[id].driver 上。
 export function vehicleDriverOf(state, id) {
@@ -141,6 +142,9 @@ export const rememberFact = (state, fact) => {
 
 // 第 92 轮：边界之外古代地点的「团队每轮一次」行动 helper（从 behavior 复制）。
 export const isWeaknessCode = code => ['weakness', 'basicweakness'].includes(ALL_CARDS[code]?.subtype)
+// 条目内需要检查「某卡号」的印刷数据（类型/特性/名称）时的唯一入口：
+// 单卡文件不得直接 import cards-data.js（encounter-entries.test 守卫），统一走本 helper。
+export const cardDefinition = code => ALL_CARDS[code] || null
 export function teamOnce(state, key, scope = 'phase') {
   const flags = state.scenarioFlags ||= {}
   const bucket = (flags.teamOnce ||= {})

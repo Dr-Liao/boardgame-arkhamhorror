@@ -9,6 +9,6 @@ export default {
   code: '11710',
   scope: 'storyAsset',
   implemented: true,
-  note: '数据型条目：克苏鲁牌库 action 卡，结算在 behavior.resolveCthulhuCard（近似见 worker 报告）。',
+  note: "数据型条目：resolveCthulhuCard 放在密谋牌库旁；强制「调查阶段结束时」由 behavior.phaseBegan(phase===\"enemy\") 结算：在克苏鲁面板一名无毁灭标记的敌人上放 1 毁灭（api.placeDoomOnCard）并弃掉本卡。",
   abilities: [],
 }

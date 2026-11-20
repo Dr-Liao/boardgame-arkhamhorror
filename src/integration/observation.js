@@ -25,6 +25,7 @@ import { concealedProjection } from '../engine/tsk-concealed.js'
 // 不写入 inv（见 src/engine/capture.js 的存储说明）。
 import { capturedLocation, isCaptured } from '../engine/capture.js'
 import { assetTextBlanked, assetTextBlankedExceptForced } from '../engine/card-text.js'
+import { reactionChoices } from '../../web/reaction-preferences.js'
 
 const PUBLIC_STATE_FIELDS = [
   'schemaVersion', 'rulesVersion', 'resourceVersion', 'rulesMode', 'revision',
@@ -441,7 +442,7 @@ export function viewState(state, observerSeat = null, options = {}) {
     // uiKey：2026-10-27「如同手牌」通道统一原语给出的牌桌挂载键（hunch:/beneath:/asset:<id>），
     // 界面据此把选项挂回直觉区/下方/宿主支援，点牌即打出（与 legalMoves 的 move.uiKey 同协议）。
     options: responder ? choiceOptionsFor(choice, observer).map(option => pick(option, [
-      'id', 'label', 'cardCode', 'uiKey',
+      'id', 'label', 'cardCode', 'uiKey', 'reactionSourceCode',
       ...(choice.kind === 'mechanic' ? ['token', 'keyColor', 'selected'] : []),
       // 序章故事调查员：额外放行公开印刷卡面身份（职业、职业名、副标题、四维、生命/理智），
       // 选人界面据此画出卡面。这些字段只放宽给 storyInvestigator 的应答座位，其他 kind
@@ -452,6 +453,23 @@ export function viewState(state, observerSeat = null, options = {}) {
   // state.legalMoves is cached for the primary seat; simultaneous seats compute their own list.
   view.legalMoves = observer == null || !actingSeats(state).includes(observer) ? []
     : observer === decisionSeat(state) ? structuredClone(state.legalMoves || []) : legalMoves(state, observer)
+  if (observer != null) {
+    const codes = new Set(reactionChoices(view).map(item => item.code).filter(Boolean))
+    // Use already-visible faces so a switch never exposes a hidden location or another seat's cards.
+    const visible = [view.acts?.[view.actIndex], view.agendas?.[view.agendaIndex], view.encounterTop,
+      ...view.locations.filter(location => location.revealed), ...view.enemies, ...(view.storyAssets || []),
+      ...view.investigators.flatMap(inv => inv.threat || []), ...attachments.act, ...attachments.agenda]
+    for (const card of visible.flatMap(card => [card, ...(card?.attachments || [])])) {
+      if (card?.facedown) continue
+      const code = card?.originalCode || card?.code || (typeof card === 'string' ? card : null)
+      if (!code) continue
+      const entry = registeredEntry(code)
+      // Scripted abilities may be implemented in chapter behavior rather than as descriptors.
+      if (entry?.explicitReactionPrompt || entry?.abilities.some(ability => ['free', 'reaction'].includes(ability.kind))
+          || (entry?.implemented && /(?:^|\n)\s*\[(?:fast|free|reaction)\]/i.test(ALL_CARDS[code]?.text || ''))) codes.add(code)
+    }
+    if (codes.size) view.reactionPromptCodes = [...codes]
+  }
   if (view.mechanics?.tdc && state.investigators[observer]) {
     view.mechanics.tdc.targets = Object.fromEntries(state.enemies.filter(enemy => enemy.partOf).map(enemy => [
       enemy.id, Object.fromEntries(['fight', 'evade'].map(action => [action,

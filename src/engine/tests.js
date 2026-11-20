@@ -1055,6 +1055,16 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       continue
     }
     if (effectContext.rerollToken) { cancelledTokens.push(token); continue }
+    // P7 TDC 11757b「取消任意类型当前标记」：tokenEffectWouldResolve 窗口可设置 context.cancelled，
+    // 该标记的效果不结算（取消也计入已揭示；与需要返袋的重抽语义分离）。
+    if (effectContext.cancelled) {
+      cancelledTokens.push(token)
+      tokenChanged(token, 'cancel', seat)
+      info(state, events, `🚫 取消了 ${tokenLabel(token)} 的效果。`)
+      // 只取消这一个标记：还有其它待结算标记时继续，否则结束本次揭示循环（避免再抽标记）。
+      if (pendingTokens.length) continue
+      break
+    }
     let tokenEffectOverride = effectContext.replacementEffect || null
     let revealedResolution = null
     const tokenInterrupt = aliveInvestigators(state).some(owner => descriptorSources(state, owner).some(row =>

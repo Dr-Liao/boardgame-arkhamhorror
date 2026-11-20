@@ -3,7 +3,7 @@
   "gates": {
     "deterministic": true,
     "everyBehaviorCardHasEvidence": false,
-    "noFailedTests": false,
+    "noFailedTests": true,
     "noMissingOrBlocked": false,
     "partitionsExact": true,
     "totalCards403": true
@@ -14219,9 +14219,11 @@
     "verified": 232
   },
   "testRun": {
-    "exitCode": 1,
-    "failCount": 21,
-    "failRecords": [
+    "exitCode": 0,
+    "failCount": 0,
+    "failRecords": [],
+    "note": "运行快照：只用于披露本次实跑；两次构建用同一快照必须完全一致（测试用 passRecords 复算证据）。",
+    "passRecords": [
       {
         "file": "tests/eote-scenario-iceAndDeathPart2.test.mjs",
         "line": 67,
@@ -14236,6 +14238,11 @@
         "file": "tests/eote-scenario-iceAndDeathPart2.test.mjs",
         "line": 97,
         "test": "P0-1 [fast] 抽取地点底下遭遇卡：真实移动+applyMove，共同花费线索并结算底牌"
+      },
+      {
+        "file": "tests/eote-scenario-iceAndDeathPart1.test.mjs",
+        "line": 153,
+        "test": "P0-1 剧本行动进入 legalMoves：campResign 真实提交后结算结局 1 并写记录"
       },
       {
         "file": "tests/eote-scenario-iceAndDeathPart3.test.mjs",
@@ -14268,9 +14275,19 @@
         "test": "P0-2 议程 7 强制：底下有卡时阻止推进、移除 2 毁灭并真实生成 1 张底牌"
       },
       {
+        "file": "tests/eote-scenario-iceAndDeathPart1.test.mjs",
+        "line": 175,
+        "test": "P0-2 议程 I–III 背面经真实 advanceAgenda 结算：生成疾行谬物/星之恐怖并收束到结局 1"
+      },
+      {
         "file": "tests/eote-scenario-iceAndDeathPart2.test.mjs",
         "line": 180,
         "test": "P0-3 [tablet] 失败后果：真实 performTest 弃牌库顶"
+      },
+      {
+        "file": "tests/eote-scenario-iceAndDeathPart1.test.mjs",
+        "line": 194,
+        "test": "P0-3 混乱标记：引擎 resolveSpecialToken 结算 [skull]/[cultist]/[tablet] 数值"
       },
       {
         "file": "tests/eote-scenario-iceAndDeathPart2.test.mjs",
@@ -14283,72 +14300,14 @@
         "test": "P0-3 混乱标记：引擎 resolveSpecialToken 结算 [skull]/[cultist]/[tablet]"
       },
       {
-        "file": "tests/eote-scenario-iceAndDeathPart3.test.mjs",
-        "line": 195,
-        "test": "P0-3 afterTest 失败后果：真实 performTest 下 [cultist] 洗入 / [tablet] 弃牌库顶"
-      },
-      {
-        "file": "tests/eote-scenario-fatalMirage.test.mjs",
-        "line": 287,
-        "test": "P0-5 真实引擎：致命幻景议程推进不再抛错，背面击败全员并按 noResolution 结算记录"
-      },
-      {
-        "file": "tests/eote-scenario-cityOfTheElderThings.test.mjs",
-        "line": 537,
-        "test": "P7 cityOfTheElderThings 真实引擎：共享组并入遭遇牌库 + 专属诡计真实结算（P0-8）"
-      },
-      {
-        "file": "tests/eote-scenario-cityOfTheElderThings.test.mjs",
-        "line": 501,
-        "test": "P7 cityOfTheElderThings 真实引擎：幕 1 目标可达 → 真实推进并揭示隐秘隧道（P0-6）"
-      },
-      {
-        "file": "tests/eote-scenario-cityOfTheElderThings.test.mjs",
-        "line": 526,
-        "test": "P7 cityOfTheElderThings 真实引擎：议程 2 背面推进到结局 2 并写记录（P0-6 R2）"
-      },
-      {
-        "file": "tests/eote-scenario-cityOfTheElderThings.test.mjs",
-        "line": 465,
-        "test": "P7 cityOfTheElderThings 真实引擎：legalMoves 含 claim/give 且 applyMove 成功（P0-6 钥匙入口）"
-      },
-      {
-        "file": "tests/eote-scenario-cityOfTheElderThings.test.mjs",
-        "line": 451,
-        "test": "P7 cityOfTheElderThings 真实引擎：setup→legalMoves→石桥剧本行动无 TypeError（P0-12）"
-      },
-      {
-        "file": "tests/eote-scenario-iceAndDeathPart3.test.mjs",
-        "line": 255,
-        "test": "P7 iceAndDeathPart3 结局记录与 JSON 存档往返（真实撤退结算路径）"
-      },
-      {
-        "file": "tests/eote-scenario-iceAndDeathPart3.test.mjs",
-        "line": 240,
-        "test": "P7 iceAndDeathPart3 渗出梦魇被击败：条目 enemyRule.removeBeneathOnDefeat 读点生效"
-      }
-    ],
-    "note": "运行快照：只用于披露本次实跑；两次构建用同一快照必须完全一致（测试用 passRecords 复算证据）。",
-    "passRecords": [
-      {
-        "file": "tests/eote-scenario-iceAndDeathPart1.test.mjs",
-        "line": 153,
-        "test": "P0-1 剧本行动进入 legalMoves：campResign 真实提交后结算结局 1 并写记录"
-      },
-      {
-        "file": "tests/eote-scenario-iceAndDeathPart1.test.mjs",
-        "line": 175,
-        "test": "P0-2 议程 I–III 背面经真实 advanceAgenda 结算：生成疾行谬物/星之恐怖并收束到结局 1"
-      },
-      {
-        "file": "tests/eote-scenario-iceAndDeathPart1.test.mjs",
-        "line": 194,
-        "test": "P0-3 混乱标记：引擎 resolveSpecialToken 结算 [skull]/[cultist]/[tablet] 数值"
-      },
-      {
         "file": "tests/eote-scenario-iceAndDeathPart1.test.mjs",
         "line": 204,
         "test": "P0-3 混乱标记纯数据口径：困难/专家 [skull] 全额、[tablet] -4、失败后果"
+      },
+      {
+        "file": "tests/eote-scenario-iceAndDeathPart3.test.mjs",
+        "line": 195,
+        "test": "P0-3 afterTest 失败后果：真实 performTest 下 [cultist] 洗入 / [tablet] 弃牌库顶"
       },
       {
         "file": "tests/eote-scenario-iceAndDeathPart3.test.mjs",
@@ -14369,6 +14328,11 @@
         "file": "tests/eote-scenario-iceAndDeathPart1.test.mjs",
         "line": 100,
         "test": "P0-4 真实 setup：4 地点入场、帷幕为有限数值、调查难度不再是 NaN"
+      },
+      {
+        "file": "tests/eote-scenario-fatalMirage.test.mjs",
+        "line": 287,
+        "test": "P0-5 真实引擎：致命幻景议程推进不再抛错，背面击败全员并按 noResolution 结算记录"
       },
       {
         "file": "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
@@ -15317,6 +15281,31 @@
       },
       {
         "file": "tests/eote-scenario-cityOfTheElderThings.test.mjs",
+        "line": 537,
+        "test": "P7 cityOfTheElderThings 真实引擎：共享组并入遭遇牌库 + 专属诡计真实结算（P0-8）"
+      },
+      {
+        "file": "tests/eote-scenario-cityOfTheElderThings.test.mjs",
+        "line": 501,
+        "test": "P7 cityOfTheElderThings 真实引擎：幕 1 目标可达 → 真实推进并揭示隐秘隧道（P0-6）"
+      },
+      {
+        "file": "tests/eote-scenario-cityOfTheElderThings.test.mjs",
+        "line": 526,
+        "test": "P7 cityOfTheElderThings 真实引擎：议程 2 背面推进到结局 2 并写记录（P0-6 R2）"
+      },
+      {
+        "file": "tests/eote-scenario-cityOfTheElderThings.test.mjs",
+        "line": 465,
+        "test": "P7 cityOfTheElderThings 真实引擎：legalMoves 含 claim/give 且 applyMove 成功（P0-6 钥匙入口）"
+      },
+      {
+        "file": "tests/eote-scenario-cityOfTheElderThings.test.mjs",
+        "line": 451,
+        "test": "P7 cityOfTheElderThings 真实引擎：setup→legalMoves→石桥剧本行动无 TypeError（P0-12）"
+      },
+      {
+        "file": "tests/eote-scenario-cityOfTheElderThings.test.mjs",
         "line": 298,
         "test": "P7 cityOfTheElderThings 专属诡计已接线：entryRevelation + campaignRule 才有真实遭遇结算"
       },
@@ -15444,6 +15433,16 @@
         "file": "tests/eote-scenario-iceAndDeathPart3.test.mjs",
         "line": 216,
         "test": "P7 iceAndDeathPart3 混乱标记纯数据口径：[skull] 简易/困难、失败差值"
+      },
+      {
+        "file": "tests/eote-scenario-iceAndDeathPart3.test.mjs",
+        "line": 255,
+        "test": "P7 iceAndDeathPart3 结局记录与 JSON 存档往返（真实撤退结算路径）"
+      },
+      {
+        "file": "tests/eote-scenario-iceAndDeathPart3.test.mjs",
+        "line": 240,
+        "test": "P7 iceAndDeathPart3 渗出梦魇被击败：条目 enemyRule.removeBeneathOnDefeat 读点生效"
       },
       {
         "file": "tests/eote-scenario-iceAndDeathPart3.test.mjs",
@@ -15691,6 +15690,6 @@
       "tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
       "tests/eote-scenario-toTheForbiddenPeaks.test.mjs"
     ],
-    "totalPasses": 268
+    "totalPasses": 289
   }
 }

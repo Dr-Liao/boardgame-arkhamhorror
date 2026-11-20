@@ -9,7 +9,7 @@ export default {
   'game.reaction.aria': '{name}的快速反应',
   'game.reaction.on.title': '快速反应已开启，点击关闭本局提示',
   'game.reaction.off.title': '快速反应已关闭，点击恢复提示',
-  'game.reaction.muteTitle': '关闭本次可选卡牌的反应提示，点击卡牌上的反应图标可重新开启',
+  'game.reaction.muteTitle': '本局关闭这些提示，可从来源卡牌或剧本区的反应图标重新开启',
   'game.reaction.mute': '本局不再询问',
   // 三态按钮（角色面板）
   'game.reaction.mode.aria': '反应设置：{state}。点按切换到{next}',

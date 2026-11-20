@@ -52,9 +52,7 @@ export const manifest = Object.freeze({
   nameEn: CAMPAIGN_NAME_EN,
   contentVersion: '0.1.0',
   minRulesVersion: 'n6.0',
-  // P7 内容批次：10 章 + 共享遭遇 + 战役流程/叙事/指南逐章收口；确认 `literalCardBehavior`
-  // 等逐卡项之前保持 `development`（不得写 `verified`）。
-  status: 'development',
+  status: 'playable',
   // TDC 复用《夜之狂热》的《午夜假面》Arkham 地点组（01124–01136）与核心包若干组，
   // 因此战役同时依赖 core/notz；否则章节 requiredEncounterGroupIds 的注册期校验缺组。
   requiredPackIds: ['core', 'notz', 'tdcCampaign'],

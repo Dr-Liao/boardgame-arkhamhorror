@@ -129,8 +129,14 @@ function progressCampaign(state, events, launch = false, leaveRest = false) {
     enterCampaignNode(campaign, manifest, graph.nodes[campaign.flow.nodeId].next)
   }
   // P9.5：`interludeFlow: 'continuous'` 的战役在关间准备结束后一次读完整个幕间子图。
-  const node = walkCampaign(campaign, manifest, (id, node, options) => requestChoice(state, {
-    kind: 'campaignBranch', source: id, seat: campaign.leadSeat, prompt: node.prompt || node.text || '选择战役路线',
+  // P7 逐人选择：choose 的第 4 参带 seat（缺省为领队），供 perInvestigator 节点逐座位提问。
+  const node = walkCampaign(campaign, manifest, (id, node, options, meta = {}) => requestChoice(state, {
+    kind: 'campaignBranch', source: id, seat: meta.seat ?? campaign.leadSeat,
+    seats: meta.perInvestigator
+      ? Object.values(campaign.investigators || {}).filter(record => record?.status === 'active')
+        .map(record => record.seat).filter(Number.isInteger)
+      : null,
+    prompt: node.prompt || node.text || '选择战役路线',
     options: options.map(option => ({ id: option.id, label: option.label })),
   }), effect => applyCampaignEffect(state, effect, text => info(state, events, text)),
   { continuousInterlude: leaveRest && manifest.interludeFlow === 'continuous' })

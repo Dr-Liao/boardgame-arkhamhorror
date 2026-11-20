@@ -9,6 +9,6 @@ export default {
   code: '11714',
   scope: 'storyAsset',
   implemented: true,
-  note: '数据型条目：克苏鲁牌库 action 卡，结算在 behavior.resolveCthulhuCard（近似见 worker 报告）。',
+  note: "数据型条目：结算在 behavior.resolveCthulhuCard：降低克苏鲁地点水位；选择另一处可提高淹没等级的地点（优先有调查员，api.choose）并提高；完全淹没地点的每位调查员检定[敏捷]，失败选择 1 伤或弃一张自己控制的资产。",
   abilities: [],
 }

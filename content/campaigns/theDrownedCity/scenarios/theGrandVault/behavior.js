@@ -25,8 +25,9 @@
 //     相连」同口径）；移动平台/碑匾腔室的印刷连接合并在同一份网格邻接里。
 //   · 幕/议程目标没有专门的引擎 objective 类型 → 目标判定在 roundEnded/checkObjectives 里。
 //   · Good Money「下一章维护阶段不能获得资源」没有引擎读点 → 记入 scenarioFlags 并写原语请求。
-//   · [cultist] 困难/专家的「本检定结算后」没有独立钩子 → 在 onDraw 立即结算（近似）。
 import { registeredEntry } from '../../../../../src/engine/ability.js'
+import { applyCampaignEffect } from '../../../../../src/campaign/campaign-effects.js'
+import { TDC_NO_UPKEEP_RESOURCES, tdcCannotGainUpkeepResources } from '../../campaign-rules.js'
 import { mechanicState } from '../../../../../src/engine/mechanic-state.js'
 import { adjacentGridSpaces, connectGrid, gridPosition, relocateGridCells } from '../../../../../src/engine/grid-map.js'
 import { changeFloodLevel, floodLevel, setFloodLevel } from '../../../../../src/engine/flood.js'
@@ -434,8 +435,23 @@ export function increaseFloodLevel(state, locationId, api = {}, amount = 1) {
   return true
 }
 
+/** 11596 隐蔽蓄水池：印刷「本地点的淹没等级不能降低」。
+ * 双层约束：① 条目 `locationRule.floodBounds.min = 1` 让引擎水位写入（含 api.mechanics.water.change
+ * 等直接写入路径）把任何降低钳制在 1；② 本函数先读条目 `locationRule.cannotDecreaseFlood`，
+ * 对内容层降低调用直接拒绝——避免未揭示/水位 0 时「降低」被 min 钳制反而变成提高的边界情况。
+ */
+function floodCannotDecrease(state, locationId) {
+  const loc = locationOf(state, locationId)
+  const code = codeOf(loc) || codeOf({ code: LOCATIONS[locationId]?.code })
+  return registeredEntry(code)?.locationRule?.cannotDecreaseFlood === true
+}
+
 export function decreaseFloodLevel(state, locationId, api = {}, amount = -1) {
   if (!locationId) return false
+  if (floodCannotDecrease(state, locationId)) {
+    info(api, `「${locationOf(state, locationId)?.name || locationId}」的淹没等级不能降低。`)
+    return false
+  }
   if (typeof api?.mechanics?.water?.change === 'function') return api.mechanics.water.change(locationId, amount)
   if (!canChangeFlood(state, locationId, amount)) return false
   return changeFloodLevel(state, locationId, amount)
@@ -459,8 +475,16 @@ export function isGlyphTranslated(state, rune) {
   return translatedGlyphs(state).includes(String(rune))
 }
 
-/** 发现/翻译一个符文：写 discoveredGlyphs，加故事卡进胜利区；满 3 个揭示封印腔室。 */
-export function translateGlyph(state, sourceCode, api = {}) {
+/** 发现/翻译一个符文：写 discoveredGlyphs，加故事卡进胜利区；满 3 个揭示封印腔室。
+ *
+ * 胜利区归属口径（第二轮修正）：
+ *   · 档案室 11598/11599 是**地点**，胜利点由引擎 `awardLocationVictory` 计入 `state.victory`，
+ *     不再另造一张故事卡进 victoryDisplay（否则 XP / 符文数重复计）。
+ *   · 古代秘库 11608/11609/11610 翻面后的 11608b/11609b/11610b 是**剧情卡**，按印刷确实加入
+ *     胜利区，因此这里补故事卡。
+ *   · `options.addVictory === false` 供「本卡本身已被引擎放进胜利区」的调用方（如敌人 11630/31）关闭补卡。
+ */
+export function translateGlyph(state, sourceCode, api = {}, { addVictory } = {}) {
   const record = GLYPH_RECORDS[String(sourceCode)]
   if (!record) return false
   const records = recordsFor(state)
@@ -468,19 +492,23 @@ export function translateGlyph(state, sourceCode, api = {}) {
   if (records.discoveredGlyphs.includes(record.rune)) return false
   records.discoveredGlyphs.push(record.rune)
   setFlag(state, `grandVaultGlyph:${record.rune}`, true)
+  const isLocationGlyph = Object.values(LOCATIONS).some(location => location.code === String(sourceCode))
   const backCode = ANCIENT_VAULT_CODES.includes(String(sourceCode))
     ? ANCIENT_VAULT_BACK_CODES[ANCIENT_VAULT_CODES.indexOf(String(sourceCode))]
     : null
+  const recordVictory = addVictory ?? !isLocationGlyph
   const victoryCode = backCode || String(sourceCode)
-  if (typeof api.addStoryToVictory === 'function') api.addStoryToVictory(victoryCode, { sourceId: `glyph:${record.rune}` })
-  else {
-    state.victoryDisplay ||= []
-    if (!state.victoryDisplay.some(entry => entry.code === victoryCode || entry.originalCode === victoryCode)) {
-      state.victoryDisplay.push({
-        id: `glyph:${record.rune}`, code: victoryCode, originalCode: victoryCode,
-        name: ALL_CARDS[victoryCode]?.nameZh || ALL_CARDS[victoryCode]?.name || victoryCode,
-        victory: Number(ALL_CARDS[victoryCode]?.victory) || 1,
-      })
+  if (recordVictory) {
+    if (typeof api.addStoryToVictory === 'function') api.addStoryToVictory(victoryCode, { sourceId: `glyph:${record.rune}` })
+    else {
+      state.victoryDisplay ||= []
+      if (!state.victoryDisplay.some(entry => entry.code === victoryCode || entry.originalCode === victoryCode)) {
+        state.victoryDisplay.push({
+          id: `glyph:${record.rune}`, code: victoryCode, originalCode: victoryCode,
+          name: ALL_CARDS[victoryCode]?.nameZh || ALL_CARDS[victoryCode]?.name || victoryCode,
+          victory: Number(ALL_CARDS[victoryCode]?.victory) || 1,
+        })
+      }
     }
   }
   info(api, `发现符文 ${record.rune}（${record.wordZh} / ${record.word}）：已翻译 ${translatedGlyphCount(state)} 个。`)
@@ -646,7 +674,44 @@ export function actions(state, inv) {
       label: `发现本地点印刷的符文（${GLYPH_RECORDS[codeOf(here)]?.rune}）`,
     })
   }
+  // 11608/11609/11610 古代秘库：翻译已附属的符文诡计（[action]，费用按印刷；X = 附属地点隐藏值/shroud）。
+  const attachedAncientVault = (here.attachments || [])
+    .map(attachment => codeOf(attachment))
+    .find(code => ANCIENT_VAULT_CODES.includes(code))
+  if (attachedAncientVault && !isGlyphTranslated(state, GLYPH_RECORDS[attachedAncientVault]?.rune)) {
+    const hidden = hiddenValueOf(here)
+    const cost = ancientVaultCostCheck(state, inv, attachedAncientVault, hidden)
+    moves.push({
+      action: 'scenarioAction', rule: 'grandVaultTranslateAncientVault', locationId: here.id,
+      code: attachedAncientVault, hidden, actions: 1,
+      label: `翻译已附属的古代秘库「${ALL_CARDS[attachedAncientVault]?.nameZh || attachedAncientVault}」（隐藏值 ${hidden}；${cost.label}）`,
+      reason: cost.reason || null,
+    })
+  }
   return moves
+}
+
+/** 地点隐藏值 = 印刷 shroud（GV 没有 shroud 修正；11608/09/10 的 X）。 */
+export function hiddenValueOf(location) {
+  return Math.max(0, Number(location?.shroud) || 0)
+}
+function printedResourceCost(asset) {
+  return Math.max(0, Number(ALL_CARDS[codeOf(asset)]?.cost) || 0)
+}
+function ancientVaultCostCheck(state, inv, code, hidden) {
+  if (code === '11608') {
+    const total = (inv.assets || []).reduce((sum, asset) => sum + printedResourceCost(asset), 0)
+    return total >= hidden
+      ? { label: `弃掉印刷资源费用合计 ≥ ${hidden} 的支援` }
+      : { label: `弃掉印刷资源费用合计 ≥ ${hidden} 的支援`, reason: `游戏区域支援的印刷资源费用合计仅 ${total}，需要 ≥ ${hidden}` }
+  }
+  if (code === '11610') {
+    const cards = (inv.hand || []).length
+    return cards >= hidden
+      ? { label: `选择并弃掉手牌 ${hidden} 张` }
+      : { label: `选择并弃掉手牌 ${hidden} 张`, reason: `手牌仅 ${cards} 张，需要 ≥ ${hidden}` }
+  }
+  return { label: `受到合计 ${hidden} 点伤害和/或恐惧` }
 }
 
 function flagValue(location, key) {
@@ -671,7 +736,93 @@ export function performAction(state, inv, move, api = {}) {
     const code = codeOf(locationOf(state, inv.location))
     return translateGlyph(state, code, api)
   }
+  if (move.rule === 'grandVaultTranslateAncientVault') return translateAncientVaultAction(state, inv, move, api)
   return false
+}
+
+/** 11608/11609/11610：翻译已附属的古代秘库（按印刷支付费用 → 翻面并翻译符文、背面加入胜利区）。 */
+export function translateAncientVaultAction(state, inv, move, api = {}) {
+  const here = locationOf(state, inv.location)
+  if (!here) return false
+  const code = String(move?.code || '')
+  if (!ANCIENT_VAULT_CODES.includes(code)) return false
+  if (isGlyphTranslated(state, GLYPH_RECORDS[code]?.rune)) return false
+  const attachment = (here.attachments || []).find(item => codeOf(item) === code)
+  if (!attachment) return false
+  const hidden = Number.isInteger(move?.hidden) ? move.hidden : hiddenValueOf(here)
+  if (code === '11608' && !payAssetResourceCost(state, inv, hidden, api)) return false
+  if (code === '11609' && !payDamageHorrorCost(state, inv, hidden, api)) return false
+  if (code === '11610' && !payHandCardsCost(state, inv, hidden, api)) return false
+  here.attachments = (here.attachments || []).filter(item => item !== attachment)
+  info(api, `「${ALL_CARDS[code]?.nameZh || code}」翻面并结算其文本。`)
+  return translateGlyph(state, code, api)
+}
+
+/** 11608 费用：选择并弃掉游戏区域中印刷资源费用合计 ≥ X 的支援。 */
+function payAssetResourceCost(state, inv, required, api = {}) {
+  const candidates = (inv.assets || []).filter(asset => printedResourceCost(asset) > 0)
+  const picked = []
+  let total = 0
+  while (total < required) {
+    const remaining = candidates.filter(asset => !picked.includes(asset))
+    if (!remaining.length) return false
+    let choice = remaining[0]
+    if (typeof api.choose === 'function') {
+      const pickedId = api.choose({
+        kind: 'asset', source: '11608', seat: inv.seat, canSkip: false,
+        prompt: `选择并弃掉支援（印刷资源费用合计至少 ${required}，已选 ${total}）。`,
+        options: remaining.map(asset => ({ id: asset.id, label: `${ALL_CARDS[codeOf(asset)]?.nameZh || codeOf(asset)}（资源 ${printedResourceCost(asset)}）` })),
+      })
+      choice = remaining.find(asset => asset.id === pickedId) || remaining[0]
+    }
+    picked.push(choice)
+    total += printedResourceCost(choice)
+  }
+  for (const asset of picked) discardControlledAsset(state, inv, asset, api)
+  return true
+}
+
+function discardControlledAsset(state, inv, asset, api = {}) {
+  if (typeof api.discardAsset === 'function' && api.discardAsset(inv.seat, asset) !== false) return true
+  const index = (inv.assets || []).indexOf(asset)
+  if (index < 0) return false
+  inv.assets.splice(index, 1)
+  inv.discard ||= []
+  inv.discard.push(codeOf(asset))
+  return true
+}
+
+/** 11609 费用：受到合计 X 点伤害和/或恐惧（逐点选择分配）。 */
+function payDamageHorrorCost(state, inv, required, api = {}) {
+  let damage = 0
+  let horror = 0
+  for (let index = 0; index < required; index += 1) {
+    let pick = 'damage'
+    if (typeof api.choose === 'function') {
+      pick = api.choose({
+        kind: 'effect', source: '11609', seat: inv.seat, canSkip: false,
+        prompt: `受到第 ${index + 1}/${required} 点：伤害还是恐惧？`,
+        options: [{ id: 'damage', label: '伤害' }, { id: 'horror', label: '恐惧' }],
+      }) || 'damage'
+    }
+    if (pick === 'horror') horror += 1
+    else damage += 1
+  }
+  if (damage > 0) {
+    if (typeof api.damage === 'function') api.damage(inv.seat, damage)
+    else inv.damage = (Number(inv.damage) || 0) + damage
+  }
+  if (horror > 0) {
+    if (typeof api.horror === 'function') api.horror(inv.seat, horror)
+    else inv.horror = (Number(inv.horror) || 0) + horror
+  }
+  return true
+}
+
+/** 11610 费用：选择并弃掉手牌 X 张（与 11593 激活费用共用同一份弃手牌实现）。 */
+function payHandCardsCost(state, inv, required, api = {}) {
+  if ((inv.hand || []).length < required) return false
+  return discardFromHand(state, inv, required, api) === required
 }
 
 export function swapPlatform(state, inv, move, api = {}) {
@@ -705,12 +856,21 @@ function discardFromHand(state, inv, count, api) {
   const hand = inv.hand || []
   let discarded = 0
   while (discarded < count && hand.length) {
-    const code = hand.shift()
+    let index = 0
+    if (typeof api?.choose === 'function') {
+      const picked = api.choose({
+        kind: 'card', source: 'discardFromHand', seat: inv.seat, canSkip: false,
+        prompt: `选择并弃掉手牌中的 1 张卡牌（${discarded + 1}/${count}）。`,
+        options: hand.map((code, handIndex) => ({ id: String(handIndex), cardCode: code, label: ALL_CARDS[code]?.nameZh || code })),
+      })
+      const found = Number(picked)
+      if (Number.isInteger(found) && found >= 0 && found < hand.length) index = found
+    }
+    const [code] = hand.splice(index, 1)
     inv.discard ||= []
     inv.discard.push(code)
     discarded += 1
   }
-  void api
   return discarded
 }
 
@@ -1018,7 +1178,13 @@ export function enemyStatModifier(state, enemy, stat) {
 
 export function enemyConnections(state, enemy, location) {
   if (!enemy || !location) return []
-  if (String(enemy.originalCode || enemy.code) !== '11744') return []
+  const code = String(enemy.originalCode || enemy.code)
+  // 11606 秘库随从：以其猎手关键词移动时，所在地点视为与每处已激活地点相连
+  // （读点 turn.js/movement.js 的 hunter 寻路；只影响该敌人自己的距离计算）。
+  if (code === '11606') {
+    return activatedLocationIds(state).filter(id => id !== location.id)
+  }
+  if (code !== '11744') return []
   const agenda = agendaFrontCode(state)
   const stages = state.scenario?.stageCards || {}
   if (!stages[agenda]?.inescapableHunterAdjacent && !AGENDA_STAGES[2]?.inescapableHunterAdjacent) return []
@@ -1036,6 +1202,179 @@ export function locationShroudModifier(state, location) {
   // 碑匾腔室/秘库核心没有隐藏值修正；预留读点给单卡条目（当前返回 0）。
   void state
   return 0
+}
+
+// ---------------------------------------------------------------------------
+// 未揭示地点的进入限制（11595 秘库核心 / 11604 封印腔室：调查员不能进入）
+// 读点：engine moves.js / moves.js legalMoves 调 scenarioBehavior.moveError。
+// ---------------------------------------------------------------------------
+export function moveError(state, inv, target, neighborId) {
+  void inv
+  const destination = target?.id || neighborId
+  if (destination !== 'coreOfTheVault' && destination !== SEALED_CHAMBER_ID) return null
+  const loc = locationOf(state, destination)
+  if (!loc || loc.revealed !== false) return null
+  return `「${loc.name}」尚未揭示，调查员不能进入。`
+}
+
+// ---------------------------------------------------------------------------
+// 敌人被击败时的章内强制（11595 秘库核心：穷途异魔在本地点被击败）
+// ---------------------------------------------------------------------------
+export function removeStillBehindYouCopies(state) {
+  const setAsideTreacheries = new Set(['11745'])
+  const removed = []
+  for (const pile of ['encounterDeck', 'encounterDiscard', 'removedFromGame']) {
+    const list = state[pile]
+    if (!Array.isArray(list)) continue
+    for (let index = list.length - 1; index >= 0; index -= 1) {
+      if (setAsideTreacheries.has(String(list[index]))) { removed.push(list.splice(index, 1)[0]) }
+    }
+  }
+  const zones = state.scenarioZones ||= {}
+  if (Array.isArray(zones.setAside)) {
+    for (let index = zones.setAside.length - 1; index >= 0; index -= 1) {
+      if (setAsideTreacheries.has(String(zones.setAside[index]))) { removed.push(zones.setAside.splice(index, 1)[0]) }
+    }
+  }
+  for (const inv of state.investigators || []) {
+    if (!Array.isArray(inv.threat)) continue
+    for (let index = inv.threat.length - 1; index >= 0; index -= 1) {
+      const code = codeOf(inv.threat[index])
+      if (setAsideTreacheries.has(code)) { removed.push(code); inv.threat.splice(index, 1) }
+    }
+  }
+  for (const location of state.locations || []) {
+    if (!Array.isArray(location.attachments)) continue
+    for (let index = location.attachments.length - 1; index >= 0; index -= 1) {
+      const code = codeOf(location.attachments[index])
+      if (setAsideTreacheries.has(code)) { removed.push(code); location.attachments.splice(index, 1) }
+    }
+  }
+  return removed
+}
+
+/** 11595 背面强制：穷途异魔在（已揭示的）秘库核心被击败 → 移出所有「仍在你身后」并记录。 */
+export function enemyDefeated(state, enemy, api = {}) {
+  if (!enemy) return false
+  if (String(enemy.originalCode || enemy.code) !== '11744') return false
+  const core = coreOfVault(state)
+  if (!core || core.revealed !== true || enemy.location !== core.id) return false
+  const removed = removeStillBehindYouCopies(state)
+  recordsFor(state).theCreatureWasDefeated = true
+  setFlag(state, 'grandVaultCreatureDefeated', true)
+  info(api, `穷途异魔在秘库核心被击败：${removed.length} 张「仍在你身后」移出游戏；记录「该生物被击败了」。`)
+  // 返回 false：敌人本身仍按常规结算（胜利区/弃牌去向），只接管印刷强制效果。
+  return false
+}
+
+/**
+ * 敌军阶段开始时的章内强制（11605 黑暗中的滑行者）：
+ * 若其所在地点没有调查员 → 攻击一处连接地点[战斗]最低的调查员；若未攻击 →
+ * 直接移动到距离移动平台最近的淹没地点。
+ */
+export function enemyPhaseStart(state, api = {}) {
+  let handled = 0
+  for (const enemy of state.enemies || []) {
+    if (enemy.defeated) continue
+    if (String(enemy.originalCode || enemy.code) !== '11605') continue
+    const location = locationOf(state, enemy.location)
+    if (!location) continue
+    if ((state.investigators || []).some(inv => !inv.defeated && !inv.resigned && inv.location === location.id)) continue
+    const candidates = (state.investigators || [])
+      .filter(inv => !inv.defeated && !inv.resigned && (location.connections || []).includes(inv.location))
+      .sort((left, right) => Number(left.combat ?? 0) - Number(right.combat ?? 0))
+    const target = candidates[0]
+    if (target && typeof api.attack === 'function') {
+      api.attack(enemy, target)
+      handled += 1
+      continue
+    }
+    const destination = nearestFloodedToMovingPlatform(state, enemy.location)
+    if (destination) {
+      if (typeof api.moveEnemy === 'function') api.moveEnemy(enemy, destination)
+      else enemy.location = destination
+      info(api, `黑暗中的滑行者移动到最近的淹没地点「${locationOf(state, destination)?.name || destination}」。`)
+      handled += 1
+    }
+  }
+  return handled > 0
+}
+
+/** 距离「移动平台」最近的淹没地点（BFS，距离按地点连接；并列取先找到的）。 */
+export function nearestFloodedToMovingPlatform(state, fromId) {
+  const anchor = locationOf(state, 'movingPlatform')
+  return nearestFloodedTo(state, anchor?.id || fromId)
+}
+
+/** 从 fromId 出发最近的淹没地点（含 fromId 自身；BFS 按地点连接）。 */
+export function nearestFloodedTo(state, fromId) {
+  if (!fromId) {
+    const any = (state.locations || []).find(loc => floodLevel(state, loc.id) > 0)
+    return any?.id || null
+  }
+  if (floodLevel(state, fromId) > 0) return fromId
+  const seen = new Set([fromId])
+  let frontier = [...(locationOf(state, fromId)?.connections || [])]
+  while (frontier.length) {
+    const next = []
+    for (const id of frontier) {
+      if (seen.has(id)) continue
+      seen.add(id)
+      const candidate = locationOf(state, id)
+      if (!candidate) continue
+      if (floodLevel(state, id) > 0) return id
+      for (const neighbor of candidate.connections || []) if (!seen.has(neighbor)) next.push(neighbor)
+    }
+    frontier = next
+  }
+  const anyFlooded = (state.locations || []).find(loc => floodLevel(state, loc.id) > 0)
+  return anyFlooded?.id || null
+}
+
+/** 猎物：线索最多的存活调查员（并列取更靠前的座位）。 */
+export function mostCluesInvestigator(state) {
+  const candidates = (state.investigators || [])
+    .filter(inv => inv && !inv.defeated && !inv.resigned)
+    .slice()
+    .sort((left, right) => (Number(right.clues) || 0) - (Number(left.clues) || 0) || left.seat - right.seat)
+  return candidates[0] || null
+}
+
+/**
+ * 生成落点钩子（PRIMITIVES.md 已落地的既有引擎读点）：
+ *   scenarioBehavior.spawnLocation(state, code, defaultLocation, engagedSeat, api) → 地点 id。
+ * 11605「生成 - 最近的淹没地点」；11606「生成 - 与猎物交战」（落点 = 猎物所在地点，
+ * 交战在 enemySpawned 里对猎物补一次 engage）。
+ */
+export function spawnLocation(state, code, defaultLocation, engagedSeat, api = {}) {
+  void engagedSeat
+  void api
+  const cardCode = String(code)
+  if (cardCode === '11605') {
+    const anchor = defaultLocation
+      || (Number.isInteger(engagedSeat) ? (state.investigators || [])[engagedSeat]?.location : null)
+      || 'movingPlatform'
+    const flooded = nearestFloodedTo(state, anchor)
+    return flooded || defaultLocation
+  }
+  if (cardCode === '11606') {
+    const prey = mostCluesInvestigator(state)
+    return prey?.location || defaultLocation
+  }
+  return defaultLocation
+}
+
+/** 生成后钩子：11606 与猎物交战（同一地点时补 engage；引擎随后也会按 engagedSeat 处理）。 */
+export function enemySpawned(state, enemy, api = {}) {
+  if (!enemy) return false
+  if (String(enemy.originalCode || enemy.code) !== '11606') return false
+  if (enemy.engagedSeat != null) return false
+  const prey = mostCluesInvestigator(state)
+  if (!prey || prey.location !== enemy.location) return false
+  if (typeof api.engage === 'function') api.engage(enemy, prey.seat)
+  else enemy.engagedSeat = prey.seat
+  info(api, `秘库随从与猎物「${prey.name}」（线索最多者）交战。`)
+  return true
 }
 
 // ---------------------------------------------------------------------------
@@ -1119,9 +1458,51 @@ export function resolution(state, key, events, api = {}) {
   return { award: true }
 }
 
+// ---------------------------------------------------------------------------
+// Good Money「下一章维护阶段不能获得资源」（campaignRuleFlag 跨章标记）
+// 口径统一：读点复用 content/campaigns/theDrownedCity/campaign-rules.js 的
+// `tdcCannotGainUpkeepResources(state, inv)`（按 appliesToScenarioIndex + seats 判定；
+// 越章后的 stale 标记无害，无需 preScenarioSetup 清理）。本文件只负责「写标记」。
+// ---------------------------------------------------------------------------
+export function noUpkeepFlag(state) {
+  return state?.campaign?.ruleFlags?.[TDC_NO_UPKEEP_RESOURCES] || null
+}
+
+/** 结局时写入跨章标记：value = { originScenario, seats, appliesToScenarioIndex }。 */
+export function markNoUpkeepResources(state, seats, api = {}) {
+  const targets = [...new Set((seats || []).filter(Number.isInteger))]
+  if (!targets.length) return null
+  const previous = noUpkeepFlag(state) || {}
+  const scenarioIndex = Number.isInteger(state?.campaign?.scenarioIndex) ? state.campaign.scenarioIndex : null
+  const value = {
+    originScenario: CHAPTER_ID,
+    seats: [...new Set([...(Array.isArray(previous.seats) ? previous.seats : []), ...targets])],
+    appliesToScenarioIndex: scenarioIndex == null ? null : scenarioIndex + 1,
+  }
+  if (typeof applyCampaignEffect === 'function') {
+    applyCampaignEffect(state, { type: 'campaignRuleFlag', key: TDC_NO_UPKEEP_RESOURCES, value },
+      text => api.info?.(text))
+  } else {
+    state.campaign ||= {}
+    state.campaign.ruleFlags ||= {}
+    state.campaign.ruleFlags[TDC_NO_UPKEEP_RESOURCES] = value
+  }
+  return value
+}
+
+/**
+ * phases.js 维护阶段获得资源前读点：复用 campaign-rules 的统一 helper
+ * （只对「上一章选择两头下注」的座位、且仅下一章生效；越章后 stale 标记无害）。
+ * engine: `if (scenarioBehavior(state).canGainResources?.(state, inv) !== false)`。
+ */
+export function canGainResources(state, inv) {
+  return !tdcCannotGainUpkeepResources(state, inv)
+}
+
 /** Good Money 任务结局（Haskell：下一章资源 / 下一章不能获得资源）。 */
 export function resolveGoodMoney(state, api = {}) {
   const marks = []
+  const noUpkeepSeats = []
   for (const inv of state.investigators || []) {
     if (inv.defeated && !inv.resigned) {
       // 败退调查员也按 Haskell 口径可结算（IncludeEliminated Anyone）；保留。
@@ -1131,7 +1512,6 @@ export function resolveGoodMoney(state, api = {}) {
       ? api.mechanics.progress.forSeat('tdcTask', inv.seat)
       : null
     if (entry?.option !== 'goodMoney') continue
-    const progress = entry
     const choice = typeof api.choose === 'function'
       ? api.choose({
         kind: 'story', source: 'goodMoney', seat: inv.seat, canSkip: false,
@@ -1142,13 +1522,14 @@ export function resolveGoodMoney(state, api = {}) {
       })
       : 'playItSafe'
     if (choice === 'playBothSides') {
+      noUpkeepSeats.push(inv.seat)
       setFlag(state, `grandVaultGoodMoneyBothSides:${inv.seat}`, true)
       marks.push(`${inv.name}: 两头下注`)
       continue
     }
     if (typeof api?.mechanics?.startingAdjustments?.defer === 'function') {
       api.mechanics.startingAdjustments.defer(inv.seat, {
-        receipt: `grandVault:goodMoney:${inv.seat}`,
+        receipt: 'grandVault-goodMoney',
         resources: GOOD_MONEY_NEXT_SCENARIO_RESOURCES,
       })
     } else {
@@ -1156,6 +1537,8 @@ export function resolveGoodMoney(state, api = {}) {
     }
     marks.push(`${inv.name}: 稳妥行事`)
   }
+  const flag = markNoUpkeepResources(state, noUpkeepSeats, api)
+  if (flag) info(api, `Good Money：${flag.seats.length} 位调查员下一章维护阶段不能获得资源。`)
   return marks
 }
 
@@ -1169,7 +1552,9 @@ export const events = Object.freeze({
       ? api.test(seat, 'willpower', 3, null)
       : { success: false }
     if (result?.success) { info(api, '致命机械：意志检定成功。'); return true }
-    const picks = Number(state.agendaIndex || 0) >= 1 ? 2 : 1
+    // 印刷英文为「choose two instead if it is act 2」（中文卡表误译作「场景2」）：
+    // 第二幕（GV 只有 2 幕，ACT2_CODE = ACT_CODES[1]）失败时改为选择两项。
+    const picks = currentActCode(state) === ACT2_CODE ? 2 : 1
     const used = new Set()
     for (let index = 0; index < picks; index += 1) {
       const options = []
@@ -1218,17 +1603,6 @@ export const events = Object.freeze({
     info(api, `「${ALL_CARDS[code]?.nameZh || code}」附属到「${loc.name}」。`)
     return true
   },
-  // 行动：把已附属的古代秘库翻面并翻译（简化：检定 + 翻译）。
-  grandVaultTranslateAncientVault(state, payload = {}, api = {}) {
-    const code = String(payload.code || '')
-    const record = GLYPH_RECORDS[code]
-    if (!record) return false
-    const seat = Number.isInteger(payload.seat) ? payload.seat : (state.currentSeat ?? 0)
-    const spec = payload.test || { skill: code === '11608' ? 'willpower' : code === '11609' ? 'combat' : 'intellect', difficulty: 3 }
-    const result = typeof api.test === 'function' ? api.test(seat, spec.skill, spec.difficulty, null) : { success: true }
-    if (!result?.success) { info(api, `翻译 ${record.rune} 的检定失败。`); return false }
-    return translateGlyph(state, code, api)
-  },
 })
 
 export const behavior = {
@@ -1251,14 +1625,30 @@ export const behavior = {
   agendaReveal,
   enemyStatModifier,
   enemyConnections,
+  enemyPhaseStart,
+  enemyDefeated,
+  enemySpawned,
+  spawnLocation,
   locationShroudModifier,
+  moveError,
+  canGainResources,
   resolveChaosToken,
+  afterTest(state, inv, result, api, { resolvedTokens = [], ignoredSymbols } = {}) {
+    if (!isHardSide(state) || ignoredSymbols) return
+    for (const token of resolvedTokens) {
+      if (token === 'cultist') applyTokenEffect(state, inv, { mode: 'deactivateOrHarmHard' }, api)
+    }
+  },
   applyTokenEffect,
   testAutoFail,
   resolution,
   events,
   // 供测试/工具读取的内容层工具（纯函数，无引擎依赖）。
   locationIdAtCell,
+  hiddenValueOf,
+  translateAncientVaultAction,
+  markNoUpkeepResources,
+  noUpkeepFlag,
   currentGrid,
   allVaultActivated,
   maybeRevealCore,
@@ -1274,6 +1664,15 @@ export const behavior = {
   increaseFloodLevel,
   decreaseFloodLevel,
   locationCannotFlood,
+  moveError,
+  enemyDefeated,
+  enemyPhaseStart,
+  removeStillBehindYouCopies,
+  nearestFloodedToMovingPlatform,
+  nearestFloodedTo,
+  mostCluesInvestigator,
+  spawnLocation,
+  enemySpawned,
 }
 
 export function implementedEntryFlags(code) {

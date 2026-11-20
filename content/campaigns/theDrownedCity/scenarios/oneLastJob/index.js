@@ -33,7 +33,7 @@ export const behaviorEntryCodes = Object.freeze([
 
 export const manifest = scenarioManifest(scenario, identities, {
   campaignId: 'theDrownedCity',
-  status: 'development',
+  status: 'playable',
   layout,
   requiredPackIds: ['core', 'tdcCampaign'],
   // campaign.requiredPackIds 含 notz（campaign-core 已落盘）；《午夜假面》复用卡属于 **arkham 地点组**

@@ -19,6 +19,7 @@
 //
 // 本章状态只写 state.scenarioFlags / state.scenarioZones / state.campaign.records / mechanicState。
 import { registeredEntry } from '../../../../../src/engine/ability.js'
+import { tdcCannotGainUpkeepResources } from '../../campaign-rules.js'
 import { mechanicState } from '../../../../../src/engine/mechanic-state.js'
 import { configureGrid, connectGrid, gridPosition, placeGridLocation, relocateGridCells } from '../../../../../src/engine/grid-map.js'
 import { changeFloodLevel, floodLevel, setFloodLevel } from '../../../../../src/engine/flood.js'
@@ -41,6 +42,7 @@ import {
 
 const CHAPTER_ID = 'theWesternWall'
 const PATH_CODE_SET = new Set(['11521', '11522', '11523', '11524', '11525'])
+const LOOK_OUT_CODE = '11534'
 
 // ---------------------------------------------------------------------------
 // 基础工具
@@ -60,6 +62,8 @@ const setFlag = (state, key, value = true) => { flagsFor(state)[key] = value; re
 const flagValue = (state, key) => flagsFor(state)[key]
 const safeCall = (api, name, ...args) => (typeof api?.[name] === 'function' ? api[name](...args) : null)
 const locationOf = (state, id) => (state?.locations || []).find(location => location.id === id) || null
+const lookOutFlags = () => flagsOf(LOOK_OUT_CODE)
+const findLookOut = inv => (inv?.threat || []).find(card => codeOf(card) === LOOK_OUT_CODE) || null
 const entryOf = code => (code ? registeredEntry(String(code)) : null)
 const flagsOf = code => entryOf(code)?.flags || {}
 const randomOf = api => (typeof api?.random === 'function' ? api.random : () => Math.random())
@@ -157,21 +161,35 @@ export function rowConnectionsOf(state, locationId) {
     .map(location => location.id)
 }
 
-/** 淹没棚屋：有深潜者敌人「移动时」视为与每处完全淹没地点相连（简化：持续相连）。 */
+/** 淹没棚屋的常规「按行」连接；深潜者移动时的完全淹没地点互连由 enemyConnections 钩子提供。 */
 export function syncShantyConnections(state, api = {}) {
+  void api
   const shanty = locationOf(state, 'drownedShanty')
   if (!shanty) return false
-  const rule = flagsOf(codeOf(shanty))
-  if (rule.deepOneMovingConnectsFlooded === false) return false
-  const deepOne = (state.enemies || []).some(enemy => !enemy.defeated && hasTrait(enemy, 'DeepOne'))
-  const base = rowConnectionsOf(state, 'drownedShanty')
-  const flooded = deepOne
-    ? (state.locations || []).filter(location => location.id !== 'drownedShanty' && fullyFlooded(state, api, location.id)).map(location => location.id)
-    : []
-  shanty.connections = [...new Set([...base, ...flooded])]
+  shanty.connections = rowConnectionsOf(state, 'drownedShanty')
   const cell = mechanicState(state, true)?.grid?.drownedShanty
   if (cell) cell.connections = [...shanty.connections]
   return true
+}
+
+/**
+ * 11527 淹没棚屋：当一名[[深潜者]]敌人移动时，淹没棚屋视为与每处完全淹没的地点相连，反之亦然。
+ * 读点：turn.js#enemyHasHunter/hunterStep、movement.js#enemyMovementDestinations 的
+ * `scenarioBehavior.enemyConnections(state, enemy, location)`（返回额外连接 id 数组）。
+ * 只在「移动中的敌人是深潜者」时生效（印刷只对该次移动临时互连，不改 location.connections 存档）。
+ */
+export function enemyConnections(state, enemy, location) {
+  if (!enemy || !location || !hasTrait(enemy, 'DeepOne')) return []
+  const shanty = locationOf(state, 'drownedShanty')
+  if (!shanty) return []
+  const here = locationOf(state, location.id)
+  if (!here) return []
+  if (here.id === 'drownedShanty') {
+    return (state.locations || [])
+      .filter(item => item.id !== 'drownedShanty' && waterLevel(state, {}, item.id) >= 2)
+      .map(item => item.id)
+  }
+  return waterLevel(state, {}, here.id) >= 2 ? ['drownedShanty'] : []
 }
 
 // ---------------------------------------------------------------------------
@@ -463,10 +481,28 @@ export function beforeMove(state, inv, destination, api = {}, options = {}) {
   return true
 }
 
+function triggerLookOutOnEnter(state, inv, location, api) {
+  const threat = findLookOut(inv)
+  if (!threat) return false
+  const flags = lookOutFlags()
+  if (!flags.enterFloodedHorror) return false
+  if (waterLevel(state, api, location.id) <= 0) return false
+  const key = `${inv.seat}:${Number(state.round) || 0}`
+  const handled = new Set(flagValue(state, 'twwLookOutRounds') || [])
+  if (handled.has(key)) return false
+  handled.add(key)
+  setFlag(state, 'twwLookOutRounds', [...handled])
+  safeCall(api, 'horror', inv.seat, Number(flags.enterFloodedHorror) || 1)
+  info(api, `「小心！」：${inv.name} 本轮首次进入淹没地点，受到 ${Number(flags.enterFloodedHorror) || 1} 点恐惧。`)
+  return true
+}
+
 export function locationEntered(state, inv, location, api = {}) {
   if (!inv || !location || inv.defeated || inv.resigned) return false
+  const lookOut = triggerLookOutOnEnter(state, inv, location, api)
   const flags = flagsOf(codeOf(location))
-  if (!flags.treacherousPath) return false
+  if (!flags.treacherousPath) return lookOut
+
   const previousId = (flagValue(state, 'twwPreviousLocation') || {})[inv.seat]
   const previous = locationOf(state, previousId)
   const prevLevel = previous ? (previous.level ?? rowLevelOf(state, previous.id)) : null
@@ -488,6 +524,32 @@ export function locationEntered(state, inv, location, api = {}) {
   return true
 }
 
+/** 11524：无法提高淹没时，玩家选择自己控制的一张 [[Ally]] 支援弃置（替代通用 discardRandom）。 */
+function discardChosenAlly(state, inv, api) {
+  const allies = (inv.assets || []).filter(asset =>
+    ((ALL_CARDS[codeOf(asset)]?.traits) || asset.traits || [])
+      .some(trait => String(trait).toLowerCase() === 'ally'))
+  if (!allies.length) return false
+  const options = allies.map(asset => ({
+    id: asset.id, label: ALL_CARDS[codeOf(asset)]?.nameZh || asset.name || codeOf(asset), cardCode: codeOf(asset),
+  }))
+  const picked = typeof api?.choose === 'function'
+    ? api.choose({
+      kind: 'card', source: '11524', seat: inv.seat,
+      prompt: '险恶道路（致命通道）：选择一张你控制的[[盟友]]支援弃置。', options,
+    })
+    : options[0]?.id
+  const target = allies.find(asset => asset.id === picked) || allies[0]
+  if (!target) return false
+  if (typeof api?.discardAsset === 'function') {
+    api.discardAsset(inv.seat, target.id)
+    return true
+  }
+  const index = (inv.assets || []).indexOf(target)
+  if (index >= 0) inv.assets.splice(index, 1)
+  return true
+}
+
 function runEnterTest(state, inv, location, api, spec, level) {
   const difficulty = Number(spec.difficultyPerLevel) ? level + Number(spec.difficultyPerLevel) - 1 : level
   const onFail = () => {
@@ -495,7 +557,7 @@ function runEnterTest(state, inv, location, api, spec, level) {
     if (spec.failHorror) safeCall(api, 'horror', inv.seat, spec.failHorror)
     if (spec.increaseFlood) {
       if (waterLevel(state, api, location.id) < 2) waterChange(state, api, location.id, 1)
-      else if (spec.discardAllyIfNoFlood) safeCall(api, 'discardRandom', inv.seat, 1)
+      else if (spec.discardAllyIfNoFlood) discardChosenAlly(state, inv, api)
     }
     info(api, `险恶道路（${location.subname || location.name}）：${inv.name} 检定失败。`)
   }
@@ -513,8 +575,11 @@ export function locationRevealed(state, location, api = {}, seat = null) {
   if (flags.spawnCoralStarSpawnOnReveal) {
     const enemy = spawnAt(state, CORAL_STAR_SPAWN_CODE, location.id, api, { exhausted: true })
     if (enemy) {
-      enemy.doesNotReadyDuringUpkeep = true
-      setFlag(state, 'twwCoralStarSpawnNotReady', true)
+      // PRIMITIVES.md 已落地：api.preventEnemyReadyNextUpkeep（phases.js 读一次 skipNextUpkeepReady 后清除）。
+      // Lead 文档写作 api.scenario.*，这里兼容两种挂载位置；无运行时 api 时退回写引擎读点同名字段。
+      const preventReady = api?.scenario?.preventEnemyReadyNextUpkeep || api?.preventEnemyReadyNextUpkeep
+      if (typeof preventReady === 'function') preventReady.call(api?.scenario || api, enemy)
+      else enemy.skipNextUpkeepReady = true
     }
     info(api, `险恶道路（浅滩巢穴）被揭示：珊瑚星之眷族以横置状态生成。`)
     return true
@@ -592,13 +657,21 @@ function spawnAt(state, code, locationId, api, options = {}) {
 
 /** 深潜者主母：「生成 - 任意已揭示地点（尽可能淹没棚屋）」+ 进场搜深潜者敌人。 */
 export function spawnLocation(state, code, fallback, engagedSeat, api = {}) {
-  if (String(code) !== DEEP_ONE_MATRON_CODE) return null
+  if (String(code) === HUNTING_PARASITE_CODE) {
+    const bearer = (state.investigators || [])[engagedSeat]
+    const here = bearer?.location
+    if (!here) return fallback
+    const connections = (locationOf(state, here)?.connections || []).filter(id => locationOf(state, id))
+    const empty = connections.find(id => (locationOf(state, id)?.clues || 0) === 0
+      && !(state.enemies || []).some(enemy => enemy.location === id))
+    return empty || connections[0] || fallback
+  }
+  if (String(code) !== DEEP_ONE_MATRON_CODE) return fallback
   const shanty = locationOf(state, 'drownedShanty')
   if (shanty && shanty.revealed) return 'drownedShanty'
-  void fallback
   void engagedSeat
   void api
-  return null
+  return fallback
 }
 
 export function enemySpawned(state, enemy, api = {}) {
@@ -865,12 +938,61 @@ export function checkObjectives(state, api = {}) {
   const target = actRule.objectiveAllAt || (west ? 'obsidianFoundations' : 'westernWall')
   const alive = activeInvestigators(state)
   if (!alive.length) return false
-  if (alive.every(inv => inv.location === target)) {
-    info(api, `幕目标达成：所有存活调查员抵达「${locationOf(state, target)?.name || target}」。`)
+  if (!alive.every(inv => inv.location === target)) return false
+  const targetName = locationOf(state, target)?.name || target
+  const skip = flagValue(state, 'twwAdvanceSkip')
+  const round = Number(state.round) || 0
+  if (skip && skip.actCode === actCode && skip.round === round) return false
+  const choice = typeof api?.choose === 'function'
+    ? api.choose({
+      kind: 'choice', source: actCode, seat: state.campaign?.currentSeat ?? state.currentSeat ?? 0,
+      prompt: `幕目标达成：所有存活调查员已抵达「${targetName}」。是否推进？`,
+      options: [{ id: 'advance', label: '推进' }, { id: 'skip', label: '暂不推进' }],
+    })
+    : 'advance'
+  if (choice === 'advance') {
+    info(api, `幕目标达成：所有存活调查员抵达「${targetName}」，推进。`)
     safeCall(api, 'advanceAct')
     return true
   }
+  setFlag(state, 'twwAdvanceSkip', { actCode, round })
+  info(api, `幕目标已达成：选择暂不推进（本轮不再询问）。`)
   return false
+}
+
+/** 敌军阶段结束：11535 猎食寄生虫在所在地点的玩家卡上放 1 毁灭，然后弃掉自身。 */
+export function enemyPhaseEnd(state, api = {}) {
+  const parasites = (state.enemies || []).filter(enemy => !enemy.defeated && codeOf(enemy) === HUNTING_PARASITE_CODE)
+  let acted = 0
+  for (const enemy of parasites) {
+    const playerCards = (state.investigators || []).flatMap(inv =>
+      (inv.assets || []).filter(asset => inv.location === enemy.location))
+    let target = null
+    if (playerCards.length && typeof api?.choose === 'function') {
+      const options = playerCards.map(card => ({
+        id: card.id, label: ALL_CARDS[codeOf(card)]?.nameZh || card.name || codeOf(card), cardCode: codeOf(card),
+      }))
+      const picked = api.choose({
+        kind: 'card', source: HUNTING_PARASITE_CODE,
+        seat: state.campaign?.leadSeat ?? state.currentSeat ?? 0,
+        prompt: '猎食寄生虫：选择在该地点的一张玩家卡，在其上放置 1 个毁灭标记。',
+        options,
+      })
+      target = playerCards.find(card => card.id === picked) || playerCards[0]
+    } else {
+      target = playerCards[0] || null
+    }
+    if (target) {
+      if (typeof api?.placeDoomOnCard === 'function') api.placeDoomOnCard(target, 1)
+      else if (typeof api?.doomOn === 'function') api.doomOn(target, 1)
+      else target.doom = (Number(target.doom) || 0) + 1
+    }
+    if (typeof api?.discardEnemy === 'function') api.discardEnemy(enemy)
+    else state.enemies = (state.enemies || []).filter(item => item !== enemy)
+    acted += 1
+  }
+  if (acted) info(api, `敌军阶段结束：${acted} 只猎食寄生虫在所在地点的玩家卡上放置 1 毁灭后弃掉。`)
+  return acted > 0
 }
 
 export function roundEnded(state, api = {}) {
@@ -1083,6 +1205,8 @@ export const events = {
 
 export const behavior = {
   id: CHAPTER_ID,
+  // Good Money（11611）跨章限制：campaign.ruleFlags.tdcNoUpkeepResources 命中时补给阶段不获得资源。
+  canGainResources: (state, inv) => !tdcCannotGainUpkeepResources(state, inv),
   startLocation,
   locationsStartRevealed: false,
   preScenarioSetup,
@@ -1098,8 +1222,10 @@ export const behavior = {
   performAction,
   enemySpawned,
   enemyMoved,
+  enemyConnections,
   spawnLocation,
   checkObjectives,
+  enemyPhaseEnd,
   roundEnded,
   actReveal,
   agendaReveal,

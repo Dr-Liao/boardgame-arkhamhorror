@@ -12,6 +12,6 @@ export default {
   scope: 'enemy',
   implemented: true,
   flags: { cthulhuFacet: true, enraged: true },
-  note: '数据型条目 + 多部位/狂怒修正读点（见文件头）。',
+  note: "狂怒面：生命=狂怒值；翻至本面后抽克苏鲁牌（enemyFaceFlipped）；成功躲避后对其造成 1 点伤害（enemyEvadedSuccessfully）。",
   abilities: [],
 }

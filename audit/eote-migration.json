@@ -1417,7 +1417,7 @@
   "primitives": {
     "plan": {
       "path": "audit/eote-primitive-plan.json",
-      "sha256": "3b0635121ca5797a436064cf615e687f172aed7b2e12de935f3ac740df061a8b"
+      "sha256": "91b56f8a413ae76c40ae8417665042c9b246d4eafea7859253d5e9c8e6362955"
     },
     "gates": {
       "scanPassed": true,
@@ -3003,7 +3003,7 @@
       ],
       "ledger": {
         "path": "audit/eote-rules.json",
-        "sha256": "035df26a5f680d943207d57a64a1529a971da28b18fcf97500c5304fa03ee047"
+        "sha256": "fc978861b893820f5e91df7d7b6171b60def9b26ee0ec271191cf48d076f5fa6"
       },
       "evidence": [
         "content/campaigns/edgeOfTheEarth/keywords.js",
@@ -3580,18 +3580,18 @@
   ],
   "evidence": {
     "files": {
-      "audit/eote-all-card-acceptance.json": "e2d520a746ee9333b49df85807649c5a6226ae3b503aab6fa716c6131050c692",
+      "audit/eote-all-card-acceptance.json": "8a78abd3b77d903ebb0c639b0d3a4da3cb6fcc866461f17bea977bc5ea800f00",
       "audit/eote-interactions.json": "dacdee14be3c864d821042efd6c77c4262f5b1ce9976cece203adef844764202",
       "audit/eote-investigators.json": "5a7c84602446d6f7d07a11fc8d5f8936a58e6b8f86b1ae9749e7fa6560da9ff6",
       "audit/eote-node-acceptance.json": "d74e48812e8bbba98d139974ce14b8a5029bf7a0da1fae97add23e34b1655ddc",
       "audit/eote-player-acceptance.json": "e0f6eecb363306773e9b54f7171fac035a4d62f71d216505aff509247707b1ad",
       "audit/eote-player-queue.json": "60cec2bc8827aa973fa0a2f94a233323ef8bdd7edc6cd935d0fbf9f1d1072a61",
-      "audit/eote-primitive-plan.json": "3b0635121ca5797a436064cf615e687f172aed7b2e12de935f3ac740df061a8b",
+      "audit/eote-primitive-plan.json": "91b56f8a413ae76c40ae8417665042c9b246d4eafea7859253d5e9c8e6362955",
       "audit/eote-primitive-requests.json": "8699aeb37738f0c0ed6c6e4bf786e7f3fd70a3ae0f9c947164e8c5c615a2b18b",
       "audit/eote-regression.json": "36a01fdd2b44bc72f8470e97df4844025e51e486addf8c6edb27ec9a3b1e557d",
-      "audit/eote-release-acceptance.json": "f257e233850f06e1cfaa852ca8943e3f1379ee2922a242a018db1780050dc3d8",
+      "audit/eote-release-acceptance.json": "a5b6d392f4faf1c054f936cb0c9055eb78907a31ea69962c162eb3197efc2fa8",
       "audit/eote-release-browser.json": "ad85bfa1bc19e2bdc111941e815be8d3ed190fd021ef88f3707e389d63b259d3",
-      "audit/eote-rules.json": "035df26a5f680d943207d57a64a1529a971da28b18fcf97500c5304fa03ee047",
+      "audit/eote-rules.json": "fc978861b893820f5e91df7d7b6171b60def9b26ee0ec271191cf48d076f5fa6",
       "audit/eote-scenario-acceptance.json": "f7341108405fa7144e8f4c6776e628f9bac2a81932e042b5de0b6f3166158de2",
       "audit/eote-scenarios-browser.json": "e8c81bc8eece243bc8c93a95c0db4dc9768bd9b160c3c3f9b62ac87ae3798567",
       "audit/eote-scope.json": "daac95c08f98e556963a361fdfc06bd2a94e53604c128493fb0ea04c65f24370",
@@ -3614,7 +3614,7 @@
     },
     {
       "path": "content/registry.js",
-      "sha256": "de33c88a7da05ec0bc6e0ad3d19fe04b4148b359e8897b8cb924e692a4959455"
+      "sha256": "e7d924738ba416e9699af5aecd9e95b1be42c6e8cbbc6f1f3f8d7cb5ef75e557"
     },
     {
       "path": "content/campaigns/edgeOfTheEarth/shared.js",
@@ -3646,7 +3646,7 @@
     },
     {
       "path": "audit/eote-all-card-acceptance.json",
-      "sha256": "e2d520a746ee9333b49df85807649c5a6226ae3b503aab6fa716c6131050c692"
+      "sha256": "8a78abd3b77d903ebb0c639b0d3a4da3cb6fcc866461f17bea977bc5ea800f00"
     },
     {
       "path": "audit/eote-investigators.json",
@@ -3658,7 +3658,7 @@
     },
     {
       "path": "audit/eote-rules.json",
-      "sha256": "035df26a5f680d943207d57a64a1529a971da28b18fcf97500c5304fa03ee047"
+      "sha256": "fc978861b893820f5e91df7d7b6171b60def9b26ee0ec271191cf48d076f5fa6"
     },
     {
       "path": "audit/eote-interactions.json",
@@ -3678,7 +3678,7 @@
     },
     {
       "path": "audit/eote-primitive-plan.json",
-      "sha256": "3b0635121ca5797a436064cf615e687f172aed7b2e12de935f3ac740df061a8b"
+      "sha256": "91b56f8a413ae76c40ae8417665042c9b246d4eafea7859253d5e9c8e6362955"
     },
     {
       "path": "audit/eote-scenarios-browser.json",
@@ -3690,7 +3690,7 @@
     },
     {
       "path": "audit/eote-release-acceptance.json",
-      "sha256": "f257e233850f06e1cfaa852ca8943e3f1379ee2922a242a018db1780050dc3d8"
+      "sha256": "a5b6d392f4faf1c054f936cb0c9055eb78907a31ea69962c162eb3197efc2fa8"
     },
     {
       "path": "content/packs/eoteCampaign/manifest.js",

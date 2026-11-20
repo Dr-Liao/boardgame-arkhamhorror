@@ -4,6 +4,7 @@
 // 约定：随机只走 helper.randomValue / api.random / api.shuffle；本章状态写
 // state.scenarioFlags / state.scenarioZones（纯 JSON）；火盆走 P2.11 locationFlag。
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
+import { addMarkerLabel, markerLabelsOf, removeMarkerLabel } from '../../../../../src/cards/card-marker-labels.js'
 import { entryFlags, enemySpawnRuleFor } from '../../../../../src/cards/card-rules.js'
 import { campaignCardChange } from '../../../../../src/campaign/campaign.js'
 import { encounterRules, activeInvestigators, hasTrait, recordsFor } from '../../encounter-rules.js'
@@ -71,7 +72,7 @@ const BRAZIER_MARKER = 'brazier'
 export function brazierLit(state, locationId) {
   const location = locById(state, locationId)
   if (!location) return false
-  if (Array.isArray(location.markers) && location.markers.includes(BRAZIER_MARKER)) return true
+  if (markerLabelsOf(location).includes(BRAZIER_MARKER)) return true
   // 旧存档/旧测试的 flags 回退读点（markers 为权威）。
   if (typeof location.flags?.brazier === 'boolean') return location.flags.brazier
   return location.litBrazier === true
@@ -81,13 +82,13 @@ export function setBrazier(state, api, locationId, lit) {
   const location = locById(state, locationId)
   if (!location) return lit
   // 先清空旧的「已点燃」标记，再按目标状态放置 1 个资源标记。
-  while (Array.isArray(location.markers) && location.markers.includes(BRAZIER_MARKER)) {
+  while (markerLabelsOf(location).includes(BRAZIER_MARKER)) {
     if (typeof api?.removeMarker === 'function') api.removeMarker(location, BRAZIER_MARKER)
-    else location.markers.splice(location.markers.indexOf(BRAZIER_MARKER), 1)
+    else removeMarkerLabel(location, BRAZIER_MARKER)
   }
   if (lit) {
     if (typeof api?.addMarker === 'function') api.addMarker(location, BRAZIER_MARKER)
-    else { location.markers ||= []; location.markers.push(BRAZIER_MARKER) }
+    else addMarkerLabel(location, BRAZIER_MARKER)
   }
   // 旧读点镜像（净状态同一份；markers 为权威载体）。
   location.flags ||= {}
@@ -105,20 +106,16 @@ function brazierVariant(lit) {
 // 与 enemy.lostSouls 数值同源；看守人不在场时先记 scenarioFlags.watcherSouls，入场时补标记。
 const SOUL_MARKER = 'stolenSoul'
 
-function soulMarkersOf(enemy) {
-  return (enemy?.markers || []).filter(label => label === SOUL_MARKER).length
-}
-
 function syncWatcherSoulMarkers(state, watcher, count, api) {
   if (!watcher) return 0
   const target = Math.max(0, Number(count) || 0)
-  while (Array.isArray(watcher.markers) && watcher.markers.includes(SOUL_MARKER)) {
+  while (markerLabelsOf(watcher).includes(SOUL_MARKER)) {
     if (typeof api?.removeMarker === 'function') api.removeMarker(watcher, SOUL_MARKER)
-    else watcher.markers.splice(watcher.markers.indexOf(SOUL_MARKER), 1)
+    else removeMarkerLabel(watcher, SOUL_MARKER)
   }
   for (let index = 0; index < target; index += 1) {
     if (typeof api?.addMarker === 'function') api.addMarker(watcher, SOUL_MARKER)
-    else { watcher.markers ||= []; watcher.markers.push(SOUL_MARKER) }
+    else addMarkerLabel(watcher, SOUL_MARKER)
   }
   watcher.lostSouls = target
   return target
@@ -441,7 +438,7 @@ export const behavior = {
   fastActions(state, inv, timing) {
     if (!circleFastAvailable(state, inv)) return []
     return [{
-      action: 'scenarioAction', rule: 'circleFast', actions: 0, fast: true,
+      action: 'scenarioAction', rule: 'circleFast', actions: 0, fast: true, reactionSourceCode: actCodeOf(state),
       label: '⚡ 阵法行动：花你自己的 1 个线索，本次技能检定难度 -2',
     }]
   },

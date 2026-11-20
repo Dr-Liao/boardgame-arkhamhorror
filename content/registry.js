@@ -38,7 +38,12 @@ export function createContentRegistry({ packs, campaigns, scenarios }, rulesVers
       ...entry.manifest.locations.flatMap(location => [location.frontCode, location.backCode]),
       ...Object.values(entry.manifest.zones).flat().map(card => card.cardCode),
     ]
+    // P7 TDC：合成地点（开阔天空 xsky 等）不是实体卡，不参与卡包归属校验。
+    const syntheticCodes = new Set(entry.manifest.locations
+      .filter(location => location.synthetic === true)
+      .flatMap(location => [location.frontCode, location.backCode]))
     for (const code of neededCodes) {
+      if (syntheticCodes.has(code)) continue
       const physicalCode = code.replace(/[a-z]$/, '')
       const linkedFaceOwned = physicalCode !== code && [...declaredPacks].some(id =>
         checked.packs.get(id).cardRanges.some(range =>

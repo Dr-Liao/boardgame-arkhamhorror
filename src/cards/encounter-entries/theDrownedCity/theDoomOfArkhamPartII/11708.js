@@ -9,6 +9,6 @@ export default {
   code: '11708',
   scope: 'storyAsset',
   implemented: true,
-  note: '数据型条目：克苏鲁牌库 action 卡，结算在 behavior.resolveCthulhuCard（近似见 worker 报告）。',
+  note: "数据型条目：结算在 behavior.resolveCthulhuCard：灰白双翼→敏捷最高者检定[敏捷]，失败选择 1 伤/1 恐；凶恶面容→所在地点每人失去 2 资源；邪恶利爪→调查员共同三选一（下回合各失 1 行动走 api.loseActions / 攻击每人 / 每人 1 直接恐惧走 api.directHorror）。",
   abilities: [],
 }

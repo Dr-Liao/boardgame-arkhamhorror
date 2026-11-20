@@ -2,6 +2,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { isDeepStrictEqual } from 'node:util'
 import { MUSIC_TRACKS, MUSIC_PLAYLISTS } from '../../web/music-player.js'
 
 const DEFAULT_ROOT = fileURLToPath(new URL('../../web/audio/music/', import.meta.url))
@@ -9,6 +10,25 @@ const AUDIO = /\.(mp3|ogg|wav|m4a|aac|flac|webm)$/i
 const own = (object, key) => Object.prototype.hasOwnProperty.call(object, key)
 const defaults = () => ({ schemaVersion: 1, playlists: Object.fromEntries(Object.entries(MUSIC_PLAYLISTS).map(([id, tracks]) => [id, { tracks: [...tracks], includeCustom: true }])) })
 export const defaultMusicConfig = defaults
+
+// The initial TDC release wrote these defaults into playlists.json. Recognize
+// its exact generated entries so existing installs pick up the new recordings.
+const previousDrownedCityChapters = {
+  'theDrownedCity/oneLastJob': ['tskNightOnTheDocksSax', 'tskNoGoodLayabout', 'tskKillers'],
+  'theDrownedCity/theWesternWall': ['ticTheDescent', 'ticOppressiveGloom', 'eoteInexorable'],
+  'theDrownedCity/theDrownedQuarter': ['ticDeepHaze', 'ticDarkFog', 'eoteBlackVortex'],
+  'theDrownedCity/theApiary': ['ticBentAndBroken', 'ticAnxiety', 'eoteScpX2xUnseenPresence'],
+  'theDrownedCity/theGrandVault': ['tcuInnerSanctum', 'tcuSymmetry', 'tcuOssuary5Rest'],
+  'theDrownedCity/courtOfTheAncients': ['tcuLandOfTheDead', 'tcuHiddenWonders', 'tcuMysticForce'],
+  'theDrownedCity/obsidianCanyons': ['eoteSpacialWinds', 'eoteCrossingTheChasm', 'eoteLongRoadAheadB'],
+  'theDrownedCity/sepulchreOfTheSleeper': ['tcuPhantasm', 'tcuAnguish', 'tcuDarkling'],
+  'theDrownedCity/theDoomOfArkhamPartI': ['eoteDespairAndTriumph', 'eoteDayOfChaos', 'eoteDarkeningDevelopments'],
+  'theDrownedCity/theDoomOfArkhamPartII': ['tskGhostpocalypse6CrossingTheThreshold', 'tskNightmareMachine', 'tskTrepidation'],
+}
+const previousDrownedCityPlaylists = {
+  ...previousDrownedCityChapters,
+  theDrownedCity: Object.values(previousDrownedCityChapters).flat(),
+}
 
 export function createMusicLibrary({ root = DEFAULT_ROOT } = {}) {
   root = path.resolve(root)
@@ -65,7 +85,10 @@ export function createMusicLibrary({ root = DEFAULT_ROOT } = {}) {
     if (!own(MUSIC_PLAYLISTS, id)) throw new RangeError('未知音乐歌单')
     const warnings = []
     const config = readConfig(warnings)
-    const configured = own(config.playlists, id) ? config.playlists[id] : defaults().playlists[id]
+    const previousTracks = previousDrownedCityPlaylists[id]
+    const saved = config.playlists[id]
+    const usesPreviousDefault = previousTracks && isDeepStrictEqual(saved, { tracks: previousTracks, includeCustom: true })
+    const configured = own(config.playlists, id) && !usesPreviousDefault ? saved : defaults().playlists[id]
     const valid = Array.isArray(configured) || (configured && Array.isArray(configured.tracks) && (configured.includeCustom === undefined || typeof configured.includeCustom === 'boolean'))
     const entry = valid ? configured : defaults().playlists[id]
     if (!valid) warnings.push('本关歌单格式有误，暂用默认歌单。')

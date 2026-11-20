@@ -25,6 +25,8 @@ import {
   canChangeFloodLevel as canChangeFlood, changeFloodLevel, floodLevel,
 } from '../../../../../src/engine/flood.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
+// P7 第三轮：《沉没之城》战役级规则（Good Money 失败 → 下一章维护阶段不能获得资源）。
+import { tdcCannotGainUpkeepResources } from '../../campaign-rules.js'
 import {
   ACT1_CODE, AGENDA1_CODE, AGENDA2_CODE, BARRIER_CORE_ACTIVE, BARRIER_CORE_ACTIVE_CODE,
   BARRIER_CORE_INACTIVE, BARRIER_CORE_INACTIVE_CODE, BARRIER_NODE_CODE, ENCOUNTER_DECK,
@@ -40,6 +42,16 @@ import {
 
 const CHAPTER_ID = 'theDrownedQuarter'
 const BARRIER_CORE_LOCATION_ID = 'barrierCore'
+// 海床地点（11542–11548）：P7 第四轮按既有 api 接线地点行动 / 回合结束强制 / 揭示强制。
+const ACROPOLIS_EPHEMERAL_CODE = '11542'
+const ACROPOLIS_COLLAPSED_CODE = '11543'
+const BLASTED_RUINS_CIRCLE_CODE = '11544'
+const BLASTED_RUINS_EDIFICES_CODE = '11545'
+const CORAL_GARDEN_CODE = '11546'
+const CORAL_FEEDING_CODE = '11547'
+const ANCIENT_GALLERY_CODE = '11548'
+const ACROPOLIS_CODES = [ACROPOLIS_EPHEMERAL_CODE, ACROPOLIS_COLLAPSED_CODE]
+const BLASTED_RUINS_CODES = [BLASTED_RUINS_CIRCLE_CODE, BLASTED_RUINS_EDIFICES_CODE]
 
 // ---------------------------------------------------------------------------
 // 基础工具
@@ -106,6 +118,88 @@ export function adjacentFloodable(state, locationId) {
   return [...new Set(location.connections || [])]
     .filter(id => locationOf(state, id) && canChangeFloodOf(state, id, 1))
 }
+
+// ---------------------------------------------------------------------------
+// 海床地点（11542–11548）公用工具
+// ---------------------------------------------------------------------------
+const groupAt = (state, locationId) => activeInvestigators(state)
+  .filter(inv => inv.location === locationId)
+const groupResourcesAt = (state, locationId) => groupAt(state, locationId)
+  .reduce((sum, inv) => sum + (Number(inv.resources) || 0), 0)
+const groupHandAt = (state, locationId) => groupAt(state, locationId)
+  .reduce((sum, inv) => sum + (inv.hand || []).length, 0)
+const controlledObsidianRelic = state => (state.investigators || [])
+  .some(inv => (inv.assets || []).some(asset => codeOf(asset) === OBSIDIAN_RELIC_CODE))
+  || (state.storyAssets || []).some(asset => codeOf(asset) === OBSIDIAN_RELIC_CODE && asset.controllerSeat != null)
+
+/** 「可以降低淹没」的候选：本地点 + 相邻，且当前淹没 > 0。 */
+function lowerFloodTargets(state, locationId) {
+  const ids = [locationId, ...(locationOf(state, locationId)?.connections || [])]
+  return [...new Set(ids)].filter(id => locationOf(state, id) && floodLevelOf(state, id) > 0)
+}
+
+/** 11542/11543 的 [action]：「选择任意地点并降低其淹没等级」。 */
+function anyFloodedLocations(state) {
+  return (state.locations || []).filter(location => floodLevelOf(state, location.id) > 0)
+    .map(location => location.id)
+}
+
+function chooseLocation(state, inv, sourceCode, candidates, prompt, api) {
+  if (candidates.length <= 1) return candidates[0]
+  const picked = typeof api.choice === 'function'
+    ? api.choice({
+      kind: 'location', source: sourceCode, seat: inv.seat, prompt,
+      options: candidates.map(id => ({ id, label: locationOf(state, id)?.name || id })),
+    })
+    : candidates[0]
+  return candidates.includes(picked) ? picked : candidates[0]
+}
+
+/** 从放一边取一张牌并创建实例（优先 api.takeFromSetAside + api.giveAsset/spawn）。 */
+function takeFromSetAside(state, code, api) {
+  const zones = zonesFor(state)
+  if (!Array.isArray(zones.setAside) || !zones.setAside.includes(String(code))) return false
+  if (typeof api.takeFromSetAside === 'function') return api.takeFromSetAside(String(code))
+  zones.setAside.splice(zones.setAside.indexOf(String(code)), 1)
+  return true
+}
+
+/** 生成放一边的[[海底]]敌人（水下寄生虫）到指定地点。 */
+function spawnSetAsideParasite(state, locationId, seat, api) {
+  if (!takeFromSetAside(state, UNDESEA_PARASITE_CODE, api)) return null
+  const spawned = typeof api.spawnEngaged === 'function'
+    ? api.spawnEngaged(UNDESEA_PARASITE_CODE, locationId, seat)
+    : spawnEnemy(state, UNDESEA_PARASITE_CODE, locationId, api)
+  info(api, `水下寄生虫在「${locationOf(state, locationId)?.name || locationId}」生成。`)
+  return spawned || null
+}
+
+/** 从遭遇牌库顶弃到一名敌人，并将其生成到指定地点（11547）。 */
+function discardUntilEnemySpawn(state, locationId, seat, api) {
+  let enemyCode = null
+  for (let guard = 0; guard < 200; guard += 1) {
+    const deck = state.encounterDeck || []
+    if (!deck.length) break
+    const top = deck[deck.length - 1]
+    const [code] = typeof api.discardEncounterTop === 'function'
+      ? api.discardEncounterTop(1, { log: false })
+      : []
+    if (!code) break
+    if (ALL_CARDS[code]?.type === 'enemy') { enemyCode = code; break }
+    void top
+  }
+  if (!enemyCode) {
+    info(api, '遭遇牌库没有敌人可供显现。')
+    return null
+  }
+  if (typeof api.takeEncounterCard === 'function') api.takeEncounterCard(enemyCode)
+  const spawned = typeof api.spawnEngaged === 'function'
+    ? api.spawnEngaged(enemyCode, locationId, seat)
+    : spawnEnemy(state, enemyCode, locationId, api)
+  info(api, `「${ALL_CARDS[enemyCode]?.nameZh || enemyCode}」在「${locationOf(state, locationId)?.name || locationId}」生成。`)
+  return spawned || null
+}
+
 
 // ---------------------------------------------------------------------------
 // 网格 / 地点入场
@@ -287,7 +381,6 @@ export function introduction(sc, records = {}, context = null) {
 export function setupLocations(state, events = null, helper = {}) {
   void events
   const api = helper?.api || {}
-  state.__api = api
   const prepare = prepareScenario(state, api)
   const plan = planLayout(state, { shuffle: resolveShuffle(api, helper) })
   for (const [id, cell] of Object.entries(plan.cells)) writeGridCell(state, id, cell)
@@ -323,21 +416,80 @@ export function locationRevealed(state, location, api = {}, seat = null) {
   if (!location) return false
   syncConnections(state)
   if (!isSeaFloorLocation(state, location)) return false
+  let handled = false
   const marker = `drownedQuarterFloodHandled:${location.id}`
-  if (state.scenarioFlags?.[marker]) return false
-  setFlag(state, marker, true)
-  if (canChangeFloodOf(state, location.id, 1)) changeFloodOf(state, location.id, 1, api)
-  const candidates = adjacentFloodable(state, location.id)
-  const target = candidates[0]
-  if (target) changeFloodOf(state, target, 1, api)
-  info(api, `进入海床「${location.name}」：本地点${target ? '与一处相邻地点' : ''}的淹没等级提高。`)
-  return true
+  if (!state.scenarioFlags?.[marker]) {
+    setFlag(state, marker, true)
+    if (canChangeFloodOf(state, location.id, 1)) changeFloodOf(state, location.id, 1, api)
+    const candidates = adjacentFloodable(state, location.id)
+    const target = candidates[0]
+    if (target) changeFloodOf(state, target, 1, api)
+    info(api, `进入海床「${location.name}」：本地点${target ? '与一处相邻地点' : ''}的淹没等级提高。`)
+    handled = true
+  }
+  // 11547 觅食地：被揭示后从遭遇牌库顶弃到一名敌人，将其生成在本地点。
+  if (codeOf(location) === CORAL_FEEDING_CODE) {
+    const key = `drownedQuarterCoralFeedingSpawned:${location.id}`
+    if (!state.scenarioFlags?.[key]) {
+      setFlag(state, key, true)
+      if (discardUntilEnemySpawn(state, location.id, Number.isInteger(seat) ? seat : 0, api)) handled = true
+    }
+  }
+  return handled
 }
+
+/** 11547 觅食地 [reaction]：你在此地发现 1 个或更多线索后 → 放一边的水下寄生虫在本地点生成。 */
+export function cluesGained(state, inv, amount, api = {}) {
+  if (!inv || !(Number(amount) > 0)) return false
+  const here = locationOf(state, inv.location)
+  if (!here || codeOf(here) !== CORAL_FEEDING_CODE) return false
+  if (here.revealed === false) return false
+  if (!zonesFor(state).setAside?.includes(UNDESEA_PARASITE_CODE)) return false
+  return Boolean(spawnSetAsideParasite(state, here.id, inv.seat, api))
+}
+
+/** 11542–11545 回合结束强制（引擎既有 scenarioBehavior.turnEnded 读点）。 */
+export function turnEnded(state, inv, api = {}) {
+  if (!inv || inv.defeated || inv.resigned) return false
+  const here = locationOf(state, inv.location)
+  if (!here) return false
+  const code = codeOf(here)
+  if (code === ACROPOLIS_EPHEMERAL_CODE) {
+    if (canChangeFloodOf(state, here.id, 1)) {
+      changeFloodOf(state, here.id, 1, api)
+      info(api, `「${here.name}」：回合结束，提高本地点淹没等级。`)
+      return true
+    }
+    if (typeof api.horror === 'function') api.horror(inv.seat, 1)
+    else inv.horror = (Number(inv.horror) || 0) + 1
+    info(api, `「${here.name}」无法提高淹没：${inv.name} 受到 1 点恐惧。`)
+    return true
+  }
+  if (code === ACROPOLIS_COLLAPSED_CODE) {
+    const [target] = adjacentFloodable(state, here.id)
+    if (target) {
+      changeFloodOf(state, target, 1, api)
+      info(api, `「${here.name}」：回合结束，提高相邻「${locationOf(state, target)?.name || target}」的淹没等级。`)
+      return true
+    }
+    if (typeof api.damage === 'function') api.damage(inv.seat, 1)
+    else inv.damage = (Number(inv.damage) || 0) + 1
+    info(api, `「${here.name}」无法提高相邻地点淹没：${inv.name} 受到 1 点伤害。`)
+    return true
+  }
+  if (BLASTED_RUINS_CODES.includes(code)) {
+    if (!canChangeFloodOf(state, here.id, 1)) return false
+    changeFloodOf(state, here.id, 1, api)
+    info(api, `「${here.name}」：回合结束，提高本地点淹没等级。`)
+    return true
+  }
+  return false
+}
+
 
 export function afterDeckSetup(state, events = null, helper = {}) {
   void events
   const api = helper?.api || {}
-  state.__api = api
   const zones = zonesFor(state)
   zones.setAside = [...SET_ASIDE_CARDS]
   setFlag(state, 'drownedQuarterRemoved', [...(layoutPlan(state)?.removed || [])])
@@ -480,14 +632,71 @@ export function actions(state, inv) {
       reason: available >= required * 2 ? null : `需要本地点共 ${required * 2} 个线索（现有 ${available}）`,
     })
   }
+  // ---- 海床地点 11542–11548（P7 第四轮） ----
+  const hereCode = codeOf(here)
+  if (ACROPOLIS_CODES.includes(hereCode)) {
+    const uses = Number(state.scenarioFlags?.drownedQuarterAcropolisLowerUses || 0)
+    const targets = anyFloodedLocations(state)
+    moves.push({
+      action: 'scenarioAction', rule: 'drownedQuarterAcropolisLowerFlood', locationId: here.id, actions: 1,
+      label: '提高本地点淹没等级：选择任意地点并降低其淹没等级（每场游戏团队限两次）',
+      reason: uses >= 2 ? '每场游戏团队限两次，已用完'
+        : !canChangeFloodOf(state, here.id, 1) ? '本地点淹没已满'
+          : !targets.length ? '没有可降低淹没的地点' : null,
+    })
+  }
+  if (BLASTED_RUINS_CODES.includes(hereCode)) {
+    const roundKey = `drownedQuarterRuinsLower:${hereCode}:${state.round}`
+    const targets = lowerFloodTargets(state, here.id)
+    const enough = hereCode === BLASTED_RUINS_CIRCLE_CODE
+      ? groupResourcesAt(state, here.id) >= 5
+      : groupHandAt(state, here.id) >= required
+    moves.push({
+      action: 'scenarioAction', rule: 'drownedQuarterRuinsLowerFlood', locationId: here.id, actions: 1,
+      label: hereCode === BLASTED_RUINS_CIRCLE_CODE
+        ? '共同花费 5 个资源：降低本地点或一处相邻地点的淹没等级（每轮团队限一次）'
+        : `共同弃掉合计 ${required} 张手牌：降低本地点或一处相邻地点的淹没等级（每轮团队限一次）`,
+      reason: state.scenarioFlags?.[roundKey] ? '每轮团队限一次，本轮已用完'
+        : !targets.length ? '没有可降低淹没的目标地点'
+          : !enough ? (hereCode === BLASTED_RUINS_CIRCLE_CODE
+            ? `需要本地点共 5 个资源（现有 ${groupResourcesAt(state, here.id)}）`
+            : `需要本地点共 ${required} 张手牌（现有 ${groupHandAt(state, here.id)}）`)
+            : null,
+    })
+  }
+  if (hereCode === CORAL_GARDEN_CODE) {
+    const hasParasite = Boolean(zonesFor(state).setAside?.includes(UNDESEA_PARASITE_CODE))
+    moves.push({
+      action: 'scenarioAction', rule: 'drownedQuarterCoralGarden', locationId: here.id, actions: 2,
+      label: '抽 2 张牌并获 2 个资源：将放一边的水下寄生虫生成在本地点（每场游戏团队限一次）',
+      reason: state.scenarioFlags?.drownedQuarterCoralGardenUsed ? '每场游戏团队限一次，已用完'
+        : !hasParasite ? '放一边没有可用的水下寄生虫' : null,
+    })
+  }
+  if (hereCode === ANCIENT_GALLERY_CODE) {
+    const hasRelic = Boolean(zonesFor(state).setAside?.includes(OBSIDIAN_RELIC_CODE))
+    moves.push({
+      action: 'scenarioAction', rule: 'drownedQuarterTakeObsidianRelic', locationId: here.id, actions: 1,
+      label: '弃掉你手中的 2 张卡牌：将放一边的黑曜石遗物放置入场，由你控制（每场游戏团队限一次）',
+      reason: controlledObsidianRelic(state) || state.scenarioFlags?.drownedQuarterGalleryRelicTaken
+        ? '每场游戏团队限一次，已用完或遗物已在场'
+        : !hasRelic ? '放一边没有黑曜石遗物'
+          : (inv.hand || []).length < 2 ? '手牌不足 2 张' : null,
+    })
+  }
   return moves
 }
+
 
 export function performAction(state, inv, move, api = {}) {
   if (!move || !inv || inv.defeated || inv.resigned) return false
   if (move.rule === 'drownedQuarterDecreaseFlood') return decreaseFloodAction(state, inv, api)
   if (move.rule === 'drownedQuarterCoreDivert') return coreDivertAction(state, inv, api)
   if (move.rule === 'drownedQuarterTakeBarrierNode') return takeBarrierNodeAction(state, inv, api)
+  if (move.rule === 'drownedQuarterAcropolisLowerFlood') return acropolisLowerFloodAction(state, inv, api)
+  if (move.rule === 'drownedQuarterRuinsLowerFlood') return ruinsLowerFloodAction(state, inv, api)
+  if (move.rule === 'drownedQuarterCoralGarden') return coralGardenAction(state, inv, api)
+  if (move.rule === 'drownedQuarterTakeObsidianRelic') return takeObsidianRelicAction(state, inv, api)
   return false
 }
 
@@ -551,6 +760,102 @@ function takeBarrierNodeAction(state, inv, api) {
     inv.assets.push(asset)
   }
   info(api, `${inv.name} 控制屏障节点。`)
+  return true
+}
+
+// ---- 海床地点行动（11542–11548）----
+function acropolisLowerFloodAction(state, inv, api) {
+  const here = locationOf(state, inv.location)
+  if (!here || !ACROPOLIS_CODES.includes(codeOf(here))) return false
+  const uses = Number(state.scenarioFlags?.drownedQuarterAcropolisLowerUses || 0)
+  if (uses >= 2) return false
+  if (!canChangeFloodOf(state, here.id, 1)) return false
+  const targets = anyFloodedLocations(state).filter(id => id !== here.id || floodLevelOf(state, id) > 0)
+  if (!targets.length) return false
+  setFlag(state, 'drownedQuarterAcropolisLowerUses', uses + 1)
+  changeFloodOf(state, here.id, 1, api)
+  const target = chooseLocation(state, inv, codeOf(here), targets,
+    '选择一处地点降低其淹没等级。', api)
+  changeFloodOf(state, target, -1, api)
+  info(api, `「${here.name}」：提高自身淹没，并降低「${locationOf(state, target)?.name || target}」的淹没等级（剩余 ${2 - uses - 1} 次）。`)
+  syncBarrierCore(state, api)
+  return true
+}
+
+function ruinsLowerFloodAction(state, inv, api) {
+  const here = locationOf(state, inv.location)
+  if (!here || !BLASTED_RUINS_CODES.includes(codeOf(here))) return false
+  const code = codeOf(here)
+  const roundKey = `drownedQuarterRuinsLower:${code}:${state.round}`
+  if (state.scenarioFlags?.[roundKey]) return false
+  const targets = lowerFloodTargets(state, here.id)
+  if (!targets.length) return false
+  const required = investigatorCount(state)
+  if (code === BLASTED_RUINS_CIRCLE_CODE) {
+    if (groupResourcesAt(state, here.id) < 5) return false
+    let remaining = 5
+    for (const member of groupAt(state, here.id)) {
+      const pay = Math.min(remaining, Number(member.resources) || 0)
+      member.resources = (Number(member.resources) || 0) - pay
+      remaining -= pay
+      if (remaining <= 0) break
+    }
+    if (remaining > 0) return false
+  } else {
+    if (groupHandAt(state, here.id) < required) return false
+    for (const member of groupAt(state, here.id)) {
+      if ((member.hand || []).length && typeof api.discardChosen === 'function') api.discardChosen(member.seat, 1, code)
+      else if ((member.hand || []).length) member.hand.pop()
+    }
+  }
+  setFlag(state, roundKey, true)
+  const target = chooseLocation(state, inv, code, targets,
+    '选择本地点或一处相邻地点降低淹没等级。', api)
+  changeFloodOf(state, target, -1, api)
+  info(api, `「${here.name}」：团队支付代价，降低「${locationOf(state, target)?.name || target}」的淹没等级。`)
+  syncBarrierCore(state, api)
+  return true
+}
+
+function coralGardenAction(state, inv, api) {
+  const here = locationOf(state, inv.location)
+  if (!here || codeOf(here) !== CORAL_GARDEN_CODE) return false
+  if (state.scenarioFlags?.drownedQuarterCoralGardenUsed) return false
+  const zones = zonesFor(state)
+  if (!Array.isArray(zones.setAside) || !zones.setAside.includes(UNDESEA_PARASITE_CODE)) return false
+  setFlag(state, 'drownedQuarterCoralGardenUsed', true)
+  if (typeof api.drawCards === 'function') api.drawCards(inv.seat, 2)
+  else for (let draw = 0; draw < 2; draw += 1) { if (inv.deck?.length) inv.hand.push(inv.deck.pop()) }
+  if (typeof api.gainResources === 'function') api.gainResources(inv.seat, 2)
+  else inv.resources = (Number(inv.resources) || 0) + 2
+  spawnSetAsideParasite(state, here.id, inv.seat, api)
+  info(api, `「${here.name}」：抽 2 张牌、获 2 个资源，水下寄生虫在本地点生成。`)
+  return true
+}
+
+function takeObsidianRelicAction(state, inv, api) {
+  const here = locationOf(state, inv.location)
+  if (!here || codeOf(here) !== ANCIENT_GALLERY_CODE) return false
+  if (controlledObsidianRelic(state) || state.scenarioFlags?.drownedQuarterGalleryRelicTaken) return false
+  if ((inv.hand || []).length < 2) return false
+  const zones = zonesFor(state)
+  if (!Array.isArray(zones.setAside) || !zones.setAside.includes(OBSIDIAN_RELIC_CODE)) return false
+  if (typeof api.discardChosen === 'function') api.discardChosen(inv.seat, 2, ANCIENT_GALLERY_CODE)
+  else inv.hand.splice(Math.max(0, inv.hand.length - 2), 2)
+  setFlag(state, 'drownedQuarterGalleryRelicTaken', true)
+  takeFromSetAside(state, OBSIDIAN_RELIC_CODE, api)
+  let asset = typeof api.giveAsset === 'function' ? api.giveAsset(inv.seat, OBSIDIAN_RELIC_CODE) : null
+  if (!asset) {
+    const card = ALL_CARDS[OBSIDIAN_RELIC_CODE] || {}
+    asset = {
+      id: `drownedQuarter-obsidianRelic-${inv.seat}`, code: OBSIDIAN_RELIC_CODE, originalCode: OBSIDIAN_RELIC_CODE,
+      name: card.nameZh || card.name || OBSIDIAN_RELIC_CODE, controllerSeat: inv.seat, ownerSeat: inv.seat,
+      exhausted: false, damage: 0, horror: 0, tokens: 0, attachments: [],
+    }
+    inv.assets ||= []
+    inv.assets.push(asset)
+  }
+  info(api, `${inv.name} 把黑曜石遗物放置入场，由自己控制。`)
   return true
 }
 
@@ -644,11 +949,86 @@ export function enemyAttackResolved(state, enemy, inv, api = {}, attack = null) 
   return false
 }
 
+/**
+ * 11541 深渊沟壑 [reaction]：「你在深渊沟壑成功攻击或躲避一名敌人后：降低其淹没等级。
+ * （每场游戏团队限一次。）」引擎既有钩子 enemyAttackedSuccessfully / enemyEvadedSuccessfully
+ * （combat.js 普通攻击 / 躲避成功路径），内容层用 scenarioFlags 记录团队每场一次。
+ */
+function trenchLowerFloodOnSuccess(state, inv, api) {
+  const here = locationOf(state, inv?.location)
+  if (!here || codeOf(here) !== ABYSSAL_TRENCH_CODE) return false
+  if (state.scenarioFlags?.drownedQuarterTrenchLowerUsed) return false
+  if (floodLevelOf(state, here.id) <= 0) return false
+  setFlag(state, 'drownedQuarterTrenchLowerUsed', true)
+  changeFloodOf(state, here.id, -1, api)
+  info(api, '深渊沟壑：成功攻击/躲避后，降低本地点淹没等级（每场游戏团队限一次）。')
+  syncBarrierCore(state, api)
+  return true
+}
+
+export function enemyAttackedSuccessfully(state, inv, enemy, api = {}) {
+  void enemy
+  return trenchLowerFloodOnSuccess(state, inv, api)
+}
+
+export function enemyEvadedSuccessfully(state, inv, enemy, api = {}) {
+  void enemy
+  return trenchLowerFloodOnSuccess(state, inv, api)
+}
+
 export function enemyDefeated(state, enemy, api = {}) {
   if (!enemy) return false
   // 「将要离场时」近似为「被击败时」：同一张双面故事的离场分支。
   if (codeOf(enemy) === UNDESEA_PARASITE_CODE) return flipUnderseaParasite(state, enemy, 'leave', api)
   return false
+}
+
+/**
+ * 引擎统一「敌人非击败离场」钩子（P7 第二轮原语，PRIMITIVES「已落地」）：
+ *   discardEnemyCard → reason 'discarded'；api.scenario.setEnemyAside → 'setAside'；
+ *   api.scenario.removeEnemyFromGame → 'removed'。
+ *
+ * 与既有 `enemyDiscarded` **择一消费**：本章只实现 enemyLeftPlay，不实现 enemyDiscarded，
+ * 避免同一实体离场时双结算。
+ *
+ * 11549 水下寄生虫：印刷「强制 - 水下寄生虫将要离场时：将本卡牌翻面并结算其文本。」→ 故事面
+ * 的离场分支：记录符文 [X]「总和」并把故事卡（11549b）加入胜利区。被击败路径由
+ * `enemyDefeated` 消费；攻击后翻面由 `enemyAttackResolved` 消费。钩子对同一实体只结算一次。
+ */
+export function enemyLeftPlay(state, enemy, reason, api = {}) {
+  if (!enemy) return false
+  if (codeOf(enemy) !== UNDESEA_PARASITE_CODE) return false
+  const key = `drownedQuarterEnemyLeftPlay:${enemy.id}`
+  if (state.scenarioFlags?.[key]) return false
+  setFlag(state, key, reason || true)
+  // 引擎已按默认去向处理（弃牌堆 / 移出游戏 / 放一边实体）：故事面进胜利区时撤销重复去向。
+  const discard = state.encounterDiscard || []
+  for (let index = discard.length - 1; index >= 0; index--) {
+    if (discard[index] === UNDESEA_PARASITE_CODE) discard.splice(index, 1)
+  }
+  if (Array.isArray(state.removedFromGame)) {
+    state.removedFromGame = state.removedFromGame
+      .filter(code => code !== UNDESEA_PARASITE_CODE && code !== UNDESEA_PARASITE_STORY_CODE)
+  }
+  if (Array.isArray(state.setAsideEnemies)) {
+    state.setAsideEnemies = state.setAsideEnemies
+      .filter(item => item.id !== enemy.id && item.code !== UNDESEA_PARASITE_CODE)
+  }
+  return flipUnderseaParasite(state, enemy, 'leave', api)
+}
+
+/**
+ * P7 第三轮原语 `scenarioBehavior.enemyWouldBeSetAside`（scenario-runtime.js#setEnemyAside 在
+ * `enemyLeftPlay(..., 'setAside')` 之后、压入 `setAsideEnemies` 之前调用；返回 true = 内容已接管去向，
+ * 跳过默认入列）。
+ *
+ * 11549 水下寄生虫：「将要离场时翻面并结算其文本」→ 故事面加入胜利区，实体不留在场上，也不应进入
+ * 「放一边」区。本章在 enemyLeftPlay('setAside') 已完成后返回 true 收口最后一条近似。
+ */
+export function enemyWouldBeSetAside(state, enemy, api = {}) {
+  void api
+  if (!enemy || codeOf(enemy) !== UNDESEA_PARASITE_CODE) return false
+  return state.scenarioFlags?.[`drownedQuarterEnemyLeftPlay:${enemy.id}`] === 'setAside'
 }
 
 /** 黑曜石遗物（11550）→ 故事面（11550b）：检定成功翻面，记录符文 Y 并加入胜利区。 */
@@ -759,6 +1139,115 @@ export function allResigned(state, api = {}) {
 export function roundEnded(state, api = {}) {
   syncBarrierCore(state, api)
   return undefined
+}
+
+// ---------------------------------------------------------------------------
+// 地点帷幕修正（既有读点 locationShroudModifier）
+// ---------------------------------------------------------------------------
+export const ABYSSAL_TRENCH_CODE = '11541'
+
+/** 已揭示的[[海底]]地点数（深渊沟壑的 X 帷幕原料）。 */
+export function revealedSeafloorLocationCount(state) {
+  return (state.locations || []).filter(location => location.revealed === true
+    && isSeaFloorLocation(state, location)).length
+}
+
+/**
+ * 深渊沟壑（11541）：「X 等于已揭示[[海底]]地点数量的一半（向下取整）」。
+ * 引擎既有读点：actions.js / engine.js / moves.js / scenario-runtime.js 的
+ * `locationShroudModifier(state, loc, inv)` 会累加到地点帷幕；卡表卡面 shroud 占位已由
+ * definition 改为 0，避免重复计入。
+ */
+export function locationShroudModifier(state, location) {
+  if (!location || codeOf(location) !== ABYSSAL_TRENCH_CODE) return 0
+  return Math.floor(revealedSeafloorLocationCount(state) / 2)
+}
+
+// ---------------------------------------------------------------------------
+// 受控剧情资产：11550 黑曜石遗物
+// ---------------------------------------------------------------------------
+/**
+ * 战役级「维护阶段不能获得资源」（Good Money 失败写 campaign.ruleFlags.tdcNoUpkeepResources）。
+ * 引擎既有读点：phases.js 补给阶段 / moves.js 资源行动 / ability-rules.js / harm-threat.js。
+ */
+export function canGainResources(state, inv) {
+  return !tdcCannotGainUpkeepResources(state, inv)
+}
+
+/**
+ * 11550 [action] 检定期间的「投入本次技能检定的每张卡牌技能图标翻倍」。
+ * 引擎既有读点：src/engine/tests.js 投入结算调用 `scenarioBehavior.commitIconMultiplier(state, owner,
+ * commitLocation)`，返回值作为本次投入每张牌的图标倍率；只在本次技能检定来源为 11550 时生效。
+ */
+export function commitIconMultiplier(state, owner, commitLocation) {
+  void owner
+  void commitLocation
+  const source = state?.skillTest?.source
+  if (!source) return 0
+  const code = String(source.originalCode || source.code || '')
+  return code === OBSIDIAN_RELIC_CODE ? 2 : 0
+}
+
+/**
+ * 11550 黑曜石遗物的离场/翻面结算（引擎既有 `scenarioBehavior.assetLeftPlay` 钩子，
+ * 读点 src/engine/assets.js#leaveAsset）：
+ *   · 正面（11550）离场：印刷「将其从游戏中移除」；
+ *   · 故事面（11550b，[action] 检定成功后翻面）离场：印刷「将本卡牌加入胜利区」+ 记录符文 [Y]。
+ * 引擎在钩子返回后才把卡号压入弃牌堆，因此这里用 `asset.removedFromGame` 抑制默认弃牌去向。
+ */
+export function assetLeftPlay(state, inv, asset, api = {}) {
+  if (!asset) return false
+  const code = codeOf(asset)
+  if (code === OBSIDIAN_RELIC_CODE) {
+    // 引擎在检定结算回调内仍保留 state.skillTest；[action] 成功后的离场就是从该回调发起的，
+    // 因此「同一次 11550 检定还没清掉」= 故事面成功结算，而非普通离场。
+    const resolvedByTest = String(state?.skillTest?.source?.originalCode || state?.skillTest?.source?.code || '') === OBSIDIAN_RELIC_CODE
+    asset.removedFromGame = true
+    state.removedFromGame ||= []
+    if (!state.removedFromGame.includes(OBSIDIAN_RELIC_CODE)) state.removedFromGame.push(OBSIDIAN_RELIC_CODE)
+    if (!resolvedByTest) {
+      info(api, '黑曜石遗物离场：从游戏中移除。')
+      return true
+    }
+    translateGlyph(state, 'rune_y', '知识', api)
+    state.victoryDisplay ||= []
+    if (!state.victoryDisplay.some(entry => codeOf(entry) === OBSIDIAN_RELIC_STORY_CODE)) {
+      const card = ALL_CARDS[OBSIDIAN_RELIC_STORY_CODE] || {}
+      state.victoryDisplay.push({
+        id: asset.id || OBSIDIAN_RELIC_STORY_CODE, code: OBSIDIAN_RELIC_STORY_CODE,
+        originalCode: OBSIDIAN_RELIC_STORY_CODE,
+        name: card.nameZh || card.name || OBSIDIAN_RELIC_STORY_CODE, victory: 1,
+      })
+    }
+    if (Array.isArray(inv?.discard)) {
+      for (let index = inv.discard.length - 1; index >= 0; index--) {
+        if (inv.discard[index] === OBSIDIAN_RELIC_CODE) inv.discard.splice(index, 1)
+      }
+    }
+    info(api, '黑曜石遗物翻面结算：发现符文 [Y]「知识」，故事卡加入胜利区。')
+    return true
+  }
+  if (code !== OBSIDIAN_RELIC_STORY_CODE) return false
+  asset.removedFromGame = true
+  state.removedFromGame ||= []
+  if (!state.removedFromGame.includes(OBSIDIAN_RELIC_STORY_CODE)) state.removedFromGame.push(OBSIDIAN_RELIC_STORY_CODE)
+  translateGlyph(state, 'rune_y', '知识', api)
+  state.victoryDisplay ||= []
+  if (!state.victoryDisplay.some(entry => codeOf(entry) === OBSIDIAN_RELIC_STORY_CODE)) {
+    const card = ALL_CARDS[OBSIDIAN_RELIC_STORY_CODE] || {}
+    state.victoryDisplay.push({
+      id: asset.id || OBSIDIAN_RELIC_STORY_CODE, code: OBSIDIAN_RELIC_STORY_CODE,
+      originalCode: OBSIDIAN_RELIC_STORY_CODE,
+      name: card.nameZh || card.name || OBSIDIAN_RELIC_STORY_CODE, victory: 1,
+    })
+  }
+  if (Array.isArray(inv?.discard)) {
+    for (let index = inv.discard.length - 1; index >= 0; index--) {
+      if (inv.discard[index] === OBSIDIAN_RELIC_STORY_CODE) inv.discard.splice(index, 1)
+    }
+  }
+  info(api, '黑曜石遗物翻面结算：发现符文 [Y]「知识」，故事卡加入胜利区。')
+  return true
 }
 
 // ---------------------------------------------------------------------------
@@ -1023,10 +1512,12 @@ export const behavior = {  id: CHAPTER_ID,
   setupLocations,
   locationPlaced,
   locationRevealed,
+  cluesGained,
   afterDeckSetup,
   actions,
   performAction,
   turnBegins,
+  turnEnded,
   phaseBegan,
   roundEnded,
   actReveal,
@@ -1034,8 +1525,16 @@ export const behavior = {  id: CHAPTER_ID,
   checkObjectives,
   allResigned,
   enemyAttackResolved,
+  enemyAttackedSuccessfully,
+  enemyEvadedSuccessfully,
   enemyDefeated,
+  enemyLeftPlay,
+  enemyWouldBeSetAside,
   enemyStatModifier,
+  locationShroudModifier,
+  commitIconMultiplier,
+  assetLeftPlay,
+  canGainResources,
   resolveChaosToken,
   chaosTokenValue,
   applyTokenEffect,
@@ -1071,6 +1570,10 @@ export const behavior = {  id: CHAPTER_ID,
   nextScenarioFor,
   locationOf,
   isSeaFloorLocation,
+  commitIconMultiplier,
+  assetLeftPlay,
+  canGainResources,
+  enemyWouldBeSetAside,
 }
 
 export {

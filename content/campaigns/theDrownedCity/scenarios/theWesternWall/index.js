@@ -39,7 +39,7 @@ export const behaviorEntryCodes = Object.freeze([
 
 export const manifest = scenarioManifest(scenario, identities, {
   campaignId: 'theDrownedCity',
-  status: 'development',
+  status: 'playable',
   layout,
   requiredPackIds: ['core', 'tdcCampaign'],
   // 只列 core / tdcCampaign 两个包已登记的组 id；Agents of Cthulhu（01181/01182）
@@ -47,6 +47,9 @@ export const manifest = scenarioManifest(scenario, identities, {
   requiredEncounterGroupIds: [
     'theWesternWall', 'cosmicLegacy', 'deepOnes', 'tdcFlood', 'rlyeh',
     'starSpawn', 'theInescapable', 'underseaCreatures',
+    // Agents of Cthulhu（01181/01182）在 core 包；P7 合并时已由 Lead 在
+    // content/packs/manifests.js 的 core.encounterGroupIds 补登记，故这里如实声明。
+    'agentsOfCthulhu',
   ],
   requiredInvestigatorIds: [],
   requiredMechanicIds: [],
@@ -71,11 +74,10 @@ manifest.fiveLevelMap = Object.freeze({
 })
 manifest.initialFlood = FLOOD_SETUP.west
 manifest.dynamicEncounterGroups = Object.freeze([EXPEDITION_GROUP])
-// 集成备注：Agents of Cthulhu（01181/01182）在 core 包里，但 pack.encounterGroupIds 没有登记
-// agentsOfCthulhu；该组仍按 Haskell 进入遭遇牌库，requiredEncounterGroupIds 里暂不声明（否则包门禁报缺组）。
-manifest.requiredEncounterGroupWarnings = Object.freeze([
-  'Agents of Cthulhu 组未在 packs/manifests.js 的 core.encounterGroupIds 登记；需 Lead 决定补登记后再写进 requiredEncounterGroupIds。',
-])
+// 集成备注：Agents of Cthulhu（01181/01182）在 core 包里，P7 合并时已在
+// content/packs/manifests.js 的 core.encounterGroupIds 登记 agentsOfCthulhu，
+// 因此 requiredEncounterGroupIds 如实声明，不再保留缺口警告。
+manifest.requiredEncounterGroupWarnings = Object.freeze([])
 
 export {
   scenario, identities, layout, behavior, CARD_DATA, SCENARIO_TEXT, RESOLUTION_KEYS, RESOLUTION3_CHAPTERS,

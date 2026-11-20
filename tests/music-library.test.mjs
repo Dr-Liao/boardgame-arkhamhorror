@@ -45,6 +45,25 @@ test('配置实时控制顺序、空歌单、自动扫描开关与文件引用�
   write({ [chapter]: ['common/ritual.mp3'] })
   assert.equal(read(chapter).tracks[0].id, 'ritual')
 })
+test('沉没之城旧版默认歌单跟随新版曲目，手动排序和自动扫描开关仍生效', t => {
+  const { root, write, read } = fixture(t)
+  const id = 'theDrownedCity/oneLastJob'
+  const tracks = ['tskNightOnTheDocksSax', 'tskNoGoodLayabout', 'tskKillers']
+  const custom = path.join(root, 'campaigns', id)
+  fs.mkdirSync(custom, { recursive: true })
+  fs.writeFileSync(path.join(custom, '补充.mp3'), 'audio')
+  write({ [id]: { tracks, includeCustom: true } })
+  const saved = fs.readFileSync(path.join(root, 'playlists.json'), 'utf8')
+  assert.deepEqual(read(id).tracks.map(track => track.id), [
+    ...SCENARIO_MUSIC.theDrownedCity.oneLastJob.tracks, `local:campaigns/${id}/补充.mp3`,
+  ])
+  assert.equal(fs.readFileSync(path.join(root, 'playlists.json'), 'utf8'), saved)
+  const reordered = [tracks[2], tracks[0], tracks[1]]
+  write({ [id]: { tracks: reordered, includeCustom: true } })
+  assert.deepEqual(read(id).tracks.slice(0, 3).map(track => track.id), reordered)
+  write({ [id]: { tracks, includeCustom: false } })
+  assert.deepEqual(read(id).tracks.map(track => track.id), tracks)
+})
 test('损坏配置保留有效歌单并提示；越界与链接引用被拒绝', t => {
   const { root, custom, write, read } = fixture(t)
   write({ [chapter]: ['ritual'] }); read(chapter)

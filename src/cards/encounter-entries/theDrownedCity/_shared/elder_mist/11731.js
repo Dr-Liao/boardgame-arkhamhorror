@@ -33,6 +33,15 @@ export default {
     attachedSkillModifiers: { willpower: -1, intellect: -1, combat: -1, agility: -1 },
     discardOnSuccessBy: 2,
   },
+  // 第二轮：Lead 落地「地点附属 modifiers 对同地点调查员生效」读点
+  // （src/engine/modifiers.js#modifierSourceRows 的 locationAttachment 行）。
+  // audience:'here' 让同地点所有调查员命中（不只 controller）；条目仍由 api.attachToLocation 写附属。
+  modifiers: [
+    { target: 'skill:willpower', amount: -1, audience: 'here' },
+    { target: 'skill:intellect', amount: -1, audience: 'here' },
+    { target: 'skill:combat', amount: -1, audience: 'here' },
+    { target: 'skill:agility', amount: -1, audience: 'here' },
+  ],
   encounterResolve(state, inv, card, api) {
     const eligible = (state.locations || [])
       .filter(location => !(location.attachments || []).some(item => (item.originalCode || item.code) === CODE))
@@ -73,6 +82,8 @@ export default {
     },
   }],
   note: '附属位置走 api.mechanics.map.nearest + api.attachToLocation；「成功超过 2 点后弃掉」走 testEnds '
-    + '窗口（result.successBy）与地点附属移除写点。近似：附属地点的 -1 四技能没有引擎读点，'
-    + '已登记 primitive request shared-2（地点附属的 investigator 技能修正），目前只有 flags 数据。',
+    + '窗口（result.successBy）与地点附属移除写点。'
+    + '「附属地点每位调查员 willpower/intellect/combat/agility -1」由条目 modifiers 声明：'
+    + '读点 src/engine/modifiers.js#modifierSourceRows 的 locationAttachment 行（第二轮 Lead 落地），'
+    + 'audience:\'here\' 对同地点所有调查员生效；附属离场后修正随之消失（无新状态字段）。',
 }

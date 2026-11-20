@@ -136,10 +136,22 @@
       "order": 41
     },
     {
+      "id": "encounterCardsLookedAt",
+      "label": "查看遭遇牌时",
+      "kind": "interrupt",
+      "order": 42
+    },
+    {
       "id": "searchWouldResolve",
       "label": "查找牌库之前",
       "kind": "reaction",
       "order": 42
+    },
+    {
+      "id": "ammoSpent",
+      "label": "花费弹药后",
+      "kind": "reaction",
+      "order": 60
     },
     {
       "id": "cardDrawn",
@@ -178,6 +190,12 @@
       "order": 61
     },
     {
+      "id": "encounterCardsDiscardedFromTop",
+      "label": "弃掉遭遇牌库顶的牌后",
+      "kind": "reaction",
+      "order": 61
+    },
+    {
       "id": "investigateSuccess",
       "label": "调查成功后",
       "kind": "reaction",
@@ -194,6 +212,18 @@
       "label": "发现线索前",
       "kind": "interrupt",
       "order": 63
+    },
+    {
+      "id": "gameEnds",
+      "label": "战役结束时",
+      "kind": "reaction",
+      "order": 64
+    },
+    {
+      "id": "resourcesGained",
+      "label": "获得资源后",
+      "kind": "reaction",
+      "order": 64
     },
     {
       "id": "scenarioStarts",
@@ -328,6 +358,12 @@
       "order": 71
     },
     {
+      "id": "assetPlayed",
+      "label": "打出支援后",
+      "kind": "reaction",
+      "order": 72
+    },
+    {
       "id": "eventPlayed",
       "label": "打出一张事件后",
       "kind": "reaction",
@@ -354,6 +390,12 @@
     {
       "id": "afterAlarmRaised",
       "label": "警报等级提高后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "assetAbilityActivated",
+      "label": "支援的行动或免费能力发动后",
       "kind": "reaction",
       "order": 100
     },
@@ -394,6 +436,12 @@
       "order": 100
     },
     {
+      "id": "assignedHarm",
+      "label": "伤害或恐惧完成分配、将要放置时",
+      "kind": "interrupt",
+      "order": 100
+    },
+    {
       "id": "attackFail",
       "label": "攻击失败后",
       "kind": "reaction",
@@ -402,6 +450,12 @@
     {
       "id": "beforeChaosTokenReveal",
       "label": "将要从混乱袋揭示标记时",
+      "kind": "interrupt",
+      "order": 100
+    },
+    {
+      "id": "beforeCommitCards",
+      "label": "将要投入技能牌时",
       "kind": "interrupt",
       "order": 100
     },
@@ -436,6 +490,12 @@
       "order": 100
     },
     {
+      "id": "chaosTokenChanged",
+      "label": "封印、取消或忽略标记后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
       "id": "chaosTokenResolved",
       "label": "祝福或诅咒标记结算后",
       "kind": "reaction",
@@ -450,12 +510,6 @@
     {
       "id": "consecutiveActions",
       "label": "连续两次同类行动后",
-      "kind": "reaction",
-      "order": 100
-    },
-    {
-      "id": "damageHealed",
-      "label": "伤害被治疗后",
       "kind": "reaction",
       "order": 100
     },
@@ -475,6 +529,12 @@
       "id": "doomWouldBePlaced",
       "label": "将要放置毁灭时",
       "kind": "interrupt",
+      "order": 100
+    },
+    {
+      "id": "encounterCardDiscardedFromPlay",
+      "label": "调查员从场上弃掉敌人或诡计后",
+      "kind": "reaction",
       "order": 100
     },
     {
@@ -538,6 +598,12 @@
       "order": 100
     },
     {
+      "id": "handEmptied",
+      "label": "调查员失去最后一张手牌后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
       "id": "harmAssigned",
       "label": "实际受到伤害或恐惧后",
       "kind": "reaction",
@@ -559,6 +625,12 @@
       "id": "investigateFail",
       "label": "调查检定失败后",
       "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "investigationPhaseStarting",
+      "label": "调查阶段开始时（强制）",
+      "kind": "interrupt",
       "order": 100
     },
     {
@@ -589,6 +661,18 @@
       "id": "opportunityAttack",
       "label": "趁乱攻击时",
       "kind": "interrupt",
+      "order": 100
+    },
+    {
+      "id": "parleySuccess",
+      "label": "谈判检定成功后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "performedAction",
+      "label": "完成行动后",
+      "kind": "reaction",
       "order": 100
     },
     {
@@ -800,6 +884,18 @@
       "label": "揭露隐匿迷你卡后",
       "kind": "reaction",
       "order": 410
+    },
+    {
+      "id": "tskCrossSeatAction",
+      "label": "跨座位即时行动授权后",
+      "kind": "reaction",
+      "order": 420
+    },
+    {
+      "id": "damageHealed",
+      "label": "伤害被治愈后",
+      "kind": "reaction",
+      "order": 430
     }
   ],
   "state": {

@@ -162,7 +162,27 @@
         "fhvDuetMusette",
         "fhvAncientMysteryWaltzAllegro",
         "fhvVanes",
-        "fhvMagistar"
+        "fhvMagistar",
+        "tdcCoolVibes",
+        "tdcSmokingGun",
+        "tdcDeepNoise",
+        "tdcDrumsOfTheDeep",
+        "tdcWithTheSea",
+        "tdcAftermath",
+        "tdcSimplex",
+        "tdcSatiate",
+        "tdcCheeZeeCavesV2",
+        "tdcTheChamber",
+        "tdcVulcan",
+        "tdcDragonAndToast",
+        "tdcRiverOfIo",
+        "tdcUndaunted",
+        "tdcHallsOfTheUndead",
+        "tdcTheSecondComingInstrumental",
+        "tdcDisquiet",
+        "tdcDarkDance",
+        "tdcUnlight",
+        "tdcColossus"
       ],
       "includeCustom": true
     },
@@ -1109,6 +1129,121 @@
         "fhvVanes",
         "fhvMagistar",
         "eoteBlackVortex"
+      ],
+      "includeCustom": true
+    },
+    "theDrownedCity": {
+      "tracks": [
+        "tdcCoolVibes",
+        "tskNightOnTheDocksSax",
+        "tdcSmokingGun",
+        "tdcDeepNoise",
+        "ticTheDescent",
+        "tdcDrumsOfTheDeep",
+        "tdcWithTheSea",
+        "tdcAftermath",
+        "ticDeepHaze",
+        "tdcSimplex",
+        "eoteScpX2xUnseenPresence",
+        "tdcSatiate",
+        "tdcCheeZeeCavesV2",
+        "tcuInnerSanctum",
+        "tdcTheChamber",
+        "tdcVulcan",
+        "tcuHiddenWonders",
+        "tdcDragonAndToast",
+        "tdcRiverOfIo",
+        "eoteCrossingTheChasm",
+        "tdcUndaunted",
+        "tdcHallsOfTheUndead",
+        "tcuPhantasm",
+        "tdcTheSecondComingInstrumental",
+        "tdcDisquiet",
+        "tdcDarkDance",
+        "eoteDayOfChaos",
+        "tdcUnlight",
+        "tdcColossus",
+        "eoteDespairAndTriumph"
+      ],
+      "includeCustom": true
+    },
+    "theDrownedCity/oneLastJob": {
+      "tracks": [
+        "tdcCoolVibes",
+        "tskNightOnTheDocksSax",
+        "tdcSmokingGun"
+      ],
+      "includeCustom": true
+    },
+    "theDrownedCity/theWesternWall": {
+      "tracks": [
+        "tdcDeepNoise",
+        "ticTheDescent",
+        "tdcDrumsOfTheDeep"
+      ],
+      "includeCustom": true
+    },
+    "theDrownedCity/theDrownedQuarter": {
+      "tracks": [
+        "tdcWithTheSea",
+        "tdcAftermath",
+        "ticDeepHaze"
+      ],
+      "includeCustom": true
+    },
+    "theDrownedCity/theApiary": {
+      "tracks": [
+        "tdcSimplex",
+        "eoteScpX2xUnseenPresence",
+        "tdcSatiate"
+      ],
+      "includeCustom": true
+    },
+    "theDrownedCity/theGrandVault": {
+      "tracks": [
+        "tdcCheeZeeCavesV2",
+        "tcuInnerSanctum",
+        "tdcTheChamber"
+      ],
+      "includeCustom": true
+    },
+    "theDrownedCity/courtOfTheAncients": {
+      "tracks": [
+        "tdcVulcan",
+        "tcuHiddenWonders",
+        "tdcDragonAndToast"
+      ],
+      "includeCustom": true
+    },
+    "theDrownedCity/obsidianCanyons": {
+      "tracks": [
+        "tdcRiverOfIo",
+        "eoteCrossingTheChasm",
+        "tdcUndaunted"
+      ],
+      "includeCustom": true
+    },
+    "theDrownedCity/sepulchreOfTheSleeper": {
+      "tracks": [
+        "tdcHallsOfTheUndead",
+        "tcuPhantasm",
+        "tdcTheSecondComingInstrumental"
+      ],
+      "includeCustom": true
+    },
+    "theDrownedCity/theDoomOfArkhamPartI": {
+      "tracks": [
+        "tdcDisquiet",
+        "tdcDarkDance",
+        "eoteDayOfChaos"
+      ],
+      "includeCustom": true
+    },
+    "theDrownedCity/theDoomOfArkhamPartII": {
+      "tracks": [
+        "tdcUnlight",
+        "tdcColossus",
+        "eoteDespairAndTriumph"
       ],
       "includeCustom": true
     }

@@ -903,7 +903,7 @@ export const behavior = {
     if (inv.location === OUTSIDERS_LAIR_ID) {
       const only = setAsideHollowCount(state) === 1 && redGlovedManIsHollow(state)
       moves.push({
-        action: 'scenarioAction', rule: 'lairSummonRedGlovedMan', actions: 0, fast: true,
+        action: 'scenarioAction', rule: 'lairSummonRedGlovedMan', actions: 0, fast: true, locationId: inv.location,
         reason: only ? null : '只有「戴红手套的男子」是唯一放一边的空洞时才能使用',
         label: '🧤 把「戴红手套的男子」放入场（置于本地一位调查员的控制下）',
       })
@@ -920,7 +920,7 @@ export const behavior = {
     // 09684 异界的屠杀（议程 3 正面）：[fast] 受到 1 点直接伤害/恐惧：查看一张迷你卡的已揭示面。
     if (state.agendaIndex === 2) {
       moves.push({
-        action: 'scenarioAction', rule: 'agenda3LookMiniCard', actions: 0, fast: true,
+        action: 'scenarioAction', rule: 'agenda3LookMiniCard', actions: 0, fast: true, reactionSourceCode: codeOf(state.agendas?.[state.agendaIndex]),
         reason: flags.agenda3LookRound === state.round ? '团队本轮已经使用过' : null,
         label: '👁️ 受到 1 点直接伤害或 1 点直接恐惧：查看一张隐匿迷你卡的已揭示面（不揭露）',
       })

@@ -17,7 +17,7 @@ import { canLeaveControlledAsset } from './asset-departure.js'
 
 import { currentRevelation, investigationFrameRef } from './resolution-scope.js'
 import { reactionSource } from './reaction-source.js'
-import { syncSpellCredit } from './spell-actions.js'
+import { removeDoomFromCard, setCardDoom } from './act-agenda.js'
 import { setLocationShroudMod } from './location-attachments.js'
 import { loseResources as applyResourceLoss } from './resource-loss.js'
 import { applyPhysicalFace } from './physical-faces.js'
@@ -144,19 +144,6 @@ export function createMiscApi(state, events, deps) {
   const slumberDeps = { entryOf: registeredEntry, isBlanked: deps.enemyTextBlanked }
 
   const doFight = (...args) => doFightRaw(...args)
-
-  // 卡上毁灭标记的唯一写点（setAssetDoom / removeDoomFromCard 共用）：
-  // 移除到阈值以下时回收未使用的法术额度（05006）。
-  const setCardDoom = (card, amount) => {
-    if (!card) return 0
-    const before = card.doom || 0
-    card.doom = Math.max(0, amount)
-    if (card.doom < before) {
-      const owner = (state.investigators || []).find(inv => (inv.assets || []).includes(card))
-      if (owner) syncSpellCredit(state, owner)
-    }
-    return card.doom
-  }
 
   return {
     resolveEmptyUses: () => resolveEmptyUses(state, abilityApi(state, events), registeredEntry),
@@ -312,6 +299,13 @@ export function createMiscApi(state, events, deps) {
       const inv = state.investigators[seat]
       return inv ? resourceBank.bankResources(state, inv, amount, events) : 0
     },
+    // P7 TDC 11756a「好钱」：把资源放在卡上（卡级 resources 计数；任务卡结束判定读同一字段）。
+    placeResourceOnCard: (card, amount = 1) => {
+      if (!card || !Number.isFinite(amount) || amount <= 0) return card?.resources || 0
+      card.resources = (card.resources || 0) + Math.trunc(amount)
+      return card.resources
+    },
+    resourcesOnCard: card => Math.max(0, Number(card?.resources) || 0),
     bankedResources: target => {
       const inv = Number.isInteger(target) ? state.investigators[target]
         : (target?.seat != null ? state.investigators[target.seat] : target)
@@ -575,7 +569,13 @@ export function createMiscApi(state, events, deps) {
     // 敌人自愈（狼人德鲁这类「攻击时治愈 1 点伤害」）。只改实例，不触发击败/胜利结算。
     healEnemy: (enemy, amount = 1) => {
       const target = typeof enemy === 'string' ? state.enemies.find(item => item.id === enemy) : enemy
-      if (target) target.damageTaken = Math.max(0, (target.damageTaken || 0) - amount)
+      if (!target) return 0
+      const before = Number(target.damageTaken) || 0
+      target.damageTaken = Math.max(0, before - Math.max(0, Number(amount) || 0))
+      const healed = before - target.damageTaken
+      // P7 TDC 11727：治疗/离场后重算持续关键词的章节钩子。
+      if (healed > 0) scenarioBehavior(state).enemyHealed?.(state, target, healed, scenarioRuntime(state, events))
+      return healed
     },
     moveEnemy: (enemy, locationId) => enemyPlayerEffectBlocked(state, enemy, slumberDeps)
       ? false : relocateEnemy(state, enemy, locationId, events),
@@ -622,15 +622,8 @@ export function createMiscApi(state, events, deps) {
       if (card) card.exhausted = false
     },
     // 移除一张场上卡上的全部/指定数量毁灭标记（月光仪式这类卡用）。
-    setAssetDoom: (card, amount = 0) => setCardDoom(card, amount),
-    // 「移除任意卡牌上的 N 个毁灭标记」（04303 古代遗物）：地点 / 敌人 / 支援都走同一条写点。
-    removeDoomFromCard: (card, amount = 1) => {
-      if (!card) return 0
-      const removed = Math.min(Math.max(0, Number(amount) || 0), Number(card.doom) || 0)
-      if (!removed) return 0
-      setCardDoom(card, (Number(card.doom) || 0) - removed)
-      return removed
-    },
+    setAssetDoom: (card, amount = 0) => setCardDoom(state, card, amount),
+    removeDoomFromCard: (card, amount) => removeDoomFromCard(state, card, amount),
     addUses: (card, amount) => {
       if (!card) return
       const old = card.uses || 0
@@ -1010,6 +1003,21 @@ export function createMiscApi(state, events, deps) {
       }
       return applied
     },
+    // P7 TDC 11568 玛莉亚·里维拉 [reaction]：把将放在异教徒敌人上的毁灭改为放在剧情资产上（当伤害）。
+    // 条目只经 ctx.api 写状态：本方法是「受控剧情资产受到伤害」的唯一写入口（含击败判定）。
+    damageControlledAsset: (target, amount = 1) => {
+      if (!(amount > 0)) return 0
+      for (const owner of state.investigators || []) {
+        const asset = (owner.assets || []).find(item => item === target || item.id === target
+          || String(item.code) === String(target) || String(item.originalCode) === String(target))
+        if (!asset) continue
+        asset.damage = (asset.damage || 0) + amount
+        info(state, events, `💥 「${cardName(asset.code)}」受到 ${amount} 点伤害。`)
+        checkAssetDefeated(state, owner, asset, events, deps)
+        return amount
+      }
+      return 0
+    },
     // 目标现在还能承接多少伤害/恐惧（条目层用来枚举可移动量）。
     harmRoomOf: (spec = {}) => {
       const seat = Number.isInteger(spec.seat) ? spec.seat : state.currentSeat
@@ -1074,6 +1082,21 @@ export function createMiscApi(state, events, deps) {
     cardFactions: code => {
       const def = cardDef(code)
       return def?.factions || (def?.klass ? [def.klass] : [])
+    },
+    // P7 TDC 11715：从混乱袋中按「指定标记」封印到卡上（[elder_sign] 或最高正数数值标记）。
+    // 读点：chaos-bag 的封印区；内容层只调用本 API，不直写 chaosBag/sealed。
+    sealChaosTokenFromBag: (token, card) => {
+      if (!card?.id || token == null) return null
+      const index = (state.chaosBag || []).indexOf(token)
+      if (index < 0) return null
+      state.chaosBag.splice(index, 1)
+      card.sealedToken = token
+      state.chaos.sealed ||= []
+      state.chaos.sealed.push({ token, source: card.id })
+      state.sealedTokens = state.chaos.sealed.map(entry => entry.token)
+      const seat = Number.isInteger(state._resolvingSeat) ? state._resolvingSeat : state.currentSeat
+      if (Number.isInteger(seat)) abilityApi(state, events).notifyChaosTokenSealed(seat, token)
+      return token
     },
     // Phase 5（5c）：「本回合该敌人的战斗/躲避值 -N」（解剖图）。
     sealRandomChaosToken: card => {

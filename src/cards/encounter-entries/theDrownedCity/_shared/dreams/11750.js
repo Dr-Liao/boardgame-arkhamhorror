@@ -9,10 +9,9 @@
 //   · 威胁区入场 = api.threat；重复副本判重后由引擎弃置；
 //   · 「手牌上限 -3」= 条目 threatEffect.handSizeModifier（stats.js#handSize 对
 //     inv.threat 逐张读 getThreatEffect(card)?.handSizeModifier，getThreatEffect 先读条目 threatEffect）；
+//   · 「最少为 1」= 条目 threatEffect.handSizeMinimum: 1（stats.js#handSize 取各威胁卡 minimum 的最大值，
+//     最终 `Math.max(0, minimum, 计算值)`；只在持有本卡（或其它声明了 minimum 的威胁卡）时生效）；
 //   · 「你的回合结束时若没有手牌」= turnEnded 窗口 + 持有者手牌判定 + api.removeThreat。
-//
-// 近似：引擎 getHandSize 的下限是 0（印刷是至少为 1）；正常牌局（基础上限 8）不会触发下限差异，
-//   只有极端降上限效果叠加时才可能差 1，已在 worker 报告列为近似项。
 const CODE = '11750'
 
 const holderOf = (state, source) => (state?.investigators || [])
@@ -24,7 +23,7 @@ export default {
   scope: 'treachery',
   implemented: true,
   treacheryRule: { threatArea: true },
-  threatEffect: { handSizeModifier: -3 },
+  threatEffect: { handSizeModifier: -3, handSizeMinimum: 1 },
   flags: {
     threatArea: true,
     traits: ['Power'],
@@ -59,6 +58,6 @@ export default {
     },
   }],
   note: '手牌上限 -3 走 threatEffect.handSizeModifier（stats.js#handSize 对威胁区卡逐张读）；'
-    + '回合结束空手弃卡走 turnEnded + api.removeThreat。近似：引擎手牌上限下限为 0（印刷为最少 1），'
-    + '常规牌局不触发差异。',
+    + '「最少为 1」走同函数的 threatEffect.handSizeMinimum: 1（取各威胁卡 minimum 最大值后 Math.max(0, minimum, 计算值)，'
+    + '回合结束弃到上限时按同一 getHandSize 结算）。回合结束空手弃卡走 turnEnded + api.removeThreat。无近似项。',
 }

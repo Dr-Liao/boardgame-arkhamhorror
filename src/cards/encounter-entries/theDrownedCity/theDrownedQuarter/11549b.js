@@ -5,6 +5,6 @@ export default {
   code: '11549b',
   scope: 'storyAsset',
   implemented: true,
-  note: "data-type（双面卡的故事面）。攻击后翻面 → 移动到连接地点（尽可能无调查员）；离场翻面 → 记录符文 [X]（发现「总和」）并把本卡加入胜利区。行为在 behavior.flipUnderseaParasite。",
+  note: "data-type（双面卡的故事面）。攻击后翻面 → 移动到连接地点（尽可能无调查员）；离场翻面 → 记录符文 [X]（发现「总和」）并把本卡加入胜利区。行为在 behavior.flipUnderseaParasite（触发点：enemyAttackResolved / enemyDefeated / enemyLeftPlay）。",
   abilities: [],
 }

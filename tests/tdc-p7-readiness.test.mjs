@@ -36,7 +36,7 @@ test('P7 战役内容包登记现有卡表范围与遭遇组，保持目录内�
   assert.deepEqual(pack.encounterGroupIds, [...groups].sort())
   // P7 内容批次：战役内容包从纯目录升为 development（战役层 handler 已接线），
   // 但卡牌仍是目录身份，不开放构筑。
-  assert.equal(pack.status, 'development')
+  assert.equal(pack.status, 'playable')
   assert.ok(pack.cards.every(card => card.cataloged && !card.rulesImplemented && !card.deckbuilding))
   assert.deepEqual(pack.behaviorIds, ['tdcPrologue', 'tdcInterludes', 'tdcEpilogue'])
 })

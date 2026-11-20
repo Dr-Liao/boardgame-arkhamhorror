@@ -60,7 +60,12 @@ export function effectiveFloodLevel(state, seat, { reduce = 0, immune = false, l
   const target = location ?? inv.location
   const vehicle = Object.values(mechanicState(state)?.vehicles || {}).find(v => v.passengers.includes(seat))
   if (immune || vehicle?.protectsFromFlood && target === inv.location && vehicle.location === target) return 0
-  return Math.max(0, floodLevel(state, target) - integer(reduce))
+  const base = Math.max(0, floodLevel(state, target) - integer(reduce))
+  // P7 TDC 11764：「为结算卡牌效果，你所在地点完全淹没时，你可以视其为部分淹没」。
+  // 条目在受控支援上声明 assetRule.effectiveFloodLevelCap = 1；只影响该控制者读到有效水位的地方。
+  const cap = (inv?.assets || []).map(asset => registeredEntry(asset.code)?.assetRule?.effectiveFloodLevelCap)
+    .find(value => Number.isInteger(value) && value >= 0)
+  return cap == null ? base : Math.min(cap, base)
 }
 export function beginAirTurn(state, seat, { damage = 5, protectedFromAir = false } = {}) {
   integer(damage); const inv = investigatorAt(state, seat)

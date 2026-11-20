@@ -177,7 +177,7 @@
   "allCards": {
     "path": "audit/eote-all-card-acceptance.json",
     "hasLedger": true,
-    "sha256": "e2d520a746ee9333b49df85807649c5a6226ae3b503aab6fa716c6131050c692",
+    "sha256": "8a78abd3b77d903ebb0c639b0d3a4da3cb6fcc866461f17bea977bc5ea800f00",
     "generatedBy": "tools/audit-eote-all-cards.mjs",
     "status": "pending",
     "summary": {

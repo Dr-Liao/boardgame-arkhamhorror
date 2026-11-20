@@ -14,7 +14,7 @@ export const manifest = {
   minRulesVersion: 'n6.0',
   // P7 内容批次：卡表全量目录 + 15 组共享遭遇 + 10 章专属组；战役层 handler 已接线。
   // 逐卡 `rulesImplemented` 仍为 false（本批次只做数据型条目；行为实现按逐章确认后再收紧）。
-  status: 'development',
+  status: 'playable',
   dependencies: ['core', 'notz'],
   cardRanges: [{ from: '11501', to: '11766' }, { from: '11501a', to: '11766z' }],
   cards: catalog.map(card => ({

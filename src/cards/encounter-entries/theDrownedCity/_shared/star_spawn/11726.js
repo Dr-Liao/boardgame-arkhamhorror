@@ -25,6 +25,8 @@ export default {
   name: '感染星之眷族',
   scope: 'enemy',
   implemented: true,
+  // 印刷「无情」：读点 turn.js#resolveEnemyPhase 的 registeredEntry(...).enemyRule.relentless。
+  enemyRule: { relentless: true },
   flags: {
     traits: ['Monster', 'Star Spawn', 'Elite'],
     quantity: 1,

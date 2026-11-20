@@ -9,6 +9,6 @@ export default {
   code: '11709',
   scope: 'storyAsset',
   implemented: true,
-  note: '数据型条目：克苏鲁牌库 action 卡，结算在 behavior.resolveCthulhuCard（近似见 worker 报告）。',
+  note: "数据型条目：结算在 behavior.resolveCthulhuCard：最近[[屋顶]]取 api.mechanics.map.nearest(from, eligible)；在该地点实例上 api.addCardCounter(rooftop,'ruin',1) 落实体废墟标记（api.cardCounterOf 读回计数）；达到 2 个→全员阵亡、弃该地点每名敌人、移除该地点与本卡（demolitionRemoved）；否则将本卡与克苏鲁弃牌堆一起洗回克苏鲁牌库。",
   abilities: [],
 }

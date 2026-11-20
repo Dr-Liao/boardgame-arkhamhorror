@@ -6,6 +6,6 @@ export default {
   scope: 'location',
   implemented: true,
   flags: {"seaFloor":true},
-  note: "data-type（[[海底]]地点，双面：背面 = 海床）。behavior.locationRevealed 执行「进入海床时提高本地点'\n      + '与一处相邻地点的淹没」；本卡其余印刷能力尚未接线（近似）：淹没卫城·短暂遗迹（被洗牌后随机决定是否入场；回合结束后必须提高本地点淹没或受 1 点恐惧；[action] 提高自身淹没降低任意地点淹没，每场两次）。",
+  note: "data-type（[[海底]]地点，双面：背面 = 海床）。已接线：进入海床提高本地点与一处相邻地点的淹没（behavior.locationRevealed）；强制「你在淹没卫城结束回合后：提高其淹没等级，或受到 1 点恐惧」走 behavior.turnEnded（引擎既有 turnEnded 读点）；[action]「提高自身淹没等级：选择任意地点并降低其淹没等级」走 behavior.actions/performAction（每场游戏团队限两次，scenarioFlags 记账）。全部子句已接线。",
   abilities: [],
 }

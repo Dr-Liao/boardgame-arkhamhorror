@@ -11,6 +11,8 @@
 // rule 匹配。地点、敌人、剧情支援赋予的行动不要写进这里——它们用 locationId/enemyId
 // 表达归属，标成幕／密谋会让按钮跑到错误的位置。返回 null 表示这个行动不属于剧本卡。
 
+import { scenarioReactionKey } from '../../web/reaction-preferences.js'
+
 const cardCode = card => card?.originalCode || card?.code || null
 
 function currentCard(state, kind) {
@@ -44,4 +46,15 @@ export function scriptCardOwner(state, move) {
     return card
   }
   return null
+}
+
+// A fast move can target a different card from the one that grants it. Allow an explicit
+// source, otherwise follow the existing script card and board entity ownership fields.
+export function scenarioFastReactionSource(state, move) {
+  if (move.reactionSourceCode) return move.reactionSourceCode
+  const script = currentCard(state, move.scriptCard || scriptCardOwner(state, move))
+  const threat = move.threatId && state.investigators?.flatMap(inv => inv.threat || []).find(card => card.id === move.threatId)
+  const location = move.locationId && state.locations?.find(item => item.id === move.locationId && item.revealed)
+  const enemy = move.enemyId && state.enemies?.find(item => item.id === move.enemyId)
+  return cardCode(script || threat || location || enemy) || scenarioReactionKey(state)
 }

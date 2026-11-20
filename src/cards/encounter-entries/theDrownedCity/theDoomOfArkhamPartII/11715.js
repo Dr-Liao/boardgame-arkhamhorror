@@ -9,6 +9,6 @@ export default {
   code: '11715',
   scope: 'storyAsset',
   implemented: true,
-  note: '数据型条目：克苏鲁牌库 action 卡，结算在 behavior.resolveCthulhuCard（近似见 worker 报告）。',
+  note: "数据型条目：resolveCthulhuCard 用 api.attachToAgenda 把卡以附件实例放在议程旁；先找 [elder_sign]，没有（或被封印）时取混乱袋中最高正数数值标记，再 api.sealChaosTokenFromBag(token, card) 封印到该卡实例（state.chaos.sealed 以 card.id 为 source）；幕推进 behavior.discardHopeFadesCard 用 api.releaseSealedToken(card, token) 放回混乱袋并 api.detachEncounterAttachmentById 移除附件。",
   abilities: [],
 }

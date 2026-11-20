@@ -492,7 +492,7 @@
       "scenario"
     ],
     "windows": {
-      "count": 133,
+      "count": 136,
       "list": [
         "actionResolvedAtLocation",
         "activateFirearmFight",
@@ -537,6 +537,7 @@
         "doomWouldBePlaced",
         "encounterCardDiscardedFromPlay",
         "encounterCardWouldDraw",
+        "encounterCardsDiscardedFromTop",
         "encounterCardsLookedAt",
         "encounterDrawn",
         "enemy.afterAttacks",
@@ -560,6 +561,7 @@
         "evadeSuccess",
         "eventPlayed",
         "floodChanged",
+        "gameEnds",
         "handCardDiscarded",
         "handEmptied",
         "harmAssigned",
@@ -587,6 +589,7 @@
         "performedAction",
         "phaseBegins",
         "promiseBroken",
+        "resourcesGained",
         "revelationTest",
         "revelationTestAlly",
         "roundEnds",

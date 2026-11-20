@@ -497,7 +497,7 @@ export const behavior = {
       const groupClues = aliveInvestigators(state).reduce((sum, other) => sum + (other.clues || 0), 0)
       const noShadows = enemiesInShadows(state) === 0
       moves.push({
-        action: 'scenarioAction', rule: 'advanceWithClues', actions: 0, fast: true,
+        action: 'scenarioAction', rule: 'advanceWithClues', actions: 0, fast: true, reactionSourceCode: codeOf(state.acts[actIndex]),
         reason: !noShadows ? '阴影中仍有敌人' : (groupClues < cost ? `需要 ${cost} 个线索（当前 ${groupClues}）` : null),
         label: `📜 共同支付 ${cost} 个线索推进场景`,
       })
@@ -518,7 +518,7 @@ export const behavior = {
     const here = locationCodeOf(state, inv.location)
     if (here === RAW_CODES.granTeatroDeLaHabana) {
       moves.push({
-        action: 'scenarioAction', rule: 'granTeatroShroud', actions: 0, fast: true,
+        action: 'scenarioAction', rule: 'granTeatroShroud', actions: 0, fast: true, locationId: inv.location,
         reason: (inv.resources || 0) < 2 ? `需要 2 资源（当前 ${inv.resources || 0}）`
           : (inv.granTeatroRound === state.round ? '本回合已经使用过' : null),
         label: '🎭 花费 2 资源：本回合大剧院隐藏值 -2',
@@ -526,14 +526,14 @@ export const behavior = {
     }
     if (here === RAW_CODES.plazaHotel) {
       moves.push({
-        action: 'scenarioAction', rule: 'plazaHotelLook', actions: 0, fast: true,
+        action: 'scenarioAction', rule: 'plazaHotelLook', actions: 0, fast: true, locationId: inv.location,
         reason: (dancingMadFlags(state).plazaHotelRound || 0) === state.round ? '团队本回合已经使用过' : null,
         label: '🏨 受到 1 点恐惧：查看月下餐厅或连接地点一张隐匿迷你卡的已揭示面',
       })
     }
     if (here === RAW_CODES.elMalecon) {
       moves.push({
-        action: 'scenarioAction', rule: 'elMaleconExpose', actions: 0, fast: true,
+        action: 'scenarioAction', rule: 'elMaleconExpose', actions: 0, fast: true, locationId: inv.location,
         reason: (dancingMadFlags(state).elMaleconRound || 0) === state.round ? '团队本回合已经使用过'
           : (concealedAt(state, inv.location).length ? null : '本地没有隐匿迷你卡'),
         label: '🌊 揭露本地另一张隐匿迷你卡（团队每轮一次）',
@@ -541,7 +541,7 @@ export const behavior = {
     }
     if (here === RAW_CODES.jardinesDeLaTropical) {
       moves.push({
-        action: 'scenarioAction', rule: 'jardinesRecall', actions: 0, fast: true,
+        action: 'scenarioAction', rule: 'jardinesRecall', actions: 0, fast: true, locationId: inv.location,
         reason: setAsideHollowCount(state) ? null : '没有放一边的空洞',
         label: '🌿 选择一张放一边的空洞，其所有者将其抽取',
       })

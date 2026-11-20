@@ -29,6 +29,8 @@
 //   · 古代祭坛的「进入前东侧前厅调查员共同花费 4[per_investigator] 线索」缺额外进入费用原语，
 //     只实现「胜利区符文 <3 不能进入」的移动拦截（原语请求已登记）。
 import { registeredEntry } from '../../../../../src/engine/ability.js'
+import { tdcCannotGainUpkeepResources } from '../../campaign-rules.js'
+import { setEnemyKeywords } from '../../../../../src/engine/enemy-keyword-movement.js'
 import { mechanicState } from '../../../../../src/engine/mechanic-state.js'
 import { connectGrid, gridPosition, relocateGridCells } from '../../../../../src/engine/grid-map.js'
 import { changeFloodLevel, floodLevel } from '../../../../../src/engine/flood.js'
@@ -71,6 +73,7 @@ const hasTrait = (value, trait) => (value?.traits || [])
   .some(item => String(item).toLowerCase() === String(trait).toLowerCase())
 const entryFlags = code => registeredEntry(String(code))?.flags || {}
 const flagIs = (code, key) => entryFlags(code)[key] === true
+const flagValue = (value, key) => entryFlags(codeOf(value))[key]
 const randomOf = api => (typeof api?.random === 'function' ? api.random : () => 0.5)
 function localShuffle(list, random) {
   const result = [...list]
@@ -208,6 +211,18 @@ export function prepareScenario(state, api = {}) {
   info(api, `古代议庭：远征队${route === 'west' ? '向西' : '向东'}；大升降机初始在第 ${report.liftLevel} 层；`
     + `幕 2 = ${route === 'west' ? '逃离高塔 v.I' : '逃离高塔 v.II'}。`)
   return report
+}
+
+// ---------------------------------------------------------------------------
+// Good Money「下一章维护阶段不能获得资源」：跨章标记的读点
+// 标记由 theGrandVault 结局用 campaignRuleFlag 写 campaign.ruleFlags.tdcNoUpkeepResources；
+// phases.js 维护阶段获得资源前询问当前章节的 canGainResources。
+// 口径统一：复用 content/campaigns/theDrownedCity/campaign-rules.js 的
+// `tdcCannotGainUpkeepResources(state, inv)`（按 appliesToScenarioIndex + seats 判定；
+// 越章后的 stale 标记无害，无需 preScenarioSetup 清理）。
+// ---------------------------------------------------------------------------
+export function canGainResources(state, inv) {
+  return !tdcCannotGainUpkeepResources(state, inv)
 }
 
 export function preScenarioSetup(state, events, api = {}) {
@@ -525,8 +540,59 @@ export function eliteKeeperKeywordsActive(state) {
   return translatedGlyphCount(state) >= TRANSLATED_GLYPHS_FOR_ELITE
 }
 
-/** 发现/翻译一个符文：写 discoveredGlyphs（string[]），翻译面加入胜利区。 */
-export function translateGlyph(state, sourceCode, api = {}) {
+// ---------------------------------------------------------------------------
+// 11630/11631 动态关键词：已翻译 ≥10 符文时获得（跌破后移除）
+// 引擎读点：api.scenario.setEnemyKeywords（enemy-keyword-movement#editableKeywords 白名单）——
+// 无情/警戒/反击的读点都先读 keywordOverrides，因此内容层只需在正确时机重同步。
+// throughRound 取当前轮：phaseBegan('mythos')（每轮开始）会再同步，越过该轮自动失效，
+// 避免把过期 override 留在实例上。
+// ---------------------------------------------------------------------------
+const KEEPER_KEYWORDS = Object.freeze({
+  [KEEPER_DREAMS_CODE]: Object.freeze(['relentless']),
+  [KEEPER_SLEEP_CODE]: Object.freeze(['alert', 'retaliate']),
+})
+
+export function syncKeeperKeywords(state, api = {}) {
+  const active = eliteKeeperKeywordsActive(state)
+  const throughRound = Number.isInteger(state?.round) ? state.round : 0
+  let changed = 0
+  for (const enemy of state?.enemies || []) {
+    const keywords = KEEPER_KEYWORDS[codeOf(enemy)]
+    if (!keywords) continue
+    const override = enemy.keywordOverrides?.[keywords[0]]
+    if (override && override.enabled === active && override.throughRound >= throughRound) continue
+    setEnemyKeywords(state, enemy, keywords, { enabled: active, throughRound })
+    changed += 1
+  }
+  if (changed && api?.info) {
+    info(api, `议庭守护者：${active ? '已翻译 10+ 符文，获得无情/警戒与反击。' : '符文不足 10 个，失去动态关键词。'}`)
+  }
+  return changed
+}
+
+/** 11630/11631：新生成的议庭守护者立即按当前符文数同步关键词。 */
+export function enemySpawned(state, enemy, api = {}) {
+  void enemy
+  syncKeeperKeywords(state, api)
+}
+
+/** 11630/11631：每轮开始（神话阶段）重新同步，让 throughRound 过期后的关键词恢复。 */
+export function phaseBegan(state, phase, api = {}) {
+  if (phase !== 'mythos') return 0
+  return syncKeeperKeywords(state, api)
+}
+
+/** 11630/11631：胜利区符文变化（消耗/移除）后重新同步。 */
+export function victoryChanged(state, api = {}) {
+  return syncKeeperKeywords(state, api)
+}
+
+/** 发现/翻译一个符文：写 discoveredGlyphs（string[]），翻译面加入胜利区。
+ *
+ * `options.addVictory === false`：敌人 11630/11631 被击败后本身已由引擎放进胜利区，
+ * 不再补故事卡（否则同卡在胜利区出现两次、[skull] 与 XP 重复计）。
+ */
+export function translateGlyph(state, sourceCode, api = {}, { addVictory = true } = {}) {
   const record = GLYPH_RECORDS[String(sourceCode)]
   if (!record) return false
   const records = recordsFor(state)
@@ -534,18 +600,22 @@ export function translateGlyph(state, sourceCode, api = {}) {
   if (records.discoveredGlyphs.includes(record.rune)) return false
   records.discoveredGlyphs.push(record.rune)
   setFlag(state, `courtGlyph:${record.rune}`, true)
-  if (typeof api.addStoryToVictory === 'function') api.addStoryToVictory(String(sourceCode), { sourceId: `glyph:${record.rune}` })
-  else {
-    state.victoryDisplay ||= []
-    if (!state.victoryDisplay.some(entry => codeOf(entry) === String(sourceCode))) {
-      state.victoryDisplay.push({
-        id: `glyph:${record.rune}`, code: String(sourceCode), originalCode: String(sourceCode),
-        name: ALL_CARDS[String(sourceCode)]?.nameZh || String(sourceCode),
-        victory: Number(ALL_CARDS[String(sourceCode)]?.victory) || 1,
-      })
+  if (addVictory) {
+    if (typeof api.addStoryToVictory === 'function') api.addStoryToVictory(String(sourceCode), { sourceId: `glyph:${record.rune}` })
+    else {
+      state.victoryDisplay ||= []
+      if (!state.victoryDisplay.some(entry => codeOf(entry) === String(sourceCode))) {
+        state.victoryDisplay.push({
+          id: `glyph:${record.rune}`, code: String(sourceCode), originalCode: String(sourceCode),
+          name: ALL_CARDS[String(sourceCode)]?.nameZh || String(sourceCode),
+          victory: Number(ALL_CARDS[String(sourceCode)]?.victory) || 1,
+        })
+      }
     }
   }
   info(api, `发现符文 ${record.rune}（${record.wordZh} / ${record.word}）：已翻译 ${translatedGlyphCount(state)} 个。`)
+  // 11630/11631：翻译符文可能跨过「已翻译 ≥10」阈值 → 立即重同步动态关键词。
+  syncKeeperKeywords(state, api)
   return true
 }
 
@@ -638,6 +708,28 @@ export function actions(state, inv) {
       code, label: `检定[${record.test.skill}](${record.test.difficulty})：翻译符文 ${record.rune}（${record.wordZh}）`,
     })
   }
+  // [[通道]]地点 [action]：移动到一处已揭示的[[通道]]地点（11624/11626/11628）。
+  if (flagIs(codeOf(here), 'passageway')) {
+    const targets = (state.locations || []).filter(loc => loc.id !== here.id && loc.revealed === true
+      && hasTrait(loc, 'Passageway'))
+    if (targets.length) {
+      moves.push({
+        action: 'scenarioAction', rule: 'courtMovePassageway', locationId: here.id, actions: 1,
+        targets: targets.map(loc => ({ id: loc.id, label: loc.name })),
+        label: '移动：移动到一处已揭示的[[通道]]地点',
+      })
+    }
+  }
+  // 搜索遭遇弃牌堆里的[[符文]]卡并抽取（11628 [fast] / 11629 [action][action]）。
+  const searchActions = Number(flagValue(here, 'searchDiscardGlyphActions') || 0)
+  if (searchActions > 0) {
+    const discarded = (state.encounterDiscard || []).filter(code => hasTrait(ALL_CARDS[code] || {}, GLYPH_TRAIT))
+    moves.push({
+      action: 'scenarioAction', rule: 'courtSearchDiscardGlyph', locationId: here.id, actions: searchActions,
+      label: `查找遭遇弃牌堆，找出一张[[符文]]卡并抽取（弃牌堆现有 ${discarded.length} 张）`,
+      reason: discarded.length ? null : '遭遇弃牌堆里没有[[符文]]卡',
+    })
+  }
   return moves
 }
 
@@ -654,7 +746,62 @@ export function performAction(state, inv, move, api = {}) {
   if (move.rule === 'courtResign') return resignAction(state, inv, api)
   if (move.rule === 'courtBreakSeal') return breakSealAction(state, inv, api)
   if (move.rule === 'courtTranslateGlyph') return translateOwnGlyphAction(state, inv, move, api)
+  if (move.rule === 'courtMovePassageway') return movePassagewayAction(state, inv, move, api)
+  if (move.rule === 'courtSearchDiscardGlyph') return searchDiscardGlyphAction(state, inv, api)
   return false
+}
+
+/** [[通道]]移动：移动到一处已揭示的[[通道]]地点（引擎通用移动管线）。 */
+export function movePassagewayAction(state, inv, move, api = {}) {
+  const targets = (move?.targets || []).map(target => locationOf(state, target.id)).filter(Boolean)
+  if (!targets.length) return false
+  const picked = typeof api.choose === 'function'
+    ? api.choose({
+      kind: 'location', source: codeOf(locationOf(state, inv.location)) || 'passageway', seat: inv.seat,
+      prompt: '移动到一处已揭示的[[通道]]地点。',
+      options: targets.map(loc => ({ id: loc.id, label: loc.name })),
+    })
+    : targets[0].id
+  const target = targets.find(loc => loc.id === picked) || targets[0]
+  if (typeof api.moveInvestigator === 'function') api.moveInvestigator(inv.seat, target.id)
+  else inv.location = target.id
+  info(api, `${inv.name} 经[[通道]]移动到「${target.name}」。`)
+  return true
+}
+
+/** 查找遭遇弃牌堆里的[[符文]]卡并抽取（11628 [fast] / 11629 [action][action]）。 */
+export function searchDiscardGlyphAction(state, inv, api = {}) {
+  const discard = state.encounterDiscard || (state.encounterDiscard = [])
+  const candidates = discard
+    .map((code, index) => ({ code, index }))
+    .filter(item => hasTrait(ALL_CARDS[item.code] || {}, GLYPH_TRAIT))
+  if (!candidates.length) {
+    info(api, '遭遇弃牌堆里没有[[符文]]卡。')
+    return false
+  }
+  const picked = typeof api.choose === 'function'
+    ? api.choose({
+      kind: 'card', source: codeOf(locationOf(state, inv.location)) || 'searchGlyph', seat: inv.seat,
+      prompt: '从遭遇弃牌堆选择一张[[符文]]卡抽取。',
+      options: candidates.map(item => ({ id: String(item.index), cardCode: item.code, label: cardName(item.code) })),
+    })
+    : candidates[0].index
+  const found = candidates.find(item => String(item.index) === String(picked)) || candidates[0]
+  discard.splice(found.index, 1)
+  if (typeof api.drawEncounter === 'function') {
+    state.encounterDeck ||= []
+    state.encounterDeck.push(found.code)
+    api.drawEncounter(inv.seat)
+  } else {
+    inv.hand ||= []
+    inv.hand.push(found.code)
+  }
+  info(api, `${inv.name} 从遭遇弃牌堆抽取「${cardName(found.code)}」。`)
+  return true
+}
+
+function cardName(code) {
+  return ALL_CARDS[code]?.nameZh || ALL_CARDS[code]?.name || String(code)
 }
 
 function slideLiftDownAction(state, inv) {
@@ -712,61 +859,36 @@ function discardForGlyphAction(state, inv, api = {}) {
   spendGroupClues(state, inv.location, required)
   const deck = state.encounterDeck || (state.encounterDeck = [])
   const count = Math.min(discardCountFor(state), deck.length)
-  const discarded = deck.splice(Math.max(0, deck.length - count), count).reverse()
-  state.encounterDiscard ||= []
-  state.encounterDiscard.push(...discarded)
+  // 弃遭遇牌库顶必须走引擎原语：真弃牌后打开 encounterCardsDiscardedFromTop 窗口，
+  // 11624/11625（[reaction]）/11627（强制）由地点条目 abilities 自行结算，不再在这里 special-case。
+  const discarded = typeof api.discardEncounterTop === 'function'
+    ? api.discardEncounterTop(count, { seat: inv.seat })
+    : discardEncounterTopCards(state, count, api)
   info(api, `从遭遇牌库顶弃掉 ${discarded.length} 张。`)
   const glyphs = discarded.filter(code => hasTrait(ALL_CARDS[code] || {}, GLYPH_TRAIT))
   const omens = discarded.filter(code => hasTrait(ALL_CARDS[code] || {}, 'Omen'))
   if (glyphs.length) drawFromEncounterDiscard(state, inv, glyphs[glyphs.length - 1], api)
   for (const code of omens) drawFromEncounterDiscard(state, inv, code, api)
-  // 地点反应（Archive of the Stars / Ancients / Lofty Walkway Archive of Conflict）：
-  // 简化为对所在地点有对应条目时追加弃牌/移动（近似；见报告）。
-  applyArchiveDiscardReactions(state, inv, discarded.length, api)
   return true
 }
 function drawFromEncounterDiscard(state, inv, code, api = {}) {
   const discard = state.encounterDiscard || (state.encounterDiscard = [])
   const index = discard.lastIndexOf(code)
   if (index >= 0) discard.splice(index, 1)
+  // 第二轮原语：api.drawEncounter(seat, { code, from: 'discard' }) 显式声明「从弃牌堆抽取」，
+  // 让 encounterResolve 的 encounteredFrom 读到 'discard'（11632-11634 的附属分支）。
+  if (typeof api.drawEncounter === 'function') {
+    api.drawEncounter(inv.seat, { code, from: 'discard' })
+    return true
+  }
   state.encounterDeck ||= []
   state.encounterDeck.push(code)
-  if (typeof api.drawEncounter === 'function') api.drawEncounter(inv.seat)
-  else if (ALL_CARDS[code]?.type === 'treachery') discard.push(code)
+  if (ALL_CARDS[code]?.type === 'treachery') discard.push(code)
+  return false
 }
-function applyArchiveDiscardReactions(state, inv, discardedCount, api = {}) {
-  if (!discardedCount) return
-  const here = locationOf(state, inv.location)
-  if (!here) return
-  const code = codeOf(here)
-  if (code === '11624' && (inv.hand || []).length) {
-    // 群星档案库：可弃 1 张手牌，额外弃 2 张。
-    const accept = typeof api.choose === 'function'
-      ? api.choose({
-        kind: 'effect', source: '11624', seat: inv.seat, canSkip: true,
-        prompt: '群星档案库：弃 1 张手牌以额外弃 2 张遭遇牌？',
-        options: [{ id: 'skip', label: '不触发' }, { id: 'trigger', label: '触发' }],
-      }) === 'trigger'
-      : false
-    if (accept) {
-      inv.discard ||= []
-      inv.discard.push(inv.hand.pop())
-      discardEncounterTop(state, 2, api)
-    }
-  } else if (code === '11625') {
-    if (typeof api.horror === 'function') api.horror(inv.seat, 1)
-    else inv.horror = (Number(inv.horror) || 0) + 1
-    discardEncounterTop(state, 3, api)
-  } else if (code === '11627') {
-    const ready = (state.enemies || []).filter(enemy => !enemy.exhausted && !hasTrait(enemy, 'Elite') && enemy.engagedSeat == null)
-    const nearest = ready[0]
-    if (nearest) {
-      nearest.location = here.id
-      info(api, `冲突档案库：最近的未交战非[[精英]]敌人移动到本地点。`)
-    }
-  }
-}
-function discardEncounterTop(state, count, api = {}) {
+// 兼容分支：没有 api.discardEncounterTop 的旧调用方（纯内容层工具/测试桩）仍可弃顶；
+// 引擎路径一律走 api.discardEncounterTop（带 encounterCardsDiscardedFromTop 窗口）。
+function discardEncounterTopCards(state, count, api = {}) {
   const deck = state.encounterDeck || (state.encounterDeck = [])
   const n = Math.min(count, deck.length)
   const cards = deck.splice(Math.max(0, deck.length - n), n).reverse()
@@ -813,16 +935,111 @@ export function investigateResult(state, inv, location, result, api = {}) {
   return false
 }
 
-/** 击败议庭守护者（11630/11631）：发现符文。 */
+/** 击败议庭守护者（11630/11631）：发现符文。
+ *
+ * 返回 false 是必须的：引擎把 enemyDefeated 的 truthy 返回值当作「击败去向被替换」，
+ * 会跳过胜利区结算（11630/11631 有胜利 1，必须走常规胜利区）。
+ * 符文卡本身由引擎放入胜利区，因此 translateGlyph 传 addVictory:false 避免重复计。
+ */
 export function enemyDefeated(state, enemy, api = {}) {
   if (!enemy) return false
   const code = codeOf(enemy)
-  if (code === KEEPER_DREAMS_CODE || code === KEEPER_SLEEP_CODE) return translateGlyph(state, code, api)
+  if (code === KEEPER_DREAMS_CODE || code === KEEPER_SLEEP_CODE) {
+    translateGlyph(state, code, api, { addVictory: false })
+    return false
+  }
+  // 11621 扭曲栈桥 [reaction]：你在本地点击败一名敌人后，从遭遇牌库顶弃 X 张
+  // （X = 该敌人的印刷生命值），抽取其中 1 张[[符文]]卡。
+  if (enemy.location === TWISTING_CATWALKS_ID) {
+    const health = Math.max(0, Number(ALL_CARDS[code]?.health) || 0)
+    if (health > 0) {
+      const discarded = typeof api.discardEncounterTop === 'function'
+        ? api.discardEncounterTop(health, { seat: Number.isInteger(state.currentSeat) ? state.currentSeat : 0 })
+        : discardEncounterTopCards(state, health, api)
+      const glyph = discarded.filter(item => hasTrait(ALL_CARDS[item] || {}, GLYPH_TRAIT)).pop()
+      if (glyph) drawFromEncounterDiscard(state, state.investigators?.[state.currentSeat ?? 0], glyph, api)
+    }
+  }
   return false
 }
 
-export function enemyDefeat(state, enemy, api = {}) {
-  return enemyDefeated(state, enemy, api)
+/**
+ * 敌军阶段开始的章内强制（11637 飞翼守护者）：
+ * 若其处于重整状态且未交战 → 移动到其猎物（[敏捷]最低者）所在地点。
+ */
+export function enemyPhaseStart(state, api = {}) {
+  let moved = 0
+  for (const enemy of state.enemies || []) {
+    if (enemy.defeated) continue
+    const code = codeOf(enemy)
+    if (!flagIs(code, 'phaseStartMoveToPrey')) continue
+    if (enemy.exhausted === true || enemy.engagedSeat != null) continue
+    const prey = lowestAgilityInvestigator(state)
+    if (!prey || prey.location === enemy.location) continue
+    if (typeof api.moveEnemy === 'function') api.moveEnemy(enemy, prey.location)
+    else enemy.location = prey.location
+    info(api, `飞翼守护者移动到猎物「${prey.name}」所在地点「${locationOf(state, prey.location)?.name || prey.location}」。`)
+    moved += 1
+  }
+  return moved > 0
+}
+
+export function lowestAgilityInvestigator(state) {
+  return activeInvestigators(state)
+    .slice()
+    .sort((left, right) => Number(left.agility ?? 0) - Number(right.agility ?? 0))[0] || null
+}
+
+/**
+ * 敌军阶段结束的章内强制（11635 巨型暴君）：
+ * 若其所在地点没有调查员 → 对每处相邻地点上每张有理智值的卡牌造成 1 点直接恐惧。
+ */
+export function enemyPhaseEnd(state, api = {}) {
+  let handled = 0
+  for (const enemy of state.enemies || []) {
+    if (enemy.defeated) continue
+    if (!flagIs(codeOf(enemy), 'enemyPhaseEndDirectHorror')) continue
+    const location = locationOf(state, enemy.location)
+    if (!location) continue
+    if ((state.investigators || []).some(inv => !inv.defeated && !inv.resigned && inv.location === location.id)) continue
+    const adjacent = [...new Set([...(location.connections || [])])]
+    for (const id of adjacent) {
+      const target = locationOf(state, id)
+      if (!target) continue
+      for (const inv of state.investigators || []) {
+        if (inv.defeated || inv.resigned || inv.location !== id) continue
+        if (typeof api.directHorror === 'function') api.directHorror(inv.seat, 1)
+        else if (typeof api.horror === 'function') api.horror(inv.seat, 1)
+        else inv.horror = (Number(inv.horror) || 0) + 1
+        handled += 1
+      }
+      for (const asset of target.assets || []) {
+        if (Number(ALL_CARDS[asset.code]?.sanity) > 0) {
+          asset.horror = (Number(asset.horror) || 0) + 1
+          handled += 1
+        }
+      }
+    }
+  }
+  return handled > 0
+}
+
+/**
+ * 敌人攻击结算后的章内强制（11621 扭曲栈桥）：
+ * 一名位于扭曲栈桥的敌人对你造成伤害和/或恐惧后 → 选择并弃掉你手牌中的 1 张卡牌。
+ */
+export function enemyAttackResolved(state, enemy, inv, api = {}) {
+  if (!enemy || !inv) return false
+  if (enemy.location !== TWISTING_CATWALKS_ID || inv.location !== TWISTING_CATWALKS_ID) return false
+  const hand = inv.hand || []
+  if (!hand.length) return false
+  if (typeof api.discardRandom === 'function') api.discardRandom(inv.seat, 1)
+  else {
+    inv.discard ||= []
+    inv.discard.push(hand.shift())
+  }
+  info(api, `扭曲栈桥：${inv.name} 被敌人攻击后弃掉 1 张手牌。`)
+  return true
 }
 
 // ---------------------------------------------------------------------------
@@ -979,6 +1196,34 @@ export function enemyConnections(state, enemy, location) {
   return [pos.y - 1, pos.y + 1].map(y => locationIdAtCell(state, { x: pos.x, y })).filter(id => id && id !== location.id)
 }
 
+/**
+ * 生成落点钩子（PRIMITIVES.md 已落地的既有引擎读点）：
+ * 11637 飞翼守护者「生成 - 最高层且没有调查员处」。层级 = 网格行 + 1（1–4 层，塔向上生长）；
+ * 「没有调查员」按整层判定（该层任一地点有调查员即跳过），从第 4 层向下找。
+ * 找不到空层时回退 defaultLocation。
+ */
+export function spawnLocation(state, code, defaultLocation, engagedSeat, api = {}) {
+  void engagedSeat
+  void api
+  if (String(code) !== '11637') return defaultLocation
+  const locationsByLevel = new Map()
+  for (const loc of state.locations || []) {
+    const pos = gridPos(state, loc.id)
+    if (!pos) continue
+    const level = Number(pos.y) + 1
+    if (!locationsByLevel.has(level)) locationsByLevel.set(level, [])
+    locationsByLevel.get(level).push(loc)
+  }
+  const occupied = loc => (state.investigators || []).some(inv => inv && !inv.defeated && !inv.resigned && inv.location === loc.id)
+  for (let level = 4; level >= 1; level -= 1) {
+    const locations = locationsByLevel.get(level) || []
+    if (!locations.length) continue
+    if (locations.some(occupied)) continue
+    return locations[0].id
+  }
+  return defaultLocation
+}
+
 export function locationShroudModifier(state, location) {
   if (!location) return 0
   const code = codeOf(location)
@@ -1071,22 +1316,34 @@ export function resolution(state, key, events, api = {}) {
 // 单卡事件（api.resolveScenarioEvent 派发）
 // ---------------------------------------------------------------------------
 export const events = Object.freeze({
-  // 11632/11633/11634 古代秘库/破损星盘仪：附属到所在地点（卡面「从弃牌堆抽取时附属」的近似）。
+  // 11632/11633/11634 古代秘库/破损星盘仪（第二轮接线，PRIMITIVES.md「遭遇抽牌来源」）：
+  //   印刷「显现 - 如果本诡计从遭遇弃牌堆被抽取，将其附属到你所在地点。否则，弃掉本卡牌，其获得涌动。」
+  //   · encounteredFrom === 'discard' → 附属到调查员所在地点，返回 { placed: true } 抑制引擎弃牌；
+  //   · 其余来源（'deck'/'search'/缺省）→ 弃掉（引擎在 placed=false 时弃牌）+ 获得涌动（额外抽 1 张遭遇牌）。
   courtGlyphTreachery(state, payload = {}, api = {}) {
     const code = String(payload.code || '')
     if (!GLYPH_TREACHERY_CODES.includes(code)) return false
     const seat = Number.isInteger(payload.seat) ? payload.seat : (state.currentSeat ?? 0)
     const inv = (state.investigators || [])[seat]
     if (!inv) return false
-    const loc = locationOf(state, inv.location)
-    if (!loc) return false
-    if (typeof api.attachEncounterToLocation === 'function') api.attachEncounterToLocation(code, loc.id)
-    else {
-      loc.attachments ||= []
-      loc.attachments.push({ code, originalCode: code, name: ALL_CARDS[code]?.nameZh || code })
+    const from = String(payload.from || 'deck')
+    const targetLocation = payload.locationId
+      ? locationOf(state, payload.locationId)
+      : locationOf(state, inv.location)
+    if (from === 'discard') {
+      if (!targetLocation) return false
+      if (typeof api.attachEncounterToLocation === 'function') api.attachEncounterToLocation(code, targetLocation.id)
+      else {
+        targetLocation.attachments ||= []
+        targetLocation.attachments.push({ code, originalCode: code, name: ALL_CARDS[code]?.nameZh || code })
+      }
+      info(api, `「${ALL_CARDS[code]?.nameZh || code}」从遭遇弃牌堆抽取：附属到「${targetLocation.name}」（之后可用地点行动翻译）。`)
+      return { placed: true }
     }
-    info(api, `「${ALL_CARDS[code]?.nameZh || code}」附属到「${loc.name}」（之后可用地点行动翻译）。`)
-    return true
+    // 非弃牌堆来源：弃掉本卡并获得涌动（额外抽取 1 张遭遇牌）。
+    info(api, `「${ALL_CARDS[code]?.nameZh || code}」非从弃牌堆抽取：弃掉本卡并获得涌动。`)
+    if (typeof api.drawEncounter === 'function') api.drawEncounter(seat)
+    return false
   },
   // 11636 宇宙预兆：意志(3)（已翻译 ≥10 符文时 +2）；失败后二选一。
   courtCosmicOmen(state, payload = {}, api = {}) {
@@ -1143,18 +1400,29 @@ export const behavior = {
   afterInvestigate,
   investigateResult,
   enemyDefeated,
+  enemyPhaseStart,
+  enemyPhaseEnd,
+  enemyAttackResolved,
+  enemySpawned,
+  phaseBegan,
+  victoryChanged,
   checkObjectives,
   allResigned,
   actReveal,
   agendaReveal,
   enemyStatModifier,
   enemyConnections,
+  spawnLocation,
   locationShroudModifier,
   moveError,
+  canGainResources,
   resolveChaosToken,
   applyTokenEffect,
   resolution,
   events,
+  // 供测试/工具读取：11630/11631 动态关键词同步与阈值读点。
+  syncKeeperKeywords,
+  eliteKeeperKeywordsActive,
 }
 
 export function implementedEntryFlags(code) {

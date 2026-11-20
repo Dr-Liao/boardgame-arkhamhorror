@@ -415,16 +415,14 @@ export const behavior = {
     const moves = []
     const location = here(state, inv)
     if (location) locationRuleFor(codeOf(location))?.actions?.({ moves, state, inv, location })
-    if (inv.assets?.some(asset => !asset.exhausted && entryFlags(codeOf(asset))?.fastAutoEvadeOrderly)) {
-      const engaged = (state.enemies || []).some(enemy => enemy.engagedSeat != null && !enemy.exhausted && codeOf(enemy) === SUSPICIOUS_ORDERLY)
-      if (engaged) {
-        moves.push({
-          action: 'scenarioAction', rule: 'shivaniEvade', actions: 0, fast: true,
-          label: '🩺 横置席瓦妮·马斯沃伦医生：自动躲避与你交战的可疑的护工',
-        })
-      }
-    }
+    const doctor = inv.assets?.find(asset => !asset.exhausted && entryFlags(codeOf(asset))?.fastAutoEvadeOrderly)
+    const canEvade = doctor && (state.enemies || []).some(enemy => enemy.engagedSeat != null && !enemy.exhausted && codeOf(enemy) === SUSPICIOUS_ORDERLY)
+    if (canEvade) moves.push({
+      action: 'scenarioAction', rule: 'shivaniEvade', actions: 0, fast: true, reactionSourceCode: codeOf(doctor),
+      label: '🩺 横置席瓦妮·马斯沃伦医生：自动躲避与你交战的可疑的护工',
+    })
     return moves.filter(move => move.actions === 0 && move.fast === true)
+      .map(move => ({ ...move, reactionSourceCode: move.reactionSourceCode || (location?.revealed ? codeOf(location) : null) }))
   },
 
   performAction(state, inv, move, api) {

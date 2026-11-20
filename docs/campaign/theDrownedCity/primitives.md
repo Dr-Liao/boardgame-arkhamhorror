@@ -31,3 +31,24 @@
 | `mechanics.startingAdjustments.defer(seat, { receipt, scenarioId?, resources?, clues? })` | 给当前调查员登记下次入场的资源或线索调整。指定章节时可跨过其他章节，同一调查员的同一回执只生效一次。替换调查员不会继承该回执。 |
 
 以原创场景和实际事务验证上述读点，运行 `npm run test:tdc:p7`。
+
+## P7 第二轮共享/逐章原语（2026-11-20）
+
+第二轮把上一批 pending 请求里可落引擎的部分落地，并让内容层按「声明即接线」消费：
+
+| 接口 / 声明键 | 行为与读点 | 消费者 |
+| --- | --- | --- |
+| `api.scenario.setEnemyKeywords(enemy, ['hunter'], { enabled, throughRound })` | 可编辑关键词扩展 hunter；turn.js#enemyHasHunter 先读 keywordOverrides，过期自动回印刷值 | 11724 朝圣者领袖（共享） |
+| `threatEffect.cannotTriggerAbilityTraits` / `flags.cannotTriggerCardAbilitiesWithTraits` | 威胁区卡按特性禁止触发 action/free/reaction 能力（forced 不受影响）；读点 ability-rules.js#descriptorUsable | 11752 地狱机械（共享） |
+| 地点附属的 `modifiers`（audience: 'here'） | 附属于地点的卡把修正作用到同地点调查员；读点 modifiers.js#modifierSourceRows | 11731 迷蒙长者（共享） |
+| `scenarioBehavior.enemyLeftPlay(state, enemy, reason, api)` | 敌人非击败离场（discarded/setAside/removed）统一钩子；与 enemyDiscarded 择一消费 | 11549 水下寄生虫、11580 带鳞寄生虫 |
+| `encounterResolve(state, inv, card, api, { location, encounteredFrom })` | 遭遇抽牌来源 deck/discard/search 透传（api.drawEncounter 可用 from 显式声明） | 11632–11634 符文诡计 |
+| `scenarioBehavior.spawnLocation(state, code, defaultLocation, engagedSeat, runtime)` | 生成落点覆盖（最近淹没地点 / 最高层无调查员 / 与猎物交战） | 11605/11606/11637 |
+| `enemyRule.cannotBeDamaged` / `enemyRule.cannotBeExhausted` | 按当前面条目动态读取；换面失效、文本空白失效；读点 enemy-restrictions.js + combat/actions/scenarioRuntime | 11702–11704 克苏鲁部位 |
+| `scenarioBehavior.enemyFaceFlipped(state, enemy, from, to, api)` | api.flipEnemy 换面成功（changed）后的强制窗口 | 11702–11704 翻面强制 |
+| `locationRule.reachConnectingEnemies` | 位于该地点可攻击/躲避直接相连地点的敌人（moves.js 目标枚举 + validateMove） | 11699/11700 屋顶 |
+| `replaceChaosTokens(state, count, mapper, { permanent })` / `lowerChaosToken` / `{ type: 'lowerChaosTokens', count, by }` | 混乱袋按当前内容逐枚降档（-7/-8 与符号不变，战役袋同步） | 幕间 IV Toe the Line |
+| `doomKeptOnAgendaAdvance: 'storyAssets'` | 议程推进时保留剧情资产（神器）上的毁灭 | 11674 城市之下 |
+| flow `choice` 节点 `perInvestigator: true` + `afterChoiceEffects` | 逐 active 调查员询问同一组选项，答案写 flow.history.choices；handler 落账 | Interlude I 领任务 / No Place Like Home 逐人创伤 |
+
+第二轮仍未落地（保持近似并登记在各章 `engine-needs/` 与 `artifacts/migration/tdc/p7/PRIMITIVES.md` 排队区）：storyAsset 主动能力激活（11550/11568/11581/11582/11638/11611）、离开宿主地点的强制检定（11576）、地点条件性移动额外费用（11571）、攻击期间线索加伤（11690/11691a）、星之眷族关键词/猎物覆盖与文本空白（11688）、合成地点 xsky schema、地点不可离场（11648–11652）、地点进入费用（11623）、下一章维护禁资源（11611）、部分结算钩子。

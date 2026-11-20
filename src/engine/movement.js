@@ -12,7 +12,9 @@ import { hunterRouteCandidates } from './enemy-routes.js'
 import { registeredEntries } from './ability.js'
 import { vehicleOf } from './vehicles.js'
 import { checkAirAfterMove } from './flood.js'
+import { enemyIsImmobile } from './enemy-keyword-movement.js'
 import { investigatorConnections } from './location-connections.js'
+import { groupClueTotal, payGroupClueCost } from './group-cost.js'
 import { swarmGroup } from './swarm.js'
 import { applyLocationDefenses, blockKeywordMove } from './location-defenses.js'
 import { withEffectSource } from './effect-provenance.js'
@@ -207,7 +209,7 @@ function dispatchEnemyMovement(state, enemy, from, to, options, events) {
 // Entering a location has the same consequences for an action or a card effect.
 // Action payment and effect-specific disengagement stay with the caller.
 
-function relocateInvestigator(state, seat, locationId, events, message = null, options = {}) {
+function relocateInvestigatorCore(state, seat, locationId, events, message = null, options = {}) {
   seat = effectRecipient(state, state.investigators[seat])?.seat ?? seat
   if (!playerEffectCanAffect(state, seat)) return
   const inv = state.investigators[seat]
@@ -315,18 +317,52 @@ function relocateInvestigator(state, seat, locationId, events, message = null, o
   if (unrevealedText) {
     locationRuleOf(destination)?.beforeEnter?.(state, destination, inv, scenarioRuntime(state, events))
   }
-  // 离开地点的检定由地点卡条目声明（locationRule.onLeave.test），引擎不再按地点 id 分支。
-  const leaveRule = locationRuleOf(prevLoc)?.onLeave || prevLoc?.onLeave
+  // P7 TDC 11623 古代祭坛：进入地点的共同线索费用（在移动前、离开旧地点时由同地点调查员共同支付）。
+  const entryCost = locationRuleOf(destination)?.entryCost
+  if (entryCost?.kind === 'groupClues') {
+    const needed = entryCost.perInvestigator * state.numInvestigators
+    if (groupClueTotal(state, inv, () => true, 'here') < needed) {
+      info(state, events, `🔎 进入「${destination?.name || locationId}」需要同地点调查员共同支付 ${needed} 个线索；当前不足，移动取消。`)
+      return
+    }
+    payGroupClueCost(state, inv, needed, spec => requestChoice(state, spec), () => true, 'here')
+    info(state, events, `🔎 同地点调查员共同支付 ${needed} 个线索，进入「${destination?.name || locationId}」。`)
+  }
+  // 离开地点的检定由地点卡条目声明（locationRule.onLeave.test）；P7 TDC 11576 起，
+  // 附属于地点的遭遇卡也可用 treacheryRule.onLeave 声明同一窗口（结算后可选弃置该附属）。
+  const hostAttachment = (prevLoc?.attachments || []).find(attachment =>
+    registeredEntry(attachment.originalCode || attachment.code)?.treacheryRule?.onLeave) || null
+  const attachmentLeaveRule = hostAttachment
+    ? registeredEntry(hostAttachment.originalCode || hostAttachment.code)?.treacheryRule?.onLeave
+    : null
+  const leaveRule = locationRuleOf(prevLoc)?.onLeave || prevLoc?.onLeave || attachmentLeaveRule
   const leaveDestination = destination
   const leaveTestApplies = leaveRule?.test && (!leaveRule.test.onlyUnrevealedDestination || !leaveDestination?.revealed)
   if (leaveTestApplies) {
-    performTest(state, seat, leaveRule.test.skill, leaveRule.test.difficulty, { source: { label: '离开地点', name: prevLoc.name, code: prevLoc.originalCode || prevLoc.code }, resolve: r => {
+    const skills = Array.isArray(leaveRule.test.skills) && leaveRule.test.skills.length
+      ? leaveRule.test.skills : [leaveRule.test.skill]
+    const skill = skills.length > 1 ? requestChoice(state, {
+      kind: 'leave', source: prevLoc?.originalCode || prevLoc?.code || 'location', seat,
+      prompt: '选择离开地点的检定技能。',
+      options: skills.map(item => ({ id: item, label: item })),
+    }) : skills[0]
+    performTest(state, seat, skill, leaveRule.test.difficulty, { source: { label: '离开地点', name: prevLoc.name, code: prevLoc.originalCode || prevLoc.code }, resolve: r => {
+        // 附属于地点的诡计：无论成功失败，结算后按声明弃置（11576 饥饿的墙壁）。
+        if (leaveRule.discardOnResolve !== false && hostAttachment) {
+          const index = (prevLoc.attachments || []).indexOf(hostAttachment)
+          if (index >= 0) prevLoc.attachments.splice(index, 1)
+          state.encounterDiscard ||= []
+          state.encounterDiscard.push(hostAttachment.originalCode || hostAttachment.code)
+        }
         if (r.success) enter()
         else {
-          inv.location = prevLoc.id
-          const text = leaveRule.cancelMessage || `🌀 「${prevLoc.name}」：${inv.name} 的移动被取消。`
-          info(state, events, text.replaceAll('{name}', inv.name))
-          leaveRule.onFail?.(state, prevLoc, scenarioRuntime(state, events), inv)
+          if (leaveRule.cancelOnFail !== false) {
+            inv.location = prevLoc.id
+            const text = leaveRule.cancelMessage || `🌀 「${prevLoc.name}」：${inv.name} 的移动被取消。`
+            info(state, events, text.replaceAll('{name}', inv.name))
+          } else enter()
+          leaveRule.onFail?.(state, prevLoc, scenarioRuntime(state, events), inv,
+            { skill, success: false, value: r.value, difficulty: leaveRule.test.difficulty })
         }
     } })
   } else {
@@ -342,6 +378,23 @@ function relocateInvestigator(state, seat, locationId, events, message = null, o
     scenarioBehavior(state).locationLeft?.(state, inv, prevLoc, scenarioRuntime(state, events))
     // 第 66 轮：地点卡自己的「离开后」效果（02326 无尽之桥）。
     locationRuleOf(prevLoc)?.onLeave?.effect?.(state, prevLoc, scenarioRuntime(state, events), inv)
+  }
+  // P7 TDC 11571 酸性体腔：从本地点移动到指定目的地的额外费用（必须支付，移动成功后结算）。
+  if (inv.location === locationId && !inv.defeated && !inv.resigned) {
+    const extra = locationRuleOf(prevLoc)?.movementExtraCost
+    const destinationCode = destination?.originalCode || destination?.code
+    const destinationTraits = (destination?.traits || []).map(trait => String(trait).toLowerCase())
+    const matches = extra && ((extra.toOriginalCodes || []).includes(destinationCode)
+      || (extra.toTraits || []).some(trait => destinationTraits.includes(String(trait).toLowerCase())))
+    if (matches) {
+      if (extra.cost.kind === 'damage') {
+        info(state, events, `💥 「${prevLoc.name}」：移动到「${destination?.name || locationId}」的额外费用，${inv.name} 受到 ${extra.cost.amount} 点伤害。`)
+        applyDamage(state, inv, extra.cost.amount, events)
+      } else {
+        info(state, events, `😱 「${prevLoc.name}」：移动到「${destination?.name || locationId}」的额外费用，${inv.name} 受到 ${extra.cost.amount} 点恐惧。`)
+        applyHorror(state, inv, extra.cost.amount, events)
+      }
+    }
   }
   }
   const barriers = state.locations.filter(loc => [inv.location, locationId].includes(loc.id))
@@ -372,6 +425,66 @@ function relocateInvestigator(state, seat, locationId, events, message = null, o
   payBarrier(0)
 }
 
+// P7 TDC 11662 等：「你将要进入本地点时，若不控制 X：花 N 线索或检定[敏捷](D)，失败取消移动」。
+// 条目声明 locationRule.entryToll = { unlessControls?, cost?:{clues}, test?:{skill,difficulty}, cancelOnFail? }；
+// 读点：所有位移（移动行动/卡牌效果/车辆/地点改道）都经本函数，一处声明覆盖全部进入路径。
+function entryTollFor(state, inv, locationId) {
+  const destination = state.locations.find(location => location.id === locationId)
+  const rule = locationRuleOf(destination)?.entryToll
+  if (!rule) return null
+  // P7 TDC 11649/11650：入场费只印在未揭示面——`onlyUnrevealed:true` 时揭示后不再收费。
+  if (rule.onlyUnrevealed === true && destination?.revealed === true) return null
+  const unless = rule.unlessControls == null ? []
+    : (Array.isArray(rule.unlessControls) ? rule.unlessControls : [rule.unlessControls])
+  if (unless.length && inv) {
+    const controlled = [...(inv.assets || []),
+      ...(state.storyAssets || []).filter(asset => asset.controllerSeat === inv.seat)]
+    if (controlled.some(card => unless.map(String).includes(String(card.originalCode || card.code)))) return null
+  }
+  return rule
+}
+
+function relocateInvestigator(state, seat, locationId, events, message = null, options = {}) {
+  seat = effectRecipient(state, state.investigators[seat])?.seat ?? seat
+  if (!playerEffectCanAffect(state, seat)) return
+  const inv = state.investigators[seat]
+  const toll = inv && !inv.defeated && !inv.resigned && inv.location !== locationId && locationExists(state, locationId)
+    ? entryTollFor(state, inv, locationId) : null
+  if (!toll) return relocateInvestigatorCore(state, seat, locationId, events, message, options)
+  const proceed = () => relocateInvestigatorCore(state, seat, locationId, events, message, options)
+  const cost = Number(toll.cost?.clues) || 0
+  const test = toll.test || null
+  const choices = []
+  if (cost > 0 && (inv.clues || 0) >= cost) choices.push({ id: 'pay', label: `花费 ${cost} 个线索` })
+  if (test) choices.push({ id: 'test', label: `检定 ${test.skill || 'agility'}(${test.difficulty})` })
+  const destination = state.locations.find(location => location.id === locationId)
+  if (!choices.length) {
+    info(state, events, `进入「${destination?.name || locationId}」的费用无法支付，移动取消。`)
+    return
+  }
+  const answer = choices.length === 1 ? choices[0].id
+    : requestChoice(state, { kind: 'move', source: 'entryToll', seat,
+      prompt: `进入「${destination?.name || locationId}」：选择支付方式。`, options: choices })
+  if (answer === 'pay') {
+    scenarioRuntime(state, events).spendClues(seat, cost)
+    info(state, events, `支付 ${cost} 个线索进入「${destination?.name || locationId}」。`)
+    proceed()
+    return
+  }
+  if (!test) return
+  performTest(state, seat, test.skill || 'agility', test.difficulty, {
+    source: { label: '进入地点的检定', name: destination?.name || locationId, code: destination?.originalCode || destination?.code },
+    resolve: result => {
+      if (result?.success) { proceed(); return }
+      if (toll.cancelOnFail !== false) {
+        info(state, events, `检定失败：进入「${destination?.name || locationId}」的移动被取消。`)
+        return
+      }
+      proceed()
+    },
+  })
+}
+
 function relocateEnemy(state, enemy, destination, events, options = {}) {
   enemy = enemyBody(state, enemy)
   if (enemy?.hostId) enemy = state.enemies.find(item => item.id === enemy.hostId) || enemy
@@ -398,7 +511,7 @@ function relocateEnemy(state, enemy, destination, events, options = {}) {
   if (enemy.location === destination || !locationExists(state, destination)) return
   if (!enemyCanEnterLocation(state, enemy, destination)) return
   // 「不能移动，也不能被移动」（04337 无形之子）：任何移动来源都被拦住。
-  if (enemy.immobile) {
+  if (enemyIsImmobile(state, enemy)) {
     info(state, events, `⛔ 「${enemy.name}」不能移动，也不能被移动。`)
     return
   }

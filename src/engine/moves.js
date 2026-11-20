@@ -224,6 +224,28 @@ export function createMoves(deps) {
       registeredEntry(card.code)?.threatEffect?.cannotTriggerActionAbilities === true)
   }
 
+  // P7 TDC 11699/11700「你位于此地点时可以如同位于连接地点般攻击或躲避该地点的敌人」：
+  // 地点条目声明 locationRule.reachConnectingEnemies 时，目标枚举与 validateMove 都按
+  // 「同地点或直接相连地点」判定（普通地点只认同地点）。
+  const reachConnectingLocations = (state, inv) => {
+    const here = state.locations.find(location => location.id === inv.location)
+    if (!here || registeredEntry(here.originalCode || here.code)?.locationRule?.reachConnectingEnemies !== true) return null
+    return new Set(here.connections || [])
+  }
+  const enemyInReach = (state, inv, enemy) => enemy.location === inv.location
+    || Boolean(reachConnectingLocations(state, inv)?.has(enemy.location))
+  // P7 TDC 11690/11691a：「在你所在地点的一次攻击期间，花费 1 线索：本次攻击伤害 +1」。
+  // 声明 attackRule.clueDamageBonus = { cost, amount }，可写在当前幕/地点/被攻击敌人条目上。
+  const clueDamageBonusRule = (state, inv, enemy) => {
+    const candidates = [state.acts?.[state.actIndex], enemy,
+      (state.locations || []).find(location => location.id === inv.location)]
+    for (const card of candidates) {
+      const rule = registeredEntry(card?.originalCode || card?.code)?.attackRule?.clueDamageBonus
+      if (rule) return rule
+    }
+    return null
+  }
+
   function legalMoves(state, observerSeat) {
   if (state.status !== 'playing') return []
   if (state.pendingChoice) return choiceMoves(state, observerSeat)
@@ -466,12 +488,20 @@ export function createMoves(deps) {
     }
   }
 
-  for (const enemy of state.enemies.filter(enemy => enemy.location === inv.location)) {
-    if (!enemyIsBody(enemy) && (!enemyRuleFlags(enemy.code).damageOnlyFrom || enemyTextBlanked(state, enemy)) && !hiddenFightBlocked(state, inv, enemy)
+  // P7 TDC 11699/11700「你位于此地点时可以如同位于连接地点般攻击或躲避该地点的敌人」：
+  // 地点条目声明 locationRule.reachConnectingEnemies 时，把直接相连地点的敌人并入目标枚举。
+  const targetEnemies = state.enemies.filter(enemy => enemyInReach(state, inv, enemy))
+  for (const enemy of targetEnemies) {
+    const canFightHere = !enemyIsBody(enemy) && (!enemyRuleFlags(enemy.code).damageOnlyFrom || enemyTextBlanked(state, enemy)) && !hiddenFightBlocked(state, inv, enemy)
       && !enemyCannotBeAttacked(state, enemy, inv.seat) && !aloofPreventsAttack(state, inv, enemy)
       && enemyEffectAllowed(state, enemy, 'fightAction', slumberDeps)
-      && scenarioBehavior(state).canFightEnemy?.(state, inv, enemy) !== false)
+      && scenarioBehavior(state).canFightEnemy?.(state, inv, enemy) !== false
+    if (canFightHere)
       moves.push({ action: 'fight', enemyId: enemy.id, label: `⚔️ 攻击「${enemy.name}」（战斗 vs ${enemyFightValue(state, enemy, inv)}${enemy.retaliate ? '，反击' : ''}）` })
+    const clueBonus = canFightHere ? clueDamageBonusRule(state, inv, enemy) : null
+    if (clueBonus && inv.clues >= clueBonus.cost)
+      moves.push({ action: 'fight', enemyId: enemy.id, clueDamageBonus: true,
+        label: `⚔️ 攻击「${enemy.name}」（花 ${clueBonus.cost} 线索，伤害 +${clueBonus.amount}；战斗 vs ${enemyFightValue(state, enemy, inv)}）` })
     if (!enemyIsBody(enemy) && (!enemyIsPart(enemy) || enemyInEngagement(state, enemy, inv))
       && enemyEffectAllowed(state, enemy, 'evadeAction', slumberDeps)
       && scenarioBehavior(state).canEvadeEnemy?.(state, inv, enemy) !== false)
@@ -946,6 +976,14 @@ export function createMoves(deps) {
       if (!loc || !investigatorConnections(state, inv.location).includes(move.locationId)) return '不能移动到该地点'
       const scenarioMoveError = scenarioBehavior(state).moveError?.(
         state, inv, state.locations.find(l => l.id === move.locationId), move.locationId)
+      // P7 TDC 11623 古代祭坛：进入地点的共同线索费用（validate 与 movement.js 结算同一声明）。
+      const entryCost = registeredEntry(destination?.originalCode || destination?.code)?.locationRule?.entryCost
+      if (entryCost?.kind === 'groupClues') {
+        const needed = entryCost.perInvestigator * state.numInvestigators
+        const total = state.investigators.filter(other => !other.defeated && !other.resigned
+          && other.location === inv.location).reduce((sum, other) => sum + (other.clues || 0), 0)
+        if (total < needed) return `需要同地点调查员共同支付 ${needed} 个线索才能进入`
+      }
       return movementError(state, inv, move.locationId) || investigatorEntryError(state, move.locationId) || scenarioMoveError || null
     }
     case 'entityAbility': {
@@ -1017,8 +1055,13 @@ export function createMoves(deps) {
       if (hiddenFightBlocked(state, inv, enemy)) return '隐私牌禁止你攻击该敌人'
       if (scenarioBehavior(state).canFightEnemy?.(state, inv, enemy) === false) return '当前剧本禁止你攻击该敌人'
       if (aloofPreventsAttack(state, inv, enemy)) return '冷漠敌人未与调查员交战，需要先主动交战（或使用忽略冷漠的攻击）'
-      const canFight = enemy.location === inv.location
+      const canFight = enemyInReach(state, inv, enemy)
       if (!canFight) return '该敌人未与你交战'
+      if (move.clueDamageBonus) {
+        const clueBonus = clueDamageBonusRule(state, inv, enemy)
+        if (!clueBonus) return '当前没有「支付线索增加攻击伤害」的效果'
+        if ((inv.clues || 0) < clueBonus.cost) return '线索不足，无法支付攻击加伤'
+      }
       return null
     }
     case 'evade': {
@@ -1028,7 +1071,7 @@ export function createMoves(deps) {
       if (enemyIsBody(enemy)) return '请选择要躲避的敌人部位'
       if (!enemyEffectAllowed(state, enemy, 'evadeAction', slumberDeps)) return '沉睡的目标免疫调查员行动'
       if (scenarioBehavior(state).canEvadeEnemy?.(state, inv, enemy) === false) return '该敌人不能被躲避'
-      const canEvade = enemyInEngagement(state, enemy, inv)
+      const canEvade = enemyInEngagement(state, enemy, inv) || (!enemyIsPart(enemy) && enemyInReach(state, inv, enemy))
       if (!canEvade) return '该敌人未与你交战'
       return null
     }
@@ -1039,7 +1082,7 @@ export function createMoves(deps) {
       if (enemyIsBody(enemy)) return '请选择要躲避的敌人部位'
       if (!enemyEffectAllowed(state, enemy, 'evadeAction', slumberDeps)) return '沉睡的目标免疫调查员行动'
       if (scenarioBehavior(state).canEvadeEnemy?.(state, inv, enemy) === false) return '该敌人不能被躲避'
-      const canEvade = enemyInEngagement(state, enemy, inv)
+      const canEvade = enemyInEngagement(state, enemy, inv) || (!enemyIsPart(enemy) && enemyInReach(state, inv, enemy))
       if (!canEvade) return '该敌人未与你交战'
       return null
     }

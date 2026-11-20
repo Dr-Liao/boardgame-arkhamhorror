@@ -9,7 +9,8 @@
 //   setupLocations / locationPlaced / afterDeckSetup → 6 张阿卡姆地点入场、放一边区
 //   actions / performAction → 幕 1 谈判（弃罪犯敌人并把线索放上幕）、幕 2 酒馆谈判（把线索放到头目上）、
 //     蒂林哈斯特密所「发现外星语言」
-//   afterInvestigate → 议程「阿卡姆地点最后一个线索被发现后」弃顶 3 张并生成罪犯敌人
+//   11502/11503 的「阿卡姆地点最后一个线索被发现后」由条目 abilities（clueDiscovered 窗口）结算；
+//   afterParley → 11516 谈判破裂：附属敌人攻击该调查员（dispatch.js#dispatchParleyHooks）。
 //   roundEnded / checkObjectives → 幕 1 线索目标、幕 2 头目伤害/线索目标、幕 3 精英在胜利区
 //   actReveal → 幕 1 背面（入酒馆/生成头目/补幕牌库）、幕 2 背面（对手帮派找上门）、幕 3 背面（结局 1）
 //   agendaReveal → 议程背面（生成执行者/洗回遭遇弃牌；或全员被击败 + 肉体创伤 + 无结局）
@@ -19,6 +20,7 @@
 //
 // 本章状态只写 state.scenarioFlags / state.scenarioZones / state.campaign.records（纯 JSON）。
 import { registeredEntry } from '../../../../../src/engine/ability.js'
+import { tdcCannotGainUpkeepResources } from '../../campaign-rules.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { mechanicState } from '../../../../../src/engine/mechanic-state.js'
 import {
@@ -270,6 +272,19 @@ export function actions(state, inv) {
         : (boss ? null : '你所在地点没有帮派头目'),
     })
   }
+  // 幕 3「[action] 从你所在地点一名[[罪犯]]敌人移除 1 个线索：谈判。该敌人把其伤害值造成给
+  // 同地点的另一名敌人。」（11508 flags.gangWarsParley）
+  if (actCode === ACT3_CODE && actFlags(state).gangWarsParley) {
+    const sources = enemiesInPlay(state).filter(enemy => enemy.location === here.id
+      && hasTrait(enemy, 'Criminal') && (Number(enemy.clues) || 0) > 0)
+    const hasOther = (source) => enemiesInPlay(state).some(enemy => enemy.location === here.id
+      && enemy !== source)
+    moves.push({
+      action: 'scenarioAction', rule: 'oneLastJobGangWarsParley', locationId: here.id, actions: 1,
+      label: '谈判：从一名有线索的[[罪犯]]敌人移除 1 个线索，让其对同地点另一名敌人造成等于其伤害值的伤害',
+      reason: sources.some(hasOther) ? null : '你所在地点没有「有线索的罪犯敌人 + 另一名敌人」组合',
+    })
+  }
   // 蒂林哈斯特密所：团队共付 1[per_investigator] 线索记录外星语言（每场游戏限一次）。
   if (here.id === START_LOCATION) {
     const flags = flagsOf(codeOf(here))
@@ -291,6 +306,7 @@ export function actions(state, inv) {
 export function performAction(state, inv, move, api = {}) {
   if (!move || !inv || inv.defeated || inv.resigned) return false
   if (move.rule === 'oneLastJobParley') return parleyAction(state, inv, api)
+  if (move.rule === 'oneLastJobGangWarsParley') return gangWarsParleyAction(state, inv, api)
   if (move.rule === 'oneLastJobBossParley') return bossParleyAction(state, inv, api)
   if (move.rule === 'oneLastJobAlienLanguage') return alienLanguageAction(state, inv, api)
   return false
@@ -311,6 +327,47 @@ function parleyAction(state, inv, api) {
   return true
 }
 
+/** 11508 幕 3 谈判：移除线索 + 让该敌人对同地点另一敌人造成其伤害值的伤害。 */
+function gangWarsParleyAction(state, inv, api) {
+  const here = locationOf(state, inv.location)
+  if (!here) return false
+  const sources = enemiesInPlay(state).filter(enemy => enemy.location === here.id
+    && hasTrait(enemy, 'Criminal') && (Number(enemy.clues) || 0) > 0)
+  if (!sources.length) return false
+  const sourceOptions = sources.map(enemy => ({ id: enemy.id, label: enemy.name || codeOf(enemy) }))
+  const sourceId = typeof api?.choose === 'function'
+    ? api.choose({ kind: 'enemy', source: ACT3_CODE, seat: inv.seat,
+      prompt: '选择移除线索的[[罪犯]]敌人。', options: sourceOptions })
+    : sourceOptions[0].id
+  const source = sources.find(enemy => enemy.id === sourceId) || sources[0]
+  const targets = enemiesInPlay(state).filter(enemy => enemy.location === here.id && enemy !== source)
+  if (!targets.length) return false
+  const targetOptions = targets.map(enemy => ({ id: enemy.id, label: enemy.name || codeOf(enemy) }))
+  const targetId = typeof api?.choose === 'function'
+    ? api.choose({ kind: 'enemy', source: ACT3_CODE, seat: inv.seat,
+      prompt: '选择被该敌人的伤害值命中的另一名敌人。', options: targetOptions })
+    : targetOptions[0].id
+  const target = targets.find(enemy => enemy.id === targetId) || targets[0]
+  if (!target) return false
+  // 移除 1 个线索（takeEnemyClues → 调查员，再 loseClues 归还到池：净移除）。
+  let removed = 0
+  if (typeof api?.takeEnemyClues === 'function') removed = api.takeEnemyClues(source, inv.seat, 1) || 0
+  if (removed && typeof api?.loseClues === 'function') api.loseClues(inv.seat, removed)
+  if (!removed) {
+    // 无运行时 api 时退回直写（behavior 允许写 state；条目仍只走 ctx.api）。
+    source.clues = Math.max(0, (Number(source.clues) || 0) - 1)
+  }
+  const damage = Number(source.damage) || 0
+  if (damage > 0) {
+    if (typeof api?.damageEnemy === 'function') api.damageEnemy(target.id, damage, inv.seat)
+    else target.damageTaken = (Number(target.damageTaken) || 0) + damage
+  }
+  info(api, `${inv.name} 与「${source.name || codeOf(source)}」谈判：移除 1 个线索，`
+    + `该敌人对「${target.name || codeOf(target)}」造成 ${damage} 点伤害。`)
+  syncCriminalAloof(state, api)
+  return true
+}
+
 function bossParleyAction(state, inv, api) {
   const boss = act2ParleySpec(state, inv)
   if (!boss) return false
@@ -323,6 +380,7 @@ function bossParleyAction(state, inv, api) {
       inv.clues -= clues
       boss.clues = (Number(boss.clues) || 0) + clues
       info(api, `${inv.name} 与「${boss.name}」谈判成功 ${successes} 点：把 ${clues} 个线索放到她/他身上。`)
+      syncCriminalAloof(state, api)
     })
     return true
   }
@@ -429,6 +487,31 @@ function act1Back(state, api, code) {
   return true
 }
 
+/**
+ * 11506/11507 幕 2 正面/背面「其上有线索的[[罪犯]]敌人获得冷漠」：
+ * 通过 api.setEnemyKeywords(enemy,['aloof'],{enabled,throughRound}) 同步（enemy-keyword-movement 既有读点）；
+ * phaseBegan / enemySpawned / 线索变动后调用，throughRound=本轮，靠这些时点续期。
+ */
+export function syncCriminalAloof(state, api = {}) {
+  const actCode = currentActCode(state)
+  if (!actFlags(state).criminalCluesGainAloof) return false
+  const setKeywords = api?.setEnemyKeywords || api?.scenario?.setEnemyKeywords
+  let synced = 0
+  for (const enemy of enemiesInPlay(state)) {
+    if (!hasTrait(enemy, 'Criminal')) continue
+    const enabled = (Number(enemy.clues) || 0) > 0
+    if (typeof setKeywords === 'function') {
+      ;(api?.setEnemyKeywords ? api : api.scenario).setEnemyKeywords(enemy, ['aloof'],
+        { enabled, throughRound: Number(state.round) || 0 })
+    } else {
+      enemy.aloof = enabled
+      enemy.printedAloof = enemy.printedAloof === undefined ? Boolean(enemy.aloof) : enemy.printedAloof
+    }
+    synced += 1
+  }
+  return synced > 0
+}
+
 function act2Back(state, api, code) {
   const isSheldonAct = code === ACT2_SHELDON_CODE
   const here = isSheldonAct ? 'hibbsRoadhouse' : 'laBellaLuna'
@@ -437,14 +520,66 @@ function act2Back(state, api, code) {
   spawnAt(state, rivalBossCode, here, api)
   spawnAt(state, GANG_ENFORCER_CODE, here, api)
   spawnAt(state, GANG_SOLDIER_CODE, here, api)
+  // 领队从遭遇牌库找到帮派士兵并生成在酒馆（引擎 encounter 管线由 api.drawEncounter/setAside 处理；
+  // 直接调用按 spawAt 生成，保持与参考 findEncounterCard+createEnemyAt 等价的目标状态）。
   const boss = enemiesInPlay(state).find(enemy => GANG_BOSS_CODES.includes(codeOf(enemy)))
+  const leadSeat = state.campaign?.leadSeat ?? state.currentSeat ?? 0
   if (boss && (Number(boss.clues) || 0) >= 1) {
     const rival = enemiesInPlay(state).find(enemy => codeOf(enemy) === rivalBossCode)
-    if (rival) rival.damageTaken = (Number(rival.damageTaken) || 0) + 2
+    if (rival && typeof api?.damageEnemy === 'function') api.damageEnemy(rival.id, 2, leadSeat)
+    // 领队选择移动至多 2 个线索到同地点另一名非精英敌人（EnemyAt location, NonEliteEnemy）。
+    const others = enemiesInPlay(state).filter(enemy => enemy.location === here && enemy !== boss
+      && !enemy.elite && !GANG_BOSS_CODES.includes(codeOf(enemy)))
+    const maxMove = Math.min(2, Number(boss.clues) || 0, others.length ? Number(boss.clues) || 0 : 0)
+    if (others.length && maxMove > 0) {
+      const options = Array.from({ length: maxMove + 1 }, (_, amount) => ({
+        id: String(amount), label: amount === 0 ? '不移动线索' : `移动 ${amount} 个线索`,
+      }))
+      const picked = typeof api?.choose === 'function'
+        ? api.choose({ kind: 'choice', source: code, seat: leadSeat,
+          prompt: '欧巴尼恩帮/谢尔顿帮：选择从帮派头目身上移动到另一名非精英敌人的线索数量（至多 2）。', options })
+        : String(maxMove)
+      const amount = Math.max(0, Math.min(maxMove, Number(picked) || 0))
+      for (let moved = 0; moved < amount; moved += 1) {
+        const targetOptions = others.map(enemy => ({
+          id: enemy.id, label: enemy.name || codeOf(enemy),
+        }))
+        const targetId = typeof api?.choose === 'function'
+          ? api.choose({ kind: 'enemy', source: code, seat: leadSeat,
+            prompt: '选择另一名位于本地点的非精英敌人接收 1 个线索。', options: targetOptions })
+          : targetOptions[0]?.id
+        const target = others.find(enemy => enemy.id === targetId) || others[0]
+        if (!target) break
+        let movedClues = 0
+        if (typeof api?.takeEnemyClues === 'function' && typeof api?.moveClueToEnemy === 'function') {
+          movedClues = api.takeEnemyClues(boss, leadSeat, 1) || 0
+          if (movedClues > 0) {
+            api.moveClueToEnemy(target, { from: 'investigator', seat: leadSeat })
+            if (typeof api?.loseClues === 'function') api.loseClues(leadSeat, movedClues)
+          }
+        }
+        if (!movedClues) break
+      }
+    }
   }
   for (const enemy of enemiesInPlay(state)) if ((Number(enemy.clues) || 0) > 0) enemy.engagedSeat = null
-  info(api, `幕 2 背面：${rivalName} 与帮手找上门（${here}）；盟友帮派战争升级。`)
+  syncCriminalAloof(state, api)
+  info(api, `幕 2 背面：${rivalName} 与帮手找上门（${here}）；线索已按印刷转移，有线索的[[罪犯]]敌人获得冷漠。`)
   return true
+}
+
+/** 敌人生成：有线索的[[罪犯]]敌人冷漠保持同步。 */
+export function enemySpawned(state, enemy, api = {}) {
+  void enemy
+  syncCriminalAloof(state, api)
+  return false
+}
+
+/** 阶段开始：有线索的[[罪犯]]敌人冷漠保持同步（throughRound=本轮，逐阶段续期）。 */
+export function phaseBegan(state, phase, api = {}) {
+  void phase
+  syncCriminalAloof(state, api)
+  return false
 }
 
 function act3Back(state, api) {
@@ -491,49 +626,26 @@ function agenda2Back(state, api) {
   return true
 }
 
-// ---------------------------------------------------------------------------
-// 议程反应：阿卡姆地点最后一个线索被发现后弃顶 3 张 + 生成罪犯敌人
-// ---------------------------------------------------------------------------
-const ARKHAM_LAST_CLUE_AGENDAS = Object.freeze([AGENDA1_CODE, AGENDA2_CODE])
-
-export function afterInvestigate(state, inv, location, result = null, api = {}) {
-  if (agendaFlags(state).arkhamLastClue !== true) return false
-  if (!location || !hasTrait(location, 'Arkham')) return false
-  if ((Number(location.clues) || 0) > 0) return false
-  const handled = new Set(flagValue(state, 'oneLastJobLastClueHandled') || [])
-  const key = `${currentAgendaCode(state)}:${location.id}`
-  if (handled.has(key)) return false
-  handled.add(key)
-  setFlag(state, 'oneLastJobLastClueHandled', [...handled])
-  const discarded = typeof api.discardEncounterTop === 'function'
-    ? api.discardEncounterTop(3)
-    : (() => {
-      const cards = []
-      for (let index = 0; index < 3; index += 1) {
-        if (!(state.encounterDeck || []).length) break
-        cards.push(state.encounterDeck.pop())
-      }
-      state.encounterDiscard = [...(state.encounterDiscard || []), ...cards]
-      return cards
-    })()
-  const criminals = (discarded || []).filter(entry => {
-    const card = ALL_CARDS[typeof entry === 'string' ? entry : codeOf(entry)] || {}
-    return card.type === 'enemy' && hasTrait(card, 'Criminal')
-  })
-  const nearestEmpty = (state.locations || []).find(item => item.id !== location.id
-    && (item.clues || 0) === 0 && !(state.enemies || []).some(enemy => enemy.location === item.id))
-  const spawnLocationId = nearestEmpty?.id || location.id
-  const spawned = criminals.map(entry => spawnAt(state, typeof entry === 'string' ? entry : codeOf(entry), spawnLocationId, api))
-  info(api, `议程反应（${location.name}最后一个线索）：弃掉 ${(discarded || []).length} 张，`
-    + `生成 ${spawned.length} 名[[罪犯]]敌人。`)
-  void inv
-  void result
-  return spawned.length > 0 || (discarded || []).length > 0
-}
 
 // ---------------------------------------------------------------------------
 // 回合/目标
 // ---------------------------------------------------------------------------
+/** 11516 谈判破裂：一位调查员在本地点谈判后，附属敌人攻击该调查员（dispatch.js 既有钩子）。 */
+export function afterParley(state, inv, enemy, api = {}) {
+  if (!inv || inv.defeated || inv.resigned) return false
+  const candidates = enemy ? [enemy] : (state.enemies || []).filter(item => item.location === inv.location)
+  let attacked = 0
+  for (const target of candidates) {
+    if (!target || !state.enemies?.includes(target) || target.defeated) continue
+    const attached = (target.attachments || []).some(item => codeOf(item) === '11516')
+    if (!attached) continue
+    safeCall(api, 'attack', target, inv)
+    attacked += 1
+  }
+  if (attacked) info(api, `谈判破裂：${attacked} 名被附属的[[罪犯]]敌人攻击${inv.name}。`)
+  return attacked > 0
+}
+
 export function checkObjectives(state, api = {}) {
   if (state.status && state.status !== 'playing') return false
   const code = currentActCode(state)
@@ -580,6 +692,118 @@ export function roundEnded(state, api = {}) {
 // ---------------------------------------------------------------------------
 // 数值修正
 // ---------------------------------------------------------------------------
+/** 11513 帮派执行者：每轮首次「同地点调查员攻击另一名[[罪犯]]敌人」后重整并攻击该调查员。 */
+/** 11511 内奥米·欧巴尼恩：每轮首次被成功躲避后重整；同地点任一调查员可受 1 伤害取消。 */
+export function afterEvade(state, inv, enemy, result = null, api = {}) {
+  if (!enemy || codeOf(enemy) !== '11511') return false
+  void result
+  const key = `${enemy.id}:${Number(state.round) || 0}`
+  const handled = new Set(flagValue(state, 'oneLastJobNaomiRounds') || [])
+  if (handled.has(key)) return false
+  handled.add(key)
+  setFlag(state, 'oneLastJobNaomiRounds', [...handled])
+  const candidates = activeInvestigators(state).filter(item => item.location === enemy.location)
+  let prevented = false
+  if (candidates.length && typeof api?.choose === 'function') {
+    const options = candidates.map(item => ({
+      id: String(item.seat), label: `${item.name} 受到 1 点伤害，以取消重整`,
+    }))
+    options.push({ id: 'none', label: '不取消（内奥米重整）' })
+    const pick = api.choose({ kind: 'choice', source: '11511', seat: inv?.seat ?? 0,
+      prompt: '内奥米首次被躲避：是否有调查员受到 1 点伤害以取消她的重整？', options })
+    const target = state.investigators?.[Number(pick)]
+    if (pick !== 'none' && target && target.location === enemy.location && !target.defeated) {
+      safeCall(api, 'damage', target.seat, 1)
+      prevented = true
+    }
+  }
+  if (!prevented) {
+    enemy.exhausted = false
+    info(api, '内奥米·欧巴尼恩本轮首次被躲避：重整她。')
+  }
+  return true
+}
+
+export function enemyAttackedSuccessfully(state, inv, enemy, api = {}) {
+  if (!enemy || !inv || !hasTrait(enemy, 'Criminal')) return false
+  const enforcer = (state.enemies || []).find(item => codeOf(item) === GANG_ENFORCER_CODE
+    && item !== enemy && item.location === enemy.location)
+  if (!enforcer) return false
+  const key = `${enforcer.id}:${Number(state.round) || 0}`
+  const handled = new Set(flagValue(state, 'oneLastJobEnforcerRounds') || [])
+  if (handled.has(key)) return false
+  handled.add(key)
+  setFlag(state, 'oneLastJobEnforcerRounds', [...handled])
+  enforcer.exhausted = false
+  safeCall(api, 'attack', enforcer, inv)
+  info(api, `帮派执行者：${inv.name} 攻击另一名罪犯敌人后，执行者重整并攻击。`)
+  return true
+}
+
+/** 11514 帮派线人：发现线索后必须花费 3 资源或在当前议程放 1 毁灭。 */
+export function cluesGained(state, inv, amount, api = {}) {
+  if (!inv || Number(amount) <= 0) return false
+  const informant = (state.enemies || []).find(item => codeOf(item) === GANG_INFORMANT_CODE
+    && !item.exhausted && item.location === inv.location)
+  if (!informant) return false
+  const resources = Number(inv.resources) || 0
+  const options = []
+  if (resources >= 3) options.push({ id: 'spend', label: '花费 3 个资源' })
+  options.push({ id: 'doom', label: '在当前议程上放置 1 个毁灭标记' })
+  const choice = typeof api?.choose === 'function'
+    ? api.choose({ kind: 'choice', source: GANG_INFORMANT_CODE, seat: inv.seat,
+      prompt: '帮派线人：花费 3 个资源，或在当前议程上放置 1 个毁灭标记。', options })
+    : (resources >= 3 ? 'spend' : 'doom')
+  if (choice === 'spend' && resources >= 3) {
+    safeCall(api, 'loseResources', inv.seat, 3)
+    info(api, `帮派线人：${inv.name} 花费 3 个资源。`)
+  } else {
+    if (typeof api?.addDoom === 'function') api.addDoom(1)
+    else state.doom = (Number(state.doom) || 0) + 1
+    info(api, `帮派线人：${inv.name} 在当前议程上放置 1 个毁灭标记。`)
+  }
+  return true
+}
+
+/** 无图距离原语时的本地 BFS（连接图；不可达不计，按地点列表顺序稳定取第一个最近）。 */
+function nearestByConnections(state, from, eligible) {
+  const locations = state.locations || []
+  if (!from) return null
+  const seen = new Set([from])
+  const queue = [from]
+  while (queue.length) {
+    const current = queue.shift()
+    const location = locations.find(item => item.id === current)
+    if (!location) continue
+    const neighbors = [...(location.connections || [])]
+    for (const id of neighbors) {
+      if (seen.has(id)) continue
+      seen.add(id)
+      const candidate = locations.find(item => item.id === id)
+      if (candidate && eligible(candidate)) return candidate.id
+      queue.push(id)
+    }
+  }
+  return null
+}
+
+/** 11514 生成：最近的、有线索的[[阿卡姆]]地点（api.mechanics.map.nearest；无原语时本地 BFS）。 */
+export function spawnLocation(state, code, fallback, engagedSeat, api = {}) {
+  if (String(code) !== GANG_INFORMANT_CODE) return fallback
+  const eligible = location => Boolean(location) && hasTrait(location, 'Arkham')
+    && (Number(location.clues) || 0) > 0
+  const from = (state.investigators || [])[engagedSeat]?.location || fallback
+  if (from && typeof api?.mechanics?.map?.nearest === 'function') {
+    const [nearest] = api.mechanics.map.nearest(from, eligible)
+    if (nearest) return nearest
+  }
+  const fromLocation = (state.locations || []).find(location => location.id === from)
+  if (eligible(fromLocation)) return fromLocation.id
+  const byGraph = nearestByConnections(state, from, eligible)
+  if (byGraph) return byGraph
+  return fallback
+}
+
 export function enemyStatModifier(state, enemy, stat) {
   const code = codeOf(enemy)
   if (code === '11510') {
@@ -698,6 +922,8 @@ export const events = {
 
 export const behavior = {
   id: CHAPTER_ID,
+  // Good Money（11611）跨章限制：campaign.ruleFlags.tdcNoUpkeepResources 命中时补给阶段不获得资源。
+  canGainResources: (state, inv) => !tdcCannotGainUpkeepResources(state, inv),
   startLocation,
   locationsStartRevealed: true,
   roundEndActIndex: 0,
@@ -709,12 +935,19 @@ export const behavior = {
   afterDeckSetup,
   actions,
   performAction,
-  afterInvestigate,
   checkObjectives,
+  afterParley,
+  enemySpawned,
+  phaseBegan,
+  syncCriminalAloof,
   roundEnded,
   actReveal,
   agendaReveal,
   enemyStatModifier,
+  enemyAttackedSuccessfully,
+  afterEvade,
+  cluesGained,
+  spawnLocation,
   resolveChaosToken,
   chaosTokenValue,
   applyTokenEffect,

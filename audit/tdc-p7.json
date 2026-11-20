@@ -353,7 +353,7 @@
         }
       ],
       "sourceGuideParagraphs": 26,
-      "scenarioStatus": "development",
+      "scenarioStatus": "playable",
       "definition": "registered",
       "guideStatus": "ready",
       "guide": "web/scenario-guides/oneLastJob.json"
@@ -505,7 +505,7 @@
         }
       ],
       "sourceGuideParagraphs": 83,
-      "scenarioStatus": "development",
+      "scenarioStatus": "playable",
       "definition": "registered",
       "guideStatus": "ready",
       "guide": "web/scenario-guides/theWesternWall.json"
@@ -647,7 +647,7 @@
         }
       ],
       "sourceGuideParagraphs": 56,
-      "scenarioStatus": "development",
+      "scenarioStatus": "playable",
       "definition": "registered",
       "guideStatus": "ready",
       "guide": "web/scenario-guides/theDrownedQuarter.json"
@@ -837,7 +837,7 @@
         }
       ],
       "sourceGuideParagraphs": 126,
-      "scenarioStatus": "development",
+      "scenarioStatus": "playable",
       "definition": "registered",
       "guideStatus": "ready",
       "guide": "web/scenario-guides/theApiary.json"
@@ -981,7 +981,7 @@
         }
       ],
       "sourceGuideParagraphs": 73,
-      "scenarioStatus": "development",
+      "scenarioStatus": "playable",
       "definition": "registered",
       "guideStatus": "ready",
       "guide": "web/scenario-guides/theGrandVault.json"
@@ -1152,7 +1152,7 @@
         }
       ],
       "sourceGuideParagraphs": 73,
-      "scenarioStatus": "development",
+      "scenarioStatus": "playable",
       "definition": "registered",
       "guideStatus": "ready",
       "guide": "web/scenario-guides/courtOfTheAncients.json"
@@ -1360,7 +1360,7 @@
         }
       ],
       "sourceGuideParagraphs": 123,
-      "scenarioStatus": "development",
+      "scenarioStatus": "playable",
       "definition": "registered",
       "guideStatus": "ready",
       "guide": "web/scenario-guides/obsidianCanyons.json"
@@ -1461,7 +1461,7 @@
         }
       ],
       "sourceGuideParagraphs": 54,
-      "scenarioStatus": "development",
+      "scenarioStatus": "playable",
       "definition": "registered",
       "guideStatus": "ready",
       "guide": "web/scenario-guides/sepulchreOfTheSleeper.json"
@@ -1565,7 +1565,7 @@
         }
       ],
       "sourceGuideParagraphs": 45,
-      "scenarioStatus": "development",
+      "scenarioStatus": "playable",
       "definition": "registered",
       "guideStatus": "ready",
       "guide": "web/scenario-guides/theDoomOfArkhamPartI.json"
@@ -1754,14 +1754,14 @@
         }
       ],
       "sourceGuideParagraphs": 78,
-      "scenarioStatus": "development",
+      "scenarioStatus": "playable",
       "definition": "registered",
       "guideStatus": "ready",
       "guide": "web/scenario-guides/theDoomOfArkhamPartII.json"
     }
   ],
   "unscopedScenarioIds": [],
-  "campaignPackStatus": "development",
+  "campaignPackStatus": "playable",
   "campaignFlowRegistered": true,
   "flowCoverage": {
     "explicit": true,
@@ -1784,14 +1784,14 @@
     "infrastructure": {
       "command": "npm run test:tdc:p7",
       "report": "artifacts/migration/tdc/p7/targeted-parallel-final.log",
-      "sha256": "c27c141dfcca56fb661346405ddc48e93dc1a4010daa1cd6133a00fd8fb1ab25",
-      "cases": 139
+      "sha256": "65d0462505912be9a7bfc1997db1d2a55099a9654f0d3489cac91e0f91725e5b",
+      "cases": 157
     },
     "fast": {
       "report": "artifacts/migration/tdc/p7/fast-final-verified.log",
-      "sha256": "7712b7fc999a9e654b76d8c0649552b5ea865d3e83eaea187a2563d70817569a",
-      "tests": 8892,
-      "pass": 8889,
+      "sha256": "62a8dc5f1001932e9443834fddc2529857188c226ae374d298791cbd8f0db71a",
+      "tests": 9051,
+      "pass": 9048,
       "fail": 0,
       "cancelled": 0,
       "skipped": 3

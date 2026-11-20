@@ -1,5 +1,7 @@
 import { registeredEntry } from './ability.js'
 import { enemyBody } from './enemy-parts.js'
+import { floodLevel } from './flood.js'
+import { ALL_CARDS } from '../cards/cards-data.js'
 
 export function enemyProtectionBlocks(state, inv, enemy, kind) {
   if (!inv || !enemy) return false
@@ -38,10 +40,16 @@ export function enemyCanEnterLocation(state, enemy, destination) {
   // 共用本函数，所以一处声明覆盖「进入」与「生成」两条路径；生成落点的改换由
   // enemies.js#spawnEnemy 读取 locationRule.enemySpawnRedirect 处理。
   if (registeredEntry(location?.originalCode || location?.code)?.locationRule?.enemiesCannotEnter === true) return false
+  // P7 TDC obsidianCanyons 11641/11642：「非弱点敌人可进出开阔天空」——弱点敌人不能进入/生成在开阔天空。
+  const locationRule = registeredEntry(location?.originalCode || location?.code)?.locationRule
+  if (locationRule?.weaknessEnemiesCannotEnter === true
+    && String(ALL_CARDS[enemy?.originalCode || enemy?.code]?.subtype || '').toLowerCase().includes('weakness')) return false
   // 「不能进入[[洞穴]]地点」（07164b/07165b 魔鬼礁石的骇物）：禁止类特性。
   const banned = rule?.cannotEnterTraits
   if (banned?.length && location && banned.some(trait => location.traits?.some(value =>
     String(value).toLowerCase() === String(trait).toLowerCase()))) return false
+  // 「不能进入/生成在未淹没地点」（P7 TDC 11605 深潜者）：进入/生成/猎人移动共用本函数。
+  if (rule?.enterOnlyFlooded === true && location && floodLevel(state, location.id) <= 0) return false
   const required = rule?.enterOnlyTraits
   if (!required?.length) return true
   return !!location && required.some(trait => location.traits?.some(value =>

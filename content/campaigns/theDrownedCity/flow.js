@@ -123,7 +123,14 @@ function fixedScenarioNodes () {
     oneLastJob: make('oneLastJob', 'interludeOne', 'opening'),
     sepulchreOfTheSleeper: make('sepulchreOfTheSleeper', 'sepulchreAftermath', 'sepulchre'),
     theDoomOfArkhamPartI: make('theDoomOfArkhamPartI', 'theDoomOfArkhamPartII', 'doom1'),
-    theDoomOfArkhamPartII: make('theDoomOfArkhamPartII', 'doomAftermath', 'doom2'),
+    // 进入 Part II 时补算 Part I 无结局的「每人随机搜一张 Injury/Madness 基础弱点」：
+    // 参考实现挂在 Part I 的 NoResolution 结算里，但该关 behavior 把弱点补入留给战役层
+    // （见 scenarios/theDoomOfArkhamPartI/behavior.js 注释），因此由场景节点进入效果结算；
+    // 处理器只在 `scenarioResults` 里 Part I 的结局是 noResolution 时生效（幂等：同批去重）。
+    theDoomOfArkhamPartII: {
+      ...make('theDoomOfArkhamPartII', 'doomAftermath', 'doom2'),
+      effects: [registered(INTERLUDE_HANDLER_ID, 'doomWeaknesses')],
+    },
   }
 }
 
@@ -131,6 +138,10 @@ function fixedScenarioNodes () {
 // 3. 路线路由（`stepReturn`）：按路线记录 + 已完成关卡 + 两条结局跳章选下一关
 // ---------------------------------------------------------------------------
 export const ROUTE_ROUTER_ID = 'routeRouter'
+const skipDrownedQuarter = { type: 'record', key: 'theDrownedQuarterWasSkipped', value: true }
+const needsExpedition = scenarioId => scenarioId === 'theDrownedQuarter'
+  ? allOf(notOf(completedScenario(scenarioId)), notOf(hasRecord('theDrownedQuarterWasSkipped')))
+  : notOf(completedScenario(scenarioId))
 
 function shortcutRules () {
   return [
@@ -161,12 +172,12 @@ export const ROUTE_ROUTER_RULES = Object.freeze([
   ...shortcutRules(),
   ...TDC_WEST_ROUTE.map(scenarioId => ({
     id: `west:${scenarioId}`,
-    when: allOf(headedWest(), notOf(completedScenario(scenarioId))),
+    when: allOf(headedWest(), needsExpedition(scenarioId)),
     next: scenarioId,
   })),
   ...TDC_EAST_ROUTE.map(scenarioId => ({
     id: `east:${scenarioId}`,
-    when: allOf(headedEast(), notOf(completedScenario(scenarioId))),
+    when: allOf(headedEast(), needsExpedition(scenarioId)),
     next: scenarioId,
   })),
 ])
@@ -198,7 +209,7 @@ function shortcutNodes () {
         {
           id: 'apiary',
           label: '前往养育场（The Apiary）',
-          effects: [registered(INTERLUDE_HANDLER_ID, 'routeShortcut', { from: 'theWesternWall', to: 'theApiary' })],
+          effects: [skipDrownedQuarter, registered(INTERLUDE_HANDLER_ID, 'routeShortcut', { from: 'theWesternWall', to: 'theApiary' })],
           next: 'theApiary',
         },
       ],
@@ -217,7 +228,7 @@ function shortcutNodes () {
         {
           id: 'westernWall',
           label: '攀墙返回营地：前往西墙（The Western Wall）',
-          effects: [registered(INTERLUDE_HANDLER_ID, 'routeShortcut', { from: 'theApiary', to: 'theWesternWall' })],
+          effects: [skipDrownedQuarter, registered(INTERLUDE_HANDLER_ID, 'routeShortcut', { from: 'theApiary', to: 'theWesternWall' })],
           next: 'theWesternWall',
         },
       ],
@@ -357,7 +368,7 @@ export function rawTdcFlowNodes () {
     ...doomNodes(),
     ...clone(epilogueNodes()),
     [ROUTE_ROUTER_ID]: routeRouterNode(),
-    campaignLostEnd: { type: 'end', outcome: 'campaignLost' },
+    campaignLostEnd: { type: 'end', outcome: 'defeat' },
     [TDC_END_STEP]: { type: 'end', outcome: 'campaignComplete' },
   }
 }

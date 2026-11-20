@@ -31,7 +31,7 @@ import { mapGeometry, hunterRouteEdges, MAP_CARD_WIDTH, MAP_CARD_HEIGHT } from '
 import { createTablePresentation } from './table-presentation.js'
 import { tableIcon, classIcon, cardAttachmentReferences, cardMarkerData, cardCounterMarkerData, placedCardMarkers } from './table-components.js'
 import { choicePresentation, entityMoves, mountCardInteractions, cancelTableGesture, handUnavailableReason, investigatorHoldsCard } from './card-interactions.js'
-import { setReactionEnabled, reactionChoices, reactionView, reactionAutoPlan, reactionState, setReactionState, reactionStates, reactionPrefsSeq, defaultReactionState, hydrateReactionStates } from './reaction-preferences.js'
+import { setReactionEnabled, reactionChoices, reactionView, reactionAutoPlan, reactionState, setReactionState, reactionStates, reactionPrefsSeq, defaultReactionState, hydrateReactionStates, scenarioReactionKey } from './reaction-preferences.js'
 import { presentationAttributes, campaignPlaylistId } from './campaign-presentation.js'
 import { captureScrollState, restoreScrollWhenMounted } from './scroll-state.js'
 // 第 4 步 P5：万象无终的专用交互面板（塔罗抽牌 / 序章选人 / 闹鬼来源 / 地点标记 / 多技能检定）。
@@ -162,10 +162,12 @@ function scheduleReactionPass(session) {
   if (!pass) return false
   if (!pass.submit) return true
   const { choice, key } = pass
-  if (key === lastReactionPass) return state.movePending?.sessionId === session.sessionId
-  lastReactionPass = key
+  // 联机确认与快照分开到达。已提交的窗口保持隐藏，直到新快照或确实提交失败。
+  if (key === lastReactionPass?.key) return !lastReactionPass.failed
+  const attempt = { key, failed: false }
+  lastReactionPass = attempt
   queueMicrotask(() => {
-    if (key !== lastReactionPass || state.session?.sessionId !== session.sessionId
+    if (attempt !== lastReactionPass || state.session?.sessionId !== session.sessionId
         || state.session.state.revision !== session.state.revision) return
     // 排队期间又忙起来（别人的行动先到）：这次不提交，等忙碌结束的那次渲染重新排队。
     if (state.busy || presentation.isBlocking || !canAct(session, choice.seat)) {
@@ -176,22 +178,27 @@ function scheduleReactionPass(session) {
     // 排队期间玩家可能改了开关：按最新状态重算，只有仍可自动结算才提交。
     const fresh = reactionAutoPlan(state.session, choice.seat, true)
     if (!fresh?.move || fresh.choice.id !== choice.id) { lastReactionPass = null; return }
-    cardMove(fresh.move, state.session, { auto: true })
+    cardMove(fresh.move, state.session, { auto: true, reactionPass: attempt })
   })
   return true
 }
 
 // 卡面、详情和角色面板共用反应提示开关。
-function renderReactionToggle(s, code) {
-  if (!s) return null
-  const def = ahCardDef(s, code)
-  if (!def.hasReactionPrompt && !def.hasAutoReaction) return null
-  const seat = s.observerSeat ?? s.players.find(player => player.role === 'human')?.seat
+function renderReactionToggle(s, code, reference = null) {
+  if (!s || !code || (s.online && !Number.isInteger(s.mySeat ?? s.observerSeat))) return null
+  const seat = mySeat(s)
   const inv = s.state.investigators.find(inv => inv.seat === seat)
+  if (!inv) return null
+  const def = ahCardDef(s, code)
   // 2026-10-28：手牌/场上之外，「如同手牌」通道里的卡（直觉区揭示那张、下方、背包/原定计划
   // 附属、宿主附属）也要显示开关，开关按 cardCode 生效（ask=提示，skip=本局不再询问）。
-  if (!inv || !investigatorHoldsCard(inv, s.state, code)) return null
-  return renderReactionModeButton(s, seat, code, def)
+  if ((def.hasReactionPrompt || def.hasAutoReaction) && investigatorHoldsCard(inv, s.state, code)) {
+    return renderReactionModeButton(s, seat, code, def)
+  }
+  if (!reference) return null
+  const source = [reference.originalCode, code].find(key => key &&
+    (s.state.reactionPromptCodes?.includes(key) || reactionState(s.sessionId, seat, key)))
+  return source ? renderReactionModeButton(s, seat, source, { name: cardDisplayName(reference) || cardDisplayName(def) }) : null
 }
 
 // 三态按钮：skip → ask → auto → skip。一个命中区，图标随状态变化：
@@ -204,11 +211,8 @@ const REACTION_MODE_KEY = { skip: 'game.reaction.mode.skip', ask: 'game.reaction
 const REACTION_MODE_TITLE_KEY = { skip: 'game.reaction.mode.skip.title', ask: 'game.reaction.mode.ask.title', auto: 'game.reaction.mode.auto.title' }
 // 两态卡（无 auto 档）沿用「开启/关闭」的 hover 文案；三态卡的标题在 ask 档会说明下一档是 auto。
 const REACTION_TOGGLE_TITLE_KEY = { skip: 'game.reaction.off.title', ask: 'game.reaction.on.title' }
-function reactionModeOf(s, seat, code) {
-  return reactionState(s.sessionId, seat, code) ?? defaultReactionState(ahCardDef(s, code))
-}
 function renderReactionModeButton(s, seat, code, def) {
-  const raw = reactionModeOf(s, seat, code)
+  const raw = reactionState(s.sessionId, seat, code) ?? defaultReactionState(def)
   const mode = !def.hasAutoReaction && raw === 'auto' ? 'ask' : raw
   const next = (def.hasAutoReaction ? REACTION_MODE_NEXT : REACTION_MODE_NEXT_NO_AUTO)[mode]
   // 三态卡说明当前档位与下一档；两态卡就是开关，读屏用 switch + aria-checked。
@@ -216,7 +220,7 @@ function renderReactionModeButton(s, seat, code, def) {
   const title = threeWay ? t(REACTION_MODE_TITLE_KEY[mode]) : t(REACTION_TOGGLE_TITLE_KEY[mode])
   const ariaLabel = threeWay
     ? t('game.reaction.mode.aria', { state: t(REACTION_MODE_KEY[mode]), next: t(REACTION_MODE_KEY[next]) })
-    : t('game.reaction.aria', { name: cardDisplayName(ahCardDef(s, code)) || code })
+    : t('game.reaction.aria', { name: cardDisplayName(def) || code })
   return h('button', {
     className: `ah-reaction-mode is-${mode}`,
     type: 'button',
@@ -301,7 +305,7 @@ export function createUI(host) {
       hydrateReactionStates(session, mySeat(session))
       syncReactionPreferences(session)
       const autoPassing = scheduleReactionPass(session)
-      session = reactionView(session)
+      session = reactionView(session, mySeat(session))
       tableSession = session
       const previous = document.querySelector('.ah-table')
       const scroll = previous?.dataset.sessionId === session.sessionId ? captureScrollState(previous) : []
@@ -877,7 +881,8 @@ function renderLocationDetail(detail) {
   const enemies = st.enemies.filter(enemy => enemy.location === loc.id && !enemy.partOf)
   const attachments = [...locationAttachments(s, loc), ...(st.storyAssets || []).filter(asset => asset.location === loc.id).map(asset => ({...ahCardDef(s,asset.code),...asset}))]
   return h('div', { className: 'ah-location-dossier' },
-    h('header', {}, h('small', {}, t('game.location.header')),h('h2', {},loc.name),h('span', {className:'ah-location-state'},loc.revealed ? t('game.location.revealed') : t('game.location.hidden'))),
+    h('header', {}, h('small', {}, t('game.location.header')),h('h2', {},loc.name),h('span', {className:'ah-location-state'},loc.revealed ? t('game.location.revealed') : t('game.location.hidden')),
+      renderReactionToggle(s, loc.code || loc.originalCode, loc)),
     h('div',{className:'ah-location-detail-layout'},
       h('div',{className:'ah-location-detail-art'},
         loc.encounterBack && !front
@@ -960,7 +965,7 @@ function renderCardDetailModal(detail) {
       detail.locationId ? renderLocationDetail(detail) : renderDetailContent(
         h, detail, renderFullCard, render, viewSession()?.state, cardDetailCustomizationChecks(state.session, detail)),
       !detail.locationId ? renderRuntimeCardState(detail) : null,
-      !detail.locationId ? renderReactionToggle(viewSession(),detail.def.code) : null,
+      !detail.locationId ? renderReactionToggle(viewSession(), detail.def.code || detail.code, detail.def) : null,
       !detail.locationId && detail.interactionKey && state.session && !presentation.isBlocking && !state.session.state.pendingChoice &&
         canAct(state.session, state.session.state.currentSeat) && entityMoves(state.session.state, detail.interactionKey).length
         ? h('button', { className: 'ah-action', disabled: state.busy, onclick: () => {
@@ -1132,6 +1137,7 @@ async function cardMove(move, displayedSession, options = {}) {
       setTimeout(() => { if (state.arkhamAcceptedFx === feedback) { state.arkhamAcceptedFx = null; render() } }, 900)
     }
   } catch (e) {
+    if (options.reactionPass) options.reactionPass.failed = true
     if (sameSession()) {
       const fresh = e.session
       // 这条提交之后用户点过「强制同步」：权威状态已由同步恢复，晚到的失败不能让界面回退。
@@ -1636,9 +1642,10 @@ function renderCardGame(s, autoPassing = false) {
 
   const script = tableRegions.script(st, actInPlay ? act : null, agenda, s.players, actInPlay ? renderActAdvance(s, humanTurn) : null, activity, renderScriptActions(s, humanTurn), {
     act: scriptAttachmentCards(s, st.scriptAttachments?.act), agenda: scriptAttachmentCards(s, st.scriptAttachments?.agenda) },
-    h('button', { type: 'button', className: 'ah-scenario-setup-button', 'data-scenario-setup': 'true', 'aria-haspopup': 'dialog',
+    [h('button', { type: 'button', className: 'ah-scenario-setup-button', 'data-scenario-setup': 'true', 'aria-haspopup': 'dialog',
       'aria-expanded': String(scenarioSetupView.opened), title: t('table.setup.title'),
       onclick: () => scenarioSetupView.open(s.sessionId) }, t('table.setup')),
+    renderReactionToggle(s, scenarioReactionKey(st), st.scenario)],
     agendaAsideCards(s, st.agendaAside))
   const map = tableRegions.map(renderLocationMap(s, humanTurn))
   const player = tableRegions.player(human ? renderPlayerDock(s, human, humanTurn) : null)
@@ -1930,7 +1937,7 @@ function renderMiniCard(s, reference, exhausted, opts = {}) {
     ondragend: draggable ? () => clearCardDrag() : null,
   },
     tableArt(h, d.originalCode || ahArtCode(s, code), cd.name, { unloadOffscreen: !!opts.unloadOffscreen }),
-    renderReactionToggle(s,code),
+    renderReactionToggle(s, code, d),
     h('div', { className: 'ah-minicard-cost' }, cd.cost != null ? cd.cost : ''),
     cd.xp ? h('div', { className: 'ah-minicard-xp' }, '✦' + cd.xp) : null,
     cd.isWeakness ? h('div', { className: 'ah-minicard-weakness' }, '⚠') : null,
@@ -2535,6 +2542,7 @@ function renderEnemyChip(s, e, { map = false } = {}) {
     onkeydown: event => { if (event.key === 'Enter') { if (choiceMove && !state.busy) cardMove(choiceMove, s); else openCardDetail(s, e) } },
     onclick: () => { if (choiceMove && !state.busy) cardMove(choiceMove, s); else openCardDetail(s, e) } },
     tableArt(h, e.originalCode || e.code, e.name),
+    renderReactionToggle(s, e.code || e.originalCode, e),
     placedCardMarkers(h, e, { enemy: true }),
     h('div', { className: 'ah-enemy-name' }, (e.hunter ? '🐺 ' : '👹 ') + e.name + (e.doom ? ' 🌑' + e.doom : '')),
     h('div', { className: 'ah-enemy-stats' },

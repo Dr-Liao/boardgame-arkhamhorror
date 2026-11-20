@@ -27,6 +27,8 @@ import { mechanicState } from '../../../../../src/engine/mechanic-state.js'
 import { connectGrid, configureGrid, gridPosition, adjacentGridSpaces, rotateGridPorts } from '../../../../../src/engine/grid-map.js'
 import { requestCurrentAgendaRevert } from '../../../../../src/engine/agenda-advance-frame.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
+import { discardEncounterAttachment } from '../../../../../src/engine/scenario-decks.js'
+import { tdcCannotGainUpkeepResources } from '../../campaign-rules.js'
 import {
   CHAPTER_ID, REFERENCE_CODE, START_LOCATION, START_LOCATION_IDS, LOCATIONS, LOCATION_IDS, LOCATION_CODE,
   LOCATION_OPTIONS, IMMOVABLE_LOCATION_IDS, SUMMIT_LOCATION_IDS, EXPEDITIONS, ACT_CODE_BY_BRANCH,
@@ -37,6 +39,7 @@ import {
   OBSIDIAN_CLAW_SPEED_CODE, OBSIDIAN_CLAW_POWER_CODE, OBSIDIAN_CLAW_CODES,
   PRIMEVAL_TERROR_CODE, STAR_VAMPIRE_CODE, GLYPH_BY_LOCATION, SKY_RELIC_GLYPH, ERODED_FRIEZE_GLYPH,
   ENCOUNTER_DECK, encounterDeckForBranch, RESOLUTION_KEYS,
+  OPEN_SKY_NAME, OPEN_SKY_NAME_EN, OPEN_SKY_TRAITS,
 } from './definition.js'
 import {
   isHardSide, stormIntensity, setStormIntensity, increaseStormIntensity, decreaseStormIntensity, skullValue,
@@ -236,12 +239,22 @@ export function gridRowForDiagramRow(state, diagramRow) {
   return rowOccupants(state, row).length ? row : null
 }
 
+/** 「不能被移动或离场」：读条目 locationRule（与引擎 swapLocation/removeLocationFromGame 同一份声明）。 */
+export function locationCannotLeavePlay(state, id) {
+  const location = locationOf(state, id)
+  if (!location) return false
+  const rule = entryOf(location.originalCode || location.code)?.locationRule || {}
+  if (rule.cannotLeavePlay === true || rule.cannotBeMoved === true) return true
+  // 兼容直调/未注册条目：definition 的 immovable 选项等价。
+  return LOCATION_OPTIONS[id]?.immovable === true
+}
+
 function isSlidableLocation(state, id) {
   const location = locationOf(state, id)
   if (!location) return false
   if (location.openSky === true || String(location.code) === OPEN_SKY_CODE) return true
-  if (IMMOVABLE_LOCATION_IDS.includes(id)) return false
-  if (LOCATION_OPTIONS[id]?.immovable) return false
+  // 印刷：「每处开阔天空和[[峰顶]]地点」；「不能移动」的地点由引擎/条目声明排除（不在此硬编码）。
+  if (locationCannotLeavePlay(state, id)) return false
   if (location.revealed === false && LOCATION_OPTIONS[id]?.summit) return true
   return hasTrait(location, 'Summit')
 }
@@ -263,16 +276,19 @@ export function openSkyPool(state) {
   return flags.openSkyPool
 }
 
-function makeOpenSkyLocation(state, id, cell) {
-  const card = { name: 'Open Sky', nameZh: '开阔天空' }
-  const location = {
-    id, code: OPEN_SKY_CODE, originalCode: OPEN_SKY_CODE, name: card.nameZh, nameEn: card.name,
-    shroud: 0, clues: 0, maxClues: 0, revealed: true, openSky: true, traits: [],
-    connections: [], symbolLinks: [], attachments: [], damage: 0, horror: 0, resources: 0, doom: 0,
+/** 把一张合成开阔天空地点（openSkyN / code xsky）放进网格并揭示。 */
+export function placeOpenSkyAt(state, id, cell, api = {}) {
+  const placed = placeLocationInGrid(state, id, cell, api, { revealed: true })
+  if (!placed) return null
+  const location = locationOf(state, id)
+  if (location) {
+    location.revealed = true
+    location.clues = 0
+    location.name = OPEN_SKY_NAME
+    location.nameEn = OPEN_SKY_NAME_EN
+    location.traits = [...OPEN_SKY_TRAITS]
   }
-  state.locations ||= []
-  state.locations.push(location)
-  writeGridCell(state, id, cell)
+  syncConnections(state)
   return location
 }
 
@@ -280,20 +296,96 @@ function makeOpenSkyLocation(state, id, cell) {
 export function placeOpenSky(state, cell, api = {}) {
   const pool = openSkyPool(state)
   const id = pool.shift()
-  if (id) return makeOpenSkyLocation(state, id, cell)
+  if (id) return placeOpenSkyAt(state, id, cell, api)
   const adapter = summitAdapter(state, api)
   const top = adapter.cards?.() || []
   const sky = [...top].reverse().find(card => String(card).startsWith('openSky'))
-  if (sky) {
-    adapter.remove?.(sky)
-    return makeOpenSkyLocation(state, sky, cell)
+  if (!sky) return null
+  adapter.remove?.(sky)
+  return placeOpenSkyAt(state, sky, cell, api)
+}
+
+/** 议程正面强制：调查员所在地点将要离场时 → 移动到任意[[中央]]地点并受 2 点直接伤害。 */
+export function evacuateLocation(state, locationId, api = {}) {
+  const location = locationOf(state, locationId)
+  if (!location) return []
+  const here = activeInvestigators(state).filter(inv => inv.location === locationId)
+  if (!here.length) return []
+  const central = (state.locations || []).filter(other => other.id !== locationId
+    && !isOpenSky(other) && hasTrait(other, 'Central') && other.revealed !== false)
+  const fallback = (state.locations || []).find(other => other.id !== locationId && !isOpenSky(other))
+  const moved = []
+  for (const inv of here) {
+    let target = central[0]?.id || fallback?.id || null
+    if (typeof api?.choose === 'function' && central.length > 1) {
+      const choice = api.choose({ kind: 'location', source: '11639-agenda', seat: inv.seat,
+        prompt: '你的地点将要离场：选择任意[[中央]]地点。',
+        options: central.map(other => ({ id: other.id, label: other.name })) })
+      target = central.find(other => other.id === String(choice))?.id || target
+    }
+    if (!target) {
+      if (typeof api?.defeat === 'function') api.defeat(inv, 'physical')
+      else inv.defeated = true
+      moved.push({ seat: inv.seat, target: null, defeated: true })
+      continue
+    }
+    inv.location = target
+    if (typeof api?.damage === 'function') api.damage(inv.seat, 2)
+    else inv.damage = (Number(inv.damage) || 0) + 2
+    moved.push({ seat: inv.seat, target, damage: 2 })
   }
-  return null
+  return moved
+}
+
+/** 地点离场前：把带 leavesPlayTo 声明的遭遇附属交给引擎统一路由（11664 → setAside，而不是遭遇弃牌堆）。 */
+function routeLeavingAttachments(state, locationId) {
+  const location = locationOf(state, locationId)
+  if (!location?.attachments?.length) return false
+  let routed = false
+  for (const attachment of [...location.attachments]) {
+    const code = codeOf(attachment)
+    if (entryOf(code)?.leavesPlayTo) {
+      discardEncounterAttachment(state, attachment, code)
+      location.attachments = location.attachments.filter(item => item !== attachment)
+      routed = true
+    }
+  }
+  return routed
 }
 
 export function removeLocationToSummitTop(state, locationId, api = {}, { victoryClause = true } = {}) {
   const location = locationOf(state, locationId)
   if (!location) return false
+  if (locationCannotLeavePlay(state, locationId)) return false
+  evacuateLocation(state, locationId, api)
+  routeLeavingAttachments(state, locationId)
+  // 地点自身声明 leavesPlayTo（11662「若将离场，放在一边（没有线索则进胜利区）」）。
+  const locationEntry = entryOf(location.originalCode || location.code)
+  if (locationEntry?.leavesPlayTo === 'setAside' || locationEntry?.leavesPlayTo === 'victory') {
+    const zones = (state.scenarioZones ||= {})
+    const noClues = (Number(location.clues) || 0) === 0
+    const bucket = locationEntry.leavesPlayTo === 'victory' || noClues ? 'victory' : 'setAside'
+    zones[bucket] ||= []
+    zones[bucket].push(location.originalCode || location.code)
+    if (typeof api?.removeLocationFromGame === 'function') {
+      const removed = api.removeLocationFromGame(locationId)
+      if (removed == null) return false
+    } else {
+      state.locations = (state.locations || []).filter(item => item.id !== locationId)
+      const data = mechanicState(state, true)
+      if (data.grid) delete data.grid[locationId]
+    }
+    syncConnections(state)
+    return true
+  }
+  // 引擎统一入口：swapLocation / removeLocationFromGame 会按条目的 locationRule 拒绝（返回 null）。
+  if (typeof api?.removeLocationFromGame === 'function') {
+    const removed = api.removeLocationFromGame(locationId)
+    if (removed == null) return false
+    const adapterForRemoved = summitAdapter(state, api)
+    adapterForRemoved.putTop([locationId])
+    return true
+  }
   const adapter = summitAdapter(state, api)
   const victory = Number(location.victory) || 0
   const noClues = (Number(location.clues) || 0) === 0
@@ -435,7 +527,7 @@ function buildSummitDeck(state, api = {}) {
   const excluded = new Set([
     START_LOCATION, 'centralSpire', ...expedition.asideLocationIds, ...expedition.removedLocationIds,
   ])
-  const pool = LOCATION_IDS.filter(id => !excluded.has(id))
+  const pool = LOCATION_IDS.filter(id => !excluded.has(id) && !LOCATION_OPTIONS[id]?.openSky)
   const shuffled = shuffleWith(api, state, pool)
   const adapter = summitAdapter(state, api)
   adapter.initialize(shuffled, { shuffle: false })
@@ -446,30 +538,33 @@ function buildSummitDeck(state, api = {}) {
 function placeInitialGrid(state, api = {}) {
   const cells = flagsFor(state).pendingSetupCells || (flagsFor(state).pendingSetupCells = {})
   const adapter = summitAdapter(state, api)
-  const placed = []
+  // 4 张开阔天空：从放一边的合成地点池取 id，先登记网格坐标，由引擎/直调统一 placeLocation。
+  const skyIds = []
   for (const cell of INITIAL_OPEN_SKY_CELLS) {
-    const location = placeOpenSky(state, cell, api)
-    if (location) placed.push(location.id)
+    const id = openSkyPool(state).shift()
+    if (!id) break
+    cells[id] = { ...cell }
+    skyIds.push(id)
   }
   const drawn = []
   for (const cell of INITIAL_FILL_CELLS) {
     const [id] = adapter.drawBottom(1)
     if (!id) break
     if (String(id).startsWith('openSky')) {
-      const location = makeOpenSkyLocation(state, id, cell)
-      if (location) placed.push(location.id)
+      // 峰顶牌库里混入的开阔天空地点 id：同样先登记坐标，稍后统一放置。
+      cells[id] = { ...cell }
+      skyIds.push(id)
       continue
     }
     cells[id] = { ...cell }
     drawn.push({ id, cell })
   }
-  placed.push(START_LOCATION)
   // 中央尖塔洗入峰顶牌库顶 3 张。
   const topThree = adapter.drawTop(3)
   const mixed = shuffleWith(api, state, [...topThree, 'centralSpire'])
   adapter.putTop(mixed)
-  setFlag(state, 'obsidianInitialPlacement', { drawn: drawn.map(entry => entry.id), openSky: placed.filter(id => id !== START_LOCATION) })
-  return { placed: [...placed.filter(id => id !== START_LOCATION), START_LOCATION], drawn }
+  setFlag(state, 'obsidianInitialPlacement', { drawn: drawn.map(entry => entry.id), openSky: [...skyIds] })
+  return { skyIds, drawn }
 }
 
 function randomizeStarSpawn(state, api = {}) {
@@ -490,15 +585,14 @@ export function setupLocations(state, events = null, helper = {}) {
   state.scenarioFlags.pendingSetupCells = {}
   state.scenarioZones ||= {}
   buildSummitDeck(state, api)
-  const { placed, drawn } = placeInitialGrid(state, api)
+  const { skyIds, drawn } = placeInitialGrid(state, api)
   randomizeStarSpawn(state, api)
-  // engine 会按返回顺序 placeLocation 真实地点；开阔天空已由 behavior 直接放进 state.locations。
-  const engineIds = [START_LOCATION, ...drawn.map(entry => entry.id)]
-  // 真实地点由引擎按返回顺序 placeLocation（locationPlaced 钩子写网格）；直调路径见 setupScenario。
+  // 引擎按返回顺序 placeLocation：起始地点 + 7 张峰顶地点 + 4 张合成开阔天空（locationPlaced 钩子写网格）。
+  const engineIds = [START_LOCATION, ...drawn.map(entry => entry.id), ...skyIds]
   syncConnections(state)
   setFlag(state, 'obsidianSetup', {
     ...report, initialCells: { ...flagsFor(state).pendingSetupCells },
-    drawnIds: drawn.map(entry => entry.id), placedIds: [...placed],
+    drawnIds: drawn.map(entry => entry.id), openSkyIds: [...skyIds], placedIds: [...engineIds],
   })
   info(api, `黑曜石峡谷：初始网格 ${engineIds.length} 处地点 + ${openSkyLocations(state).length} 处开阔天空；峰顶牌库 ${summitSize(state, api)} 张。`)
   return engineIds
@@ -640,7 +734,7 @@ export function setupScenario(state, api = {}) {
   const ids = setupLocations(state, null, { api })
   const cells = flagsFor(state).pendingSetupCells || {}
   for (const id of ids) {
-    if (!locationOf(state, id)) placeLocationInGrid(state, id, cells[id] || START_CELL, api, { revealed: id === START_LOCATION })
+    if (!locationOf(state, id)) placeLocationInGrid(state, id, cells[id] || START_CELL, api, { revealed: id === START_LOCATION || LOCATION_OPTIONS[id]?.openSky })
   }
   const deck = modifyDeck(state, [...ENCOUNTER_DECK])
   state.encounterDeck = shuffleWith(api, state, deck)
@@ -659,9 +753,14 @@ export function locationPlaced(state, location, api = {}, seat = null) {
   if (cell && !gridPosition(state, location.id)) writeGridCell(state, location.id, cell)
   const position = gridPosition(state, location.id)
   if (position) location.grid = { x: position.x, y: position.y }
-  if (location.id === START_LOCATION) {
+  if (location.id === START_LOCATION || LOCATION_OPTIONS[location.id]?.openSky) {
     location.revealed = true
-    location.clues = Math.max(0, Number(location.maxClues) || 0)
+    location.clues = 0
+    if (LOCATION_OPTIONS[location.id]?.openSky) {
+      location.name = OPEN_SKY_NAME
+      location.nameEn = OPEN_SKY_NAME_EN
+      location.traits = [...OPEN_SKY_TRAITS]
+    }
   } else if (location.revealed !== true) {
     location.revealed = false
     // 未揭示的[[峰顶]]地点在地点面朝下时带 Summit 特性（滑行判定用）。
@@ -675,11 +774,60 @@ export function locationPlaced(state, location, api = {}, seat = null) {
 export function locationRevealed(state, location, api = {}, seat = null) {
   if (!location) return false
   const options = LOCATION_OPTIONS[location.id] || {}
+  if (String(location.id).startsWith('dazzlingSkyline')) return dazzlingSkylineReveal(state, location, api, seat)
+  if (location.id === 'ancientCanyons') return ancientCanyonsReveal(state, location, api, seat)
   if (options.revealErodedFrieze) return drawErodedFrieze(state, location, api)
   if (options.glyphLocation === 'westernAthenaeum' && options.glyphOnLastClue) return false
   if (options.glyphLocation) return false
   void seat
   return false
+}
+
+function revealingSeat(state, seat) {
+  return Number.isInteger(seat) ? seat : (state.currentSeat ?? state.campaign?.leadSeat ?? 0)
+}
+
+/** 11659：揭示后受到 1 点恐惧。 */
+export function dazzlingSkylineReveal(state, location, api = {}, seat = null) {
+  const actor = revealingSeat(state, seat)
+  if (typeof api.horror === 'function') api.horror(actor, 1)
+  else state.investigators[actor].horror = (Number(state.investigators[actor].horror) || 0) + 1
+  info(api, `「${location.name}」揭示：${state.investigators[actor]?.name || actor} 受到 1 点恐惧。`)
+  return true
+}
+
+/** 11658：揭示后[敏捷](1)；失败从遭遇牌库/弃牌堆找[[怪物]]敌人生成并交战（近似：直接抽取）。 */
+export function ancientCanyonsReveal(state, location, api = {}, seat = null) {
+  const actor = revealingSeat(state, seat)
+  if (typeof api.test !== 'function') return false
+  let failed = false
+  api.test(actor, 'agility', 1, result => { failed = result?.success !== true })
+  if (!failed) return false
+  // P7 原语：按印刷数据在遭遇牌库/弃牌堆搜索，命中后洗回牌库并生成交战（引擎唯一入口）。
+  if (typeof api.searchEncounterCard === 'function') {
+    const found = api.searchEncounterCard({ traits: ['Monster'], type: 'enemy',
+      from: ['deck', 'discard'], spawn: 'engaged', seat: actor })
+    if (!found) {
+      info(api, '古代峡谷：遭遇牌库与弃牌堆都没有[[怪物]]敌人。')
+      return false
+    }
+    info(api, `古代峡谷：${state.investigators[actor]?.name || actor} 检定失败，搜索到[[怪物]]敌人「${ALL_CARDS[found]?.nameZh || found}」并与你交战。`)
+    return true
+  }
+  const search = pile => pile.findIndex(code => ALL_CARDS[code]?.type === 'enemy' && hasTrait(ALL_CARDS[code], 'Monster'))
+  state.encounterDeck ||= []
+  state.encounterDiscard ||= []
+  const deckIndex = search(state.encounterDeck)
+  const discardIndex = deckIndex < 0 ? search(state.encounterDiscard) : -1
+  const source = deckIndex >= 0 ? state.encounterDeck : (discardIndex >= 0 ? state.encounterDiscard : null)
+  const index = deckIndex >= 0 ? deckIndex : discardIndex
+  if (!source || index < 0) { info(api, '古代峡谷：遭遇牌库与弃牌堆都没有[[怪物]]敌人。'); return false }
+  const [code] = source.splice(index, 1)
+  state.encounterDeck.push(code)
+  if (typeof api.drawEncounter === 'function') api.drawEncounter(actor)
+  else spawnEnemyFallback(state, code, state.investigators[actor]?.location, api, { engagedSeat: actor })
+  info(api, `古代峡谷：${state.investigators[actor]?.name || actor} 检定失败，抽取[[怪物]]敌人「${ALL_CARDS[code]?.nameZh || code}」并交战。`)
+  return true
 }
 
 function drawErodedFrieze(state, location, api = {}) {
@@ -688,13 +836,19 @@ function drawErodedFrieze(state, location, api = {}) {
   const zones = (state.scenarioZones ||= {})
   zones.setAside ||= []
   zones.setAside = zones.setAside.filter(code => code !== ERODED_FRIEZE_CODE)
-  const attachment = {
-    id: `eroded-frieze-${location.id}`, code: ERODED_FRIEZE_CODE, originalCode: ERODED_FRIEZE_CODE,
-    name: ALL_CARDS[ERODED_FRIEZE_CODE]?.nameZh || '剥蚀壁画', encounterAttached: true,
-    tokens: 0, resources: 0, attachments: [], flipped: false,
+  // 引擎真实遭遇附属实例（显示/文本空白/关闭行动共用同一份数据）；无 api 时退回同形状对象。
+  const attachment = typeof api?.attachEncounterToLocation === 'function'
+    ? api.attachEncounterToLocation(ERODED_FRIEZE_CODE, location.id, { encounterAttached: true, tokens: 0, flipped: false })
+    : null
+  if (!attachment) {
+    const fallback = {
+      id: `eroded-frieze-${location.id}`, code: ERODED_FRIEZE_CODE, originalCode: ERODED_FRIEZE_CODE,
+      name: ALL_CARDS[ERODED_FRIEZE_CODE]?.nameZh || '剥蚀壁画', encounterAttached: true,
+      tokens: 0, resources: 0, attachments: [], flipped: false,
+    }
+    location.attachments ||= []
+    location.attachments.push(fallback)
   }
-  location.attachments ||= []
-  location.attachments.push(attachment)
   info(api, `「${location.name}」揭示：抽取放一边的剥蚀壁画，附属到本地点。`)
   return true
 }
@@ -848,6 +1002,28 @@ export function windsInPlay(state) {
 }
 
 /** 轮末强制：按风暴强度揭示标记；出现非 [elder_sign] 符号 → 吹风并翻面。 */
+/** 印刷「无情」用 P7 关键词覆盖声明：入场与每轮神话阶段开始时按印刷值重新启用。 */
+function setEnemyRelentless(state, enemy, enabled, api = {}) {
+  const scenarioApi = api?.scenario || api
+  if (typeof scenarioApi?.setEnemyKeywords !== 'function') return false
+  return scenarioApi.setEnemyKeywords(enemy, ['relentless'], { enabled, throughRound: state.round })
+}
+
+export function enemySpawned(state, enemy, api = {}) {
+  if (!enemy || codeOf(enemy) !== STAR_VAMPIRE_CODE) return false
+  return setEnemyRelentless(state, enemy, true, api)
+}
+
+export function phaseBegan(state, phase, api = {}) {
+  if (String(phase) !== 'mythos') return false
+  let changed = false
+  for (const enemy of state.enemies || []) {
+    if (codeOf(enemy) !== STAR_VAMPIRE_CODE) continue
+    changed = setEnemyRelentless(state, enemy, true, api) || changed
+  }
+  return changed
+}
+
 export function roundEnded(state, api = {}) {
   stElmosRoundEnd(state, api)
   const winds = windsInPlay(state)
@@ -934,8 +1110,7 @@ export function fillGridCell(state, cell, api = {}) {
   const [id] = adapter.drawBottom(1)
   if (!id) return null
   if (String(id).startsWith('openSky')) {
-    const location = makeOpenSkyLocation(state, id, cell)
-    syncConnections(state)
+    const location = placeOpenSkyAt(state, id, cell, api)
     return location?.id || null
   }
   const placed = placeLocationInGrid(state, id, cell, api, { revealed: false })
@@ -973,6 +1148,12 @@ function finishResolution(state, key, api = {}) {
 function removeLocationFromGame(state, locationId, api = {}) {
   const location = locationOf(state, locationId)
   if (!location) return false
+  routeLeavingAttachments(state, locationId)
+  if (typeof api?.removeLocationFromGame === 'function') {
+    // 幕背面明示「忽略其文本框」（不能被移动/离场也照样移除）。
+    const removed = api.removeLocationFromGame(locationId, { force: true })
+    if (removed != null) return true
+  }
   state.locations = state.locations.filter(item => item.id !== locationId)
   const data = mechanicState(state, true)
   if (data.grid) delete data.grid[locationId]
@@ -1208,6 +1389,20 @@ export function actions(state, inv) {
       reason: openSkies.length ? (groupClues >= activeInvestigators(state).filter(other => other.location === here.id).length ? null : '线索不足') : '没有相邻开阔天空',
     })
   }
+  if (options.resign) {
+    moves.push({
+      action: 'scenarioAction', rule: 'obsidianResign', locationId: here.id, actions: 1,
+      label: '[action]：撤退。你攀爬下去。',
+    })
+  }
+  if (options.suspendedReef) {
+    const candidates = summitEnemiesWithin(state, inv, 3)
+    moves.push({
+      action: 'scenarioAction', rule: 'obsidianSuspendedReefSwap', locationId: here.id, actions: 0, fast: true,
+      label: '[fast] 花费 1 个线索：选择一名位于至多 3 次连接之外[[峰顶]]地点的敌人，与它交换位置（忽略其所在地点的强制效果）',
+      reason: (Number(inv.clues) || 0) < 1 ? '需要 1 个线索' : (candidates.length ? null : '至多 3 次连接内没有[[峰顶]]地点的敌人'),
+    })
+  }
   if (options.magneticSpires) {
     moves.push({
       action: 'scenarioAction', rule: 'obsidianMagneticSwap', locationId: here.id, actions: 1,
@@ -1260,7 +1455,8 @@ export function actions(state, inv) {
     moves.push({
       action: 'scenarioAction', rule: 'obsidianGlyphOrreryFlip', locationId: here.id, actions: 1,
       label: '调查员共同花费 1[per_investigator] 个线索：翻面符文星盘仪，记录符文 [rune_d]（波浪）',
-      reason: groupClues >= investigatorCount(state) ? null : '线索不足',
+      reason: here.cannotFlipAgain ? '已翻面（不能再次翻面）'
+        : (groupClues >= investigatorCount(state) ? null : '线索不足'),
     })
   }
   return moves
@@ -1280,8 +1476,26 @@ export function performAction(state, inv, move, api = {}) {
     case 'obsidianDazzlingSkyline': return dazzlingSkylineAction(state, inv, api)
     case 'obsidianGlyphTranslate': return glyphTranslateAction(state, inv, api)
     case 'obsidianGlyphOrreryFlip': return glyphOrreryFlip(state, inv, api)
+    case 'obsidianResign': return resignAction(state, inv, api)
+    case 'obsidianSuspendedReefSwap': return suspendedReefSwap(state, inv, api)
     default: return false
   }
+}
+
+/** 「以任意顺序放在峰顶牌库顶」：逐张询问顺序；无 api.choose 时按揭示顺序放回。 */
+function returnSummitCardsInAnyOrder(adapter, cards, inv, api = {}) {
+  if (cards.length <= 1 || typeof api?.choose !== 'function') { adapter.putTop(cards); return [...cards] }
+  const remaining = [...cards]
+  const order = []
+  while (remaining.length) {
+    const answer = api.choose({ kind: 'card', source: '11639-act', seat: inv.seat,
+      prompt: '选择下一张放在峰顶牌库顶的牌（最后选的在最上面）。',
+      options: remaining.map((card, index) => ({ id: String(index), cardCode: card, label: ALL_CARDS[card]?.nameZh || card })) })
+    const index = remaining.findIndex((_, itemIndex) => String(itemIndex) === String(answer))
+    order.push(remaining.splice(Math.max(0, index), 1)[0])
+  }
+  adapter.putTop(order.reverse())
+  return order
 }
 
 /** 每幕共有行动：花费 X 线索，从峰顶牌库底揭示 X 张；可把 1 张地点放进相邻开阔天空并移动。 */
@@ -1289,15 +1503,36 @@ export function searchTheSpires(state, inv, api = {}, options = {}) {
   const location = locationOf(state, inv.location)
   if (!location || isOpenSky(location)) return false
   const available = Number(inv.clues) || 0
-  const spend = Math.max(1, Math.min(Number(options.clues) || available, available))
-  if (spend <= 0) return false
   const adapter = summitAdapter(state, api)
-  if (adapter.size() <= 0) return false
+  if (available <= 0 || adapter.size() <= 0) return false
+  // 印刷「花费 X 个线索」：X 由玩家选择（1..min(线索, 峰顶牌库)）。
+  let spend = Math.max(0, Math.min(Number(options.clues) || 0, available))
+  if (!spend && typeof api?.choose === 'function') {
+    const maximum = Math.max(1, Math.min(available, adapter.size()))
+    const answer = api.choose({ kind: 'effect', source: '11639-act', seat: inv.seat, canSkip: false,
+      prompt: `花费 X 个线索，从峰顶牌库底揭示 X 张（1-${maximum}）`,
+      options: Array.from({ length: maximum }, (_, index) => ({ id: String(index + 1), label: `X=${index + 1}` })) })
+    spend = Math.min(maximum, Math.max(1, Number(answer) || 1))
+  }
+  if (!spend) spend = 1
   inv.clues -= spend
   const revealed = adapter.drawBottom(spend)
   const placeable = revealed.filter(card => !String(card).startsWith('openSky') && LOCATION_IDS.includes(card))
-  const sky = adjacentOpenSkies(state, inv)[0] || null
-  const chosen = options.placeId && placeable.includes(options.placeId) ? options.placeId : (placeable[0] || null)
+  const skies = adjacentOpenSkies(state, inv)
+  let sky = skies[0] || null
+  if (skies.length > 1 && typeof api?.choose === 'function') {
+    const answer = api.choose({ kind: 'location', source: '11639-act', seat: inv.seat,
+      prompt: '选择一处相邻开阔天空放置地点。',
+      options: skies.map(id => ({ id, label: locationOf(state, id)?.name || id })) })
+    sky = skies.find(id => id === String(answer)) || sky
+  }
+  let chosen = options.placeId && placeable.includes(options.placeId) ? options.placeId : (placeable[0] || null)
+  if (placeable.length > 1 && typeof api?.choose === 'function') {
+    const answer = api.choose({ kind: 'card', source: '11639-act', seat: inv.seat, canSkip: true,
+      prompt: '选择要放进开阔天空的一处地点（其余放回峰顶牌库顶）。',
+      options: placeable.map(code => ({ id: code, cardCode: code, label: ALL_CARDS[code]?.nameZh || code })) })
+    if (placeable.includes(answer)) chosen = answer
+  }
   if (chosen && sky) {
     const skyLocation = locationOf(state, sky)
     const skyCell = skyLocation ? (mechanicState(state).grid?.[sky]) : null
@@ -1307,28 +1542,98 @@ export function searchTheSpires(state, inv, api = {}, options = {}) {
       const placed = locationOf(state, chosen)
       if (placed) { placed.revealed = true; placed.clues = Math.max(0, Number(placed.maxClues) || 0) }
       const rest = revealed.filter(card => card !== chosen)
-      adapter.putTop(rest)
+      returnSummitCardsInAnyOrder(adapter, rest, inv, api)
       inv.location = chosen
-      info(api, `${inv.name} 从峰顶牌库底揭示 ${spend} 张，把「${placed?.name || chosen}」放进开阔天空并移动过去。`)
-      return { revealed, placed: chosen, moved: true }
+      info(api, `${inv.name} 花费 ${spend} 个线索，从峰顶牌库底揭示 ${spend} 张，把「${placed?.name || chosen}」放进开阔天空并移动过去。`)
+      return { revealed, cluesSpent: spend, placed: chosen, moved: true }
     }
   }
-  adapter.putTop(revealed)
-  info(api, `${inv.name} 从峰顶牌库底揭示 ${spend} 张，未放置地点，全部放回峰顶牌库顶。`)
-  return { revealed, placed: null, moved: false }
+  returnSummitCardsInAnyOrder(adapter, revealed, inv, api)
+  info(api, `${inv.name} 花费 ${spend} 个线索，从峰顶牌库底揭示 ${spend} 张，未放置地点，全部放回峰顶牌库顶。`)
+  return { revealed, cluesSpent: spend, placed: null, moved: false }
+}
+
+/** [action] 撤退（11651 西墙 / 11652 古代圆顶）：走引擎撤退入口。 */
+function resignAction(state, inv, api = {}) {
+  if (!inv || inv.defeated || inv.resigned) return false
+  if (typeof api.resign === 'function') api.resign(inv.seat)
+  else {
+    inv.resigned = true
+    inv.resignRound = state.round
+  }
+  info(api, `${inv.name} 撤退（攀爬下去）。`)
+  return true
+}
+
+/** 至多 maxDistance 次连接内、位于[[峰顶]]地点（非开阔天空）的敌人。 */
+export function summitEnemiesWithin(state, inv, maxDistance = 3) {
+  const distance = new Map([[inv.location, 0]])
+  const queue = [inv.location]
+  while (queue.length) {
+    const current = queue.shift()
+    const currentDistance = distance.get(current)
+    if (currentDistance >= maxDistance) continue
+    const location = locationOf(state, current)
+    for (const neighbor of location?.connections || []) {
+      if (distance.has(neighbor)) continue
+      distance.set(neighbor, currentDistance + 1)
+      queue.push(neighbor)
+    }
+  }
+  return (state.enemies || []).filter(enemy => !enemy.defeated && distance.has(enemy.location)
+    && !isOpenSky(locationOf(state, enemy.location))
+    && hasTrait(locationOf(state, enemy.location), 'Summit'))
+}
+
+/** 11656 [fast]：花 1 线索与至多 3 次连接内[[峰顶]]地点的敌人交换位置。 */
+function suspendedReefSwap(state, inv, api = {}) {
+  if ((Number(inv.clues) || 0) < 1) return false
+  const candidates = summitEnemiesWithin(state, inv, 3)
+  if (!candidates.length) return false
+  let target = candidates[0]
+  if (candidates.length > 1 && typeof api?.choose === 'function') {
+    const answer = api.choose({ kind: 'enemy', source: '11656', seat: inv.seat,
+      prompt: '选择一名位于至多 3 次连接之外[[峰顶]]地点的敌人，与它交换位置。',
+      options: candidates.map(enemy => ({ id: enemy.id, label: enemy.name || enemy.code })) })
+    target = candidates.find(enemy => enemy.id === String(answer)) || target
+  }
+  const from = inv.location
+  const to = target.location
+  inv.clues -= 1
+  if (typeof api.moveEnemy === 'function') api.moveEnemy(target, from)
+  else target.location = from
+  if (typeof api.moveInvestigator === 'function') api.moveInvestigator(inv.seat, to)
+  else inv.location = to
+  info(api, `悬浮礁石：${inv.name} 花 1 个线索与「${target.name || target.code}」交换位置（${from} ↔ ${to}）。`)
+  return true
 }
 
 function placeCluesAction(state, inv, api = {}) {
   const location = locationOf(state, inv.location)
   if (!location) return false
   if (location.cluesPlacedThisRound === state.round) return false
-  if ((Number(inv.resources) || 0) < 1) return false
-  inv.resources = Number(inv.resources) - 1
-  const pending = Math.max(0, Number(flagsFor(state).pendingClues) || 0) + 1
-  setFlag(state, 'pendingClues', pending)
+  const resources = Number(inv.resources) || 0
+  if (resources < 1) return false
+  // 印刷「花费 1-3 个资源」：数量由玩家选择。
+  const maximum = Math.max(1, Math.min(3, resources))
+  const amount = typeof api?.choose === 'function'
+    ? Math.min(maximum, Math.max(1, Number(api.choose({ kind: 'effect', source: '11648', seat: inv.seat, canSkip: false,
+      prompt: '花费 1-3 个资源：在任意已揭示地点放置等量线索。',
+      options: Array.from({ length: maximum }, (_, index) => ({ id: String(index + 1), label: `花费 ${index + 1} 个资源` })) })) || 1))
+    : 1
+  const revealedLocations = (state.locations || []).filter(other => other.revealed === true)
+  let target = location
+  if (revealedLocations.length > 1 && typeof api?.choose === 'function') {
+    const answer = api.choose({ kind: 'location', source: '11648', seat: inv.seat,
+      prompt: '选择要在哪一处已揭示地点放置线索。',
+      options: revealedLocations.map(other => ({ id: other.id, label: other.name })) })
+    target = revealedLocations.find(other => other.id === String(answer)) || target
+  }
+  inv.resources -= amount
+  target.clues = (Number(target.clues) || 0) + amount
   location.cluesPlacedThisRound = state.round
   setFlag(state, `placeCluesRound-${location.id}`, state.round)
-  info(api, `${inv.name} 花费 1 个资源，在「${location.name}」放置 1 个线索。`)
+  info(api, `${inv.name} 花费 ${amount} 个资源，在「${target.name}」放置 ${amount} 个线索。`)
   return true
 }
 
@@ -1339,15 +1644,23 @@ function hangingShipSlide(state, inv, api = {}) {
   if (!spendGroupClues(state, location.id, here.length)) return false
   const openSkies = adjacentOpenSkies(state, inv)
   if (!openSkies.length) return false
-  const target = openSkies[0]
+  let target = openSkies[0]
+  if (typeof api?.choose === 'function' && openSkies.length > 1) {
+    const answer = api.choose({ kind: 'location', source: '11657', seat: inv.seat,
+      prompt: '选择一处相邻开阔天空，把悬挂船只滑动过去。',
+      options: openSkies.map(id => ({ id, label: locationOf(state, id)?.name || id })) })
+    target = openSkies.find(id => id === String(answer)) || target
+  }
   const shipCell = mechanicState(state).grid?.[location.id]
   const skyCell = mechanicState(state).grid?.[target]
   if (!shipCell || !skyCell) return false
-  removeLocationToSummitTop(state, target, api)
+  // 「向相邻开阔天空滑动一次」= 船只与开阔天空交换格坐标（物品/标记原地保留）。
   const data = mechanicState(state).grid
   data[location.id] = { ...data[location.id], x: skyCell.x, y: skyCell.y }
   location.grid = { x: skyCell.x, y: skyCell.y }
-  makeOpenSkyLocation(state, target, { x: shipCell.x, y: shipCell.y })
+  data[target] = { ...data[target], x: shipCell.x, y: shipCell.y }
+  const sky = locationOf(state, target)
+  if (sky) sky.grid = { x: shipCell.x, y: shipCell.y }
   syncConnections(state)
   info(api, `悬挂船只滑入相邻开阔天空。`)
   return true
@@ -1365,7 +1678,13 @@ function magneticSpiresSwap(state, inv, api = {}) {
     const cell = gridPosition(state, other.id)
     return cell && Math.abs(cell.x - origin.x) + Math.abs(cell.y - origin.y) <= 2
   })
-  const target = candidates.find(other => other.id === flagsFor(state).magneticSwapTarget) || candidates[0]
+  let target = candidates.find(other => other.id === flagsFor(state).magneticSwapTarget) || candidates[0]
+  if (typeof api?.choose === 'function' && candidates.length > 1) {
+    const answer = api.choose({ kind: 'location', source: '11661', seat: inv.seat,
+      prompt: '选择至多 2 格外的一处开阔天空，与磁性尖塔交换位置。',
+      options: candidates.map(other => ({ id: other.id, label: other.name })) })
+    target = candidates.find(other => other.id === String(answer)) || target
+  }
   if (!target) return false
   const targetCell = gridPosition(state, target.id)
   const data = mechanicState(state).grid
@@ -1384,7 +1703,13 @@ function aerialWaterfallFast(state, inv, api = {}) {
   if ((Number(inv.clues) || 0) < 1) return false
   const destinations = (state.locations || []).filter(location => location.revealed
     && hasTrait(location, 'Summit') && location.id !== inv.location)
-  const target = destinations.find(location => location.id === flagsFor(state).aerialWaterfallTarget) || destinations[0]
+  let target = destinations.find(location => location.id === flagsFor(state).aerialWaterfallTarget) || destinations[0]
+  if (typeof api?.choose === 'function' && destinations.length > 1) {
+    const answer = api.choose({ kind: 'location', source: '11660', seat: inv.seat,
+      prompt: '选择任意已揭示的[[峰顶]]地点并移动过去。',
+      options: destinations.map(location => ({ id: location.id, label: location.name })) })
+    target = destinations.find(location => location.id === String(answer)) || target
+  }
   if (!target) return false
   inv.clues -= 1
   inv.location = target.id
@@ -1450,10 +1775,17 @@ function obsidianCliffsAction(state, inv, api = {}) {
 }
 
 function dazzlingSkylineAction(state, inv, api = {}) {
-  if ((Number(inv.clues) || 0) < 1) return false
-  inv.clues -= 1
+  const clues = Number(inv.clues) || 0
+  if (clues < 1) return false
+  const maximum = Math.max(1, Math.min(3, clues))
+  const amount = typeof api?.choose === 'function'
+    ? Math.min(maximum, Math.max(1, Number(api.choose({ kind: 'effect', source: '11659', seat: inv.seat, canSkip: false,
+      prompt: '花费 1-3 个线索：每花费 1 个，从峰顶牌库底揭示 3 张。',
+      options: Array.from({ length: maximum }, (_, index) => ({ id: String(index + 1), label: `花费 ${index + 1} 个线索` })) })) || 1))
+    : 1
+  inv.clues -= amount
   const adapter = summitAdapter(state, api)
-  const revealed = adapter.drawBottom(3)
+  const revealed = adapter.drawBottom(3 * amount)
   const bottom = []
   const top = []
   for (const card of revealed) {
@@ -1467,7 +1799,7 @@ function dazzlingSkylineAction(state, inv, api = {}) {
   }
   if (top.length) adapter.putTop(top)
   if (bottom.length) adapter.putBottom(bottom)
-  info(api, `${inv.name} 花费 1 个线索，从峰顶牌库底揭示 3 张并按选择放在顶/底。`)
+  info(api, `${inv.name} 花费 ${amount} 个线索，从峰顶牌库底揭示 ${3 * amount} 张并按选择放在顶/底。`)
   return true
 }
 
@@ -1482,15 +1814,29 @@ function glyphTranslateAction(state, inv, api = {}) {
 }
 
 function glyphOrreryFlip(state, inv, api = {}) {
-  if (flagsFor(state).glyphOrreryFlipped === true) return false
   const location = locationOf(state, inv.location)
-  if (!location) return false
+  if (!location || location.cannotFlipAgain || flagsFor(state).glyphOrreryFlipped === true) return false
   if (!spendGroupClues(state, location.id, investigatorCount(state))) return false
-  translateGlyph(state, 'rune_d', 'Wave', api)
-  location.flippedToStory = true
-  setFlag(state, 'glyphOrreryFlipped', true)
+  if (typeof api.flipLocation === 'function') {
+    // 引擎地点翻面统一入口（flipScenarioLocation）→ behavior.locationStory 结算故事面并标记不能再次翻面。
+    if (!api.flipLocation(location.id, inv.seat)) return false
+  } else {
+    translateGlyph(state, 'rune_d', 'Wave', api)
+    setFlag(state, 'glyphOrreryFlipped', true)
+    location.flippedToStory = false
+    location.cannotFlipAgain = true
+  }
   info(api, `符文星盘仪翻面：记录符文 [rune_d]（波浪）。`)
   return true
+}
+
+/** 11662b 故事面：记录 rune_d「Wave」后翻回地点面且不能再次翻面（引擎 flipScenarioLocation → locationStory 钩子）。 */
+export function locationStory(state, location, api = {}) {
+  if (location?.id !== 'glyphOrrery' && String(location?.originalCode || location?.code) !== '11662') return
+  translateGlyph(state, 'rune_d', 'Wave', api)
+  setFlag(state, 'glyphOrreryFlipped', true)
+  location.flippedToStory = false
+  location.cannotFlipAgain = true
 }
 
 export function translateGlyph(state, rune, word, api = {}) {
@@ -1591,18 +1937,58 @@ export function enemyAttackResolved(state, enemy, inv, api = {}) {
   return false
 }
 
+/** 11670：在开阔天空被击败时，与其交战的调查员被击败并承受 1 点肉体创伤。 */
+export function enemyDefeated(state, enemy, api = {}) {
+  if (!enemy || codeOf(enemy) !== PRIMEVAL_TERROR_CODE) return false
+  const here = locationOf(state, enemy.location)
+  if (!here || !isOpenSky(here)) return false
+  const engaged = Number.isInteger(enemy.engagedSeat) ? state.investigators?.[enemy.engagedSeat] : null
+  if (!engaged) return false
+  addPhysicalTrauma(state, api, engaged.seat, 1)
+  if (typeof api.defeat === 'function') api.defeat(engaged, 'physical')
+  else engaged.defeated = true
+  info(api, `原初恐怖在开阔天空被击败：${engaged.name || engaged.seat} 被击败并承受 1 点肉体创伤。`)
+  return true
+}
+
+/** Good Money（11611）「下一章维护阶段不能获得资源」：跨章标记由 campaign-rules.js 统一判定（phases.js 补给阶段读点）。 */
+export function canGainResources(state, inv) {
+  return !tdcCannotGainUpkeepResources(state, inv)
+}
+
+/** 11663 天空遗物：[action] 检定期间投入卡牌的技能图标翻倍（tests.js#commitIconMultiplier 读点）。 */
+export function commitIconMultiplier(state, owner) {
+  const seat = flagsFor(state).skyRelicTestSeat
+  if (seat == null) return undefined
+  return Number(owner?.seat) === Number(seat) ? 2 : undefined
+}
+
+/** 11670「位于开阔天空时与该敌人解除交战 → 你被击败并承受 1 点肉体创伤」。 */
+export function enemyDisengaged(state, enemy, inv, api = {}) {
+  if (!enemy || codeOf(enemy) !== PRIMEVAL_TERROR_CODE) return false
+  const here = locationOf(state, enemy.location)
+  if (!here || !isOpenSky(here)) return false
+  const actor = inv || (Number.isInteger(enemy.engagedSeat) ? state.investigators?.[enemy.engagedSeat] : null)
+  if (!actor || actor.defeated) return false
+  addPhysicalTrauma(state, api, actor.seat, 1)
+  if (typeof api.defeat === 'function') api.defeat(actor, 'physical')
+  else actor.defeated = true
+  info(api, `原初恐怖在开阔天空被解除交战：${actor.name || actor.seat} 被击败并承受 1 点肉体创伤。`)
+  return true
+}
+
+/** 11670 原初恐怖「不能进行趁乱攻击」：引擎 hidden-rules.js#enemyCanOpportunityAttack 读点。 */
+export function canOpportunityAttack(state, enemy) {
+  void state
+  return codeOf(enemy) !== PRIMEVAL_TERROR_CODE
+}
+
 export function movementError(state, inv, destination, destinationId) {
   if (!destination) return null
   if (isOpenSky(destination)) {
     const engagedWithTerror = (state.enemies || []).some(enemy => enemy.engagedSeat === inv.seat
       && codeOf(enemy) === PRIMEVAL_TERROR_CODE)
     return engagedWithTerror ? null : '不能移动进开阔天空（除非剧本效果允许）'
-  }
-  if (LOCATION_OPTIONS[destinationId]?.entryToll && destination.revealed !== true) {
-    const claw = (state.investigators || []).some(other => (other.assets || [])
-      .some(asset => OBSIDIAN_CLAW_CODES.includes(codeOf(asset))))
-    const clues = Number(inv.clues) || 0
-    if (!claw && clues < 1) return '进入未揭示的尖塔需要花费 1 个线索或通过[agility](2)检定'
   }
   return null
 }
@@ -1612,12 +1998,27 @@ export function movementError(state, inv, destination, destinationId) {
 // ---------------------------------------------------------------------------
 /** 11665 圣艾尔摩之火：附属到最近未附属本卡的地点；轮末该地点每人 1 伤害并移到相邻（尽可能有调查员）。 */
 export function stElmosFire(state, inv, api = {}) {
-  const here = locationOf(state, inv?.location)
-  if (!here) return false
-  here.attachments ||= []
-  here.attachments.push({ id: `st-elmos-${here.id}`, code: '11665', originalCode: '11665', name: '圣艾尔摩之火',
+  if (!inv?.location) return false
+  // 「最近的一处未附属圣艾尔摩之火地点」：BFS 距离，找不到时退到所在地点。
+  const hasFire = location => (location.attachments || []).some(attachment => codeOf(attachment) === '11665')
+  const visited = new Set([inv.location])
+  const queue = [inv.location]
+  let target = null
+  while (queue.length) {
+    const current = locationOf(state, queue.shift())
+    if (current && !hasFire(current)) { target = current; break }
+    for (const neighbor of current?.connections || []) {
+      if (visited.has(neighbor)) continue
+      visited.add(neighbor)
+      queue.push(neighbor)
+    }
+  }
+  if (!target) target = locationOf(state, inv.location)
+  if (!target) return false
+  target.attachments ||= []
+  target.attachments.push({ id: `st-elmos-${target.id}`, code: '11665', originalCode: '11665', name: '圣艾尔摩之火',
     encounterAttached: true, tokens: 0 })
-  info(api, `圣艾尔摩之火附属到「${here.name}」。`)
+  info(api, `圣艾尔摩之火附属到最近的「${target.name}」。`)
   return true
 }
 
@@ -1632,9 +2033,10 @@ export function stElmosRoundEnd(state, api = {}) {
       else inv.damage = (Number(inv.damage) || 0) + 1
     }
     location.attachments = location.attachments.filter(attachment => attachment !== fire)
-    const target = (location.connections || []).map(id => locationOf(state, id)).filter(Boolean)
-      .sort((a, b) => (b.id === state.investigators?.find(other => other.location === b.id)?.location ? 1 : 0)
-        - (a.id === state.investigators?.find(other => other.location === a.id)?.location ? 1 : 0))[0]
+    // 「附属到一处相邻地点（尽可能有调查员）」：优先有调查员的相邻地点，其次第一个相邻地点。
+    const adjacent = (location.connections || []).map(id => locationOf(state, id)).filter(Boolean)
+    const occupied = adjacent.find(other => activeInvestigators(state).some(inv => inv.location === other.id))
+    const target = occupied || adjacent[0] || null
     if (target) {
       target.attachments ||= []
       target.attachments.push(fire)
@@ -1659,7 +2061,10 @@ export function acrophobia(state, inv, api = {}) {
       prompt: '恐高症：失去 1 次行动或受到 1 点恐惧。',
       options: [{ id: 'action', label: '失去 1 次行动' }, { id: 'horror', label: '受到 1 点恐惧' }],
     }) : 'horror'
-    if (choice === 'action') inv.actionsLeft = Math.max(0, (Number(inv.actionsLeft) ?? 3) - 1)
+    if (choice === 'action') {
+      if (typeof api.loseActions === 'function') api.loseActions(inv.seat, 1)
+      else inv.actionsLeft = Math.max(0, (Number(inv.actionsLeft) ?? 3) - 1)
+    }
     else if (typeof api.horror === 'function') api.horror(inv.seat, 1)
     else inv.horror = (Number(inv.horror) || 0) + 1
   }
@@ -1690,8 +2095,16 @@ export function wingsOfTerrorFailedTest(state, inv, api = {}) {
   state.encounterDiscard ||= []
   state.encounterDiscard.push(...discarded)
   if (found) {
-    state.encounterDeck.push(found)
-    api.drawEncounter(inv.seat)
+    const choice = typeof api?.choose === 'function' ? api.choose({ kind: 'effect', source: '11667', seat: inv.seat,
+      prompt: '恐怖之翼：抽取该敌人，或让它从弃牌堆攻击你。',
+      options: [{ id: 'draw', label: '抽取该敌人' }, { id: 'attack', label: '该敌人从弃牌堆攻击你' }] }) : 'draw'
+    if (choice === 'attack' && typeof api.attackFromDiscard === 'function') {
+      state.encounterDiscard.push(found)
+      api.attackFromDiscard(found, inv.seat)
+    } else {
+      state.encounterDeck.push(found)
+      if (typeof api.drawEncounter === 'function') api.drawEncounter(inv.seat)
+    }
   }
   const threat = state.investigators[inv.seat].threat || []
   state.investigators[inv.seat].threat = threat.filter(card => codeOf(card) !== '11667')
@@ -1711,7 +2124,8 @@ export function lostInTheClouds(state, inv, api = {}) {
     ],
   }) : 'horror'
   if (choice === 'doom') {
-    state.doom = (Number(state.doom) || 0) + 1
+    if (typeof api.addDoom === 'function') api.addDoom(1)
+    else state.doom = (Number(state.doom) || 0) + 1
     info(api, '迷失云中：在当前密谋上放置 1 个毁灭标记。')
   } else if (choice === 'horror') {
     for (const other of activeInvestigators(state)) {
@@ -1911,7 +2325,15 @@ export const behavior = {
   turnBegins,
   turnEnded,
   roundEnded,
+  enemySpawned,
+  phaseBegan,
   movementError,
+  locationStory,
+  canOpportunityAttack,
+  enemyDisengaged,
+  commitIconMultiplier,
+  canGainResources,
+  enemyDefeated,
   enemyAttackResolved,
   actReveal,
   agendaReveal,
@@ -1939,7 +2361,12 @@ export const behavior = {
   openSkyLocations,
   openSkyPool,
   placeOpenSky,
+  placeOpenSkyAt,
+  removeLocationToSummitTop,
   rebuildSkyline,
+  evacuateLocation,
+  dazzlingSkylineReveal,
+  ancientCanyonsReveal,
   farthestLocationFromInvestigators,
   searchTheSpires,
   translateGlyph,
@@ -1948,6 +2375,14 @@ export const behavior = {
   tasksOf,
   isOpenSky,
   isSlidableLocation,
+  locationCannotLeavePlay,
+  enemyDisengaged,
+  commitIconMultiplier,
+  summitEnemiesWithin,
+  canOpportunityAttack,
+  canGainResources,
+  enemySpawned,
+  phaseBegan,
   locationOf,
   neighborsOf,
   advanceStorm: increaseStormIntensity,

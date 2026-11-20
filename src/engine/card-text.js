@@ -14,6 +14,9 @@ export function assetTextBlankedExceptForced(asset) {
 // legalMoves / 反应窗口 / 玩家窗口的唯一枚举来源）。只做前两处会让被空白化的支援仍能发动能力
 // （06013 门之匣 + 04099 实机复现：旧 DSL 已被清空，描述子却还在玩家窗口里开选项）。
 export function assetTextBlanked(asset, inv) {
+  // P7 TDC 11688 黏土恐怖 [fast]：「将本支援印刷文本框视为空白直到本轮结束（特性除外）」。
+  // 空白标记由 api.scenario.blankStoryAssetText 写入，turn.js 在轮次推进时清除。
+  if (asset?.textBlank === true) return true
   const traits = ALL_CARDS[asset?.code]?.traits || []
   if (!traits.length) return false
   const threat = inv?.threat || []

@@ -11,6 +11,6 @@ export default {
   implemented: true,
   flags: { direction: 'west', fastDecreaseFlood: true, clueCostPerInvestigator: 1, objectiveAllAt: 'obsidianFoundations' },
   note: '数据型条目：目标“全员位于黑曜石地基”由 behavior.checkObjectives 检查；'
-    + 'approximation：目标写的是“可以推进”，本实现采取满足即自动推进（引擎线性幕默认口径）。',
+    + '达成后由 api.choose 询问「推进 / 暂不推进」，只有 advance 才推进；skip 记本幕+本回合，本轮不再重复询问（印刷“可以推进”）。',
   abilities: [],
 }

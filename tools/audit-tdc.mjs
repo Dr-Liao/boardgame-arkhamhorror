@@ -7,6 +7,7 @@ import { contentRegistry } from '../content/registered.js'
 import { campaignListForUi } from '../content/registry.js'
 import { SCENARIO_MIGRATION_CHECKS, assertMigrationConfirmations } from '../content/migration-confirmation.js'
 import { mod, sha, sorted, writeOrCheck } from './scan-tdc-scope.mjs'
+import { browserSources, hallRoot, sha256 } from './tdc-p8-evidence.mjs'
 
 const read = name => JSON.parse(readFileSync(join(mod, `audit/tdc-${name}.json`), 'utf8'))
 const scope = read('scope')
@@ -17,6 +18,31 @@ const interactions = read('interactions')
 const investigators = read('investigators')
 const player = read('player')
 const p7 = read('p7')
+const auditPath = name => `audit/tdc-${name}.json`
+const readOptional = name => existsSync(join(mod, auditPath(name))) ? read(name) : null
+const browserReport = readOptional('release-browser')
+const regression = readOptional('p8-regression')
+const viewports = ['desktop', 'mobile']
+const evidenceMatches = ({ report, file, sha256: expected }) => {
+  const path = file ?? report
+  return typeof path === 'string' && path.startsWith('artifacts/migration/tdc/p8/')
+    && existsSync(join(hallRoot, path)) && sha256(readFileSync(join(hallRoot, path))) === expected
+}
+const validBrowser = browserReport?.schemaVersion === 1 && browserReport.campaignId === scope.campaignId
+  && browserReport.candidate === false && Array.isArray(browserReport.rows)
+  && Object.keys(browserReport.sources || {}).length > 0
+  && sha256(JSON.stringify(browserReport.sources)) === sha256(JSON.stringify(browserSources(scope.scenarios)))
+  && browserReport.rows.every(row => row.screenshot && evidenceMatches(row.screenshot))
+const browserRows = validBrowser ? browserReport.rows : []
+const browserPassed = (kind, viewport, predicate = () => true) =>
+  browserRows.filter(row => row.kind === kind && row.viewport === viewport && predicate(row)).length === 1
+const validRegression = regression?.schemaVersion === 1 && regression.status === 'passed'
+  && regression.newFailures?.length === 0 && regression.results?.full?.counts?.cancelled === 0
+  && evidenceMatches(regression.before)
+  && ['playerIndex', 'encounterIndex', 'compliance', 'story', 'guides', 'guideCoverage', 'presentation', 'docs', 'replay', 'campaign', 'full']
+    .every(key => regression.results[key] && (key === 'full' || regression.results[key].exitCode === 0)
+      && evidenceMatches(regression.results[key]))
+  && regression.results.full.counts.failures.every(title => regression.before.failures.includes(title))
 // P7 内容批次：逐章验收账本（tools/audit-tdc-scenarios.mjs 生成）。缺失时按「未交付」处理，
 // 确认项保持 false，不会因为账本缺失而放宽门禁。
 const p7ScenarioLedgerPath = join(mod, 'audit/tdc-p7-scenarios.json')
@@ -24,6 +50,21 @@ const p7Scenarios = existsSync(p7ScenarioLedgerPath)
   ? JSON.parse(readFileSync(p7ScenarioLedgerPath, 'utf8'))
   : null
 const p7Chapter = id => p7Scenarios?.scenarios?.find(row => row.id === id) || null
+// 第二轮（2026-11-20）：逐卡 literal 账本由各 worker 生成到
+// artifacts/migration/tdc/p7/literal/<chapterId>.json；approximation/notImplemented/evidenceMissing
+// 全为 0 且条目覆盖本章 cardCount 才算 literalCardBehavior 完成（严格口径，不靠 note 美化）。
+const p7LiteralPath = id => join(mod, '../../artifacts/migration/tdc/p7/literal', `${id}.json`)
+let p7LiteralCache = null
+const p7Literal = id => {
+  p7LiteralCache ||= new Map()
+  if (!p7LiteralCache.has(id)) {
+    const path = p7LiteralPath(id)
+    try {
+      p7LiteralCache.set(id, existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : null)
+    } catch { p7LiteralCache.set(id, null) }
+  }
+  return p7LiteralCache.get(id)
+}
 const tdcStoryText = 'content/campaigns/theDrownedCity/story-text.js'
 const tdcStoryReady = existsSync(join(mod, tdcStoryText))
 const tdcStoryComplete = tdcStoryReady && p7.counts.bilingualGuides === p7.counts.scenarios
@@ -31,8 +72,7 @@ const tdcWorkerReport = id => `artifacts/migration/tdc/p7/workers/scenario-${
   { oneLastJob: 'alpha', theWesternWall: 'alpha', theDrownedQuarter: 'beta', theApiary: 'beta',
     theGrandVault: 'gamma', courtOfTheAncients: 'gamma', obsidianCanyons: 'delta',
     sepulchreOfTheSleeper: 'delta', theDoomOfArkhamPartI: 'epsilon', theDoomOfArkhamPartII: 'epsilon' }[id] || 'unknown'}.md`
-// 逐章内容检查的推导：结构/条目/测试/指南均有独立证据才算 true；approximations 仍会把
-// literalCardBehavior / saveReplay / browserAcceptance 留为 false（账本如实保持 pending）。
+// 每章的 Node、存档、逐卡行为与双端浏览器证据独立判定。
 function contentCheck(id, check) {
   const row = p7Chapter(id)
   const contentReady = Boolean(row?.checks?.moduleLoaded && row?.checks?.manifestComplete && row?.checks?.registered)
@@ -47,7 +87,23 @@ function contentCheck(id, check) {
     case 'chaosEffects': return Boolean(row?.checks?.chaosFile && row?.checks?.tests)
     case 'resolutionsAndRecords': return contentReady && Boolean(row?.checks?.tests)
     case 'storyText': return tdcStoryComplete && Boolean(row?.checks?.guide)
-    // literalCardBehavior / saveReplay / browserAcceptance：本轮未逐条/实局验收，保持 false。
+    // 真实 saveSnapshot/readSnapshot 存档重放：章节测试里必须有该用例（标题可核对）。
+    case 'saveReplay': {
+      const titles = row?.tests?.titles || []
+      return Boolean(row?.checks?.tests)
+        && titles.some(title => /saveSnapshot|存档重放|存档\/重放/.test(title))
+    }
+    // 逐卡印刷行为：literal 账本必须存在且严格零近似/零未实现/零缺证据。
+    case 'literalCardBehavior': {
+      const literal = p7Literal(id)
+      const summary = literal?.summary || null
+      if (!summary) return false
+      const covered = Number(summary.total) >= Number(row?.cardCount || 0)
+      return Boolean(row?.checks?.cardEntries) && covered
+        && summary.approximation === 0 && summary.notImplemented === 0 && summary.evidenceMissing === 0
+    }
+    case 'browserAcceptance': return viewports.every(viewport => browserPassed('chapter', viewport,
+      row => row.id === id && row.code === scope.scenarios.find(chapter => chapter.id === id)?.code))
     default: return false
   }
 }
@@ -112,7 +168,7 @@ assert.deepEqual(sorted(ownerCodes), scope.codes, '范围分区遗漏或重叠')
 assert.deepEqual(scan.cardRows.map(card => card.code), scope.codes, '机制扫描有卡号遗漏或重复')
 assert.equal(scan.scopeSha256, sha(JSON.stringify(scope)), '范围与机制扫描的 SHA-256 漂移')
 assert.equal(scan.coverage.unclassified.length, 0)
-assert(!campaignListForUi(contentRegistry).some(campaign => campaign.id === scope.campaignId), 'TDC 战役仍待 P8 发布验收')
+const launchEnabled = campaignListForUi(contentRegistry).some(campaign => campaign.id === scope.campaignId)
 const releasedInvestigatorCards = new Set([...scope.partitions.investigators, ...scope.partitions.signatures])
 const releasedPlayerCards = new Set(player.cards.filter(card => card.status === 'verified').map(card => card.code))
 assert(scope.codes.every(code => ALL_CARDS[code]?.availability === 'catalog-only'
@@ -171,8 +227,39 @@ const rulebookChecks = {
 const keywordsVerified = keywordItems.every(item => item.status === 'verified')
 const rulebookVerified = Object.values(rulebookChecks).every(Boolean)
 const rulesFastPassed = rules.acceptance.fast?.failed === 0 && rules.acceptance.fast.cancelled === 0
+const scenarioItems = scope.scenarios.map(({ id }) => {
+  const checks = Object.fromEntries(SCENARIO_MIGRATION_CHECKS.map(check => [check, contentCheck(id, check)]))
+  return { id, checks, status: Object.values(checks).every(Boolean) ? 'verified' : 'pending',
+    evidence: [`tests/tdc-scenario-${id}.test.mjs`, 'audit/tdc-p7-scenarios.json', `content/scenario-guide-sources/${id}.json`,
+      tdcWorkerReport(id), 'audit/tdc-p7.json', 'audit/tdc-scope.json',
+      ...(checks.browserAcceptance ? [auditPath('release-browser'), ...browserRows.filter(row => row.id === id)
+        .map(row => row.screenshot.file)] : [])] }
+})
+const scenariosVerified = scenarioItems.every(item => item.status === 'verified')
+const remaining = ['shared', 'campaign'].flatMap(id => (p7Literal(id)?.entries || []).filter(row => row.approximation)
+  .map(row => ({ id: row.code || row.id, scope: id, status: 'disclosed',
+    detail: row.judgement || row.note, evidence: [row.file, `artifacts/migration/tdc/p7/literal/${id}.json`] })))
+const required = {
+  chapters: scenariosVerified,
+  routes: browserPassed('route', 'desktop', row => row.direction === 'west' && row.outcome === 'victory')
+    && browserPassed('route', 'mobile', row => row.direction === 'east' && row.outcome === 'defeat'),
+  multiplayerAiAndSave: viewports.every(viewport => ['online', 'ai', 'save'].every(kind => browserPassed(kind, viewport))),
+  regression: Boolean(validRegression),
+  disclosed: ['shared', 'campaign'].every(id => {
+    const summary = p7Literal(id)?.summary
+    return summary?.notImplemented === 0 && summary.evidenceMissing === 0
+      && remaining.filter(row => row.scope === id && row.id && row.detail && row.evidence.every(Boolean)).length === summary.approximation
+  }),
+  keywordsAndRulebook: keywordsVerified && rulebookVerified,
+}
+const releaseComplete = Object.values(required).every(Boolean)
+assert.equal(launchEnabled, releaseComplete, `TDC 大厅状态与 P8 门禁不一致：${JSON.stringify(required)}`)
 const migration = {
-  schemaVersion: 1, campaignId: scope.campaignId, status: 'catalog-only',
+  schemaVersion: 1, campaignId: scope.campaignId, status: releaseComplete ? 'verified' : 'development',
+  playable: launchEnabled, earlyAccess: false, equivalenceCertified: releaseComplete && remaining.length === 0,
+  releaseAcceptance: { status: releaseComplete ? 'complete' : 'pending', required, deferred: [],
+    browser: auditPath('release-browser'), regression: auditPath('p8-regression') },
+  remaining,
   stages: {
     P0: { status: strictReplay ? 'verified' : 'baseline-recorded', scope: 'audit/tdc-scope.json', baseline: 'audit/tdc-baseline.json',
       replayBaselineVerified: strictReplay },
@@ -190,14 +277,11 @@ const migration = {
       replayCases: interactions.acceptance.replayCases },
     P5: { status: investigators.status, investigators: 'audit/tdc-investigators.json', pending: investigators.pending },
     P6: { status: player.status, player: 'audit/tdc-player.json', counts: player.counts },
-    P7: { status: p7.status, p7: 'audit/tdc-p7.json', counts: p7.counts },
+    P7: { status: scenariosVerified ? 'verified' : p7.status, p7: 'audit/tdc-p7.json', counts: p7.counts },
+    P8: { status: releaseComplete ? 'verified' : 'pending' },
   },
   confirmations: {
-    scenarios: { status: 'pending', items: scope.scenarios.map(({ id }) => ({ id, status: 'pending',
-      checks: Object.fromEntries(SCENARIO_MIGRATION_CHECKS.map(check => [check, contentCheck(id, check)])),
-      evidence: [`tests/tdc-scenario-${id}.test.mjs`, 'audit/tdc-p7-scenarios.json',
-        `content/scenario-guide-sources/${id}.json`, tdcWorkerReport(id), 'audit/tdc-p7.json',
-        'audit/tdc-scope.json'] })) },
+    scenarios: { status: scenariosVerified ? 'verified' : 'pending', items: scenarioItems },
     keywords: { status: keywordsVerified ? 'verified' : 'pending', items: keywordItems },
     rulebook: { status: rulebookVerified ? 'verified' : 'pending', checks: rulebookChecks, evidence: rulesEvidence },
   },

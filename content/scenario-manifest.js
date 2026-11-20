@@ -39,9 +39,18 @@ export function scenarioManifest(scenario, identities, {
   const locations = Object.values(scenario.locations).map(location => {
     const identity = identities.locations?.[location.id]
     if (!identity?.originalCode) throw new Error(`${scenario.id}: 地点 ${location.id} 缺少原卡身份`)
+    // P7 TDC obsidianCanyons：合成地点（开阔天空 xsky）没有实体卡；身份里声明
+    // { originalCode: 'xsky', synthetic: true, name, traits }，manifest 带上展示用名称/特性，
+    // 注册表对合成卡号跳过「必须属于已装卡包」的校验。
+    const synthetic = identity.synthetic === true
     return { id: location.id, frontCode: identity.originalCode,
       backCode: identity.linkedOriginalCode || identity.originalCode,
-      connections: [...location.connections] }
+      connections: [...location.connections],
+      ...(synthetic ? {
+        synthetic: true,
+        name: identity.name || location.name || location.id,
+        traits: [...(identity.traits || [])],
+      } : {}) }
   })
   const sideAliases = [...(scenario.cultistDeck || []),
     ...Object.values(scenario.agentSets || {}).flat()]

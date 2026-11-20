@@ -14,6 +14,7 @@ export default {
   implemented: true,
   flags: { friezeAction: true, cannotBeCanceled: true, storyCode: '11531b' },
   cannotLeavePlay: true,
+  cannotBeCanceledRevelation: true,
   encounterResolve(state, inv, card, api) {
     const locationId = inv?.location
     if (!locationId) return false
@@ -33,8 +34,11 @@ export default {
     api?.info?.('「海底壁画」附属到当前地点（不能取消、不能离场）。')
     return true
   },
-  note: '数据型条目：显现附属由 encounterResolve 经 api.attachToLocation 实现；'
+  note: '数据型条目：显现附属由 encounterResolve 经 api.attachToLocation 实现（附属实例同样带 cannotLeavePlay）；'
     + '两次检定的翻面行动由 behavior.twwSeafloorFrieze 实现。'
-    + 'approximation：「不能取消」只在 flags 记录，引擎的取消管线没有单独读点。',
+    + '「显现不能取消」已接 cannotBeCanceledRevelation（treachery-tokens.js / encounter.js 取消窗口既有读点）。'
+    + '「不能离场」已接引擎读点 cannotLeavePlay：scenario-decks.js#encounterCardCannotLeavePlay，'
+    + 'detachEncounterAttachment / detachEncounterAttachmentById / discardEncounterAttachment 统一拒绝；'
+    + '背面 11531b 不声明，可正常离场。',
   abilities: [],
 }

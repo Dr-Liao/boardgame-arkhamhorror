@@ -12,5 +12,5 @@ export default {
   encounterResolve(state, inv, card, api) {
     return api.resolveScenarioEvent('doomOfArkhamPartTwoEyesOfYchlecht', { seat: inv.seat }) === true
   },
-  note: 'approximation：恶心可塑性的三选一由 behavior.grossPlasticity 处理；其余按卡面结算。',
+  note: "显现：险境；检定[意志](X=狂怒值)；失败受到 1 点直接恐惧（api.scenario.directHorror）并随机弃 1 张手牌。",
 }

@@ -383,6 +383,20 @@ function* modifierSourceRows(state) {
     const list = modifiersOf(card.originalCode || card.code).filter(modifier => modifier.audience === 'all')
     if (list.length) yield { controller: null, source: card, list }
   }
+  // P7 TDC 11731 迷蒙长者：「附属地点的每位调查员 [willpower]/[intellect]/[combat]/[agility]-1」。
+  // 地点附属不是任何调查员的资产，这里按「同地点调查员」产出修正行：controller 取该地点的一名
+  // 在场调查员（audience:'here' 的比较据此成立），每张附属只产出一行，避免多人叠加重复计数。
+  for (const location of state?.locations || []) {
+    for (const attachment of location.attachments || []) {
+      const list = modifiersOf(attachment.originalCode || attachment.code)
+      if (!list.length) continue
+      const controller = (state.investigators || [])
+        .find(inv => !inv.defeated && !inv.resigned && inv.location === location.id)
+      if (!controller) continue
+      if (hooks.sourceBlanked?.(state, controller, attachment)) continue
+      yield { controller, source: attachment, list, host: 'locationAttachment' }
+    }
+  }
   // 持续效果（state.effects）：与卡片修正等价的一条声明式来源，只是有到期时间。
   for (const row of hooks.activeEffects(state)) {
     const controller = state?.investigators?.[row.effect?.controllerSeat]

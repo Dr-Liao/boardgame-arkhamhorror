@@ -11,9 +11,9 @@
 //   · 「每名其他异教徒敌人 +2 战斗」= 条目 modifiers 的 audience:'enemies'（modifiers.js#entityModifierRows
 //     的 enemyAura 行 + entityModifierTotal('enemyFight')）；condition 里同时判定「本卡处于重整状态」
 //     「目标不是自己」「目标带 Cultist 特性」；
-//   · 「获得无情」= api.scenario.setEnemyKeywords 的 relentless 覆盖（enemy-keyword-movement.js 的
-//     可编辑关键词含 relentless）；在敌人生成/轮开始/本卡重整时同步一次，每轮失效后重算；
-//   · 「获得猎手」= 引擎的可编辑关键词不含 hunter，见 note 与 primitive request（pending）。
+//   · 「获得无情和猎手」= api.scenario.setEnemyKeywords 的 relentless/hunter 覆盖
+//     （enemy-keyword-movement.js#editableKeywords 含两者；turn.js#enemyHasHunter 先读
+//     keywordOverrides.hunter 再读印刷值/幕规则）；在敌人生成/轮开始/本卡重整时同步一次，每轮失效后重算。
 const CODE = '11724'
 const TRAIT = 'cultist'
 
@@ -61,13 +61,14 @@ export default {
       if (!leader) return
       for (const enemy of state.enemies || []) {
         if (enemy === leader || !isCultist(enemy)) continue
-        api.scenario?.setEnemyKeywords?.(enemy, ['relentless'], { enabled: true, throughRound: state.round })
+        api.scenario?.setEnemyKeywords?.(enemy, ['relentless', 'hunter'], { enabled: true, throughRound: state.round })
       }
-      api.info?.('🕯️ 「朝圣者领袖」重整：其他异教徒敌人获得无情。')
+      api.info?.('🕯️ 「朝圣者领袖」重整：其他异教徒敌人获得猎手与无情。')
     },
   }],
   note: 'generated 位置走 enemyRule.spawnAnyEmpty；+2 战斗走 enemyAura 修正（重整状态条件在 condition 里）；'
-    + '无情通过 setEnemyKeywords 的 relentless 覆盖同步。近似：引擎可编辑关键词白名单不含 hunter，'
-    + '「获得猎手」没有写入读点——已登记 primitive request（shared-1：允许 setEnemyKeywords 授予 hunter）。'
-    + '重整后才进入在场的敌人会在下一次 enemySpawn/roundStarts/enemyReadied 同步。',
+    + '「获得猎手和无情」通过 setEnemyKeywords 的 hunter/relentless 覆盖同步（第二轮按引擎现状接线：'
+    + 'enemy-keyword-movement.js 的 editableKeywords 含 hunter，turn.js#enemyHasHunter 先读 keywordOverrides.hunter 再读印刷值/幕规则）。'
+    + '关键词覆盖按轮记账，重整后才进入在场的敌人会在下一次 enemySpawn/roundStarts/enemyReadied 同步；'
+    + '这是引擎按轮失效口径带来的时点差异，不涉及规则缺失。',
 }

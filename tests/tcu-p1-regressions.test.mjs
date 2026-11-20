@@ -5,10 +5,12 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 
-import { createGameState, applyMove, legalMoves, startScenario, performTest } from '../src/engine/engine.js'
+import { createGameState, applyMove, enemyFightValue, legalMoves, scenarioRuntime, startScenario, performTest } from '../src/engine/engine.js'
 import { viewState } from '../src/integration/observation.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
+import { addCardCounter, cardCounterOf } from '../src/engine/card-counters.js'
 import { chapters } from '../content/campaigns/theCircleUndone/shared.js'
+import { asset } from './core-fixture.mjs'
 
 const SAFE_IDS = ['done', 'skip', 'no', 'avoid', 'decline', 'cancel', 'none', 'leave', 'safe', 'continue']
 
@@ -111,6 +113,36 @@ test('P1 05095 入场毁灭不能绕过 05085b 的「毁灭不能放在银暮秘
   const spawned = state.enemies.find(enemy => String(enemy.code) === '05095')
   assert.ok(spawned, '05095 已生成')
   assert.equal(spawned.doom || 0, 0, '05085b 生效后入场毁灭被拒绝（不再无条件补写）')
+})
+
+test('恶罪报应：读档后可用柯达相机给幽灵看守人放证据，证据与窃魂可以共存', () => {
+  const state = startScenarioAt(baseState(), 'theWagesOfSin')
+  const kodak = asset(state, '09016')
+  applyMove(state, 0, { action: 'debug', kind: 'spawn', code: '05086', targetSeat: 0 })
+
+  const restored = JSON.parse(JSON.stringify(state))
+  const chooseKodak = legalMoves(restored, 0).find(move => move.optionId?.startsWith('desc:09016#0:'))
+  assert.ok(chooseKodak)
+  applyMove(restored, 0, chooseKodak)
+  const watcher = restored.enemies.find(enemy => enemy.code === '05086')
+  const runtime = scenarioRuntime(restored, [])
+  const baseFight = enemyFightValue(restored, watcher)
+  assert.equal(cardCounterOf(watcher, 'evidence'), 1)
+  assert.equal(restored.investigators[0].assets.find(item => item.id === kodak.id).exhausted, true)
+
+  runtime.addMarker(watcher, 'stolenSoul')
+  runtime.addMarker(watcher, 'stolenSoul')
+  assert.equal(enemyFightValue(restored, watcher), baseFight + 2)
+  assert.equal(cardCounterOf(watcher, 'evidence'), 1)
+  addCardCounter(watcher, 'evidence', -1)
+  assert.deepEqual(watcher.markers, ['stolenSoul', 'stolenSoul'])
+  addCardCounter(watcher, 'evidence', 1)
+  const savedEnemy = JSON.parse(JSON.stringify(watcher))
+  assert.equal(cardCounterOf(savedEnemy, 'evidence'), 1)
+  assert.equal(enemyFightValue(restored, savedEnemy), baseFight + 2)
+  assert.equal(runtime.removeMarker(savedEnemy, 'stolenSoul'), 1)
+  assert.equal(enemyFightValue(restored, savedEnemy), baseFight + 1)
+  assert.equal(cardCounterOf(savedEnemy, 'evidence'), 1)
 })
 
 test('P1 05104 投入卡牌的额外费用只在真正投入后结算（投入 0 张/放弃不结算）', () => {

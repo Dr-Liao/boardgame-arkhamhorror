@@ -21,8 +21,9 @@ import { canDiscardControlledAsset, canLeaveControlledAsset, discardControlledAs
 // 依赖注入同前几批；被多个 api 依赖表引用的 doPlay / performTest 用惰性 thunk。
 
 import { linkLocationBySymbols } from './locations.js'
+import { removeDoomFromCard } from './act-agenda.js'
 import { attachLocationCard, addLocationShroud, setLocationShroudMod } from './location-attachments.js'
-import { discardEncounterAttachment, rememberScenarioDeckAttachment } from './scenario-decks.js'
+import { discardEncounterAttachment, encounterCardCannotLeavePlay, rememberScenarioDeckAttachment } from './scenario-decks.js'
 import { scenarioRuntimeExtras } from './scenario-runtime-extras.js'
 import {
   buildScenarioLocationDeck, chooseScenarioLocationDeck, discardScenarioLocation,
@@ -46,6 +47,7 @@ import { wrapInvestigatorEffects } from './effect-recipient.js'
 import { enemyPlayerEffectBlocked } from './effect-provenance.js'
 import { attackHiddenEnemyFromHand } from './hidden-enemy.js'
 import { enemyCanEnterLocation } from './enemy-entry.js'
+import { enemyCannotBeExhausted } from './enemy-restrictions.js'
 import { changeLocationSeals, restoreEnemyLocation, turnLocationIntoEnemy } from './enemy-location.js'
 import { setEnemyKeywords } from './enemy-keyword-movement.js'
 import { applyInvestigatorForm, replaceLethalHarmWithForm, restoreInvestigatorForm } from './investigator-form.js'
@@ -53,6 +55,9 @@ import { grantPurchaseDiscount } from '../campaign/purchase-discount.js'
 import { redirectAllyHarm } from './harm-assignment.js'
 import { dispatchVehicleEvent, roadHazardOnce } from './road-hazards.js'
 import { mechanicState } from './mechanic-state.js'
+import { addCardCounter, cardCounterOf } from './card-counters.js'
+import { addMarkerLabel, markerLabelsOf, removeMarkerLabel } from '../cards/card-marker-labels.js'
+import { sealChaosToken } from './chaos-bag.js'
 import { capturedAtLocation, capturedLocation, capturedSeats, isCaptured } from './capture.js'
 import { removeVehicle } from './vehicles.js'
 // P7《暗潮之下》第八章：并行幕（深海之城 v.I/II/III）的运行时入口。
@@ -171,6 +176,7 @@ export function createScenarioRuntime(deps) {
     hasSupply,
     hunterStep, resolveHunterMove, resolveHunterMoves, enemyZoneApi, enemyOutcomePublicApi,
     resolveEnemyPhaseOf,
+    runEnemyPatrol,
     info,
     investigateTest,
     isLocationHaunted,
@@ -549,12 +555,23 @@ function scenarioRuntime(state, events, testSource = null) {
     changeLocationSeals: (id, delta) => changeLocationSeals(state, id, delta),
     // 2026-10-28 P2-6：地点交换 / 移出游戏（05125 探访巫宅）。旧地点上的线索/毁灭/地点附属/
     // 玩家地点附属/敌人/调查员迁移语义由原语统一处理，卡条目不再写 state.locations。
-    swapLocation: (fromId, toId, options = {}) => swapLocationInPlay(state, events, fromId, toId, options, {
-      placeLocation, removeLocation, relocateInvestigator, relocateEnemy,
-    }),
-    removeLocationFromGame: (id, options = {}) => removeLocationFromGame(state, events, id, options, {
-      removeLocation, discardEnemyCard,
-    }),
+    swapLocation: (fromId, toId, options = {}) => {
+      // P7 TDC obsidianCanyons 11648–11652：「不能被移动或离场」的地点声明（同一判定入口）。
+      const from = state.locations.find(location => location.id === fromId)
+      const rule = registeredEntry(from?.originalCode || from?.code)?.locationRule
+      if ((rule?.cannotLeavePlay === true || rule?.cannotBeMoved === true) && options.force !== true) return null
+      return swapLocationInPlay(state, events, fromId, toId, options, {
+        placeLocation, removeLocation, relocateInvestigator, relocateEnemy,
+      })
+    },
+    removeLocationFromGame: (id, options = {}) => {
+      const location = state.locations.find(item => item.id === id)
+      const rule = registeredEntry(location?.originalCode || location?.code)?.locationRule
+      if ((rule?.cannotLeavePlay === true || rule?.cannotBeMoved === true) && options.force !== true) return null
+      return removeLocationFromGame(state, events, id, options, {
+        removeLocation, discardEnemyCard,
+      })
+    },
     // 「放进遭遇牌库并洗牌」：把牌洗回遭遇牌库（地点 / 诡计卡通用模板）。
     // 逐字等价于「encounterDeck.push(...codes) 后 api.shuffleEncounterDeck()」：只消耗一次洗牌随机。
     shuffleIntoEncounterDeck: (codes, options = {}) => {
@@ -622,6 +639,70 @@ function scenarioRuntime(state, events, testSource = null) {
     spawn: (code, location, options = {}) => spawnEnemy(state, code, location, null, true, false, null, options),
     linkEnemyParts: (bodyId, partIds) => linkEnemyParts(state, bodyId, partIds),
     spawnEngaged: (code, location, seat) => spawnEnemy(state, code, location, seat),
+    // P7 TDC 11706/11707：「额外执行一次该敌人的巡逻关键词」——与敌人阶段同一个 patrolMove 实现，
+    // 成功移动时记录 enemy.lastPatrolRound（内容层据此判断「本轮是否已巡逻」）。
+    runEnemyPatrol: (enemy, options = {}) => {
+      const actual = state.enemies.find(item => item.id === (typeof enemy === 'string' ? enemy : enemy?.id))
+      if (!actual) return false
+      return Boolean(runEnemyPatrol(state, actual, events))
+    },
+    // P7 TDC：章节 behavior 也需要「给任意卡放计数器 / 按指定标记封印 / 解除封印」的写入口。
+    // 能力面（api.misc/api.card）与本处共用同一实现，避免 behavior 侧出现直写或无法闭合。
+    addCardCounter: (card, id, amount = 1, options = {}) => addCardCounter(card, id, amount, options),
+    cardCounterOf: (card, id) => cardCounterOf(card, id),
+    sealChaosTokenFromBag: (token, card) => {
+      if (!card?.id || token == null) return null
+      sealChaosToken(state, token, card.id, Number.isInteger(state._resolvingSeat) ? state._resolvingSeat : null)
+      return token
+    },
+    releaseSealedToken: (card, token = '0') => {
+      const entry = (state.chaos?.sealed || []).find(item => item.source === card?.id && item.token === token)
+      if (!entry) return null
+      state.chaos.sealed = state.chaos.sealed.filter(item => item !== entry)
+      state.sealedTokens = state.chaos.sealed.map(item => item.token)
+      state.chaosBag.push(entry.token)
+      return entry.token
+    },
+    // P7 TDC obsidianCanyons 11658：「搜索遭遇牌库和遭遇弃牌堆，找出一名[[怪物]]敌人，将其生成并与你交战」。
+    // 读点：引擎唯一「按印刷数据搜索遭遇牌并生成」入口；伤害/生成/牌堆移除三件事在一处收口。
+    searchEncounterCard: ({ traits = [], type = 'enemy', from = ['deck', 'discard'], spawn = null,
+      seat = null, shuffleDeck = true } = {}) => {
+      const wanted = traits.map(trait => String(trait).toLowerCase())
+      const matches = code => {
+        const def = cardDef(code)
+        if (!def) return false
+        if (type && def.type !== type) return false
+        if (!wanted.length) return true
+        return (def.traits || []).some(trait => wanted.includes(String(trait).toLowerCase()))
+      }
+      let found = null
+      for (const pile of from) {
+        if (pile === 'deck') {
+          state.encounterDeck ||= []
+          for (let index = state.encounterDeck.length - 1; index >= 0; index -= 1) {
+            if (matches(state.encounterDeck[index])) { found = { pile, index, code: state.encounterDeck[index] }; break }
+          }
+        } else if (pile === 'discard') {
+          state.encounterDiscard ||= []
+          for (let index = state.encounterDiscard.length - 1; index >= 0; index -= 1) {
+            if (matches(state.encounterDiscard[index])) { found = { pile, index, code: state.encounterDiscard[index] }; break }
+          }
+        }
+        if (found) break
+      }
+      if (!found) return null
+      const list = found.pile === 'deck' ? state.encounterDeck : state.encounterDiscard
+      list.splice(found.index, 1)
+      info(state, events, `🔎 从遭遇${found.pile === 'deck' ? '牌库' : '弃牌堆'}找到「${cardName(found.code)}」。`)
+      if (found.pile === 'deck' && shuffleDeck !== false && state.encounterDeck.length) {
+        state.encounterDeck = shuffle(state.encounterDeck, () => randomValue(state))
+      }
+      if (spawn === 'engaged' && Number.isInteger(seat)) {
+        const inv = state.investigators[seat]
+        if (inv) spawnEnemy(state, found.code, inv.location, seat)
+      }
+      return found.code
+    },
     // 从玩家牌/无目录数据生成的敌人（04331 飞天水螅：把牌库顶的牌视为敌人）。
     spawnStoryEnemy: (code, location, stats = {}, extra = {}) => spawnStoryEnemy(state, code, location, stats, extra, events),
     attack: (enemy, inv) => enemyAttack(state, enemy, inv, events, '剧本效果', { kind: 'effect' }),
@@ -1040,6 +1121,18 @@ function scenarioRuntime(state, events, testSource = null) {
       actual.skipNextUpkeepReady = true
       return true
     },
+    // P7 TDC 11688 黏土恐怖 [fast]：将受控剧情支援的印刷文本框视为空白直到本轮结束
+    // （特性不受影响）。读点：card-text.js#assetTextBlanked；turn.js 轮次推进时清除 textBlankRound。
+    blankStoryAssetText: (asset, { untilRoundEnd = true } = {}) => {
+      const id = typeof asset === 'string' ? asset : asset?.id
+      const all = [...(state.storyAssets || []),
+        ...state.investigators.flatMap(inv => inv.assets || [])]
+      const actual = all.find(card => card === asset || card?.id === id)
+      if (!actual) return false
+      actual.textBlank = true
+      if (untilRoundEnd) actual.textBlankRound = state.round
+      return true
+    },
     preventEnemyReady: (enemy, rounds = 1) => {
       if (!enemy) return false
       enemy.preventReady = { from: state.round, rounds: Math.max(1, Number(rounds) || 1) }
@@ -1086,6 +1179,7 @@ function scenarioRuntime(state, events, testSource = null) {
       return asset ? attachCardTo(state, null, code, asset, { encounterAttached: true, ...extra }) : null
     },
     detachEncounterAttachment: source => {
+      if (!source || encounterCardCannotLeavePlay(source.originalCode || source.code)) return false
       const hosts = [...state.locations, ...state.acts, ...state.agendas, ...state.enemies, ...(state.storyAssets || []),
         ...state.investigators.flatMap(inv => inv.assets)]
       const host = hosts.find(item => item.attachments?.includes(source))
@@ -1103,6 +1197,7 @@ function scenarioRuntime(state, events, testSource = null) {
       for (const host of hosts) {
         const attachment = (host.attachments || []).find(item => item.id === attachmentId)
         if (!attachment) continue
+        if (encounterCardCannotLeavePlay(attachment.originalCode || attachment.code)) return false
         host.attachments.splice(host.attachments.indexOf(attachment), 1)
         discardEncounterAttachment(state, attachment)
         return true
@@ -1246,7 +1341,10 @@ function scenarioRuntime(state, events, testSource = null) {
       if (!enemy) return 0
       const before = Number(enemy.damageTaken) || 0
       enemy.damageTaken = Math.max(0, before - Math.max(0, Number(amount) || 0))
-      return before - enemy.damageTaken
+      const healed = before - enemy.damageTaken
+      // P7 TDC 11727：「有伤害时获得警戒/反击」需要在治疗/离场后重算关键词。
+      if (healed > 0) scenarioBehavior(state).enemyHealed?.(state, enemy, healed, scenarioRuntime(state, events))
+      return healed
     },
     // 05267/05087：敌人的横置/重整（敌人阶段与「如同敌军阶段」的结算共用读点）。
     readyEnemy: enemy => {
@@ -1265,6 +1363,8 @@ function scenarioRuntime(state, events, testSource = null) {
     exhaustEnemy: enemy => {
       if (!enemy) return false
       if (enemyPlayerEffectBlocked(state, enemy, slumberDeps)) return false
+      // P7 TDC 11702–11704：非[[狂怒]]面「不能被横置」。
+      if (enemyCannotBeExhausted(state, enemy, deps.enemyTextBlanked)) return false
       for (const member of swarmGroup(state, enemy)) member.exhausted = true
       return true
     },
@@ -1357,7 +1457,6 @@ function scenarioRuntime(state, events, testSource = null) {
     flipMarker: (target, options = {}) => {
       const amount = Math.max(1, Math.floor(options.amount || 1))
       if (!target) return 0
-      const labels = target.markers || []
       let flipped = 0
       for (let i = 0; i < amount; i++) {
         if ((target.doom || 0) <= 0) break
@@ -1366,14 +1465,14 @@ function scenarioRuntime(state, events, testSource = null) {
         flipped += 1
       }
       if (flipped) {
-        labels.push(`doomToClue:${flipped}`)
-        target.markers = labels
+        addMarkerLabel(target, `doomToClue:${flipped}`)
         info(state, events, `🔄 把「${target.name || cardName(target.code)}」上的 ${flipped} 个毁灭标记翻至线索面。`)
       }
       return flipped
     },
     // 在「某一张卡」上放毁灭的统一入口（敌人在内）：走 doomPlaced 钩子与 04265 手铐拦截。
     doomOn: (card, amount = 1) => placeDoomOnCard(state, card, amount, events, { silent: true }),
+    removeDoomFromCard: (card, amount) => removeDoomFromCard(state, card, amount),
     // 2026-10-25 本循环修复 doom-placement-prevention：内容可先问「这张卡此刻能不能被放置毁灭」。
     canPlaceDoomOn: card => scenarioBehavior(state).canPlaceDoomOn?.(state, card) !== false,
     // 2026-10-25 第四轮修复 05307：地点遭遇附属的真实实例承载（显示/文本空白/关闭行动读同一份数据）。
@@ -1577,6 +1676,8 @@ function scenarioRuntime(state, events, testSource = null) {
     // 2026-10-28 P1：剧本/遭遇卡附属到地点（疯狂生长 04076 / 屋中无人 04145 / 怨灵作祟 03094 …）。
     // 走 location-attachments.js 的唯一写入口（location.attachments），卡文件不再直接 push。
     attachToLocation: (locationId, fields = {}) => attachLocationCard(state, locationId, { scope: 'location', ...fields }),
+    // P7 TDC 11516：遭遇牌（或剧情牌）附属到敌人；读点：combat/enemyDamaged 等既有 enemy.attachments 消费者。
+    attachToEnemy: (enemy, code, extra = {}) => (enemy && code ? attachCardTo(state, null, code, enemy, extra) : null),
     // 「附属到地点，帷幕 +N」的雾/阴影诡计（01168 朦胧之雾）：与 api-clue 的同一实现。
     attachShroud: (locationId, amount = 2, code = null) => addLocationShroud(state, locationId, amount, code),
     // 地点帷幕临时修正（03262 地下深坑「附属地点隐藏值 +1」）：与 api-misc 的同一实现。
@@ -1596,19 +1697,9 @@ function scenarioRuntime(state, events, testSource = null) {
       return enemy.attachments.splice(index, 1)[0]
     },
     // 2026-10-25 第五轮修复（05239/05241/05242）：通用「资源标记」载体（记在敌人/地点/卡实例上）。
-    addMarker: (target, label = 'resource') => {
-      if (!target) return null
-      target.markers ||= []
-      target.markers.push(label)
-      return target.markers.length
-    },
-    removeMarker: (target, label = 'resource') => {
-      if (!target?.markers) return 0
-      const index = target.markers.indexOf(label)
-      if (index >= 0) target.markers.splice(index, 1)
-      return target.markers.length
-    },
-    markers: target => (target?.markers ? [...target.markers] : []),
+    addMarker: (target, label = 'resource') => target ? addMarkerLabel(target, label) : null,
+    removeMarker: (target, label = 'resource') => removeMarkerLabel(target, label),
+    markers: target => [...markerLabelsOf(target)],
     // 2026-10-25 第五轮修复（05110）：地点当前帷幕的完整读点（含剧本/地点修正与雾）。
     locationShroud: (locationId, seat = state.currentSeat, { includeLocationState = false } = {}) => {
       const location = state.locations.find(loc => loc.id === locationId)
@@ -1725,9 +1816,17 @@ function scenarioRuntime(state, events, testSource = null) {
     }),
     // 第 2 步 P2.12：异端者多面与放逐（面的代码/属性来自关卡数据与卡面定义）。
     flipAsset: (asset,nextCode) => applyPhysicalFace(state,asset,nextCode,{definitionFor:code=>cardDef(code)}),
-    flipEnemy: (enemy, nextCode) => enemyPlayerEffectBlocked(state, enemy, slumberDeps) ? null
-      : flipEnemyFace(state, enemy, nextCode, { defOf: code => enemyDef(code), newCardInstance, info, events, reactionWindow,
-        afterApplied:entity=>{if(!entity.exhausted)autoEngageAt(state,entity.location,events)} }),
+    flipEnemy: (enemy, nextCode) => {
+      if (enemyPlayerEffectBlocked(state, enemy, slumberDeps)) return null
+      const fromCode = enemy?.code || null
+      const flipped = flipEnemyFace(state, enemy, nextCode, { defOf: code => enemyDef(code), newCardInstance, info, events, reactionWindow,
+        afterApplied:entity=>{if(!entity.exhausted)autoEngageAt(state,entity.location,events)} })
+      // P7 TDC 11702–11704：翻至[[狂怒]]面后的「强制 - 你将本敌人翻至本面后」由章节 behavior 结算一次。
+      if (flipped?.changed) {
+        scenarioBehavior(state).enemyFaceFlipped?.(state, enemy, fromCode, nextCode, scenarioRuntime(state, events))
+      }
+      return flipped
+    },
     enemyFace: enemy => enemyFace(enemy),
     addStoryToVictory: (code, options = {}) => {
       state.victoryDisplay ||= []
@@ -2032,6 +2131,15 @@ function scenarioRuntime(state, events, testSource = null) {
         discarded.push(code)
         if (options.log !== false) info(state, events, `弃掉遭遇牌库顶的「${cardName(code)}」。`)
       }
+      // P7 TDC 11624/11625/11627：弃掉遭遇牌库顶后的反应/强制窗口（地点条目 ability trigger
+      // 或章节 behavior 均可监听）。窗口只在真的弃了牌时打开，旧对局无监听者时行为零变化。
+      if (discarded.length) {
+        reactionWindow(state, 'encounterCardsDiscardedFromTop', {
+          when: 'encounterCardsDiscardedFromTop', count: discarded.length, codes: [...discarded],
+          seat: Number.isInteger(options.seat) ? options.seat : null,
+          prompt: `弃掉了遭遇牌库顶的 ${discarded.length} 张牌。`,
+        }, events, { allowNested: true })
+      }
       return discarded
     },
     discardEncounterCard: (code, options = {}) => {
@@ -2282,6 +2390,12 @@ function scenarioRuntime(state, events, testSource = null) {
       if (untilRoundEnd) enemy.asideUntilRoundEnd = { round: state.round, location: enemy.location }
       disengageEnemy(state, enemy)
       removeOne(state.enemies, enemy)
+      scenarioBehavior(state).enemyLeftPlay?.(state, enemy, 'setAside', scenarioRuntime(state, events))
+      // P7 TDC 11549：「将要离场时翻面并移动到连接地点」的章节钩子可以在敌人已被移出场景后
+      // 决定不再进入「放一边」区（返回 true = 内容已接管去向，跳过默认 push）。
+      if (scenarioBehavior(state).enemyWouldBeSetAside?.(state, enemy, scenarioRuntime(state, events)) === true) {
+        return enemy.id
+      }
       state.setAsideEnemies ||= []
       state.setAsideEnemies.push(enemy)
       return enemy.id
@@ -2306,6 +2420,7 @@ function scenarioRuntime(state, events, testSource = null) {
         disengageEnemy(state, item)
         removeOne(state.enemies, item)
         state.removedFromGame.push(item.originalCode || item.code)
+        scenarioBehavior(state).enemyLeftPlay?.(state, item, 'removed', scenarioRuntime(state, events))
       }
       if (enemy.enemyLocation) removeLocation(state, enemy.id, events)
       return true

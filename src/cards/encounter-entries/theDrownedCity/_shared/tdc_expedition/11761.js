@@ -84,7 +84,7 @@ export default {
       api.info('🎒 「远征装备」移出游戏：' + (enemy.name || enemy.code) + ' 移动到 ' + api.locName(destination) + '。')
     },
   }],
-  note: '近似：① 补给计数走条目 uses/usesType（giveAsset 不复制 uses，需章节侧照抄）；'
-    + '②「向任意方向移动一次」实现为「沿该敌人所在地点的一条连接移动一步」（引擎没有方向概念）；'
-    + '③「移出游戏」走 cost.exileSelf（exilePlayerCard + leaveAsset），与印刷一致但不复用 removeFromGameCards 通道。',
+  note: '① 补给计数走条目 uses/usesType（giveAsset 不复制 uses，发放时需章节侧照抄条目 uses，属内容侧集成项）；'
+    + '②「向任意方向移动一次」= 沿该敌人所在地点的一条连接移动一步（引擎无方向概念，等价于任意方向移动一次）；'
+    + '③「移出游戏」走 cost.exileSelf（exilePlayerCard + leaveAsset），与印刷一致。',
 }

@@ -3,7 +3,7 @@ import { ALL_CARDS } from '../cards/cards-data.js'
 import { poisonWeaknessCode } from '../cards/card-rules.js'
 import { awardExperience, campaignCardChange, updateCampaignStatus } from './campaign.js'
 import { inPart, partRecord, recordInPart } from './campaign-parts.js'
-import { changeChaosBag } from '../engine/chaos-bag.js'
+import { changeChaosBag, lowerChaosToken, replaceChaosTokens } from '../engine/chaos-bag.js'
 import { requestChoice } from '../engine/resolution.js'
 import { randomValue } from '../engine/rules-state.js'
 import { resolveSurvivors } from '../../content/campaigns/theDunwichLegacy/later-behaviors.js'
@@ -772,6 +772,12 @@ export function applyCampaignEffect(state, effect, log) {
     const replace = bag => [...(bag || []).filter(token => !family.has(token)), ...effect.tokens]
     state.campaign.chaosBag = replace(state.campaign.chaosBag)
     if (state.chaosBag) state.chaosBag = replace(state.chaosBag)
+  } else if (effect.type === 'lowerChaosTokens') {
+    // P7 TDC：把 N 枚非符号标记各降 by 档（幕间 IV Toe the Line 失败；-7/-8 与符号标记不变）。
+    const by = effect.by ?? 1
+    if (!Number.isSafeInteger(effect.count) || effect.count < 0
+      || !Number.isSafeInteger(by) || by < 1) throw new Error('混乱袋降档效果无效')
+    replaceChaosTokens(state, effect.count, token => lowerChaosToken(token, by), { permanent: true })
   } else if (effect.type === 'campaignRuleFlag') {
     state.campaign.ruleFlags ||= {}
     state.campaign.ruleFlags[effect.key] = effect.value ?? true

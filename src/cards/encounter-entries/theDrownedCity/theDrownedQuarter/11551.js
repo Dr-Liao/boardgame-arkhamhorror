@@ -5,6 +5,8 @@ export default {
   code: '11551',
   scope: 'enemy',
   implemented: true,
-  note: "印刷：冷漠、巡逻（最近的未淹没或部分淹没地点）；敌军阶段开始时若重整：提高所在地点淹没，不能则放 1 毁灭。行为在 behavior.phaseBegan（按卡号 11551）。巡逻目标的「未淹没或部分淹没」筛选尚未接线（近似）。",
+  // 巡逻（最近的未淹没或部分淹没地点）：引擎既有 enemyRule.patrolTarget（turn.js 读点）。
+  enemyRule: { patrolTarget: { kind: 'flood', below: 2 } },
+  note: "印刷：冷漠、巡逻（最近的未淹没或部分淹没地点）；敌军阶段开始时若重整：提高所在地点淹没，不能则放 1 毁灭。已接线：巡逻目标由 enemyRule.patrolTarget = { kind:'flood', below:2 } 声明（引擎既有 turn.js#巡逻读点：最近的未完全淹没地点）；敌军阶段开始强制在 behavior.phaseBegan（按卡号 11551）。全部子句已接线。",
   abilities: [],
 }

@@ -251,3 +251,33 @@
 
 暗潮之下
   campaigns/theInnsmouthConspiracy/intoTheMaelstrom/
+
+金盆洗手
+  campaigns/theDrownedCity/oneLastJob/
+
+西墙
+  campaigns/theDrownedCity/theWesternWall/
+
+淹没城区
+  campaigns/theDrownedCity/theDrownedQuarter/
+
+养育场
+  campaigns/theDrownedCity/theApiary/
+
+大秘库
+  campaigns/theDrownedCity/theGrandVault/
+
+古代议庭
+  campaigns/theDrownedCity/courtOfTheAncients/
+
+黑曜石峡谷
+  campaigns/theDrownedCity/obsidianCanyons/
+
+沉睡者墓穴
+  campaigns/theDrownedCity/sepulchreOfTheSleeper/
+
+阿卡姆的毁灭 第一部分
+  campaigns/theDrownedCity/theDoomOfArkhamPartI/
+
+阿卡姆的毁灭 第二部分
+  campaigns/theDrownedCity/theDoomOfArkhamPartII/

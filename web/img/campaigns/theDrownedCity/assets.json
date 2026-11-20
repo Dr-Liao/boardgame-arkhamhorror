@@ -1,0 +1,140 @@
+{
+  "campaignId": "theDrownedCity",
+  "created": "2026-11-20",
+  "source": "Original artwork generated using the OpenAI built-in image_gen tool.",
+  "palette": "slate sea green, weathered basalt, oxidized brass and location-specific colors",
+  "assets": [
+    {
+      "id": "hub",
+      "title": "沉没之城",
+      "file": "hub/drowned-city.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original atmospheric landscape illustration for a 1920s cosmic-horror tabletop mod, landscape 3:2 1536×1024. Sweeping wide view from a tilted black-stone causeway into a drowned prehistoric city, stepped basalt monoliths rising out of a vast slate-green sea in offshore fog, impossibly leaning towers, a tiny 1920s expedition boat and one dim copper searchlight for scale. Blue-green dawn, old copper and oxidized jade. Painterly cinematic realism with matte oil texture and light paper grain. Readable silhouettes and an uncluttered composition that works in a cropped UI. Original art with no lettering, logos, borders or watermarks. Do not imitate or reconstruct any published game art.",
+      "original": "artifacts/tdc-media/originals/hub.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 229200,
+      "sha256": "a79c8db33e511a30bc0bdb92fd29c81d4efadf3ac18a053f71048e82825af7e3"
+    },
+    {
+      "id": "table",
+      "title": "深海远征牌桌",
+      "file": "table/expedition-desk.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original atmospheric landscape illustration for a 1920s cosmic-horror tabletop mod, landscape 3:2 1536×1024. Strict orthographic top-down view of a salt-stained near-black oak chart table aboard a 1920s survey cutter. The central 75% is entirely empty, flat dark low-contrast wood suitable for readable cards, with a folded water-distorted chart, small tarnished brass dividers, a rope edge and a sliver of green glass lamp cropped into outer corners only. Keep the central surface even and free of cast shadows. Painterly cinematic realism with matte oil texture and light paper grain. Readable silhouettes and an uncluttered composition that works in a cropped UI. Original art with no lettering, logos, borders or watermarks. Do not imitate or reconstruct any published game art.",
+      "original": "artifacts/tdc-media/originals/table.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 160398,
+      "sha256": "660521cc7554791a749d0791973111f2cfda1d2630d107af5ca590330a22a59e"
+    },
+    {
+      "id": "oneLastJob",
+      "title": "金盆洗手",
+      "file": "scenarios/oneLastJob/scene.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original atmospheric landscape illustration for a 1920s cosmic-horror tabletop mod, landscape 3:2 1536×1024. Late 1920s New England city at night, a rain-glossed service alley and an unmarked basement speakeasy entrance, vented steam, a parked black period sedan, a faint amber back-room light spilling onto the wet stairs, ink-blue brick and sodium-gold reflections. Crime noir atmosphere. Painterly cinematic realism with matte oil texture and light paper grain. Readable silhouettes and an uncluttered composition that works in a cropped UI. Original art with no lettering, logos, borders or watermarks. Do not imitate or reconstruct any published game art.",
+      "original": "artifacts/tdc-media/originals/oneLastJob.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 346960,
+      "sha256": "4d6dcbc4493c3c5190f0a7c5352caa21f9479e03b61a77ee2234d689948233b3"
+    },
+    {
+      "id": "theWesternWall",
+      "title": "西墙",
+      "file": "scenarios/theWesternWall/scene.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original atmospheric landscape illustration for a 1920s cosmic-horror tabletop mod, landscape 3:2 1536×1024. View from an expedition ledge down the sheer impossible rampart of a half-submerged cyclopean city. Huge slant-jointed basalt blocks, narrow wet landings, a slack period climbing rope at the edge, turquoise wave foam far below. Cold spray and sheer vertical scale. Painterly cinematic realism with matte oil texture and light paper grain. Readable silhouettes and an uncluttered composition that works in a cropped UI. Original art with no lettering, logos, borders or watermarks. Do not imitate or reconstruct any published game art.",
+      "original": "artifacts/tdc-media/originals/theWesternWall.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 276072,
+      "sha256": "5c327ab64c3dfbe82dd3c060bbde1b74acfc05a91a9b7443000cf92ac121bcdd"
+    },
+    {
+      "id": "theDrownedQuarter",
+      "title": "淹没城区",
+      "file": "scenarios/theDrownedQuarter/scene.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original atmospheric landscape illustration for a 1920s cosmic-horror tabletop mod, landscape 3:2 1536×1024. At water level in a submerged stone neighborhood, flooded alleys threading between square roofless dwellings; under glassy teal water a vast ancient power conduit gives off a faint blue light. Silvery pools, silt, reflected arches and a dense dark channel leading inward. Painterly cinematic realism with matte oil texture and light paper grain. Readable silhouettes and an uncluttered composition that works in a cropped UI. Original art with no lettering, logos, borders or watermarks. Do not imitate or reconstruct any published game art.",
+      "original": "artifacts/tdc-media/originals/theDrownedQuarter.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 238416,
+      "sha256": "bde3a69e1d3ece1627ae23680301b15da7013d98b2e80317a1e2b2a7e79e0317"
+    },
+    {
+      "id": "theApiary",
+      "title": "养育场",
+      "file": "scenarios/theApiary/scene.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original atmospheric landscape illustration for a 1920s cosmic-horror tabletop mod, landscape 3:2 1536×1024. Subterranean chamber of an alien hive fused into hewn black stone, towering waxy hexagonal cells, translucent amber membranes, sticky filaments and a narrow path disappearing into dim russet light. Suggest an unsettling living architecture with restrained detail, no gore. Painterly cinematic realism with matte oil texture and light paper grain. Readable silhouettes and an uncluttered composition that works in a cropped UI. Original art with no lettering, logos, borders or watermarks. Do not imitate or reconstruct any published game art.",
+      "original": "artifacts/tdc-media/originals/theApiary.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 166390,
+      "sha256": "61f1a7242948f1dfaa43a45ea69ae6dba2b983e7ba4186908c69c1b0a716901f"
+    },
+    {
+      "id": "theGrandVault",
+      "title": "大秘库",
+      "file": "scenarios/theGrandVault/scene.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original atmospheric landscape illustration for a 1920s cosmic-horror tabletop mod, landscape 3:2 1536×1024. Symmetrical underground vault antechamber, terraced obsidian steps and tarnished bronze winch machinery lead to a colossal concentric sealed doorway. Quiet golden shaft of light catches floating mineral dust, subdued deep verdigris and heavy shadows. Painterly cinematic realism with matte oil texture and light paper grain. Readable silhouettes and an uncluttered composition that works in a cropped UI. Original art with no lettering, logos, borders or watermarks. Do not imitate or reconstruct any published game art.",
+      "original": "artifacts/tdc-media/originals/theGrandVault.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 193576,
+      "sha256": "e129e570ed2a0f6d7ac38306c8ad66a09634dd8803ba8eed42c81c7133819785"
+    },
+    {
+      "id": "courtOfTheAncients",
+      "title": "古代议庭",
+      "file": "scenarios/courtOfTheAncients/scene.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original atmospheric landscape illustration for a 1920s cosmic-horror tabletop mod, landscape 3:2 1536×1024. Yawning archaic council amphitheater, tiers of empty black-stone seats and giant eroded pillars encircle a displaced suspended dais over a central chasm. Cool jade light trickles through stone seams, violet-gray recession. Suggest impossible architecture through perspective. Painterly cinematic realism with matte oil texture and light paper grain. Readable silhouettes and an uncluttered composition that works in a cropped UI. Original art with no lettering, logos, borders or watermarks. Do not imitate or reconstruct any published game art.",
+      "original": "artifacts/tdc-media/originals/courtOfTheAncients.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 231898,
+      "sha256": "437f1a10f2828caf89099ee05d2b7b4132384b4efb51c6bb6386e2b9dd0affb4"
+    },
+    {
+      "id": "obsidianCanyons",
+      "title": "黑曜石峡谷",
+      "file": "scenarios/obsidianCanyons/scene.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original atmospheric landscape illustration for a 1920s cosmic-horror tabletop mod, landscape 3:2 1536×1024. A vast ravine of jagged black volcanic glass with a small period cable gondola silhouetted against distant lightning, its narrow cable crossing toward a stone outpost near a jagged summit. Violet storm clouds, airborne dust and icy side light, steep diagonal composition. Painterly cinematic realism with matte oil texture and light paper grain. Readable silhouettes and an uncluttered composition that works in a cropped UI. Original art with no lettering, logos, borders or watermarks. Do not imitate or reconstruct any published game art.",
+      "original": "artifacts/tdc-media/originals/obsidianCanyons.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 246728,
+      "sha256": "a029a16c88985809b39e885598dbf05fa75c1f232e065b197e6bedea49805921"
+    },
+    {
+      "id": "sepulchreOfTheSleeper",
+      "title": "沉睡者墓穴",
+      "file": "scenarios/sepulchreOfTheSleeper/scene.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original atmospheric landscape illustration for a 1920s cosmic-horror tabletop mod, landscape 3:2 1536×1024. A rock-cut sepulcher flooded ankle-deep, broad stairs into a vast dark funerary chamber. A monolithic sarcophagus with a hairline seal sits beyond a shallow reflecting pool; faint sea-green light seeps from the seam. Still ritual atmosphere and thick cold darkness. No creature visible. Painterly cinematic realism with matte oil texture and light paper grain. Readable silhouettes and an uncluttered composition that works in a cropped UI. Original art with no lettering, logos, borders or watermarks. Do not imitate or reconstruct any published game art.",
+      "original": "artifacts/tdc-media/originals/sepulchreOfTheSleeper.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 131350,
+      "sha256": "cef79aae93ec5c2641b01d1ff56beb4172bdd535da0a9fc64136e38a95b3ea34"
+    },
+    {
+      "id": "theDoomOfArkhamPartI",
+      "title": "阿卡姆的毁灭 第一部分",
+      "file": "scenarios/theDoomOfArkhamPartI/scene.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original atmospheric landscape illustration for a 1920s cosmic-horror tabletop mod, landscape 3:2 1536×1024. 1920s New England downtown just before catastrophe, empty rain-dark storefronts and muted yellow shop lights, shopfront glass reflecting an unnatural sea-green light overhead. A vanished figure implied by an abandoned umbrella. Low swirling clouds, tense investigative quiet. Painterly cinematic realism with matte oil texture and light paper grain. Readable silhouettes and an uncluttered composition that works in a cropped UI. Original art with no lettering, logos, borders or watermarks. Do not imitate or reconstruct any published game art.",
+      "original": "artifacts/tdc-media/originals/theDoomOfArkhamPartI.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 287524,
+      "sha256": "4861252601afb605a573da4cc723f91700eb0e340231294c77dd008ae819c14d"
+    },
+    {
+      "id": "theDoomOfArkhamPartII",
+      "title": "阿卡姆的毁灭 第二部分",
+      "file": "scenarios/theDoomOfArkhamPartII/scene.webp",
+      "prompt": "Use case: stylized-concept. Asset type: original atmospheric landscape illustration for a 1920s cosmic-horror tabletop mod, landscape 3:2 1536×1024. Cinematic high view over flooded New England streets in a devastating nocturnal storm, brick rooftops and steeples silhouetted by distant lightning, surge running along the boulevards, an immense indistinct organic shadow within the clouds behind the town. Jade storm light, small warm rescue lanterns, no gore. Painterly cinematic realism with matte oil texture and light paper grain. Readable silhouettes and an uncluttered composition that works in a cropped UI. Original art with no lettering, logos, borders or watermarks. Do not imitate or reconstruct any published game art.",
+      "original": "artifacts/tdc-media/originals/theDoomOfArkhamPartII.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 238202,
+      "sha256": "ce452c0edd8cf8fe2c9f6f48f7a88c38721b430e205402c6cd9f756287497fd6"
+    }
+  ]
+}

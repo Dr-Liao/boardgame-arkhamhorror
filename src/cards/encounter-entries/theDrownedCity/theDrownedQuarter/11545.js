@@ -6,6 +6,6 @@ export default {
   scope: 'location',
   implemented: true,
   flags: {"seaFloor":true},
-  note: "data-type（[[海底]]地点，双面：背面 = 海床）。behavior.locationRevealed 执行「进入海床时提高本地点'\n      + '与一处相邻地点的淹没」；本卡其余印刷能力尚未接线（近似）：残破遗迹·崩毁建筑（回合结束后提高自身淹没；[action] 本地点调查员共同弃合计 1/人张手牌降低本地点/相邻地点淹没，每轮一次）。",
+  note: "data-type（[[海底]]地点，双面：背面 = 海床）。已接线：进入海床提高本地点与一处相邻地点的淹没（behavior.locationRevealed）；强制「你在残破遗迹（崩毁建筑）结束回合后：提高其淹没等级」走 behavior.turnEnded；[action]「位于本地的调查员共同弃掉手牌中合计 1[per_investigator] 张卡牌：降低本地点或一处相邻地点的淹没等级」走 behavior.actions/performAction（每轮团队限一次，scenarioFlags 记账）。全部子句已接线。",
   abilities: [],
 }

@@ -9,6 +9,6 @@ export default {
   code: '11705',
   scope: 'storyAsset',
   implemented: true,
-  note: '数据型条目：克苏鲁牌库 action 卡，结算在 behavior.resolveCthulhuCard（近似见 worker 报告）。',
+  note: "数据型条目：结算在 behavior.resolveCthulhuCard：灰白双翼→克苏鲁地点每人随机弃 1 手牌；凶恶面容→攻击该地点意志最高者，若没有进行攻击则该调查员抽遭遇牌库顶（api.drawEncounter 的 cannotCancel + suppressSurge 选项）；邪恶利爪→该地点战斗最高者检定[combat](X=狂怒值)，失败被攻击。",
   abilities: [],
 }

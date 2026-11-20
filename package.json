@@ -345,6 +345,9 @@
     "test:fhv:p8": "node --test tests/fhv-p8-campaign.test.mjs tests/fhv-p8-migration.test.mjs",
     "test:fhv:release:browser": "node tools/run-fhv-release-browser.mjs",
     "audit:tdc:scenarios": "node tools/audit-tdc-scenarios.mjs --check",
+    "test:tdc:p8": "node --test tests/tdc-p8-campaign.test.mjs",
+    "test:tdc:p8:browser": "node tools/run-tdc-release-browser.mjs",
+    "verify:tdc:p8:regression": "node tools/verify-tdc-p8-regression.mjs",
     "audit:tdc:scenarios:write": "node tools/audit-tdc-scenarios.mjs --write",
     "test:tdc:scenarios": "node --test \"tests/tdc-scenario-*.test.mjs\"",
     "test:tdc:p7:content": "node --test tests/tdc-p7-story.test.mjs tests/tdc-p7-campaign-layer.test.mjs tests/tdc-p7-campaign-registration.test.mjs tests/tdc-p7-scenario-integrity.test.mjs tests/tdc-p7-shared-encounters.test.mjs tests/tdc-p7-shared-assets.test.mjs"

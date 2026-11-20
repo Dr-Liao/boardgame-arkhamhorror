@@ -15,6 +15,7 @@ import { validateEotePlayerPrimitives } from './effect-state.js'
 import { validateTskState } from './tsk-primitives.js'
 import { discardDreamGateIntruders } from './dream-gate.js'
 import { canDiscardControlledAsset } from './asset-departure.js'
+import { playAccess } from './play-condition.js'
 import { resolveTransaction } from './resolution.js'
 import { isDeepStrictEqual } from 'node:util'
 // 存档向下兼容与修复。
@@ -236,13 +237,16 @@ function needsReactionPromptFlags(state) {
     && entryNeedsReactionPrompt(def.code || def.originalCode))
 }
 
-// 待决选择存在、但派生缓存 `legalMoves` 整个缺失：客户端按缓存渲染选项（observation.js#viewState
-// 对决策座位直接复制 `state.legalMoves`），缓存缺失会让窗口只剩提示、没有按钮，整局卡死。
-// 已知来源：P10 之前的并行开局在 launchParallelLanes 里直接跑 resolveTransaction（事务重建会丢掉
-// 派生缓存），若第一处待决选择正好问本线真人（没有 AI 先提交动作刷新缓存），B 线从开局第一秒就卡住。
-// 建局/正常行动路径都会补算这个缓存；这里只在旧存档缺字段时重算一次（migrateRuntime 的 playable 分支）。
+// 客户端用 legalMoves 缓存渲染按钮。旧存档可能缺少待决选项缓存，或未缓存现已允许打出的手牌弱点。
 function needsCachedLegalMoves(runtime) {
-  return !!runtime?.pendingChoice && !Array.isArray(runtime.legalMoves)
+  if (runtime?.pendingChoice) return !Array.isArray(runtime.legalMoves)
+  if (runtime?.uiState !== 'inScenario') return false
+  const seat = decisionSeat(runtime)
+  const hand = runtime.investigators?.[seat]?.hand || []
+  const cached = Array.isArray(runtime.legalMoves) ? runtime.legalMoves : []
+  const missing = hand.filter(code => playAccess(code).playableWeakness
+    && !cached.some(move => move.action === 'play' && move.cardId === code))
+  return missing.length > 0 && legalMoves(runtime, seat).some(move => move.action === 'play' && missing.includes(move.cardId))
 }
 
 function needsScenarioCardTable(runtime) {

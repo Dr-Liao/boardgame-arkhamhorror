@@ -65,9 +65,33 @@ test('铁杉谷盛宴十二个场景各三首，旧曲复用不超过 40%，录�
   assert.deepEqual(musicTracksForPlaylist(campaignId), assigned)
 })
 
-test('铁杉谷盛宴大厅、牌桌与场景插画使用登记的 WebP', () => {
-  const campaignId = 'theFeastOfHemlockVale'
-  const base = new URL('../web/img/campaigns/theFeastOfHemlockVale/', import.meta.url)
+test('沉没之城十关各三首，每关最多复用一首，战役内录音互不重复', () => {
+  const campaignId = 'theDrownedCity'
+  const scenarios = contentRegistry.listScenarios().filter(scenario => scenario.campaignId === campaignId)
+  assert.equal(scenarios.length, 10)
+  const earlierTracks = new Set(Object.keys(SCENARIO_MUSIC)
+    .filter(id => id !== campaignId).flatMap(id => musicTracksForPlaylist(id).map(track => track.isrc)))
+  const assigned = scenarios.flatMap(({ id }) => {
+    const playlist = campaignPlaylistId({ campaign: { id: campaignId }, scenario: { id }, uiState: 'inScenario' })
+    assert.equal(playlist, `${campaignId}/${id}`)
+    const tracks = musicTracksForPlaylist(playlist)
+    assert.equal(tracks.length, 3, id)
+    assert.ok(tracks.filter(track => earlierTracks.has(track.isrc)).length <= 1, id)
+    return tracks
+  })
+  assert.equal(new Set(assigned.map(track => track.isrc)).size, assigned.length)
+  assert.deepEqual(musicTracksForPlaylist(campaignId).map(track => track.id).sort(), assigned.map(track => track.id).sort())
+  assert.equal(campaignPlaylistId({ campaign: { id: campaignId }, uiState: 'campaignHub' }), campaignId)
+})
+
+for (const campaignId of ['theFeastOfHemlockVale', 'theDrownedCity']) {
+  test(`${campaignId} 大厅、牌桌与场景插画使用登记的 WebP`, () => {
+    assertScenarioArt(campaignId)
+  })
+}
+
+function assertScenarioArt(campaignId) {
+  const base = new URL(`../web/img/campaigns/${campaignId}/`, import.meta.url)
   const manifest = JSON.parse(readFileSync(new URL('assets.json', base), 'utf8'))
   const scenarios = contentRegistry.listScenarios().filter(scenario => scenario.campaignId === campaignId)
   const { hubHero, tableOverlay } = campaignPresentation(campaignId).assets
@@ -87,7 +111,7 @@ test('铁杉谷盛宴大厅、牌桌与场景插画使用登记的 WebP', () => 
     assert.equal(expected.get(asset.id), '/mods/arkhamhorror/img/campaigns/' + campaignId + '/' + asset.file)
   }
   assert.equal(new Set(manifest.assets.map(asset => asset.sha256)).size, manifest.assets.length)
-})
+}
 
 test('关间准备跟随下一关，桌面继续使用正在进行的关卡，未知关卡安全回退', () => {
   const state = { campaign: { id: 'theDunwichLegacy' }, scenario: { id: 'theMiskatonicMuseum' }, hubSelectedScenarioId: 'theEssexCountyExpress' }

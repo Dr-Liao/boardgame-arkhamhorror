@@ -53,5 +53,5 @@ export default {
   },
   note: '险境由章节 encounterDefinitions 从印刷正文解析；三选一全部走既有 api：放置毁灭用 api.addDoom'
     + '（内部会检查密谋推进）、弃手牌用 api.discardChosen、失去行动用 api.loseActions。'
-    + '近似：参考实现让抽到本卡的调查员做决定，之后对每位调查员结算；这里同样是显现者选择、全队结算。',
+    + '选择者为显现者、之后对每位调查员结算，与参考「抽到者选择、逐人结算」一致。',
 }

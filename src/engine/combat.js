@@ -11,6 +11,7 @@ import { directDamageSource } from '../integration/direct-damage.js'
 import { currentEffectSource, damageSourceMatches } from './effect-provenance.js'
 import { enemyHasAttackKeyword, resolveElusiveAfterAttack } from './enemy-keyword-movement.js'
 import { enemyProtectionBlocks } from './enemy-entry.js'
+import { enemyCannotBeExhausted } from './enemy-restrictions.js'
 // 战斗与躲避（进战斗 / 躲敌人）从 engine.js 拆出的第三个模块（Phase 6 · 6d-3）。
 //
 // 这一对动作是「按域拆分」的第一个示例：roadmap 里规划的 combat/ 域。
@@ -569,12 +570,12 @@ function doFight(state, seat, opts, events, noSpend) {
           }), events)
         }
       }
-      // 「晕眩重击」：攻击成功时自动躲避被攻击敌人。
+      // 「晕眩重击」：攻击成功时自动躲避被攻击敌人（「不能被横置」的敌人只解除交战）。
       for (const commitment of r.committed || []) {
         const code = typeof commitment === 'string' ? commitment : commitment.code
         if (!commitProfile(code)?.onSuccess?.autoEvadeAttackedEnemy) continue
         if (!state.enemies.includes(enemy)) continue
-        body.exhausted = true
+        if (!enemyCannotBeExhausted(state, body, enemyTextBlanked)) body.exhausted = true
         disengageEnemy(state, body)
         info(state, events, `「${cardName(code)}」：上次攻击命中后自动躲避了「${enemy.name}」。`)
       }
@@ -600,7 +601,7 @@ function doFight(state, seat, opts, events, noSpend) {
         enemyCode: enemy.originalCode || enemy.code, ...(victoryAttached ? { victoryAttached } : {}) }
       if (opts.autoEvadeOnSuccessBy != null && state.enemies.includes(enemy)
         && r.value - difficulty >= opts.autoEvadeOnSuccessBy) {
-        body.exhausted = true
+        if (!enemyCannotBeExhausted(state, body, enemyTextBlanked)) body.exhausted = true
         disengageEnemy(state, body)
         afterEvade(state, inv, enemy, events, r)
         info(state, events, `💨 ${inv.name} 以 ${opts.autoEvadeOnSuccessBy} 点以上成功，自动躲避「${enemy.name}」。`)
@@ -667,7 +668,7 @@ function doEvade(state, seat, opts, events, noSpend) {
   if (!canEvade) { info(state, events, `${inv.name} 找不到可躲避的交战敌人。`); return }
   const mods = enemyStatMods(state)
   if (opts.auto) {
-    body.exhausted = true
+    if (!enemyCannotBeExhausted(state, body, enemyTextBlanked)) body.exhausted = true
     if (canDisengage(state, inv, body)) disengageEnemy(state, body)
     else info(state, events, `${inv.name} 无法与「${enemy.name}」解除交战。`)
     info(state, events, `💨 ${inv.name} 摆脱了「${enemy.name}」！`)
@@ -780,6 +781,8 @@ function doEvade(state, seat, opts, events, noSpend) {
       const outcomeText = evadeTest?.keepEngaged ? '保持交战。' : `${exhaustText}脱离交战。`
       info(state, events, `💨 ${inv.name} 躲避成功（${SKILL_NAMES[evadeSkill]} ${r.value} vs ${evadeBase}），「${enemy.name}」${outcomeText}`)
       triggerReaction(state, seat, 'evadeSuccess', events, { enemy, location: inv.location, successBy: r.value - evadeBase },{skipAbilityWindow:true})
+      // P7 TDC 11702–11704：普通（非自动）躲避成功后的章节钩子；内容据此结算「躲至[[狂怒]]面」。
+      scenarioBehavior(state).enemyEvadedSuccessfully?.(state, inv, enemy, scenarioRuntime(state, events))
       if (opts.extraEvadeIfCommittedSkill && state.skillTest.committed.some(item => item.seat === seat && cardDef(item.code)?.type === 'skill')) {
         const others = enemiesEngagedWith(state, inv).filter(other => other.id !== body.id)
         if (others.length) {

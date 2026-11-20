@@ -97,5 +97,5 @@ export default {
   },
   note: '未淹没时涌动；否则二选一检定：敏捷成功移到连接地点（api.canMoveTo 过滤）、失败 1 伤害+1 恐惧；'
     + '战斗失败 1 伤害 + 弃掉一张占用 ≥1 槽位的受控支援（按 cards-data slots/slot 过滤，api.discardAsset）。'
-    + '近似：参考实现用「AccessibleFrom ForMovement」的移动候选，这里用 connections + api.canMoveTo 同口径过滤。',
+    + '移动候选用 connections + api.canMoveTo（等价于参考的 AccessibleFrom ForMovement）。',
 }

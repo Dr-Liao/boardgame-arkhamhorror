@@ -1,12 +1,17 @@
 // P7 阿卡姆的毁灭 第一部分（theDoomOfArkhamPartI · 提示卡 11682）章节测试。
 //
 // 覆盖：章节结构/manifest、午夜假面地图与变体地点、6 处地点下方暗牌、幽灵商店显现与兰道尔、
-// 幕 1 目标/背面分流、神器划除/黏土恐怖/淹没街区记录、四档混乱标记、JSON 存档往返。
+// 幕 1 目标/背面分流、神器划除/黏土恐怖/淹没街区记录、四档混乱标记、JSON 存档往返、
+// 真实 saveSnapshot/readSnapshot 存档重放（CONTINUATION §2.1）。
 //
 // 本文件不 import engine.js：章节 behavior 只走内容层函数与 P2 原语（网格/水位用 mechanicState），
 // 因此单测可在其他 worker 尚未重建索引时独立运行。
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { mkdtempSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import path from 'node:path'
+import { persistEnabled, readSnapshot, saveSnapshot } from '../../../lib/sessions.js'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import { mechanicState } from '../src/engine/mechanic-state.js'
 import * as chapter from '../content/campaigns/theDrownedCity/scenarios/theDoomOfArkhamPartI/index.js'
@@ -144,7 +149,7 @@ test('P7 theDoomOfArkhamPartI 章节结构：6 张条目、12 地点、1 幕 1 �
   assert.equal(chapter.scenario.id, 'theDoomOfArkhamPartI')
   assert.equal(chapter.scenario.originalCode, '11682')
   assert.equal(chapter.scenario.referenceCode, '11682')
-  assert.equal(chapter.manifest.status, 'development')
+  assert.equal(chapter.manifest.status, 'playable')
   assert.equal(chapter.manifest.campaignId, 'theDrownedCity')
   assert.equal(chapter.manifest.referenceCode, '11682')
   assert.equal(chapter.manifest.contentVersion, '0.1.0')
@@ -174,7 +179,15 @@ test('P7 theDoomOfArkhamPartI 章节结构：6 张条目、12 地点、1 幕 1 �
   assert.equal(registeredEntry('11685').flags.ephemeralShop, true)
   assert.equal(registeredEntry('11686').flags.fightPerBeneath, 1)
   assert.equal(registeredEntry('11688').flags.artifact, true)
-  assert.equal(registeredEntry('11687').implemented, false)
+  assert.equal(registeredEntry('11687').implemented, true)
+  // 第二轮收口：11687 被动 +1 走 testValue 修正，反应走 testBegins；11688 现为受控剧情资产。
+  assert.equal(registeredEntry('11687').modifiers.some(modifier => modifier.target === 'testValue'), true)
+  assert.equal(registeredEntry('11687').abilities.some(ability => ability.trigger.includes('testBegins')), true)
+  assert.equal(registeredEntry('11688').implemented, true)
+  assert.equal(registeredEntry('11688').controlledAsset, true)
+  assert.deepEqual(registeredEntry('11688').storyAssetRule.enemyOverride,
+    { trait: 'Star Spawn', lose: ['patrol', 'prey'], gain: ['hunter'], prey: 'controller' })
+  assert.equal(registeredEntry('11688').flags.horrorInClay, true)
 })
 
 test('P7 theDoomOfArkhamPartI 遭遇牌库：按印刷份数展开，商店/兰道尔/午夜假面诡计不入库', () => {
@@ -369,4 +382,115 @@ test('P7 theDoomOfArkhamPartI 四档混乱符号与失败效果', () => {
   assert.equal(doomOfArkhamPartOneChaosTokenValue({ ...state, difficulty: 'hard' }, 'elderthing'), -4)
   // 未知标记交回默认
   assert.equal(doomOfArkhamPartOneChaosToken(state, null, 'auto_fail'), null)
+})
+
+// ---------------------------------------------------------------------------
+// 5. 真实存档重放（CONTINUATION §2.1）
+// ---------------------------------------------------------------------------
+const stable = value => JSON.parse(JSON.stringify(value))
+
+test('P7 theDoomOfArkhamPartI 真实存档重放：saveSnapshot/readSnapshot 读回等价，续动作确定', () => {
+  const previousHome = process.env.DSH_HOME
+  const previousPersist = process.env.BOARDGAME_PERSIST
+  delete process.env.BOARDGAME_PERSIST // 覆盖默认开启路径，不设置 persist=0
+  const home = mkdtempSync(path.join(tmpdir(), 'tdc-doom1-'))
+  process.env.DSH_HOME = home
+  const sessionId = `tdc-doom1-${Date.now()}`
+  try {
+    assert.equal(persistEnabled(), true, 'BOARDGAME_PERSIST 默认开启')
+    const state = withScenario(2, { records: { barrierNode: true } })
+    const api = makeApi(state)
+    setupScenario(state, api)
+    const players = [{ seat: 0, id: 'p1' }, { seat: 1, id: 'p2' }]
+    const events = [{ type: 'info', text: 'setup' }]
+    const settings = { difficulty: state.difficulty, seed: 'doom1' }
+    const file = saveSnapshot({ sessionId, modId: 'arkhamhorror', state, players, events, settings })
+    assert.ok(file.endsWith('.json'))
+
+    const restored = readSnapshot(sessionId)
+    assert.ok(restored, '读回存档不能为空')
+    const session = restored.session || restored
+    assert.equal(session.sessionId, sessionId)
+    assert.equal(session.modId, 'arkhamhorror')
+    assert.deepEqual(stable(session.state), stable(state), '读回状态必须与内存状态一致')
+    assert.deepEqual(session.players, players)
+    assert.deepEqual(session.events, events)
+
+    // 从读回状态继续一个本章真实动作：幕 1「共同支付线索抽取地点下方暗牌」。
+    const continueAction = target => {
+      const host = Object.keys(target.scenarioZones.beneathStacks)[0]
+      target.scenarioZones.beneathStacks[host] = ['01135']
+      for (const inv of target.investigators) {
+        inv.location = host
+        inv.clues = 3
+      }
+      const actionApi = makeApi(target)
+      const moved = behavior.performAction(target, target.investigators[0],
+        { action: 'scenarioAction', rule: 'doomArkhamDrawBeneath', locationId: host }, actionApi)
+      return { moved, state: stable(target) }
+    }
+    const fromDisk = continueAction(session.state)
+    const fromMemory = continueAction(stable(state))
+    assert.equal(fromDisk.moved, true, '读回状态上的续动作必须可执行')
+    assert.equal(fromMemory.moved, true)
+    assert.deepEqual(fromDisk.state, fromMemory.state, '同一续动作在两条路径上的结果必须一致')
+  } finally {
+    if (previousHome === undefined) delete process.env.DSH_HOME
+    else process.env.DSH_HOME = previousHome
+    if (previousPersist === undefined) delete process.env.BOARDGAME_PERSIST
+    else process.env.BOARDGAME_PERSIST = previousPersist
+    rmSync(home, { recursive: true, force: true })
+  }
+})
+
+// ---------------------------------------------------------------------------
+// 13. 跨章收口：Good Money（11611）→ 本关补给阶段不获得资源
+//   引擎读点：phases.js#201 scenarioBehavior(state).canGainResources
+//   规则来源：content/campaigns/theDrownedCity/campaign-rules.js#tdcCannotGainUpkeepResources
+// ---------------------------------------------------------------------------
+test('P7 theDoomOfArkhamPartI 补给阶段：tdcNoUpkeepResources 命中且 scenarioIndex/seat 匹配时不获得资源', async t => {
+  let engine, rules, core
+  try {
+    engine = await import('../src/engine/engine.js')
+    rules = await import('../content/campaigns/theDrownedCity/campaign-rules.js')
+    core = await import('./core-fixture.mjs')
+  } catch (error) {
+    t.diagnostic(`engine/campaign-rules 导入失败（集成期间注册表在改？）：${error?.stack || error?.message || error}`)
+    return
+  }
+  const scenario = chapter.scenario
+  assert.equal(typeof chapter.behavior.canGainResources, 'function', 'behavior 必须暴露 canGainResources 钩子')
+  const runUpkeep = (flag) => {
+    const state = core.fixture('01001', 1)
+    state.scenario = structuredClone(scenario)
+    state.scenarioFlags = {}
+    state.campaign.ruleFlags = {}
+    state.campaign.scenarioIndex = 2
+    if (flag) state.campaign.ruleFlags[rules.TDC_NO_UPKEEP_RESOURCES] = flag
+    const inv = state.investigators[0]
+    inv.resources = 5
+    inv.clues = 0
+    inv.hand = []
+    const capacity = chapter.behavior.canGainResources(state, inv)
+    state.phase = 'investigation'
+    state.currentSeat = 0
+    engine.runBetweenInvestigationPhases(state, [])
+    return { state, inv, capacity }
+  }
+  // 无标记 → 正常 +1 资源
+  const normal = runUpkeep(null)
+  assert.equal(normal.capacity, true)
+  assert.equal(normal.inv.resources, 6, '无标记时补给阶段正常获得 1 资源')
+  // 命中且 scenarioIndex/seat 匹配 → 不获得资源
+  const matched = runUpkeep({ appliesToScenarioIndex: 2, seats: [0] })
+  assert.equal(matched.capacity, false)
+  assert.equal(matched.inv.resources, 5, '标记命中：补给阶段不获得资源')
+  // seat 不匹配 → 正常
+  const wrongSeat = runUpkeep({ appliesToScenarioIndex: 2, seats: [1] })
+  assert.equal(wrongSeat.capacity, true)
+  assert.equal(wrongSeat.inv.resources, 6, '仅 seats 不匹配时正常获得资源')
+  // scenarioIndex 不匹配 → 正常
+  const wrongIndex = runUpkeep({ appliesToScenarioIndex: 9, seats: [0] })
+  assert.equal(wrongIndex.capacity, true)
+  assert.equal(wrongIndex.inv.resources, 6, '仅 scenarioIndex 不匹配时正常获得资源')
 })

@@ -114,7 +114,7 @@ export function cardAttachmentReferences(card = {}) {
 //   2. 多类型使用标记：`card.useTokens = { brilliance: 3 }` —— api.placeUse 与
 //      api.mechanics.useTokens.move/spend 写出的非主类型计数（10722 着彩枯疫的「光辉」等）。
 //   3. 脚本标签计数：`card.markers = ['overgrowth', 'overgrowth']` —— api.scenario.addMarker
-//      写出的参考标签（10732 毒花的「疯长」、05239 看守人的「窃魂」等；与第 1 种共用 markers 字段）。
+//      写出的参考标签（10732 毒花的「疯长」、05239 看守人的「窃魂」等；共存时位于 markers.labels）。
 //
 // 约定：
 //   · 新增计数器 id / 使用标记类型 / 标签必须在本表登记（文案进 web/locales 词典），
@@ -125,6 +125,8 @@ export const NAMED_COUNTER_DISPLAY = Object.freeze({
   evidence: Object.freeze({ icon: 'eye', labelKey: 'table.marker.evidence' }),
   bounty: Object.freeze({ icon: 'star', labelKey: 'table.marker.bounty' }),
   hollow: Object.freeze({ icon: 'lock', labelKey: 'table.marker.beneath' }),
+  // P7 TDC 11709 拆毁：最近 [[Rooftop]] 地点上的废墟标记。
+  ruin: Object.freeze({ icon: 'star', labelKey: 'table.marker.ruin' }),
 })
 export const USE_TOKEN_DISPLAY = Object.freeze({
   secret: Object.freeze({ icon: 'arcane', labelKey: 'table.marker.secret' }),
@@ -132,6 +134,9 @@ export const USE_TOKEN_DISPLAY = Object.freeze({
   brilliance: Object.freeze({ icon: 'eye', labelKey: 'table.marker.brilliance' }),
   // 十循环《沉没之城》任务卡「信仰之行」的征兆计数（11754a/b）。
   signs: Object.freeze({ icon: 'star', labelKey: 'table.marker.signs' }),
+  // 任务卡把「伤害/恐惧」也作为具名使用标记（11755a/11759a），与生命/理智面分开显示。
+  damage: Object.freeze({ icon: 'damage', labelKey: 'table.marker.damage' }),
+  horror: Object.freeze({ icon: 'sanity', labelKey: 'table.marker.horror' }),
 })
 export const LABEL_MARKER_DISPLAY = Object.freeze({
   overgrowth: Object.freeze({ icon: 'leaf', labelKey: 'table.marker.overgrowth' }),
@@ -182,9 +187,10 @@ export function useTokenMarkers(card) {
   })
 }
 
-/** 脚本标签计数（数组形 markers）→ 按标签聚合的标记行；kind 加 `marker-` 前缀。 */
+/** 脚本标签计数 → 按标签聚合的标记行；kind 加 `marker-` 前缀。 */
 export function labelMarkerMarkers(card) {
-  const labels = card?.markers
+  const markers = card?.markers
+  const labels = Array.isArray(markers) ? markers : markers?.labels
   if (!Array.isArray(labels)) return []
   const counts = new Map()
   for (const label of labels) {

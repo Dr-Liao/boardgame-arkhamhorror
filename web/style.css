@@ -633,7 +633,7 @@ button:focus-visible, [role='button']:focus-visible, summary:focus-visible { out
 .ah-calm .ah-location-entities { position: absolute; top: 10px; left: calc(100% + 7px); display: flex; gap: 4px; }
 .ah-table.ah-calm .ah-location-entities .ah-enemy { position: relative; display: block; width: 36px; min-width: 36px; height: 51px; padding: 0; border-color: #ad686d; }
 .ah-table.ah-calm .ah-location-entities .ah-enemy .ah-table-art { position: absolute; inset: 0; width: 100%; height: 100%; }
-.ah-calm .ah-location-entities .ah-enemy > :not(.ah-table-art):not(.ah-card-markers), .ah-calm .ah-location-entities .ah-enemy::after { display: none; }
+.ah-calm .ah-location-entities .ah-enemy > :not(.ah-table-art, .ah-card-markers, .ah-reaction-mode), .ah-calm .ah-location-entities .ah-enemy::after { display: none; }
 .ah-calm .ah-table-script { justify-self: center; display: flex; padding: 4px 0; gap: 12px; align-items: center; overflow: visible; }
 .ah-calm .ah-script-cards { flex: none; gap: 9px; }
 .ah-calm .ah-script-card { position: relative; flex: none; width: 59px; height: 83px; padding: 0; border-radius: 4px; box-shadow: 0 3px 7px #0006; }

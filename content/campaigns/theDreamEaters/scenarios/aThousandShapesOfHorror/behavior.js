@@ -373,10 +373,10 @@ export const behavior = {
     // 06194 阁楼的秘密在场时，地点上的 [fast] 能力不能触发。
     const aside = state.agendaAside
     if ((aside || []).some(card => (card.originalCode || card.code || card) === SECRETS_IN_THE_ATTIC)) return []
-    const moves = []
-    const location = here(state, inv)
+    const location = here(state, inv), moves = []
     if (location) locationRuleFor(codeOf(location))?.actions?.({ moves, state, inv, location })
     return moves.filter(move => move.actions === 0 && move.fast === true)
+      .map(move => ({ ...move, reactionSourceCode: location.revealed ? codeOf(location) : null }))
   },
 
   performAction(state, inv, move, api) {

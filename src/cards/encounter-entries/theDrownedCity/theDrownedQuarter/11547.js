@@ -6,6 +6,6 @@ export default {
   scope: 'location',
   implemented: true,
   flags: {"seaFloor":true},
-  note: "data-type（[[海底]]地点，双面：背面 = 海床）。behavior.locationRevealed 执行「进入海床时提高本地点'\n      + '与一处相邻地点的淹没」；本卡其余印刷能力尚未接线（近似）：珊瑚礁·觅食地（victory 1；揭示后从遭遇牌库顶弃到敌人并生成；[reaction] 发现线索后生成放一边的水下寄生虫）。",
+  note: "data-type（[[海底]]地点，双面：背面 = 海床；victory 1）。已接线：进入海床提高本地点与一处相邻地点的淹没（behavior.locationRevealed）；强制「被揭示后从遭遇牌库顶弃到一名敌人，将其生成在本地点」在 behavior.locationRevealed（api.discardEncounterTop + api.takeEncounterCard + api.spawnEngaged）；[reaction]「你在此地发现 1 个或更多线索后：放一边的水下寄生虫生成在本地点」在 behavior.cluesGained（引擎既有 cluesGained 读点）。全部子句已接线（反应按强制自动结算，无询问）。",
   abilities: [],
 }

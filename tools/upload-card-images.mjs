@@ -18,6 +18,8 @@ const argv = process.argv.slice(2)
 const staged = argv.includes('--staged')
 const replace = argv.includes('--replace')
 if (replace && !staged) throw new Error('--replace 仅用于 --staged')
+const artsFile = argv.find(value => value.startsWith('--arts-file='))?.slice('--arts-file='.length)
+if (artsFile && !staged) throw new Error('--arts-file 仅用于 --staged')
 const limit = Number(argv.find(value => value.startsWith('--limit='))?.split('=')[1] || Infinity)
 if (limit !== Infinity && (!staged || !Number.isInteger(limit) || limit < 1)) throw new Error('--limit 仅用于 --staged，且需为正整数')
 const concurrency = Number(argv.find(value => value.startsWith('--concurrency='))?.split('=')[1] || 8)
@@ -73,6 +75,14 @@ const files = staged
     .sort()
     .map(name => `zh/cards/${name}`)
   : inventory.files
+if (artsFile) {
+  const arts = JSON.parse(readFileSync(artsFile, 'utf8'))
+  if (!Array.isArray(arts) || !arts.length || arts.some(art => typeof art !== 'string' || !/^cards\/[0-9A-Za-z_-]+\.avif$/.test(art))) throw new Error('卡面清单格式无效')
+  const selected = new Set(arts.map(art => `zh/${art}`))
+  const available = new Set(files)
+  if ([...selected].some(file => !available.has(file))) throw new Error('清单中有尚未暂存的中文卡图')
+  files.splice(0, files.length, ...[...selected].sort())
+}
 if (staged && limit < files.length) files.length = limit
 if (!Array.isArray(files) || !files.length) throw new Error('卡图清单为空')
 const present = await existingKeys()

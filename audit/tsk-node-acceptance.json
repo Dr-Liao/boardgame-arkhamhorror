@@ -101,7 +101,7 @@
     },
     {
       "path": "tests/tsk-primitives-keys-hollow.test.mjs",
-      "sha256": "4700b66dc85f0dfbcffddf8e2952675377305f271144da027e8b3ecaf6bb9a4b"
+      "sha256": "925b275cb5d75467558ff4fa6f11f5bd01c4500aa5a1b8d1562e9bcb267f2f09"
     },
     {
       "path": "tests/tsk-primitives-map.test.mjs",

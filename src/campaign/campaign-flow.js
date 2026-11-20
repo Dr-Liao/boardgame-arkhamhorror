@@ -433,6 +433,18 @@ export function validateCampaignGraph(manifest) {
     // 流程执行器只停下并交出节点，必须声明回到主线/下一幕间的出口。
     if (node.type === 'map' && !node.next) throw new Error(`世界地图节点缺少出口：${id}`)
     if (node.type === 'map' && node.options != null) throw new Error(`世界地图节点不能声明选项（由战役行为接管）：${id}`)
+    // P7 TDC：逐人选择（Interlude I 各自领任务 / No Place Like Home 各自二选一创伤）。
+    // 语义：节点按 active 调查员逐个询问同一组选项，答案按座位写进 flow.history（choices），
+    // 不决定流程边；由 afterChoiceEffects 的 handler 读取并落账。节点本身必须声明唯一出口。
+    const perInvestigator = node.perInvestigator === true
+    if (node.perInvestigator != null && typeof node.perInvestigator !== 'boolean') {
+      throw new Error(`perInvestigator 必须是布尔值：${id}`)
+    }
+    if (perInvestigator) {
+      if (node.type !== 'choice') throw new Error(`逐人选择只支持 choice 节点：${id}`)
+      if (!node.next) throw new Error(`逐人选择节点缺少出口：${id}`)
+      assertCampaignEffects(node.afterChoiceEffects, `战役节点 ${id} 的 afterChoiceEffects`, manifest)
+    }
     // 引擎只在 interlude/checkpoint 节点上读 `next`（见 src/engine/campaign-flow.js#progressCampaign），
     // 这两类节点写 options 会被静默忽略；非分支节点声明 options 一律在注册期拒绝。
     if (node.options != null && !BRANCH_NODE_TYPES.includes(node.type)) {
@@ -449,13 +461,14 @@ export function validateCampaignGraph(manifest) {
       assertFlowCondition(option.when, `战役节点 ${id} 的选项 ${option.id} 的 when`, recordSchema)
       assertCampaignEffects(option.effects, `战役节点 ${id} 的选项 ${option.id}`, manifest)
     }
-    if ((node.options || []).some(option => option.next == null)) throw new Error(`战役选项缺少出口：${id}`)
+    if (!perInvestigator && (node.options || []).some(option => option.next == null)) throw new Error(`战役选项缺少出口：${id}`)
     if (node.options && new Set(node.options.map(o => o.id)).size !== node.options.length) throw new Error(`重复战役选项：${id}`)
     if (node.type === 'stepReturn') assertStepReturn(id, node, manifest)
     assertNodeExtras(id, node, manifest)
     const edges = node.type === 'stepReturn' ? [...node.rules, ...(node.next ? [{ next: node.next }] : [])]
-      : BRANCH_NODE_TYPES.includes(node.type) ? [...node.options, ...(node.next ? [{ next: node.next }] : [])]
-        : node.next ? [{ next: node.next }] : []
+      : perInvestigator ? (node.next ? [{ next: node.next }] : [])
+        : BRANCH_NODE_TYPES.includes(node.type) ? [...node.options, ...(node.next ? [{ next: node.next }] : [])]
+          : node.next ? [{ next: node.next }] : []
     if (node.type !== 'end' && !edges.length) throw new Error(`战役节点缺少出口：${id}`)
     for (const edge of edges) if (!graph.nodes[edge.next]) throw new Error(`战役出口不存在：${id}/${edge.next}`)
   }
@@ -563,10 +576,27 @@ export function walkCampaign(campaign, manifest, choose, applyEffect = () => {},
       const options = node.options.filter(option => flowCondition(option.when, campaign))
       if (!options.length) throw new Error(`战役节点没有可用分支：${id}`)
       if (node.type === 'branch' && options.length !== 1) throw new Error(`战役自动分支必须唯一：${id}`)
-      const answer = node.type === 'branch' ? options[0].id : choose(id, node, options)
-      edge = options.find(option => option.id === answer)
-      if (!edge) throw new Error('无效战役分支')
-      campaign.flow.history.at(-1).choice = answer
+      if (node.perInvestigator === true) {
+        // 逐人选择：每个 active 调查员各答一次；答案按座位存 history.choices，
+        // 之后由 afterChoiceEffects 的战役处理器落账（领任务/创伤二选一）。
+        const records = Object.values(campaign.investigators || {})
+          .filter(record => record && record.status === 'active' && Number.isInteger(record.seat))
+          .sort((left, right) => left.seat - right.seat)
+        const choices = {}
+        for (const record of records) {
+          const answer = choose(id, node, options, { seat: record.seat, perInvestigator: true })
+          if (!options.some(option => option.id === answer)) throw new Error('无效战役分支')
+          choices[record.seat] = answer
+        }
+        campaign.flow.history.at(-1).choices = choices
+        for (const effect of node.afterChoiceEffects || []) apply(effect)
+        edge = { next: node.next, effects: [] }
+      } else {
+        const answer = node.type === 'branch' ? options[0].id : choose(id, node, options)
+        edge = options.find(option => option.id === answer)
+        if (!edge) throw new Error('无效战役分支')
+        campaign.flow.history.at(-1).choice = answer
+      }
     } else if (node.type === 'stepReturn') {
       // 有序规则链：第一条命中的规则生效（参考实现 nextStep 的 if/else 链），都不命中走兜底 next。
       const matched = node.rules.find(rule => flowCondition(rule.when, campaign))

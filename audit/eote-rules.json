@@ -8,11 +8,11 @@
   "sources": [
     {
       "path": "audit/eote-mechanism-scan.json",
-      "sha256": "08b922f2ad2cc5fe7dae1da5a4de8238dfb822dc0dba45538a80e449e8f06e02"
+      "sha256": "4f52560a4693ede7af02255ad71d0d60798a514249433637b7ceaecf2e3e3305"
     },
     {
       "path": "audit/eote-primitive-plan.json",
-      "sha256": "4d56f1d1d8cdd35c69abb5a27cf842ac005a86fc0fda53138ad7385d2014d8f9"
+      "sha256": "91b56f8a413ae76c40ae8417665042c9b246d4eafea7859253d5e9c8e6362955"
     },
     {
       "path": "web/eote-rules.js",

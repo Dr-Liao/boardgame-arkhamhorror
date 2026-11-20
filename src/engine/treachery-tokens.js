@@ -59,7 +59,7 @@ export function createTreacheryTokens(deps) {
     totalDoom,
   } = deps
 
-  function resolveTreachery(state, inv, t, events, scenarioDeckId) {
+  function resolveTreachery(state, inv, t, events, scenarioDeckId, { from = 'deck' } = {}) {
     if (t.hidden) {
       privateInfo(state, events, inv.seat, `🃏 你抽到隐私诡计「${t.name}」：${t.text || ''}`)
     } else {
@@ -70,7 +70,7 @@ export function createTreacheryTokens(deps) {
     // 2026-10-25 第五轮修复 05049：「正在结算显现效果」的统一读点（进程内作用域，不写 state）。
     pushRevelation(t.code, scenarioDeckId, t.originalCode)
     try {
-      return resolveTreacheryBody(state, inv, t, events)
+      return resolveTreacheryBody(state, inv, t, events, { from })
     } finally {
       if (previousTreachery === undefined) delete state._treacheryResolving
       else state._treacheryResolving = previousTreachery
@@ -80,7 +80,7 @@ export function createTreacheryTokens(deps) {
     }
   }
 
-  function resolveTreacheryBody(state, inv, t, events) {
+  function resolveTreacheryBody(state, inv, t, events, { from = 'deck' } = {}) {
     // 2026-10-25 第五轮修复 05183：抽牌时被强制「获得险境/不可取消」的卡，在真正揭示期间同样生效。
     const forced = forcedRevelationOf(t.code)
     const forcedPeril = forced?.peril === true
@@ -119,6 +119,9 @@ export function createTreacheryTokens(deps) {
       // 未声明第 5 参的条目会忽略多余参数；声明了但地点缺失的条目自行返回 false（继续走后续通用分支）。
       if (entry?.encounterResolve) return entry.encounterResolve(state, inv, t, api, {
         location: state.locations.find(location => location.id === inv.location) || null,
+        // P7 TDC 11632-11634：印刷「如果本诡计从遭遇弃牌堆被抽取……」。抽牌来源由 drawEncounter
+        // 的 options.from 透传（'deck' | 'discard' | 'search'）；未知/旧调用方默认 'deck'。
+        encounteredFrom: from,
       })
       if (entry?.treacheryRule?.test) return resolveDeclarativeTreacheryTest(state, inv, t, api, null, { forcedPeril })
     }

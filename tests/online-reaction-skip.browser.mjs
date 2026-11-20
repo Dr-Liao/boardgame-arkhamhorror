@@ -55,7 +55,7 @@ test('联机忙碌快照不会先画出已关闭的快速反应窗口', async ({
       session: view(), busy, lobby: null, signals: [] } })
   })
   const commands = []
-  await page.route('**/api/online/command', async route => {
+  await page.route('**/api/online/command?*', async route => {
     const body = route.request().postDataJSON()
     commands.push(body)
     if (body.action === 'move') {
@@ -75,7 +75,7 @@ test('联机忙碌快照不会先画出已关闭的快速反应窗口', async ({
 
   // P1：进局时客户端会把本机「反应关」集合用 prefs 命令同步给房主（不需要等窗口出现）。
   await expect.poll(() => commands.filter(command => command.action === 'prefs').length, { timeout: 10000 }).toBeGreaterThan(0)
-  expect(commands.find(command => command.action === 'prefs').body.codes).toEqual(['01073'])
+  expect(commands.find(command => command.action === 'prefs').body.states).toEqual({ '01073': 'skip' })
 
   // 房主还在结算（busy=true）：窗口必须继续藏着，也不能提交 skip。
   await expect(page.locator('.bg-game-status')).toHaveText('正在继续结算…')
@@ -91,7 +91,7 @@ test('联机忙碌快照不会先画出已关闭的快速反应窗口', async ({
   expect(moveCommand.action).toBe('move')
   expect(moveCommand.body.move).toEqual({ action: 'choose', choiceId: 'reaction-online', optionId: 'skip', revision })
   // 这条兜底 skip 同时把本机「反应关」集合带给房主（房主收到后会代答后续窗口）。
-  expect(moveCommand.body.client?.autoPass?.codes).toEqual(['01073'])
+  expect(moveCommand.body.client?.autoPrefs?.states).toEqual({ '01073': 'skip' })
   await expect(page.locator('.ah-table')).toHaveAttribute('data-revision', String(revision + 1))
   await expect(page.locator('[data-choice-kind="reaction"]')).toHaveCount(0)
   expect(await page.evaluate(() => window.__reactionPanels)).toBe(0)

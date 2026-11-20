@@ -11,5 +11,5 @@ export default {
   encounterResolve(state, inv, card, api) {
     return api.resolveScenarioEvent('doomOfArkhamPartTwoGrossPlasticity', { seat: inv.seat }) === true
   },
-  note: 'approximation：恶心可塑性的三选一由 behavior.grossPlasticity 处理；其余按卡面结算。',
+  note: "显现：险境；api.choose 三选一（behavior.grossPlasticity）：密谋 +1 毁灭（api.addDoom，可导致推进）/ 提高所在地点淹没等级 / 每位调查员各自选择 1 伤或 1 恐。",
 }

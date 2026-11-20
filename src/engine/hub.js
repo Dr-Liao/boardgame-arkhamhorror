@@ -204,6 +204,7 @@ export function createHub(deps) {
     replacementCandidates,
     replacementOptions,
     requestChoice,
+    reactionWindow,
     resolutionCheckpoint,
     shuffle,
     upgradeRecord,
@@ -296,6 +297,12 @@ function runInterlude(state, nextIndex, events) {
 }
 
 function endCampaign(state, events) {
+  // P7 TDC 共享任务卡：战役结束前开一次卡级窗口，让在场任务卡结算「结束时判定」。
+  try {
+    reactionWindow?.(state, 'gameEnds', { when: 'gameEnds', prompt: '战役结束：结算任务卡与结束效果。' }, events)
+  } catch (error) {
+    info(state, events, `⚠️ 战役结束窗口结算失败：${error.message}`)
+  }
   const CAMPAIGN = campaignFor(state)
   const crossing = (CAMPAIGN.epilogueCrossOutRecords || []).filter(key => state.campaign.records[key])
   if (crossing.length) {

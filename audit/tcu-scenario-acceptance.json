@@ -13,7 +13,7 @@
     "totalEncounterCards": 293,
     "pendingEncounterCards": 0,
     "gaps": 0,
-    "testCases": 448
+    "testCases": 449
   },
   "items": [
     {
@@ -353,7 +353,7 @@
       "approximations": [],
       "testFile": "tests/tcu-secret-name.test.mjs",
       "testCases": {
-        "passed": 46,
+        "passed": 47,
         "failed": 0
       },
       "sources": [

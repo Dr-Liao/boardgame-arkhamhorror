@@ -10,7 +10,6 @@ export default {
   scope: 'act',
   implemented: true,
   flags: { direction: 'east', fastDecreaseFlood: true, clueCostPerInvestigator: 1, objectiveAllAt: 'westernWall' },
-  note: '数据型条目：与 11519 同构（目标是西墙）；'
-    + 'approximation：目标“可以推进”按满足即自动推进处理。',
+  note: '数据型条目：与 11519 同构（目标是西墙）；达成后 api.choose 询问「推进 / 暂不推进」，skip 记本幕+本回合。',
   abilities: [],
 }

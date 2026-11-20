@@ -34,6 +34,16 @@ import {
   skullValue, isHardSide, hasTrait, codeOf, nearestEnemyWithoutDoom, CHAOS_TOKEN_FACES,
 } from './chaos.js'
 import { STORY } from './story.js'
+import { tdcCannotGainUpkeepResources } from '../../campaign-rules.js'
+
+// ---------------------------------------------------------------------------
+// 跨章规则：Good Money（11611）playBothSides 失败 → 下一章补给阶段不能获得资源。
+// campaign-rules.js#tdcCannotGainUpkeepResources 统一读 campaign.ruleFlags（scenarioIndex/seat 匹配），
+// 引擎读点：phases.js#201 `scenarioBehavior(state).canGainResources?.(state, inv) === false` 时跳过收入。
+// ---------------------------------------------------------------------------
+export function canGainResources(state, inv) {
+  return !tdcCannotGainUpkeepResources(state, inv)
+}
 
 // ---------------------------------------------------------------------------
 // 基础工具
@@ -647,6 +657,7 @@ export const behavior = {
   referenceCode: REFERENCE_CODE,
   startLocation: () => START_LOCATION,
   locationsStartRevealed: true,
+  canGainResources,
   introduction(sc, records = {}, context = null) {
     void records
     void context

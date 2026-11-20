@@ -76,7 +76,7 @@ export function resourceBankProjection(inv) {
 import { effectRecipient, playerEffectCanAffect } from './effect-recipient.js'
 
 export function createResourceBank(deps) {
-  const { cardName, info, requestChoice } = deps
+  const { cardName, info, requestChoice, onResourcesGained } = deps
   // 规范化结果按卡号缓存（每次获得资源都要问一次）。
   const ruleCache = new Map()
   const ruleOf = code => {
@@ -110,6 +110,12 @@ export function createResourceBank(deps) {
       asset.resources = (asset.resources || 0) + amount
       info(state, events, `💰 ${inv.name} 获得的 ${amount} 资源放在「${cardName(asset.code)}」上（共 ${asset.resources}）。`)
     } else inv.resources += amount
+    // P7 TDC 11756a「获得 1 个或更多资源后」：统一资源获得入口开反应窗口（无监听者零变化）。
+    try {
+      onResourcesGained?.(state, inv, amount, events)
+    } catch {
+      // 资源已到账；窗口失败不阻断获得（与其它展示窗口同口径 fail-open）。
+    }
     return amount
   }
 

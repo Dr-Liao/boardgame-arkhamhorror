@@ -7,10 +7,9 @@
 //
 // 读点（声明即接线）：
 //   · 战斗/躲避/生命/伤害/恐惧 = cards-data；猎手/无情由章节 encounterDefinitions 解析；
-//   · 「任意连接地点（尽可能为空地点）」= enemySpawn 窗口（enemies.js#spawnEnemy 的
-//     reactionWindow 在自动交战前派发，context 带 enemy/seat/location）。条目在该窗口把敌人
-//     移动到抽牌者地点的连接地点：优先无人地点，没有则任意连接地点；移动用 api.moveEnemy
-//     （relocateEnemy 的剧本/能力写点）。移动后引擎的「同地点才交战」判定自然不再生效；
+//   · 「生成 - 任意连接地点（尽可能为空地点）」= 条目 enemyRule.spawnLocation（第七轮新读点，
+//     读点 enemies.js#spawnEnemy：排在 behavior.spawnLocation 之后、redirect 之前；优先空地点、
+//     按到默认落点的图距离取最近；kind 'nearestEmptyConnecting' 只在默认落点的直接连接地点里选）；
 //   · 「每轮首次揭示 elder_thing」= chaosTokenRevealed 窗口 + limit { perRound, group }；
 //   · 「重整」= api.scenario.readyEnemy；「结算猎手关键词（不攻击）」= api.scenario.hunterStep
 //     取下一步目标后 api.moveEnemy（不进入敌人攻击循环）。
@@ -22,6 +21,9 @@ export default {
   name: '穷途异魔',
   scope: 'enemy',
   implemented: true,
+  // 印刷「无情」：读点 turn.js#resolveEnemyPhase 的 registeredEntry(...).enemyRule.relentless。
+  // 「生成 - 任意连接地点（尽可能为空地点）」：条目级生成落点声明，读点 enemies.js#spawnEnemy。
+  enemyRule: { relentless: true, spawnLocation: { kind: 'nearestEmptyConnecting' } },
   flags: {
     traits: ['Monster', 'Star Spawn', 'Elite'],
     quantity: 1,
@@ -36,31 +38,6 @@ export default {
     spawnConnectedEmpty: true,
   },
   abilities: [{
-    kind: 'forced',
-    trigger: 'enemySpawn',
-    silent: true,
-    label: '生成：改为在抽牌者地点的连接地点生成（尽可能为空地点）',
-    criteria: ({ state, source, context }) => Boolean(source?.id) && context?.enemy?.id === source.id
-      && Number.isInteger(context?.seat) && Boolean(state.investigators?.[context.seat]?.location),
-    resolve: ({ state, source, context, api }) => {
-      const inv = state.investigators[context.seat]
-      const origin = state.locations?.find(location => location.id === inv.location)
-      const connected = [...new Set(origin?.connections || [])]
-        .filter(id => id !== inv.location && state.locations?.some(location => location.id === id))
-      if (!connected.length) return
-      const empty = connected.filter(id => !(state.investigators || []).some(other =>
-        !other.defeated && !other.resigned && other.location === id)
-        && !(state.enemies || []).some(enemy => enemy !== source && enemy.location === id))
-      const candidates = empty.length ? empty : connected
-      const chosen = candidates.length === 1 ? candidates[0] : (api.choice({
-        kind: 'location', source: CODE, seat: inv.seat,
-        prompt: '「穷途异魔」：选择它生成的连接地点（尽可能为空地点）。',
-        options: candidates.map(id => ({ id, label: api.locName?.(id) || id })),
-      }) || candidates[0])
-      api.moveEnemy?.(source, chosen)
-      api.info?.(`💀 「穷途异魔」在「${api.locName?.(chosen) || chosen}」生成（尽可能为空地点）。`)
-    },
-  }, {
     kind: 'forced',
     trigger: 'chaosTokenRevealed',
     silent: true,
@@ -77,8 +54,9 @@ export default {
       api.info?.('💀 「穷途异魔」：本轮首次揭示旧神标记，重整并结算一次猎手移动（不发动攻击）。')
     },
   }],
-  note: '生成位置用 enemySpawn 窗口（在自动交战前）把敌人改放到抽牌者地点的连接地点，优先无人地点；'
+  note: '生成落点走条目级 enemyRule.spawnLocation: { kind: \'nearestEmptyConnecting\' }'
+    + '（读点 enemies.js#spawnEnemy：在默认落点的直接连接地点里优先空地点、按图距离取最近；'
+    + '由引擎在生成瞬间直接落到该地点，没有「先生成再移动」的窗口顺序差异）。'
     + '猎手/无情来自印刷正文解析。每轮首次 elder_thing 的强制效果走 chaosTokenRevealed + perRound(group) 上限：'
-    + '重整后结算一次 hunterStep 移动，不进入攻击。近似：生成位置在引擎里是「先生成再移动」，'
-    + '没有直接指定连接地点的印刷生成点读点（span 生成窗口内完成，最终位置正确）。',
+    + '重整后结算一次 hunterStep 移动，不进入攻击。无近似项。',
 }

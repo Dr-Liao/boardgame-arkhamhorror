@@ -12,5 +12,5 @@ export default {
   encounterResolve(state, inv, card, api) {
     return api.resolveScenarioEvent('doomOfArkhamPartTwoLayWaste', { seat: inv.seat }) === true
   },
-  note: 'approximation：恶心可塑性的三选一由 behavior.grossPlasticity 处理；其余按卡面结算。',
+  note: "显现：检定[敏捷](X=克苏鲁狂怒值)（behavior.runRageTest 读 flags.test）；失败受到 2 点伤害（api.damage）。",
 }

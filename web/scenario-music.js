@@ -110,18 +110,18 @@ export const SCENARIO_MUSIC = Object.freeze({
     theLairOfDagon: chapter('达贡巢穴', '深海祭坛、誓约仪式、诅咒与祝福', ['ticOppressiveGloom', 'ticAnxiety', 'ancientRite']),
     intoTheMaelstrom: chapter('暗潮之下', '伊哈·恩斯雷门扉、深海之城、终局抉择', ['ticTheDescent', 'ticStormfront', 'thunderDreams']),
   }),
-  // 十循环《沉没之城》P7：10 章 BGM 各 3 首（复用既有曲库，不新增音频）。
+  // 十循环：20 首新曲 + 10 首旧曲（33.3%），30 个位置无循环内重复。
   theDrownedCity: Object.freeze({
-    oneLastJob: chapter("金盆洗手", ["阿卡姆夜街、帮派谈判、赌局揭底"], ["tskNightOnTheDocksSax","tskNoGoodLayabout","tskKillers"]),
-    theWesternWall: chapter("西墙", ["深海高墙、垂降与淹没、古城的压迫感"], ["ticTheDescent","ticOppressiveGloom","eoteInexorable"]),
-    theDrownedQuarter: chapter("淹没城区", ["海床遗迹、供能核心、潮水逼近"], ["ticDeepHaze","ticDarkFog","eoteBlackVortex"]),
-    theApiary: chapter("养育场", ["血肉隧道、蜂巢回响、朝圣者的低语"], ["ticBentAndBroken","ticAnxiety","eoteScpX2xUnseenPresence"]),
-    theGrandVault: chapter("大秘库", ["秘库阶梯、升降机、内殿封印"], ["tcuInnerSanctum","tcuSymmetry","tcuOssuary5Rest"]),
-    courtOfTheAncients: chapter("古代议庭", ["古代议庭、石柱与符文、跨层升降"], ["tcuLandOfTheDead","tcuHiddenWonders","tcuMysticForce"]),
-    obsidianCanyons: chapter("黑曜石峡谷", ["黑曜石峡谷、风暴与吊船、峰顶牌库"], ["eoteSpacialWinds","eoteCrossingTheChasm","eoteLongRoadAheadB"]),
-    sepulchreOfTheSleeper: chapter("沉睡者墓穴", ["墓穴静默、克苏鲁苏醒、仪式收束"], ["tcuPhantasm","tcuAnguish","tcuDarkling"]),
-    theDoomOfArkhamPartI: chapter("阿卡姆的毁灭 第一部分", ["阿卡姆毁灭前夜、幽灵商店、风暴将临"], ["eoteDespairAndTriumph","eoteDayOfChaos","eoteDarkeningDevelopments"]),
-    theDoomOfArkhamPartII: chapter("阿卡姆的毁灭 第二部分", ["克苏鲁降临、终局火力、尾声抉择"], ["tskGhostpocalypse6CrossingTheThreshold","tskNightmareMachine","tskTrepidation"]),
+    oneLastJob: chapter('金盆洗手', '阿卡姆夜街、帮派谈判、赌局揭底', ['tdcCoolVibes', 'tskNightOnTheDocksSax', 'tdcSmokingGun']),
+    theWesternWall: chapter('西墙', '深海高墙、垂降与淹没、古城的压迫感', ['tdcDeepNoise', 'ticTheDescent', 'tdcDrumsOfTheDeep']),
+    theDrownedQuarter: chapter('淹没城区', '海床遗迹、供能核心、潮水逼近', ['tdcWithTheSea', 'tdcAftermath', 'ticDeepHaze']),
+    theApiary: chapter('养育场', '血肉隧道、蜂巢回响、朝圣者的低语', ['tdcSimplex', 'eoteScpX2xUnseenPresence', 'tdcSatiate']),
+    theGrandVault: chapter('大秘库', '秘库阶梯、升降机、内殿封印', ['tdcCheeZeeCavesV2', 'tcuInnerSanctum', 'tdcTheChamber']),
+    courtOfTheAncients: chapter('古代议庭', '古代议庭、石柱与符文、跨层升降', ['tdcVulcan', 'tcuHiddenWonders', 'tdcDragonAndToast']),
+    obsidianCanyons: chapter('黑曜石峡谷', '黑曜石峡谷、风暴与吊船、峰顶牌库', ['tdcRiverOfIo', 'eoteCrossingTheChasm', 'tdcUndaunted']),
+    sepulchreOfTheSleeper: chapter('沉睡者墓穴', '墓穴静默、克苏鲁苏醒、仪式收束', ['tdcHallsOfTheUndead', 'tcuPhantasm', 'tdcTheSecondComingInstrumental']),
+    theDoomOfArkhamPartI: chapter('阿卡姆的毁灭 第一部分', '幽灵商店、暴雨、街区失守', ['tdcDisquiet', 'tdcDarkDance', 'eoteDayOfChaos']),
+    theDoomOfArkhamPartII: chapter('阿卡姆的毁灭 第二部分', '克苏鲁降临、终局鏖战、尾声抉择', ['tdcUnlight', 'tdcColossus', 'eoteDespairAndTriumph']),
   }),
 })
 

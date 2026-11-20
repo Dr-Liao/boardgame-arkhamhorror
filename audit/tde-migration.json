@@ -1385,7 +1385,7 @@
     },
     {
       "path": "content/registry.js",
-      "sha256": "de33c88a7da05ec0bc6e0ad3d19fe04b4148b359e8897b8cb924e692a4959455"
+      "sha256": "e7d924738ba416e9699af5aecd9e95b1be42c6e8cbbc6f1f3f8d7cb5ef75e557"
     },
     {
       "path": "content/mechanics.js",
@@ -1546,7 +1546,7 @@
           "verified": 388,
           "pending": 0,
           "simplified": 0,
-          "testsPassed": 420
+          "testsPassed": 429
         },
         "browserEvidence": {
           "specs": [
@@ -1971,7 +1971,7 @@
       ],
       "ledger": {
         "path": "audit/tde-scenario-acceptance.json",
-        "sha256": "0a559cc27213ee39896178deb74cf27fcbff5d5f57976206cebec184bb1fbf78"
+        "sha256": "41380cd1ff8cdd804e1a458467f4743cfd3f51db4c9f8ce8e9c755c0626aacfd"
       },
       "sourceLock": {
         "path": "audit/tde-scenario-source-lock.json",
@@ -2486,7 +2486,7 @@
       "audit/tde-player-acceptance.json": "3d1ec35e06c7e01085a0300dd30b4a5c4532b8cb984bcace39572ed76d0294c1",
       "audit/tde-primitive-requests.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
       "audit/tde-rules.json": "556a40680796b6ddc89380028597e753ebebfaba330e51e051c7038a66415d72",
-      "audit/tde-scenario-acceptance.json": "0a559cc27213ee39896178deb74cf27fcbff5d5f57976206cebec184bb1fbf78",
+      "audit/tde-scenario-acceptance.json": "41380cd1ff8cdd804e1a458467f4743cfd3f51db4c9f8ce8e9c755c0626aacfd",
       "audit/tde-scenario-gap-triage.json": "8c0b602227cd438541e9a8049f98bd914fea4ea09cf6c821377533e84c04aa9a",
       "audit/tde-scenario-source-lock.json": "7dbfb8ff22befdee20d6a0b8a36768a0d690922ca96b0439cebef0bd1a817c27",
       "audit/tde-story-acceptance.json": "23a7ccef2f730184df97db535b85c3b13b4a9ba869e9b5e1d05613ddbf5c3841",
@@ -2527,7 +2527,7 @@
           "verified": 388,
           "pending": 0,
           "simplified": 0,
-          "testsPassed": 420
+          "testsPassed": 429
         },
         "browserEvidence": {
           "specs": [
@@ -3157,7 +3157,7 @@
       ],
       "ledger": {
         "path": "audit/tde-scenario-acceptance.json",
-        "sha256": "0a559cc27213ee39896178deb74cf27fcbff5d5f57976206cebec184bb1fbf78",
+        "sha256": "41380cd1ff8cdd804e1a458467f4743cfd3f51db4c9f8ce8e9c755c0626aacfd",
         "status": "verified"
       },
       "sourceLock": {

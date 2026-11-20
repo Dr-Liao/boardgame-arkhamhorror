@@ -14,8 +14,7 @@
 //
 // 引擎契约：behavior.resolveChaosToken 返回 { delta, onDraw, onFail }；onDraw/onFail 的
 // { type:'scenarioToken', token, mode } 由 skill-effects.js#applyTokenFx 回派到
-// behavior.applyTokenEffect。困难/专家 [cultist] 的「检定结算后」没有专门钩子（引擎的
-// onDraw 只在校验过程中立即结算），本文件按近似写入 onDraw 并在报告登记。
+// behavior.applyTokenEffect。困难/专家 [cultist] 由该章 afterTest 消费已结算的标记。
 import { mechanicState } from '../../../../../src/engine/mechanic-state.js'
 
 export const isHardSide = state => ['hard', 'expert'].includes(String(state?.difficulty || 'standard'))
@@ -92,7 +91,7 @@ export function grandVaultChaosToken(state, inv, token) {
       return { delta: -skullValue(state), onDraw: [], onFail: [] }
     case 'cultist':
       return hard
-        ? { delta: -4, onDraw: [{ type: 'scenarioToken', token: 'cultist', mode: 'deactivateOrHarmHard' }], onFail: [] }
+        ? { delta: -4, onDraw: [], onFail: [] }
         : { delta: -3, onDraw: [], onFail: [{ type: 'scenarioToken', token: 'cultist', mode: 'deactivateOrHarm' }] }
     case 'tablet':
       return { delta: tabletValue(state, inv), onDraw: [], onFail: [] }

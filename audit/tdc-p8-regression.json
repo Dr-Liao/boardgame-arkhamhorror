@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "before": {
+    "tests": 9617,
+    "pass": 9603,
+    "fail": 11,
+    "cancelled": 0,
+    "skipped": 3,
+    "failures": [
+      "N1 输出稳定且逐项关闭差集，不覆盖 N0 冻结报告",
+      "N3 事务失败时静态字段的嵌套写入也完全隔离",
+      "P8 FHV 发布账本：逐字节复算一致",
+      "P8 TSK 发布账本：逐字节复算一致",
+      "P8 TSK 逐卡账本",
+      "只读导入校验与未知 CLI 参数具有可靠退出状态",
+      "四循环九章每关三首，跨循环复用与循环内重复均不超过 30%",
+      "展示资源生成工具默认只读，--check 比对产物，未知参数非零退出",
+      "服务端拒绝目录中未开放调查员和伪造牌组",
+      "绯红密钥十关各三首，旧曲复用不超过 40%，循环内无重复录音",
+      "近似披露完整：simplified 必有 disclosures，战役 verified 不得带近似前缀"
+    ],
+    "sha256": "0c8f4c5b1f3096acb38d2f90dae90bbf43ff2e1c727833340370103ce21779c9",
+    "report": "artifacts/migration/tdc/p8/full-before.log"
+  },
+  "results": {
+    "playerIndex": {
+      "command": "node tools/build-card-index.mjs --check",
+      "exitCode": 0,
+      "sha256": "f712d7148fe120a85904358ed7e16e64b69916801f992e1a0ab33b224b5eda1b",
+      "report": "artifacts/migration/tdc/p8/regression-playerIndex.log"
+    },
+    "encounterIndex": {
+      "command": "node tools/build-encounter-index.mjs --check",
+      "exitCode": 0,
+      "sha256": "496cbeb6d5f70e941851ae6e01107b7949e3094804aeeb5f836951cdf5021de0",
+      "report": "artifacts/migration/tdc/p8/regression-encounterIndex.log"
+    },
+    "compliance": {
+      "command": "node tools/audit-card-entry-compliance.mjs --check",
+      "exitCode": 0,
+      "sha256": "18070e55534341541518f28631ee8699ae17d75e4dc24e26b119e79a862742d0",
+      "report": "artifacts/migration/tdc/p8/regression-compliance.log"
+    },
+    "story": {
+      "command": "node tools/import-tdc-story.mjs --check",
+      "exitCode": 0,
+      "sha256": "502305a6ba21b34d5ceeef5e073918ec3687ca1422cd5ebab6210280f9eb2123",
+      "report": "artifacts/migration/tdc/p8/regression-story.log"
+    },
+    "guides": {
+      "command": "node tools/build-tdc-guides.mjs --check",
+      "exitCode": 0,
+      "sha256": "bb262888695439bb70c2bbb1cfa6abec80410578394e7838cd8690f1af0de784",
+      "report": "artifacts/migration/tdc/p8/regression-guides.log"
+    },
+    "guideCoverage": {
+      "command": "node tools/import-scenario-guides.mjs --check",
+      "exitCode": 0,
+      "sha256": "c75ecef801bd8fb15f6795bb99e99f24376980a65109d4dce85af689f65a159c",
+      "report": "artifacts/migration/tdc/p8/regression-guideCoverage.log"
+    },
+    "presentation": {
+      "command": "node tools/build-presentation.mjs --check",
+      "exitCode": 0,
+      "sha256": "e9b8f2ceedfd844f87c1a082a5a04e4f36d2099e6d3be2aeb0ca4b98b54ce196",
+      "report": "artifacts/migration/tdc/p8/regression-presentation.log"
+    },
+    "docs": {
+      "command": "node tools/check-doc-links.mjs",
+      "exitCode": 0,
+      "sha256": "9413b1a0a8cd036fdce3f2fb861cf1c77c1e70e9b6246bc73edab6f24b2f2ee9",
+      "report": "artifacts/migration/tdc/p8/regression-docs.log"
+    },
+    "replay": {
+      "command": "node tools/replay-fixtures.mjs --compare ../../artifacts/migration/tdc/replay-before-recovered.json",
+      "exitCode": 0,
+      "sha256": "38b3926ee993e94bb1c7bbbd5d751369d3512e5d36a0a65a9d7461a2098bb7b7",
+      "report": "artifacts/migration/tdc/p8/regression-replay.log"
+    },
+    "campaign": {
+      "command": "node --test tests/tdc-p8-campaign.test.mjs",
+      "exitCode": 0,
+      "sha256": "dec9eb0c803f52023389a6fdcdfd93c8a0b95a4f2b1708777ed3055a2b96d8d7",
+      "report": "artifacts/migration/tdc/p8/regression-campaign.log"
+    },
+    "full": {
+      "command": "node tools/run-tests.mjs all --test-concurrency=12",
+      "exitCode": 1,
+      "sha256": "216fc1e076ac5e674ac78aa1941e6303df2c049cc1b8c9372258695d5e26208c",
+      "report": "artifacts/migration/tdc/p8/regression-full.log",
+      "counts": {
+        "tests": 9624,
+        "pass": 9611,
+        "fail": 10,
+        "cancelled": 0,
+        "skipped": 3,
+        "failures": [
+          "N1 输出稳定且逐项关闭差集，不覆盖 N0 冻结报告",
+          "N3 事务失败时静态字段的嵌套写入也完全隔离",
+          "P8 FHV 发布账本：逐字节复算一致",
+          "P8 TSK 发布账本：逐字节复算一致",
+          "P8 TSK 逐卡账本",
+          "只读导入校验与未知 CLI 参数具有可靠退出状态",
+          "四循环九章每关三首，跨循环复用与循环内重复均不超过 30%",
+          "服务端拒绝目录中未开放调查员和伪造牌组",
+          "绯红密钥十关各三首，旧曲复用不超过 40%，循环内无重复录音",
+          "近似披露完整：simplified 必有 disclosures，战役 verified 不得带近似前缀"
+        ]
+      }
+    }
+  },
+  "newFailures": [],
+  "remainingFailures": [
+    "N1 输出稳定且逐项关闭差集，不覆盖 N0 冻结报告",
+    "N3 事务失败时静态字段的嵌套写入也完全隔离",
+    "P8 FHV 发布账本：逐字节复算一致",
+    "P8 TSK 发布账本：逐字节复算一致",
+    "P8 TSK 逐卡账本",
+    "只读导入校验与未知 CLI 参数具有可靠退出状态",
+    "四循环九章每关三首，跨循环复用与循环内重复均不超过 30%",
+    "服务端拒绝目录中未开放调查员和伪造牌组",
+    "绯红密钥十关各三首，旧曲复用不超过 40%，循环内无重复录音",
+    "近似披露完整：simplified 必有 disclosures，战役 verified 不得带近似前缀"
+  ]
+}

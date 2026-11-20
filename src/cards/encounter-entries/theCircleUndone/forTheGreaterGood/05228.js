@@ -1,9 +1,11 @@
 // 05228 机关盒：取得控制权及加入战役牌组仍由《崇高利益》的剧本流程处理。
+import { markerLabelsOf } from '../../_shared.js'
+
 const watcherOf = state => (state.enemies || []).find(enemy =>
   String(enemy.originalCode || enemy.code) === '05086')
 
 const brazierLit = location => Boolean(location && (
-  (location.markers || []).includes('brazier')
+  markerLabelsOf(location).includes('brazier')
   || location.flags?.brazier === true
   || (location.flags?.brazier == null && location.litBrazier === true)
 ))

@@ -10,7 +10,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 
-import { answer, fixture, move, settle } from './core-fixture.mjs'
+import { answer, asset, fixture, move, settle } from './core-fixture.mjs'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { slotUsage, canEquip, assetReplacementPlans, legalMoves } from '../src/engine/engine.js'
 import { registeredEntry } from '../src/engine/ability.js'
@@ -46,6 +46,50 @@ function joeWithColt() {
   inv.actionsLeft = 5
   return { state, inv }
 }
+
+test('TCU 05042 高塔·XVI 从手牌打出需要 4 个资源和 1 个行动，入场后解除投入封锁', () => {
+  const state = fixture('01001')
+  const inv = me(state)
+  inv.hand = ['05042', '01090']
+  inv.resources = 4
+  inv.actionsLeft = 0
+  const playTower = () => legalMoves(state, 0).find(option => option.action === 'play' && option.cardId === '05042')
+
+  assert.equal(playTower(), undefined, '没有剩余行动时不能打出')
+  inv.actionsLeft = 1
+  inv.resources = 3
+  assert.equal(playTower(), undefined, '资源不足时不能打出')
+  inv.resources = 4
+  inv.actionsLeft = 2
+  const command = playTower()
+  assert.ok(command, '费用足够时应有打出行动')
+  move(state, command)
+  settle(state)
+
+  assert.equal(me(state).resources, 0)
+  assert.equal(me(state).actionsLeft, 1)
+  assert.deepEqual(me(state).hand, ['01090'])
+  assert.deepEqual(me(state).assets.map(item => item.code), ['05042'])
+  move(state, { action: 'investigate' })
+  assert.equal(state.pendingChoice?.kind, 'commit')
+  assert.deepEqual(state.pendingChoice.options.map(option => option.id), ['done', '0'], '打出后可投入洞察力')
+  answer(state, '0')
+  settle(state)
+  assert.ok(me(state).discard.includes('01090'))
+})
+
+test('TCU 05042 高塔·XVI 打出时可以替换已经占用塔罗槽的资产', () => {
+  const state = fixture('01001')
+  const tarot = asset(state, '05023')
+  me(state).hand = ['05042']
+  move(state, { action: 'play', cardId: '05042' })
+  assert.equal(state.pendingChoice?.kind, 'assetReplacement')
+  assert.deepEqual(state.pendingChoice.options.map(option => option.id), [tarot.id])
+  settle(state)
+
+  assert.deepEqual(me(state).assets.map(item => item.code), ['05042'])
+  assert.ok(me(state).discard.includes('05023'))
+})
 
 test('05009 柯尔特：在场时打出第一张[[工具]]（放大镜）不需要弃置资产腾槽', () => {
   const { state, inv } = joeWithColt()

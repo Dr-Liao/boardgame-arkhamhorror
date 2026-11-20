@@ -33,6 +33,8 @@ import { enemySpawnRuleFor } from '../cards/card-rules.js'
 import { sourceCardDef, weaknessOwnerSeat } from './card-lookup.js'
 import { enemyIgnoresInvestigator } from './trait-passives.js'
 import { enemyCanEnterLocation, enemyProtectionBlocks } from './enemy-entry.js'
+import { enemyCannotBeDamaged } from './enemy-restrictions.js'
+import { ignoredEnemyAttackOffer, markIgnoredEnemyAttack, storyAssetEnemyDamageRedirect } from './story-asset-rules.js'
 import { capturedActionError } from './capture.js'
 import { capabilityBlocked } from './modifiers.js'
 import { swarmGroup, returnSwarmCard, swarmCardsOf } from './swarm.js'
@@ -244,6 +246,23 @@ function enemyAttack(state, enemy, inv, events, label, options = {}) {
     return false
   }
   recordEnemyPhaseAttack(state, enemy)
+  // P7 TDC 11638 伊克雷希特碎片：每轮第一次由[[星之眷族]]/[[深潜者]]发起的攻击可以被忽略。
+  if (attack.kind !== 'effect') {
+    const ignoreOffer = ignoredEnemyAttackOffer(state, enemy, inv)
+    if (ignoreOffer) {
+      markIgnoredEnemyAttack(ignoreOffer, state)
+      const answer = requestChoice(state, {
+        kind: 'reaction', source: 'ignoreFirstAttack', seat: inv.seat,
+        prompt: `是否忽略本回合首次由「${enemy.name}」发起的攻击？`,
+        options: [{ id: 'ignore', label: '忽略这次攻击' }, { id: 'take', label: '正常结算攻击' }],
+      })
+      if (answer === 'ignore') {
+        info(state, events, `🛡️ 「${cardName(ignoreOffer.asset.code)}」忽略了「${enemy.name}」本回合的首次攻击。`)
+        attack.cancelled = true
+        return false
+      }
+    }
+  }
   const context = reactionWindow(state, 'enemyAttack',
     { when: 'enemyAttack', seat: inv.seat, location: inv.location, enemy, attackKind: attack.kind,
       prompt: `「${enemy.name}」攻击 ${inv.name}` }, events)
@@ -530,6 +549,39 @@ function spawnEnemy(state, code, locationId, engagedSeat, ignoreSpawn = false, t
     }
   }
   if (!ignoreSpawn && scenarioBehavior(state).spawnLocation) loc = scenarioBehavior(state).spawnLocation(state, code, loc, engagedSeat, scenarioRuntime(state, []))
+  // P7 TDC 11744 等：条目级「生成落点」声明（共享遭遇卡无章节 behavior 可用时）。
+  // 形状 { kind: 'nearestEmpty'|'nearestEmptyConnecting'|'nearestEmptyTrait', trait? }。
+  if (!ignoreSpawn) {
+    const spawnRule = registeredEntry(code)?.enemyRule?.spawnLocation
+    if (spawnRule?.kind && !(spawnRule.onlyIfEmpty === true && state.investigators.some(inv =>
+      !inv.defeated && !inv.resigned && inv.location === loc))) {
+      const origin = state.locations.find(location => location.id === loc)
+      const pool = spawnRule.kind === 'nearestEmptyConnecting'
+        ? (origin?.connections || []).map(id => state.locations.find(location => location.id === id)).filter(Boolean)
+        : state.locations.filter(location => !spawnRule.trait
+          || (location.traits || []).some(trait => String(trait).toLowerCase() === String(spawnRule.trait).toLowerCase()))
+      const occupied = location => state.investigators.some(inv => !inv.defeated && !inv.resigned && inv.location === location.id)
+      const empty = pool.filter(location => !occupied(location) && !state.enemies.some(other => other.location === location.id))
+      const candidates = (empty.length ? empty : pool)
+        .filter(location => enemyCanEnterLocation(state, { ...def, code, originalCode: code }, location.id))
+      if (candidates.length) {
+        let best = Infinity
+        let nearest = []
+        for (const candidate of candidates) {
+          const distance = buildDistance(state, loc, candidate.id)
+          if (!Number.isFinite(distance)) continue
+          if (distance < best) { best = distance; nearest = [candidate.id] } else if (distance === best) nearest.push(candidate.id)
+        }
+        if (nearest.length) {
+          loc = nearest.length === 1 ? nearest[0] : requestChoice(state, {
+            kind: 'location', source: code, seat: engagedSeat ?? leadDecisionSeat(state),
+            prompt: `选择「${def.name}」的生成地点。`,
+            options: nearest.map(id => ({ id, label: state.locations.find(location => location.id === id)?.name || id })),
+          })
+        }
+      }
+    }
+  }
   // 「敌人不能生成在该地点」的地点侧声明（07252b 拘禁室）：按声明的候选改换落点；
   // 无候选时保留原落点，交给下面的 enemyCanEnterLocation 失败路径。
   loc = redirectEnemySpawn(state, code, loc)
@@ -672,11 +724,18 @@ function disengageEnemy(state, enemy, grouped = false) {
     }
     return
   }
-  if (enemy.engagedSeat != null) {
-    const inv = state.investigators[enemy.engagedSeat]
+  const engagedSeat = enemy.engagedSeat
+  if (engagedSeat != null) {
+    const inv = state.investigators[engagedSeat]
     if (inv) removeOne(inv.engaged, enemy.id)
   }
   enemy.engagedSeat = null
+  // P7 TDC obsidianCanyons 11670：「位于开阔天空时原始恐怖解除与你的交战 → 你被击败并得 1 肉体创伤」。
+  // 读点：所有解除交战来源共用本函数；章节用 behavior.enemyDisengaged 消费（旧内容无钩子时零变化）。
+  if (engagedSeat != null) {
+    const inv = state.investigators[engagedSeat] || null
+    scenarioBehavior(state).enemyDisengaged?.(state, enemy, inv, scenarioRuntime(state, state._resolution?.events || []))
+  }
 }
 
 function leaveEnemyPlay(state,enemy,events,{reason='zone',preserveKeys=false,responsibleSeat=null}={}) {
@@ -831,6 +890,8 @@ function defeatEnemy(state, enemy, events, options={}) {
 function canDamageEnemy(state, enemy, seat = null, source = null) {
   if (enemyIsBody(enemy)) return false
   if (!enemy || enemy.global || !state.enemies.includes(enemy)) return false
+  // P7 TDC 11702–11704：非[[狂怒]]面印刷「不能受到伤害」（按当前面条目动态读；文本空白时失效）。
+  if (enemyCannotBeDamaged(state, enemy, enemyTextBlanked)) return false
   // 沉睡（enemyRule.slumbering）的敌人免疫玩家卡效果与调查员行动；剧本/遭遇来源照常，
   // 来源未知时 fail-closed。读点与「能不能打/交战」共用同一套判定。
   if (!enemyEffectAllowed(state, enemy, 'damage', { entryOf: registeredEntry, isBlanked: enemyTextBlanked, cardDef })) return false
@@ -884,6 +945,15 @@ function damageEnemy(state, enemy, amount, seat, events, source = null, presenta
   const adjusted = scenarioBehavior(state).enemyDamageAmount?.(state,enemy,total,scenarioRuntime(state,events),seat,source)
   if (Number.isFinite(adjusted)) total=Math.max(0,adjusted)
   if (!total) return false
+  // P7 TDC 11568 玛莉亚·里维拉：伤害改为放在受控剧情资产上（控制器与敌人在同一地点）。
+  const redirect = storyAssetEnemyDamageRedirect(state, enemy)
+  if (redirect) {
+    const owner = state.investigators?.[redirect.controllerSeat]
+    redirect.asset.damage = (redirect.asset.damage || 0) + total
+    info(state, events, `🛡️ 「${cardName(redirect.asset.code)}」代替「${enemy.name}」承受 ${total} 点伤害（${redirect.asset.damage}/${cardDef(redirect.asset.code)?.health ?? '?'}）。`)
+    if (owner) checkAssetDefeated(state, owner, redirect.asset, events, deps)
+    return true
+  }
   if (directDamageSource(state, source, presentation)) {
     const cue = directDamageCue(state, { source, hint: presentation, seat, enemy, damage: total, cardName,
       tableState: captureTableState(state, getStat, getMaxSanity, { enemyHealth, enemyFightValue, enemyEvadeValue }) })

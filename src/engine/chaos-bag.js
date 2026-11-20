@@ -46,6 +46,51 @@ export function changeChaosBag(state, token, amount, { permanent = false } = {})
   if (permanent) state.campaign.chaosBag = campaignBag
 }
 
+// P7 TDC 幕间 IV「同舟共济（Toe the Line）」失败：把袋里的非符号标记逐枚降档
+// （参考 Helpers.hs#lowerChaosTokenByTwo：-7/-8 与符号标记不变）。数值面按印刷顺序排列，
+// 降档 = 下标 + by；越界表示已是最低，保留原标记。
+export const CHAOS_NUMERIC_TOKENS = Object.freeze(['+1', '0', '-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8'])
+export function lowerChaosToken(token, by = 1) {
+  const index = CHAOS_NUMERIC_TOKENS.indexOf(token)
+  const target = index + by
+  return index >= 0 && target < CHAOS_NUMERIC_TOKENS.length ? CHAOS_NUMERIC_TOKENS[target] : null
+}
+
+// 从当前袋（及可选的战役持久袋）里随机抽 count 枚数值标记，逐枚应用 mapper：
+// mapper 返回 null 表示保留原标记（不消耗一次替换），返回字符串则替换。返回实际替换数。
+export function replaceChaosTokens(state, count, mapper, { permanent = true, tokens = CHAOS_NUMERIC_TOKENS } = {}) {
+  if (!Number.isSafeInteger(count) || count < 0 || typeof mapper !== 'function'
+    || !Array.isArray(tokens) || !tokens.length) throw new Error('混乱袋替换无效')
+  const apply = bag => {
+    const copy = [...(bag || [])]
+    const candidates = copy
+      .map((token, index) => ({ token, index }))
+      .filter(row => tokens.includes(row.token))
+    for (let i = candidates.length - 1; i > 0; i--) {
+      const j = Math.floor(randomValue(state) * (i + 1))
+      ;[candidates[i], candidates[j]] = [candidates[j], candidates[i]]
+    }
+    const picked = candidates.slice(0, count)
+    if (!picked.length) return { bag: copy, replaced: 0 }
+    const pickedIndexes = new Set(picked.map(row => row.index))
+    const kept = copy.filter((_, index) => !pickedIndexes.has(index))
+    const mapped = []
+    let replaced = 0
+    for (const row of picked) {
+      const next = mapper(row.token)
+      if (next == null) { mapped.push(row.token); continue }
+      if (typeof next !== 'string' || !next) throw new Error('混乱袋替换目标无效')
+      mapped.push(next)
+      replaced += 1
+    }
+    return { bag: [...kept, ...mapped], replaced }
+  }
+  const current = apply(state.chaosBag)
+  state.chaosBag = current.bag
+  if (permanent && state.campaign) state.campaign.chaosBag = apply(state.campaign.chaosBag).bag
+  return current.replaced
+}
+
 export function beginChaosTest(state) {
   const z = zones(state)
   z.frames.push(z.revealed.length)

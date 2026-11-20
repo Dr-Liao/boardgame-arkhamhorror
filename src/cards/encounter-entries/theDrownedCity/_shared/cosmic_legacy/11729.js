@@ -73,6 +73,6 @@ export default {
     },
   }],
   note: '标记转换走 tokenReveal 中断 + api.replaceChaosToken（原标记归还混乱袋、按旧神标记继续结算），'
-    + '与参考实现的 ForcedChaosTokenChange 同口径；摆脱行动走威胁区 action 描述子。'
-    + '近似：替换「cultist/tablet → elderthing」只影响本次检定的结算，不改变混乱袋构成。',
+    + '与参考实现的 ForcedChaosTokenChange 同口径：替换只影响本次检定的结算、不改变混乱袋构成；'
+    + '摆脱行动走威胁区 action 描述子。',
 }

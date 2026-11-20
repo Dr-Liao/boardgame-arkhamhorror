@@ -395,6 +395,20 @@ function settleScenarioBoundary(state, events, error) {
   } else progressCampaign(state, events, true)
 }
 
+// P7 TDC 11516：「若调查员在本地点进行过谈判」的章节钩子（在 parley 行动结算后派发一次）。
+// 读点：Doom of Arkham Part I 的 11516 强制让被附属敌人攻击该调查员。
+function dispatchParleyHooks(state, seat, move, events) {
+  const inv = state.investigators[seat]
+  if (!inv || inv.defeated || inv.resigned) return
+  const enemy = move?.enemyId ? state.enemies.find(item => item.id === move.enemyId) || null : null
+  const runtime = scenarioRuntime(state, events)
+  scenarioBehavior(state).afterParley?.(state, inv, enemy, runtime)
+  reactionWindow(state, 'parleyed', {
+    when: 'parleyed', seat, location: inv.location, enemy,
+    prompt: `${inv.name} 进行了谈判。`,
+  }, events, { allowNested: true })
+}
+
 function executeCommand(state, seat, move, events) {
   // 调试 move（CONTRACT §3.1）：在局外分支之前分发，完全绕过行动点 / 借机攻击 /
   // 行动类型；校验已由 applyMove → validateMove 完成。
@@ -1074,11 +1088,30 @@ function applyMoveUnchecked(state, seat, move, events) {
     case 'explore': doExplore(state, seat, events); break
     case 'searchIzzie': doSearchIzzie(state, seat, events); break
     case 'locationAbility': doLocationAbility(state, seat, m.locationId, events); break
-    case 'fight': doFight(state, seat, { enemyId: m.enemyId, basicAction: 'fight' }, events); break
+    case 'fight': {
+      // P7 TDC 11690/11691a：支付线索换取本次攻击 +1 伤害（每次攻击限一次；战斗失败也消耗）。
+      let damageBonus = 0
+      if (m.clueDamageBonus) {
+        const enemy = state.enemies.find(item => item.id === m.enemyId)
+        const here = state.locations.find(location => location.id === inv.location)
+        let rule = null
+        for (const card of [state.acts?.[state.actIndex], enemy, here]) {
+          rule = registeredEntry(card?.originalCode || card?.code)?.attackRule?.clueDamageBonus || null
+          if (rule) break
+        }
+        if (!rule || (inv.clues || 0) < rule.cost) break
+        inv.clues -= rule.cost
+        syncClues(state)
+        damageBonus += rule.amount
+        info(state, events, `🔎 ${inv.name} 花费 ${rule.cost} 个线索：本次攻击伤害 +${rule.amount}。`)
+      }
+      doFight(state, seat, { enemyId: m.enemyId, basicAction: 'fight', ...(damageBonus ? { damageBonus } : {}) }, events)
+      break
+    }
     case 'evade': doEvade(state, seat, { enemyId: m.enemyId, basicAction: 'evade' }, events); break
     case 'extraEvade': doEvade(state, seat, { enemyId: m.enemyId }, events, true); inv.extraEvadeUsed = state.turnSerial; break
     case 'deckTopWeaknessDiscard': discardRevealedDeckTopWeakness(state, seat, events); break
-    case 'parley': doParley(state, seat, m.enemyId, events); break
+    case 'parley': doParley(state, seat, m.enemyId, events); dispatchParleyHooks(state, seat, m, events); break
     case 'parleyCultist': doParleyCultist(state, seat, m.enemyId, events); break
     case 'parleyLita': doParleyLita(state, seat, events); break
     case 'drawCultist': doDrawCultist(state, seat, events); break

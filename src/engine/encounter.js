@@ -7,6 +7,7 @@ import { enemyRuleFlags, investigatorRule } from '../cards/card-rules.js'
 import { extraDeckPiles } from './alt-decks.js'
 import { scenarioDeckPiles } from './scenario-decks.js'
 import { markForcedRevelation } from './resolution-scope.js'
+import { scenarioFastReactionSource } from './script-cards.js'
 // 遭遇牌与反应窗口（drawEncounter / reactionWindow / triggerReaction / playerWindow）
 // 从 engine.js 拆出的模块（Phase 6 · 6d-20）。
 //
@@ -126,10 +127,13 @@ function drawEncounter(state, inv, events, options = {}) {
     else state.encounterDiscard = []
   }
   const code = options.code ?? deck().pop()
+  // P7 TDC 11632-11634：印刷「如果本诡计从遭遇弃牌堆被抽取……」。抽牌来源作为结算上下文透传：
+  // 牌库顶抽取 = 'deck'；api.drawEncounter(seat,{code,from}) 可显式声明 'discard'/'search'。
+  const drawSource = options.from ?? (options.code != null ? 'search' : 'deck')
   const phaseDrawRule = state.phase === 'mythos' ? state._mythosEncounterDrawRule : null
   if (phaseDrawRule?.uncancelable === true && options.cannotCancel !== true) options = { ...options, cannotCancel: true }
-  const forceSurge = phaseDrawRule?.firstSurge === true
-  if (forceSurge) phaseDrawRule.firstSurge = false
+  const forceSurge = options.grantSurge === true || phaseDrawRule?.firstSurge === true
+  if (phaseDrawRule?.firstSurge === true) phaseDrawRule.firstSurge = false
   const encounterLookRule = registeredEntry(code)?.encounterLookRule
   const encounter = ALL_ENEMIES[code] || ALL_TREACHERIES[code] || (encounterLookRule ? ALL_CARDS[code] : null)
   if (ALL_ENEMIES[code]) recordRoundAction(state, inv, 'enemyDraws', null, registeredEntry)
@@ -186,6 +190,7 @@ function drawEncounter(state, inv, events, options = {}) {
     if(surge&&!options.suppressSurge&&!resolution?.surgeHandled&&!resolvingInv.defeated&&!resolvingInv.resigned){
       info(state,events,`🌀 「${encounter?.name||code}」涌动：再抽取一张遭遇牌。`)
       const child={...options};delete child.suppressSurge;delete child.code
+      if (options.grantSurge === true) { delete child.grantSurge; delete child.peril }
       if (options.skillPenalty) { delete child.skillPenalty; delete child.enemyAttacks; delete child.peril; delete child.cannotCancel }
       drawEncounter(state,resolvingInv,events,child)
     }
@@ -279,7 +284,7 @@ function drawEncounter(state, inv, events, options = {}) {
     resolution = { gainSurge: true }
   } else if (ALL_TREACHERIES[code]) {
     const capturedBefore = (state.victoryDisplay || []).filter(card => card.code === code || card.code === cardDef(code)?.originalCode).length
-    resolution = resolveTreachery(state, resolvingInv, ALL_TREACHERIES[code], events, options.scenarioDeckId)
+    resolution = resolveTreachery(state, resolvingInv, ALL_TREACHERIES[code], events, options.scenarioDeckId, { from: drawSource })
     // Older campaign handlers may already perform their printed surge; the marker prevents a second draw.
     const placed = (typeof resolution === 'object' ? resolution.placed : resolution)
       || (state.victoryDisplay || []).filter(card => card.code === code || card.code === cardDef(code)?.originalCode).length > capturedBefore
@@ -629,6 +634,7 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
           for (const targetId of targets.length ? targets.map(target => target.id) : [null]) options.push({
             id: `${asset.id}:${index}:${targetId || ''}`, label: `${cardName(asset.code)}：${ability.label}`,
             assetId: asset.id, index, targetId, ownerSeat,
+            ...(ownerSeat !== inv.seat ? { reactionSourceCode: asset.code } : {}),
           })
           if (ability.descriptor) shimOffered.add(ability.descriptor)
         }
@@ -670,7 +676,8 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
       || (scenarioBehavior(state).actions?.(state, inv) || [])
         .filter(move => !move.reason && move.actions === 0 && move.fast === true)
     for (const move of scenarioFast || []) {
-      options.push({ id: `scenario-fast:${move.rule}:${move.enemyId || ''}`, label: move.label, scenarioMove: move })
+      options.push({ id: `scenario-fast:${move.rule}:${move.enemyId || ''}`, label: move.label, scenarioMove: move,
+        reactionSourceCode: scenarioFastReactionSource(state, move) })
     }
     {
       for (const { move, entry } of fastHandPlays(state, inv, opts)) {
@@ -698,8 +705,9 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
       prompt: inv.seat === fastCardSeat && options.some(option => option.cardCode)
         ? '回合结束前：可以打出快速卡或使用免费触发能力，或让过。'
         : `${playerWindowLabel(timing)}：可以使用免费触发能力，或让过。`, canSkip: true,
-      options: [{ id: 'skip', label: '让过' }, ...options.map(({ id, label, assetId, index, targetId, cardCode, uiKey, fromChannel, asIfLocation }) => ({
+      options: [{ id: 'skip', label: '让过' }, ...options.map(({ id, label, assetId, index, targetId, cardCode, uiKey, fromChannel, asIfLocation, reactionSourceCode }) => ({
         id, label, assetId, abilityIndex: index, targetId,
+        ...(reactionSourceCode ? { reactionSourceCode } : {}),
         // 只有「如同手牌」通道候选才补 cardCode/uiKey（手牌快速卡保持原有选择负载，
         // 避免改变既有对局的待决选择形状/重放指纹）。卢克的「如同位于」是 2026-11-05 新增的
         // 独立 id，补 cardCode 让「快速反应开关」按卡号过滤时也能覆盖这些变体。

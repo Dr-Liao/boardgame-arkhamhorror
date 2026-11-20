@@ -144,7 +144,7 @@ const locationOf = (state, id) => state.locations.find(location => location.id =
 test('P7 theWesternWall 章节结构：20 张条目、13 地点实例、2 幕、1 议程、4 结局键', () => {
   assert.equal(chapter.scenario.id, 'theWesternWall')
   assert.equal(chapter.scenario.originalCode, '11517')
-  assert.equal(chapter.manifest.status, 'development')
+  assert.equal(chapter.manifest.status, 'playable')
   assert.equal(chapter.manifest.campaignId, 'theDrownedCity')
   assert.equal(chapter.manifest.referenceCode, '11517')
   assert.equal(chapter.manifest.contentVersion, '0.1.0')
@@ -388,14 +388,16 @@ test('P7 theWesternWall 标记效果：完全淹没受伤、提高淹没等级',
 // ---------------------------------------------------------------------------
 // 6. 幕目标
 // ---------------------------------------------------------------------------
-test('P7 theWesternWall 幕目标：西线全员到黑曜石地基、东线全员到西墙', () => {
+test('P7 theWesternWall 幕目标：西线全员到黑曜石地基、东线全员到西墙（达成后询问推进）', () => {
   const west = setup(2, { records: { theExpeditionHeadedWest: true } })
+  west.api.choose = () => 'advance'
   west.state.investigators[0].location = 'obsidianFoundations'
   assert.equal(behavior.checkObjectives(west.state, west.api), false, '还有一人未到')
   west.state.investigators[1].location = 'obsidianFoundations'
   assert.equal(behavior.checkObjectives(west.state, west.api), true)
   assert.equal(west.api.advanced, 1)
   const east = setup(1, { records: { theExpeditionHeadedEast: true } })
+  east.api.choose = () => 'advance'
   east.state.investigators[0].location = 'westernWall'
   assert.equal(behavior.checkObjectives(east.state, east.api), true)
   assert.equal(east.api.advanced, 1)
@@ -499,8 +501,8 @@ test('P7 theWesternWall 单卡条目：20 张注册、code 唯一、剧情/敌�
   assert.equal(implementedEntryFlags('11531b').glyph.letter, 'W')
   assert.equal(implementedEntryFlags('11532b').glyph.letter, 'Z')
   assert.equal(implementedEntryFlags('11533').searchDeepOneOnEnter, true)
-  assert.equal(registeredEntry('11534').implemented, false, '未实现的诡计不得标 implemented')
-  assert.equal(registeredEntry('11535').implemented, false)
+  assert.equal(registeredEntry('11534').implemented, true, '第二轮已接线；残余近似写在 note')
+  assert.equal(registeredEntry('11535').implemented, true, '第二轮已接线 enemyPhaseEnd/spawnLocation')
   assert.equal(typeof registeredEntry('11531').encounterResolve, 'function')
   assert.equal(scenario.enemies['11533'].hunter, true)
   assert.equal(scenario.enemies['11535'].aloof, true)
@@ -519,4 +521,369 @@ test('P7 theWesternWall 只读投影与 JSON 存档往返', () => {
   assert.deepEqual(restored.scenarioFlags, state.scenarioFlags)
   assert.deepEqual(restored.scenarioZones, state.scenarioZones)
   assert.equal(restored.locations.length, state.locations.length)
+})
+
+
+// ---------------------------------------------------------------------------
+// 9. saveReplay：真实 saveSnapshot / readSnapshot 持久化 + 同一动作重放
+// ---------------------------------------------------------------------------
+test('P7 theWesternWall saveReplay：saveSnapshot/readSnapshot 恢复后状态等价，西墙抽 3 张动作结果一致', async () => {
+  const fsMod = await import('node:fs')
+  const os = await import('node:os')
+  const path = await import('node:path')
+  const home = fsMod.mkdtempSync(path.join(os.tmpdir(), 'dsh-tdc-tww-'))
+  const previousHome = process.env.DSH_HOME
+  process.env.DSH_HOME = home
+  try {
+    const { saveSnapshot, readSnapshot, persistEnabled } = await import('../../../lib/sessions.js')
+    assert.equal(persistEnabled(), true, 'BOARDGAME_PERSIST 默认开启路径必须被覆盖')
+    const { state } = setup(1, { records: { theExpeditionHeadedWest: true } })
+    const session = {
+      sessionId: 'tdc-the-western-wall-save-replay',
+      modId: 'arkhamhorror',
+      state: JSON.parse(JSON.stringify(state)),
+      players: [{ seat: 0, name: '调查员1' }],
+      events: [{ kind: 'setup', note: 'test' }],
+      settings: { difficulty: 'standard' },
+    }
+    const file = saveSnapshot(session)
+    assert.equal(fsMod.existsSync(file), true, '快照文件应落盘')
+    const restoredRecord = readSnapshot(session.sessionId)
+    assert.ok(restoredRecord, 'readSnapshot 应返回记录')
+    assert.equal(restoredRecord.sessionId ?? restoredRecord.session.sessionId, session.sessionId)
+    const restoredState = restoredRecord.session.state
+    assert.deepEqual(restoredState, JSON.parse(JSON.stringify(state)), '恢复后状态必须与内存状态等价')
+    assert.deepEqual(restoredState.scenarioFlags.mechanics.flood, state.scenarioFlags.mechanics.flood,
+      'P7 淹没状态（mechanicState）必须随存档恢复')
+
+    // 同一动作：西墙 [action][action] 抽 3 张（每场游戏一次），两边的结果指纹一致。
+    const moveOf = target => behavior.actions(target, target.investigators[0])
+      .find(move => move.rule === 'twwWesternWallDraw')
+    const freshMove = moveOf(state)
+    const restoredMove = moveOf(restoredState)
+    assert.ok(freshMove && restoredMove, '两个起点都必须提供同一动作')
+    const apiFresh = makeApi(state)
+    const apiRestored = makeApi(restoredState)
+    assert.equal(behavior.performAction(state, state.investigators[0], freshMove, apiFresh), true)
+    assert.equal(behavior.performAction(restoredState, restoredState.investigators[0], restoredMove, apiRestored), true)
+    const fingerprint = target => JSON.stringify({
+      hand: target.investigators[0].hand,
+      flags: target.scenarioFlags,
+      flood: target.scenarioFlags.mechanics.flood,
+      summary: scenarioSummary(target),
+    })
+    assert.equal(fingerprint(restoredState), fingerprint(state), '恢复后继续同一动作的结果必须一致')
+  } finally {
+    if (previousHome === undefined) delete process.env.DSH_HOME
+    else process.env.DSH_HOME = previousHome
+    fsMod.rmSync(home, { recursive: true, force: true })
+  }
+})
+
+
+// ---------------------------------------------------------------------------
+// 10. 第二轮接线：11535 enemyPhaseEnd / 11534 威胁区与淹没进场恐惧（引擎既有读点）
+// ---------------------------------------------------------------------------
+test('P7 theWesternWall 第二轮接线：11535 敌军阶段末放毁灭弃自身、11534 失败入威胁区并按轮恐惧', () => {
+  const { state, api } = setup(1, { records: { theExpeditionHeadedWest: true } })
+  const location = state.locations.find(item => item.level === 2)
+  state.investigators[0].location = location.id
+  const asset = { id: 'asset-1', code: '01020', originalCode: '01020', controllerSeat: 0 }
+  state.investigators[0].assets.push(asset)
+  const parasite = api.spawn('11535', location.id)
+  const doomCalls = []
+  const discardCalls = []
+  const apiEnemyPhase = {
+    ...api,
+    doomOn: (card, amount) => { doomCalls.push([card.id, amount]); card.doom = (Number(card.doom) || 0) + amount },
+    discardEnemy: enemy => { discardCalls.push(enemy.id); state.enemies = state.enemies.filter(item => item !== enemy) },
+  }
+  assert.equal(behavior.enemyPhaseEnd(state, apiEnemyPhase), true, '敌军阶段结束强制必须结算')
+  assert.deepEqual(doomCalls, [['asset-1', 1]], '在所在地点玩家卡上放 1 毁灭')
+  assert.deepEqual(discardCalls, [parasite.id], '随后弃掉猎食寄生虫')
+  assert.equal(state.enemies.includes(parasite), false)
+  const spawnLocationId = behavior.spawnLocation(state, '11535', null, 0, api)
+  assert.ok(location.connections.includes(spawnLocationId), '生成在连接地点')
+
+  // 11534 显现：智力(3) 失败 → 进入威胁区（api.threat 唯一写入口）。
+  const lookOut = ENTRIES.find(entry => entry.code === '11534')
+  const threatCalls = []
+  const apiRevelation = {
+    last: null,
+    test: (seat, skill, difficulty, resolve) => { apiRevelation.last = { seat, skill, difficulty }; resolve({ success: false }) },
+    threat: (seat, code) => { threatCalls.push([seat, code]); return { seat, code } },
+    info: () => {},
+  }
+  assert.equal(lookOut.encounterResolve(state, state.investigators[0], { code: '11534' }, apiRevelation), true)
+  assert.deepEqual(apiRevelation.last, { seat: 0, skill: 'intellect', difficulty: 3 })
+  assert.deepEqual(threatCalls, [[0, '11534']])
+
+  // 强制：每轮首次进入淹没地点受 1 恐惧（同轮只一次，下一轮再触发）。
+  state.investigators[0].threat.push({ id: 'threat-1', code: '11534', originalCode: '11534' })
+  const flooded = state.locations.find(item => item.level === 4)
+  const horrorBefore = state.investigators[0].horror
+  state.round = 3
+  assert.equal(behavior.locationEntered(state, state.investigators[0], flooded, api), true)
+  assert.equal(state.investigators[0].horror, horrorBefore + 1)
+  behavior.locationEntered(state, state.investigators[0], flooded, api)
+  assert.equal(state.investigators[0].horror, horrorBefore + 1, '同一轮只触发一次')
+  state.round = 4
+  behavior.locationEntered(state, state.investigators[0], flooded, api)
+  assert.equal(state.investigators[0].horror, horrorBefore + 2, '下一轮再次触发')
+
+  // 回合结束检定走引擎既有 threatEffect.endTurnTest 读点（turn.js#runThreatEndTurn）。
+  assert.deepEqual(registeredEntry('11534').threatEffect.endTurnTest, { skill: 'agility', difficulty: 3 })
+  assert.equal(registeredEntry('11534').treacheryRule.threatArea, true)
+  assert.equal(registeredEntry('11534').implemented, true)
+  assert.equal(registeredEntry('11535').implemented, true)
+})
+
+
+// ---------------------------------------------------------------------------
+// 11. 其余专属卡：淹没棚屋动态连接、符文 V/Z/W、海底壁画与水下秘库翻面
+// ---------------------------------------------------------------------------
+test('P7 theWesternWall 其余专属卡：淹没棚屋动态连接、破碎遗迹符文 V、黑曜石地基抽海底壁画、水下秘库/海底壁画翻面', () => {
+  const { state, api } = setup(1, { records: { theExpeditionHeadedWest: true } })
+  const inv = state.investigators[0]
+
+  // 11527 淹没棚屋：深潜者敌人「移动时」才与完全淹没地点双向互连（enemyConnections 钩子）。
+  const shanty = locationOf(state, 'drownedShanty')
+  assert.ok(shanty, '淹没棚屋在入场 10 地点之一')
+  const floodedLocation = state.locations.find(location => behavior.waterLevel(state, api, location.id) >= 2
+    && location.id !== 'drownedShanty')
+  assert.ok(floodedLocation, '西线 4–5 层存在完全淹没地点')
+  behavior.syncShantyConnections(state, api)
+  assert.equal(shanty.connections.includes(floodedLocation.id), false, '常态下淹没棚屋不并入完全淹没地点')
+  const deepOneMover = { id: 'deep-mover', code: '11746', originalCode: '11746', traits: ['Humanoid', 'Monster', 'Deep One'], location: 'drownedShanty' }
+  assert.ok(behavior.enemyConnections(state, deepOneMover, shanty).includes(floodedLocation.id),
+    '深潜者移动时：淹没棚屋 → 任意完全淹没地点')
+  assert.ok(behavior.enemyConnections(state, deepOneMover, floodedLocation).includes('drownedShanty'),
+    '深潜者移动时：完全淹没地点 → 淹没棚屋（双向）')
+  assert.deepEqual(behavior.enemyConnections(state, { traits: ['Humanoid'] }, shanty), [], '非深潜者不生效')
+  assert.deepEqual(behavior.enemyConnections(state, deepOneMover, locationOf(state, 'westernWall')), [],
+    '非淹没地点不回连淹没棚屋')
+
+  // 11528 破碎遗迹：未淹没时发现符文 V（陌生人）。
+  const ruins = locationOf(state, 'shatteredRuins')
+  behavior.waterSet(state, {}, ruins.id, 0)
+  inv.location = ruins.id
+  const glyphMove = behavior.actions(state, inv).find(move => move.rule === 'twwLocationGlyph')
+  assert.ok(glyphMove && glyphMove.reason === null)
+  assert.equal(behavior.performAction(state, inv, glyphMove, api), true)
+  assert.ok(state.campaign.records.discoveredGlyphs.includes('V'))
+  assert.equal(state.scenarioFlags.twwGlyphTranslation.V, '陌生人')
+
+  // 11529 黑曜石地基：智力(3) 成功抽出放一边的海底壁画（11531）。
+  const foundations = locationOf(state, 'obsidianFoundations')
+  inv.location = foundations.id
+  const drawMove = behavior.actions(state, inv).find(move => move.rule === 'twwObsidianFoundations')
+  assert.ok(drawMove)
+  state.scenarioZones.setAside.includes('11531')
+  const deckPuts = []
+  const apiFrieze = { ...api, putOnEncounterDeck: codes => { deckPuts.push(...codes) }, drawEncounter: () => {} }
+  assert.equal(behavior.performAction(state, inv, drawMove, apiFrieze), true)
+  assert.deepEqual(deckPuts, ['11531'], '放到一边的海底壁画进入遭遇管线')
+  assert.equal(state.scenarioZones.setAside.includes('11531'), false)
+
+  // 11531/11531b 海底壁画：附属到地点；两次检定成功后翻面 → 符文 W（寄生虫）+ 加入胜利区。
+  foundations.attachments ||= []
+  foundations.attachments.push({ id: '11531:foundations', code: '11531', originalCode: '11531' })
+  const friezeMove = behavior.actions(state, inv).find(move => move.rule === 'twwSeafloorFrieze')
+  assert.ok(friezeMove)
+  assert.equal(behavior.performAction(state, inv, friezeMove, api), true)
+  assert.ok(state.campaign.records.discoveredGlyphs.includes('W'))
+  assert.equal(state.scenarioFlags.twwGlyphTranslation.W, '寄生虫')
+  assert.ok(state.victoryDisplay.some(entry => entry.code === '11531b'), '海底壁画 story 面进胜利区')
+
+  // 11532/11532b 水下秘库：从沉没阶梯揭示入场后，智力(层级) 成功翻面 → 符文 Z（城市）。
+  const stairway = locationOf(state, 'sunkenStairway')
+  api.choose = () => '0'
+  behavior.locationRevealed(state, stairway, api)
+  const vault = locationOf(state, 'underseaVault')
+  assert.ok(vault)
+  inv.location = vault.id
+  const vaultMove = behavior.actions(state, inv).find(move => move.rule === 'twwUnderseaVault')
+  assert.ok(vaultMove)
+  assert.equal(behavior.performAction(state, inv, vaultMove, api), true)
+  assert.ok(state.campaign.records.discoveredGlyphs.includes('Z'))
+  assert.equal(state.scenarioFlags.twwGlyphTranslation.Z, '城市')
+  assert.equal(state.scenarioFlags.twwVaultFlipped, true)
+})
+
+
+// ---------------------------------------------------------------------------
+// 12. 第二轮阶段2：11525 走已落地原语 preventEnemyReadyNextUpkeep；11535 用 placeDoomOnCard
+// ---------------------------------------------------------------------------
+test('P7 theWesternWall 第二轮阶段2：11525 珊瑚星之眷族调用 preventEnemyReadyNextUpkeep，11535 敌军阶段末用 placeDoomOnCard', () => {
+  // 11525：揭示浅滩巢穴 → 生成横置珊瑚星之眷族，并调用 P7 已落地原语让其在下一补给阶段不重整。
+  const first = setup(1, { records: { theExpeditionHeadedWest: true } })
+  const shallowDen = first.state.locations.find(location => codeOfLocation(location) === '11525')
+  assert.ok(shallowDen, '浅滩巢穴在入场 10 地点之一')
+  const primitiveCalls = []
+  const apiPrimitive = {
+    ...first.api,
+    scenario: {
+      preventEnemyReadyNextUpkeep: enemy => {
+        primitiveCalls.push(enemy.originalCode)
+        enemy.skipNextUpkeepReady = true
+        return true
+      },
+    },
+  }
+  assert.equal(behavior.locationRevealed(first.state, shallowDen, apiPrimitive), true)
+  const coral = first.state.enemies.find(enemy => enemy.originalCode === '11727')
+  assert.ok(coral, '珊瑚星之眷族生成')
+  assert.equal(coral.exhausted, true, '横置状态生成')
+  assert.deepEqual(primitiveCalls, ['11727'], '调用 preventEnemyReadyNextUpkeep')
+  assert.equal(coral.skipNextUpkeepReady, true, '引擎读点 skipNextUpkeepReady 已写')
+  // 没有运行时 api 时，behavior 退回写同一引擎读点（文档化的 fallback）。
+  const second = setup(1, { records: { theExpeditionHeadedWest: true } })
+  const shallowDen2 = second.state.locations.find(location => codeOfLocation(location) === '11525')
+  behavior.locationRevealed(second.state, shallowDen2, second.api)
+  assert.equal(second.state.enemies.find(enemy => enemy.originalCode === '11727')?.skipNextUpkeepReady, true)
+
+  // 11535：敌军阶段结束时优先用 api.placeDoomOnCard 放 1 毁灭，然后弃掉自身。
+  const third = setup(1, { records: { theExpeditionHeadedWest: true } })
+  const location = third.state.locations.find(item => item.level === 2)
+  third.state.investigators[0].location = location.id
+  third.state.investigators[0].assets.push({ id: 'asset-2', code: '01020', originalCode: '01020' })
+  third.api.spawn('11535', location.id)
+  const doomPlaced = []
+  const discarded = []
+  const apiPhaseEnd = {
+    ...third.api,
+    placeDoomOnCard: (card, amount) => { doomPlaced.push([card.id, amount]) },
+    discardEnemy: enemy => { discarded.push(enemy.originalCode) },
+  }
+  assert.equal(behavior.enemyPhaseEnd(third.state, apiPhaseEnd), true)
+  assert.deepEqual(doomPlaced, [['asset-2', 1]])
+  assert.deepEqual(discarded, ['11535'])
+})
+
+function codeOfLocation(location) {
+  return String(location.originalCode || location.code || '')
+}
+
+// ---------------------------------------------------------------------------
+// 13. Good Money（11611）跨章限制：章节 behavior.canGainResources 消费 campaign-rules
+// ---------------------------------------------------------------------------
+test('P7 theWesternWall Good Money 跨章限制：补给阶段 canGainResources 按 campaign.ruleFlags 命中', () => {
+  const { state } = setup(1)
+  const inv = state.investigators[0]
+  assert.equal(behavior.canGainResources(state, inv), true, '无标记 → 正常获得资源')
+  state.campaign.ruleFlags = {
+    tdcNoUpkeepResources: { originScenario: 'theGrandVault', seats: [0], appliesToScenarioIndex: 7 },
+  }
+  state.campaign.scenarioIndex = 7
+  assert.equal(behavior.canGainResources(state, inv), false, 'seat + scenarioIndex 命中 → 补给阶段不能获得资源')
+  state.campaign.scenarioIndex = 8
+  assert.equal(behavior.canGainResources(state, inv), true, 'scenarioIndex 不匹配 → 正常获得')
+  state.campaign.scenarioIndex = 7
+  assert.equal(behavior.canGainResources(state, { seat: 1 }), true, 'seat 不匹配 → 正常获得')
+  // seats 为空表示全队都受限（Good Money playBothSides 失败口径）。
+  state.campaign.ruleFlags.tdcNoUpkeepResources = { originScenario: 'theGrandVault', seats: [], appliesToScenarioIndex: 7 }
+  assert.equal(behavior.canGainResources(state, { seat: 1 }), false, 'seats 为空 → 全队受限')
+  delete state.campaign.ruleFlags.tdcNoUpkeepResources
+  assert.equal(behavior.canGainResources(state, inv), true, '移除标记 → 恢复正常')
+})
+
+
+// ---------------------------------------------------------------------------
+// 12. 第五轮：幕目标推进选择 / 11524 盟友选择 / 11535 领队选择玩家卡
+// ---------------------------------------------------------------------------
+test('P7 theWesternWall 幕目标：达成后询问推进/跳过（skip 不推进且本幕本回合不重复询问）', () => {
+  const { state, api } = setup(1, { records: { theExpeditionHeadedWest: true } })
+  state.investigators[0].location = 'obsidianFoundations'
+  const prompts = []
+  let answer = 'skip'
+  api.choose = request => { prompts.push(request); return answer }
+  assert.equal(behavior.checkObjectives(state, api), false, '选 skip 不推进')
+  assert.equal(api.advanced, 0)
+  assert.equal(behavior.checkObjectives(state, api), false)
+  assert.equal(prompts.length, 1, '本幕本回合 skip 后不再重复询问')
+  assert.equal(prompts[0].options.map(option => option.id).join(','), 'advance,skip')
+  state.round = (Number(state.round) || 1) + 1
+  answer = 'advance'
+  assert.equal(behavior.checkObjectives(state, api), true, '下一回合可以重新选择推进')
+  assert.equal(api.advanced, 1)
+})
+
+test('P7 theWesternWall 11524 致命通道：淹没无法提高时由玩家选择弃掉自己控制的[[盟友]]支援', () => {
+  const { state, api } = setup(1, { records: { theExpeditionHeadedWest: true } })
+  const deadlyPass = state.locations.find(location => String(location.originalCode || location.code) === '11524')
+  assert.ok(deadlyPass, '致命通道在入场地点之一')
+  behavior.waterSet(state, api, deadlyPass.id, 2)
+  const inv = state.investigators[0]
+  inv.location = deadlyPass.id
+  inv.assets.push({ id: 'ally-1', code: '10041', originalCode: '10041' })
+  inv.assets.push({ id: 'ally-2', code: '10041', originalCode: '10041' })
+  const chooseCalls = []
+  const discardCalls = []
+  let answer = 'ally-2'
+  const apiAlly = {
+    ...api,
+    choose: request => { chooseCalls.push(request); return answer },
+    discardAsset: (seat, assetId) => { discardCalls.push([seat, assetId]); return true },
+    // 进入检定固定失败，才会进入「无法提高淹没 → 弃盟友」分支。
+    test: (seat, skill, difficulty, resolve) => resolve({ success: false }),
+  }
+  assert.equal(behavior.locationEntered(state, inv, deadlyPass, apiAlly), true)
+  assert.equal(chooseCalls.length, 1, '只选择一次盟友')
+  assert.deepEqual(chooseCalls[0].options.map(option => option.id), ['ally-1', 'ally-2'])
+  assert.deepEqual(discardCalls, [[0, 'ally-2']], '弃置玩家选择的盟友支援')
+  // 没有盟友时不崩溃。
+  inv.assets = []
+  behavior.waterSet(state, api, deadlyPass.id, 2)
+  behavior.locationEntered(state, inv, deadlyPass, apiAlly)
+})
+
+test('P7 theWesternWall 11535 猎食寄生虫：敌军阶段末由领队选择所在地点的一张玩家卡放毁灭', () => {
+  const { state, api } = setup(1, { records: { theExpeditionHeadedWest: true } })
+  const location = state.locations.find(item => item.level === 2)
+  state.investigators[0].location = location.id
+  state.investigators[0].assets.push({ id: 'p1', code: '01020', originalCode: '01020' })
+  state.investigators[0].assets.push({ id: 'p2', code: '01020', originalCode: '01020' })
+  state.campaign.leadSeat = 0
+  api.spawn('11535', location.id)
+  const doomPlaced = []
+  const chooseCalls = []
+  const apiChoose = {
+    ...api,
+    choose: request => { chooseCalls.push(request); return 'p2' },
+    placeDoomOnCard: (card, amount) => { doomPlaced.push([card.id, amount]) },
+    discardEnemy: () => {},
+  }
+  assert.equal(behavior.enemyPhaseEnd(state, apiChoose), true)
+  assert.equal(chooseCalls.length, 1)
+  assert.equal(chooseCalls[0].seat, 0, '由领队选择')
+  assert.deepEqual(chooseCalls[0].options.map(option => option.id).sort(), ['p1', 'p2'])
+  assert.deepEqual(doomPlaced, [['p2', 1]], '毁灭放在领队选择的玩家卡上')
+})
+
+
+// ---------------------------------------------------------------------------
+// 13. 第七轮：11531 不能离场（引擎 cannotLeavePlay 统一拒绝）
+// ---------------------------------------------------------------------------
+test('P7 theWesternWall 11531 海底壁画不能离场：条目声明 cannotLeavePlay、背面 11531b 不声明', () => {
+  // 引擎读点：scenario-decks.js#encounterCardCannotLeavePlay 读条目 cannotLeavePlay === true，
+  // 并被 detachEncounterAttachment / detachEncounterAttachmentById / discardEncounterAttachment 统一拒绝
+  // （引擎侧断言见 Lead 的引擎测试；本 checkout 的引擎模块图当前存在与 content 的循环导入，
+  //  无法在内容测试中 import engine.js —— 已在第七轮报告向 Lead 说明，修复后可在本文件补端到端断言）。
+  assert.equal(registeredEntry('11531').cannotLeavePlay, true, '11531 声明 cannotLeavePlay')
+  assert.notEqual(registeredEntry('11531b').cannotLeavePlay, true, '11531b（翻面）不声明 cannotLeavePlay')
+  const attached = []
+  const api = {
+    attachToLocation: (locationId, attachment) => { attached.push({ locationId, attachment }); return attachment },
+    info: () => {},
+  }
+  const state = { locations: [{ id: 'locA', attachments: [] }], encounterDiscard: [] }
+  assert.equal(registeredEntry('11531').encounterResolve(state, { location: 'locA', seat: 0 }, { code: '11531' }, api), true)
+  assert.equal(attached.length, 1, '显现附属一次')
+  assert.equal(attached[0].locationId, 'locA')
+  assert.equal(attached[0].attachment.code, '11531')
+  assert.equal(attached[0].attachment.cannotLeavePlay, true, '附属实例同样带 cannotLeavePlay')
+  // 同地点重复显现不再重复附属。
+  assert.equal(registeredEntry('11531').encounterResolve(
+    { locations: [{ id: 'locA', attachments: attached.map(item => item.attachment) }] },
+    { location: 'locA', seat: 0 }, { code: '11531' }, api), false)
 })

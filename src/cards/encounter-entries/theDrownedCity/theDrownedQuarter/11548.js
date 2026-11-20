@@ -6,6 +6,6 @@ export default {
   scope: 'location',
   implemented: true,
   flags: {"seaFloor":true},
-  note: "data-type（[[海底]]地点，双面：背面 = 海床）。behavior.locationRevealed 执行「进入海床时提高本地点'\n      + '与一处相邻地点的淹没」；本卡其余印刷能力尚未接线（近似）：古代展廊（victory 1；[action] 弃 2 张手牌把放一边的黑曜石遗物放入场由你控制，每场团队一次）。",
+  note: "data-type（[[海底]]地点，双面：背面 = 海床；victory 1）。已接线：进入海床提高本地点与一处相邻地点的淹没（behavior.locationRevealed）；[action]「选择并弃掉你手牌中的 2 张卡牌：将放一边的黑曜石遗物放置入场，由你控制」走 behavior.actions/performAction + api.discardChosen/giveAsset + api.takeFromSetAside（每场游戏团队限一次，scenarioFlags 记账）。全部子句已接线（「选择弃掉」由 api.discardChosen 提供选择）。",
   abilities: [],
 }

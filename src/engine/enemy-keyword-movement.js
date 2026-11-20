@@ -2,9 +2,17 @@ import { enemyCanEnterLocation, enemyHasLocationKeyword } from './enemy-entry.js
 import { shortestPaths } from './map-graph.js'
 import { canChangeFloodLevel, floodLevel } from './flood.js'
 import { enemyIsPart } from './enemy-parts.js'
+import { registeredEntry } from './ability.js'
+import { normalizePatrolTarget } from './patrol-target.js'
+
+export { normalizePatrolTarget }
 
 const active = investigator => !investigator.defeated && !investigator.resigned
-const editableKeywords = ['alert', 'aloof', 'elusive', 'retaliate', 'relentless']
+// 可编辑关键词白名单：内容层通过 api.scenario.setEnemyKeywords 授予/取消。
+// hunter 于 P7 TDC（11724 朝圣者领袖）加入：重整状态时其他异教徒获得猎手；
+// turn.js#enemyHasHunter 先读 keywordOverrides.hunter 再读印刷/幕规则。
+// immobile 供 11635 等「该敌人不能移动」的声明式改写（P7 TDC 第三轮）。
+const editableKeywords = ['alert', 'aloof', 'elusive', 'hunter', 'immobile', 'retaliate', 'relentless']
 const phaseAttacks = new WeakMap()
 
 export function trackEnemyPhaseAttacks(state, resolve) {
@@ -33,6 +41,15 @@ export function setEnemyKeywords(state, enemy, keywords, { enabled, throughRound
   return true
 }
 
+// P7 TDC 11635：敌人「不能移动」可由条目 enemyRule.immobile 声明，也可由内容层
+// api.scenario.setEnemyKeywords(enemy, ['immobile'], ...) 动态改写；读点：relocateEnemy / 巡逻 / 猎手移动。
+export function enemyIsImmobile(state, enemy) {
+  const overridden = enemyKeywordOverride(state, enemy, 'immobile')
+  if (overridden != null) return overridden
+  if (enemy?.immobile) return true
+  return registeredEntry(enemy?.originalCode || enemy?.code)?.enemyRule?.immobile === true
+}
+
 export function enemyKeywordOverride(state, enemy, keyword) {
   const value = enemy?.keywordOverrides?.[keyword]
   return value && value.throughRound >= state.round ? value.enabled : null
@@ -50,30 +67,26 @@ export function validateEnemyKeywords(state) {
   }
 }
 
-export function enemyHasAttackKeyword(state, enemy, keyword, printed, entryOf) {
+export function enemyHasAttackKeyword(state, enemy, keyword, printed, entryOf = registeredEntry) {
   const overridden = enemyKeywordOverride(state, enemy, keyword)
   if (overridden != null) return overridden
-  return printed || enemyHasLocationKeyword(state, enemy, keyword) || (enemy.attachments || []).some(card =>
+  if (printed || enemyHasLocationKeyword(state, enemy, keyword)) return true
+  const entry = entryOf(enemy.originalCode || enemy.code)
+  // P7 TDC 11727：「其上有伤害时获得警戒和反击」——条目级条件关键词（伤害清零即失效）。
+  if (Array.isArray(entry?.enemyRule?.whileDamagedKeywords)
+    && entry.enemyRule.whileDamagedKeywords.includes(keyword) && Number(enemy.damageTaken) > 0) return true
+  // P7 TDC 11747：「其他深潜者获得无情」——在场敌人条目级关键词光环（按特性匹配，不含自身）。
+  const traits = (entry?.flags?.traits || []).map(trait => String(trait).toLowerCase())
+  const aura = (state.enemies || []).some(other => {
+    if (!other || other === enemy || other.id === enemy.id) return false
+    const rule = entryOf(other.originalCode || other.code)?.enemyRule?.grantsKeywordsToTraits
+    if (!rule || !Array.isArray(rule.keywords) || !rule.keywords.includes(keyword)) return false
+    const wanted = (rule.traits || []).map(trait => String(trait).toLowerCase())
+    return !wanted.length || traits.some(trait => wanted.includes(trait))
+  })
+  if (aura) return true
+  return (enemy.attachments || []).some(card =>
     entryOf(card.originalCode || card.code)?.treacheryRule?.enemyKeywordAura?.keywords?.includes(keyword))
-}
-
-export function normalizePatrolTarget(spec) {
-  if (!spec || typeof spec !== 'object' || Array.isArray(spec)) throw new TypeError('巡逻目标需要对象')
-  const fields = { named: ['locationId'], trait: ['trait', 'minClues'], nearestEmpty: ['trait'], resident: ['assetCode'],
-    flood: ['below', 'canIncrease'], enemy: ['maxDoom'] }
-  if (!Object.hasOwn(fields, spec.kind) || Object.keys(spec).some(key => !['kind', ...fields[spec.kind]].includes(key))) {
-    throw new TypeError('未知巡逻目标')
-  }
-  const required = { named: ['locationId'], trait: ['trait'], resident: ['assetCode'] }
-  for (const key of required[spec.kind] || []) {
-    if (typeof spec[key] !== 'string' || !spec[key].trim()) throw new TypeError(`巡逻目标缺少 ${key}`)
-  }
-  if (spec.minClues != null && (!Number.isSafeInteger(spec.minClues) || spec.minClues < 0)) throw new TypeError('巡逻线索门槛无效')
-  if (spec.trait != null && (typeof spec.trait !== 'string' || !spec.trait.trim())) throw new TypeError('巡逻特性无效')
-  if (spec.below != null && ![1, 2].includes(spec.below)) throw new TypeError('巡逻淹没门槛无效')
-  if (spec.canIncrease != null && typeof spec.canIncrease !== 'boolean') throw new TypeError('巡逻淹没条件无效')
-  if (spec.maxDoom != null && (!Number.isSafeInteger(spec.maxDoom) || spec.maxDoom < 0)) throw new TypeError('巡逻毁灭门槛无效')
-  return { ...spec }
 }
 
 const canEnterLocation = (state, enemy, id) => enemyCanEnterLocation(state, enemy, id)
@@ -103,7 +116,7 @@ function qualifyingTargets(state, enemy, spec) {
       && !other.defeated && other.location != null && (other.doom || 0) <= (spec.maxDoom ?? Infinity)).map(other => other.location)
   }
   const matchesTrait = location => !spec.trait || location.traits?.some(trait => trait.toLowerCase() === spec.trait.toLowerCase())
-  return state.locations.filter(location => spec.kind === 'nearestEmpty'
+  return state.locations.filter(location => ['nearestEmpty', 'nearestEmptyTrait'].includes(spec.kind)
     ? location.id !== enemy.location && !state.investigators.some(inv => active(inv) && inv.location === location.id)
       && !state.enemies.some(other => other.location === location.id) && matchesTrait(location)
     : matchesTrait(location) && (location.clues || 0) >= (spec.minClues || 0))
@@ -111,13 +124,13 @@ function qualifyingTargets(state, enemy, spec) {
 }
 
 export function resolvePatrol(state, enemy, spec, deps) {
-  if (!state.enemies.includes(enemy) || enemy.exhausted || enemy.engagedSeat != null || enemy.immobile || enemy.hostId || deps.blanked(enemy)) return false
+  if (!state.enemies.includes(enemy) || enemy.exhausted || enemy.engagedSeat != null || enemyIsImmobile(state, enemy) || enemy.hostId || deps.blanked(enemy)) return false
   const targetSpec = normalizePatrolTarget(spec)
   const targetIds = [...new Set(qualifyingTargets(state, enemy, targetSpec))]
   const reachable = targetIds.map(id => ({ id, paths: shortestPaths(state.locations, enemy.location, id, to => canEnterLocation(state, enemy, to)) }))
     .filter(row => row.paths.length)
   const closest = Math.min(...reachable.map(row => row.paths[0].length))
-  const nearest = ['nearestEmpty', 'flood', 'enemy'].includes(targetSpec.kind)
+  const nearest = ['nearestEmpty', 'nearestEmptyTrait', 'flood', 'enemy'].includes(targetSpec.kind)
   const available = nearest ? reachable.filter(row => row.paths[0].length === closest) : reachable
   const selected = destinationChoice(state, enemy, available.map(row => row.id), deps, '选择巡逻的目标地点。')
   if (!selected || selected === enemy.location) return false
@@ -130,7 +143,7 @@ const resolving = new WeakSet()
 export function resolveElusive(state, enemy, enabled, deps) {
   if (!enabled || !state.enemies.includes(enemy) || enemy.exhausted || resolving.has(enemy) || deps.blanked(enemy)) return false
   const origin = state.locations.find(location => location.id === enemy.location)
-  const candidates = enemy.immobile ? [] : [...new Set(origin?.connections || [])].filter(id => id !== origin.id && canEnterLocation(state, enemy, id))
+  const candidates = enemyIsImmobile(state, enemy) ? [] : [...new Set(origin?.connections || [])].filter(id => id !== origin.id && canEnterLocation(state, enemy, id))
   const unoccupied = candidates.filter(id => !state.investigators.some(inv => active(inv) && inv.location === id))
   const destination = destinationChoice(state, enemy, unoccupied.length ? unoccupied : candidates, deps, '选择逃逸的连接地点。')
   resolving.add(enemy)

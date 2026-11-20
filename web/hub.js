@@ -745,7 +745,16 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const recommendation = state.arkhamRecommendation = { key, sessionId: s.sessionId, code: inv.code, loading: true }
     render()
     try {
-      const deck = await loadRecommendedDeck(inv.code)
+      const deck = await loadRecommendedDeck(inv.code).catch(async error => {
+        const current = state.session
+        const autoDeck = current && legal(current, 'hubAutoDeck')[0]
+        if (key === deckDraftKey(current, deckInvestigator(current, g)) && autoDeck && !locked(current)) {
+          await submitMove(autoDeck, current)
+          return null
+        }
+        throw error
+      })
+      if (!deck) return
       const plan = planArkhamDbImport(deck, { ...scopedBuilder(s, g.clientData?.deckBuilder), currentCode: inv.code })
       if (!plan.ready || plan.mismatch || plan.errors.length) throw new Error(t('hub.deck.recommendedUnavailable'))
 

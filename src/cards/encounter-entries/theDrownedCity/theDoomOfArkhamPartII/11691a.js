@@ -7,6 +7,10 @@ export default {
   code: '11691a',
   scope: 'act',
   implemented: true,
-  note: "数据型条目：背面在 behavior.actReveal（含最终封印切换）。approximation：盟友「可选」分配简化为直接按序分配。",
+  // 11690/11691a 正面印刷 [fast]：在你所在地点的一次攻击期间，花费 1 个线索：本次攻击伤害 +1。
+  // 读点（PRIMITIVES「攻击期间线索加伤」已落地）：moves.js 生成额外 fight 变体
+  // （clueDamageBonus: true），dispatch.js 支付线索并把伤害并入本次攻击；validateMove 拒绝线索不足。
+  attackRule: { clueDamageBonus: { cost: 1, amount: 1 } },
+  note: "数据型条目：背面在 behavior.actReveal（含最终封印切换）；[fast] 攻击期间支付 1 线索 +1 伤害走 attackRule.clueDamageBonus（moves.js / dispatch.js 读点）；最终封印时盟友按玩家顺序逐人可选控制（behavior.putAlliesIntoPlay 经 api.choose 分配，不占盟友槽）。",
   abilities: [],
 }

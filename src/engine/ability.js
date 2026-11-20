@@ -1,5 +1,5 @@
 import { validateKeyCost } from './key-cost.js'
-import { normalizePatrolTarget } from './enemy-keyword-movement.js'
+import { normalizePatrolTarget } from './patrol-target.js'
 import { validateDamageSourceRule } from './effect-provenance.js'
 import { validateSealEntry } from './seal-entry.js'
 // 诡镇奇谈：卡牌版 · 声明式能力注册表（Ability Registry）
@@ -153,6 +153,9 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   // Phase 5（5b-9）：资产上的规则性字段（回合结束自愈恐惧 / 维护阶段付费 / 被击败反伤 / 恐惧转移 / 不可离场）。
   'healSelfHorrorAfterTurn', 'forcedUpkeepPayOrDiscard', 'defeatedDamage',
   'redirectOneHorrorToSelf', 'cannotLeavePlay',
+  // P7 TDC 11662/11663/11664：遭遇附属「将离场时的去向」声明（setAside / removed / victory），
+  // 读点 scenario-decks.js#discardEncounterAttachment（引擎统一路由，不再由章节 flag 近似）。
+  'leavesPlayTo',
   // Phase 5（5b-10）：入场封印 / 替换封印旧印 / 附属目标声明（`attachTo` + `onAttach`）。
   'sealOnEnter', 'substituteSealedElderSign', 'attachTo', 'onAttach',
   // 2026-10-25：05042「必须留在起始手牌」的条目级声明字段。
@@ -402,6 +405,16 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'traumaAtGameEndWhenInHand',
   // 2026-10-25 第四轮修复 05041：威胁区光环——同地点调查员的检定平局按失败结算。
   'failTies', 'transferOnControllerDefeat', 'movesThroughVoid', 'betweenActionsAnyTurn',
+  // P7 TDC：受控剧情资产（神器）可像玩家资产一样声明 action/free 能力，
+  // 由 controlledAbilityCards 枚举进玩家行动窗口；仅 scope:'storyAsset' 允许。
+  'controlledAsset',
+  // P7 TDC 11688 黏土恐怖：受控剧情资产对匹配特性敌人的关键词/猎物改写声明。
+  // 形状 { enemyOverride: { trait, lose?: ['patrol','prey'], gain?: ['hunter'], prey?: 'controller' } }；
+  // 读点 src/engine/story-asset-rules.js → turn.js（猎手/巡逻）与 card-ops.js#preyTarget（猎物）。
+  'storyAssetRule',
+  // P7 TDC 11690/11691a 幕牌 [fast]：「在你所在地点的一次攻击期间，花费 1 线索：本次攻击伤害 +1」。
+  // 形状 { clueDamageBonus: { cost, amount } }；读点 moves.js 的额外 fight 变体 + dispatch 扣线索/加伤。
+  'attackRule',
   'fast', 'noOpportunityAttack'])
 
 // 条目级「能不能打出」条件：函数式 predicate，或 { when, message }（message 直接展示给玩家）。
@@ -603,6 +616,60 @@ export function registerCardAbilities(entries) {
     const origin = `能力条目 ${entry.code || '<无 code>'}`
     assertKnownKeys(entry, ENTRY_KEYS, origin)
     validateSealEntry(entry)
+    // P7 TDC 11752：威胁区卡声明「你不能触发[[符文]]或[[神器]]卡牌的能力」。
+    // 读点：ability-rules.js#descriptorUsable（action/free/reaction 同一入口，forced 不受影响）。
+    // 两种等价写法：threatEffect.cannotTriggerAbilityTraits（引擎规范键）或
+    // flags.cannotTriggerCardAbilitiesWithTraits（早期内容批次已落的声明键，保留兼容）。
+    for (const traits of [
+      entry.threatEffect?.cannotTriggerAbilityTraits,
+      entry.flags?.cannotTriggerCardAbilitiesWithTraits,
+    ]) {
+      if (traits == null) continue
+      if (!Array.isArray(traits) || !traits.length
+        || traits.some(trait => typeof trait !== 'string' || !trait.trim())) {
+        throw new TypeError(`${origin}: cannotTriggerAbilityTraits 必须是非空字符串数组`)
+      }
+    }
+    // P7 TDC：攻击期间支付线索加伤（11690/11691a 幕牌）。
+    if (entry.attackRule?.clueDamageBonus != null) {
+      const bonus = entry.attackRule.clueDamageBonus
+      if (!bonus || typeof bonus !== 'object' || Array.isArray(bonus)
+        || !Number.isSafeInteger(bonus.cost) || bonus.cost < 1
+        || !Number.isSafeInteger(bonus.amount) || bonus.amount < 1) {
+        throw new TypeError(`${origin}: attackRule.clueDamageBonus 需要 { cost, amount } 正整数`)
+      }
+    }
+    // P7 TDC 11688：受控剧情资产对匹配特性敌人的关键词/猎物改写声明。
+    if (entry.storyAssetRule?.enemyOverride != null) {
+      const override = entry.storyAssetRule.enemyOverride
+      if (!override || typeof override !== 'object' || Array.isArray(override)
+        || typeof override.trait !== 'string' || !override.trait.trim()
+        || (override.lose != null && (!Array.isArray(override.lose)
+          || override.lose.some(item => !['patrol', 'prey'].includes(item))))
+        || (override.gain != null && (!Array.isArray(override.gain)
+          || override.gain.some(item => !['hunter', 'relentless', 'retaliate', 'alert', 'aloof', 'elusive'].includes(item))))
+        || (override.prey != null && override.prey !== 'controller')) {
+        throw new TypeError(`${origin}: storyAssetRule.enemyOverride 形状无效`)
+      }
+    }
+    // P7 TDC 11638：受控剧情资产「每轮可忽略第一次符合特性敌人的攻击」。
+    if (entry.storyAssetRule?.ignoreFirstAttack != null) {
+      const rule = entry.storyAssetRule.ignoreFirstAttack
+      if (!rule || typeof rule !== 'object' || Array.isArray(rule)
+        || !Array.isArray(rule.traits) || !rule.traits.length
+        || rule.traits.some(trait => typeof trait !== 'string' || !trait.trim())) {
+        throw new TypeError(`${origin}: storyAssetRule.ignoreFirstAttack.traits 必须是非空字符串数组`)
+      }
+    }
+    // P7 TDC 11568：受控剧情资产承接[[异教徒]]敌人的伤害。
+    if (entry.storyAssetRule?.redirectEnemyDamage != null) {
+      const rule = entry.storyAssetRule.redirectEnemyDamage
+      if (!rule || typeof rule !== 'object' || Array.isArray(rule)
+        || !Array.isArray(rule.traits) || !rule.traits.length
+        || rule.traits.some(trait => typeof trait !== 'string' || !trait.trim())) {
+        throw new TypeError(`${origin}: storyAssetRule.redirectEnemyDamage.traits 必须是非空字符串数组`)
+      }
+    }
     const discardPlayCost = entry.discardPlayCost
     if (discardPlayCost != null && (typeof discardPlayCost !== 'object' || Array.isArray(discardPlayCost)
       || Object.keys(discardPlayCost).some(key => !['trait', 'slot', 'zones'].includes(key))
@@ -637,6 +704,12 @@ export function registerCardAbilities(entries) {
     if (entry.assetRule?.hostTrait != null && (typeof entry.assetRule.hostTrait !== 'string' || !entry.assetRule.hostTrait)) throw new TypeError(`${origin}: 非法附属特性`)
     if (entry.assetRule?.hostIgnoresOpportunityAttack != null && typeof entry.assetRule.hostIgnoresOpportunityAttack !== 'function') {
       throw new TypeError(`${origin}: assetRule.hostIgnoresOpportunityAttack 必须是函数`)
+    }
+    // P7 TDC 11764：「完全淹没视为部分淹没」的受控支援声明；读点 flood.js#effectiveFloodLevel。
+    if (entry.assetRule?.effectiveFloodLevelCap != null
+      && (!Number.isInteger(entry.assetRule.effectiveFloodLevelCap)
+        || entry.assetRule.effectiveFloodLevelCap < 0 || entry.assetRule.effectiveFloodLevelCap > 2)) {
+      throw new TypeError(`${origin}: assetRule.effectiveFloodLevelCap 必须是 0–2 的整数`)
     }
     if (entry.assetRule?.enemyEntryAmbush != null) {
       const rule = entry.assetRule.enemyEntryAmbush
@@ -739,8 +812,45 @@ export function registerCardAbilities(entries) {
     if (entry.locationRule?.objective != null && typeof entry.locationRule.objective !== 'function') throw new TypeError('Invalid printed location objective')
     if(entry.enemyRule?.ignoreHunterBarriers!=null && typeof entry.enemyRule.ignoreHunterBarriers!=='boolean')throw new TypeError('Invalid Hunter barrier rule')
     if (entry.enemyRule?.patrolTarget != null) normalizePatrolTarget(entry.enemyRule.patrolTarget)
+    // P7 TDC 11727/11747：条目级条件关键词与关键词光环；读点 enemy-keyword-movement.js#enemyHasAttackKeyword。
+    const keywordWhitelist = ['alert', 'aloof', 'elusive', 'hunter', 'immobile', 'relentless', 'retaliate']
+    if (entry.enemyRule?.whileDamagedKeywords != null) {
+      const list = entry.enemyRule.whileDamagedKeywords
+      if (!Array.isArray(list) || !list.length || new Set(list).size !== list.length
+        || list.some(keyword => !keywordWhitelist.includes(keyword))) {
+        throw new TypeError(`${origin}: enemyRule.whileDamagedKeywords 声明无效`)
+      }
+    }
+    if (entry.enemyRule?.grantsKeywordsToTraits != null) {
+      const rule = entry.enemyRule.grantsKeywordsToTraits
+      if (!rule || typeof rule !== 'object' || !Array.isArray(rule.keywords) || !rule.keywords.length
+        || new Set(rule.keywords).size !== rule.keywords.length
+        || rule.keywords.some(keyword => !keywordWhitelist.includes(keyword))
+        || (rule.traits != null && (!Array.isArray(rule.traits)
+          || rule.traits.some(trait => typeof trait !== 'string' || !trait.trim())))) {
+        throw new TypeError(`${origin}: enemyRule.grantsKeywordsToTraits 声明无效`)
+      }
+    }
+    // P7 TDC 11744：条目级生成落点声明；读点 enemies.js#spawnEnemy。
+    if (entry.enemyRule?.spawnLocation != null) {
+      const rule = entry.enemyRule.spawnLocation
+      if (!rule || typeof rule !== 'object' || Array.isArray(rule)
+        || !['nearestEmpty', 'nearestEmptyConnecting', 'nearestEmptyTrait'].includes(rule.kind)
+        || (rule.trait != null && (typeof rule.trait !== 'string' || !rule.trait.trim()))
+        || (rule.onlyIfEmpty != null && typeof rule.onlyIfEmpty !== 'boolean')) {
+        throw new TypeError(`${origin}: enemyRule.spawnLocation 声明无效`)
+      }
+    }
     if (entry.enemyRule?.elusive != null && typeof entry.enemyRule.elusive !== 'boolean') throw new TypeError('无效逃逸声明')
     if (entry.enemyRule?.relentless != null && typeof entry.enemyRule.relentless !== 'boolean') throw new TypeError('无效无情声明')
+    // P7 TDC 11702–11704（克苏鲁部位非[[狂怒]]面）：「不能受到伤害、被击败或横置」。
+    // 读点：enemies.js#canDamageEnemy / scenario-runtime#exhaustEnemy / actions.js 躲避横置；
+    // 换面后按当前面条目的 enemyRule 动态判定。
+    for (const key of ['cannotBeDamaged', 'cannotBeExhausted']) {
+      if (entry.enemyRule?.[key] != null && typeof entry.enemyRule[key] !== 'boolean') {
+        throw new TypeError(`无效 ${key} 声明`)
+      }
+    }
     if (entry.enemyRule?.allowedDamageSources != null) validateDamageSourceRule(entry.enemyRule.allowedDamageSources)
     if (entry.enemyRule?.discardToScenarioDeck != null && (typeof entry.enemyRule.discardToScenarioDeck !== 'string'
       || !/^[a-z][a-zA-Z0-9]{0,63}$/.test(entry.enemyRule.discardToScenarioDeck)
@@ -782,6 +892,10 @@ export function registerCardAbilities(entries) {
       }
     }
     // 「生成 - 最后方的地点」（07213/07214）：读点在 enemies.js#spawnEnemy（与 spawnMostClues 同段）。
+    // P7 TDC 11605：「不能进入/生成在未淹没地点」；读点 enemy-entry.js#enemyCanEnterLocation。
+    if (entry.enemyRule?.enterOnlyFlooded != null && typeof entry.enemyRule.enterOnlyFlooded !== 'boolean') {
+      throw new TypeError('Invalid enter-only-flooded rule')
+    }
     if (entry.spawnRearmost != null && typeof entry.spawnRearmost !== 'boolean') throw new TypeError('Invalid rearmost spawn flag')
     // 「生成 - 某张剧情支援（载具）所在地点」（07164b/07165b「生成 - 渔船所在地点」）：
     // 条目声明剧情支援卡号；读点在 enemies.js#spawnEnemy（取实例当前 location）。
@@ -893,12 +1007,81 @@ export function registerCardAbilities(entries) {
         || (bounds.onlyRevealed != null && typeof bounds.onlyRevealed !== 'boolean')
         || (bounds.min ?? 0) > (bounds.max ?? 2)) throw new TypeError('Invalid flood bounds')
     }
+    // P7 TDC 11623 古代祭坛：进入地点的共同线索费用（movement.js#moveAfterCosts 预付费）。
+    if (entry.locationRule?.entryCost != null) {
+      const cost = entry.locationRule.entryCost
+      if (!cost || typeof cost !== 'object' || Array.isArray(cost)
+        || cost.kind !== 'groupClues'
+        || !Number.isSafeInteger(cost.perInvestigator) || cost.perInvestigator < 1) {
+        throw new TypeError('Invalid locationRule.entryCost')
+      }
+    }
+    // P7 TDC 11648–11652：「不能被移动或离场」的地点声明；读点 scenario-runtime 的
+    // swapLocation / removeLocationFromGame 统一入口。
+    for (const key of ['cannotLeavePlay', 'cannotBeMoved']) {
+      if (entry.locationRule?.[key] != null && typeof entry.locationRule[key] !== 'boolean') {
+        throw new TypeError(`Invalid location ${key} rule`)
+      }
+    }
+    // P7 TDC 11662：「进入本地点时若不控制 X：花 N 线索或检定[敏捷](D)，失败取消移动」。
+    // 读点 movement.js#entryTollFor / relocateInvestigator。
+    if (entry.locationRule?.entryToll != null) {
+      const toll = entry.locationRule.entryToll
+      const validUnless = toll?.unlessControls == null || (typeof toll.unlessControls === 'string'
+        ? Boolean(toll.unlessControls.trim())
+        : Array.isArray(toll.unlessControls) && toll.unlessControls.length
+          && toll.unlessControls.every(code => typeof code === 'string' && code.trim()))
+      const validCost = toll?.cost == null || (Number.isSafeInteger(toll.cost.clues) && toll.cost.clues > 0)
+      const validTest = toll?.test == null || (typeof toll.test.skill === 'string'
+        && Number.isSafeInteger(toll.test.difficulty) && toll.test.difficulty > 0)
+      if (!toll || typeof toll !== 'object' || Array.isArray(toll) || !validUnless || !validCost || !validTest
+        || (toll.cost == null && toll.test == null)
+        || (toll.cancelOnFail != null && typeof toll.cancelOnFail !== 'boolean')
+        || (toll.onlyUnrevealed != null && typeof toll.onlyUnrevealed !== 'boolean')) {
+        throw new TypeError('Invalid location entryToll rule')
+      }
+    }
+    // P7 TDC 11662/11663/11664：遭遇附属离场去向白名单。
+    if (entry.leavesPlayTo != null && !['setAside', 'removed', 'victory'].includes(entry.leavesPlayTo)) {
+      throw new TypeError('Invalid leavesPlayTo disposition')
+    }
+    // P7 TDC 11571：从本地点移动到指定目的地必须支付额外费用（伤害/恐惧）。
+    if (entry.locationRule?.movementExtraCost != null) {
+      const extra = entry.locationRule.movementExtraCost
+      const cost = extra?.cost
+      const validCodes = extra?.toOriginalCodes == null
+        || (Array.isArray(extra.toOriginalCodes) && extra.toOriginalCodes.length
+          && extra.toOriginalCodes.every(code => typeof code === 'string' && code))
+      const validTraits = extra?.toTraits == null
+        || (Array.isArray(extra.toTraits) && extra.toTraits.length
+          && extra.toTraits.every(trait => typeof trait === 'string' && trait))
+      if (!extra || typeof extra !== 'object' || Array.isArray(extra)
+        || !validCodes || !validTraits
+        || (extra.toOriginalCodes == null && extra.toTraits == null)
+        || !cost || !['damage', 'horror'].includes(cost.kind)
+        || !Number.isSafeInteger(cost.amount) || cost.amount < 1) {
+        throw new TypeError('Invalid locationRule.movementExtraCost')
+      }
+    }
     // P7 TIC 07252b 拘禁室：「敌人不能进入或生成在本地点」的地点侧声明。
     // 读点：enemy-entry.js#enemyCanEnterLocation（进入/猎人/生成校验）与
     // enemies.js#spawnEnemy（生成落点按 enemySpawnRedirect 改换）。
     if (entry.locationRule?.enemiesCannotEnter != null
       && typeof entry.locationRule.enemiesCannotEnter !== 'boolean') {
       throw new TypeError('Invalid enemies-cannot-enter rule')
+    }
+    // P7 TDC 11641/11642：「非弱点敌人可进出开阔天空」；读点 enemy-entry.js#enemyCanEnterLocation。
+    if (entry.locationRule?.weaknessEnemiesCannotEnter != null
+      && typeof entry.locationRule.weaknessEnemiesCannotEnter !== 'boolean') {
+      throw new TypeError('Invalid weakness-enemies-cannot-enter rule')
+    }
+    // P7 TDC 11661：「你在此地时不能触发[[枪械]]支援的能力」；读点 ability-rules.js#traitTriggerBlocked。
+    if (entry.locationRule?.cannotTriggerAbilityTraits != null) {
+      const traits = entry.locationRule.cannotTriggerAbilityTraits
+      if (!Array.isArray(traits) || !traits.length
+        || traits.some(trait => typeof trait !== 'string' || !trait.trim())) {
+        throw new TypeError('Invalid location cannot-trigger-ability-traits rule')
+      }
     }
     if (entry.locationRule?.enemySpawnRedirect != null) {
       const redirect = entry.locationRule.enemySpawnRedirect
@@ -937,13 +1120,22 @@ export function registerCardAbilities(entries) {
     }
     // 非玩家卡没有「打出」「投入」这类玩家侧时机：生命周期钩子与 action/free 都不成立，
     // 否则会声明出永远不结算的条目。注册期直接失败，不等到对局中途静默失效。
+    // P7 TDC：受控剧情资产（controlledAsset:true）例外——它由某名调查员控制、随其资产实例
+    // 进入玩家行动窗口（controlledAbilityCards），因此允许 action/free（无需 actionKind）。
+    const controlledStoryAsset = scope === 'storyAsset' && entry.controlledAsset === true
+    if (entry.controlledAsset != null && typeof entry.controlledAsset !== 'boolean') {
+      throw new TypeError(`${origin}: controlledAsset 必须是布尔值`)
+    }
+    if (entry.controlledAsset === true && scope !== 'storyAsset') {
+      throw new Error(`${origin}: controlledAsset 只允许用于 scope:'storyAsset'`)
+    }
     if (NON_PLAYER_SCOPES.includes(scope)) {
       for (const descriptor of abilities) {
         // 第 2 步 P2.7：非玩家实体可以声明「由调查员发起的行动」（谈判），但必须显式写
         // actionKind 说明它按哪种行动结算；其余 action/free 仍然拒绝，避免声明出永远不结算的条目。
         const playerInitiated = ['action', 'free'].includes(descriptor.kind) && typeof descriptor.actionKind === 'string'
         if (LIFECYCLE_KINDS.has(descriptor.kind)
-          || (['action', 'free'].includes(descriptor.kind) && !playerInitiated)) {
+          || (['action', 'free'].includes(descriptor.kind) && !playerInitiated && !controlledStoryAsset)) {
           throw new Error(`${origin}: 非玩家卡（scope ${scope}）不能声明 ${descriptor.kind}`
             + '（只能写 constant / reaction / forced / elderSign；谈判类行动必须带 actionKind）')
         }
@@ -969,6 +1161,8 @@ export function registerCardAbilities(entries) {
       discardWhenEmpty: entry.discardWhenEmpty === true,
       // Phase 5：条目级卡面关键字（资产/调查员的 fast 与不引发借机攻击）。
       transferOnControllerDefeat: entry.transferOnControllerDefeat ?? false,
+      // P7 TDC：受控剧情资产（scope storyAsset）允许声明 action/free 能力。
+      controlledAsset: entry.controlledAsset === true,
       movesThroughVoid: entry.movesThroughVoid === true,
       betweenActionsAnyTurn: entry.betweenActionsAnyTurn === true,
       fast: entry.fast === true,
@@ -991,6 +1185,7 @@ export function registerCardAbilities(entries) {
       defeatedDamage: entry.defeatedDamage ?? null,
       redirectOneHorrorToSelf: entry.redirectOneHorrorToSelf === true,
       cannotLeavePlay: entry.cannotLeavePlay === true,
+      leavesPlayTo: entry.leavesPlayTo || null,
       // 2026-10-25：05042 起始手牌弱点；2026-10-26：占用豁免读 slotExemptions。
       staysInOpeningHand: entry.staysInOpeningHand === true,
       slotExemptions: entry.slotExemptions ?? null,
@@ -1004,6 +1199,8 @@ export function registerCardAbilities(entries) {
       // Phase 5（5c-20）：卡面自带的打出限制 / 团队张数上限（读点 cardPlayBlockedReason）。
       playRestriction: entry.playRestriction ?? null,
       teamLimit: entry.teamLimit ?? null,
+      attackRule: entry.attackRule ? Object.freeze({ ...entry.attackRule }) : null,
+      storyAssetRule: entry.storyAssetRule ? Object.freeze({ ...entry.storyAssetRule }) : null,
       // Phase 5（5c-24）：打出后去向与「封印标记当结算结果」的声明。
       becomesAsset: entry.becomesAsset === true,
       exileAfterPlay: entry.exileAfterPlay === true,
@@ -1131,6 +1328,12 @@ export function registerCardAbilities(entries) {
           ...entry.locationRule.onLeave,
           test: entry.locationRule.onLeave.test ? Object.freeze({ ...entry.locationRule.onLeave.test }) : null,
         }) : null,
+        // P7 TDC 11571 酸性体腔：从本地点移动到指定目的地的额外费用（读点 movement.js#moveAfterCosts）。
+        movementExtraCost: entry.locationRule.movementExtraCost ? Object.freeze({
+          ...entry.locationRule.movementExtraCost,
+          toOriginalCodes: Object.freeze([...(entry.locationRule.movementExtraCost.toOriginalCodes || [])]),
+          toTraits: Object.freeze([...(entry.locationRule.movementExtraCost.toTraits || [])]),
+        }) : null,
       }) : null,
       penaltyKind: entry.penaltyKind || null,
       surgeIfNoClues: entry.surgeIfNoClues === true,
@@ -1216,7 +1419,7 @@ export function registerCardAbilities(entries) {
       cannotMulliganAway: entry.cannotMulliganAway === true,
       doomPerInvestigator: entry.doomPerInvestigator === true,
       skipMythosDoom: entry.skipMythosDoom === true,
-      doomKeptOnAgendaAdvance: ['locations', 'enemies', 'self'].includes(entry.doomKeptOnAgendaAdvance)
+      doomKeptOnAgendaAdvance: ['locations', 'enemies', 'self', 'storyAssets'].includes(entry.doomKeptOnAgendaAdvance)
         ? entry.doomKeptOnAgendaAdvance : null,
       removeFromGameOnLeave: entry.removeFromGameOnLeave === true,
       horrorOverflowDamage: Number.isSafeInteger(entry.horrorOverflowDamage) ? entry.horrorOverflowDamage : null,

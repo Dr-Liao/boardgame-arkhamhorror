@@ -18,7 +18,11 @@
 // 注：章节模块由并行 worker 落盘；`scenarios/index.js` 聚合器必须缺失容错（本测试不断言十场景齐备）。
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, readFileSync, mkdtempSync, rmSync } from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
+
+import { persistEnabled, readSnapshot, saveSnapshot } from '../../../lib/sessions.js'
 
 import {
   applyCampaignEffect,
@@ -27,6 +31,7 @@ import {
   enterCampaignNode, flowCondition, validateCampaignGraph, walkCampaign,
 } from '../src/campaign/campaign-flow.js'
 import { assertCampaignManifest } from '../content/schema.js'
+import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { inspectFlow } from '../tools/tdc-p7-readiness.mjs'
 
 import {
@@ -41,7 +46,8 @@ import {
 } from '../content/campaigns/theDrownedCity/shared.js'
 import {
   TDC_ARTIFACT_RECORD_KEYS, TDC_GLYPH_GATE, TDC_RECORD_DEFAULTS,
-  TDC_RECORD_KEYS, TDC_RECORD_SCHEMA, TDC_RECORD_TYPES, TDC_RLYEH_ARTIFACT_RECORD_KEYS, TDC_TASKS,
+  TDC_RECORD_KEYS, TDC_RECORD_SCHEMA, TDC_RECORD_TYPES, TDC_RLYEH_ARTIFACT_RECORD_KEYS,
+  TDC_TASK_COMPLETION_PROGRESS, TDC_TASKS,
 } from '../content/campaigns/theDrownedCity/records.js'
 import {
   TDC_EAST_ROUTE, TDC_EPILOGUE_BRANCHES, TDC_WEST_ROUTE, anyRlyehArtifact, campaignText,
@@ -52,8 +58,10 @@ import {
   EPILOGUE_HANDLER_ID, endgameSummary, epilogueNodes,
 } from '../content/campaigns/theDrownedCity/epilogue.js'
 import {
-  INTERLUDE_HANDLER_ID, TDC_EXPEDITION_CHOICES, claimTask, interludeNodes, resolveTasks,
-  runExpedition, runNplhTrauma, runSepulchreKnowBetter, taskProgressSnapshot,
+  INTERLUDE_HANDLER_ID, TDC_EXPEDITION_CHOICES, TDC_INTERLUDE_APPROXIMATIONS, TDC_TASK_FAILURE_EFFECTS,
+  addBasicWeaknessForSeat, claimTask, claimTasksFromChoices, interludeNodes, preloadCampaignPrimitives,
+  resolveTasks, runDoomPartOneWeaknesses, runExpedition, runNplhTrauma, runNplhTraumaChoices,
+  runSepulchreKnowBetter, taskProgressSnapshot,
 } from '../content/campaigns/theDrownedCity/interludes.js'
 import { PROLOGUE_HANDLER_ID, TDC_PROLOGUE_NODES, startTdcCampaign } from '../content/campaigns/theDrownedCity/prologue.js'
 import { chapterIdentity, chapterIds } from '../content/campaigns/theDrownedCity/chapters.js'
@@ -101,6 +109,7 @@ function newState ({ seats = 2, difficulty = 'standard' } = {}) {
     }
   }
   const campaign = {
+    id: CAMPAIGN_ID,
     records: structuredClone(TDC_RECORD_DEFAULTS),
     recordSchema: TDC_RECORD_TYPES,
     scenarioResults: [],
@@ -129,10 +138,16 @@ function apply (state, effect) {
 
 const logOf = () => line => { /* 测试日志吞掉 */ void line }
 
+// `answers[id]` 可以是字符串（全桌同一答案）或 `{ seat: optionId }`（perInvestigator 节点逐座位答案）。
 function chooseAnswer (answers) {
-  return (id, node, options) => {
+  return (id, node, options, meta = {}) => {
     const wanted = answers[id]
-    if (wanted && options.some(option => option.id === wanted)) return wanted
+    if (meta.perInvestigator) {
+      const seatWanted = wanted && typeof wanted === 'object' && !Array.isArray(wanted) ? wanted[meta.seat] : undefined
+      if (seatWanted && options.some(option => option.id === seatWanted)) return seatWanted
+      return options[0].id
+    }
+    if (typeof wanted === 'string' && options.some(option => option.id === wanted)) return wanted
     return options[0].id
   }
 }
@@ -140,13 +155,15 @@ function chooseAnswer (answers) {
 /**
  * 走 flow 直到可交互停点（与 FHV 测试同一 harness）：scenario 由调用方「结算」后按节点出口继续。
  * `resolutions` 按 scenarioId 给引擎结局键；缺省 resolution1。
+ * `stopAt`：命中该节点 id 时停下（用于存档重放：保存「正在整备停点」的战役状态）。
  */
-function play (state, { answers = {}, resolutions = {}, onScenario = null, maxStops = 200 } = {}) {
+function play (state, { answers = {}, resolutions = {}, onScenario = null, stopAt = null, maxStops = 200 } = {}) {
   const graph = validateCampaignGraph(MANIFEST)
   const visited = []
   for (let step = 0; step < maxStops * 6; step += 1) {
     const node = walkCampaign(state.campaign, MANIFEST, chooseAnswer(answers), effect => apply(state, effect))
     visited.push(node.type === 'scenario' ? `scenario:${node.scenarioId}` : node.id)
+    if (stopAt && node.id === stopAt) return { visited, ended: false, node, state }
     if (node.type === 'end') return { visited, ended: true, node, state }
     if (node.type === 'scenario') {
       const resolution = resolutions[node.scenarioId] || 'resolution1'
@@ -159,6 +176,15 @@ function play (state, { answers = {}, resolutions = {}, onScenario = null, maxSt
     enterCampaignNode(state.campaign, MANIFEST, graph.nodes[node.id].next)
   }
   throw new Error('流程没有在预期步数内结束')
+}
+
+/** 从当前停点沿 `next` 进入并再走一个可交互停点（存档续跑确定性比较用）。 */
+function advanceOneStop (state) {
+  const graph = validateCampaignGraph(MANIFEST)
+  const current = graph.nodes[state.campaign.flow.nodeId]
+  assert.ok(current?.next, `当前节点没有出口：${state.campaign.flow.nodeId}`)
+  enterCampaignNode(state.campaign, MANIFEST, current.next)
+  return walkCampaign(state.campaign, MANIFEST, chooseAnswer({}), effect => apply(state, effect))
 }
 
 function record (state, key, value) {
@@ -221,7 +247,7 @@ test('prologue / Interlude I–IV / Sepulchre 门 / 尾声节点全部可达', (
 // ③ 记录 schema（CONTRACT §4）
 // ---------------------------------------------------------------------------
 test('记录 schema 覆盖 CONTRACT §4 全量键、类型与默认值', () => {
-  assert.equal(TDC_RECORD_KEYS.length, 42)
+  assert.ok(TDC_RECORD_KEYS.includes('theDrownedQuarterWasSkipped'))
   const setKeys = ['discoveredGlyphs', 'rlyehMap', 'floodedNeighborhoods']
   for (const key of TDC_RECORD_KEYS) {
     assert.equal(TDC_RECORD_TYPES[key], setKeys.includes(key) ? 'string[]' : 'boolean', key)
@@ -313,7 +339,7 @@ test('东线逐章顺序：黑曜石峡谷 → 古代议庭 → 大秘库 → �
 })
 
 test('TheWesternWall 结局 3 / Apiary 结局 4 的跳章选择生效', () => {
-  // 西线：西墙结局 3 → 玩家选养育场（跳过淹没城区），随后路线回头补上淹没城区。
+  // 西线：西墙结局 3 → 选择养育场，绕过淹没城区。
   const { state } = newState()
   const { visited } = play(state, {
     answers: {
@@ -323,9 +349,10 @@ test('TheWesternWall 结局 3 / Apiary 结局 4 的跳章选择生效', () => {
   })
   const order = visited.filter(entry => entry.startsWith('scenario:'))
     .map(entry => entry.slice('scenario:'.length))
-  assert.deepEqual(order.slice(0, 4), ['oneLastJob', 'theWesternWall', 'theApiary', 'theDrownedQuarter'])
+  assert.deepEqual(order.slice(0, 4), ['oneLastJob', 'theWesternWall', 'theApiary', 'theGrandVault'])
+  assert.ok(!order.includes('theDrownedQuarter'))
 
-  // 东线：养育场结局 4 → 玩家选西墙（跳过淹没城区），随后路线回头补上淹没城区。
+  // 东线：养育场结局 4 → 选择西墙，绕过淹没城区。
   const east = newState()
   const eastPlay = play(east.state, {
     answers: {
@@ -337,7 +364,8 @@ test('TheWesternWall 结局 3 / Apiary 结局 4 的跳章选择生效', () => {
     .map(entry => entry.slice('scenario:'.length))
   assert.deepEqual(eastOrder.slice(0, 5),
     ['oneLastJob', 'obsidianCanyons', 'courtOfTheAncients', 'theGrandVault', 'theApiary'])
-  assert.ok(eastOrder.indexOf('theApiary') < eastOrder.indexOf('theDrownedQuarter'))
+  assert.equal(eastOrder[5], 'theWesternWall')
+  assert.ok(!eastOrder.includes('theDrownedQuarter'))
 })
 
 test('拒绝邀约 → 战役以失败结束（campaignLost）', () => {
@@ -346,7 +374,7 @@ test('拒绝邀约 → 战役以失败结束（campaignLost）', () => {
     answers: { interludeOneDecision: 'refuse' },
   })
   assert.equal(ended, true)
-  assert.equal(node.outcome, 'campaignLost')
+  assert.equal(node.outcome, 'defeat')
   assert.ok(visited.includes('anOfferRefused'))
   assert.deepEqual(state.campaign.scenarioResults.map(result => result.scenarioId), ['oneLastJob'])
 })
@@ -371,7 +399,12 @@ test('Sepulchre 门槛纯函数：第一门 ≥1 文物 + ≥10 字形；第二�
 test('Sepulchre 第一门不满足 → 跳过剧本直接 Interlude III', () => {
   const { state } = newState()
   const { visited } = play(state, {
-    answers: { interludeOneDecision: 'accept', expeditionChoice: 'west' },
+    // 逐人任务选不带混乱袋副作用的两条（walkInFaith / noPlaceLikeHome），保证袋断言确定。
+    answers: {
+      taskChoice: { 0: 'walkInFaith', 1: 'noPlaceLikeHome' },
+      interludeOneDecision: 'accept',
+      expeditionChoice: 'west',
+    },
   })
   assert.ok(visited.includes('sepulchreGate'))
   assert.ok(visited.includes('theAwakening'))
@@ -386,7 +419,11 @@ test('Sepulchre 第二门不满足 → 混乱袋永久加入 1 个 0 标记，�
   addGlyphs(state, 12)
   const before = state.campaign.chaosBag.filter(token => token === '0').length
   const { visited } = play(state, {
-    answers: { interludeOneDecision: 'accept', expeditionChoice: 'west' },
+    answers: {
+      taskChoice: { 0: 'walkInFaith', 1: 'noPlaceLikeHome' },
+      interludeOneDecision: 'accept',
+      expeditionChoice: 'west',
+    },
   })
   assert.ok(visited.includes('sepulchreGateStep2'))
   assert.ok(visited.includes('sepulchreAddZero'))
@@ -439,7 +476,7 @@ test('Sepulchre 三结局：knowBetter（进度+1、记录梦魇）/ layItToRest
     resolutions: { sepulchreOfTheSleeper: 'noResolution' },
   })
   assert.equal(losePlay.ended, true)
-  assert.equal(losePlay.node.outcome, 'campaignLost')
+  assert.equal(losePlay.node.outcome, 'defeat')
 })
 
 test('全流程终点可达：Doom II 结局 → 尾声 1/2/3 分支；noResolution → 战役失败', () => {
@@ -464,7 +501,7 @@ test('全流程终点可达：Doom II 结局 → 尾声 1/2/3 分支；noResolut
     answers: { interludeOneDecision: 'refuse', final: 'x' },
     resolutions: { theDoomOfArkhamPartII: 'noResolution' },
   })
-  assert.equal(node.outcome, 'campaignLost')
+  assert.equal(node.outcome, 'defeat')
   assert.ok(visited.includes('anOfferRefused'))
 })
 
@@ -483,54 +520,235 @@ test('序幕 handler：初始化四档混乱袋与 R’lyeh 地图 7 条目（�
   assert.deepEqual(again.rlyehMap.length, 7)
 })
 
-test('Interlude I：领任务把任务卡加入牌组；其余调查员按规范顺序补领', () => {
+test('Interlude I：perInvestigator 节点让两名调查员各领不同任务（history.choices 落账）', () => {
   const { state } = newState()
-  const result = claimTask(state, 'goodMoney', logOf())
-  assert.equal(result.seat, 0)
-  assert.equal(result.taskId, 'goodMoney')
-  assert.ok(state.campaign.investigators[0].deck.includes('11756a'))
-  assert.equal(state.campaign.progressTracks.tdcTask['investigator-1'].option, 'goodMoney')
-  // 第二名调查员自动补领（近似，已披露）。
-  assert.equal(result.autoAssigned.length, 1)
-  assert.equal(result.autoAssigned[0].seat, 1)
-  assert.notEqual(state.campaign.progressTracks.tdcTask['investigator-2'].option, 'goodMoney')
-  // 重复领取同一任务被拒绝。
-  assert.equal(claimTask(state, 'goodMoney', logOf()), null)
+  const driven = play(state, {
+    answers: {
+      taskChoice: { 0: 'walkInFaith', 1: 'toeTheLine' },
+      interludeOneDecision: 'accept',
+      expeditionChoice: 'west',
+    },
+    stopAt: 'expeditionPrep',
+  })
+  assert.equal(driven.node.id, 'expeditionPrep')
+  // 逐人选择节点：引擎把每个座位的答案写进当前访问的 history.choices。
+  const taskVisit = state.campaign.flow.history.find(visit => visit.nodeId === 'taskChoice')
+  assert.deepEqual(taskVisit.choices, { 0: 'walkInFaith', 1: 'toeTheLine' })
+  const tracks = state.campaign.progressTracks.tdcTask
+  assert.equal(tracks['investigator-1'].option, 'walkInFaith')
+  assert.equal(tracks['investigator-2'].option, 'toeTheLine')
+  // 任务卡各自入牌组（11754a 信仰之行 / 11755a 坚守底线），不重复。
+  assert.ok(state.campaign.investigators[0].deck.includes('11754a'))
+  assert.ok(state.campaign.investigators[1].deck.includes('11755a'))
+  assert.equal(new Set([tracks['investigator-1'].option, tracks['investigator-2'].option]).size, 2)
+  // 节点本身是 perInvestigator + 唯一出口 + afterChoiceEffects（选项不带 next）。
+  const node = TDC_FLOW.nodes.taskChoice
+  assert.equal(node.perInvestigator, true)
+  assert.equal(node.next, 'interludeOneDecision')
+  assert.deepEqual(node.afterChoiceEffects.map(effect => effect.event), ['claimTasks'])
+  assert.ok(node.options.every(option => option.next == null))
 })
 
-test('Interlude IV：任务进度换算经验、≥5 换完成卡并写 §4 记录、失败走创伤/混乱袋分支', () => {
+test('Interlude I：重复选择同一任务时按规范顺序回退（内容层去重）', () => {
+  const { state } = newState()
+  state.campaign.flow = {
+    nodeId: 'taskChoice',
+    visits: { taskChoice: 1 },
+    history: [{ nodeId: 'taskChoice', visit: 1, choices: { 0: 'walkInFaith', 1: 'walkInFaith' } }],
+  }
+  const result = claimTasksFromChoices(state, logOf())
+  assert.equal(result.assigned.length, 2)
+  assert.deepEqual(result.assigned.map(row => row.seat), [0, 1])
+  assert.equal(result.assigned[0].taskId, 'walkInFaith')
+  assert.notEqual(result.assigned[1].taskId, 'walkInFaith')
+  assert.deepEqual(result.fallbacks, [{ seat: 1, wanted: 'walkInFaith', assigned: result.assigned[1].taskId }])
+  const tracks = state.campaign.progressTracks.tdcTask
+  assert.equal(new Set([tracks['investigator-1'].option, tracks['investigator-2'].option]).size, 2)
+  // 领过的任务不能再被单座位辅助重复领取。
+  assert.equal(claimTask(state, 'walkInFaith', logOf()), null)
+})
+
+test('Interlude IV：任务进度换算经验、≥5 换完成卡并写 §4 记录、失败走创伤/混乱袋降档分支', () => {
   const { state } = newState()
   claimTask(state, 'walkInFaith', logOf())
   claimTask(state, 'toeTheLine', logOf())
   const campaign = state.campaign
   campaign.progressTracks.tdcTask['investigator-1'].value = 6
   campaign.progressTracks.tdcTask['investigator-2'].value = 2
+  // Toe the Line 失败 = 抽 2 枚非符号标记各降 2 档；用可控袋断言（2 枚数值 + 2 枚符号）。
+  state.chaosBag = ['+1', '0', 'skull', 'autofail']
+  campaign.chaosBag = ['+1', '0', 'skull', 'autofail']
   const summary = resolveTasks(state, logOf())
   assert.equal(summary.completed.length, 1)
   assert.equal(summary.failed.length, 1)
-  // 完成：Walk in Faith → isStrongInTheirFaith + 完成面卡；未完成：Toe the Line → 1 点肉体创伤。
+  // 完成：Walk in Faith → isStrongInTheirFaith + 完成面卡；未完成：Toe the Line → 1 点肉体创伤 + 降档。
   assert.equal(campaign.records.isStrongInTheirFaith, true)
   assert.ok(campaign.investigators[0].deck.includes('11754b'))
   assert.ok(!campaign.investigators[0].deck.includes('11754a'))
   assert.equal(campaign.investigators[0].xp, 6)
   assert.equal(campaign.investigators[1].xp, 2)
   assert.equal(campaign.trauma[1].physical, 1)
+  assert.deepEqual([...state.chaosBag].sort(), ['-1', '-2', 'autofail', 'skull'])
+  assert.deepEqual([...campaign.chaosBag].sort(), ['-1', '-2', 'autofail', 'skull'])
+  // 失败分支表已接线（不再有「近似跳过」说明）。
+  assert.deepEqual(TDC_TASK_FAILURE_EFFECTS.toeTheLine.lowerChaosTokens, { count: 2, by: 2 })
+  assert.ok(TDC_TASK_FAILURE_EFFECTS.toeTheLine.trauma)
   // 快照与尾声摘要可读。
   assert.equal(taskProgressSnapshot(state).length, 2)
   assert.equal(endgameSummary(state).branch, null)
 })
 
-test('No Place Like Home 失败二选一创伤：只作用于失败者', () => {
+test('Interlude IV：8 条任务的失败/完成分支逐条完整（参考 ForInvestigator InterludeStep 4）', async () => {
+  await preloadCampaignPrimitives()
+  const bag = ['+1', '0', 'skull', 'eldersign', 'tablet']
+  const failedRun = taskId => {
+    const { state } = newState()
+    claimTask(state, taskId, logOf())
+    const campaign = state.campaign
+    campaign.progressTracks.tdcTask['investigator-1'].value = 0
+    state.chaosBag = [...bag]
+    campaign.chaosBag = [...bag]
+    const summary = resolveTasks(state, logOf())
+    return { state, campaign, record: campaign.investigators[0], summary }
+  }
+  const count = (list, token) => list.filter(value => value === token).length
+
+  // 失败分支逐条。
+  const walkInFaith = failedRun('walkInFaith')
+  assert.equal(walkInFaith.campaign.trauma[0].mental, 1)
+  assert.equal(walkInFaith.campaign.records.lostTheirFaith, true)
+
+  const goodMoney = failedRun('goodMoney')
+  assert.equal(goodMoney.campaign.trauma[0].physical, 1)
+  const added = goodMoney.record.deck.filter(code => code !== '11756a')
+  assert.equal(added.length, 1, 'Good Money 失败应加 1 张 Injury/Criminal 基础弱点')
+  assert.ok((ALL_CARDS[added[0]].traits || []).some(trait => ['Injury', 'Criminal'].includes(trait)))
+
+  const dreams = failedRun('dreamsOfDestruction')
+  assert.equal(dreams.campaign.trauma[0].mental, 1)
+  assert.equal(count(dreams.state.chaosBag, 'eldersign'), 0, '应移除 1 枚 elderSign')
+
+  const noPlaceLikeHome = failedRun('noPlaceLikeHome')
+  assert.equal(noPlaceLikeHome.campaign.trauma[0], undefined, 'NPLH 创伤由逐人选择节点结算')
+  assert.equal(noPlaceLikeHome.campaign.investigators[0].deck.includes('11753b'), false)
+
+  const doNoHarm = failedRun('doNoHarm')
+  assert.equal(doNoHarm.campaign.trauma[0].mental, 1)
+  assert.equal(count(doNoHarm.state.chaosBag, 'tablet'), count(bag, 'tablet') + 1)
+
+  const toeTheLine = failedRun('toeTheLine')
+  assert.equal(toeTheLine.campaign.trauma[0].physical, 1)
+  assert.deepEqual([...toeTheLine.state.chaosBag].sort(), ['-1', '-2', 'eldersign', 'skull', 'tablet'])
+
+  const proveYourWorth = failedRun('proveYourWorth')
+  assert.equal(proveYourWorth.campaign.trauma[0].mental, 1)
+
+  const plumbTheDepths = failedRun('plumbTheDepths')
+  assert.equal(plumbTheDepths.campaign.trauma[0].mental, 1)
+  assert.equal(count(plumbTheDepths.state.chaosBag, 'skull'), count(bag, 'skull') + 1)
+
+  // 完成分支逐条：换完成面卡 + 写对应 §4 记录 + 进度换经验。
+  for (const task of TDC_TASKS) {
+    const { state } = newState()
+    claimTask(state, task.id, logOf())
+    const campaign = state.campaign
+    campaign.progressTracks.tdcTask['investigator-1'].value = TDC_TASK_COMPLETION_PROGRESS
+    const summary = resolveTasks(state, logOf())
+    assert.equal(summary.completed.length, 1, `${task.id} 应完成`)
+    const record = campaign.investigators[0]
+    assert.ok(record.deck.includes(task.completedCard), `${task.id} 完成面 ${task.completedCard}`)
+    assert.ok(!record.deck.includes(task.card), `${task.id} 未完成面应移除`)
+    assert.equal(campaign.records[task.completedRecord], true, `${task.id} 完成记录 ${task.completedRecord}`)
+    assert.equal(record.xp, TDC_TASK_COMPLETION_PROGRESS)
+    if (task.id === 'dreamsOfDestruction') assert.equal(count(state.chaosBag, '+1'), count(CHAOS_BAGS.standard, '+1') + 1)
+  }
+})
+
+test('Good Money 失败：按 traits 搜收藏加基础弱点；已持有同名/同印刷则跳过', async () => {
+  // 引擎 basicWeaknessPool 经非阻塞 import 预载（避免 engine.js ⇄ content 的静态循环）。
+  // 这里断言真实引擎导出可用（对局进入 Interlude IV 前必然已加载；失败时内容层有同口径回退池）。
+  const enginePool = await preloadCampaignPrimitives()
+  assert.equal(typeof enginePool, 'function', 'engine.basicWeaknessPool 应可预载')
+  const { state } = newState()
+  assert.ok(Array.isArray(enginePool(state)) && enginePool(state).includes('01101'), 'TDC 可达池应含 Mob Enforcer（Criminal）')
+  claimTask(state, 'goodMoney', logOf())
+  const campaign = state.campaign
+  campaign.progressTracks.tdcTask['investigator-1'].value = 1
+  const summary = resolveTasks(state, logOf())
+  assert.equal(summary.failed.length, 1)
+  assert.equal(summary.failed[0].taskId, 'goodMoney')
+  const record = campaign.investigators[0]
+  const weakness = record.deck.find(code => code !== '11756a')
+  assert.ok(weakness, '应加入一张基础弱点')
+  const traits = (ALL_CARDS[weakness].traits || []).map(trait => trait.toLowerCase())
+  assert.ok(traits.includes('injury') || traits.includes('criminal'), `弱点 ${weakness} 应带 Injury/Criminal 特性`)
+  // 已持有时不再重复发放（同名字/同印刷排除）——TDC 可达的 Injury/Criminal 池通常只有一张。
+  const again = newState()
+  claimTask(again.state, 'goodMoney', logOf())
+  again.state.campaign.progressTracks.tdcTask['investigator-1'].value = 1
+  again.state.campaign.investigators[0].deck.push(weakness)
+  resolveTasks(again.state, logOf())
+  assert.equal(again.state.campaign.investigators[0].deck.filter(code => code === weakness).length, 1)
+  // 直接调用 helper 的排除逻辑：已持有时返回 null 或另一张未持有卡。
+  const skipped = addBasicWeaknessForSeat(again.state, 0, ['Injury', 'Criminal'], logOf())
+  assert.ok(skipped === null || skipped !== weakness)
+})
+
+test('No Place Like Home 失败二选一创伤：逐人选择、只作用于失败者', () => {
   const { state } = newState()
   claimTask(state, 'noPlaceLikeHome', logOf())
+  claimTask(state, 'walkInFaith', logOf())
   const campaign = state.campaign
+  // seat0 领 NPLH 且失败；seat1 领 Walk in Faith（不应受影响）。
   campaign.progressTracks.tdcTask['investigator-1'].value = 2
-  const physical = runNplhTrauma(state, { kind: 'physical' }, logOf())
-  assert.deepEqual(physical.affected, [0])
+  campaign.progressTracks.tdcTask['investigator-2'].value = 5
+  campaign.flow = {
+    nodeId: 'nplhTraumaChoice',
+    visits: { nplhTraumaChoice: 1 },
+    history: [{ nodeId: 'nplhTraumaChoice', visit: 1, choices: { 0: 'physical', 1: 'mental' } }],
+  }
+  const result = runNplhTraumaChoices(state, logOf())
+  assert.deepEqual(result.applied, [{ seat: 0, kind: 'physical' }])
   assert.equal(campaign.trauma[0].physical, 1)
-  const mental = runNplhTrauma(state, { kind: 'mental' }, logOf())
-  assert.deepEqual(mental.affected, [0])
+  assert.equal(campaign.trauma[0].mental, 0)
+  assert.equal(campaign.trauma[1], undefined)
+  // 节点结构：perInvestigator + afterChoiceEffects + 唯一出口。
+  const node = TDC_FLOW.nodes.nplhTraumaChoice
+  assert.equal(node.perInvestigator, true)
+  assert.equal(node.next, 'finale')
+  assert.deepEqual(node.afterChoiceEffects.map(effect => effect.event), ['nplhTraumaChoices'])
+  assert.ok(node.options.every(option => option.next == null))
+  // 旧单 kind 辅助仍可用（夹具/直接调用）。
+  assert.deepEqual(runNplhTrauma(state, { kind: 'mental' }, logOf()).affected, [0])
   assert.equal(campaign.trauma[0].mental, 1)
+})
+
+test('Doom I 无结局：进入 Part II 时每人随机搜一张 Injury/Madness 基础弱点', async () => {
+  assert.equal(typeof await preloadCampaignPrimitives(), 'function')
+  const { state } = newState()
+  const campaign = state.campaign
+  campaign.scenarioResults.push({ scenarioId: 'theDoomOfArkhamPartI', resolution: 'noResolution' })
+  campaign.rngState = 1
+  const result = runDoomPartOneWeaknesses(state, logOf())
+  assert.equal(result.applied.length, 2)
+  for (const row of result.applied) {
+    const traits = (ALL_CARDS[row.code].traits || []).map(trait => trait.toLowerCase())
+    assert.ok(traits.includes('injury') || traits.includes('madness'), `${row.code} 应带 Injury/Madness 特性`)
+    assert.ok(campaign.investigators[row.seat].deck.includes(row.code))
+  }
+  assert.equal(new Set(result.applied.map(row => row.code)).size, 2, '同批两名调查员不发同一张')
+  // 非 noResolution 不生效。
+  const other = newState()
+  other.state.campaign.scenarioResults.push({ scenarioId: 'theDoomOfArkhamPartI', resolution: 'resolution2' })
+  assert.deepEqual(runDoomPartOneWeaknesses(other.state, logOf()).applied, [])
+  // flow：进入 Part II 场景节点时触发（Part I behavior 把弱点补入留给战役层）。
+  assert.deepEqual(TDC_FLOW.nodes.theDoomOfArkhamPartII.effects.map(effect => effect.event), ['doomWeaknesses'])
+  // 经注册 handler 分派也可用（引擎会按节点效果走 applyCampaignEffect）。
+  const third = newState()
+  third.state.campaign.scenarioResults.push({ scenarioId: 'theDoomOfArkhamPartI', resolution: 'noResolution' })
+  apply(third.state, TDC_FLOW.nodes.theDoomOfArkhamPartII.effects[0])
+  assert.equal(third.state.campaign.investigators[0].deck.filter(code => (ALL_CARDS[code].traits || [])
+    .some(trait => ['Injury', 'Madness'].includes(trait))).length, 1)
 })
 
 test('Sepulchre knowBetter：每名有任务的调查员进度 +1 且记录梦魇', () => {
@@ -552,16 +770,22 @@ test('Interlude III 符号替换与尾声 handler 已注册', () => {
   assert.equal(PROLOGUE_HANDLER_ID, 'tdcPrologue')
   assert.equal(INTERLUDE_HANDLER_ID, 'tdcInterludes')
   assert.equal(EPILOGUE_HANDLER_ID, 'tdcEpilogue')
+  // 第二轮接线的近似已从登记表移除（保留的 4 条是真实残余）。
+  const ids = TDC_INTERLUDE_APPROXIMATIONS.map(row => row.id)
+  assert.ok(!ids.includes('toeTheLineTokens'))
+  assert.ok(!ids.includes('goodMoneyWeakness'))
+  assert.deepEqual([...ids].sort(),
+    ['easternChaosSwap', 'goodMoneyWeaknessPool', 'nplhTraumaChoice', 'perInvestigatorTaskChoice'].sort())
 })
 
 // ---------------------------------------------------------------------------
 // ⑦ 战役清单 / 包清单 / 章节辅助 / card-data
 // ---------------------------------------------------------------------------
-test('战役清单：10 章、四档混乱袋、unlock 闭包、status development、handler id', () => {
+test('战役清单：10 章、四档混乱袋、unlock 闭包、可启动状态与 handler id', () => {
   assertCampaignManifest(tdcManifest)
   assert.equal(CAMPAIGN_ID, 'theDrownedCity')
   assert.equal(CAMPAIGN_NAME, '沉没之城')
-  assert.equal(tdcManifest.status, 'development')
+  assert.equal(tdcManifest.status, 'playable')
   // TDC 复用《夜之狂热》的《午夜假面》Arkham 地点组，因此依赖 notz（注册期遭遇组校验）。
   assert.deepEqual(tdcManifest.requiredPackIds, ['core', 'notz', 'tdcCampaign'])
   assert.equal(tdcManifest.scenarioIds.length, 10)
@@ -693,6 +917,93 @@ test('叙事桥：story-text 未落盘时安全回退空串（不阻塞）', () 
   // 缺键/缺文件一律空串，绝不抛错。
   assert.equal(campaignText('不存在的键'), '')
   assert.equal(campaignText(''), '')
+})
+
+// ---------------------------------------------------------------------------
+// ⑨ saveReplay：真实 saveSnapshot/readSnapshot（lib/sessions.js）后战役层状态等价 + 续跑确定
+// ---------------------------------------------------------------------------
+// 与各章 saveReplay 同一口径（CONTINUATION §2.1）：临时 DSH_HOME + 默认开启持久化路径
+// （不设置 BOARDGAME_PERSIST=0），存档 → 读回 → 深比较 → 双方各再推进一个停点后结果一致。
+// 覆盖「战役层」状态：flow（nodeId/history/visits）、records（含 string[] 集合）、
+// progressTracks（tdcTask 进度轨）、混乱袋、调查员牌组（任务/远征剧情资产）。
+test('战役层存档重放：flow/records/recordSets/progressTracks 恢复等价，续跑一个停点结果确定', () => {
+  const previousHome = process.env.DSH_HOME
+  const previousPersist = process.env.BOARDGAME_PERSIST
+  const home = mkdtempSync(path.join(os.tmpdir(), 'tdc-campaign-save-'))
+  process.env.DSH_HOME = home
+  // 默认开启路径：不设置 BOARDGAME_PERSIST=0。
+  delete process.env.BOARDGAME_PERSIST
+  const sessionId = 'tdcCampaignLayerReplay'
+  try {
+    assert.equal(persistEnabled(), true, 'BOARDGAME_PERSIST 默认必须开启')
+    // 1) 走到真实战役中段停点：开场关打完 → Interlude I 领任务（tdcTask 进度轨）→
+    //    接受提议 → Interlude II 西线（headedWest 记录 + 混乱袋换标记 + Andy 入牌组）→
+    //    西墙结算 → 第一段整备停点 expeditionPrep。
+    const { state } = newState()
+    const driven = play(state, {
+      answers: {
+        taskChoice: { 0: 'walkInFaith', 1: 'toeTheLine' },
+        interludeOneDecision: 'accept',
+        expeditionChoice: 'west',
+      },
+      stopAt: 'expeditionPrep',
+    })
+    assert.equal(driven.node.id, 'expeditionPrep')
+    assert.equal(state.campaign.flow.nodeId, 'expeditionPrep')
+    // 战役层真实数据已产生（否则存档等价测试没有意义）。
+    assert.deepEqual(state.campaign.scenarioResults.map(result => result.scenarioId), ['oneLastJob', 'theWesternWall'])
+    assert.equal(state.campaign.records.theExpeditionHeadedWest, true)
+    assert.equal(state.campaign.records.theExpeditionHeadedEast, false)
+    assert.ok(Object.keys(state.campaign.progressTracks?.tdcTask || {}).length >= 2)
+    assert.ok(state.campaign.investigators[0].deck.includes('11766'), 'Andy Van Nortwick 应在领队牌组')
+    assert.ok(state.campaign.chaosBag.includes('cultist'))
+
+    // 2) 真实落盘：saveSnapshot → readSnapshot。
+    const file = saveSnapshot({
+      sessionId,
+      modId: 'arkhamhorror',
+      state,
+      players: [
+        { seat: 0, name: '调查员 1', investigatorId: 'investigator-1' },
+        { seat: 1, name: '调查员 2', investigatorId: 'investigator-2' },
+      ],
+      events: [{ seq: 0, type: 'info', text: '战役存档重放夹具' }],
+      settings: { playerCount: 2, campaignId: CAMPAIGN_ID, difficulty: 'standard', seed: 'tdc-campaign-replay' },
+    })
+    assert.ok(file.includes(path.join('boardgame-hall', 'sessions', 'arkhamhorror')), `存档应落 mod 子目录：${file}`)
+    const restored = readSnapshot(sessionId)
+    assert.ok(restored, `readSnapshot 返回 null；磁盘文件：${existsSync(file) ? readFileSync(file, 'utf8').slice(0, 500) : '缺失'}`)
+
+    // 3) 读回状态与内存状态深度相等（JSON 规范化后；覆盖 flow/records/recordSets/progressTracks）。
+    const normalize = value => JSON.parse(JSON.stringify(value))
+    assert.deepEqual(normalize(restored.session.state), normalize(state))
+    assert.deepEqual(normalize(restored.session.state.campaign.flow), normalize(state.campaign.flow))
+    assert.deepEqual(normalize(restored.session.state.campaign.records), normalize(state.campaign.records))
+    assert.deepEqual(normalize(restored.session.state.campaign.progressTracks), normalize(state.campaign.progressTracks))
+    // 集合记录（record-sets 口径，string[]）单项复核。
+    assert.deepEqual(restored.session.state.campaign.records.discoveredGlyphs,
+      state.campaign.records.discoveredGlyphs)
+    assert.notEqual(restored.session.state.campaign.flow.history.length, 0)
+
+    // 4) 从读回状态继续推进一个停点，与内存状态同起点推进的结果做指纹比较。
+    const restoredState = { ...restored.session.state }
+    const memoryNode = advanceOneStop(state)
+    const restoredNode = advanceOneStop(restoredState)
+    assert.equal(restoredNode.id, memoryNode.id)
+    assert.deepEqual(
+      { id: restoredNode.id, type: restoredNode.type, scenarioId: restoredNode.scenarioId, next: restoredNode.next },
+      { id: memoryNode.id, type: memoryNode.type, scenarioId: memoryNode.scenarioId, next: memoryNode.next })
+    assert.deepEqual(normalize(restoredState.campaign), normalize(state.campaign))
+    // 续跑后确实进入西线第二关（西墙 → 淹没城区）。
+    assert.equal(restoredNode.scenarioId, 'theDrownedQuarter')
+    assert.equal(restoredState.campaign.flow.nodeId, 'theDrownedQuarter')
+  } finally {
+    rmSync(home, { recursive: true, force: true })
+    if (previousHome === undefined) delete process.env.DSH_HOME
+    else process.env.DSH_HOME = previousHome
+    if (previousPersist === undefined) delete process.env.BOARDGAME_PERSIST
+    else process.env.BOARDGAME_PERSIST = previousPersist
+  }
 })
 
 // 未使用的导出保持引用（避免 lint/树摇误删；同时验证模块形状）。

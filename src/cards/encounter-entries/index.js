@@ -2454,6 +2454,7 @@ import e11763 from './theDrownedCity/_shared/tdc_expedition/11763.js'
 import e11764 from './theDrownedCity/_shared/tdc_expedition/11764.js'
 import e11765 from './theDrownedCity/_shared/tdc_expedition/11765.js'
 import e11766 from './theDrownedCity/_shared/tdc_expedition/11766.js'
+import exsky from './theDrownedCity/obsidianCanyons/xsky.js'
 
 export const NON_PLAYER_ENTRY_LIST = [
   ewolfManDrew,
@@ -4907,6 +4908,7 @@ export const NON_PLAYER_ENTRY_LIST = [
   e11764,
   e11765,
   e11766,
+  exsky,
 ]
 
 registerNonPlayerEntries(NON_PLAYER_ENTRY_LIST)

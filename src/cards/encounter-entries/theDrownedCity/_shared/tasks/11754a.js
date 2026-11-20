@@ -7,19 +7,12 @@
 //
 // 读点（声明即接线）：
 //   · 「使用(0 征兆)」= 条目 uses/usesType（0 次同样写进条目，newPlayerAssetInstance 会初始化 uses=0）；
-//   · 「任意地点揭示 elder_sign 标记后」= chaosTokenRevealed 窗口（tests.js），criteria 读 context.token === 'eldersign'，不限地点；
-//   · 「放置 1 个征兆」= api.placeUse(source, 'signs', 1)（api-misc 的卡面计数器入口）。
-//   · 两面同实体：flags.task.partnerCode 指向完成面 11754b；任务完成时战役层用 11754b
-//     替换本卡，并把 isStrongInTheirFaith 写进剧本日志（参考 Helpers.hs#tasks / interludes.js#resolveTasks）。
-//   · 每名调查员的任务进度只走 P7 原语 mechanics.progress（轨道 'tdcTask'，option = 任务 id），
-//     不自造战役记录键；完成门限 5 点由战役层（TDC_TASK_COMPLETION_PROGRESS）判定。
-//
-// 近似 / 未接线（blocked read point）：
-//   · 「游戏结束时……在剧本日志中本任务下标记 1 点进度」没有卡级窗口：引擎 finishScenario 只扫
-//     手牌里的 traumaAtGameEndWhenInHand，不枚举在场的卡条目。因此本条目只把印刷判定声明为
-//     flags.task.endOfGame；进度写入需由 Lead 在结局读点调用
-//     api.mechanics.progress.change('tdcTask', seat, 1, '11754a:endOfGame') 结算。
-//     8 张任务共用同一句模板（同句规则），不在单卡里各写一遍命令式逻辑。
+//   · 「任意地点揭示 elder_sign 标记后」= chaosTokenRevealed 窗口，criteria 读 context.token === 'eldersign'，不限地点；
+//   · 「放置 1 个征兆」= api.placeUse(source, 'signs', 1)（卡面计数器入口）；
+//   · 「游戏结束时…标记 1 点进度」= 引擎卡级 gameEnds 窗口（hub.endCampaign 派发；第三轮落地）。
+//     条目声明 forced/trigger:gameEnds，resolve 判定「征兆数 > 1×人数」后 api.mechanics.progress.change 写入 +1；
+//     receipt = 'taskEnd-walkInFaith'，重复收尾自动去重。
+//   · 两面同实体：flags.task.partnerCode 指向完成面 11754b；完成门限 5 点由战役层 interludes.resolveTasks 判定。
 const CODE = '11754a'
 
 const TASK = Object.freeze({
@@ -29,16 +22,19 @@ const TASK = Object.freeze({
   partnerCode: '11754b',
   completedCard: '11754b',
   completedRecord: 'isStrongInTheirFaith',
-  progress: Object.freeze({ track: 'tdcTask', threshold: 5, amount: 1, receipt: '11754a:endOfGame' }),
-  tally: Object.freeze({'token':'signs','initial':0,'on':['chaosTokenRevealed']}),
-  endOfGame: Object.freeze({'kind':'usesMoreThanPerInvestigator','token':'signs','perInvestigator':1}),
+  progress: Object.freeze({ track: 'tdcTask', threshold: 5, amount: 1, receipt: 'taskEnd-walkInFaith' }),
+  tally: Object.freeze({ token: 'signs', initial: 0, on: ['chaosTokenRevealed'] }),
+  endOfGame: Object.freeze({ kind: 'usesMoreThanPerInvestigator', token: 'signs', perInvestigator: 1, settle: 'gameEnds' }),
 })
+
+const investigatorCount = state => Number(state.numInvestigators)
+  || (state.investigators || []).filter(other => !other.defeated && !other.resigned).length
 
 export default {
   code: CODE,
   name: '信仰之行',
   scope: 'storyAsset',
-  implemented: false,
+  implemented: true,
   uses: 0,
   usesType: 'signs',
   flags: { permanent: true, traits: ['Task', 'Incomplete'], task: TASK },
@@ -48,12 +44,21 @@ export default {
     label: '放置 1 个征兆',
     criteria: ({ context }) => context?.token === 'eldersign',
     resolve: ({ inv, source, api }) => {
-      api.placeUse(source, 'signs', 1)
-      api.info('✨ ' + inv.name + ' 揭示 elder_sign：「信仰之行」放置 1 个征兆。')
+      const signs = Number(api.placeUse(source, 'signs', 1)) || 0
+      api.info('✨ ' + inv.name + ' 揭示 elder_sign：「信仰之行」放置 1 个征兆（当前 ' + signs + '）。')
+    },
+  }, {
+    kind: 'forced',
+    trigger: 'gameEnds',
+    label: '游戏结束：征兆超过 1×人数则本任务进度 +1',
+    criteria: ({ state, source }) => Number(source?.uses) > (Number(TASK.endOfGame.perInvestigator) || 1) * investigatorCount(state),
+    resolve: ({ inv, api }) => {
+      const next = api.mechanics?.progress?.change(TASK.progress.track, inv.seat, TASK.progress.amount, TASK.progress.receipt)
+      if (next === false) return
+      api.info('🏅 「信仰之行」：游戏结束时征兆超过 1×人数，本任务进度 +1。')
     },
   }],
-  note: 'approximation / blocked read point：① 征兆计数与放置已接线；'
-    + '②「游戏结束时超过 1[per_investigator] 个征兆则标记 1 点进度」没有卡级窗口，'
-    + '进度需由结局读点用 api.mechanics.progress.change(\'tdcTask\', seat, 1, \'11754a:endOfGame\') 结算；'
-    + '失败分支（信仰崩塌 / lostTheirFaith）由战役层幕间处理，不在本卡重复实现。',
+  note: '① 征兆计数/放置走条目 uses + api.placeUse（chaosTokenRevealed 窗口，任意地点）；'
+    + '②「游戏结束时…标记 1 点进度」走引擎卡级 gameEnds 窗口：forced/trigger:gameEnds，resolve 判定'
+    + '「征兆 > 1×人数」后用 api.mechanics.progress.change 写入 +1；receipt=taskEnd-walkInFaith，重复收尾去重。无近似项。',
 }

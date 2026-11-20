@@ -30,6 +30,8 @@ export default {
   flags: { permanent: true, traits: ['Task', 'Completed'], controlBonus: { extraAction: 'move' }, task: TASK },
   modifiers: [{ target: 'actions', amount: 1 }],
   abilities: [],
-  note: '近似：额外一次「仅可用于移动」的行动用 actions +1 修正承载（引擎没有行动类型读点，'
-    + 'flags.task.extraAction 保留印刷限制供界面/审计读取）。',
+  note: '近似：额外一次「仅可用于移动」的行动用 modifiers 的 actions +1 承载（stats 的 actions 读点，'
+    + '与 10700 同一写法）；引擎没有「行动类型限制」读点，印刷限制只写在'
+    + ' flags.task.extraActionLimit: \'move\' 与 flags.controlBonus.extraAction: \'move\''
+    + '（供界面/审计/未来读点使用），因此这 1 次额外行动目前也可被普通行动消费。接口需求见 engine-needs §7。',
 }

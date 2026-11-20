@@ -52,6 +52,6 @@ export default {
     },
   }],
   note: '「调查它所在地点时」按 skillTest.actionKind=investigate 且检定目标地点 = 敌人所在地点判定；'
-    + '交战/攻击走 api.engage + api.scenario.attack。冷漠/猎手/猎物来自印刷正文解析。'
-    + '近似：「立刻攻击」按剧本攻击入口结算（含攻击窗口/伤害分配），与普通敌人阶段攻击同口径。',
+    + '交战/攻击走 api.engage + api.scenario.attack。「立刻攻击」与敌人阶段攻击同一结算入口'
+    + '（含攻击窗口/伤害分配），不是近似。冷漠/猎手/猎物来自印刷正文解析。',
 }

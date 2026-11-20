@@ -7,6 +7,6 @@ export default {
   scope: 'enemy',
   implemented: true,
   flags: { prey: 'mostRemainingHealth', hunter: true, relentless: true, healDamageAfterAttack: 1 },
-  
-  note: "星之吸血鬼（×2）。猎手/无情；猎物-剩余生命值最高者；攻击后治愈 1 点伤害（behavior.enemyAttackResolved 读 healDamageAfterAttack）。数值来自卡表 encounterDefinitions；猎手/无情/猎物的引擎声明未接线（近似）。",
+  enemyRule: { relentless: true },
+  note: "星之吸血鬼（×2）。猎手/无情（入场与每轮神话阶段开始用 P7 `api.scenario.setEnemyKeywords(enemy,['relentless'],{enabled:true,throughRound:state.round})` 声明，`enemyRule.relentless` 为印刷回退；过期自动回印刷值）；猎物-剩余生命值最高者（card-data 的 preyRules 把印刷「Most remaining health」映射为 prey:'mostRemainingHealth'，引擎 PREY_RANK 求值）；攻击后治愈 1 点伤害（behavior.enemyAttackResolved 读 healDamageAfterAttack）。",
 }

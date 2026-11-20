@@ -68,6 +68,6 @@ export default {
       api.info('🛡️ 「鸦片酊」移出游戏：取消了「' + api.cardName(context.cardCode) + '」的显现效果。')
     },
   }],
-  note: '近似：取消走 treachery 窗口的 context.cancelled（与 05014/05259 同一取消口径），取消后由引擎弃进遭遇弃牌堆；'
+  note: '取消走 treachery 窗口的 context.cancelled（与 05014/05259 同一取消口径），取消后由引擎弃进遭遇弃牌堆；'
     + '「[[力量]]/[[恐怖]]」按 cards-data 的 Power / Terror 特性判定。',
 }

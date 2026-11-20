@@ -299,7 +299,7 @@
       {
         "module": "src/engine/api-misc.js",
         "exportName": "createMiscApi",
-        "topLevelCount": 280,
+        "topLevelCount": 284,
         "verbs": [
           "addCardCounter",
           "addChaosToken",
@@ -377,6 +377,7 @@
           "connectLocations",
           "countControlled",
           "damage",
+          "damageControlledAsset",
           "damageEnemy",
           "deferCardBeneath",
           "deferPlayedEventReturn",
@@ -472,6 +473,7 @@
           "placeAssetHarm",
           "placeClues",
           "placeDreamGate",
+          "placeResourceOnCard",
           "placeUse",
           "planTestReveal",
           "playAsEffect",
@@ -519,6 +521,7 @@
           "resign",
           "resolveEmptyUses",
           "resourceBank",
+          "resourcesOnCard",
           "restoreEnemyFromAside",
           "retargetInvestigation",
           "retryLastFailedTest",
@@ -531,6 +534,7 @@
           "scenarioFlag",
           "scheduleActionEffects",
           "scheduleWeaknessShuffle",
+          "sealChaosTokenFromBag",
           "sealRandomChaosToken",
           "searchDeckIntoPlay",
           "searchTop",
@@ -648,7 +652,7 @@
       "scenario"
     ],
     "windows": {
-      "count": 134,
+      "count": 137,
       "list": [
         "actionResolvedAtLocation",
         "activateFirearmFight",
@@ -693,6 +697,7 @@
         "doomWouldBePlaced",
         "encounterCardDiscardedFromPlay",
         "encounterCardWouldDraw",
+        "encounterCardsDiscardedFromTop",
         "encounterCardsLookedAt",
         "encounterDrawn",
         "enemy.afterAttacks",
@@ -716,6 +721,7 @@
         "evadeSuccess",
         "eventPlayed",
         "floodChanged",
+        "gameEnds",
         "handCardDiscarded",
         "handEmptied",
         "harmAssigned",
@@ -743,6 +749,7 @@
         "performedAction",
         "phaseBegins",
         "promiseBroken",
+        "resourcesGained",
         "revelationTest",
         "revelationTestAlly",
         "roundEnds",

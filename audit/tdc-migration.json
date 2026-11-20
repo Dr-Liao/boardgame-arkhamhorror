@@ -1,7 +1,156 @@
 {
   "schemaVersion": 1,
   "campaignId": "theDrownedCity",
-  "status": "catalog-only",
+  "status": "verified",
+  "playable": true,
+  "earlyAccess": false,
+  "equivalenceCertified": false,
+  "releaseAcceptance": {
+    "status": "complete",
+    "required": {
+      "chapters": true,
+      "routes": true,
+      "multiplayerAiAndSave": true,
+      "regression": true,
+      "disclosed": true,
+      "keywordsAndRulebook": true
+    },
+    "deferred": [],
+    "browser": "audit/tdc-release-browser.json",
+    "regression": "audit/tdc-p8-regression.json"
+  },
+  "remaining": [
+    {
+      "id": "11734",
+      "scope": "shared",
+      "status": "disclosed",
+      "detail": "涌动/显现/失败二选一在条目内自足实现；「最近的敌人」用 entryDistance 取最近（并列由抽到本卡的调查员选择，与参考「最近的敌人」口径一致）；「抽取遭遇弃牌堆最上方的敌人」= api.takeEncounterCard + api.drawEncounter 交给真实遭遇管线。近似：drawEncounter 用 suppressSurge 抑制该敌人自身涌动在本次结算里再抽一张（参考是否二次涌动依实现口径，此处保守不二次涌动）。",
+      "evidence": [
+        "src/cards/encounter-entries/theDrownedCity/_shared/undersea_creatures/11734.js",
+        "artifacts/migration/tdc/p7/literal/shared.json"
+      ]
+    },
+    {
+      "id": "11745",
+      "scope": "shared",
+      "status": "disclosed",
+      "detail": "难度随胜利区里「仍在你身后」份数递增；失败分「在场逐地点移动并交战」与「不在场：查找场外区域、抽取穷途异魔并加入胜利区」；场外查找覆盖场景放一边、遭遇牌库/弃牌堆、放一边敌人、移除区与胜利区（第四/五轮补齐），找到后统一走 api.drawEncounter。近似：其它尚未枚举的章节私有牌库/极少数容器不在查找范围。",
+      "evidence": [
+        "src/cards/encounter-entries/theDrownedCity/_shared/the_inescapable/11745.js",
+        "artifacts/migration/tdc/p7/literal/shared.json"
+      ]
+    },
+    {
+      "id": "11751",
+      "scope": "shared",
+      "status": "disclosed",
+      "detail": "note 标注需要章节内容把被击败的持久构造体放入胜利区，否则无来源可拉回；拉回/横置生成已接线。",
+      "evidence": [
+        "src/cards/encounter-entries/theDrownedCity/_shared/alien_machinery/11751.js",
+        "artifacts/migration/tdc/p7/literal/shared.json"
+      ]
+    },
+    {
+      "id": "11753b",
+      "scope": "shared",
+      "status": "disclosed",
+      "detail": "actions +1 用 modifiers 的 actions 读点接线（与 10700 同一写法）；「仅可用于移动」的行动类型限制无引擎读点，印刷限制只写在 flags.task.extraActionLimit 与 flags.controlBonus.extraAction（供界面/审计/未来读点使用），因此这 1 次额外行动目前也可被普通行动消费。接口需求见 engine-needs §7。",
+      "evidence": [
+        "src/cards/encounter-entries/theDrownedCity/_shared/tasks/11753b.js",
+        "artifacts/migration/tdc/p7/literal/shared.json"
+      ]
+    },
+    {
+      "id": "11756a",
+      "scope": "shared",
+      "status": "disclosed",
+      "detail": "「获得 1+ 资源后放 1 个到本卡」走 resourcesGained 窗口 + api.placeResourceOnCard（2026-11-20 落地），真实 applyMove 用例（02140 获得 2 资源）断言卡上 +1/资源池净 +1；「游戏结束时卡上 ≥5 则 +1 进度」走 gameEnds 窗口。近似：印刷是 [reaction]（可选），引擎 resourcesGained 事务窗口目前只允许 forced 安全消费（可选 reaction 会触发「未消费的选择恢复凭据」），条目写成 forced 自动放置，可选性差异是本卡唯一近似。",
+      "evidence": [
+        "src/cards/encounter-entries/theDrownedCity/_shared/tasks/11756a.js",
+        "artifacts/migration/tdc/p7/literal/shared.json"
+      ]
+    },
+    {
+      "id": "11761",
+      "scope": "shared",
+      "status": "disclosed",
+      "detail": "①治疗/移出游戏移敌/任意方向移动一步全部接线（引擎无方向概念，沿连接移动一步等价）；②「使用(3 补给)」的发放初始化仍需章节照抄条目 uses（giveAsset 不复制 uses，内容侧集成项）。",
+      "evidence": [
+        "src/cards/encounter-entries/theDrownedCity/_shared/tdc_expedition/11761.js",
+        "artifacts/migration/tdc/p7/literal/shared.json"
+      ]
+    },
+    {
+      "id": "expeditionChoice",
+      "scope": "campaign",
+      "status": "disclosed",
+      "detail": "西线已按参考 westernChaosTokens 实现：记录 theExpeditionHeadedWest + Andy Van Nortwick（11766）入领队牌组 + 移除 1 tablet、加入 1 cultist。残余子句（东线）：参考实现 `Campaigns/TheDrownedCity.hs` 东线只留注释 `-- TODO: swap a chaos token (remove 1 / add 1) for the remainder of the campaign, per the Eastern Expedition setup`，而 interlude 文本（interludes.json#expeditionToRlyeh.easternExpedition）未给具体标记与方向；本层东线只记录 theExpeditionHeadedEast、发放 Ruby Standish（11765），不换取混乱标记（无印刷文面可依据，属未完成子句而非可内容闭合项）。",
+      "evidence": [
+        "content/campaigns/theDrownedCity/interludes.js",
+        "artifacts/migration/tdc/p7/literal/campaign.json"
+      ]
+    },
+    {
+      "id": "returnToArkhamWithArtifact",
+      "scope": "campaign",
+      "status": "disclosed",
+      "detail": "任务结算已完整消费印刷条款：8 条任务的进度→经验（1:1）；进度 ≥5 换完成面任务卡并写对应 §4 记录（isStrongInTheirFaith/madeBank/understandsTheFuture/foundTheirTrueHome/sworeAnOathToProtectOthers/foundNewWork/pulledTheirWeight/learnedTheSecretTruth，Dreams of Destruction 另加 1 枚 +1 标记）；7 条失败分支逐条结算（walkInFaith 精神创伤+lostTheirFaith；dreamsOfDestruction 精神创伤+移 elderSign；doNoHarm 精神创伤+加 tablet；toeTheLine 肉体创伤+2 枚非符号标记各降 2 档；proveYourWorth 精神创伤；plumbTheDepths 精神创伤+加 skull）；NPLH 逐人二选一创伤由 nplhTraumaChoice 节点结算；Doom I noResolution 随机弱点在 Part II 进入时结算。残余单一子句（Good Money 失败）：印刷要求「搜索收藏，从可选的 Injury/Criminal 基础弱点中选择一张加入牌组」；campaign 效果处理器同步执行、拿不到 requestChoice，本层改为从 basicWeaknessPool 过滤 traits 后自动取候选最低卡号。当前 TDC required-pack 弱弱点池中 Injury/Criminal 仅 01101（唯一候选，结果等价）；若收藏/池扩充为多候选则不等价（需引擎给 campaign handler 逐人选择读点）。",
+      "evidence": [
+        "content/campaigns/theDrownedCity/interludes.js",
+        "artifacts/migration/tdc/p7/literal/campaign.json"
+      ]
+    },
+    {
+      "id": "returnToArkhamWithoutArtifact",
+      "scope": "campaign",
+      "status": "disclosed",
+      "detail": "任务结算已完整消费印刷条款：8 条任务的进度→经验（1:1）；进度 ≥5 换完成面任务卡并写对应 §4 记录（isStrongInTheirFaith/madeBank/understandsTheFuture/foundTheirTrueHome/sworeAnOathToProtectOthers/foundNewWork/pulledTheirWeight/learnedTheSecretTruth，Dreams of Destruction 另加 1 枚 +1 标记）；7 条失败分支逐条结算（walkInFaith 精神创伤+lostTheirFaith；dreamsOfDestruction 精神创伤+移 elderSign；doNoHarm 精神创伤+加 tablet；toeTheLine 肉体创伤+2 枚非符号标记各降 2 档；proveYourWorth 精神创伤；plumbTheDepths 精神创伤+加 skull）；NPLH 逐人二选一创伤由 nplhTraumaChoice 节点结算；Doom I noResolution 随机弱点在 Part II 进入时结算。残余单一子句（Good Money 失败）：印刷要求「搜索收藏，从可选的 Injury/Criminal 基础弱点中选择一张加入牌组」；campaign 效果处理器同步执行、拿不到 requestChoice，本层改为从 basicWeaknessPool 过滤 traits 后自动取候选最低卡号。当前 TDC required-pack 弱弱点池中 Injury/Criminal 仅 01101（唯一候选，结果等价）；若收藏/池扩充为多候选则不等价（需引擎给 campaign handler 逐人选择读点）。",
+      "evidence": [
+        "content/campaigns/theDrownedCity/interludes.js",
+        "artifacts/migration/tdc/p7/literal/campaign.json"
+      ]
+    },
+    {
+      "id": "expeditionPrep",
+      "scope": "campaign",
+      "status": "disclosed",
+      "detail": "内容层设计口径（参考实现无对应步骤）：6 条远征章每次结算后进入一次 expeditionPrep（interlude 节点，共 6 次，位于各 scenario.next → routeRouter 之间）。作用是提供引擎唯一的购牌/升级窗读点——`src/engine/campaign-flow.js#progressCampaign` 只在 `node.type === \"interlude\" && node.upgrades !== false` 时 `campaign.upgradesAllowed=true` 并 `openDraftUpgrades`；没有该停点则跨关未花费经验无法消费。节点无卡牌效果、不开检定、不改记录；标题为内容层中文（非官方叙事）。参考实现把 XP 消费放在幕间固定步骤，本层按章结算后统一给窗（设计口径，非规则差异）。",
+      "evidence": [
+        "content/campaigns/theDrownedCity/interludes.js",
+        "artifacts/migration/tdc/p7/literal/campaign.json"
+      ]
+    },
+    {
+      "id": "westernWallShortcut",
+      "scope": "campaign",
+      "status": "disclosed",
+      "detail": "内容设计口径 + 子句范围差：参考 `TheWesternWall.hs#ScenarioResolution` 在 **Resolution 1** 与 **西线 NoResolution** 时调用 `chooseResolution3`（选 The Drowned Quarter / The Apiary）；本层由 routeRouter 只在 `headedWest && scenarioResults 中 theWesternWall === resolution3 && theDrownedQuarter 未完成 && theApiary 未完成` 时进入本节点（任务口径指定「西线结局 3」）。选项与去向（DQ/Apiary）与参考一致；未覆盖参考的 res1/noRes 触发时机（其余结局按线性路线推进），东线不会进入（避免回跳已完成的章）。",
+      "evidence": [
+        "content/campaigns/theDrownedCity/flow.js",
+        "artifacts/migration/tdc/p7/literal/campaign.json"
+      ]
+    },
+    {
+      "id": "apiaryShortcut",
+      "scope": "campaign",
+      "status": "disclosed",
+      "detail": "内容设计口径 + 子句范围差：参考 `TheApiary.hs#resolveTheApiary` 在 **东线 Resolution 3 / 东线 NoResolution** 时 `push R4`（选 The Drowned Quarter / The Western Wall）；Resolution 4 本身是已进入 R4 后的选择结算。本层由 routeRouter 只在 `scenarioResults 中 theApiary === resolution4 && theDrownedQuarter 未完成 && theWesternWall 未完成` 时进入本节点。选项与去向（DQ/WW）与参考一致；触发时机绑定任务口径的「结局 4」，未覆盖参考的 res3/noRes 触发路径。",
+      "evidence": [
+        "content/campaigns/theDrownedCity/flow.js",
+        "artifacts/migration/tdc/p7/literal/campaign.json"
+      ]
+    },
+    {
+      "id": "routeRouter",
+      "scope": "campaign",
+      "status": "disclosed",
+      "detail": "内容设计口径：参考各章 `ScenarioResolution` 用逐条 `endOfScenarioThen` 指定下一章，包含回退/绕行分支——TheWesternWall: res1→(西线)选 DQ/Apiary、res2/noRes→(东线)Sepulchre、(西线 noRes→选 DQ/Apiary)；TheDrownedQuarter: 任意结局→(西线)Apiary/(东线)WesternWall；TheApiary: res1/2→GrandVault、res3/noRes→(西线)GrandVault/(东线)R4；TheGrandVault: res1→Court、res2→Apiary、noRes→(西线)Court/(东线)Apiary；CourtOfTheAncients: res1→Obsidian、res2→GrandVault、noRes→(西线)Obsidian/(东线)GrandVault；ObsidianCanyons: res1→Sepulchre、res2→Court、noRes→(西线)Sepulchre/(东线)Court。本层按任务口径的**西线/东线线性顺序**推进（西：WW→DQ→Apiary→GV→CotA→OC；东：OC→CotA→GV→Apiary→DQ→WW），只逐条镜像两条点名跳章（WW res3、Apiary res4），其余结局不改下一章，全部 6 章完成后进入 Sepulchre 门。属内容层路线简化（设计口径），不逐条镜像参考的回退/绕行分支。",
+      "evidence": [
+        "content/campaigns/theDrownedCity/flow.js",
+        "artifacts/migration/tdc/p7/literal/campaign.json"
+      ]
+    }
+  ],
   "stages": {
     "P0": {
       "status": "verified",
@@ -65,7 +214,7 @@
       }
     },
     "P7": {
-      "status": "implementation-in-progress",
+      "status": "verified",
       "p7": "audit/tdc-p7.json",
       "counts": {
         "sharedGroups": 15,
@@ -78,15 +227,17 @@
         "bilingualGuides": 10,
         "externalDependenciesCovered": 28
       }
+    },
+    "P8": {
+      "status": "verified"
     }
   },
   "confirmations": {
     "scenarios": {
-      "status": "pending",
+      "status": "verified",
       "items": [
         {
           "id": "oneLastJob",
-          "status": "pending",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
@@ -94,25 +245,28 @@
             "actsAndAgendas": true,
             "locationsAndConnections": true,
             "encounterBehaviors": true,
-            "literalCardBehavior": false,
+            "literalCardBehavior": true,
             "chaosEffects": true,
             "resolutionsAndRecords": true,
             "storyText": true,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "saveReplay": true,
+            "browserAcceptance": true
           },
+          "status": "verified",
           "evidence": [
             "tests/tdc-scenario-oneLastJob.test.mjs",
             "audit/tdc-p7-scenarios.json",
             "content/scenario-guide-sources/oneLastJob.json",
             "artifacts/migration/tdc/p7/workers/scenario-alpha.md",
             "audit/tdc-p7.json",
-            "audit/tdc-scope.json"
+            "audit/tdc-scope.json",
+            "audit/tdc-release-browser.json",
+            "artifacts/migration/tdc/p8/screenshots/desktop-oneLastJob.png",
+            "artifacts/migration/tdc/p8/screenshots/mobile-oneLastJob.png"
           ]
         },
         {
           "id": "theWesternWall",
-          "status": "pending",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
@@ -120,25 +274,28 @@
             "actsAndAgendas": true,
             "locationsAndConnections": true,
             "encounterBehaviors": true,
-            "literalCardBehavior": false,
+            "literalCardBehavior": true,
             "chaosEffects": true,
             "resolutionsAndRecords": true,
             "storyText": true,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "saveReplay": true,
+            "browserAcceptance": true
           },
+          "status": "verified",
           "evidence": [
             "tests/tdc-scenario-theWesternWall.test.mjs",
             "audit/tdc-p7-scenarios.json",
             "content/scenario-guide-sources/theWesternWall.json",
             "artifacts/migration/tdc/p7/workers/scenario-alpha.md",
             "audit/tdc-p7.json",
-            "audit/tdc-scope.json"
+            "audit/tdc-scope.json",
+            "audit/tdc-release-browser.json",
+            "artifacts/migration/tdc/p8/screenshots/desktop-theWesternWall.png",
+            "artifacts/migration/tdc/p8/screenshots/mobile-theWesternWall.png"
           ]
         },
         {
           "id": "theDrownedQuarter",
-          "status": "pending",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
@@ -146,25 +303,28 @@
             "actsAndAgendas": true,
             "locationsAndConnections": true,
             "encounterBehaviors": true,
-            "literalCardBehavior": false,
+            "literalCardBehavior": true,
             "chaosEffects": true,
             "resolutionsAndRecords": true,
             "storyText": true,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "saveReplay": true,
+            "browserAcceptance": true
           },
+          "status": "verified",
           "evidence": [
             "tests/tdc-scenario-theDrownedQuarter.test.mjs",
             "audit/tdc-p7-scenarios.json",
             "content/scenario-guide-sources/theDrownedQuarter.json",
             "artifacts/migration/tdc/p7/workers/scenario-beta.md",
             "audit/tdc-p7.json",
-            "audit/tdc-scope.json"
+            "audit/tdc-scope.json",
+            "audit/tdc-release-browser.json",
+            "artifacts/migration/tdc/p8/screenshots/desktop-theDrownedQuarter.png",
+            "artifacts/migration/tdc/p8/screenshots/mobile-theDrownedQuarter.png"
           ]
         },
         {
           "id": "theApiary",
-          "status": "pending",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
@@ -172,25 +332,28 @@
             "actsAndAgendas": true,
             "locationsAndConnections": true,
             "encounterBehaviors": true,
-            "literalCardBehavior": false,
+            "literalCardBehavior": true,
             "chaosEffects": true,
             "resolutionsAndRecords": true,
             "storyText": true,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "saveReplay": true,
+            "browserAcceptance": true
           },
+          "status": "verified",
           "evidence": [
             "tests/tdc-scenario-theApiary.test.mjs",
             "audit/tdc-p7-scenarios.json",
             "content/scenario-guide-sources/theApiary.json",
             "artifacts/migration/tdc/p7/workers/scenario-beta.md",
             "audit/tdc-p7.json",
-            "audit/tdc-scope.json"
+            "audit/tdc-scope.json",
+            "audit/tdc-release-browser.json",
+            "artifacts/migration/tdc/p8/screenshots/desktop-theApiary.png",
+            "artifacts/migration/tdc/p8/screenshots/mobile-theApiary.png"
           ]
         },
         {
           "id": "theGrandVault",
-          "status": "pending",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
@@ -198,25 +361,28 @@
             "actsAndAgendas": true,
             "locationsAndConnections": true,
             "encounterBehaviors": true,
-            "literalCardBehavior": false,
+            "literalCardBehavior": true,
             "chaosEffects": true,
             "resolutionsAndRecords": true,
             "storyText": true,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "saveReplay": true,
+            "browserAcceptance": true
           },
+          "status": "verified",
           "evidence": [
             "tests/tdc-scenario-theGrandVault.test.mjs",
             "audit/tdc-p7-scenarios.json",
             "content/scenario-guide-sources/theGrandVault.json",
             "artifacts/migration/tdc/p7/workers/scenario-gamma.md",
             "audit/tdc-p7.json",
-            "audit/tdc-scope.json"
+            "audit/tdc-scope.json",
+            "audit/tdc-release-browser.json",
+            "artifacts/migration/tdc/p8/screenshots/desktop-theGrandVault.png",
+            "artifacts/migration/tdc/p8/screenshots/mobile-theGrandVault.png"
           ]
         },
         {
           "id": "courtOfTheAncients",
-          "status": "pending",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
@@ -224,25 +390,28 @@
             "actsAndAgendas": true,
             "locationsAndConnections": true,
             "encounterBehaviors": true,
-            "literalCardBehavior": false,
+            "literalCardBehavior": true,
             "chaosEffects": true,
             "resolutionsAndRecords": true,
             "storyText": true,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "saveReplay": true,
+            "browserAcceptance": true
           },
+          "status": "verified",
           "evidence": [
             "tests/tdc-scenario-courtOfTheAncients.test.mjs",
             "audit/tdc-p7-scenarios.json",
             "content/scenario-guide-sources/courtOfTheAncients.json",
             "artifacts/migration/tdc/p7/workers/scenario-gamma.md",
             "audit/tdc-p7.json",
-            "audit/tdc-scope.json"
+            "audit/tdc-scope.json",
+            "audit/tdc-release-browser.json",
+            "artifacts/migration/tdc/p8/screenshots/desktop-courtOfTheAncients.png",
+            "artifacts/migration/tdc/p8/screenshots/mobile-courtOfTheAncients.png"
           ]
         },
         {
           "id": "obsidianCanyons",
-          "status": "pending",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
@@ -250,25 +419,28 @@
             "actsAndAgendas": true,
             "locationsAndConnections": true,
             "encounterBehaviors": true,
-            "literalCardBehavior": false,
+            "literalCardBehavior": true,
             "chaosEffects": true,
             "resolutionsAndRecords": true,
             "storyText": true,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "saveReplay": true,
+            "browserAcceptance": true
           },
+          "status": "verified",
           "evidence": [
             "tests/tdc-scenario-obsidianCanyons.test.mjs",
             "audit/tdc-p7-scenarios.json",
             "content/scenario-guide-sources/obsidianCanyons.json",
             "artifacts/migration/tdc/p7/workers/scenario-delta.md",
             "audit/tdc-p7.json",
-            "audit/tdc-scope.json"
+            "audit/tdc-scope.json",
+            "audit/tdc-release-browser.json",
+            "artifacts/migration/tdc/p8/screenshots/desktop-obsidianCanyons.png",
+            "artifacts/migration/tdc/p8/screenshots/mobile-obsidianCanyons.png"
           ]
         },
         {
           "id": "sepulchreOfTheSleeper",
-          "status": "pending",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
@@ -276,25 +448,28 @@
             "actsAndAgendas": true,
             "locationsAndConnections": true,
             "encounterBehaviors": true,
-            "literalCardBehavior": false,
+            "literalCardBehavior": true,
             "chaosEffects": true,
             "resolutionsAndRecords": true,
             "storyText": true,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "saveReplay": true,
+            "browserAcceptance": true
           },
+          "status": "verified",
           "evidence": [
             "tests/tdc-scenario-sepulchreOfTheSleeper.test.mjs",
             "audit/tdc-p7-scenarios.json",
             "content/scenario-guide-sources/sepulchreOfTheSleeper.json",
             "artifacts/migration/tdc/p7/workers/scenario-delta.md",
             "audit/tdc-p7.json",
-            "audit/tdc-scope.json"
+            "audit/tdc-scope.json",
+            "audit/tdc-release-browser.json",
+            "artifacts/migration/tdc/p8/screenshots/desktop-sepulchreOfTheSleeper.png",
+            "artifacts/migration/tdc/p8/screenshots/mobile-sepulchreOfTheSleeper.png"
           ]
         },
         {
           "id": "theDoomOfArkhamPartI",
-          "status": "pending",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
@@ -302,25 +477,28 @@
             "actsAndAgendas": true,
             "locationsAndConnections": true,
             "encounterBehaviors": true,
-            "literalCardBehavior": false,
+            "literalCardBehavior": true,
             "chaosEffects": true,
             "resolutionsAndRecords": true,
             "storyText": true,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "saveReplay": true,
+            "browserAcceptance": true
           },
+          "status": "verified",
           "evidence": [
             "tests/tdc-scenario-theDoomOfArkhamPartI.test.mjs",
             "audit/tdc-p7-scenarios.json",
             "content/scenario-guide-sources/theDoomOfArkhamPartI.json",
             "artifacts/migration/tdc/p7/workers/scenario-epsilon.md",
             "audit/tdc-p7.json",
-            "audit/tdc-scope.json"
+            "audit/tdc-scope.json",
+            "audit/tdc-release-browser.json",
+            "artifacts/migration/tdc/p8/screenshots/desktop-theDoomOfArkhamPartI.png",
+            "artifacts/migration/tdc/p8/screenshots/mobile-theDoomOfArkhamPartI.png"
           ]
         },
         {
           "id": "theDoomOfArkhamPartII",
-          "status": "pending",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
@@ -328,20 +506,24 @@
             "actsAndAgendas": true,
             "locationsAndConnections": true,
             "encounterBehaviors": true,
-            "literalCardBehavior": false,
+            "literalCardBehavior": true,
             "chaosEffects": true,
             "resolutionsAndRecords": true,
             "storyText": true,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "saveReplay": true,
+            "browserAcceptance": true
           },
+          "status": "verified",
           "evidence": [
             "tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
             "audit/tdc-p7-scenarios.json",
             "content/scenario-guide-sources/theDoomOfArkhamPartII.json",
             "artifacts/migration/tdc/p7/workers/scenario-epsilon.md",
             "audit/tdc-p7.json",
-            "audit/tdc-scope.json"
+            "audit/tdc-scope.json",
+            "audit/tdc-release-browser.json",
+            "artifacts/migration/tdc/p8/screenshots/desktop-theDoomOfArkhamPartII.png",
+            "artifacts/migration/tdc/p8/screenshots/mobile-theDoomOfArkhamPartII.png"
           ]
         }
       ]

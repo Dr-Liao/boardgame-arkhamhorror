@@ -74,7 +74,7 @@ export const behaviorEntryCodes = Object.freeze([
 
 export const manifest = scenarioManifest(scenario, identities, {
   campaignId: 'theDrownedCity',
-  status: 'development',
+  status: 'playable',
   layout,
   requiredPackIds: ['core', 'tdcCampaign'],
   requiredEncounterGroupIds: [

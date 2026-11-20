@@ -83,8 +83,9 @@ export default {
     }, 0, { code: CODE, label: '遭遇检定', name: '梦游迁徙' })
     return false
   },
-  note: '涌动/显现/失败二选一全在条目内自足实现。「抽取遭遇弃牌堆最上方的敌人」= 从弃牌堆取回物理卡'
-    + '后交给真实遭遇管线（api.takeEncounterCard + api.drawEncounter），会正常生成/交战；'
-    + 'suppressSurge 防止该敌人自身的涌动在本次结算里再抽一张。'
-    + '近似：参考实现优先使用「最近的敌人」，并列时由抽到本卡的调查员选择。',
+  note: '涌动/显现/失败二选一全在条目内自足实现。「最近的敌人」用 entryDistance 取最近（并列由抽到本卡的'
+    + '调查员选择，与参考「最近的敌人」口径一致）。「抽取遭遇弃牌堆最上方的敌人」= 从弃牌堆取回物理卡'
+    + '后交给真实遭遇管线（api.takeEncounterCard + api.drawEncounter），会正常生成/交战。'
+    + '近似：drawEncounter 用 suppressSurge 抑制该敌人自身涌动在本次结算里再抽一张'
+    + '（参考的「从弃牌堆抽取」是否二次涌动依实现口径；此处保守不二次涌动）。',
 }

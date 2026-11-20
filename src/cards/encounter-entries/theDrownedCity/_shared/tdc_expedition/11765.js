@@ -44,6 +44,6 @@ export default {
       api.info('🏃 ' + inv.name + ' 移动到 ' + api.locName(id) + '（「露比·斯坦迪什」）。')
     },
   }],
-  note: '近似：[fast] 移动写成 0 行动的能力（cost.action:false）；印刷的「没有处于重整状态的敌人」已接线，'
-    + '「一处连接地点」用 api.moveInvestigator 走常规移动（不引发借机攻击的语义由 0 行动能力承担，未额外声明）。',
+  note: '[fast] 移动写成 0 行动能力（cost.action:false，不引发借机攻击）；印刷的「没有处于重整状态的敌人」'
+    + '与「一处连接地点」都已接线（criteria + api.moveInvestigator）。',
 }

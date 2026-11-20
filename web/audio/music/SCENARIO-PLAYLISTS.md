@@ -141,3 +141,20 @@
 | 最终日黎明 | 金色晨曦、果园静候、宴前整备 | ★ Ascending the Vale → ★ Cattails → Dreams Become Real |
 | 最终夜 | 长桌烛火、暮色聚拢、不祥的宴席 | ★ Duet Musette → ★ Ancient Mystery Waltz (Allegro) → Ritual |
 | 山谷的命运 | 光色异变、山谷崩裂、终局抉择 | ★ Vanes → ★ Magistar → Black Vortex |
+
+## 沉没之城（十循环）
+
+十关各三首，共 30 首不同录音。每关新增两首并复用一首，旧曲复用率为 **33.3%**，战役内无重复。新增录音由 Kevin MacLeod 创作，下载自 Incompetech，按 CC BY 4.0 署名，转码为 44.1 kHz、128 kbps MP3。逐曲来源、ISRC 与校验值见 [sources.json](sources.json)，署名见 [CREDITS.txt](CREDITS.txt)。
+
+| 关卡 | 场景风格 | 播放顺序（★为新增） |
+| --- | --- | --- |
+| 金盆洗手 | 阿卡姆夜街、帮派谈判、赌局揭底 | ★ Cool Vibes → Night on the Docks - Sax → ★ Smoking Gun |
+| 西墙 | 深海高墙、垂降与淹没、古城的压迫感 | ★ Deep Noise → The Descent → ★ Drums of the Deep |
+| 淹没城区 | 海床遗迹、供能核心、潮水逼近 | ★ With the Sea → ★ Aftermath → Deep Haze |
+| 养育场 | 血肉隧道、蜂巢回响、朝圣者的低语 | ★ Simplex → SCP-x2x (Unseen Presence) → ★ Satiate |
+| 大秘库 | 秘库阶梯、升降机、内殿封印 | ★ Chee Zee Caves V2 → Inner Sanctum → ★ The Chamber |
+| 古代议庭 | 古代议庭、石柱与符文、跨层升降 | ★ Vulcan → Hidden Wonders → ★ Dragon and Toast |
+| 黑曜石峡谷 | 黑曜石峡谷、风暴与吊船、峰顶牌库 | ★ River of Io → Crossing the Chasm → ★ Undaunted |
+| 沉睡者墓穴 | 墓穴静默、克苏鲁苏醒、仪式收束 | ★ Halls of the Undead → Phantasm → ★ The Second Coming Instrumental |
+| 阿卡姆的毁灭 第一部分 | 幽灵商店、暴雨、街区失守 | ★ Disquiet → ★ Dark Dance → Day of Chaos |
+| 阿卡姆的毁灭 第二部分 | 克苏鲁降临、终局鏖战、尾声抉择 | ★ Unlight → ★ Colossus → Despair and Triumph |

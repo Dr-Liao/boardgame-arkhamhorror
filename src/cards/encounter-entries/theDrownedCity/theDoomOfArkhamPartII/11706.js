@@ -9,6 +9,6 @@ export default {
   code: '11706',
   scope: 'storyAsset',
   implemented: true,
-  note: '数据型条目：克苏鲁牌库 action 卡，结算在 behavior.resolveCthulhuCard（近似见 worker 报告）。',
+  note: "数据型条目：结算在 behavior.resolveCthulhuCard：灰白双翼→api.runEnemyPatrol(克苏鲁本体) 额外执行一次巡逻（与敌人阶段同一 patrolMove，成功移动写 lastPatrolRound）；凶恶面容→最近调查员检定[意志]；邪恶利爪→一名调查员检定[敏捷]，失败由该调查员选择 提高克苏鲁地点水位/1 伤/1 恐（api.choose）。",
   abilities: [],
 }

@@ -50,5 +50,6 @@ export default {
       api.info('✨ ' + target.name + ' 治疗了 1 点恐惧（「信仰之行」）。')
     },
   }],
-  note: '近似：elder_sign 揭示窗口由 chaosTokenRevealed 提供（不限地点，与印刷一致）；目标不只一位时由卡牌控制者选人。',
+  note: 'elder_sign 揭示窗口由 chaosTokenRevealed 提供（不限地点，与印刷一致）；同地点有多位调查员时'
+    + '由本卡控制者选人，与参考同口径。+1 意志走 modifiers 的 skill:willpower。',
 }

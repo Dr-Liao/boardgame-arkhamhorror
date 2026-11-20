@@ -31,6 +31,8 @@ import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { mechanicState } from '../../../../../src/engine/mechanic-state.js'
 import { connectGrid, gridPosition } from '../../../../../src/engine/grid-map.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
+// P7 第三轮：《沉没之城》战役级规则（Good Money 失败 → 下一章维护阶段不能获得资源）。
+import { tdcCannotGainUpkeepResources } from '../../campaign-rules.js'
 import {
   ACT1_CODE, ACT2_EAST_CODE, ACT2_WEST_CODE, ACT_CODES_BY_DIRECTION, AGENDA1_CODE, AGENDA2_CODE,
   ANCIENT_RELIC_CODE, ANCIENT_RELIC_STORY_CODE, APIARY_TENDER_CODE, CENTRAL_CHAMBER_ID,
@@ -565,6 +567,21 @@ function spendGroupClues(state, locationId, amount) {
   return remaining === 0
 }
 
+/** 团队共同花费线索（Anywhere 池）：按任意顺序从最多线索的调查员开始扣。 */
+function spendTeamClues(state, amount) {
+  let remaining = Math.max(0, Number(amount) || 0)
+  const pool = (state.investigators || [])
+    .filter(inv => !inv.defeated && !inv.resigned)
+    .sort((left, right) => (Number(right.clues) || 0) - (Number(left.clues) || 0))
+  for (const inv of pool) {
+    if (remaining <= 0) break
+    const pay = Math.min(Number(inv.clues) || 0, remaining)
+    inv.clues = (Number(inv.clues) || 0) - pay
+    remaining -= pay
+  }
+  return remaining === 0
+}
+
 export function actions(state, inv) {
   if (!inv || inv.defeated || inv.resigned) return []
   const here = locationOf(state, inv.location)
@@ -626,6 +643,28 @@ export function actions(state, inv) {
       label: '[fast]（每轮一次）在离养育场入口最远的地点放置线索直到其线索值',
     })
   }
+  // 培育场入口（引诱之光）：[action] 共同花费 1[per_investigator] 线索：把遭遇弃牌堆中的每处地点
+  // 洗入遭遇牌库底 10 张中（P7 第六轮：behavior.shuffleIntoBottom 既有助手）。
+  if (hereCode === '11559') {
+    const available = groupCluesAt(state, here.id)
+    moves.push({
+      action: 'scenarioAction', rule: 'apiaryEntranceShuffleLocations', locationId: here.id, actions: 1,
+      label: `共同花费 ${required} 个线索：将遭遇弃牌堆中的每处地点洗入遭遇牌库底 10 张`,
+      reason: available >= required ? null : `需要本地点共 ${required} 个线索（现有 ${available}）`,
+    })
+  }
+  // 养育场入口（危险出口，11559b）：[action] 共同花费 1[per_investigator] 线索：
+  // 把本地点一张[[异教徒]]支援或敌人放到本场景下方。
+  if (hereCode === '11559b') {
+    const available = groupCluesAt(state, here.id)
+    const targets = putUnderCandidates(state, here.id)
+    moves.push({
+      action: 'scenarioAction', rule: 'apiaryPutCultistUnder', locationId: here.id, actions: 1,
+      label: `共同花费 ${required} 个线索：把本地点一张[[异教徒]]支援或敌人放到本场景下方`,
+      reason: targets.length ? (available >= required ? null
+        : `需要本地点共 ${required} 个线索（现有 ${available}）`) : '本地点没有[[异教徒]]支援或敌人',
+    })
+  }
   // 腐化秘库 [action][action] 发现符文 Q。
   if (hereCode === '11564' && !glyphsKnown(state, 'q')) {
     moves.push({ action: 'scenarioAction', rule: 'apiaryGlyphQ', locationId: here.id, actions: 2, label: '发现符文 [Q]（手）' })
@@ -650,6 +689,8 @@ export function performAction(state, inv, move, api = {}) {
     case 'apiaryGrislyMask': return grislyMaskAction(state, inv, api)
     case 'apiaryAncientRelic': return ancientRelicAction(state, inv, api)
     case 'apiaryEntranceFast': return entranceFastAction(state, inv, api)
+    case 'apiaryEntranceShuffleLocations': return entranceShuffleLocationsAction(state, inv, api)
+    case 'apiaryPutCultistUnder': return putCultistUnderAction(state, inv, api)
     case 'apiaryGlyphQ': return glyphAction(state, 'rune_q', '手', api)
     case 'apiaryGlyphR': return glyphAction(state, 'rune_r', '时间', api)
     default: return false
@@ -678,19 +719,49 @@ function parleyCultistAction(state, inv, api) {
   const cultist = (state.enemies || []).find(enemy => enemy.location === inv.location && hasTrait(enemy, 'Cultist'))
   if (!cultist) return false
   const spec = flagsOf('11557').parley || { skill: 'intellect', difficulty: 2 }
+  const difficulty = Number(spec.difficulty) || 2
+  /**
+   * 印刷：「你每成功超过难度 1 点，向任意方向移动你所在地点一名不同的[[异教徒]]敌人一次。」
+   * 引擎既有读点：api.test 的 result（value/failedBy/successBy）+ api.moveEnemy。
+   * 成功超出 n 点 → 依次选择 n 名**不同**的、与所在地点相同的[[异教徒]]敌人各移动一次。
+   */
   const move = result => {
-    if (result?.success && Number(result.failedBy ?? 0) <= 0) {
-      const from = locationOf(state, cultist.location)
-      const target = (from?.connections || []).filter(id => locationOf(state, id))[0]
-      if (target) {
-        if (typeof api.moveEnemy === 'function') api.moveEnemy(cultist, target)
-        else cultist.location = target
-        info(api, `谈判成功：「${cultist.name}」移动到「${locationOf(state, target)?.name || target}」。`)
-      }
+    if (!(result?.success === true)) return
+    const explicit = Number(result?.successBy)
+    const successBy = Number.isFinite(explicit)
+      ? Math.max(0, explicit)
+      : Math.max(0, (Number(result?.value ?? difficulty) || difficulty) - difficulty)
+    if (successBy <= 0) return
+    const here = locationOf(state, inv.location)
+    if (!here) return
+    const candidates = (state.enemies || []).filter(enemy => enemy.location === inv.location
+      && hasTrait(enemy, 'Cultist') && !enemy.defeated)
+    const used = new Set()
+    for (let step = 0; step < successBy && used.size < candidates.length; step++) {
+      const available = candidates.filter(enemy => !used.has(enemy.id))
+      if (!available.length) break
+      const picked = typeof api.choose === 'function' && available.length > 1
+        ? api.choose({
+          kind: 'enemy', source: ACT2_WEST_CODE, seat: inv.seat,
+          prompt: `谈判：选择第 ${step + 1} 名要移动的[[异教徒]]敌人（每名敌人每次谈判只能移动一次）。`,
+          options: available.map(enemy => ({ id: enemy.id, label: enemy.name })),
+        })
+        : available[0].id
+      const enemy = available.find(item => item.id === picked) || available[0]
+      const from = locationOf(state, enemy.location)
+      const destination = (from?.connections || []).find(id => locationOf(state, id))
+      if (!destination) break
+      used.add(enemy.id)
+      if (typeof api.moveEnemy === 'function') api.moveEnemy(enemy, destination)
+      else enemy.location = destination
+      info(api, `谈判成功（超出 ${successBy} 点）：「${enemy.name}」移动到「${locationOf(state, destination)?.name || destination}」。`)
     }
   }
-  if (typeof api.test !== 'function') { move({ success: true, failedBy: 0 }); return true }
-  api.test(inv.seat, spec.skill, spec.difficulty, move, 0, { label: '失落的朝圣者：谈判' })
+  if (typeof api.test !== 'function') {
+    move({ success: true, failedBy: 0, successBy: 1, value: difficulty + 1 })
+    return true
+  }
+  api.test(inv.seat, spec.skill, difficulty, move, 0, { label: '失落的朝圣者：谈判' })
   return true
 }
 
@@ -758,8 +829,84 @@ function entranceFastAction(state, inv, api) {
   return true
 }
 
-function glyphAction(state, rune, meaning, api) {
-  if (glyphsKnown(state, rune.replace(/^rune_/, ''))) return false
+/** 11559b [action]：本地点可放到幕下的[[异教徒]]敌人或受控支援。 */
+function putUnderCandidates(state, locationId) {
+  const enemies = (state.enemies || [])
+    .filter(enemy => enemy.location === locationId && hasTrait(enemy, 'Cultist'))
+    .map(enemy => ({ kind: 'enemy', id: enemy.id, label: enemy.name, enemy }))
+  const assets = []
+  for (const inv of state.investigators || []) {
+    if (inv.location !== locationId || inv.defeated || inv.resigned) continue
+    for (const asset of inv.assets || []) {
+      const card = ALL_CARDS[codeOf(asset)]
+      if (!(card?.traits || []).some(trait => String(trait).toLowerCase() === 'cultist')) continue
+      assets.push({ kind: 'asset', id: asset.id, label: asset.name || codeOf(asset), asset, seat: inv.seat })
+    }
+  }
+  return [...enemies, ...assets]
+}
+
+/** 11559 [action]：共同花费 1[per_investigator] 线索，把遭遇弃牌堆中的每处地点洗入牌库底 10 张。 */
+function entranceShuffleLocationsAction(state, inv, api) {
+  const entrance = locationOf(state, START_LOCATION)
+  if (!entrance || codeOf(entrance) !== '11559') return false
+  const required = investigatorCount(state)
+  if (groupCluesAt(state, entrance.id) < required) return false
+  const locations = (state.encounterDiscard || []).filter(code => ALL_CARDS[code]?.type === 'location')
+  if (!spendGroupClues(state, entrance.id, required)) return false
+  const codes = []
+  for (const code of locations) {
+    const discard = state.encounterDiscard || []
+    const index = discard.indexOf(code)
+    if (index >= 0) discard.splice(index, 1)
+    codes.push(code)
+  }
+  if (codes.length) {
+    // 「洗入遭遇牌库底 10 张」：取栈底 10 张，与地点一起洗牌后放回栈底（数组前部）。
+    const deck = state.encounterDeck ||= []
+    const depth = Math.min(10, Math.max(0, deck.length))
+    const bottom = deck.splice(0, depth)
+    const random = randomOf(api)
+    const merged = shuffled([...codes, ...bottom], resolveShuffle(api), random)
+    deck.unshift(...merged)
+  }
+  info(api, `养育场入口：共同花费 ${required} 个线索，把 ${codes.length} 处地点洗入遭遇牌库底 10 张。`)
+  return true
+}
+
+/** 11559b [action]：共同花费 1[per_investigator] 线索，把本地点一张[[异教徒]]支援或敌人放到本场景下方。 */
+function putCultistUnderAction(state, inv, api) {
+  const here = locationOf(state, START_LOCATION)
+  if (!here || codeOf(here) !== '11559b') return false
+  const required = investigatorCount(state)
+  if (groupCluesAt(state, here.id) < required) return false
+  const candidates = putUnderCandidates(state, here.id)
+  if (!candidates.length) return false
+  const picked = candidates.length === 1 ? candidates[0] : (() => {
+    const id = typeof api.choice === 'function'
+      ? api.choice({
+        kind: 'card', source: '11559b', seat: inv.seat,
+        prompt: '选择要放到场景下方的[[异教徒]]支援或敌人。',
+        options: candidates.map(item => ({ id: item.id, label: item.label })),
+      })
+      : candidates[0].id
+    return candidates.find(item => item.id === id) || candidates[0]
+  })()
+  if (!spendGroupClues(state, here.id, required)) return false
+  const under = [...cultistCardsUnderAct(state), codeOf(picked.enemy || picked.asset)]
+  setFlag(state, 'apiaryCultistsUnder', under)
+  if (picked.enemy) {
+    const index = (state.enemies || []).indexOf(picked.enemy)
+    if (index >= 0) state.enemies.splice(index, 1)
+  } else if (picked.asset) {
+    const owner = state.investigators?.[picked.seat]
+    if (owner) owner.assets = (owner.assets || []).filter(asset => asset !== picked.asset)
+  }
+  info(api, `养育场入口：把「${picked.label}」放到本场景下方（共 ${under.length} 张）。`)
+  return true
+}
+
+function glyphAction(state, rune, meaning, api) {  if (glyphsKnown(state, rune.replace(/^rune_/, ''))) return false
   translateGlyph(state, rune, meaning, api)
   return true
 }
@@ -929,7 +1076,93 @@ export function enemyDefeated(state, enemy, api = {}) {
   return false
 }
 
+/**
+ * 引擎统一「敌人非击败离场」钩子（P7 第二轮原语，PRIMITIVES「已落地」）：
+ *   discardEnemyCard → reason 'discarded'；api.scenario.setEnemyAside → 'setAside'；
+ *   api.scenario.removeEnemyFromGame → 'removed'。
+ *
+ * 与既有 `enemyDiscarded` **择一消费**：本章只实现 enemyLeftPlay，不实现 enemyDiscarded，
+ * 避免同一实体离场时双结算。
+ *
+ * 11580 带鳞寄生虫[tdc_rune_t]：印刷「带鳞寄生虫[tdc_rune_t]将要离场时，将其放在一边，位于场外。」
+ * → 撤销引擎默认去向（遭遇弃牌堆 / 移出游戏 / 放一边实体），统一进章节放一边记录；
+ * 被击败翻面故事面（符文 T「空气」+ 胜利区）由 `enemyDefeated` 消费，二者互斥。
+ */
+export function enemyLeftPlay(state, enemy, reason, api = {}) {
+  if (!enemy) return false
+  if (codeOf(enemy) !== SQUAMOUS_PARASITE_CODE) return false
+  const key = `apiaryEnemyLeftPlay:${enemy.id}`
+  if (state.scenarioFlags?.[key]) return false
+  setFlag(state, key, reason || true)
+  const discard = state.encounterDiscard || []
+  for (let index = discard.length - 1; index >= 0; index--) {
+    if (discard[index] === SQUAMOUS_PARASITE_CODE) discard.splice(index, 1)
+  }
+  if (Array.isArray(state.removedFromGame)) {
+    state.removedFromGame = state.removedFromGame.filter(code => code !== SQUAMOUS_PARASITE_CODE)
+  }
+  if (Array.isArray(state.setAsideEnemies)) {
+    const index = state.setAsideEnemies.indexOf(enemy)
+    if (index >= 0) state.setAsideEnemies.splice(index, 1)
+  }
+  return flipSquamousParasite(state, enemy, 'leave', api)
+}
+
 export function enemyAttackResolved() {
+  return false
+}
+
+// ---------------------------------------------------------------------------
+// 战役级规则：维护阶段不能获得资源（Good Money 失败，跨章标记）
+// ---------------------------------------------------------------------------
+/**
+ * 引擎既有读点：phases.js 补给阶段 / moves.js 资源行动 / ability-rules.js / harm-threat.js。
+ */
+export function canGainResources(state, inv) {
+  return !tdcCannotGainUpkeepResources(state, inv)
+}
+
+// ---------------------------------------------------------------------------
+// 受控剧情资产：11581 古代遗物 / 11568 玛莉亚·里维拉（引擎既有 assetLeftPlay 读点）
+// ---------------------------------------------------------------------------
+/**
+ * 引擎既有 `scenarioBehavior.assetLeftPlay(state, inv, asset, api)`（读点 src/engine/assets.js#leaveAsset）：
+ *   · 11581 古代遗物[tdc_rune_s]「将要离场时，将其放在一边，位于场外」→ 撤销默认弃牌去向，
+ *     记入章节放一边区（scenarioZones.setAside）；
+ *   · 11568 玛莉亚·里维拉「如果她被击败：将她加入胜利区」→ 按印刷生命判定被击败（离场钩子同时
+ *     会为主动弃置触发，所以只在伤害达到生命上限时进胜利区）。
+ */
+export function assetLeftPlay(state, inv, asset, api = {}) {
+  if (!asset) return false
+  const code = codeOf(asset)
+  const zones = zonesFor(state)
+  if (code === ANCIENT_RELIC_CODE || code === ANCIENT_RELIC_STORY_CODE) {
+    asset.removedFromGame = true
+    zones.setAside ||= []
+    if (!zones.setAside.includes(ANCIENT_RELIC_CODE)) zones.setAside.push(ANCIENT_RELIC_CODE)
+    info(api, '古代遗物离场：放在一边，位于场外。')
+    return true
+  }
+  if (code === MARIA_RIVERA_CODE) {
+    const printed = ALL_CARDS[MARIA_RIVERA_CODE] || {}
+    const defeated = (Number(asset.damage) || 0) >= (Number(printed.health) || 5)
+    if (!defeated) return false
+    asset.removedFromGame = true
+    state.victoryDisplay ||= []
+    if (!state.victoryDisplay.some(entry => codeOf(entry) === MARIA_RIVERA_CODE)) {
+      state.victoryDisplay.push({
+        id: asset.id || MARIA_RIVERA_CODE, code: MARIA_RIVERA_CODE, originalCode: MARIA_RIVERA_CODE,
+        name: printed.nameZh || printed.name || MARIA_RIVERA_CODE, victory: 0,
+      })
+    }
+    if (Array.isArray(inv?.discard)) {
+      for (let index = inv.discard.length - 1; index >= 0; index--) {
+        if (inv.discard[index] === MARIA_RIVERA_CODE) inv.discard.splice(index, 1)
+      }
+    }
+    info(api, '玛莉亚·里维拉被击败：加入胜利区。')
+    return true
+  }
   return false
 }
 
@@ -1101,11 +1334,92 @@ export function agendaReveal(state, agenda, api = {}) {
   return false
 }
 
+/**
+ * 失落的朝圣者（幕 2 正面，11557）的强制：敌军阶段结束时，每名[[异教徒]]敌人
+ * 「每与一名[[偷渡者]]敌人位于同一地点」受到 1 点伤害。
+ *
+ * 引擎既有读点：turn.js#resolveEnemyPhase 末尾调用
+ * `scenarioBehavior(state).enemyPhaseEnd?.(state, scenarioRuntime(state, events))`，
+ * 伤害走 api.damageEnemy(enemyId, amount, seat, source)（scenario-runtime.js）。
+ * 卡面数据声明在 definition.ACT_STAGES[2].enemyPhaseEndCultistDamage（当前幕的 stage 卡上），
+ * 因此条目不需要再声明 flag。
+ */
+export function enemyPhaseEnd(state, api = {}) {
+  const stage = state.acts?.[state.actIndex ?? 0]
+  if (!stage || stage.enemyPhaseEndCultistDamage !== 'perStowawayAtLocation') return false
+  const enemies = state.enemies || []
+  const seat = state.campaign?.leadSeat ?? 0
+  let handled = false
+  for (const cultist of enemies) {
+    if (!hasTrait(cultist, 'Cultist') || cultist.defeated) continue
+    const stowaways = enemies.filter(enemy => enemy !== cultist && !enemy.defeated
+      && enemy.location === cultist.location && hasTrait(enemy, 'Stowaway'))
+    if (!stowaways.length) continue
+    handled = true
+    if (typeof api.damageEnemy === 'function') {
+      api.damageEnemy(cultist.id, stowaways.length, seat, { type: 'scenario', code: ACT2_WEST_CODE })
+    } else if (typeof api.scenario?.damageEnemy === 'function') {
+      api.scenario.damageEnemy(cultist.id, stowaways.length, seat)
+    } else {
+      cultist.damageTaken = (Number(cultist.damageTaken) || 0) + stowaways.length
+    }
+    info(api, `敌军阶段结束：「${cultist.name}」与 ${stowaways.length} 名[[偷渡者]]同地点，受到 ${stowaways.length} 点伤害。`)
+  }
+  return handled
+}
+
+/**
+ * 11557 失落的朝圣者（幕 2 西向）：「每名[[异教徒]]敌人获得胜利 0 和冷漠。」
+ * 引擎既有钩子：`scenarioBehavior.enemySpawned`（enemies.js / turn-flow.js 每次生成后）与
+ * `scenarioBehavior.phaseBegan`（每次阶段开始），把当前幕下已在场的[[异教徒]]敌人也补写一次。
+ * 写法：内容层直接写实体字段（章节层允许）——`enemy.aloof = true`、`enemy.victory = 0`。
+ */
+function syncCultistPilgrimStats(state) {
+  if (currentActCode(state) !== ACT2_WEST_CODE) return false
+  let changed = false
+  for (const enemy of state.enemies || []) {
+    if (codeOf(enemy) === MOTHER_CODE) continue
+    if (!hasTrait(enemy, 'Cultist')) continue
+    if (enemy.aloof !== true) { enemy.aloof = true; changed = true }
+    if (Number(enemy.victory) > 0) { enemy.victory = 0; changed = true }
+  }
+  return changed
+}
+
+export function enemySpawned(state, enemy, api = {}) {
+  void enemy
+  void api
+  return syncCultistPilgrimStats(state)
+}
+
+export function phaseBegan(state, phase, api = {}) {
+  void phase
+  void api
+  return syncCultistPilgrimStats(state)
+}
+
+/**
+ * 11559b 危险出口：「抽取一名[[偷渡者]]敌人时，改为将其生成在养育场入口，而非其通常生成地点。」
+ * 引擎既有 `scenarioBehavior.spawnLocation` 钩子（encounter.js / enemy-entry.js 生成落点）。
+ */
+export function spawnLocation(state, code, defaultLocation, engagedSeat, api = {}) {
+  void defaultLocation
+  void engagedSeat
+  void api
+  const entrance = locationOf(state, START_LOCATION)
+  if (!entrance || codeOf(entrance) !== '11559b') return null
+  const card = ALL_CARDS[code]
+  const traits = (card?.traits || []).map(trait => String(trait).toLowerCase())
+  if (card?.type !== 'enemy' || !traits.includes('stowaway')) return null
+  return entrance.id
+}
+
 export function doomPlaced(state, context = {}, api = {}) {
-  if (!context?.agenda || Number(context.amount) <= 0) return false
-  if (currentAgendaCode(state) !== AGENDA2_CODE) return false
+  const tendersHandled = readyTendersOnDoomPlaced(state, context, api)
+  if (!context?.agenda || Number(context.amount) <= 0) return tendersHandled
+  if (currentAgendaCode(state) !== AGENDA2_CODE) return tendersHandled
   const existsNonElite = (state.enemies || []).some(enemy => !hasTrait(enemy, 'Elite'))
-  if (existsNonElite) return false
+  if (existsNonElite) return tendersHandled
   const deck = encounterDeck(state)
   const revealed = []
   let found = null
@@ -1122,7 +1436,58 @@ export function doomPlaced(state, context = {}, api = {}) {
   deck.push(...shuffled(revealed, resolveShuffle(api), random))
   info(api, `可憎寄生虫：从遭遇牌库顶揭示 ${revealed.length + (found ? 1 : 0)} 张，`
     + `${found ? '生成一名敌人' : '没有敌人'}，其余洗回牌库。`)
-  return Boolean(found)
+  return Boolean(found) || tendersHandled
+}
+
+/**
+ * 11575 养育场看守（P7 第四轮）：「强制 - 本地点一张卡牌被放置毁灭标记时：重整养育场看守。
+ * 其本轮失去冷漠。如果其与一位调查员交战，该敌人立刻攻击。」
+ * 引擎既有 `scenarioBehavior.doomPlaced` 读点（act-agenda.js#placeDoomOnCard，context { target, amount }）。
+ */
+function readyTendersOnDoomPlaced(state, context, api = {}) {
+  const target = context?.target
+  if (!target || !(Number(context.amount) > 0)) return false
+  const locationId = typeof target.location === 'string'
+    ? target.location
+    : (locationOf(state, target.id) ? target.id : null)
+  if (!locationId) return false
+  let handled = false
+  for (const enemy of [...(state.enemies || [])]) {
+    if (codeOf(enemy) !== APIARY_TENDER_CODE || enemy.location !== locationId) continue
+    if (typeof api.readyEnemy === 'function') api.readyEnemy(enemy)
+    else enemy.exhausted = false
+    if (typeof api.setEnemyKeywords === 'function') {
+      api.setEnemyKeywords(enemy, ['aloof'], { enabled: false, throughRound: state.round })
+    } else {
+      enemy.keywordOverrides ||= {}
+      enemy.keywordOverrides.aloof = { enabled: false, throughRound: state.round }
+    }
+    const victim = Number.isInteger(enemy.engagedSeat) ? state.investigators?.[enemy.engagedSeat] : null
+    if (victim && !victim.defeated && !victim.resigned && typeof api.attack === 'function') {
+      api.attack(enemy, victim)
+    }
+    info(api, `「${enemy.name}」重整并失去冷漠${victim ? `，立刻攻击 ${victim.name}` : ''}。`)
+    handled = true
+  }
+  return handled
+}
+
+
+/**
+ * 11583 寄生变形（P7 第四轮）：「强制 - 一名敌人与你交战后：在寄生变形上放置 1 个毁灭标记。」
+ * 引擎既有 `scenarioBehavior.enemyEngaged(state, enemy, inv, api)` 读点（enemies.js#engageEnemy；
+ * 该窗口走 triggerReaction 旧通道、不打开描述子能力窗口，所以由章节钩子消费）。
+ */
+export function enemyEngaged(state, enemy, inv, api = {}) {
+  if (!enemy || !inv) return false
+  const threats = (inv.threat || []).filter(card => codeOf(card) === PARASITIC_TRANSFORMATION_CODE)
+  if (!threats.length) return false
+  for (const threat of threats) {
+    if (typeof api.placeDoomOnCard === 'function') api.placeDoomOnCard(threat, 1)
+    else threat.doom = (Number(threat.doom) || 0) + 1
+  }
+  info(api, `寄生变形：${inv.name} 与「${enemy.name || enemy.code}」交战后，在其上放置 1 个毁灭标记。`)
+  return true
 }
 
 export function roundEnded(state, api = {}) {
@@ -1146,7 +1511,19 @@ export function checkObjectives(state, api = {}) {
       .filter(location => (location.traits || []).some(trait => String(trait).toLowerCase() === 'sanctum'))
       .map(location => location.id)])
     if (!alive.every(inv => here.has(inv.location))) return false
-    info(api, '轮末：每位未击败调查员都在一处[[圣所]]地点，推进幕 1。')
+    // 印刷目标是一条 free trigger：「如果每位存活调查员都在一处[[圣所]]地点，调查员可以共同花费
+    // 所需线索以推进」；所需线索 = 2[per_investigator]（Haskell UnsettlingSigns 能力 2 的
+    // GroupClueCost (PerPlayer 2)）。线索是团队池（Anywhere），支付后才推进。
+    const required = 2 * investigatorCount(state)
+    const available = (state.investigators || [])
+      .filter(inv => !inv.defeated && !inv.resigned)
+      .reduce((sum, inv) => sum + (Number(inv.clues) || 0), 0)
+    if (available < required) {
+      info(api, `轮末：全队在[[圣所]]，但共同线索不足（需要 ${required}，现有 ${available}），幕 1 不推进。`)
+      return false
+    }
+    spendTeamClues(state, required)
+    info(api, `轮末：每位未击败调查员都在一处[[圣所]]地点，共同支付 ${required} 个线索推进幕 1。`)
     if (typeof api.advanceAct === 'function') { api.advanceAct(); return true }
     return actReveal(state, currentAct(state), api)
   }
@@ -1274,6 +1651,13 @@ export function grantParasiticTransformation(state, api = {}) {
 export function resolution(state, key, events = null, api = {}) {
   void events
   const infoApi = api?.info ? api : api?.api || {}
+  // 11581 古代遗物 [reaction]「你在控制它的情况下结束游戏时：翻面结算」→ 结局结算时自动翻面。
+  for (const inv of state.investigators || []) {
+    const relic = (inv.assets || []).find(asset => codeOf(asset) === ANCIENT_RELIC_CODE)
+    if (!relic) continue
+    flipAncientRelic(state, inv, relic, infoApi)
+    break
+  }
   const finalKey = RESOLUTION_KEYS.includes(String(key)) ? String(key) : 'noResolution'
   const chain = resolutionChainForKey(finalKey, state)
   if (!chain.length) throw new RangeError(`未知结局：${key}`)
@@ -1433,12 +1817,20 @@ export const behavior = {
   actions,
   performAction,
   roundEnded,
+  enemyPhaseEnd,
   doomPlaced,
   actReveal,
   agendaReveal,
   checkObjectives,
   enemyDefeated,
+  enemyLeftPlay,
+  enemyEngaged,
+  enemySpawned,
+  spawnLocation,
+  phaseBegan,
   enemyAttackResolved,
+  assetLeftPlay,
+  canGainResources,
   resolveChaosToken,
   chaosTokenValue,
   applyTokenEffect,
@@ -1465,6 +1857,8 @@ export const behavior = {
   spawnTheInescapable,
   flipSquamousParasite,
   flipAncientRelic,
+  entranceShuffleLocationsAction,
+  putCultistUnderAction,
   flipHiddenVault,
   translateGlyph,
   glyphsKnown,

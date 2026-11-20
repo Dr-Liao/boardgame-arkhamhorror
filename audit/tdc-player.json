@@ -33,7 +33,7 @@
   "scenariosPassed": 119,
   "browser": {
     "report": "artifacts/migration/tdc/p6/browser.json",
-    "sha256": "06a5c52a80e16045a38655ce531e6ed6d5449467accca0ff5485c741c940597b",
+    "sha256": "86cdae7765725c01fe0b7f39d7e625515019f676b9d6a5e7408cee797c8330c2",
     "cases": 2,
     "screenshots": [
       {
@@ -52,7 +52,7 @@
           390,
           844
         ],
-        "sha256": "908ec98acb46808e64b9168ac8fef5e16058c1d2e9ddf317738a7a36e8ab4b33"
+        "sha256": "00e9f1e957944b89a7c295bac7d94e582ed4b7a8fe6c7d22098f5628a5c84af5"
       }
     ]
   },

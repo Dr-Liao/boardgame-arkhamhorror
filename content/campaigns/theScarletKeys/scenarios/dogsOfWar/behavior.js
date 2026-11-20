@@ -1632,12 +1632,12 @@ function moveActions(state, inv, moves) {
   const knight = knightAsset(state)
   if (knight && knight.location === inv.location) {
     moves.push({
-      action: 'scenarioAction', rule: ACTION_RULES.knightToAsset, locationId: inv.location, actions: 0, fast: true,
+      action: 'scenarioAction', rule: ACTION_RULES.knightToAsset, locationId: inv.location, actions: 0, fast: true, reactionSourceCode: codeOf(knight),
       label: '快速，横置暗红骑士：把你最多 3 个资源移到暗红骑士上',
       ...((Number(inv.resources) || 0) < 1 ? { reason: '你没有资源' } : {}),
     })
     moves.push({
-      action: 'scenarioAction', rule: ACTION_RULES.knightFromAsset, locationId: inv.location, actions: 0, fast: true,
+      action: 'scenarioAction', rule: ACTION_RULES.knightFromAsset, locationId: inv.location, actions: 0, fast: true, reactionSourceCode: codeOf(knight),
       label: '快速，横置暗红骑士：把暗红骑士上的 1 个资源移到你的资源池或支援上',
       ...((Number(knight.resources) || 0) < 1 ? { reason: '暗红骑士上没有资源' } : {}),
     })

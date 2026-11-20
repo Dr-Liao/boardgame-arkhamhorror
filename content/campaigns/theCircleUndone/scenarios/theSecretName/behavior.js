@@ -256,9 +256,9 @@ export const behavior = {
         })
       }
     }
-    const location = here(state, inv)
-    if (location) locationRuleFor(String(codeOf(location)))?.actions?.({ moves, state, inv, location })
-    return moves
+    const location = here(state, inv), localMoves = []
+    if (location) locationRuleFor(String(codeOf(location)))?.actions?.({ moves: localMoves, state, inv, location })
+    return [...moves, ...localMoves.map(move => move.fast && location.revealed ? { ...move, reactionSourceCode: codeOf(location) } : move)]
   },
 
   performAction(state, inv, move, api) {

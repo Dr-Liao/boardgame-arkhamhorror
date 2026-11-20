@@ -7,12 +7,12 @@
     "effectsTopLevelFields": 0,
     "escapeCards": 0,
     "descriptorEntries": 1304,
-    "descriptorAbilities": 1930,
+    "descriptorAbilities": 1960,
     "abilityKinds": 12,
-    "windows": 133,
+    "windows": 136,
     "effectPrimitives": 56,
-    "nonPlayerCards": 413,
-    "behaviorLines": 82655,
+    "nonPlayerCards": 434,
+    "behaviorLines": 85450,
     "declaredScenarios": 3
   },
   "channels": {
@@ -21,13 +21,13 @@
   },
   "nonPlayer": {
     "byScope": {
-      "enemy": 144,
-      "location": 112,
-      "storyAsset": 94,
-      "treachery": 33,
+      "enemy": 145,
+      "location": 117,
+      "storyAsset": 106,
+      "treachery": 34,
       "act": 11,
       "scenario": 8,
-      "agenda": 11
+      "agenda": 13
     },
     "codes": [
       "01181",
@@ -402,6 +402,26 @@
       "10732",
       "10738",
       "10739",
+      "11502",
+      "11503",
+      "11515",
+      "11550",
+      "11568",
+      "11574",
+      "11581",
+      "11582",
+      "11611",
+      "11624",
+      "11625",
+      "11627",
+      "11628",
+      "11629",
+      "11638",
+      "11663",
+      "11672a",
+      "11672b",
+      "11687",
+      "11688",
       "11721",
       "11722",
       "11723",
@@ -426,6 +446,7 @@
       "11754b",
       "11755a",
       "11755b",
+      "11756a",
       "11757a",
       "11757b",
       "11758a",
@@ -444,8 +465,8 @@
       "screechingByakhee",
       "wolfManDrew"
     ],
-    "abilities": 457,
-    "modifiers": 135
+    "abilities": 487,
+    "modifiers": 140
   },
   "declaration": {
     "abilityScopes": [
@@ -542,7 +563,7 @@
       "content/campaigns/theScarletKeys/scenarios/shadesOfSuffering/behavior.js",
       "content/campaigns/theScarletKeys/scenarios/withoutATrace/behavior.js"
     ],
-    "behaviorLines": 82655,
+    "behaviorLines": 85450,
     "declaredScenarios": 3
   },
   "cards": [

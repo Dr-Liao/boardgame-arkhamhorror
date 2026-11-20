@@ -275,8 +275,11 @@ test('卡上计数展示契约：具名计数器/多类型使用标记/脚本标
   assert.deepEqual(cardMarkerData({ markers: ['mysteryMeat'] }), [['marker-mysteryMeat', 'star', 'mysteryMeat', 1]])
   assert.deepEqual(cardMarkerData({ useTokens: { occult: 2 } }), [['token-occult', 'star', 'occult', 2]])
   // 多种载体并存时按「具名计数器 → 使用标记 → 标签计数」登记顺序输出，渲染顺序稳定。
-  assert.deepEqual(cardMarkerData({ markers: { bounty: 2, evidence: 1 }, useTokens: { secret: 1 } }),
-    [['evidence', 'eye', '证据', 1], ['bounty', 'star', '赏金', 2], ['token-secret', 'arcane', '秘密', 1]])
+  assert.deepEqual(cardMarkerData({ markers: { bounty: 2, evidence: 1, labels: ['brazier', 'doomToClue:1'] },
+    useTokens: { secret: 1 } }), [
+    ['evidence', 'eye', '证据', 1], ['bounty', 'star', '赏金', 2],
+    ['token-secret', 'arcane', '秘密', 1], ['marker-brazier', 'star', '火盆', 1],
+  ])
   // 演出快照（applyStep 期间重绘牌桌）与实时观察同口径，否则演出播放时计数会闪没。
   const snapshot = captureTableState(s, getStat, getMaxSanity)
   assert.deepEqual(snapshot.investigators[0].assets.find(asset => asset.id === kodak.id).markers, { evidence: 2 })

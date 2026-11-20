@@ -9,6 +9,6 @@ export default {
   code: '11707',
   scope: 'storyAsset',
   implemented: true,
-  note: '数据型条目：克苏鲁牌库 action 卡，结算在 behavior.resolveCthulhuCard（近似见 worker 报告）。',
+  note: "数据型条目：结算在 behavior.resolveCthulhuCard：灰白双翼→每人随机弃 1 手牌 + api.runEnemyPatrol 额外巡逻；凶恶面容→意志最高者检定[意志]，失败选择 1 点恐惧或弃一张自己控制的资产（api.choose + discardAsset）；邪恶利爪→若克苏鲁本体 enemy.lastPatrolRound !== state.round（本轮未以巡逻移动）则攻击其所在地点每名调查员。",
   abilities: [],
 }

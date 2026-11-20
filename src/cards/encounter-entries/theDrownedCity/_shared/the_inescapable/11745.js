@@ -37,6 +37,11 @@ function findOutOfPlayInescapable(state, api) {
   if (aside) return 'setAsideEnemy'
   if ((state.removedFromGame || []).includes(ENEMY)) return 'removedFromGame'
   if ((state.scenarioZones?.setAside || []).includes(ENEMY)) return 'setAside'
+  // 胜利区也算「场外」：被击败并进入胜利区后，把它的物理卡取回再抽取。
+  if ((state.victoryDisplay || []).some(card => String(card?.originalCode || card?.code || card) === ENEMY)) {
+    api.scenario?.takeFromVictory?.(ENEMY)
+    return 'victoryDisplay'
+  }
   return null
 }
 
@@ -90,6 +95,6 @@ export default {
   },
   note: '难度随胜利区里「仍在你身后」的份数递增；失败后分「在场（逐地点移动并交战）」与'
     + '「不在场（查找场外区域、抽取穷途异魔并加入胜利区）」两条分支。'
-    + '近似：场外查找覆盖放一边（场景区/放一边敌人）、遭遇牌库/弃牌堆与移除区；'
-    + '其它尚未枚举的场外容器（如某些独立牌库）不在此列；找到后统一走 api.drawEncounter 生成/交战。',
+    + '场外查找覆盖：场景放一边、遭遇牌库/弃牌堆、放一边敌人、移除区、胜利区（第三/四轮补齐）；'
+    + '找到后统一走 api.drawEncounter 生成/交战。近似：其它尚未枚举的章节私有牌库/极少数容器不在查找范围。',
 }

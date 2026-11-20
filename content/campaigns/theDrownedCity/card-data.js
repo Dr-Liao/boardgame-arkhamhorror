@@ -117,6 +117,8 @@ export function encounterDefinitions (codes) {
         'Fewest cards in hand': 'fewestCardsInHand', 'Lowest [agility]': 'lowestAgility',
         'Lowest [willpower]': 'lowestWillpower', 'Most cards in hand': 'mostCardsInHand',
         'Highest [agility]': 'highestAgility',
+        // P7 TDC 11671 星之眷族血魔：印刷「Most remaining health」（引擎 PREY_RANK 同名读点）。
+        'Most remaining health': 'mostRemainingHealth',
       }
       enemies[code] = {
         ...base,

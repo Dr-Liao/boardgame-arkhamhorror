@@ -161,6 +161,25 @@ export function createAbilityRules(deps) {
     return descriptor.kind === 'free' || ignoreActionCost ? { ...descriptor.cost, action: false } : descriptor.cost
   }
 
+  // P7 TDC 11752 异星机械：「你不能触发[[符文]]或[[神器]]卡牌的能力」。
+  // 声明来自调查员威胁区的实例（威胁区卡的 threatEffect.cannotTriggerAbilityTraits）；
+  // 命中触发源卡片的印刷/有效特性时拒绝 action/free/reaction，forced 仍按规则结算。
+  function traitTriggerBlocked(state, inv, source) {
+    const blocked = (inv?.threat || []).flatMap(card => {
+      const entry = registeredEntry(card.originalCode || card.code)
+      return entry?.threatEffect?.cannotTriggerAbilityTraits || entry?.flags?.cannotTriggerCardAbilitiesWithTraits || []
+    })
+    // P7 TDC 11661 磁性尖塔：「你在此地时不能触发[[枪械]]支援的能力」（地点侧声明）。
+    const here = (state.locations || []).find(location => location.id === inv?.location)
+    const locationBlocked = registeredEntry(here?.originalCode || here?.code)?.locationRule?.cannotTriggerAbilityTraits || []
+    if (!blocked.length && !locationBlocked.length) return false
+    if (!source) return false
+    const code = typeof source === 'string' ? source : source.originalCode || source.code
+    const traits = [...(cardDef(code)?.traits || []), ...(source?.traits || [])]
+      .map(trait => String(trait).toLowerCase())
+    return [...blocked, ...locationBlocked].some(trait => traits.includes(String(trait).toLowerCase()))
+  }
+
   function descriptorUsable(state, inv, source, descriptor, { windowId = null, context = {}, mode = 'window', fromChannel = null, ignoreCosts = false, ignoreActionCost = false } = {}) {
     if (descriptor.fromDiscard && (!source?.discardedCard || discardLocked(state, inv) || !inv.discard.includes(source.code))) return false
     if (state.scenario?.mechanics?.noEncounterDeck && (descriptor.requiresEncounterDeck || descriptor.cost?.drawEncounter)) return false
@@ -184,6 +203,7 @@ export function createAbilityRules(deps) {
     // Phase 2（C1）：capability:triggerAbilities 只禁止"可选"的能力；
     // forced（强制）在规则上仍然结算，不能被"不能触发能力"挡住。
     if (descriptor.kind !== 'forced' && capabilityBlocked(state, inv, 'triggerAbilities')) return false
+    if (descriptor.kind !== 'forced' && traitTriggerBlocked(state, inv, source)) return false
     if (descriptor.kind !== 'forced' && assetTextBlankedExceptForced(source)) return false
     // 2026-11-06：04099 毒蛇灾厄 / 02088 等「文本框视为空白」的整类规则也压到描述子上。
     // 旧 DSL 走 stats.assetEffect 已被清空，描述子却是 legalMoves / 反应窗口 / playerWindow 的

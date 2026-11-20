@@ -319,8 +319,8 @@ test('P7 十章 index.js 均可 import，manifest 通过结构校验，身份/�
     if (manifest.referenceCode !== chapter.referenceCode) {
       problems.push(`${id}: manifest.referenceCode=${show(manifest.referenceCode)}，应为 ${chapter.referenceCode}`)
     }
-    if (manifest.status !== 'development') {
-      problems.push(`${id}: manifest.status=${show(manifest.status)}，本轮章节应为 development`)
+    if (manifest.status !== 'playable') {
+      problems.push(`${id}: manifest.status=${show(manifest.status)}，正式发布的章节应为 playable`)
     }
   }
   assert.deepEqual(problems, [], `章节模块结构缺口：\n${problems.join('\n')}`)
@@ -423,6 +423,15 @@ test('P7 十章地点 frontCode/backCode 真实、连接对称、layout.edges �
       for (const target of location.connections ?? []) connections.add(`${location.id}>${target}`)
     }
     for (const location of locations) {
+      // P7 TDC obsidianCanyons 开阔天空：合成地点没有实体卡，manifest 用 synthetic:true 声明；
+      // 仍要求显示名称/特性与合成卡号前缀（schema 已校验），不要求出现在 ALL_CARDS。
+      if (location.synthetic === true) {
+        if (!/^x[a-z0-9]/i.test(location.frontCode) || !location.name
+          || !Array.isArray(location.traits) || !location.traits.length) {
+          problems.push(`${id}: 合成地点 ${location.id} 的 synthetic/name/traits/卡号声明不完整`)
+        }
+        continue
+      }
       for (const field of ['frontCode', 'backCode']) {
         if (!ALL_CARDS[location[field]]) {
           problems.push(`${id}: 地点 ${location.id}.${field}=${show(location[field])} 不是 ALL_CARDS 中的真实卡号`)
@@ -498,7 +507,9 @@ test('P7 231 张专属卡逐章条目文件齐全，import 后 code 与文件名
     // 同一战役多章共用的卡（11687）按归属算法只落在其中一章目录：只要卡号属于本章或任一章节
     // scope 就不算越界；未知卡号仍然报错。
     const campaignCodes = new Set(CHAPTER_IDS.flatMap(chapterId => chapterCardCodes(chapterId)))
-    const extra = directoryCodes.filter(code => !expectedCodes.includes(code) && !campaignCodes.has(code))
+    // P7 TDC obsidianCanyons：合成地点 `xsky` 的条目文件不是专属卡号，不参与 scope 越界判定。
+    const extra = directoryCodes.filter(code => !expectedCodes.includes(code) && !campaignCodes.has(code)
+      && !/^x[a-z0-9]/i.test(code))
     if (extra.length) {
       problems.push(`${id}: 条目目录含不属于本章 scope 的卡号 ${show(extra)}（scope group 归属见 audit/tdc-scope.json）`)
     }

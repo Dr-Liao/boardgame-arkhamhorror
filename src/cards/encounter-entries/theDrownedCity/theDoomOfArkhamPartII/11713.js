@@ -9,6 +9,6 @@ export default {
   code: '11713',
   scope: 'storyAsset',
   implemented: true,
-  note: '数据型条目：克苏鲁牌库 action 卡，结算在 behavior.resolveCthulhuCard（近似见 worker 报告）。',
+  note: "数据型条目：结算在 behavior.resolveCthulhuCard：胜利区无[[克苏鲁]]敌人→弃卡并抽克苏鲁牌库顶；否则选择一位调查员检定[意志]（api.choose），失败选择胜利区一名[[克苏鲁]]敌人以[[狂怒]]面放回面板（api.spawn + linkCthulhuParts）。",
   abilities: [],
 }

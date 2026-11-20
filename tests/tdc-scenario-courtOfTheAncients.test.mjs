@@ -6,11 +6,22 @@
 // 幕 1 推进 / 成功调查改为滑动 / 不稳地基强制检定 / 符文（胜利区符文数、skull 值、祭坛进入限制、
 // 破封取碎片）/ 宇宙预兆与符文诡计事件 / 四档混乱标记 / 结局记录 / JSON 存档往返。
 //
-// 本文件不 import engine.js：章节 behavior 只走内容层函数与 P2/P7 原语（网格坐标用 mechanicState）。
+// 本文件只对「引擎既有读点」的接线用例 import engine.js；
+// 章节 behavior 的其余用例仍只走内容层函数与 P2/P7 原语（网格坐标用 mechanicState）。
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
+// 引导 import：先加载 mechanic-state，避免 engine/ability 与 card-rules 的初始化顺序回归（见 engine-needs 环境观察）。
 import { mechanicState } from '../src/engine/mechanic-state.js'
+import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
+import { enemyAttack, reactionWindow, registerCampaignScenarios, relocateEnemy, scenarioRuntime } from '../src/engine/engine.js'
+import {
+  enemyHasAttackKeyword, enemyIsImmobile, enemyKeywordOverride, setEnemyKeywords,
+} from '../src/engine/enemy-keyword-movement.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
+import {
+  fixture as engineFixture, legalMoves as engineLegalMoves, move as engineMove, settle as engineSettle,
+  validateMove as engineValidateMove,
+} from './core-fixture.mjs'
 import { assertScenarioManifest } from '../content/schema.js'
 import { scenarioZoneReport } from '../content/scenario-manifest.js'
 import * as chapter from '../content/campaigns/theDrownedCity/scenarios/courtOfTheAncients/index.js'
@@ -31,7 +42,9 @@ import {
   translateGlyph, translatedGlyphCount, glyphCount, shardControlledBy, giveShard, altarSealDifficulty,
   eliteKeeperKeywordsActive, locationShroudModifier, enemyDefeated, moveError, checkObjectives,
   actReveal, agendaReveal, resolution, discardCountFor, increaseFloodLevel, decreaseFloodLevel,
-  spawnEnemy, isGlyphTranslated,
+  spawnEnemy, isGlyphTranslated, enemyPhaseStart, enemyPhaseEnd, enemyAttackResolved,
+  movePassagewayAction, searchDiscardGlyphAction, lowestAgilityInvestigator,
+  spawnLocation as courtSpawnLocation,
 } from '../content/campaigns/theDrownedCity/scenarios/courtOfTheAncients/behavior.js'
 import {
   courtChaosToken, courtChaosTokenValue, courtTokenText, skullValue, cultistValue, glyphCardsInVictory,
@@ -39,9 +52,11 @@ import {
   translatedGlyphCount as chaosTranslatedGlyphCount,
 } from '../content/campaigns/theDrownedCity/scenarios/courtOfTheAncients/chaos.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
-import { readdirSync } from 'node:fs'
+import { readdirSync, existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
-import { dirname, resolve } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
+import { tmpdir } from 'node:os'
+import { saveSnapshot, readSnapshot, persistEnabled } from '../../../lib/sessions.js'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 const ENTRY_DIR = resolve(HERE, '../src/cards/encounter-entries/theDrownedCity/courtOfTheAncients')
@@ -131,6 +146,27 @@ const makeApi = (state, options = {}) => {
       if (location) location.revealed = true
       return Boolean(location)
     },
+    moveEnemy(enemy, destination) { enemy.location = destination; return true },
+    attack(enemy, inv) { (api.attacks ||= []).push([enemy.id, inv?.seat]); return true },
+    discardRandom(seat, amount = 1) {
+      const inv = state.investigators[seat]
+      let discarded = 0
+      for (let index = 0; index < amount && inv.hand.length; index += 1) {
+        inv.discard ||= []
+        inv.discard.push(inv.hand.shift())
+        discarded += 1
+      }
+      return discarded
+    },
+    drawEncounter(seat, options = {}) {
+      (api.draws ||= []).push({ seat, options })
+      const code = options.code ?? (state.encounterDeck || []).pop()
+      if (!code) return null
+      const inv = state.investigators[seat]
+      if (inv) { inv.hand ||= []; inv.hand.push(code) }
+      return code
+    },
+    engage(enemy, seat) { enemy.engagedSeat = seat; return true },
   }
   api.mechanics = {}
   return api
@@ -151,7 +187,7 @@ const levelOf = (state, id) => gridOf(state, id) ? gridOf(state, id).y + 1 : nul
 test('P7 courtOfTheAncients 结构：27 条目、11 规则地点（12 张地点卡）、2 幕 2 议程、development manifest', () => {
   assert.equal(chapter.scenario.id, 'courtOfTheAncients')
   assert.equal(chapter.scenario.referenceCode, '11612')
-  assert.equal(chapter.manifest.status, 'development')
+  assert.equal(chapter.manifest.status, 'playable')
   assert.equal(chapter.manifest.campaignId, 'theDrownedCity')
   assert.equal(chapter.manifest.contentVersion, '0.1.0')
   assert.doesNotThrow(() => assertScenarioManifest(chapter.manifest))
@@ -380,9 +416,12 @@ test('P7 courtOfTheAncients 符文：击败守护者译符文、胜利区符文�
   const { state, api } = setup(1, { theExpeditionHeadedWest: true })
   state.investigators[0].location = 'eastAntechamber'
   const keeper = spawnEnemy(state, '11630', 'eastAntechamber', api)
-  assert.equal(behavior.enemyDefeated(state, keeper, api), true)
+  // 引擎在击败敌人时把有胜利 X 的敌人放进胜利区；这里模拟该结算，验证 enemyDefeated
+  // 只翻译符文、不额外补故事卡（第二轮修正：返回 false 保持常规胜利区结算）。
+  state.victoryDisplay.push({ id: 'keeper', code: '11630', originalCode: '11630', name: '议庭守护者', victory: 1 })
+  assert.equal(behavior.enemyDefeated(state, keeper, api), false, 'enemyDefeated 不替换击败去向往')
   assert.equal(isGlyphTranslated(state, 'rune_k'), true)
-  assert.equal(glyphCount(state), 1)
+  assert.equal(glyphCount(state), 1, '胜利区只有引擎放入的敌人本身，未重复补故事卡')
   assert.equal(skullValue(state), 1)
   assert.equal(courtChaosTokenValue(state, 'skull'), -1)
   state.difficulty = 'hard'
@@ -391,12 +430,16 @@ test('P7 courtOfTheAncients 符文：击败守护者译符文、胜利区符文�
   state.difficulty = 'standard'
   // 胜利区符文 <3：不能进入古代祭坛。
   assert.match(moveError(state, state.investigators[0], locationOf(state, 'ancientAltar')), /3 张/)
-  translateGlyph(state, '11631', api)
+  // 再击败一名守护者（模拟引擎胜利区）+ 翻译两张符文诡计 → 胜利区符文 3 张。
+  const keeper2 = spawnEnemy(state, '11631', 'eastAntechamber', api)
+  state.victoryDisplay.push({ id: 'keeper2', code: '11631', originalCode: '11631', name: '议庭守护者', victory: 1 })
+  behavior.enemyDefeated(state, keeper2, api)
   translateGlyph(state, '11632', api)
-  assert.equal(glyphCount(state), 3)
+  translateGlyph(state, '11633', api)
+  assert.equal(glyphCount(state), 4)
   assert.equal(moveError(state, state.investigators[0], locationOf(state, 'ancientAltar')), null)
   // 古代祭坛破封：难度 5 - floor(已翻译/5)。
-  assert.equal(translatedGlyphCount(state), 3)
+  assert.equal(translatedGlyphCount(state), 4)
   assert.equal(altarSealDifficulty(state), 5)
   state.investigators[0].location = 'ancientAltar'
   state.investigators[0].clues = 0
@@ -413,7 +456,7 @@ test('P7 courtOfTheAncients 符文：击败守护者译符文、胜利区符文�
     state.campaign.records.discoveredGlyphs.push(rune)
   }
   assert.equal(eliteKeeperKeywordsActive(state), true)
-  assert.equal(chaosTranslatedGlyphCount(state), 10)
+  assert.equal(chaosTranslatedGlyphCount(state), 11, '4 张本局符文 + 7 张跨章记录')
 })
 
 test('P7 courtOfTheAncients 地点隐藏值修正：梦之档案库按胜利区符文 -1、历史档案库按附属符文 +1', () => {
@@ -516,7 +559,8 @@ test('P7 courtOfTheAncients 混乱标记：四档取值（cultist 偷渡者 / ta
 test('P7 courtOfTheAncients 事件：符文诡计附属到地点、宇宙预兆失败结算', () => {
   const { state, api } = setup(1, { theExpeditionHeadedWest: true })
   state.investigators[0].location = 'eastAntechamber'
-  assert.equal(behavior.events.courtGlyphTreachery(state, { code: '11632', seat: 0 }, api), true)
+  const attached = behavior.events.courtGlyphTreachery(state, { code: '11632', seat: 0, from: 'discard' }, api)
+  assert.deepEqual(attached, { placed: true })
   const location = locationOf(state, 'eastAntechamber')
   assert.equal(location.attachments.some(attachment => attachment.code === '11632'), true)
   // 地点行动：翻译附属符文。
@@ -546,4 +590,637 @@ test('P7 courtOfTheAncients JSON 存档往返：网格 / 升降机层级 / 符�
   assert.equal(liftState(saved).level, 2)
   assert.deepEqual(saved.scenarioZones.setAside, state.scenarioZones.setAside)
   assert.equal(saved.investigators[0].location ?? 'eastAntechamber', 'eastAntechamber')
+})
+
+// ---------------------------------------------------------------------------
+// 9. 第二轮：敌军阶段/战后强制、[[通道]]移动、搜弃牌堆符文（内容侧收口）
+// ---------------------------------------------------------------------------
+test('P7 courtOfTheAncients 敌军阶段钩子：11637 移动到猎物、11635 对相邻地点直接恐惧、11621 战后弃手牌', () => {
+  const { state, api } = setup(2, { theExpeditionHeadedWest: false })
+  // 11637 飞翼守护者：敌军阶段开始，重整且未交战 → 移动到[敏捷]最低的猎物所在地点。
+  state.investigators[0].location = 'eastAntechamber'
+  state.investigators[0].agility = 2
+  state.investigators[1].location = 'twistingCatwalks'
+  state.investigators[1].agility = 4
+  const keeper = spawnEnemy(state, '11637', 'westAntechamber', api)
+  assert.equal(lowestAgilityInvestigator(state).seat, 0)
+  assert.equal(enemyPhaseStart(state, api), true)
+  assert.equal(keeper.location, 'eastAntechamber', '移动到猎物所在地点')
+  keeper.exhausted = true
+  keeper.location = 'westAntechamber'
+  enemyPhaseStart(state, api)
+  assert.equal(keeper.location, 'westAntechamber', '横置或已交战时不动')
+  // 11635 巨型暴君：敌军阶段结束，若其地点没有调查员 → 相邻地点上有理智值的卡牌直接恐惧。
+  state.investigators[1].location = 'eastAntechamber'
+  const tyrant = spawnEnemy(state, '11635', 'twistingCatwalks', api)
+  const neighbor = 'greatLift'
+  assert.ok(locationOf(state, 'twistingCatwalks').connections.includes(neighbor))
+  state.investigators[0].location = neighbor
+  state.investigators[0].horror = 0
+  const asset = { id: 'asset-sanity', code: '01021', controllerSeat: 0, horror: 0, sanity: 1 }
+  locationOf(state, neighbor).assets = [asset]
+  assert.equal(enemyPhaseEnd(state, api), true)
+  assert.equal(state.investigators[0].horror, 1, '相邻地点调查员 1 点直接恐惧')
+  assert.equal(asset.horror, 1, '相邻地点有理智值的资产 1 点直接恐惧')
+  tyrant.location = state.investigators[0].location
+  assert.equal(enemyPhaseEnd(state, api), false, '暴君所在地点有调查员时不触发')
+  // 11621 扭曲栈桥：位于扭曲栈桥的敌人攻击后弃 1 张手牌。
+  state.investigators[0].location = 'twistingCatwalks'
+  state.investigators[0].hand = ['01001', '01002']
+  const foe = spawnEnemy(state, '11637', 'twistingCatwalks', api)
+  assert.equal(enemyAttackResolved(state, foe, state.investigators[0], api), true)
+  assert.equal(state.investigators[0].hand.length, 1)
+  state.investigators[0].location = 'eastAntechamber'
+  assert.equal(enemyAttackResolved(state, foe, state.investigators[0], api), false, '不在扭曲栈桥不触发')
+})
+
+test('P7 courtOfTheAncients 地点行动收口：[[通道]]移动与搜索遭遇弃牌堆[[符文]]卡', () => {
+  const { state, api } = setup(1, { theExpeditionHeadedWest: false })
+  const passageway = state.locations.find(loc => registeredEntry(loc.originalCode || loc.code)?.flags?.passageway)
+  assert.ok(passageway, '场上有[[通道]]地点')
+  const otherPassageway = state.locations.find(loc => loc !== passageway
+    && registeredEntry(loc.originalCode || loc.code)?.flags?.passageway)
+  otherPassageway.revealed = true
+  state.investigators[0].location = passageway.id
+  passageway.revealed = true
+  const move = behavior.actions(state, state.investigators[0]).find(item => item.rule === 'courtMovePassageway')
+  assert.ok(move, '[[通道]]地点提供[action]移动')
+  api.choose = () => otherPassageway.id
+  assert.equal(behavior.performAction(state, state.investigators[0], move, api), true)
+  assert.equal(state.investigators[0].location, otherPassageway.id)
+  // 11629 [action][action]：从遭遇弃牌堆搜索[[符文]]卡并抽取。
+  const searcher = state.locations.find(loc => Number(registeredEntry(loc.originalCode || loc.code)?.flags?.searchDiscardGlyphActions || 0) > 0)
+  if (searcher) {
+    state.investigators[0].location = searcher.id
+    state.encounterDiscard = ['11749', '11632', '11750']
+    state.encounterDeck = []
+    state.investigators[0].hand = []
+    const search = behavior.actions(state, state.investigators[0]).find(item => item.rule === 'courtSearchDiscardGlyph')
+    assert.ok(search)
+    assert.equal(behavior.performAction(state, state.investigators[0], search, api), true)
+    assert.equal(state.encounterDiscard.includes('11632'), false)
+    assert.equal(state.investigators[0].hand.includes('11632'), true)
+  }
+})
+
+// ---------------------------------------------------------------------------
+// 10. 第二轮：生成落点与遭遇抽牌来源（PRIMITIVES.md 已落地读点）
+// ---------------------------------------------------------------------------
+test('P7 courtOfTheAncients 生成落点：11637 最高层且没有调查员处', () => {
+  const { state, api } = setup(2, { theExpeditionHeadedWest: true })
+  // 把 1–3 层各放一名调查员，第 4 层空出（向西路线大升降机在第 1 层）。
+  const levelOne = state.locations.find(loc => levelOf(state, loc.id) === 1)
+  const levelTwo = state.locations.find(loc => levelOf(state, loc.id) === 2)
+  const levelThree = state.locations.find(loc => levelOf(state, loc.id) === 3)
+  assert.ok(levelThree, '第 3 层有地点')
+  state.investigators[0].location = levelOne.id
+  state.investigators[1].location = levelTwo.id
+  const picked = courtSpawnLocation(state, '11637', 'eastAntechamber', 0, api)
+  assert.equal(levelOf(state, picked), 4, '生成在第 4 层（最高层且无调查员）')
+  assert.equal(state.investigators.some(inv => inv.location === picked), false)
+  // 第 4 层与第 3 层都被占时 → 退到最高空层（第 2 层）。
+  const levelFour = state.locations.find(loc => levelOf(state, loc.id) === 4)
+  state.investigators[0].location = levelFour.id
+  state.investigators[1].location = levelThree.id
+  const second = courtSpawnLocation(state, '11637', 'eastAntechamber', 0, api)
+  assert.equal(levelOf(state, second), 2, '第 4/3 层被占后取最高空层第 2 层')
+  assert.equal(state.investigators.some(inv => inv.location === second), false)
+  // 其它卡号不改换落点。
+  assert.equal(courtSpawnLocation(state, '11630', 'eastAntechamber', 0, api), 'eastAntechamber')
+})
+
+test('P7 courtOfTheAncients 遭遇抽牌来源：弃牌堆抽取 → 附属到所在地点', () => {
+  const { state, api } = setup(1, { theExpeditionHeadedWest: true })
+  state.investigators[0].location = 'eastAntechamber'
+  const entry = ENTRIES.find(item => item.code === '11632')
+  const eventApi = { ...api, resolveScenarioEvent: (id, payload) => behavior.events[id](state, payload, api) }
+  const result = entry.encounterResolve(state, state.investigators[0], { code: '11632', originalCode: '11632' },
+    eventApi, { encounteredFrom: 'discard', location: locationOf(state, 'eastAntechamber') })
+  assert.deepEqual(result, { placed: true }, '附属路径返回 placed:true 抑制引擎弃牌')
+  const location = locationOf(state, 'eastAntechamber')
+  assert.equal(location.attachments.some(attachment => attachment.code === '11632'), true, '附属到所在地点')
+  assert.equal((api.draws || []).length, 0, '弃牌堆来源不触发涌动')
+})
+
+test('P7 courtOfTheAncients 遭遇抽牌来源：牌库顶抽取 → 弃掉并获得涌动', () => {
+  const { state, api } = setup(1, { theExpeditionHeadedWest: true })
+  state.investigators[0].location = 'eastAntechamber'
+  state.encounterDeck = ['11749', '11750']
+  const entry = ENTRIES.find(item => item.code === '11634')
+  const eventApi = { ...api, resolveScenarioEvent: (id, payload) => behavior.events[id](state, payload, api) }
+  const result = entry.encounterResolve(state, state.investigators[0], { code: '11634', originalCode: '11634' },
+    eventApi, { encounteredFrom: 'deck', location: locationOf(state, 'eastAntechamber') })
+  assert.equal(result, false, '牌库顶来源不附属（交由引擎弃掉本卡）')
+  const location = locationOf(state, 'eastAntechamber')
+  assert.equal(location.attachments.some(attachment => attachment.code === '11634'), false, '不附属')
+  assert.equal((api.draws || []).length, 1, '获得涌动：额外抽 1 张遭遇牌')
+  assert.equal(api.draws[0].seat, 0)
+})
+
+// ---------------------------------------------------------------------------
+// 11. 第二轮：literal 账本证据（27 张条目的印刷关键子句断言）
+// ---------------------------------------------------------------------------
+test('P7 courtOfTheAncients literal 覆盖：27 张条目的印刷关键子句断言', () => {
+  assert.equal(ENTRIES.length, 27)
+  const byCode = Object.fromEntries(ENTRIES.map(entry => [entry.code, entry]))
+  for (const code of chapter.implementedEncounterCodes) assert.ok(byCode[code], `缺少条目 ${code}`)
+  // 路线化幕/议程牌库。
+  assert.equal(ACT_STAGES[1].code, '11616')
+  assert.equal(ACT_CODE_BY_ROUTE.west, '11617')
+  assert.equal(ACT_CODE_BY_ROUTE.east, '11618')
+  assert.equal(AGENDA_STAGES[1].code, '11613')
+  assert.equal(AGENDA_STAGES[1.5].code, '11614')
+  assert.equal(AGENDA_STAGES[2].code, '11615')
+  assert.equal(registeredEntry('11615').flags.liftMovedAgilityTest.difficulty, 2)
+  assert.equal(registeredEntry('11616').flags.discardCountSolo, 8)
+  assert.equal(registeredEntry('11617').flags.resignLocation, 'twistingCatwalks')
+  assert.equal(registeredEntry('11618').flags.resignLocation, 'eastAntechamber')
+  // 地点：前厅下滑 / 大升降机两面 / 祭坛 / 档案库 / 通道 / 搜弃牌堆。
+  assert.equal(registeredEntry('11619').flags.liftSlideDown, true)
+  assert.equal(registeredEntry('11620').flags.liftSlideDown, true)
+  assert.equal(registeredEntry('11622').flags.inactive, true)
+  assert.equal(registeredEntry('11622b').flags.active, true)
+  assert.equal(registeredEntry('11623').flags.cannotEnterUntilGlyphs, 3)
+  // 第三轮：11623 进入额外费用声明（locationRule.entryCost，引擎 moves/movement 读点）。
+  assert.deepEqual(registeredEntry('11623').locationRule.entryCost, { kind: 'groupClues', perInvestigator: 4 })
+  // 第三轮：11638 [reaction]（enemySpawn → 横置敌人）已声明。
+  assert.equal(registeredEntry('11638').abilities.length, 1)
+  assert.equal(registeredEntry('11638').abilities[0].kind, 'reaction')
+  assert.deepEqual(registeredEntry('11638').storyAssetRule, { ignoreFirstAttack: { traits: ['Star Spawn', 'Deep One'] } }, '第五轮：忽略首次攻击声明')
+  assert.equal(registeredEntry('11626').flags.spawnObserver, true)
+  // 第四轮：弃遭遇牌库顶窗口（encounterCardsDiscardedFromTop）的三张地点条目已声明能力。
+  assert.equal(registeredEntry('11624').abilities.length, 1)
+  assert.equal(registeredEntry('11624').abilities[0].kind, 'reaction')
+  assert.deepEqual(registeredEntry('11624').abilities[0].trigger, ['encounterCardsDiscardedFromTop'])
+  assert.deepEqual(registeredEntry('11624').abilities[0].cost, { discardHand: 1 })
+  assert.equal(registeredEntry('11625').abilities[0].kind, 'reaction')
+  assert.deepEqual(registeredEntry('11625').abilities[0].cost, { horror: 1 }, '第五轮：直接恐惧作为费用')
+  assert.equal(registeredEntry('11628').flags.shroudPerAttachedGlyph, 1)
+  assert.equal(registeredEntry('11628').abilities.length, 1, '第五轮：11628 [fast] 为条目 free 能力')
+  assert.equal(registeredEntry('11628').abilities[0].kind, 'free')
+  assert.equal(registeredEntry('11628').abilities[0].actionKind, 'activate')
+  assert.equal(registeredEntry('11629').flags.searchDiscardGlyphActions, 2)
+  assert.equal(registeredEntry('11629').abilities[0].kind, 'forced', '第五轮：11629 investigationPhaseEnds 强制')
+  assert.deepEqual(registeredEntry('11629').abilities[0].trigger, ['investigationPhaseEnds'])
+  for (const code of ['11624', '11626', '11628']) assert.equal(registeredEntry(code).flags.passageway, true)
+  // 敌人：符文 / 关键词 / 生成与强制声明。
+  assert.equal(registeredEntry('11630').flags.glyphRune, 'rune_k')
+  assert.equal(registeredEntry('11631').flags.glyphRune, 'rune_j')
+  assert.equal(registeredEntry('11635').flags.enemyPhaseEndDirectHorror, true)
+  assert.deepEqual(registeredEntry('11635').enemyRule, { immobile: true }, '第四轮：11635 enemyRule.immobile')
+  assert.equal(typeof behavior.syncKeeperKeywords, 'function', '第四轮：11630/11631 动态关键词同步读点')
+  for (const hook of ['enemySpawned', 'phaseBegan', 'victoryChanged']) {
+    assert.equal(typeof behavior[hook], 'function', `第四轮：${hook} 动态关键词同步时机`)
+  }
+  assert.equal(registeredEntry('11637').flags.phaseStartMoveToPrey, true)
+  assert.equal(registeredEntry('11637').flags.prey, 'lowestAgility')
+  // 诡计：符文诡计检定 / 宇宙预兆 / 剧情资产。
+  for (const code of ['11632', '11633', '11634']) {
+    assert.ok(registeredEntry(code).flags.glyphTreachery)
+    assert.equal(typeof registeredEntry(code).encounterResolve, 'function')
+  }
+  assert.deepEqual(registeredEntry('11632').flags.test, { skill: 'willpower', difficulty: 3 })
+  assert.equal(registeredEntry('11636').flags.cosmicOmen, true)
+  assert.equal(typeof registeredEntry('11636').encounterResolve, 'function')
+  assert.equal(registeredEntry('11638').flags.shardOfYchlecht, true)
+  // 第二轮已落地原语接线断言：生成落点钩子 + 遭遇抽牌来源（encounterResolve 第 5 参）。
+  assert.equal(typeof behavior.spawnLocation, 'function', 'behavior.spawnLocation 读点')
+  for (const code of ['11632', '11633', '11634']) {
+    const entry = ENTRIES.find(item => item.code === code)
+    assert.equal(entry.encounterResolve.length >= 4, true, `${code} encounterResolve 有第 5 参（context）`)
+  }
+  assert.deepEqual(GLYPH_RUNE_ORDER, ['rune_k', 'rune_j', 'rune_g', 'rune_i', 'rune_h'])
+  assert.deepEqual(Object.keys(GLYPH_RECORDS).sort(), ['11630', '11631', '11632', '11633', '11634'])
+  for (const hook of ['enemyPhaseStart', 'enemyPhaseEnd', 'enemyAttackResolved', 'moveError', 'canGainResources']) {
+    assert.equal(typeof behavior[hook], 'function', `behavior.${hook} 读点`)
+  }
+  assert.equal(typeof movePassagewayAction, 'function', 'movePassagewayAction 读点')
+  assert.equal(typeof searchDiscardGlyphAction, 'function', 'searchDiscardGlyphAction 读点')
+})
+
+// ---------------------------------------------------------------------------
+// 11. 第二轮：真实 saveSnapshot/readSnapshot 存档重放
+// ---------------------------------------------------------------------------
+test('P7 courtOfTheAncients saveReplay：真实 saveSnapshot/readSnapshot 恢复后状态等价、后续动作确定', () => {
+  const previousHome = process.env.DSH_HOME
+  const previousPersist = process.env.BOARDGAME_PERSIST
+  const persistHome = mkdtempSync(join(tmpdir(), 'tdc-co-save-'))
+  delete process.env.BOARDGAME_PERSIST // 覆盖默认开启路径（不设 BOARDGAME_PERSIST=0）
+  process.env.DSH_HOME = persistHome
+  try {
+    assert.equal(persistEnabled(), true, 'BOARDGAME_PERSIST 默认为开启')
+    const { state, api } = setup(2, { theExpeditionHeadedWest: true })
+    slideGreatLift(state, 'up', api)
+    translateGlyph(state, '11630', api, { addVictory: false })
+    const sessionId = 'tdc-co-save-replay'
+    const session = {
+      sessionId, modId: 'arkhamhorror', state,
+      players: [{ seat: 0, name: '调查员1' }, { seat: 1, name: '调查员2' }],
+      events: [{ type: 'test', text: '古代议庭存档前' }],
+      settings: { difficulty: 'hard', seed: 'tdc-co' },
+      revision: 5,
+    }
+    const file = saveSnapshot(session)
+    assert.equal(existsSync(file), true)
+    const record = readSnapshot(sessionId)
+    assert.ok(record, `readSnapshot 返回空：${readFileSync(file, 'utf8').slice(0, 400)}`)
+    const normalize = value => JSON.parse(JSON.stringify(value))
+    assert.deepEqual(normalize(record.session.state), normalize(state), '读回状态与内存状态深度相等')
+    assert.equal(record.session.sessionId, sessionId)
+    assert.equal(record.session.modId, 'arkhamhorror')
+    assert.deepEqual(record.session.settings, session.settings)
+    // 后续动作：从读回状态与内存起点各执行同一 behavior 入口（再滑一次升降机 + 翻译一个符文）。
+    const restoredState = record.session.state
+    const restoreApi = makeApi(restoredState)
+    const memoryApi = makeApi(state)
+    assert.equal(slideGreatLift(restoredState, 'up', restoreApi), true)
+    assert.equal(slideGreatLift(state, 'up', memoryApi), true)
+    assert.equal(translateGlyph(restoredState, '11632', restoreApi), true)
+    assert.equal(translateGlyph(state, '11632', memoryApi), true)
+    const fingerprint = value => JSON.stringify({
+      lift: liftState(value),
+      grid: Object.fromEntries(Object.entries(mechanicState(value).grid).map(([id, cell]) => [id, { x: cell.x, y: cell.y }])),
+      glyphs: value.campaign.records.discoveredGlyphs,
+      flags: value.scenarioFlags,
+      victory: value.victoryDisplay,
+      connections: Object.fromEntries((value.locations || []).map(loc => [loc.id, loc.connections])),
+    })
+    assert.equal(fingerprint(restoredState), fingerprint(state), '同一动作在恢复态与内存态结果一致')
+    assert.equal(liftState(restoredState).level, 3)
+    assert.deepEqual(restoredState.campaign.records.discoveredGlyphs, ['rune_k', 'rune_g'])
+  } finally {
+    if (previousHome === undefined) delete process.env.DSH_HOME
+    else process.env.DSH_HOME = previousHome
+    if (previousPersist === undefined) delete process.env.BOARDGAME_PERSIST
+    else process.env.BOARDGAME_PERSIST = previousPersist
+    rmSync(persistHome, { recursive: true, force: true })
+  }
+})
+
+// ---------------------------------------------------------------------------
+// 12. 第三轮：11623 古代祭坛进入费用（locationRule.entryCost）+ 11638 [reaction]
+// ---------------------------------------------------------------------------
+const addCourtLocations = (state, pairs) => {
+  for (const [id, connections] of pairs) {
+    state.locations.push({ id, code: id, name: id, revealed: true, clues: 0, shroud: 1, connections })
+  }
+}
+
+test('P7 courtOfTheAncients 11623 进入费用：同地点组线索不足拒绝，支付 4×人数后进入', () => {
+  const state = engineFixture('01001', 2)
+  addCourtLocations(state, [['tdcHall', ['tdcAltar']], ['tdcAltar', ['tdcHall']]])
+  const altar = state.locations.find(location => location.id === 'tdcAltar')
+  altar.code = '11623'
+  altar.originalCode = '11623'
+  for (const inv of state.investigators) inv.location = 'tdcHall'
+  // 古代祭坛的进入限制：胜利区符文 ≥3（behavior.moveError）。
+  state.victoryDisplay.push(
+    { id: 'g1', code: '11630', originalCode: '11630' },
+    { id: 'g2', code: '11631', originalCode: '11631' },
+    { id: 'g3', code: '11632', originalCode: '11632' },
+  )
+  state.investigators[0].clues = 2
+  state.investigators[1].clues = 2
+  // 2 名调查员 × 4 = 需要 8 个线索（同地点调查员共同支付）。
+  assert.match(engineValidateMove(state, 0, { action: 'move', locationId: 'tdcAltar' }) || '', /8 个线索/)
+  const blocked = engineLegalMoves(state, 0).filter(option => option.action === 'move')
+  assert.equal(blocked.some(option => (option.to ?? option.locationId) === 'tdcAltar'), false, '线索不足时不可移动')
+  // 补足到 8 后可以进入，并扣掉 8 个线索。
+  state.investigators[1].clues = 6
+  const moveOption = engineLegalMoves(state, 0)
+    .find(option => option.action === 'move' && (option.to ?? option.locationId) === 'tdcAltar')
+  assert.ok(moveOption, '线索足够时出现移动动作')
+  engineMove(state, moveOption)
+  engineSettle(state)
+  assert.equal(state.investigators[0].location, 'tdcAltar')
+  const remaining = state.investigators.reduce((sum, inv) => sum + (inv.clues || 0), 0)
+  assert.equal(remaining, 0, '共同支付 8 个线索（2 + 6 → 0）')
+  assert.equal(state.placesCluesSpent ?? 0, 0)
+})
+
+test('P7 courtOfTheAncients 11638 [reaction]：星之眷族敌人进入地点时横置碎片并横置该敌人', () => {
+  const state = engineFixture('01001', 1)
+  const inv = state.investigators[0]
+  const shard = { id: 'shard11638', code: '11638', exhausted: false }
+  inv.assets.push(shard)
+  const execute = (draft, seat, move, events) => {
+    void seat; void move
+    scenarioRuntime(draft, events).spawn('11725', draft.investigators[0].location)
+  }
+  resolveTransaction(state, 0, { action: 'fixture-spawn' }, execute)
+  assert.equal(state.pendingChoice?.kind, 'reaction', '敌人进入地点打开 enemySpawn 反应窗口')
+  const triggerOption = state.pendingChoice.options.find(option => String(option.id).startsWith('desc:') && option.cardCode === '11638')
+  assert.ok(triggerOption, '伊克雷希特碎片 [reaction] 出现在反应选项里')
+  resolveTransaction(state, 0, { action: 'choose', choiceId: state.pendingChoice.id, optionId: triggerOption.id }, execute)
+  const afterShard = state.investigators[0].assets.find(asset => asset.id === shard.id)
+  assert.equal(afterShard.exhausted, true, '[reaction] 费用：横置伊克雷希特碎片')
+  const enemy = state.enemies.find(item => String(item.originalCode || item.code) === '11725')
+  assert.ok(enemy, '星之眷族敌人已生成')
+  assert.equal(enemy.exhausted, true, '横置该敌人')
+})
+
+test('P7 courtOfTheAncients Good Money 标记读点：下一章维护阶段禁止获得资源（campaign-rules helper 判定，越章后 stale 无害）', () => {
+  const { state } = setup(2, { theExpeditionHeadedWest: true })
+  state.campaign.scenarioIndex = 5
+  state.campaign.ruleFlags = {
+    tdcNoUpkeepResources: { originScenario: 'theGrandVault', seats: [0], appliesToScenarioIndex: 5 },
+  }
+  assert.equal(behavior.canGainResources(state, state.investigators[0]), false, '下一章维护阶段不能获得资源')
+  assert.equal(behavior.canGainResources(state, state.investigators[1]), true, '未选该分支的座位不受影响')
+  // 越过下一章后 helper 按 appliesToScenarioIndex 判定，stale 标记不再生效（无需 preScenarioSetup 清理）。
+  state.campaign.scenarioIndex = 6
+  assert.equal(behavior.canGainResources(state, state.investigators[0]), true, '越章后 stale 标记无害')
+  assert.ok(state.campaign.ruleFlags.tdcNoUpkeepResources, '标记保留（helper 判定）')
+})
+
+// ---------------------------------------------------------------------------
+// 13. 第四轮：11635 immobile + 11624/11625/11627 弃顶窗口 + 11630/11631 动态关键词
+// ---------------------------------------------------------------------------
+const answerPendingChoices = (state, execute, seat = 0) => {
+  let guard = 0
+  let triggered = false
+  while (state.pendingChoice && guard++ < 16) {
+    const choice = state.pendingChoice
+    // 11625 这类无费用弃顶反应会自我连锁：只触发第一次，后续反应窗口一律跳过（真实对局为可选）。
+    let option = choice.options.find(item => !['skip', 'done'].includes(item.id)) || choice.options[0]
+    if (triggered && choice.kind === 'reaction' && choice.options.some(item => item.id === 'skip')) option = { id: 'skip' }
+    if (choice.kind === 'reaction' && option.id !== 'skip') triggered = true
+    resolveTransaction(state, seat, { action: 'choose', choiceId: choice.id, optionId: option.id }, execute)
+  }
+}
+
+test('P7 courtOfTheAncients 11635 不能移动：enemyRule.immobile 拦下移动，setEnemyKeywords 关闭后恢复移动', () => {
+  const state = engineFixture('01001', 1)
+  addCourtLocations(state, [['tdcTyrant', ['tdcDen']], ['tdcDen', ['tdcTyrant']]])
+  const tyrant = {
+    id: 'tyrant11635', code: '11635', originalCode: '11635', name: '巨型暴君',
+    location: 'tdcTyrant', engagedSeat: null, exhausted: false, damageTaken: 0,
+    traits: ['Monster', 'Abomination', 'Elite'],
+  }
+  state.enemies.push(tyrant)
+  assert.equal(enemyIsImmobile(state, tyrant), true, '条目 enemyRule.immobile 声明生效')
+  relocateEnemy(state, tyrant, 'tdcDen', [])
+  assert.equal(tyrant.location, 'tdcTyrant', '不能移动：任何移动来源被拦下，位置不变')
+  // 动态改写：内容层关闭 immobile 后同一实例恢复可移动。
+  assert.equal(setEnemyKeywords(state, tyrant, ['immobile'], { enabled: false, throughRound: state.round }), true)
+  assert.equal(enemyIsImmobile(state, tyrant), false)
+  relocateEnemy(state, tyrant, 'tdcDen', [])
+  assert.equal(tyrant.location, 'tdcDen', 'setEnemyKeywords 关闭 immobile 后恢复移动')
+})
+
+test('P7 courtOfTheAncients 11624 [reaction] 弃顶：弃 1 手牌后额外弃 2 张（encounterCardsDiscardedFromTop 窗口）', () => {
+  const state = engineFixture('01001', 1)
+  addCourtLocations(state, [['tdcStars', ['tdcHall']], ['tdcHall', ['tdcStars']]])
+  const stars = state.locations.find(location => location.id === 'tdcStars')
+  stars.code = '11624'
+  stars.originalCode = '11624'
+  const inv = state.investigators[0]
+  inv.location = 'tdcStars'
+  inv.hand = ['01020']
+  inv.discard = []
+  state.encounterDeck = ['cryptChill', 'ancientEvils', 'dissonantVoices', 'graveHunger', 'rottingRemains']
+  state.encounterDiscard = []
+  const execute = (draft, seat, move, events) => {
+    void seat; void move
+    scenarioRuntime(draft, events).discardEncounterTop(1, { seat: 0 })
+  }
+  resolveTransaction(state, 0, { action: 'fixture-discard-top' }, execute)
+  assert.equal(state.pendingChoice?.kind, 'reaction', '弃顶后打开 encounterCardsDiscardedFromTop 反应窗口')
+  const entityOption = state.pendingChoice.options.find(option => String(option.id).startsWith('entity:') && option.cardCode === '11624')
+  assert.ok(entityOption, '11624 [reaction] 出现在反应选项里')
+  answerPendingChoices(state, execute)
+  const fresh = state.investigators[0]
+  assert.equal(state.encounterDiscard.length, 3, '弃顶 1 张 + 反应额外 2 张')
+  assert.deepEqual(fresh.discard, ['01020'], '费用：弃掉 1 张手牌')
+  assert.equal(fresh.hand.length, 0)
+})
+
+test('P7 courtOfTheAncients 11625 [reaction] 弃顶：受到 1 点直接恐惧并额外弃 3 张', () => {
+  const state = engineFixture('01001', 1)
+  addCourtLocations(state, [['tdcAncients', ['tdcHall']], ['tdcHall', ['tdcAncients']]])
+  const archive = state.locations.find(location => location.id === 'tdcAncients')
+  archive.code = '11625'
+  archive.originalCode = '11625'
+  const inv = state.investigators[0]
+  inv.location = 'tdcAncients'
+  const horrorBefore = inv.horror
+  state.encounterDeck = ['cryptChill', 'ancientEvils', 'dissonantVoices', 'graveHunger', 'rottingRemains', 'frozenInFear']
+  state.encounterDiscard = []
+  const execute = (draft, seat, move, events) => {
+    void seat; void move
+    scenarioRuntime(draft, events).discardEncounterTop(1, { seat: 0 })
+  }
+  resolveTransaction(state, 0, { action: 'fixture-discard-top' }, execute)
+  const entityOption = state.pendingChoice?.options?.find(option => String(option.id).startsWith('entity:') && option.cardCode === '11625')
+  assert.ok(entityOption, '11625 [reaction] 出现在反应选项里')
+  answerPendingChoices(state, execute)
+  assert.equal(state.investigators[0].horror, horrorBefore + 1, '受到 1 点直接恐惧')
+  assert.ok(state.encounterDiscard.length >= 4, '弃顶 1 张 + 额外 3 张（连锁反应可能更多）')
+})
+
+test('P7 courtOfTheAncients 11627 强制弃顶：最近的重整非精英敌人解除交战并移动到高空栈道', () => {
+  const state = engineFixture('01001', 1)
+  addCourtLocations(state, [['tdcWalkway', ['tdcNear']], ['tdcNear', ['tdcWalkway']]])
+  const walkway = state.locations.find(location => location.id === 'tdcWalkway')
+  walkway.code = '11627'
+  walkway.originalCode = '11627'
+  const inv = state.investigators[0]
+  inv.location = 'tdcWalkway'
+  const thug = {
+    id: 'thug-11627', code: '01169', originalCode: '01169', name: '暴徒',
+    location: 'tdcNear', engagedSeat: 0, exhausted: false, damageTaken: 0,
+    traits: ['Humanoid', 'Criminal'],
+  }
+  state.enemies.push(thug)
+  inv.engaged = [thug.id]
+  state.encounterDeck = ['cryptChill', 'ancientEvils']
+  state.encounterDiscard = []
+  const execute = (draft, seat, move, events) => {
+    void seat; void move
+    scenarioRuntime(draft, events).discardEncounterTop(1, { seat: 0 })
+  }
+  resolveTransaction(state, 0, { action: 'fixture-discard-top' }, execute)
+  assert.equal(state.pendingChoice, null, '强制能力不询问')
+  const fresh = state.enemies.find(enemy => enemy.id === 'thug-11627')
+  assert.equal(fresh.location, 'tdcWalkway', '最近的未交战非[[精英]]敌人移动到本地点')
+  assert.equal(fresh.engagedSeat, null, '移动到本地点后保持解除交战')
+  assert.equal(state.investigators[0].engaged.includes('thug-11627'), false)
+})
+
+test('P7 courtOfTheAncients 11630/11631 动态关键词：<10 不加、≥10 加、跌破后移除并随 phaseBegan/enemySpawned/victoryChanged 同步', () => {
+  const { state } = setup(1, { theExpeditionHeadedWest: true })
+  state.round = 3
+  const location = state.investigators[0].location
+  state.enemies.push(
+    { id: 'keeper30', code: '11630', originalCode: '11630', name: '议庭守护者·梦境', location, engagedSeat: null, exhausted: false, damageTaken: 0, traits: ['Monster', 'Keeper', 'Glyph', 'Elite'] },
+    { id: 'keeper31', code: '11631', originalCode: '11631', name: '议庭守护者·睡眠', location, engagedSeat: null, exhausted: false, damageTaken: 0, traits: ['Monster', 'Keeper', 'Glyph', 'Elite'] },
+  )
+  const keeper30 = state.enemies.find(enemy => enemy.id === 'keeper30')
+  const keeper31 = state.enemies.find(enemy => enemy.id === 'keeper31')
+  state.campaign.records.discoveredGlyphs = ['rune_a', 'rune_b']
+  behavior.syncKeeperKeywords(state, {})
+  assert.equal(enemyKeywordOverride(state, keeper30, 'relentless'), false, '<10 符文：无情不授予')
+  assert.equal(enemyKeywordOverride(state, keeper31, 'alert'), false)
+  assert.equal(enemyKeywordOverride(state, keeper31, 'retaliate'), false)
+  state.campaign.records.discoveredGlyphs = Array.from({ length: 10 }, (_, index) => `rune_${index}`)
+  behavior.syncKeeperKeywords(state, {})
+  assert.equal(enemyKeywordOverride(state, keeper30, 'relentless'), true, '≥10 符文：获得无情')
+  assert.equal(enemyHasAttackKeyword(state, keeper30, 'relentless', false, registeredEntry), true)
+  assert.equal(enemyKeywordOverride(state, keeper31, 'alert'), true, '≥10 符文：获得警戒')
+  assert.equal(enemyKeywordOverride(state, keeper31, 'retaliate'), true, '≥10 符文：获得反击')
+  assert.equal(enemyHasAttackKeyword(state, keeper31, 'alert', false, registeredEntry), true)
+  // 跌破阈值：重新同步后移除。
+  state.campaign.records.discoveredGlyphs = state.campaign.records.discoveredGlyphs.slice(0, 9)
+  behavior.syncKeeperKeywords(state, {})
+  assert.equal(enemyKeywordOverride(state, keeper30, 'relentless'), false, '跌破 10 后移除无情')
+  assert.equal(enemyKeywordOverride(state, keeper31, 'alert'), false)
+  // 同步时机：每轮开始（phaseBegan mythos）、胜利区符文变化（victoryChanged）、新生成（enemySpawned）。
+  state.campaign.records.discoveredGlyphs = Array.from({ length: 10 }, (_, index) => `rune_${index}`)
+  behavior.phaseBegan(state, 'mythos', {})
+  assert.equal(enemyKeywordOverride(state, keeper30, 'relentless'), true, 'phaseBegan(mythos) 重新同步')
+  // 轮次推进：上一轮写的 override 到期失效（throughRound=旧轮），神话阶段重同步前不再生效。
+  state.round += 1
+  assert.equal(enemyKeywordOverride(state, keeper30, 'relentless'), null, '越过 throughRound 后 override 到期')
+  behavior.phaseBegan(state, 'mythos', {})
+  assert.equal(enemyKeywordOverride(state, keeper30, 'relentless'), true, '新一轮神话阶段按符文数重新授予')
+  // 胜利区符文变化（消耗符文）→ victoryChanged 立即重同步。
+  state.campaign.records.discoveredGlyphs = ['rune_a']
+  behavior.victoryChanged(state, {})
+  assert.equal(enemyKeywordOverride(state, keeper30, 'relentless'), false, 'victoryChanged 按剩余符文数移除')
+  // 新敌人生成 → enemySpawned 同步已有守护者。
+  state.campaign.records.discoveredGlyphs = Array.from({ length: 11 }, (_, index) => `rune_${index}`)
+  behavior.enemySpawned(state, { id: 'newKeeper', code: '11630' }, {})
+  assert.equal(enemyKeywordOverride(state, keeper30, 'relentless'), true, 'enemySpawned 同步已有守护者')
+})
+
+// ---------------------------------------------------------------------------
+// 14. 第五轮：11638 忽略首次攻击 / 11628 X 行动 / 11629 调查阶段结束洗回 / 11625 费用口径
+// ---------------------------------------------------------------------------
+test('P7 courtOfTheAncients 11638 被动：每轮首次[[星之眷族]]攻击可忽略（ignoredAttackRound 记账）', () => {
+  const state = engineFixture('01001', 1)
+  const inv = state.investigators[0]
+  const shard = { id: 'shard11638', code: '11638', originalCode: '11638', exhausted: false }
+  inv.assets.push(shard)
+  state.enemies.push({
+    id: 'star-spawn-11638', code: '11725', originalCode: '11725', name: '星之眷族',
+    location: inv.location, engagedSeat: 0, exhausted: false, damageTaken: 0,
+    damage: 1, horror: 1, traits: ['Monster', 'Star Spawn', 'Elite'],
+  })
+  inv.engaged = ['star-spawn-11638']
+  const execute = (draft, seat, move, events) => {
+    void seat; void move
+    enemyAttack(draft, draft.enemies.find(enemy => enemy.id === 'star-spawn-11638'), draft.investigators[0], events)
+  }
+  resolveTransaction(state, 0, { action: 'fixture-attack' }, execute)
+  assert.equal(state.pendingChoice?.source, 'ignoreFirstAttack', '首次攻击出现忽略选项')
+  resolveTransaction(state, 0, { action: 'choose', choiceId: state.pendingChoice.id, optionId: 'ignore' }, execute)
+  assert.equal(state.investigators[0].damage, 0, '选择忽略：无伤害')
+  assert.equal(state.investigators[0].horror, 0, '选择忽略：无恐惧')
+  assert.equal(state.investigators[0].assets.find(asset => asset.id === 'shard11638').ignoredAttackRound, state.round, '每轮一次记账')
+  // 同一轮第二次攻击：不再询问，正常结算。
+  resolveTransaction(state, 0, { action: 'fixture-attack-2' }, execute)
+  assert.equal(state.pendingChoice, null, '同轮不再询问')
+  assert.equal(state.investigators[0].damage, 1, '第二次攻击正常造成伤害')
+  // 下一轮恢复：每轮首次攻击再次可忽略。
+  state.round += 1
+  resolveTransaction(state, 0, { action: 'fixture-attack-3' }, execute)
+  assert.equal(state.pendingChoice?.source, 'ignoreFirstAttack', '下一轮恢复询问')
+  resolveTransaction(state, 0, { action: 'choose', choiceId: state.pendingChoice.id, optionId: 'ignore' }, execute)
+  assert.equal(state.investigators[0].damage, 1, '下一轮再次忽略成功')
+})
+
+test('P7 courtOfTheAncients 11628 [fast]：花 X 次行动搜索弃牌堆符文（X=1/2 扣行动、抽取数量正确）', () => {
+  // 11628 的抽取走 api.drawEncounter（真实引擎按当前剧本的遭遇定义解析）；
+  // 本用例在内容层状态上直接结算条目 free 能力，用与引擎同形的 api 桩记录支付与抽取。
+  const ability = registeredEntry('11628').abilities[0]
+  assert.equal(ability.kind, 'free')
+  assert.equal(ability.actionKind, 'activate')
+  const run = ({ x, actionsLeft, discard }) => {
+    const { state } = setup(1, { theExpeditionHeadedWest: true })
+    const inv = state.investigators[0]
+    inv.actionsLeft = actionsLeft
+    state.encounterDiscard = [...discard]
+    const draws = []
+    const api = {
+      cardDef: code => ALL_CARDS[code] || null,
+      choose: spec => (spec.kind === 'number' ? String(x) : null),
+      loseActions: (seat, amount) => { state.investigators[seat].actionsLeft -= amount },
+      drawEncounter: seat => draws.push(seat),
+      scenario: {
+        encounterDiscardCards: () => [...state.encounterDiscard],
+        takeEncounterDiscard: code => {
+          const index = state.encounterDiscard.lastIndexOf(code)
+          if (index < 0) return false
+          state.encounterDiscard.splice(index, 1)
+          return true
+        },
+        putOnEncounterDeck: () => {},
+      },
+    }
+    ability.resolve({ inv, api, state })
+    return { state, draws }
+  }
+  // X = 1：扣 1 行动、抽 1 张符文。
+  {
+    const { state, draws } = run({ x: '1', actionsLeft: 2, discard: ['11632', 'cryptChill', '11633'] })
+    assert.equal(state.investigators[0].actionsLeft, 1, 'X=1：扣 1 次行动')
+    assert.equal(draws.length, 1, 'X=1：依次抽取 1 张')
+    assert.equal(state.encounterDiscard.filter(code => code === '11632' || code === '11633').length, 1, 'X=1：只抽 1 张符文')
+  }
+  // X = 2：扣 2 行动、抽 2 张符文。
+  {
+    const { state, draws } = run({ x: '2', actionsLeft: 2, discard: ['11632', 'cryptChill', '11633'] })
+    assert.equal(state.investigators[0].actionsLeft, 0, 'X=2：扣 2 次行动')
+    assert.equal(draws.length, 2, 'X=2：依次抽取 2 张')
+    assert.equal(state.encounterDiscard.filter(code => code === '11632' || code === '11633').length, 0, 'X=2：抽走 2 张符文')
+  }
+})
+
+test('P7 courtOfTheAncients 11629 强制：调查阶段结束时把附属[[符文]]诡计混洗入遭遇牌库', () => {
+  const state = engineFixture('01001', 1)
+  addCourtLocations(state, [['tdcMemory', ['tdcHall']], ['tdcHall', ['tdcMemory']]])
+  const archive = state.locations.find(location => location.id === 'tdcMemory')
+  archive.code = '11629'
+  archive.originalCode = '11629'
+  archive.clues = 1
+  archive.attachments = [
+    { id: 'glyph-t1', code: '11632', originalCode: '11632' },
+    { id: 'glyph-t2', code: '11633', originalCode: '11633' },
+  ]
+  state.encounterDeck = []
+  state.encounterDiscard = ['cryptChill']
+  const execute = (draft, seat, move, events) => {
+    void seat; void move
+    reactionWindow(draft, 'investigationPhaseEnds', { when: 'investigationPhaseEnds', round: draft.round }, events)
+  }
+  resolveTransaction(state, 0, { action: 'fixture-phase-end' }, execute)
+  const fresh = state.locations.find(location => location.id === 'tdcMemory')
+  assert.deepEqual(fresh.attachments || [], [], '附属诡计全部离场')
+  assert.equal(state.encounterDeck.includes('11632'), true, '11632 混洗入遭遇牌库')
+  assert.equal(state.encounterDeck.includes('11633'), true, '11633 混洗入遭遇牌库')
+  assert.equal(state.encounterDiscard.includes('11632'), false, '弃牌堆不残留副本（不复制卡牌）')
+  assert.equal(state.encounterDiscard.includes('cryptChill'), true, '其它遭遇弃牌不受影响')
+})
+
+test('P7 courtOfTheAncients 11625 费用口径：直接恐惧作为反应费用在额外弃牌前结算', () => {
+  const state = engineFixture('01001', 1)
+  addCourtLocations(state, [['tdcAncients2', ['tdcHall']], ['tdcHall', ['tdcAncients2']]])
+  const archive = state.locations.find(location => location.id === 'tdcAncients2')
+  archive.code = '11625'
+  archive.originalCode = '11625'
+  const inv = state.investigators[0]
+  inv.location = 'tdcAncients2'
+  const horrorBefore = inv.horror
+  state.encounterDeck = ['cryptChill', 'ancientEvils', 'dissonantVoices', 'graveHunger']
+  state.encounterDiscard = []
+  const execute = (draft, seat, move, events) => {
+    void seat; void move
+    scenarioRuntime(draft, events).discardEncounterTop(1, { seat: 0 })
+  }
+  resolveTransaction(state, 0, { action: 'fixture-discard-top' }, execute)
+  const entityOption = state.pendingChoice?.options?.find(option => String(option.id).startsWith('entity:') && option.cardCode === '11625')
+  assert.ok(entityOption)
+  answerPendingChoices(state, execute)
+  assert.equal(state.investigators[0].horror, horrorBefore + 1, '费用：受到 1 点恐惧')
+  assert.ok(state.encounterDiscard.length >= 4, '费用支付后额外弃 3 张')
 })

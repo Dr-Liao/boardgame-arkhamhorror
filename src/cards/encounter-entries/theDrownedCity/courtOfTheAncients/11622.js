@@ -4,7 +4,7 @@ export default {
   code: '11622',
   scope: 'location',
   implemented: true,
-  flags: {"greatLift":true,"inactive":true,"cannotMove":true},
+  flags: {"greatLift":true,"inactive":true},
   note: "数据型条目：印刷数值/正文取卡表，规则读点在 definition/behavior。",
   abilities: [],
 }

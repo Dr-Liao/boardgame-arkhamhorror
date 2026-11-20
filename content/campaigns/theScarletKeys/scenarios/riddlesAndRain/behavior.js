@@ -1181,7 +1181,7 @@ export function fastActions(state, inv, timing) {
   const moves = []
   if (inv.location === L.bigBen && !usedThisRound(state, 'tskBigBenPeekRound')) {
     moves.push({
-      action: 'scenarioAction', rule: 'bigBenPeek', actions: 0, fast: true,
+      action: 'scenarioAction', rule: 'bigBenPeek', actions: 0, fast: true, locationId: L.bigBen,
       label: '⏰ 快速：查看大本钟或连接地点的一张隐匿迷你卡（敏捷 2，每回合一次）',
     })
   }
@@ -1190,7 +1190,7 @@ export function fastActions(state, inv, timing) {
     && state.investigators?.[test.seat]?.location === L.towerPrison
     && (inv.clues || 0) > 0) {
     moves.push({
-      action: 'scenarioAction', rule: 'towerPrisonClue', actions: 0, fast: true,
+      action: 'scenarioAction', rule: 'towerPrisonClue', actions: 0, fast: true, locationId: L.towerPrison,
       label: '🔑 快速：花费 1 个线索，检定者本次技能值 +2（塔楼牢房）',
     })
   }

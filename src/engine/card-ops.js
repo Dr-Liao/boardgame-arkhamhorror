@@ -1,5 +1,6 @@
 import { putInHand } from './hand-entry.js'
 import { replacePlayerZoneCards, splicePlayerDiscard } from './player-zones.js'
+import { storyAssetEnemyOverride } from './story-asset-rules.js'
 // card-ops.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 卡与目标的具体操作：补充使用次数、装弹、按特性检索、选择调查员/敌人/猎物。
 // 读点：搜索类效果（api.searchDeck / lookAt）与敌人目标解析。
@@ -53,6 +54,8 @@ export function createCardOps(deps) {
     mostDamage: (state, inv) => -(inv.damage || 0),
     mostCardsInHand: (state, inv) => -((inv.hand || []).length),
     fewestCardsInHand: (state, inv) => (inv.hand || []).length,
+    // P7 TDC 11671 星之眷族血魔：「猎物 - 剩余生命值最高」。
+    mostRemainingHealth: (state, inv) => -remainingHealth(inv),
     // 「猎物 - 距离昆扬之口最近」：按地点连接数计算最短距离。
     nearestMouth: (state, inv) => {
       const mouth = (state.locations || []).find(location =>
@@ -90,6 +93,13 @@ export function createCardOps(deps) {
 
   function preyTarget(state, enemy, candidates) {
     if (!candidates.length) return null
+    // P7 TDC 11688：「每名[[星之眷族]]敌人失去印刷的猎物提示，并获得『猎物 - 你』」：
+    // 受控剧情资产（11688 黏土恐怖）声明 prey:'controller' 时，猎物固定为其控制者。
+    if (!enemyTextBlanked(state, enemy)) {
+      const override = storyAssetEnemyOverride(state, enemy)
+      if (override?.rule?.prey === 'controller' && Number.isInteger(override.controllerSeat)
+        && candidates.includes(override.controllerSeat)) return override.controllerSeat
+    }
     // 内容层写入的具体猎物（例如 04098「猎物 - 中毒的调查员」由失落时代 encounter-rules 写入
     // enemy.preySeat）：若仍合法则直接作为猎物，不再进入 generic prey 选择。
     if (!enemyTextBlanked(state, enemy) && Number.isInteger(enemy.preySeat)

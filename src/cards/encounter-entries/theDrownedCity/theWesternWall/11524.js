@@ -14,7 +14,7 @@ export default {
     treacherousPath: true, cannotEnterFromClues: true, shroudIsLevel: true,
     enterTest: { skill: 'willpower', difficultyPerLevel: 1, increaseFlood: true, discardAllyIfNoFlood: true },
   },
-  note: '数据型条目：进入检定与「淹没无法提高则弃盟友」由 behavior.locationEntered/runEnterTest 实现'
-    + '（弃盟友走通用 discardRandom 近似，未做精确的盟友选择 UI）。',
+  note: '数据型条目：进入检定与「淹没无法提高则弃盟友」由 behavior.locationEntered/runEnterTest 实现；'
+    + '无法提高淹没时用 api.choose 让玩家选择自己控制的一张[[盟友]]支援，再经 api.discardAsset 弃置。',
   abilities: [],
 }

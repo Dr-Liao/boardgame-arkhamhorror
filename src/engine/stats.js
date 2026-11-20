@@ -240,11 +240,14 @@ export function createStats(deps) {
       if (eff && eff.passive && eff.passive.handSizeBonus) v += eff.passive.handSizeBonus
     }
     for (const card of inv.threat) v += getThreatEffect(card)?.handSizeModifier || 0
+    // P7 TDC 11750「你的手牌上限 -3（最少为 1）」：威胁区卡可声明 handSizeMinimum 作为下限。
+    const minimum = (inv.threat || []).reduce((max, card) =>
+      Math.max(max, Number(getThreatEffect(card)?.handSizeMinimum) || 0), 0)
     if (inv.assets.some(asset => assetEffect(inv, asset)?.passive?.sameNameHandLimit)) {
       const names = inv.hand.map(code => cardDef(code)?.name || code)
       v += names.length - new Set(names).size
     }
-    return Math.max(0, v)
+    return Math.max(0, minimum, v)
   }
 
   function getHandSize(state, inv) { return handSize(state, inv) }

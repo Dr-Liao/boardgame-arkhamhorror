@@ -10,6 +10,6 @@ export default {
   scope: 'enemy',
   implemented: true,
   flags: { fightPerBeneath: 1, healthPerInvestigatorPerBeneath: 1, immobile: true, relentless: true },
-  note: '数据型条目 + 修正读点；approximation：无仇敌/无情的行为由引擎通用关键词处理。',
+  note: "数据型条目 + 修正读点：战斗值/生命按商店下方暗牌数（behavior.enemyStatModifier）；不能移动/无情/反击/每调查员生命取印刷定义。",
   abilities: [],
 }

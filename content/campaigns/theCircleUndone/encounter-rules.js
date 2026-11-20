@@ -16,10 +16,11 @@
 //   encounterDrawn / resolveEncounter / encounterActions / performEncounterAction
 //
 // 本文件只 import 内容层允许的读点：cards-data（印刷数据）、card-rules（条目规则读点）、
-// campaign/mementos（看守人记录）。不 import 引擎模块；需要引擎能力时走钩子参数 `api`
+// card-marker-labels（实例标签）、campaign/mementos（看守人记录）。不 import 引擎模块；需要引擎能力时走钩子参数 `api`
 //（scenarioRuntime）。单卡行为不得把卡号写回这里：所有分派都通过 card-rules 的条目读点
 // 或条目声明的数据字段完成。
 import { ALL_CARDS } from '../../../src/cards/cards-data.js'
+import { markerLabelsOf } from '../../../src/cards/card-marker-labels.js'
 import {
   encounterResolveFor, enemyScriptFor, enemySpawnRuleFor, enemyStatRuleFor,
   threatActionFor, threatActionByRule, treacheryRuleFor,
@@ -555,7 +556,7 @@ export const encounterRules = Object.freeze({
     // 单卡数据：攻击随卡上某种标记数量提高（05086 幽灵看守人：每个 stolenSoul +1）。
     if (rule?.fightPerMarker && stat === 'fight') {
       const label = rule.fightPerMarker.label
-      bonus += (enemy.markers || []).filter(marker => marker === label).length
+      bonus += markerLabelsOf(enemy).filter(marker => marker === label).length
     }
     // 单卡数据：场上某个敌人给「某类敌人」的光环修正（05148 布朗·詹金：重整的生物 +2 攻击）。
     for (const source of state.enemies || []) {

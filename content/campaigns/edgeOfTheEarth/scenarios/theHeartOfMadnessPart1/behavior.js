@@ -128,7 +128,7 @@ export const behavior = {
     if (!location) return []
     const moves = []
     locationRuleFor(codeOf(location))?.fastActions?.({ moves, state, inv, location })
-    return moves
+    return moves.map(move => ({ ...move, reactionSourceCode: location.revealed ? codeOf(location) : null }))
   },
 
   performAction(state, inv, move, api) {

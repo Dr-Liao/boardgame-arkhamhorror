@@ -1199,7 +1199,7 @@ export function actions(state, inv) {
     const freeKey = `freeSlideSwap:${turnKey(state, inv)}`
     if (canUse(state, freeKey) && (inv.clues || 0) >= costPerPlayer(state)) {
       moves.push({
-        action: 'scenarioAction', rule: 'writtenInRockFastSlideSwap', actions: 0, fast: true,
+        action: 'scenarioAction', rule: 'writtenInRockFastSlideSwap', actions: 0, fast: true, reactionSourceCode: ACT2_CODE,
         label: `[fast] 共同花费 ${costPerPlayer(state)} 条线索：滑动一个地点，或交换 2 个相邻地点`,
       })
     }
@@ -1217,7 +1217,7 @@ export function actions(state, inv) {
     }
     if (location?.id === CONTROL_STATION_ID && location.revealed && !ledger.writtenInRockStationSwapUsed) {
       moves.push({
-        action: 'scenarioAction', rule: 'writtenInRockStationSwap', actions: 0, fast: true,
+        action: 'scenarioAction', rule: 'writtenInRockStationSwap', actions: 0, fast: true, reactionSourceCode: codeOf(location),
         label: '[fast] 交换 2 个相邻[[轨道]]地点（团队每局一次）',
       })
     }

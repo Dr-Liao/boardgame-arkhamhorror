@@ -14,6 +14,7 @@
 // theInvestigatorsHaltedCthulhusAwakening。
 import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
+import { tdcCannotGainUpkeepResources } from '../../campaign-rules.js'
 import {
   CHAPTER_ID, REFERENCE_CODE, CTHULHU_CODE, BENEATH_THE_CITY_CODE, CTHULHU_AWAKENED_CODE,
   AGENDA_CODES, AGENDA_STAGES, STAGE_CARDS, ENCOUNTER_DECK, ENCOUNTER_DECK_CODES,
@@ -192,7 +193,7 @@ export function distributeArtifacts(state, api = {}) {
     const fewest = Math.min(...counts.map(item => item.count))
     const candidates = counts.filter(item => item.count === fewest)
     const choice = typeof api?.choose === 'function' ? api.choose({
-      kind: 'investigator', source: '11673-artifacts', canSkip: false,
+      kind: 'investigator', source: '11673-artifacts', seat: state.campaign?.leadSeat ?? candidates[0].seat, canSkip: false,
       prompt: `选择「${artifact.name}」的控制者（神器数最少者优先）。`,
       options: candidates.map(item => ({ id: String(item.seat), label: state.investigators[item.seat]?.name || `调查员${item.seat + 1}` })),
     }) : String(candidates[0].seat)
@@ -269,7 +270,6 @@ export function canPlaceDoomOn(state, card) {
   increaseDisturbance(state, 1)
   const current = disturbance(state)
   if (current >= disturbanceThreshold(state)) setFlag(state, 'sepulchreAdvancePending', true)
-  info(state.__api, `[城市之下] 毁灭改为扰动（当前 ${current}）。`)
   return false
 }
 
@@ -291,8 +291,8 @@ export function advanceBeneathTheCityLocal(state, api = {}) {
   state.doom = 0
   state.agendaIndex = (state.agendaIndex ?? 0) + 1
   if (!state.agendas[state.agendaIndex]) {
-    state.status = 'lost'
-    state.gameOver = true
+    if (typeof api.finish === 'function') api.finish('noResolution')
+    else state.resolution = 'noResolution'
   }
   return true
 }
@@ -300,7 +300,11 @@ export function advanceBeneathTheCityLocal(state, api = {}) {
 export function spawnCthulhu(state, api = {}) {
   if (activeEnemy(state, CTHULHU_CODE)) return activeEnemy(state, CTHULHU_CODE)
   const def = state.scenario?.enemies?.[CTHULHU_CODE] || {}
-  if (typeof api.spawn === 'function') return api.spawn(CTHULHU_CODE, START_LOCATION, { exhausted: false })
+  if (typeof api.spawn === 'function') {
+    const spawned = api.spawn(CTHULHU_CODE, START_LOCATION, { exhausted: false })
+    if (spawned) enemySpawned(state, spawned, api)
+    return spawned
+  }
   const enemy = {
     id: `cthulhu-${(state.enemies || []).length + 1}`, code: CTHULHU_CODE, originalCode: CTHULHU_CODE,
     name: ALL_CARDS[CTHULHU_CODE]?.nameZh || '克苏鲁', location: START_LOCATION,
@@ -311,6 +315,7 @@ export function spawnCthulhu(state, api = {}) {
   }
   state.enemies ||= []
   state.enemies.push(enemy)
+  enemySpawned(state, enemy, api)
   info(api, '克苏鲁在「梦者安息地」生成。')
   return enemy
 }
@@ -324,10 +329,51 @@ export function cthulhuDefeated(state) {
   return Boolean(flagsFor(state).cthulhuDefeated)
 }
 
+/** 议程推进前（引擎 clearDoomInPlay 之前）：快照场上神器（含玩家控制与剧情资产）上的毁灭。 */
+export function agendaAdvancing(state, agenda, api = {}) {
+  void api
+  if (codeOf(agenda) !== BENEATH_THE_CITY_CODE) return false
+  const snapshot = []
+  for (const inv of state.investigators || []) {
+    for (const asset of inv.assets || []) {
+      if (!ARTIFACT_RECORDS.some(item => item.code === codeOf(asset))) continue
+      if ((Number(asset.doom) || 0) > 0) snapshot.push({ id: asset.id, code: codeOf(asset), doom: Number(asset.doom) })
+    }
+  }
+  for (const asset of state.storyAssets || []) {
+    if (!ARTIFACT_RECORDS.some(item => item.code === codeOf(asset))) continue
+    if ((Number(asset.doom) || 0) > 0) snapshot.push({ id: asset.id, code: codeOf(asset), doom: Number(asset.doom) })
+  }
+  setFlag(state, 'sepulchreArtifactDoomBeforeAdvance', snapshot)
+  return snapshot.length > 0
+}
+
+/** 推进后回填神器毁灭（其他卡牌上的毁灭按规则清空）。 */
+export function restoreArtifactDoom(state, api = {}) {
+  const snapshot = flagsFor(state).sepulchreArtifactDoomBeforeAdvance
+  if (!Array.isArray(snapshot) || !snapshot.length) return 0
+  const assets = [
+    ...(state.investigators || []).flatMap(inv => inv.assets || []),
+    ...(state.storyAssets || []),
+  ]
+  let restored = 0
+  for (const entry of snapshot) {
+    const asset = assets.find(item => item.id === entry.id)
+      || assets.find(item => codeOf(item) === entry.code && (Number(item.doom) || 0) === 0)
+    if (!asset) continue
+    asset.doom = Math.max(Number(asset.doom) || 0, entry.doom)
+    restored += 1
+  }
+  setFlag(state, 'sepulchreArtifactDoomBeforeAdvance', [])
+  info(api, `城市之下推进：保留神器上的毁灭（${restored} 件）。`)
+  return restored
+}
+
 export function agendaReveal(state, agenda, api = {}) {
   const code = codeOf(agenda)
   if (code === BENEATH_THE_CITY_CODE) {
     spawnCthulhu(state, api)
+    restoreArtifactDoom(state, api)
     info(api, '城市之下（背面）：克苏鲁在梦者安息地生成。')
     return true
   }
@@ -336,14 +382,70 @@ export function agendaReveal(state, agenda, api = {}) {
       if (typeof api.drivenInsane === 'function') api.drivenInsane(inv.seat)
       else { inv.defeated = true; inv.drivenInsane = true; inv.defeatCause = 'insane' }
     }
-    state.status = 'lost'
-    state.gameOver = true
+    info(api, '你无法逃避的毁灭：每位存活调查员陷入发疯，战役失败。')
     if (typeof api.finish === 'function') api.finish('noResolution')
     else state.resolution = 'noResolution'
-    info(api, '你无法逃避的毁灭：每位存活调查员陷入发疯，战役失败。')
     return true
   }
   return false
+}
+
+/** 11676 梦者安息地：一位调查员在本地点检定失败后 → +1 扰动。 */
+export function afterTest(state, inv, result, api = {}, context = {}) {
+  if (!inv || result?.success === true) return false
+  const here = locationOf(state, inv.location)
+  if (!here || here.id !== START_LOCATION) return false
+  const value = increaseDisturbance(state, 1)
+  info(api, `[梦者安息地] ${inv.name || inv.seat} 检定失败：扰动 +${1}（当前 ${value}）。`)
+  void context
+  return true
+}
+
+/** 印刷「无情」用 P7 关键词覆盖声明：生成与每轮神话阶段开始时按印刷值重新启用。 */
+function setEnemyRelentless(state, enemy, enabled, api = {}) {
+  const scenarioApi = api?.scenario || api
+  if (typeof scenarioApi?.setEnemyKeywords !== 'function') return false
+  return scenarioApi.setEnemyKeywords(enemy, ['relentless'], { enabled, throughRound: state.round })
+}
+
+export function enemySpawned(state, enemy, api = {}) {
+  if (!enemy || codeOf(enemy) !== CTHULHU_CODE) return false
+  return setEnemyRelentless(state, enemy, true, api)
+}
+
+export function phaseBegan(state, phase, api = {}) {
+  if (String(phase) !== 'mythos') return false
+  const cthulhu = cthulhuInPlay(state)
+  if (!cthulhu) return false
+  return setEnemyRelentless(state, cthulhu, true, api)
+}
+
+/** 11674b 克苏鲁：被躲避后 → 重整他，或他所在地点每位调查员受 1 点直接伤害。 */
+export function afterEvade(state, inv, enemy, result = null, api = {}) {
+  if (!enemy || codeOf(enemy) !== CTHULHU_CODE) return false
+  const here = locationOf(state, enemy.location)
+  const choice = typeof api?.choose === 'function' ? api.choose({ kind: 'effect', source: CTHULHU_CODE, seat: inv?.seat ?? 0,
+    prompt: '克苏鲁被躲避：重整他，或他所在地点每位调查员受到 1 点直接伤害。',
+    options: [{ id: 'ready', label: '重整克苏鲁' }, { id: 'damage', label: '每位调查员受到 1 点直接伤害' }] }) : 'ready'
+  if (choice === 'damage') {
+    for (const other of (state.investigators || []).filter(item => !item.defeated && item.resigned !== true && item.location === enemy.location)) {
+      if (typeof api.damage === 'function') api.damage(other.seat, 1)
+      else other.damage = (Number(other.damage) || 0) + 1
+    }
+    info(api, '克苏鲁被躲避：他所在地点每位调查员受到 1 点直接伤害。')
+  } else {
+    enemy.exhausted = false
+    if (typeof api.readyEnemy === 'function') api.readyEnemy(enemy)
+    info(api, '克苏鲁被躲避：重整他。')
+  }
+  void here
+  void result
+  return true
+}
+
+/** Good Money（11611）「下一章维护阶段不能获得资源」：跨章标记由 campaign-rules.js 统一判定（phases.js 补给阶段读点）。 */
+export function canGainResources(state, inv) {
+  return !tdcCannotGainUpkeepResources(state, inv)
 }
 
 export function doomPlaced(state, context = {}, api = {}) {
@@ -409,6 +511,8 @@ export function weakenCthulhu(state, inv, api = {}) {
     && (Number(asset.doom) || 0) > 0 && flagsFor(state)[`weakened-${asset.id}-${state.round}`] !== true)
   if (!artifact) return false
   artifact.doom = Math.max(0, (Number(artifact.doom) || 0) - 1)
+  // 印刷：「克苏鲁本轮失去无情」——用 P7 关键词覆盖（throughRound=当前轮），过期自动回到印刷值。
+  setEnemyRelentless(state, cthulhu, false, api)
   setFlag(state, `weakened-${artifact.id}-${state.round}`, true)
   setFlag(state, 'cthulhuWeakenedRound', state.round)
   info(api, `从「${artifact.name}」移除 1 点毁灭：克苏鲁本回合失去无情，且战斗/躲避 -1。`)
@@ -463,7 +567,8 @@ export function performAction(state, inv, move, api = {}) {
   const artifact = artifactInPlay(state, options.artifactRecord)
   if (!artifact) return false
   const placeDoom = () => {
-    artifact.doom = (Number(artifact.doom) || 0) + 1
+    if (typeof api.placeDoomOnCard === 'function') api.placeDoomOnCard(artifact, 1)
+    else artifact.doom = (Number(artifact.doom) || 0) + 1
     return true
   }
   if (!options.skill) {
@@ -539,8 +644,8 @@ export function applyTokenEffect(state, inv, effect = {}, api = {}) {
   if (mode === 'drawEncounterOnFail') {
     if (typeof api.drawEncounter !== 'function') return false
     const failedBy = Number(effect?.test?.failedBy) || 0
-    api.drawEncounter(inv?.seat ?? 0)
-    info(api, `[cultist]：检定失败，抽取遭遇牌库顶牌${failedBy >= 3 ? '（失败 ≥3：该牌获得险境与涌动，近似为直接结算）' : ''}。`)
+    api.drawEncounter(inv?.seat ?? 0, failedBy >= 3 ? { peril: true, grantSurge: true } : undefined)
+    info(api, `[cultist]：检定失败，抽取遭遇牌库顶牌${failedBy >= 3 ? '（该牌获得险境与涌动）' : ''}。`)
     return true
   }
   if (mode === 'horrorOrDiscardPerFail') {
@@ -574,12 +679,7 @@ export function investigatorDefeatResolution(state, api = {}) {
     inv.drivenInsane = true
     if (typeof api.drivenInsane === 'function') api.drivenInsane(inv.seat)
   }
-  if (!survivors.length) {
-    state.status = 'lost'
-    state.gameOver = true
-    return { defeated: defeated.map(inv => inv.seat), survivors: 0, campaignLost: true }
-  }
-  return { defeated: defeated.map(inv => inv.seat), survivors: survivors.length, campaignLost: false }
+  return { defeated: defeated.map(inv => inv.seat), survivors: survivors.length, campaignLost: survivors.length === 0 }
 }
 
 export function resolution(state, key, events = null, api = {}) {
@@ -589,17 +689,12 @@ export function resolution(state, key, events = null, api = {}) {
   const defeat = investigatorDefeatResolution(state, api)
   if (finalKey === 'resolution1') {
     records.theInvestigatorsHaltedCthulhusAwakening = true
-    records.cthulhuWasBanished = true
     for (const inv of state.investigators || []) {
       addTrauma(state, api, inv.seat, 'mental', 2)
-      if (typeof api.addScenarioXpBonus === 'function') api.addScenarioXpBonus(inv.seat, 10)
     }
-    state.status = 'won'
     info(api, '结局 1：调查员阻止了克苏鲁的苏醒，赢得战役（+10 奖励经验、每人 2 点精神创伤）。')
     return { bonus: 10, award: true, campaignWin: true, next: 'epilogue', defeat }
   }
-  state.status = 'lost'
-  state.gameOver = true
   info(api, '无结局：所有调查员都被击败或发疯，战役失败。')
   return { bonus: 0, award: true, campaignWin: false, next: null, defeat }
 }
@@ -642,13 +737,20 @@ export const behavior = {
   modifyDeck,
   afterDeckSetup,
   canPlaceDoomOn,
+  canGainResources,
   doomPlaced,
+  afterTest,
+  afterEvade,
   agendaReveal,
+  agendaAdvancing,
+  restoreArtifactDoom,
   checkObjectives,
   roundEnded,
   actions,
   performAction,
   enemyMoved,
+  enemySpawned,
+  phaseBegan,
   enemyDefeated,
   enemyStatModifier,
   resolveChaosToken,
@@ -672,6 +774,11 @@ export const behavior = {
   artifactInPlay,
   maybeAdvanceBeneathTheCity,
   advanceBeneathTheCityLocal,
+  afterTest,
+  afterEvade,
+  canGainResources,
+  agendaAdvancing,
+  restoreArtifactDoom,
   investigatorDefeatResolution,
   neighborsOf,
   locationOf,

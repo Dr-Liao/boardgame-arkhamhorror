@@ -40,6 +40,43 @@ async function fixture(page, { players = 1, onMove } = {}) {
 }
 const entity = (page,key) => page.locator(`[data-interaction="${key}"]`).filter({ visible: true }).first()
 
+for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
+  test(`异端者快速反应可关闭并重新开启（${viewport.width}px）`, async ({ page }, testInfo) => {
+    await page.setViewportSize(viewport)
+    const f = await fixture(page)
+    const code = '05178a'
+    const optionId = 'scenario-fast:hereticParley:heretic'
+    const openWindow = (st, id) => {
+      const options = [{ id: 'skip', label: '让过' },
+        { id: optionId, label: '快速谈判：花费 1 个线索查看异端者的另一面', reactionSourceCode: code }]
+      st.pendingChoice = { id, kind: 'playerWindow', seat: 0, canSkip: true, options }
+      st.legalMoves = options.map(option => ({ action: 'choose', choiceId: id, optionId: option.id, label: option.label }))
+    }
+    await f.update(st => {
+      st.enemies = [{ id: 'heretic', code, originalCode: code, type: 'enemy', name: '异端者',
+        location: st.investigators[0].location, fight: 2, evade: 2, health: 4, damageTaken: 0 }]
+      st.reactionPromptCodes = [code]
+      openWindow(st, 'heretic-first')
+    })
+
+    const toggle = entity(page, 'enemy:heretic').getByRole('switch', { name: '异端者的快速反应' })
+    const offer = page.locator(`[data-option-id="${optionId}"]`)
+    await expect(offer).toBeVisible()
+    await expect(toggle).toHaveAttribute('aria-checked', 'true')
+    await page.locator('.ah-mute-reaction').click()
+    await expect(offer).toHaveCount(0)
+    await expect(toggle).toHaveAttribute('aria-checked', 'false')
+    await expect.poll(() => f.submitted.at(-1)?.move?.optionId).toBe('skip')
+    expect(f.submitted.at(-1).client.autoPrefs.states).toEqual({ [code]: 'skip' })
+    await page.screenshot({ path: testInfo.outputPath('heretic-prompt-off.png') })
+
+    await toggle.click()
+    await expect(toggle).toHaveAttribute('aria-checked', 'true')
+    await f.update(st => openWindow(st, 'heretic-next'))
+    await expect(offer).toBeVisible()
+  })
+}
+
 test('使用卡牌与结算重绘保持地图位置和已加载图片，不出现原点闪帧',async({page})=>{
   await page.setViewportSize({width:1440,height:1000})
   await page.addInitScript(()=>localStorage.setItem('arkham-presentation',JSON.stringify({sound:false,fast:true})))

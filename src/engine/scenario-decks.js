@@ -40,10 +40,29 @@ export function rememberScenarioDeckAttachment(attachment) {
   return attachment
 }
 
+// P7 TDC 11531 海底壁画：「本卡不能离场」。读点：discardEncounterAttachment 与章节 detach 入口
+// 统一拒绝；条目用 `cannotLeavePlay: true`（treacheryRule.cannotLeavePlay 兼容旧写法）声明。
+export function encounterCardCannotLeavePlay(code) {
+  const entry = registeredEntry(code)
+  return entry?.cannotLeavePlay === true || entry?.treacheryRule?.cannotLeavePlay === true
+}
+
 export function discardEncounterAttachment(state, attachment, mainCode = attachment.originalCode || attachment.code) {
+  if (encounterCardCannotLeavePlay(mainCode)) return false
+  // P7 TDC 11662/11663/11664：条目声明「若将离场则放一边 / 移出游戏 / 加入胜利区」。
+  // 读点：所有遭遇附属离场都经本函数（detach/弃置/地点离场清理），一处声明覆盖全部去向。
+  const disposition = registeredEntry(mainCode)?.leavesPlayTo
+  if (disposition === 'setAside' || disposition === 'removed' || disposition === 'victory') {
+    state.scenarioZones ||= {}
+    const bucket = disposition === 'victory' ? 'victory' : disposition
+    state.scenarioZones[bucket] ||= []
+    state.scenarioZones[bucket].push(mainCode)
+    return true
+  }
   if (!routeDiscardToScenarioDeck(state, attachment.scenarioDeckCode || attachment.code, attachment.discardToScenarioDeck)) {
     state.encounterDiscard.push(mainCode)
   }
+  return true
 }
 
 export function routeEnemyDiscardToScenarioDeck(state, enemy) {

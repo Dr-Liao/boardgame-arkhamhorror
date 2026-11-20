@@ -29,6 +29,7 @@ import { chooseEntrySeal, sealAvailable } from './seal-entry.js'
 import { playTimingSource } from './play-timing.js'
 import { payPlayDiscardCost, playDiscardCostChoices } from './play-discard-cost.js'
 import { actionsAvailable, consumeAction } from './restricted-actions.js'
+import { enemyCannotBeExhausted } from './enemy-restrictions.js'
 import { cancelResolution } from './resolution.js'
 export function createActions(deps) {
   const {
@@ -798,11 +799,13 @@ function runInvestigate(state, seat, opts, events, noSpend) {
             prompt: '是否自动躲避一个与你交战的敌人？',
             options: [{ id: 'skip', label: '不躲避' }, { id: 'trigger', label: '自动躲避' }],
           }) === 'trigger'
-          if (want) {
-            const enemy = targets.length === 1 ? targets[0]
-              : chooseEnemyFrom(state, seat, targets, loc.originalCode || loc.code)
-            enemy.exhausted = true; disengageEnemy(state, enemy); afterEvade(state, inv, enemy, events)
-          }
+            if (want) {
+              const enemy = targets.length === 1 ? targets[0]
+                : chooseEnemyFrom(state, seat, targets, loc.originalCode || loc.code)
+              // P7 TDC 11702–11704：非[[狂怒]]面「不能被横置」：只解除交战。
+              if (!enemyCannotBeExhausted(state, enemy)) enemy.exhausted = true
+              disengageEnemy(state, enemy); afterEvade(state, inv, enemy, events)
+            }
         }
       }
       if (loc.fog) {
