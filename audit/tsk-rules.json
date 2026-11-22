@@ -9,11 +9,11 @@
   "sources": [
     {
       "path": "audit/tsk-mechanism-scan.json",
-      "sha256": "612e2d6e6b08b13f5b85a0046453407fc4eef791387202aa870c6aac01fb324f"
+      "sha256": "defbb5d93e4e1f16e9ba2d54819843d0c2ccc421350b1b8b211151d45c5ec8a2"
     },
     {
       "path": "audit/tsk-primitive-plan.json",
-      "sha256": "4889e3f0314737decdae0d705b7d5bb74e44b51e48c55eda7d3dc497545278b2"
+      "sha256": "0bf64369e4d913f30135252d39160330653ae92d618a397c2aaae06e6099886b"
     },
     {
       "path": "web/tsk-rules.js",

@@ -120,7 +120,7 @@
     },
     {
       "path": "src/integration/mechanic-view.js",
-      "sha256": "6560979ca31ad3e4c3c488f2cac74baf395ae0e404593e8a628751417e4cd9ea"
+      "sha256": "10babd9156fcce53e432ca606a7104b66c58978559c62403979476542b2ea2da"
     },
     {
       "path": "tests/eote-interaction-fixture.mjs",
@@ -132,7 +132,7 @@
     },
     {
       "path": "web/mechanic-ui.js",
-      "sha256": "d1c6a63ca0fdf5aa099e1b049010ea52c1da7870aba5f8819e773ac9bf7f1321"
+      "sha256": "553db01fcc388db9a15873c9e4fa40d229cb1dbda9719f33bcdb55dd2de28ad8"
     }
   ]
 }

@@ -1,0 +1,136 @@
+{
+  "id": "guardiansOfTheAbyss",
+  "campaignId": "guardiansOfTheAbyss",
+  "locales": {
+    "en": {
+      "intro": [
+        {
+          "id": "intro1",
+          "title": "Guardians of the Abyss",
+          "text": "A letter from Cairo brings you to Egypt, where an unnatural slumber is spreading through the city. The trail of the curse leads from the streets of Cairo into the desert of Dashur, and from there beyond the gate of dreams themselves. Two connected scenarios await: The Eternal Slumber and The Night's Usurper."
+        },
+        {
+          "id": "intro2",
+          "title": "Campaign Rules",
+          "text": "This side story is played as a two-part mini-campaign. Record dreamers in the abyss, the Brotherhood agents who escaped, and any cards taken by the abyss between scenarios. In The Night's Usurper, the strength of the abyss and the Brotherhood agents beneath the scenario reference card are initialized from those records. Each investigator begins with 2 experience."
+        }
+      ],
+      "setup": [
+        {
+          "id": "gatherCampaign",
+          "text": "Gather the Guardians of the Abyss cards (pack guardians). The first scenario uses The Eternal Slumber, Sands of Egypt, Brotherhood of the Beast and Abyssal Tribute encounter sets; the second uses The Night's Usurper, Sands of Egypt, Brotherhood of the Beast and Abyssal Gifts."
+        },
+        {
+          "id": "experience",
+          "text": "This side story is played in standalone mode: each investigator begins with 2 experience and may build a deck using the standard deckbuilding rules."
+        },
+        {
+          "id": "chaosBag",
+          "text": "Use the Standard (21 tokens) or Hard (23 tokens) chaos bag from the side story setup: two +1 tokens, three skull tokens, one cultist, one tablet, one elder thing, one auto-fail and one elder sign; adjust the numeric tokens per the difficulty table."
+        },
+        {
+          "id": "records",
+          "text": "Keep a campaign log for dreamers in the abyss (X), Brotherhood Agents Who Escaped, and all notes that a card was taken by the abyss. These carry over from The Eternal Slumber to The Night's Usurper."
+        },
+        {
+          "id": "begin",
+          "text": "Begin with The Eternal Slumber. After resolving it, proceed directly to The Night's Usurper."
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "storyCards",
+          "title": "Story Cards",
+          "text": "Story cards are a card type used in this side story. When you are instructed to resolve a story card, read its story text and resolve its game text, if any. When a location or enemy in play is flipped to its story side, it is still considered in play while that story card is resolved."
+        },
+        {
+          "id": "strengthOfTheAbyss",
+          "title": "Strength of the Abyss",
+          "text": "Resources on the scenario reference card represent the current strength of the abyss. When instructed to add or remove strength, adjust the tokens accordingly. The strength has no inherent effect, but many encounter cards grow stronger as it rises."
+        },
+        {
+          "id": "takenByTheAbyss",
+          "title": "Taken by the Abyss",
+          "text": "When an investigator or Ally asset is taken by the abyss, first add 1 strength to the abyss. If the card is unique, record its name in the campaign log. An investigator taken by the abyss is treated as killed or driven insane, and unique Ally assets taken by the abyss cannot be played for the remainder of the campaign."
+        },
+        {
+          "id": "explore",
+          "title": "Explore",
+          "text": "Some abilities are identified as Explore actions. Draw the top card of the exploration deck until a location connected by matching symbols is drawn (put it into play and move there) or a treachery is drawn (resolve it normally). Other locations drawn are shuffled back into the exploration deck at the end of the exploration."
+        }
+      ],
+      "resolutions": [
+        {
+          "id": "campaignResult",
+          "title": "Campaign Result",
+          "text": "After resolving The Night's Usurper, apply its records to the campaign log and finish the side story. The abyss was saved, the Day of Reckoning is coming, or you joined forces with Xzharah, depending on the second scenario's resolution."
+        }
+      ]
+    },
+    "zh": {
+      "intro": [
+        {
+          "id": "intro1",
+          "title": "深渊守卫",
+          "text": "一封来自开罗的信把你们带到埃及：一种非自然的沉睡正在城中蔓延。诅咒的线索从开罗街道一直延伸到达舒尔沙漠，再越过梦境之门。本支线由两个相连的章节组成：《永恒沉睡》与《夜之篡位者》。"
+        },
+        {
+          "id": "intro2",
+          "title": "战役规则",
+          "text": "本支线按两章迷你战役进行。请记录「深渊中的沉梦者（X）」「逃脱的兄弟会特工」以及所有「被深渊吞没」的卡牌；《夜之篡位者》开场时，深渊之力与剧本参考卡下方的兄弟会特工都由这些记录初始化。每名调查员初始拥有 2 点经验。"
+        }
+      ],
+      "setup": [
+        {
+          "id": "gatherCampaign",
+          "text": "收集深渊守卫卡包（guardians）。第一章使用遭遇组：永恒沉睡、埃及之沙、野兽兄弟会、深渊献祭；第二章使用：夜之篡位者、埃及之沙、野兽兄弟会、深渊赠礼。"
+        },
+        {
+          "id": "experience",
+          "text": "本支线以独立模式进行：每名调查员初始拥有 2 点经验，可按标准构筑规则组牌。"
+        },
+        {
+          "id": "chaosBag",
+          "text": "使用支线设置页的普通（21 枚）或困难（23 枚）混乱袋：两枚 +1、三枚 [skull]，以及[cultist]（异教徒）、[tablet]（石板）、[elder_thing]（古神）、自动失败、上古印记各一枚；数值标记按难度表调整。"
+        },
+        {
+          "id": "records",
+          "text": "在战役日志中记录「深渊中的沉梦者（X）」「逃脱的兄弟会特工」以及所有「被深渊吞没」的条目，这些记录会从《永恒沉睡》延续到《夜之篡位者》。"
+        },
+        {
+          "id": "begin",
+          "text": "从《永恒沉睡》开始；结算完毕后直接进入《夜之篡位者》。"
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "storyCards",
+          "title": "故事卡",
+          "text": "故事卡是本支线使用的卡牌类型。被指示结算故事卡时，读出其故事文本并结算其游戏文本（若有）。当场上的地点或敌人翻面为故事卡时，在结算该故事卡期间它仍视为在场。"
+        },
+        {
+          "id": "strengthOfTheAbyss",
+          "title": "深渊之力",
+          "text": "剧本参考卡上的资源标记代表深渊之力的当前强度。按卡面指示增减；深渊之力本身没有固有效果，但许多遭遇卡会随着它增强而变得更危险。"
+        },
+        {
+          "id": "takenByTheAbyss",
+          "title": "被深渊吞没",
+          "text": "当调查员或[[盟友]]支援被深渊吞没时，先让深渊之力 +1；若该卡为独特卡，在战役日志记录其名称。被深渊吞没的调查员视为被杀或发疯，且战役余下时间不能打出被吞没的独特[[盟友]]支援的副本。"
+        },
+        {
+          "id": "explore",
+          "title": "探索",
+          "text": "部分能力带有「探索」行动标记：从探索牌库顶逐张翻牌，直到翻出以符号相连的地点（将其置入战场并移动过去），或翻出诡计（按正常流程结算）。途中翻出的其他地点在本次探索结束时洗回探索牌库。"
+        }
+      ],
+      "resolutions": [
+        {
+          "id": "campaignResult",
+          "title": "战役结果",
+          "text": "结算《夜之篡位者》后，把其记录写入战役日志并结束支线：根据第二章结局，可能是「深渊已被拯救」「清算之日即将到来」，或「你们与伊扎法拉联手」。"
+        }
+      ]
+    }
+  }
+}

@@ -54,23 +54,23 @@
     },
     {
       "file": "games/arkhamhorror/src/deck/availability.js",
-      "sha256": "e5c3eb69cce3d56c41761d05fa876842ec18db31d44b217a5a058737faa459ad"
+      "sha256": "e865a733c178b7ae56345da23ffdebf60a8cf4741cb746669ba4539b182a7079"
     },
     {
       "file": "games/arkhamhorror/src/deck/deckbuilding.js",
-      "sha256": "1ac92e94024ac86669dc6c09c5a0564c8a77d093f4ed90dea910ad5d3c6b0a0d"
+      "sha256": "0676c48dfc7e4ca746b68a1e91752d33f06bf155baa979645a57df3347bcef20"
     },
     {
       "file": "games/arkhamhorror/web/deck-rules.js",
-      "sha256": "f470e8fbe25be37f3523fe1059f60feabda9bd93fa7c7e4cb4bc720304a85ce7"
+      "sha256": "2b7aee32068272b949b7449f17caef750a6794554d43fb148b1dd643054761aa"
     },
     {
       "file": "games/arkhamhorror/src/campaign/campaign.js",
-      "sha256": "20f7887dcf0e7bb2afcfed5f6f90d0a30673690bf696b6bb2cd7596d84d88aa6"
+      "sha256": "bf24bac27ea6e6dd2e804569523903ed074f332a7ed1a94aa5b72f990eb30b41"
     },
     {
       "file": "games/arkhamhorror/src/cards/entries/_shared.js",
-      "sha256": "e90a182c133f6eca054f075568c419ccb24baae66ea5eb974b61f5d5d0cb9804"
+      "sha256": "68335ec099a4c0e211fbf71d5f976ce54bb7a07e75308ce43f80954e35ac434e"
     },
     {
       "file": "games/arkhamhorror/src/engine/myriad.js",
@@ -78,7 +78,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/suites.mjs",
-      "sha256": "feb24d18079340698dcf63b6a4814bded6780db37b0c1ab8dd14c5a464d6aaa2"
+      "sha256": "f93e2f6fab73dc414dfcf45ed21e56e5eae4919071b4a8d4de08fe5881fc9627"
     },
     {
       "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",

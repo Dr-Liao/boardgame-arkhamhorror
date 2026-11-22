@@ -25,6 +25,17 @@
 
 export const UI_CARDS = Object.freeze({
   scenarioCards: Object.freeze({
+    theBlobThatAteEverything: '85001',
+    theBlobThatAteEverythingElse: '85001',
+    warOfTheOuterGods: '86001',
+    theLabyrinthsOfLunacy: '70001',
+    theEternalSlumber: '83001',
+    theNightsUsurper: '83016',
+    laidToRest: '90054',
+    enthrallingEncore: '90094',
+    redTideRising: '90041',
+    relicsOfThePast: '90065',
+    machinationsThroughTime: '87001',
     theGathering: '01104',
     theMidnightMasks: '01120',
     theDevourerBelow: '01142',

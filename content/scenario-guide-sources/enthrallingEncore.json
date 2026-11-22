@@ -1,0 +1,156 @@
+{
+  "id": "enthrallingEncore",
+  "campaignId": "enthrallingEncore",
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "惑人返场",
+          "children": [
+            { "id": "body1", "text": "每个人在人生这出戏里都有自己的角色。你不确定自《黄衣之王》来到阿卡姆的沃德剧院以来过了多久。从那以后，你就把这件事抛在脑后，只当是一场无法解释、却异常鲜明的幻觉。但后来你听见了它。起初它只在梦里出现——那出戏管弦乐谱的萦绕旋律，如今由一把小提琴独奏。它把你引到了阿卡姆一个你一直回避的角落：沃德剧院。剧院漆黑寂静，只有那支只有你能听见的旋律……" },
+            { "id": "proceedToSetup", "text": "继续阅读设置。" }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "setup",
+          "title": "设置",
+          "children": [
+            { "id": "gatherSets", "text": "收齐以下遭遇组的全部卡牌：惑人返场、谢幕、腐朽与污秽、妄想、如影随形、食尸鬼、恐惧打击、老鼠。除惑人返场外，均可在核心包与《卡尔克萨之路》战役扩展中找到。原《谢幕》的剧本参考卡、幕与议程移出游戏。" },
+            { "id": "propsDeck", "text": "组建道具牌库：从每个职介（守卫者、探求者、流浪者、潜修者、求生者）各找 3 张 0 级非盟友支援，共 15 张（尽量不重复），洗混后放在剧本参考卡旁。" },
+            { "id": "removeCards", "text": "将 The Man in the Pallid Mask 与 Royal Emissary 移出游戏。" },
+            { "id": "setAside", "text": "将每张前厅走廊门口与后台走廊门口放在一边，置于场外（本 Mod 以六个私密地点近似）。" },
+            { "id": "placeLocations", "text": "将剧院、前厅、楼座与后台放入场。" },
+            { "id": "startAt", "text": "每位调查员从剧院开始游戏。" },
+            { "id": "sinisterSoloist", "text": "将邪恶独奏者敌人放入后台。" }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "measures",
+          "title": "小节",
+          "children": [
+            { "id": "body", "text": "小节以剧本参考卡上的资源表示。每当剧本提示放置一个小节时，就在剧本参考卡上放置 1 个资源；剧本对小节数量的引用都读取这一数量。" }
+          ]
+        },
+        {
+          "id": "propsDeck",
+          "title": "道具牌库",
+          "children": [
+            { "id": "body", "text": "道具牌库是一副独立牌库，包含 15 张 0 级非盟友支援。效果会揭示其顶牌，被抽走的牌进入调查员手牌，其余牌混洗后放回牌库底；被洗入的卡牌放在牌库底。" }
+          ]
+        },
+        {
+          "id": "privateLocations",
+          "title": "私密地点",
+          "children": [
+            { "id": "body", "text": "前厅或后台揭示时，从放在一边的私密地点中随机放 2 张入场。私密地点只与对应的前厅或后台相连。" }
+          ]
+        }
+      ],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "无结局",
+          "children": [
+            { "id": "body", "text": "若没有达成任何结局（每位调查员都被击败）：跳到结局 2。" }
+          ]
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "children": [
+            { "id": "body", "text": "小提琴手被击败后，你只能希望那出亵渎戏剧的最后一缕幽魂终于安息。沃德剧院事件之后的每一天，你的神经都绷得紧紧的，总在等待那段旋律。日子过去，旋律再未回来，仿佛《黄衣之王》相关的一切从未真正发生。但它们确实发生过，不是吗？" },
+            { "id": "rewards", "text": "每位调查员获得等于胜利区卡牌胜利点数之和的经验。每位调查员可以选择：把签名卡升级为进阶版，或把进阶版弱点降级为原本版本（若能做到）。无法升级进阶签名卡或降级进阶弱点的调查员改为获得 2 点额外经验。" }
+          ]
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "children": [
+            { "id": "body", "text": "再也无法承受独奏者，你双膝跪地，任由旋律压倒性的力量如不可阻挡的洪流般冲刷而过。音符灌满耳朵，淹没了其他一切念头。你的视野褪色，沃德剧院的现实变暗、扭曲，以怪异的角度被拉长。你发现自己躺在舞台落满灰尘的木板上。独奏者消失了。怪物消失了。剧院漆黑，似乎只剩你一人。你缓缓起身，转身逃走。你确信这个地方被诅咒了，这出戏被诅咒了，而这诅咒将困扰你余生。" },
+            { "id": "rewards", "text": "每位调查员获得等于胜利区卡牌胜利点数之和的经验。每位调查员必须：把弱点升级为进阶版，或把进阶版签名卡降级为原本版本（若能做到）；无法做到的调查员受到 1 点精神创伤。" }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "Enthralling Encore",
+          "children": [
+            { "id": "body1", "text": "Everyone has their role to play in the performance of life. You're not sure how long it has been since The King in Yellow came to Arkham's Ward Theatre. Since then, you've put it out of your mind, dismissing it as an unexplained, and incredibly vivid, hallucination. But then you heard it. At first it came to you in your dreams, the haunting melody of the production's orchestral score, now presented by a single violin. It has led you to a corner of Arkham you had been avoiding: the Ward Theatre. The Theatre is dark and quiet, save for that melody only you can hear..." },
+            { "id": "proceedToSetup", "text": "Proceed to Setup." }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "setup",
+          "title": "Setup",
+          "children": [
+            { "id": "gatherSets", "text": "Gather all cards from the following encounter sets: Enthralling Encore, Curtain Call, Decay and Filth, Delusions, Hauntings, Ghouls, Striking Fear, and Rats. Each of these sets except for Enthralling Encore can be found in the Core Set and The Path to Carcosa Campaign Expansion. The original scenario reference card, acts, and agendas from the Curtain Call encounter set are removed from the game." },
+            { "id": "propsDeck", "text": "Build the Props deck: search your collection for 3 level 0 non-Ally assets from each class (guardian, seeker, rogue, mystic, and survivor), for a total of 15 cards (no duplicates, if possible). Shuffle these cards together to form the Props deck and place it near the scenario reference card." },
+            { "id": "removeCards", "text": "Remove The Man in the Pallid Mask and Royal Emissary from the game." },
+            { "id": "setAside", "text": "Set each copy of the Lobby Doorway and each copy of the Backstage Doorway aside, out of play (approximated in this mod with the six private locations)." },
+            { "id": "placeLocations", "text": "Put the Theatre, Lobby, Balcony, and Backstage locations into play." },
+            { "id": "startAt", "text": "Each investigator begins play at the Theatre." },
+            { "id": "sinisterSoloist", "text": "Put the Sinister Soloist enemy into play at the Backstage." }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "measures",
+          "title": "Measures",
+          "children": [
+            { "id": "body", "text": "Measures are represented by resources on the scenario reference card. Whenever the scenario instructs you to place a measure, place 1 resource on the scenario reference card; references to the number of measures read that count." }
+          ]
+        },
+        {
+          "id": "propsDeck",
+          "title": "Props Deck",
+          "children": [
+            { "id": "body", "text": "The Props deck is a separate deck of 15 level 0 non-Ally assets. Effects reveal cards from the top of the Props deck; drawn cards are added to investigators' hands, and the rest are shuffled and placed on the bottom of the deck. Cards shuffled into the deck are placed on the bottom." }
+          ]
+        },
+        {
+          "id": "privateLocations",
+          "title": "Private Locations",
+          "children": [
+            { "id": "body", "text": "When the Lobby or the Backstage is revealed, put 2 random private locations from those set aside into play. Private locations are only connected to their corresponding Lobby or Backstage." }
+          ]
+        }
+      ],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "No Resolution",
+          "children": [
+            { "id": "body", "text": "If no resolution was reached because each investigator was defeated: Skip to Resolution 2." }
+          ]
+        },
+        {
+          "id": "resolution1",
+          "title": "Resolution 1",
+          "children": [
+            { "id": "body", "text": "With the violinist defeated, you can only hope that the last specter of that unholy production is finally put to rest. Every day following the events at the Ward Theatre, your nerves are coiled tight, always expecting to hear the melody. The days pass, the melody never returns, and it would seem you are allowed to continue your life as if the events surrounding The King in Yellow had never truly happened. But they did, didn't they?" },
+            { "id": "rewards", "text": "Each investigator earns experience equal to the combined Victory X value of each card in the victory display. Each investigator may either upgrade their signature card to its advanced version, or downgrade the advanced version of their weakness to its original version (if able). Each investigator unable to do so earns 2 bonus experience instead." }
+          ]
+        },
+        {
+          "id": "resolution2",
+          "title": "Resolution 2",
+          "children": [
+            { "id": "body", "text": "Unable to withstand the soloist any longer, you drop to your knees, letting the overwhelming power of the melody wash over you like an unstoppable flood. The notes fill your ears, drowning out every other thought. Your vision fades, the reality of the Ward Theatre growing dark, warping and stretching at odd angles. You land on the dusty wooden boards of a stage. The soloist is gone. The monsters are gone. The Theatre is dark and seemingly abandoned, save for you. You rise slowly, then turn and flee. You are convinced that this place is cursed, that the production is cursed, and that this curse will haunt you for the rest of your days." },
+            { "id": "rewards", "text": "Each investigator earns experience equal to the combined Victory X value of each card in the victory display. Each investigator must either upgrade their weakness to its advanced version, or downgrade the advanced version of their signature to its original version, if able; an investigator unable to do so suffers 1 mental trauma." }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import { isDraftMode, startInitialDraft, applyDraftMove } from '../deck/draft-mode.js'
-import { applyStartingDeckExperience, campaignDeckLocked, campaignOpeningExperience } from '../campaign/campaign.js'
+import { applyStartingDeckExperience, campaignDeckLocked, campaignOpeningExperience, campaignSeatingIncludesRequired } from '../campaign/campaign.js'
 import { drawBasicWeaknesses } from '../deck/deckbuilding.js'
 import { alternateBuildFor } from '../deck/alternate-investigator-build.js'
 import { recordRegulatedAction } from './action-history.js'
@@ -918,6 +918,10 @@ function executeHubMove(state, seat, move, events) {
         ? '首关尚未开始，已重新开放调查员、牌组与席位准备。' : '首关尚未开始，请重新确认席位准备。')
       break
     case 'hubBeginScenario': {
+      // 批次 4：挑战战役要求「指定调查员必须在场，其余席位任意」，开局前校验。
+      if (!campaignSeatingIncludesRequired(campaignFor(state), (state.investigators || []).map(inv => inv.code))) {
+        throw new Error('本战役要求包含指定调查员之一，请调整队伍后开始关卡')
+      }
       // P9.5：并行 lane 内部运行时由 mod 边界选定队长（线队长可以是 AI），不再要求真人。
       const humanLead = state.laneRuntime ? true : (state.humanSeats || [0]).includes(campaign.leadSeat)
       if (!campaign.leadConfirmed || !humanLead) throw new Error('请先选择一名真人玩家担任队长')

@@ -3,13 +3,15 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import { chapters } from '../content/campaigns/theCircleUndone/shared.js'
-import { SCENARIO_MUSIC } from '../web/scenario-music.js'
+import { SCENARIO_MUSIC, SIDE_STORY_MUSIC } from '../web/scenario-music.js'
 import { musicTracksForPlaylist } from '../web/music-player.js'
 import { campaignPresentation, campaignPlaylistId } from '../web/campaign-presentation.js'
 
 test('四循环九章每关三首，跨循环复用与循环内重复均不超过 30%', () => {
   assert.deepEqual(Object.keys(SCENARIO_MUSIC.theCircleUndone).sort(), chapters.map(c => c.id).sort())
-  const oldTracks = new Set(Object.entries(SCENARIO_MUSIC).filter(([id]) => id !== 'theCircleUndone').flatMap(([, rows]) => Object.values(rows).flatMap(c => c.tracks)))
+  const oldTracks = new Set(Object.entries(SCENARIO_MUSIC)
+    .filter(([id]) => id !== 'theCircleUndone' && !Object.hasOwn(SIDE_STORY_MUSIC, id) && !id.startsWith('returnTo'))
+    .flatMap(([, rows]) => Object.values(rows).flatMap(c => c.tracks)))
   const assigned = []
   for (const chapter of chapters) {
     const id = campaignPlaylistId({ campaign: { id: 'theCircleUndone' }, hubSelectedScenarioId: chapter.id, uiState: 'scenarioSetup' })

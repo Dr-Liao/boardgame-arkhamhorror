@@ -1724,6 +1724,61 @@ import e12099 from './12099.js'
 import e12102 from './12102.js'
 import e12103 from './12103.js'
 import e12104 from './12104.js'
+import e89001 from './89001.js'
+import e89002 from './89002.js'
+import e89002b from './89002b.js'
+import e89003 from './89003.js'
+import e89004 from './89004.js'
+import e90037 from './90037.js'
+import e90038 from './90038.js'
+import e90039 from './90039.js'
+import e90040 from './90040.js'
+import e90046 from './90046.js'
+import e90047 from './90047.js'
+import e90048 from './90048.js'
+import e90049 from './90049.js'
+import e90050 from './90050.js'
+import e90051 from './90051.js'
+import e90052 from './90052.js'
+import e90059 from './90059.js'
+import e90060 from './90060.js'
+import e90061 from './90061.js'
+import e90062 from './90062.js'
+import e90063 from './90063.js'
+import e90064 from './90064.js'
+import e90078 from './90078.js'
+import e90079 from './90079.js'
+import e90080 from './90080.js'
+import e90081 from './90081.js'
+import e90082 from './90082.js'
+import e90083 from './90083.js'
+import e90084 from './90084.js'
+import e90085 from './90085.js'
+import e90086 from './90086.js'
+import e90087 from './90087.js'
+import e90088 from './90088.js'
+import e90089 from './90089.js'
+import e90090 from './90090.js'
+import e90091 from './90091.js'
+import e90092 from './90092.js'
+import e90093 from './90093.js'
+import e98001 from './98001.js'
+import e98002 from './98002.js'
+import e98003 from './98003.js'
+import e98005 from './98005.js'
+import e98006 from './98006.js'
+import e98007 from './98007.js'
+import e98013 from './98013.js'
+import e98008 from './98008.js'
+import e98009 from './98009.js'
+import e98011 from './98011.js'
+import e98012 from './98012.js'
+import e98014 from './98014.js'
+import e98015 from './98015.js'
+import e98017 from './98017.js'
+import e98018 from './98018.js'
+import e99002 from './99002.js'
+import e99003 from './99003.js'
 
 export const CARD_ENTRY_LIST = [
   e01001,
@@ -3449,6 +3504,61 @@ export const CARD_ENTRY_LIST = [
   e12102,
   e12103,
   e12104,
+  e89001,
+  e89002,
+  e89002b,
+  e89003,
+  e89004,
+  e90037,
+  e90038,
+  e90039,
+  e90040,
+  e90046,
+  e90047,
+  e90048,
+  e90049,
+  e90050,
+  e90051,
+  e90052,
+  e90059,
+  e90060,
+  e90061,
+  e90062,
+  e90063,
+  e90064,
+  e90078,
+  e90079,
+  e90080,
+  e90081,
+  e90082,
+  e90083,
+  e90084,
+  e90085,
+  e90086,
+  e90087,
+  e90088,
+  e90089,
+  e90090,
+  e90091,
+  e90092,
+  e90093,
+  e98001,
+  e98002,
+  e98003,
+  e98005,
+  e98006,
+  e98007,
+  e98013,
+  e98008,
+  e98009,
+  e98011,
+  e98012,
+  e98014,
+  e98015,
+  e98017,
+  e98018,
+  e99002,
+  e99003,
 ]
 
 export const CARD_ENTRY_BY_CODE = new Map(CARD_ENTRY_LIST.map(entry => [entry.code, entry]))

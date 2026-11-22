@@ -261,11 +261,11 @@
     "inputs": [
       {
         "file": "audit/tsk-scope.json",
-        "sha256": "78fd6d2f4f1243cdb93af19df3246b2f90a8f7544e4e1157063b30ab07e969ed"
+        "sha256": "106aa98013880ab89be60e0ae117a58a3577153c59665f6a924d56dcb1575c78"
       },
       {
         "file": "audit/tsk-scenario-acceptance.json",
-        "sha256": "6dba177649d11c20576812a33f9bb3847b2c236b35c0c583a4c664fdae3d7a5e"
+        "sha256": "399ffd58ec10a4dd9d865feeffcbe2f9af9da60c0737ec7606f595ae964174ae"
       },
       {
         "file": "audit/tsk-player-acceptance.json",
@@ -273,7 +273,7 @@
       },
       {
         "file": "audit/tsk-investigators.json",
-        "sha256": "ee735eec30e5442457cf27afa591ec27584db2a0681f0c507e9aa937f028bc3a"
+        "sha256": "a5283a0546a61b8968c592029274a8bc8e3cc75175126876f3219683767c354f"
       },
       {
         "file": "audit/tsk-campaign-plan.json",

@@ -1,9 +1,17 @@
 import { test, expect } from '@playwright/test'
-import { SCENARIO_MUSIC } from '../web/scenario-music.js'
+import { SCENARIO_MUSIC, SIDE_STORY_MUSIC } from '../web/scenario-music.js'
 import { MUSIC_TRACKS } from '../web/music-player.js'
 
-test('全部已配置关卡切换正确歌单和音频，自动轮播与暂停不串曲', async ({ page }) => {
-  test.setTimeout(90_000)
+const campaigns = Object.entries(SCENARIO_MUSIC)
+const isExtraCampaign = ([id]) => Object.hasOwn(SIDE_STORY_MUSIC, id) || id.startsWith('returnTo')
+const groups = [
+  ['主战役', campaigns.filter(campaign => !isExtraCampaign(campaign))],
+  ['支线和重返系列', campaigns.filter(isExtraCampaign)],
+]
+
+for (const [name, group] of groups) test(`${name}关卡切换正确歌单和音频，自动轮播与暂停不串曲`, async ({ page }) => {
+  const scenarioCount = group.reduce((count, [, chapters]) => count + Object.keys(chapters).length, 0)
+  test.setTimeout(Math.max(90_000, scenarioCount * 3000))
   const errors = []; page.on('pageerror', error => errors.push(error.message))
   await page.route('**/scenario-music-fixture', route => route.fulfill({ contentType: 'text/html', body: '<main></main>' }))
   await page.goto('/scenario-music-fixture')
@@ -27,7 +35,7 @@ test('全部已配置关卡切换正确歌单和音频，自动轮播与暂停�
     window.musicAudio.muted = true
   })
   await page.getByRole('button', { name: '展开音乐播放器', exact: true }).click()
-  for (const [campaign, chapters] of Object.entries(SCENARIO_MUSIC)) {
+  for (const [campaign, chapters] of group) {
     for (const [chapter, configuration] of Object.entries(chapters)) {
       await page.evaluate(({ campaign, chapter }) => window.selectChapter(campaign, chapter), { campaign, chapter })
       await expect(page.locator('.ah-music-track')).toHaveCount(configuration.tracks.length)

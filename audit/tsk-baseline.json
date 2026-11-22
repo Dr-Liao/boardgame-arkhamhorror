@@ -256,13 +256,13 @@
     "effectsEntries": 0,
     "effectsTopLevelFields": 0,
     "escapeCards": 0,
-    "descriptorEntries": 1710,
-    "descriptorAbilities": 2426,
+    "descriptorEntries": 1765,
+    "descriptorAbilities": 2484,
     "abilityKinds": 12,
     "windows": 144,
     "effectPrimitives": 56,
-    "nonPlayerCards": 440,
-    "behaviorLines": 92550,
+    "nonPlayerCards": 444,
+    "behaviorLines": 99408,
     "declaredScenarios": 3
   },
   "preExistingFailures": {

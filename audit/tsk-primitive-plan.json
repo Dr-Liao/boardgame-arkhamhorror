@@ -7,7 +7,7 @@
   "generatedBy": "tools/audit-tsk-primitives.mjs",
   "docs": "docs/campaign/theScarletKeys/primitives.md",
   "status": "catalog-only",
-  "scanSha256": "79604394e011ed7d5b9cca55d35a0ce9c38f5102aacc2deb66491906ad807f7c",
+  "scanSha256": "f2161b9a2ca6d42e73027ae743fce53da4942f8def9afbe0b392aa33f54fac8c",
   "scanFiles": [
     {
       "path": "src/engine/api-mechanics.js",

@@ -138,8 +138,8 @@ function validateInvestigator(invDef) {
   if (!req || (!Number.isSafeInteger(req.size) || req.size < 1 || req.size !== INVESTIGATORS[invDef.code].deckRequirements.size) || !Array.isArray(req.signatureCards)
     || req.signatureCards.length !== signatures.length
     || signatures.some((code) => !req.signatureCards.includes(code))
-    || !Array.isArray(req.random) || req.random.length !== 1
-    || req.random[0]?.target !== 'subtype' || req.random[0]?.value !== 'basicweakness'
+    || !Array.isArray(req.random) || ![1, 2].includes(req.random.length)
+    || req.random.some(rule => rule?.target !== 'subtype' || rule?.value !== 'basicweakness')
     || !Array.isArray(invDef.deckOptions) || !invDef.deckOptions.length
     || JSON.stringify(invDef.deckOptions) !== JSON.stringify(INVESTIGATORS[invDef.code].deckOptions)) {
     throw new Error('调查员构筑依赖不完整或不受支持：' + invDef.code)
@@ -364,6 +364,44 @@ function classChoiceBlocked(invDef, card, plan) {
   }
   return false
 }
+// 批次 4：Subject 5U-21 的特殊构筑（50 张；五职业各≥7；中立任意等级；其余 0 级）。
+// 通用自动构筑按评分填充，无法保证职业下限，故单独构造合法清单。
+function buildSubjectPlayerCards(scored, size) {
+  const deck = []
+  const used = new Map()
+  const uniqueUsed = new Set()
+  const canAdd = card => {
+    const count = used.get(card.code) || 0
+    if (count >= cardLimit(card)) return false
+    if (card.unique && uniqueUsed.has(card.code)) return false
+    return true
+  }
+  const add = card => {
+    used.set(card.code, (used.get(card.code) || 0) + 1)
+    if (card.unique) uniqueUsed.add(card.code)
+    deck.push(card.code)
+  }
+  const classes = ['guardian', 'seeker', 'rogue', 'mystic', 'survivor']
+  for (const klass of classes) {
+    let needed = 7
+    for (const { card } of scored) {
+      if (needed <= 0 || deck.length >= size) break
+      if (String(card.klass || '').toLowerCase() !== klass) continue
+      if ((card.xp || 0) !== 0 || !canAdd(card)) continue
+      add(card)
+      needed -= 1
+    }
+    if (needed > 0) throw new Error(`Subject 5U-21 牌池不足：${klass} 至少需要 7 张 0 级卡`)
+  }
+  // 余下 15 张：优先中立 0 级，再任意职业 0 级；等级上限仍为 0。
+  for (const { card } of scored) {
+    if (deck.length >= size) break
+    if ((card.xp || 0) !== 0 || !canAdd(card)) continue
+    add(card)
+  }
+  return deck
+}
+
 export function buildDeck(invDef, options = {}) {
   validateInvestigator(invDef)
   const build = alternateBuildFor(invDef.code, options.investigatorBuild)
@@ -372,6 +410,30 @@ export function buildDeck(invDef, options = {}) {
   const size = deckRules(invDef).size
   const budget = xpBudget(options) + (Number(TSK_BONUS_XP[invDef?.code]) || 0) + backXp
   const rng = mulberry32(hashSeed((options.seed || 'deck') + ':' + invDef.code + ':' + (options.seat ?? 0)))
+  // 批次 4：Subject 5U-21 的 deckOptions 含 atleast（五职业各≥7）规则，通用 matchesDeckOptions
+  // 只认普通 faction 规则，会把职业卡全部滤掉；这里按卡面口径单独筛池。
+  if (registeredEntry(invDef.code)?.investigator?.specialDeckbuilding === 'subject5u21') {
+    const classes = new Set(['guardian', 'seeker', 'rogue', 'mystic', 'survivor'])
+    const licensed = allowedPlayerPool(options)
+    const subjectPool = licensed.filter(card => {
+      if (card.permanent) return false
+      if ((card.xp ?? 0) > budget) return false
+      return (card.factions || [card.klass, card.klass2, card.klass3].filter(Boolean))
+        .some(faction => String(faction).toLowerCase() === 'neutral')
+        || classes.has(String(card.klass || '').toLowerCase())
+    })
+    const scored = subjectPool.map(card => ({ card, score: scoreCard(card, invDef) + (rng() * 0.6 - 0.3) }))
+    scored.sort((a, b) => b.score - a.score)
+    const subjectDeck = buildSubjectPlayerCards(scored, size)
+    const sig = signatureAndWeaknesses(invDef, rng, options)
+    const full = [...subjectDeck, ...sig.signatureCards, ...sig.signatureWeaknesses, ...sig.basicWeaknesses]
+    return {
+      deck: shuffle(full, rng),
+      playerCards: subjectDeck,
+      ...(budget ? { startingExperienceSpent: 0 } : {}),
+      ...sig,
+    }
+  }
   const basePool = allowedPlayerPool(options).filter((c) => matchesDeckOptions(invDef, c))
   const classPlan = factionSelectPlan(invDef, basePool)
   const pool = basePool.filter(card => !classChoiceBlocked(invDef, card, classPlan))
@@ -468,15 +530,26 @@ export function signatureAndWeaknesses(invDef, rng, options = {}) {
     signatureWeaknesses.push(...Array(burdenCount).fill(burden))
   }
   const normal = deckRules(invDef).signatureCards.map(primary => signaturePrinting(invDef, primary))
-  const printings = alternate?.signatures === 'advanced' ? family.advanced
-    : alternate?.signatures === 'both' ? [...normal, ...family.advanced] : normal
+  // 批次 4：always = 该调查员必带附加签名；仅当正面是平行版本或背面选择平行版本时生效。
+  // 核心原版正面（未选平行构筑）仍走原签名套件，避免把平行专属必带卡塞进核心牌组。
+  const alternatePrint = Boolean(family
+    && (family.alternates.includes(invDef.code) || family.alternates.includes(alternate?.back)))
+  const always = alternatePrint ? (family?.always || []) : []
+  const backCode = alternate?.back ?? invDef.code
+  const advancedPrintings = family
+    ? (family.alternates?.includes(backCode) ? family.advancedFor(backCode) : [...(family.advanced || [])])
+    : []
+  const printings = alternate?.signatures === 'advanced' ? [...new Set([...always, ...advancedPrintings])]
+    : alternate?.signatures === 'both' ? [...new Set([...normal, ...always, ...advancedPrintings])]
+    : [...new Set([...normal, ...always])]
   for (const code of [...printings, ...(alternate?.directives || [])]) {
     if (eoteBuild && code === eoteBuild.burdenCode) continue
     const def = ALL_CARDS[code]
     if (!def || def.code !== code
       || !implementation(code).implemented
       || !Array.isArray(def.signatureFor)
-      || !def.signatureFor.includes(family?.original || invDef.code)) {
+      || !def.signatureFor.some(owner => [family?.original, ...(family?.alternates || []), invDef.code]
+        .filter(Boolean).includes(owner))) {
       throw new Error('签名卡或专属弱点依赖缺失/不合法：' + code)
     }
     const quantity = Number.isSafeInteger(def.quantity) && def.quantity > 0 ? def.quantity : 1
@@ -611,10 +684,14 @@ export function deckBuilderData() {
   const investigators = SELECTABLE_INVESTIGATOR_CODES.map((code) => {
     const inv = INVESTIGATORS[code]
     validateInvestigator(inv)
-    signatureAndWeaknesses(inv, () => 0)
     const req = { ...inv.deckRequirements, ...deckRules(inv) }
     const variant = alternateInvestigatorFamily(code)
-    const sigs = req.signatureCards.map(primary => signaturePrinting(inv, primary)).map((c) => {
+    const alternatePrint = Boolean(variant && variant.alternates.includes(code))
+    const sigCodes = [...new Set([
+      ...req.signatureCards.map(primary => signaturePrinting(inv, primary)),
+      ...(alternatePrint ? variant.always : []),
+    ])]
+    const sigs = sigCodes.map((c) => {
       const d = ALL_CARDS[c]
       return {
         code: c,

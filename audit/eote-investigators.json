@@ -3,7 +3,7 @@
   "cycle": "eote",
   "phase": "P5",
   "generatedBy": "tools/audit-eote-investigators.mjs",
-  "status": "verified",
+  "status": "pending",
   "items": [
     {
       "code": "08001",
@@ -253,22 +253,22 @@
     "browserAcceptance": true,
     "investigatorsAllVerified": true,
     "packBoundary": true,
-    "parallelVersionsOutOfScope": true,
+    "parallelVersionsOutOfScope": false,
     "originalBaselinePreserved": true,
     "replayZeroDrift": true,
     "fastNoNewFailures": true,
-    "docsPresent": true
+    "docsPresent": false
   },
   "gates": {
     "nodeAcceptance": true,
     "browserAcceptance": true,
     "investigatorsAllVerified": true,
     "packBoundary": true,
-    "parallelVersionsOutOfScope": true,
+    "parallelVersionsOutOfScope": false,
     "originalBaselinePreserved": true,
     "replayZeroDrift": true,
     "fastNoNewFailures": true,
-    "docsPresent": true
+    "docsPresent": false
   },
   "deliveredInvestigators": [
     "08001",
@@ -333,7 +333,7 @@
   "sources": [
     {
       "path": "audit/eote-baseline.json",
-      "sha256": "e7eb3a2b4ed251de83a50b9393665a4404b2f86b3d55f6e02160030358ed73e6"
+      "sha256": "736ecf6e1a8d9b352c15b8bfc4fa28bec36fcf3ff4373066886d14205a5a1127"
     },
     {
       "path": "audit/eote-investigators-browser.json",
@@ -429,11 +429,11 @@
     },
     {
       "path": "src/deck/availability.js",
-      "sha256": "a918bf81d36b9d1962dcd85fd02c6edf789442f70f3c0c708d3c89e355ab9d14"
+      "sha256": "e865a733c178b7ae56345da23ffdebf60a8cf4741cb746669ba4539b182a7079"
     },
     {
       "path": "src/deck/deckbuilding.js",
-      "sha256": "654b99784b0bacef241d69d00fe5a6887a1b55bcad7abca99d6ad79316dbfeb8"
+      "sha256": "0676c48dfc7e4ca746b68a1e91752d33f06bf155baa979645a57df3347bcef20"
     }
   ],
   "evidence": [

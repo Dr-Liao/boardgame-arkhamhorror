@@ -175,6 +175,27 @@ import * as retCarcosaAPhantomOfTruth from './campaigns/returnToThePathToCarcosa
 import * as retCarcosaThePallidMask from './campaigns/returnToThePathToCarcosa/scenarios/returnToThePallidMask/index.js'
 import * as retCarcosaBlackStarsRise from './campaigns/returnToThePathToCarcosa/scenarios/returnToBlackStarsRise/index.js'
 import * as retCarcosaDimCarcosa from './campaigns/returnToThePathToCarcosa/scenarios/returnToDimCarcosa/index.js'
+// 批次 4：Blob（普通 + ELSE! 双章节）、War of the Outer Gods、Labyrinths of Lunacy。
+import { manifest as theBlobThatAteEverything } from './campaigns/theBlobThatAteEverything/manifest.js'
+import * as theBlobThatAteEverythingChapter from './campaigns/theBlobThatAteEverything/scenarios/theBlobThatAteEverything/index.js'
+import * as theBlobThatAteEverythingElseChapter from './campaigns/theBlobThatAteEverything/scenarios/theBlobThatAteEverythingElse/index.js'
+import { manifest as warOfTheOuterGods } from './campaigns/warOfTheOuterGods/manifest.js'
+import * as warOfTheOuterGodsChapter from './campaigns/warOfTheOuterGods/scenarios/warOfTheOuterGods/index.js'
+import { manifest as machinationsThroughTime } from './campaigns/machinationsThroughTime/manifest.js'
+import * as machinationsThroughTimeChapter from './campaigns/machinationsThroughTime/scenarios/machinationsThroughTime/index.js'
+import { manifest as redTideRising } from './campaigns/redTideRising/manifest.js'
+import * as redTideRisingChapter from './campaigns/redTideRising/scenarios/redTideRising/index.js'
+import { manifest as relicsOfThePast } from './campaigns/relicsOfThePast/manifest.js'
+import * as relicsOfThePastChapter from './campaigns/relicsOfThePast/scenarios/relicsOfThePast/index.js'
+import { manifest as laidToRest } from './campaigns/laidToRest/manifest.js'
+import * as laidToRestChapter from './campaigns/laidToRest/scenarios/laidToRest/index.js'
+import { manifest as enthrallingEncore } from './campaigns/enthrallingEncore/manifest.js'
+import * as enthrallingEncoreChapter from './campaigns/enthrallingEncore/scenarios/enthrallingEncore/index.js'
+import { manifest as guardiansOfTheAbyss } from './campaigns/guardiansOfTheAbyss/manifest.js'
+import * as guardiansTheEternalSlumberChapter from './campaigns/guardiansOfTheAbyss/scenarios/theEternalSlumber/index.js'
+import * as guardiansTheNightsUsurperChapter from './campaigns/guardiansOfTheAbyss/scenarios/theNightsUsurper/index.js'
+import { manifest as theLabyrinthsOfLunacy } from './campaigns/theLabyrinthsOfLunacy/manifest.js'
+import * as theLabyrinthsOfLunacyChapter from './campaigns/theLabyrinthsOfLunacy/scenarios/theLabyrinthsOfLunacy/index.js'
 // 批次 2：独立支线（Curse of the Rougarou）作为独立单章战役注册；主战役的关间插入
 // 由各主战役 manifest 的 `sideStories` 声明 + hubStartSideStory 驱动（引擎已接通）。
 import { manifest as curseOfTheRougarou } from './campaigns/curseOfTheRougarou/manifest.js'
@@ -208,7 +229,9 @@ let bundle = {
     theDreamEaters, theInnsmouthConspiracy, eoteCampaignManifest, tskCampaignManifest, fhvCampaignManifest,
     tdcCampaignManifest, returnToTheDunwichLegacy, returnToThePathToCarcosa,
     curseOfTheRougarou, carnevaleOfHorrors, murderAtTheExcelsiorHotel, returnToNightOfTheZealot,
-    readOrDie, allOrNothing, badBlood, byTheBook],
+    readOrDie, allOrNothing, badBlood, byTheBook,
+    theBlobThatAteEverything, warOfTheOuterGods, theLabyrinthsOfLunacy, guardiansOfTheAbyss,
+    laidToRest, enthrallingEncore, redTideRising, relicsOfThePast, machinationsThroughTime],
   scenarios: [gathering, masks, devourer, extracurricularActivity, theHouseAlwaysWins, theMiskatonicMuseum,
     theEssexCountyExpress, bloodOnTheAltar, undimensionedAndUnseen, whereDoomAwaits, lostInTimeAndSpace,
     curtainCall, theLastKing, echoesOfThePast, theUnspeakableOath, aPhantomOfTruth, thePallidMask,
@@ -238,7 +261,11 @@ let bundle = {
     retCarcosaCurtainCall, retCarcosaTheLastKing, retCarcosaEchoesOfThePast, retCarcosaTheUnspeakableOath,
     retCarcosaAPhantomOfTruth, retCarcosaThePallidMask, retCarcosaBlackStarsRise, retCarcosaDimCarcosa,
     curseOfTheRougarouChapter, carnevaleOfHorrorsChapter, murderAtTheExcelsiorHotelChapter,
-    readOrDieChapter, allOrNothingChapter, badBloodChapter, byTheBookChapter],
+    readOrDieChapter, allOrNothingChapter, badBloodChapter, byTheBookChapter,
+    theBlobThatAteEverythingChapter, theBlobThatAteEverythingElseChapter, warOfTheOuterGodsChapter, theLabyrinthsOfLunacyChapter,
+    guardiansTheEternalSlumberChapter, guardiansTheNightsUsurperChapter,
+    laidToRestChapter, enthrallingEncoreChapter, redTideRisingChapter, relicsOfThePastChapter,
+    machinationsThroughTimeChapter],
 }
 export let contentRegistry = createContentRegistry(bundle)
 

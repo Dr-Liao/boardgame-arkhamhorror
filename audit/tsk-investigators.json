@@ -316,7 +316,7 @@
   "sources": [
     {
       "path": "audit/tsk-baseline.json",
-      "sha256": "8757a5d8044af19dcb9f6be8adcd2a941fb9f381451afe7729b0b16f494b541a"
+      "sha256": "0057cdf5da8700135dcff967a10569a86f9b154c4a132ab2db0ad91b4627065b"
     },
     {
       "path": "audit/tsk-investigators-browser.json",
@@ -420,15 +420,15 @@
     },
     {
       "path": "src/deck/availability.js",
-      "sha256": "674b2b60c655b878bf5b5e02f7cf8d04134935f1eef4742c9751da07560aa9f5"
+      "sha256": "e865a733c178b7ae56345da23ffdebf60a8cf4741cb746669ba4539b182a7079"
     },
     {
       "path": "src/deck/deckbuilding.js",
-      "sha256": "bb6b5e866ec4a981f4267fc5f98da9f7bb6b4811c225202280de1d9ec11910cc"
+      "sha256": "dfea133c08f67b1ef493726976ae97c670928df1348ef17e652ed354a2adc770"
     },
     {
       "path": "web/deck-rules.js",
-      "sha256": "8df48d4a2843823f7d3f201cb543cce1e51eaed9854fe66c1e79cbd6464a0c20"
+      "sha256": "2b7aee32068272b949b7449f17caef750a6794554d43fb148b1dd643054761aa"
     }
   ],
   "evidence": [

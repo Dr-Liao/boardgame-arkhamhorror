@@ -24,7 +24,7 @@ import {
 } from './investigator-form.js'
 import { requestChoice } from './resolution.js'
 import { investigatorRule } from '../cards/card-rules.js'
-import { applyStartingDeckExperience, campaignAllowsInvestigator, campaignOpeningExperience } from '../campaign/campaign.js'
+import { applyStartingDeckExperience, campaignAllowsInvestigator, campaignOpeningExperience, campaignSeatingIncludesRequired } from '../campaign/campaign.js'
 import { deckAfterSurvey, restoreSurveyInvestigator, surveyForDestination, surveyForInvestigator } from './survey-preparation.js'
 import { expirePurchaseDiscounts } from '../campaign/purchase-discount.js'
 import { initBeginGameDisciplines, syncPassiveDeckTop } from './eote-investigator-support.js'
@@ -546,8 +546,12 @@ function createGameState(settings, players, { sharedFreeWindows = true } = {}) {
   const seed = String(settings.seed ?? randomUUID())
   const randomState = { rngState: hashSeed(seed) >>> 0 }
   // 渐进式会同时收窄可选调查员；全部模式保持原来的候选表与随机流。
-  const invCodes = (manifest.opening?.investigators || PLAYABLE_INVESTIGATORS).filter(code => allowsCard(code, poolContext))
-  if (manifest.opening?.investigators
+  // 批次 4：挑战战役可在 opening.requiredInvestigators 声明「指定调查员必须在场，其余任意」。
+  const opensAny = manifest.opening?.anyInvestigators === true
+  const requiredInvestigators = manifest.opening?.requiredInvestigators
+    || (opensAny ? manifest.opening?.investigators || [] : [])
+  const invCodes = ((opensAny ? null : manifest.opening?.investigators) || PLAYABLE_INVESTIGATORS).filter(code => allowsCard(code, poolContext))
+  if (!opensAny && manifest.opening?.investigators
     && new Set(invCodes.map(code => investigatorIdentity(code, ALL_INVESTIGATORS))).size < players.length) {
     throw new Error('本战役开放的调查员不足以填满当前席位')
   }
@@ -558,7 +562,11 @@ function createGameState(settings, players, { sharedFreeWindows = true } = {}) {
   const order = shuffle(invCodes, () => randomValue(orderState))
 
   let humanPick = settings.playerInvestigator
-  if (!humanPick || humanPick === 'auto' || humanPick === '__random__') humanPick = order[0]
+  if (!humanPick || humanPick === 'auto' || humanPick === '__random__') {
+    // 单个指定调查员的挑战：默认直接选它（多人时其余座位仍可任选）。
+    humanPick = requiredInvestigators.length === 1 && invCodes.includes(requiredInvestigators[0])
+      ? requiredInvestigators[0] : order[0]
+  }
   if (!canSelectInvestigator(humanPick) || !Object.hasOwn(ALL_INVESTIGATORS, humanPick)) {
     throw new Error(`调查员未开放：${humanPick}`)
   }
@@ -601,6 +609,11 @@ function createGameState(settings, players, { sharedFreeWindows = true } = {}) {
     investigators.push(makeInvestigator(ALL_INVESTIGATORS[code], p.seat))
   }
 
+  // 批次 4：指定调查员必须在场（其余座位任意）。大厅流程（campaignHub）在 hubBeginScenario 校验，
+  // 因为调查员是在大厅内逐步选择的；直接开局时立刻校验。
+  if (!settings.campaignHub && !campaignSeatingIncludesRequired(manifest, investigators.map(inv => inv.code))) {
+    throw new Error(`本战役要求包含指定调查员之一：${requiredInvestigators.join(' / ')}`)
+  }
   if (settings.deckMode === 'draft') settings = { ...settings, campaignHub: true, playerDeck: null }
   const difficulty = settings.difficulty || 'standard'
   const state = {

@@ -1,0 +1,285 @@
+{
+  "id": "machinationsThroughTime",
+  "campaignId": "machinationsThroughTime",
+  "sourceKind": "authored",
+  "officialChinese": false,
+  "note": "单桌普通流程（三时代同桌面）指南；epic multiplayer 跨桌/多时代同步由跨桌引擎提供。",
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "时间阴谋",
+          "text": "报纸头条写着「本地科学家荣获诺贝尔奖！」日期是 1956 年 12 月 5 日。你读到托马斯·科里根与玛丽·杰林斯基的故事：他们的研究最终发现了传送术，却在多年前离奇失踪。著名科学家凭空消失，伟大发明不复存在，历史性发现被抹去。阿尔卡姆各处裂开传送门，门后是廷达洛斯。你必须在过去、现在与未来三个时代修复破碎的时间线。"
+        },
+        {
+          "id": "timeline",
+          "title": "三个时代",
+          "text": "阿尔卡姆的地点分布在三个时代：过去、现在与未来。各时代的剧情卡记录托马斯·科里根与玛丽·杰林斯基的生平；完成它们即可修复时间线。"
+        },
+        {
+          "id": "tindalos",
+          "title": "棱角时间之境",
+          "text": "廷达洛斯是棱角时间之境，是廷达洛斯猎犬与其主提尔斯哈的居所。传送门把它与每个时代相连。"
+        }
+      ],
+      "setup": [
+        {
+          "id": "gatherSets",
+          "text": "收集《时间阴谋》与 单组模式 遭遇组的全部卡牌。"
+        },
+        {
+          "id": "corriganIndustries",
+          "text": "把科里根工业地点放在一边（场外）。"
+        },
+        {
+          "id": "placeLocations",
+          "text": "使用 单组模式 面把廷达洛斯放入场；再按时代布置图把其余 14 个地点放入场。"
+        },
+        {
+          "id": "startAt",
+          "text": "每位调查员从廷达洛斯开始游戏。"
+        },
+        {
+          "id": "nobleLegacy",
+          "text": "把「伟大遗产（过去）」「伟大遗产（现在）」「伟大遗产（未来）」依次放入场并结算各自设置文本（在过去河滨码头放置尼古拉·特斯拉、在现在阿卡姆广告报放置埃兹拉·格雷夫斯，把维度光束机器放在一边）。"
+        },
+        {
+          "id": "machination",
+          "text": "从三张 Machination 剧情卡中随机选 1 张放入场并结算设置；其余 2 张移出游戏。"
+        },
+        {
+          "id": "plot",
+          "text": "从三张 Plot 剧情卡中随机选 1 张放入场并结算设置；其余 2 张移出游戏。"
+        },
+        {
+          "id": "doom",
+          "text": "在密谋 1a 上放置 1[per_investigator] 个毁灭标记；简单移除 1 个，困难加 1 个，专家加 2 个。"
+        },
+        {
+          "id": "shuffleRemainder",
+          "text": "把剩余 33 张遭遇卡洗成遭遇牌库，准备开始。"
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "tokens",
+          "title": "混乱标记",
+          "text": "skull：-X，X=1（简单/普通）或 2（困难/专家）+胜利区剧情卡数量。cultist：-1/-2；若你在廷达洛斯则自动失败。tablet：-2/-3；若你所在地点有科学家支援则改为 -4/-6。elderthing：-3/-4；若失败，对你所在地点的一张盟友支援造成 1 伤害或 1 恐惧。"
+        },
+        {
+          "id": "abduct",
+          "title": "绑架",
+          "text": "强制：一张科学家支援将要被击败时，改为将其绑架（放在一边，场外）。"
+        },
+        {
+          "id": "agendaBacks",
+          "title": "密谋背面",
+          "text": "密谋 1b 结算当前 Plot 剧情卡的后续影响（生成谢尔顿帮/老萨迪、提尔斯哈，或翻面处理剧情卡）。密谋 2b：每个时代每位剩余调查员被击败并受 1 点精神创伤，然后按艾德温·贝内特是支援还是敌人推进到结局 2/3/4。"
+        },
+        {
+          "id": "actObjective",
+          "title": "穿行时光",
+          "text": "任何调查员均可触发其所在地点科学家支援上的能力；移动时可带走同地点任意数量的科学家支援。目标：三个时代中托马斯·科里根与玛丽·杰林斯基都位于非廷达洛斯地点，且每个时代都没有 Plot 剧情卡位于场上，推进。"
+        },
+        {
+          "id": "nobleChain",
+          "title": "伟大遗产",
+          "text": "按过去→现在→未来的顺序完成各时代剧情卡上的能力，并为每个能力标记「已触发」。一张剧情卡上的三个能力全部触发后，把它加入胜利区。"
+        },
+        {
+          "id": "plots",
+          "title": "Plot 剧情卡",
+          "text": "时空异常：在每个米斯卡塔尼克大学地点放置 1[per_investigator] 点恐惧作为异常，并把提尔斯哈、老萨迪与谢尔顿帮移出游戏。黑帮麻烦：把老萨迪与 3 名谢尔顿帮放在一边，提尔斯哈移出游戏，现在时代调查员各获 2 资源。不可名状的怪物：把提尔斯哈放在一边，老萨迪与谢尔顿帮移出游戏。"
+        }
+      ],
+      "story": [
+        {
+          "id": "machinations",
+          "title": "Machination 剧情卡",
+          "text": "苦涩的竞争：玛丽·杰林斯基在过去阿卡姆公报，托马斯·科里根被绑架，艾德温·贝内特（敌人）放在一边。救赎旧日同事：托马斯·科里根在过去童年之家，玛丽被绑架，艾德温·贝内特敌人生成在现在的米斯卡塔尼克大学。不安的联盟：托马斯·科里根在过去童年之家、玛丽在过去奥马利钟表店，艾德温·贝内特支援在阿卡姆公报并带有线索。"
+        },
+        {
+          "id": "nobleLegacyPast",
+          "title": "伟大遗产（过去）",
+          "text": "宣告托马斯和玛丽相识了；宣告他们受尼古拉·特斯拉启发；宣告天文台开始筹建。"
+        },
+        {
+          "id": "nobleLegacyPresent",
+          "title": "伟大遗产（现在）",
+          "text": "宣告天文台建成了；宣告传送研究开始了；宣告科里根工业成立（把科里根工业地点放入未来时代）。"
+        },
+        {
+          "id": "nobleLegacyFuture",
+          "title": "伟大遗产（未来）",
+          "text": "取得维度光束机器，宣告托马斯和玛丽取得历史性发现，并宣告他们获得诺贝尔奖。"
+        }
+      ],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "没有结局",
+          "text": "无数廷达洛斯猎犬从传送门中涌出。每个时代的每位剩余调查员被击败并受 1 点精神创伤。若艾德温·贝内特支援在场上，进入结局 2；若艾德温·贝内特敌人在场上，进入结局 3；否则进入结局 4。"
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "text": "科里根与杰林斯基的研究帮助你们封印了阿尔卡姆所有通往廷达洛斯的传送门，艾德温·贝内特的阴谋不再威胁世界。每位调查员获得胜利区每张卡 Victory X 的经验，并可把尼古拉·特斯拉、埃兹拉·格雷夫斯或维度光束机器加入牌库。"
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "text": "你们从怪兽爪下逃脱，但时间线无法修复；你们选择相信艾德温·贝内特来修复一切。每位调查员获得胜利区经验并可把奖励资产加入牌库。"
+        },
+        {
+          "id": "resolution3",
+          "title": "结局 3",
+          "text": "你们醒来时被埋在廷达洛斯恶臭的土壤中，成为这里的永久居民；科里根与杰林斯基也一同被囚禁，艾德温·贝内特的阴谋继续蔓延。每位幸存调查员被逼疯。"
+        },
+        {
+          "id": "resolution4",
+          "title": "结局 4",
+          "text": "你们逃脱了，但时间线无法修复，人类蒙受巨大损失；唯一的好消息是艾德温·贝内特不知所踪。每位调查员获得胜利区经验并可把奖励资产加入牌库。"
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "Machinations Through Time",
+          "text": "The newspaper headline reads, \"Local scientists win Nobel Prize!\" It is dated December 5, 1956. Curious, you learn of Thomas Corrigan and Mary Zielinski, whose research culminated in the discovery of teleportation, and who disappeared years ago. Prominent scientists have vanished, inventions have become un-invented, and a historic discovery has been undiscovered. Within the portals that riddle Arkham lies the realm of Tindalos. You must mend the broken timeline across the past, present, and future."
+        },
+        {
+          "id": "timeline",
+          "title": "Three Eras",
+          "text": "The locations of Arkham are spread across three eras: the Past, the Present, and the Future. Story cards in each era track the lives of Thomas Corrigan and Mary Zielinski; completing them repairs the timeline."
+        },
+        {
+          "id": "tindalos",
+          "title": "The Realm of Angular Time",
+          "text": "Tindalos is the realm of angular time, home to the Hounds of Tindalos and their master, Tyr'thrha. Portals connect it to every era."
+        }
+      ],
+      "setup": [
+        {
+          "id": "gatherSets",
+          "text": "Gather all cards from the Machinations Through Time and Single Group Mode encounter sets."
+        },
+        {
+          "id": "corriganIndustries",
+          "text": "Set the Corrigan Industries location aside, out of play."
+        },
+        {
+          "id": "placeLocations",
+          "text": "Put the Tindalos location into play using its Single Group Mode side, then put the remaining fourteen locations into play according to the era placement chart."
+        },
+        {
+          "id": "startAt",
+          "text": "Each investigator begins play at Tindalos."
+        },
+        {
+          "id": "nobleLegacy",
+          "text": "Put A Noble Legacy (Past), A Noble Legacy (Present) and A Noble Legacy (Future) into play one at a time and resolve each Setup text (place Nikola Tesla at the Past River Docks, Ezra Graves at the Present Arkham Advertiser, and set the Dimensional Beam Machine aside)."
+        },
+        {
+          "id": "machination",
+          "text": "Choose one Machination story card at random, put it into play and resolve its Setup text; remove the other two from the game."
+        },
+        {
+          "id": "plot",
+          "text": "Choose one Plot story card at random, put it into play and resolve its Setup text; remove the other two from the game."
+        },
+        {
+          "id": "doom",
+          "text": "Add 1 {'{'}perPlayer{'}'} doom to agenda 1a; remove 1 on Easy, add 1 on Hard, add 2 on Expert."
+        },
+        {
+          "id": "shuffleRemainder",
+          "text": "Shuffle the remaining 33 encounter cards into the encounter deck. You are ready to begin."
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "tokens",
+          "title": "Chaos Tokens",
+          "text": "Skull: -X, where X is 1 (Easy/Standard) or 2 (Hard/Expert) plus the number of story cards in the victory display. Cultist: -1 (Easy/Standard) or -2 (Hard/Expert); if you are at Tindalos you automatically fail. Tablet: -2/-3, or -4/-6 if a Scientist asset is at your location. Elder Thing: -3/-4; if you fail, deal 1 damage or 1 horror to an Ally asset at your location."
+        },
+        {
+          "id": "abduct",
+          "title": "Abduction",
+          "text": "Forced: When a Scientist asset would be defeated, instead abduct it (set it aside, out of play)."
+        },
+        {
+          "id": "agendaBacks",
+          "title": "Agenda Backs",
+          "text": "Agenda 1b resolves the Plot story card's setup consequences (spawn Sheldon Gang/Old Sadie Sheldon, Tyr'thrha, or flip the Plot story). Agenda 2b defeats each surviving investigator and adds 1 mental trauma, then proceeds to Resolution 2/3/4 depending on whether the Edwin Bennet asset or enemy is in play."
+        },
+        {
+          "id": "actObjective",
+          "title": "Walking Through Time",
+          "text": "Any investigator may trigger abilities on Scientist assets at their location; when you move, you may move any number of Scientist assets with you. Goal: in all three eras, Thomas Corrigan and Mary Zielinski are at non-Tindalos locations, and no Plot story card is in play. When that is true, advance."
+        },
+        {
+          "id": "nobleChain",
+          "title": "A Noble Legacy",
+          "text": "Resolve the abilities on each era's A Noble Legacy story card in order (Past, then Present, then Future), marking each ability as triggered. When all three abilities on a story card are triggered, add it to the victory display."
+        },
+        {
+          "id": "plots",
+          "title": "Plot Story Cards",
+          "text": "Anomalies in Spacetime places 1 {'{'}perPlayer{'}'} horror as anomalies on each Miskatonic University location and removes Tyr'thrha, Old Sadie Sheldon and the Sheldon Gang from the game. Mob Troubles sets Old Sadie Sheldon and 3 copies of Sheldon Gang aside, removes Tyr'thrha, and each Present-era investigator gains 2 resources. Unspeakable Abomination sets Tyr'thrha aside and removes Old Sadie Sheldon and the Sheldon Gang."
+        }
+      ],
+      "story": [
+        {
+          "id": "machinations",
+          "title": "Machinations",
+          "text": "A Bitter Rivalry: Mary Zielinski is at the Past Arkham Gazette and Thomas Corrigan has been abducted; Edwin Bennet (enemy) is set aside. Redeem a Former Colleague: Thomas Corrigan is at the Childhood Home and Mary has been abducted; Edwin Bennet (enemy) spawns at the Present Miskatonic University. Uneasy Alliance: Thomas Corrigan is at the Childhood Home and Mary at O'Malley's Watch Shop, while Edwin Bennet (asset) is at the Arkham Gazette with clues on him."
+        },
+        {
+          "id": "nobleLegacyPast",
+          "title": "A Noble Legacy (Past)",
+          "text": "Declare that Thomas and Mary have met; that they have been inspired by Nikola Tesla; and that funding for an observatory has begun."
+        },
+        {
+          "id": "nobleLegacyPresent",
+          "title": "A Noble Legacy (Present)",
+          "text": "Declare that the observatory is built; that teleportation research has begun; and that Corrigan Industries has been founded (putting the Corrigan Industries location into play in the Future)."
+        },
+        {
+          "id": "nobleLegacyFuture",
+          "title": "A Noble Legacy (Future)",
+          "text": "Retrieve the Dimensional Beam Machine, declare that Thomas and Mary have made a historic discovery, and declare that they have won a Nobel Prize."
+        }
+      ],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "No Resolution",
+          "text": "Countless Hounds burst through the portals. Each remaining investigator in all eras is defeated and suffers 1 mental trauma. If the Edwin Bennet asset is in play, proceed to Resolution 2; if the Edwin Bennet enemy is in play, proceed to Resolution 3; otherwise proceed to Resolution 4."
+        },
+        {
+          "id": "resolution1",
+          "title": "Resolution 1",
+          "text": "Corrigan and Zielinski's research helps seal every portal from Arkham to Tindalos, and Edwin Bennet's machinations are no longer a threat. Each investigator earns experience equal to the Victory X value of each card in the victory display, and may add Nikola Tesla, Ezra Graves or the Dimensional Beam Machine to their deck."
+        },
+        {
+          "id": "resolution2",
+          "title": "Resolution 2",
+          "text": "You escape the beasts, but the timeline cannot be repaired; you entrust Edwin Bennet to repair what was broken. Each investigator earns victory-display experience and may add the reward assets to their deck."
+        },
+        {
+          "id": "resolution3",
+          "title": "Resolution 3",
+          "text": "You wake buried to your neck in the fetid soil of Tindalos as permanent residents; Corrigan and Zielinski are imprisoned there too, and Edwin Bennet's schemes continue unimpeded. Each surviving investigator is driven insane."
+        },
+        {
+          "id": "resolution4",
+          "title": "Resolution 4",
+          "text": "You escape the beasts and the timeline remains broken, but Edwin Bennet is nowhere to be found. Each investigator earns victory-display experience and may add the reward assets to their deck."
+        }
+      ]
+    }
+  }
+}

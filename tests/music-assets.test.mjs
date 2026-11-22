@@ -31,6 +31,42 @@ test('每个已配置关卡都有两到三首独立 BGM，所有音乐均参与�
   assert.ok([...uses.keys()].every(id => !forgottenTracks.has(id)), '三循环歌单应使用独立曲库')
 })
 
+test('支线与重返系列每关三首，支线共用战役插画与既有牌桌图', () => {
+  const commonTable = campaignPresentation('common').assets.tableOverlay
+  const covers = new Set()
+  for (const campaign of contentRegistry.listCampaigns()) {
+    const { id, scenarioIds } = campaign
+    const sideStory = campaign.sideStory ?? (scenarioIds.length === 1 && scenarioIds[0] === id)
+    if (!sideStory && !id.startsWith('returnTo')) continue
+    const { hubHero, tableOverlay } = campaignPresentation(id).assets
+    assert.equal(campaignPlaylistId({ campaign: { id }, uiState: 'campaignHub' }), id)
+    if (sideStory) {
+      const file = hubHero.replace('/mods/arkhamhorror/', '../web/')
+      const data = readFileSync(new URL(file, import.meta.url))
+      assert.equal(data.subarray(8, 12).toString(), 'WEBP', id)
+      const hash = createHash('sha256').update(data).digest('hex')
+      assert.ok(!covers.has(hash), id)
+      covers.add(hash)
+      assert.equal(tableOverlay, commonTable, id)
+    }
+    for (const scenarioId of scenarioIds) {
+      const theme = campaignPresentation(id, scenarioId)
+      assert.equal(theme.musicPlaylist, `${id}/${scenarioId}`)
+      const tracks = musicTracksForPlaylist(theme.musicPlaylist)
+      assert.equal(tracks.length, 3, scenarioId)
+      assert.equal(new Set(tracks.map(track => track.isrc)).size, 3, scenarioId)
+      if (sideStory) {
+        assert.equal(theme.assets.storyDefault, hubHero, scenarioId)
+        assert.equal(theme.assets.tableOverlay, commonTable, scenarioId)
+      }
+    }
+  }
+  const inserted = campaignPresentation('nightOfTheZealot', 'curseOfTheRougarou')
+  assert.equal(inserted.assets.storyDefault, campaignPresentation('curseOfTheRougarou').assets.hubHero)
+  assert.equal(inserted.assets.tableOverlay, campaignPresentation('nightOfTheZealot').assets.tableOverlay)
+  assert.equal(inserted.musicPlaylist, 'curseOfTheRougarou/curseOfTheRougarou')
+})
+
 test('食梦者八关各三首，旧曲复用不超过 40%，新增音频只存通用曲库', () => {
   const chapters = Object.values(SCENARIO_MUSIC.theDreamEaters)
   assert.equal(chapters.length, 8)

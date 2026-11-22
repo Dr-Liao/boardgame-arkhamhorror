@@ -20,11 +20,11 @@ test('Arkham 开局可逐席选择 AI，人数切换保留选择且实际座位�
     const origin = `http://127.0.0.1:${server.address().port}`
     const errors = []
     page.on('pageerror', error => errors.push(error.message))
-    await page.goto(origin)
+    await page.goto(origin, { waitUntil: 'domcontentloaded' })
     await page.click('.bg-settings-btn')
     await page.locator('.bg-backdrop').click({ position: { x: 1, y: 1 } })
     await expect(page.getByRole('heading', { name: '⚙️ 设置' })).toBeVisible()
-    await page.getByRole('button', { name: '👤 玩家', exact: true }).click()
+    await page.getByRole('button', { name: '玩家', exact: true }).click()
     await page.getByLabel('玩家名称', { exact: true }).fill('星河队长')
     await page.getByLabel('上传玩家头像', { exact: true }).setInputFiles(fileURLToPath(new URL('../../../public/avatars/yuzu.webp', import.meta.url)))
     await expect(page.getByRole('img', { name: '玩家头像预览', exact: true }).locator('img')).toBeVisible()
@@ -78,8 +78,10 @@ test('Arkham 开局可逐席选择 AI，人数切换保留选择且实际座位�
     await expect(page.getByRole('dialog', { name: 'AI 高级设置' })).toHaveCount(0)
 
     // 游戏高级设置：卡牌范围（默认全部）与回档开关（默认允许）。
-    await page.getByRole('button', { name: '修改游戏高级设置', exact: true }).click()
-    const gameSettings = page.getByRole('dialog', { name: '游戏高级设置' })
+    const setup = page.getByRole('dialog', { name: '调查准备设置' })
+    await setup.getByRole('button', { name: '选择战役', exact: true }).click()
+    const picker = page.getByRole('dialog', { name: '选择战役', exact: true })
+    const gameSettings = picker.getByRole('group', { name: '游戏高级设置' })
     await expect(gameSettings).toBeVisible()
     if (CARD_POOL_RESTRICTION_ENABLED) {
       const scopeSelect = gameSettings.getByLabel('卡牌范围', { exact: true })
@@ -92,14 +94,8 @@ test('Arkham 开局可逐席选择 AI，人数切换保留选择且实际座位�
     const rollback = gameSettings.getByLabel('允许回档', { exact: true })
     await expect(rollback).toBeChecked()
     await rollback.uncheck()
-    await page.getByRole('button', { name: '关闭游戏高级设置', exact: true }).click()
-    await expect(page.getByRole('dialog', { name: '游戏高级设置' })).toHaveCount(0)
-    if (CARD_POOL_RESTRICTION_ENABLED) {
-      await expect(page.locator('.ah-ai-dialogue-settings').filter({ hasText: '游戏高级设置' })).toContainText('渐进式')
-    } else {
-      await expect(page.locator('.ah-ai-dialogue-settings').filter({ hasText: '游戏高级设置' })).not.toContainText('渐进式')
-    }
-    await expect(page.locator('.ah-ai-dialogue-settings').filter({ hasText: '游戏高级设置' })).toContainText('禁止')
+    await picker.getByRole('button', { name: '确认选择', exact: true }).click()
+    await expect(picker).toHaveCount(0)
 
     const teammates = page.getByRole('combobox', { name: /^AI 队友/ })
     const count = page.getByRole('combobox', { name: '席位数量' })

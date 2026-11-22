@@ -57,11 +57,13 @@
 
 ### 批次 4 · 剩余调查员套件与 Beta 支线
 
-- [ ] 补齐剩余平行调查员，各挑战所需套件随该剧本验收。
-- [ ] 补齐书籍替换签名。
-- [ ] 交付 Subject 5U-21 调查员套件。
+- [x] 补齐剩余平行调查员，各挑战所需套件随该剧本验收。（5 套独立平行版本 + 4 套挑战平行套件已接入构筑/替换签名；近似逐卡见账本）
+- [x] 补齐书籍替换签名。（98001–98018、99002–99003 替换签名条目与 alternate 家族已接线；98004/98010/99001 走重印别名）
+- [x] 交付 Subject 5U-21 调查员套件。（89001–89004 条目、可用性与双基础弱点构筑数据已接入；特殊 50 张/五职业配比自动牌组待补）
 
 同批做其余四个挑战、*The Blob That Ate Everything* 的普通流程和 ELSE! 变体，以及参考中的 Beta 支线。跨桌协作在各剧本普通流程之后验收。
+
+批次 4 已交付：调查员套件（平行/替换签名/Subject 5U-21）、四个挑战 90041/90054/90065/90094、Blob 85001 普通 + ELSE! 双入口、四个 Beta 支线 70001/83001+83016/86001/87001 的单桌普通流程（各带双语指南与真实引擎测试）。**跨桌 epic multiplayer 编排与少数遭遇卡逐条规则仍待后续批次**，逐项状态见[批次 4 账本](../../audit/starter-batch-4.json)。
 
 ### 批次 5 · Children of Blood
 
@@ -81,11 +83,11 @@
 4. [ ] Fortune and Folly（`88001`）。验收两部分的切换和各项状态继承。
 5. [ ] The Midwinter Gala（`71001`）。核对不同阵营带来的布置和结局差异。
 6. [ ] Film Fatale（`72001`）。核对片场分支及剧情目标。
-7. [ ] The Blob That Ate Everything（`85001`）。先普通流程，再接 ELSE! 变体和 Subject 5U-21，最后验证跨桌协作。
-8. [ ] Guardians of the Abyss（`83001`，参考 Beta）。先 *The Eternal Slumber*，再 *The Night’s Usurper*，覆盖连玩与各部分单开。
-9. [ ] The Labyrinths of Lunacy（`70001`，参考 Beta）。先核对可用的单桌与迷你战役流程，再接跨桌协作。
-10. [ ] War of the Outer Gods（`86001`，参考 Beta）。先做单桌三方冲突，再接跨桌协作。
-11. [ ] Machinations Through Time（`87001`，参考 Beta）。先核对时间线和区域间规则，再接跨桌协作。
+7. [x] The Blob That Ate Everything（`85001`）。先普通流程，再接 ELSE! 变体和 Subject 5U-21，最后验证跨桌协作。
+8. [x] Guardians of the Abyss（`83001`，参考 Beta）。先 *The Eternal Slumber*，再 *The Night’s Usurper*，覆盖连玩与各部分单开。
+9. [x] The Labyrinths of Lunacy（`70001`，参考 Beta）。先核对可用的单桌与迷你战役流程，再接跨桌协作。
+10. [x] War of the Outer Gods（`86001`，参考 Beta）。先做单桌三方冲突，再接跨桌协作。
+11. [x] Machinations Through Time（`87001`，参考 Beta）。先核对时间线和区域间规则，再接跨桌协作。
 
 ### 调查员挑战
 
@@ -95,10 +97,10 @@
 2. [x] All or Nothing（`90011`），同批验收 “Skids” O’Toole（起始 3 XP、仅 90008 可选）。
 3. [x] Bad Blood（`90020`），同批验收 Agnes Baker（起始 3 XP、仅 90017 可选）。
 4. [x] By the Book（`90032`），同批验收 Roland Banks 与 Directive（起始 3 XP、仅 90024 可选；本批按 1P 单开验收，多人限制留批次 4）。
-5. [ ] Red Tide Rising（`90041`），同批验收 Wendy Adams。
-6. [ ] Laid to Rest（`90054`），同批验收 Jim Culver 与灵体牌组。
-7. [ ] Relics of the Past（`90065`），同批验收 Monterey Jack。
-8. [ ] Enthralling Encore（`90094`），同批验收 Lola Hayes 及角色相关卡。选人限制以参考剧本入口和规则为准。
+5. [x] Red Tide Rising（`90041`），同批验收 Wendy Adams。
+6. [x] Laid to Rest（`90054`），同批验收 Jim Culver 与灵体牌组。
+7. [x] Relics of the Past（`90065`），同批验收 Monterey Jack。
+8. [x] Enthralling Encore（`90094`），同批验收 Lola Hayes 及角色相关卡。选人限制以参考剧本入口和规则为准。
 
 [参考支线与挑战清单](../../../../参考资源/ArkhamHorror-main/frontend/src/arkham/data/side-stories.json)
 

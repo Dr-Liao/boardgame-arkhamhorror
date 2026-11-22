@@ -95,7 +95,7 @@ export function campaignListForUi(registry) {
   }).map(campaign => ({
     id: campaign.id, name: campaign.name, nameEn: campaign.nameEn, recordLabels: campaign.recordLabels || {},
     flow: campaignGraph(campaign),
-    status: campaign.status, earlyAccess: EARLY_ACCESS_CAMPAIGNS.has(campaign.id),
+    status: campaign.status, earlyAccess: EARLY_ACCESS_CAMPAIGNS.has(campaign.id), sideStory: campaign.sideStory,
     contentPacks: registry.listPacks().map(pack => ({
       id: pack.id, name: pack.name || pack.id, status: pack.status, description: pack.description,
       required: campaign.requiredPackIds.includes(pack.id),

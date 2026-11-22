@@ -25,9 +25,15 @@ const BORROW_ONLY_CAMPAIGNS = new Set([
   'returnToNightOfTheZealot', 'returnToTheDunwichLegacy', 'returnToThePathToCarcosa',
   'curseOfTheRougarou', 'carnevaleOfHorrors', 'murderAtTheExcelsiorHotel',
   'readOrDie', 'allOrNothing', 'badBlood', 'byTheBook',
+  // 批次 4：挑战 / Blob / Beta 支线借用基础循环与旧战役的非玩家卡。
+  'redTideRising', 'laidToRest', 'relicsOfThePast', 'enthrallingEncore',
+  'theBlobThatAteEverything', 'theLabyrinthsOfLunacy', 'guardiansOfTheAbyss',
+  'warOfTheOuterGods', 'machinationsThroughTime',
 ])
 // 本批新发行包：这些包里的卡只出现在新战役，按新战役归属。
-const NEW_STORY_PACKS = new Set(['rtnotz', 'rtdwl', 'rtptc', 'cotr', 'coh', 'hotel', 'rod', 'aon', 'bad', 'btb'])
+const NEW_STORY_PACKS = new Set(['rtnotz', 'rtdwl', 'rtptc', 'cotr', 'coh', 'hotel', 'rod', 'aon', 'bad', 'btb',
+  // 批次 4
+  'rtr', 'ltr', 'rop', 'enc', 'blob', 'blbe', 'lol', 'guardians', 'wog', 'mtt'])
 
 // 'card'：战役专属的「玩家侧弱点牌库」条目（如忒咳哩-哩 16 张弱点）需要玩家 scope 的
 // weakness 生命周期；它们仍按归属目录落盘，不进入常规非玩家实体枚举。

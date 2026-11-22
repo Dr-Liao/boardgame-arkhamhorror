@@ -30,7 +30,11 @@ const TOP_LEVEL = new Set(['shared', 'nightOfTheZealot', 'theDunwichLegacy', 'th
   // 批次 2：重返战役 / 独立支线 / 调查员挑战
   'returnToNightOfTheZealot', 'returnToTheDunwichLegacy', 'returnToThePathToCarcosa',
   'curseOfTheRougarou', 'carnevaleOfHorrors', 'murderAtTheExcelsiorHotel',
-  'readOrDie', 'allOrNothing', 'badBlood', 'byTheBook'])
+  'readOrDie', 'allOrNothing', 'badBlood', 'byTheBook',
+  // 批次 4（已完成注册的战役；redTideRising/relicsOfThePast/machinationsThroughTime 完成后追加）
+  'laidToRest', 'enthrallingEncore', 'redTideRising', 'relicsOfThePast',
+  'theBlobThatAteEverything', 'theLabyrinthsOfLunacy', 'guardiansOfTheAbyss',
+  'machinationsThroughTime'])
 const SCOPED_DIRECTORIES = new Set(['enemies', 'treacheries', 'locations', 'acts', 'agendas', 'storyAssets', 'threats', 'all'])
 
 const relativeOf = file => path.relative(ENTRY_DIR, file).split(path.sep).join('/')

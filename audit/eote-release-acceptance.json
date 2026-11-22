@@ -177,7 +177,7 @@
   "allCards": {
     "path": "audit/eote-all-card-acceptance.json",
     "hasLedger": true,
-    "sha256": "8a78abd3b77d903ebb0c639b0d3a4da3cb6fcc866461f17bea977bc5ea800f00",
+    "sha256": "b862f0d41c541ca12ff48834e44c84b021d1ab2f78bb50d9884238ee6fb7609f",
     "generatedBy": "tools/audit-eote-all-cards.mjs",
     "status": "pending",
     "summary": {
@@ -202,7 +202,7 @@
   },
   "cardImages": {
     "path": "audit/eote-scope.json",
-    "sha256": "daac95c08f98e556963a361fdfc06bd2a94e53604c128493fb0ea04c65f24370",
+    "sha256": "22535b8097b5b43dacff7d52a807f9f5f5d40907f644c41e9f64fbc8424563e1",
     "english": "web/img/cards/",
     "chinese": "web/img/zh/cards/",
     "remoteFallback": [

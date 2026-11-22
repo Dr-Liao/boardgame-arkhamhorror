@@ -293,6 +293,9 @@ export function createCardDefs(deps) {
   // 不传 state 的旧调用保持全量池；战役起始牌组额外拿到本战役已开放玩家包的卡（P10）。
   function corePlayerPool(state = null, investigatorCode = null) {
     const context = cardPoolContext(state)
+    // 批次 4：Subject 5U-21 的构筑允许「中立任意等级 + 任意职阶 0 级 + 每职阶≥7」，
+    // 默认 34 张核心池不足；自动构筑改用全部已开放玩家池（仍按卡牌范围过滤）。
+    if (registeredEntry(investigatorCode)?.investigator?.specialDeckbuilding === 'subject5u21') return availablePlayerPool(state)
     const base = playablePool()
     const campaignCodes = [...campaignDeckbuildingCodes(state), ...starterPlayerCardsFor(investigatorCode),
       ...(CORE2026_INVESTIGATOR_CODES.includes(investigatorCode) ? CORE2026_PLAYER_CARD_CODES : [])]

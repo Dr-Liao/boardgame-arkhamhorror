@@ -41,6 +41,9 @@ import { expansionPlayerCodes } from '../../content/expansions.js'
 import { coreCardVerified, CORE_ACCEPTANCE_PROFILE } from '../cards/core-acceptance.js'
 import { tfaPlayerCardVerified, tfaPlayerBuildable, IMPLEMENTED_PLAYER_CODES, manifest as tfaPlayerPack } from '../../content/packs/tfaPlayer/manifest.js'
 import { starterInvestigators, starterPlayerCards, starterSignatures, starterWeaknesses } from './starter-packs.js'
+import {
+  BATCH4_DEPENDENCY_CODES, BATCH4_INVESTIGATORS, BATCH4_SIGNATURES_BY_INVESTIGATOR,
+} from '../../content/packs/batch4/player-sets.js'
 // 批次 3：2026 核心盒玩家侧（5 调查员 + 10 签名 + 8 基础弱点 + 54 普通玩家卡）。
 import {
   CORE2026_INVESTIGATOR_CODES, CORE2026_SIGNATURE_CODES, CORE2026_SIGNATURES_BY_INVESTIGATOR,
@@ -84,7 +87,7 @@ export const PLAYABLE_INVESTIGATOR_CODES = Object.freeze([
 // 种子用例的 AI 选人漂移；P10 的发布门禁要求旧 baseline 只 compare/re-baseline 一次，不为
 // 新循环做无收益的 AI 漂移。真人仍可从 SELECTABLE 选食梦者调查员；AI 席位在食梦者战役里
 // 从已开放池选人（cardPoolScope=all 允许核心卡组），不影响战役可启动。
-export const SELECTABLE_INVESTIGATOR_CODES = Object.freeze([
+const SELECTABLE_INVESTIGATOR_CODE_LIST = [
   ...PLAYABLE_INVESTIGATOR_CODES,
   ...TDE_INVESTIGATOR_CODES,
   ...TIC_INVESTIGATOR_CODES,
@@ -97,7 +100,10 @@ export const SELECTABLE_INVESTIGATOR_CODES = Object.freeze([
   ...starterInvestigators,
   ...CORE2026_INVESTIGATOR_CODES,
   ...alternateInvestigatorCodes,
-])
+  ...BATCH4_INVESTIGATORS,
+]
+// 批次 4：平行/印刷调查员与既有循环清单可能重叠（如 98019 已属 TDC 清单），统一去重。
+export const SELECTABLE_INVESTIGATOR_CODES = Object.freeze([...new Set(SELECTABLE_INVESTIGATOR_CODE_LIST)])
 
 export const CORE_PLAYER_CODES = Object.freeze([
   '01016', '01017', '01018', '01019', '01020', '01021', '01022', '01023', '01024', '01025',
@@ -206,6 +212,7 @@ export const SIGNATURES_BY_INVESTIGATOR = Object.freeze({
   ...starterSignatures,
   ...CORE2026_SIGNATURES_BY_INVESTIGATOR,
   ...alternateSignatureRequirements,
+  ...BATCH4_SIGNATURES_BY_INVESTIGATOR,
 })
 export const SIMPLIFIED_CARD_CODES = Object.freeze([...CORE_PLAYER_CODES, ...CORE_SIGNATURE_CODES, ...CORE_BASIC_WEAKNESS_CODES, ...CORE_STORY_CODES])
 export {
@@ -282,7 +289,7 @@ const cards = new Set([...SIMPLIFIED_CARD_CODES, ...CORE_UPGRADE_CODES, ...expan
   ...DUNWICH_BASIC_WEAKNESS_CODES, ...CARCOSA_BASIC_WEAKNESS_CODES,
   ...Object.values(starterSignatures).flat(), ...starterPlayerCards, ...starterWeaknesses,
   ...CORE2026_SIGNATURE_CODES, ...CORE2026_PLAYER_CARD_CODES, ...CORE2026_BASIC_WEAKNESS_CODES,
-  ...returnPlayerCards, ...returnWeaknesses, ...alternateDependencies])
+  ...returnPlayerCards, ...returnWeaknesses, ...alternateDependencies, ...BATCH4_DEPENDENCY_CODES])
 const strictAcceptedCodes = new Set([...investigators, ...cards])
 const strictScenarioCodes = new Set(Object.values(SCENARIO_CARD_IDENTITIES).flatMap(categories =>
   Object.values(categories).flatMap(entries => Object.values(entries).map(entry => entry.originalCode))))
@@ -323,11 +330,16 @@ export function getAvailability(code) {
       || EOTE_PLAYER_BASIC_WEAKNESS_CODES.includes(code)
       || TDE_PLAYER_DEPENDENCY_CODES.includes(code)
       || Object.values(starterSignatures).some(signatures => signatures.includes(code))
+      || BATCH4_DEPENDENCY_CODES.includes(code)
       || CORE2026_SIGNATURE_CODES.includes(code) || CORE2026_BASIC_WEAKNESS_CODES.includes(code)
       || ALL_BASIC_WEAKNESS_CODES.includes(code),
     scenarioOnly: CORE_STORY_CODES.includes(code),
     acceptanceProfile: coreCardVerified(code) ? CORE_ACCEPTANCE_PROFILE.id : null,
     reason: coreCardVerified(code) ? '初始包已通过逐卡行为验收；范围与测试见 audit/core-acceptance.json。'
+      : BATCH4_INVESTIGATORS.includes(code)
+        ? '批次 4：Subject 5U-21 调查员套件已完成逐卡行为验收（Ravenous 双面/Regurgitation/Reality Acid）。'
+      : BATCH4_DEPENDENCY_CODES.includes(code)
+        ? '批次 4：Subject 5U-21 的签名/专属弱点；只作构筑依赖，不进入普通玩家牌池。'
       : CORE2026_INVESTIGATOR_CODES.includes(code) || CORE2026_SIGNATURE_CODES.includes(code)
         ? '批次 3：2026 核心盒调查员与签名/专属卡已完成逐人行为验收，可在大厅选择与构筑。'
       : CORE2026_BASIC_WEAKNESS_CODES.includes(code)

@@ -1,4 +1,4 @@
-import { SCENARIO_MUSIC, scenarioPlaylistId } from './scenario-music.js'
+import { SCENARIO_MUSIC, SIDE_STORY_MUSIC, scenarioPlaylistId, sideStoryCampaignId } from './scenario-music.js'
 
 // 单一主题入口（新增循环 / 新视觉风格只改这里）：
 //   palette   循环专属的 7 个界面色，由 web/campaign-theme.css 统一映射到控件；
@@ -254,18 +254,28 @@ const CAMPAIGNS = Object.freeze({
       storyDefault: `${DREAM_EATERS}/scenarios/${id}/scene.webp`,
     }) })]))),
   }),
+  ...Object.fromEntries(Object.keys(SIDE_STORY_MUSIC).map(id => {
+    const cover = `${ROOT}/img/campaigns/side-stories/${id}.webp`
+    return [id, Object.freeze({
+      id,
+      assets: Object.freeze({ hubHero: cover, casefile: cover, storyDefault: cover }),
+    })]
+  })),
 })
 
 export function campaignPresentation(campaignId, scenarioId = '') {
   const campaign = CAMPAIGNS[campaignId] || {}
   const scenario = campaign.scenarios?.[scenarioId] || {}
+  const sideStoryArt = CAMPAIGNS[sideStoryCampaignId(scenarioId)]?.assets.storyDefault
+  const assets = { ...COMMON.assets, ...campaign.assets, ...scenario.assets }
+  if (sideStoryArt) assets.storyDefault = sideStoryArt
   return {
     id: campaign.id || COMMON.id,
     palette: { ...COMMON.palette, ...campaign.palette, ...scenario.palette },
     materials: { ...COMMON.materials, ...campaign.materials, ...scenario.materials },
-    assets: { ...COMMON.assets, ...campaign.assets, ...scenario.assets },
+    assets,
     musicPlaylist: scenarioPlaylistId(campaignId, scenarioId) || scenario.musicPlaylist || campaign.musicPlaylist
-      || (campaignId === 'theDunwichLegacy' ? 'theDunwichLegacy' : COMMON.musicPlaylist),
+      || (SCENARIO_MUSIC[campaignId] ? campaignId : COMMON.musicPlaylist),
   }
 }
 

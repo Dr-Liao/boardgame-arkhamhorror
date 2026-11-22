@@ -14039,11 +14039,11 @@
     "ledgers": [
       {
         "path": "audit/eote-player-acceptance.json",
-        "sha256": "e0f6eecb363306773e9b54f7171fac035a4d62f71d216505aff509247707b1ad"
+        "sha256": "1226ba2b37f3dc877c0660995f75b90589d413cda73080bc5a6500e4bdbee1b5"
       },
       {
         "path": "audit/eote-investigators.json",
-        "sha256": "5a7c84602446d6f7d07a11fc8d5f8936a58e6b8f86b1ae9749e7fa6560da9ff6"
+        "sha256": "c62f93366a894a67be1e1b3dba61ef4221077aa031734e9e2da0870cd591e372"
       },
       {
         "path": "audit/eote-scenario-acceptance.json",
@@ -14058,7 +14058,7 @@
       "audit/eote-primitive-requests.json"
     ],
     "scope": "audit/eote-scope.json",
-    "scopeSha256": "daac95c08f98e556963a361fdfc06bd2a94e53604c128493fb0ea04c65f24370",
+    "scopeSha256": "22535b8097b5b43dacff7d52a807f9f5f5d40907f644c41e9f64fbc8424563e1",
     "testFiles": [
       {
         "path": "tests/eote-investigator-bob.test.mjs",

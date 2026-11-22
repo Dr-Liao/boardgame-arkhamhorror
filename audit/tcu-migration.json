@@ -8,7 +8,7 @@
   "docs": "docs/tcu-completion.md",
   "scope": {
     "path": "artifacts/migration/tcu/scope.json",
-    "sha256": "30017af6dee66266e2a00d3d1bc21cb8aba366f90b207536fc856be397e04a03"
+    "sha256": "3964d749ee668feb7c7e47aaef5d8f360017f1a694cfc359b20c07ac1fae76a1"
   },
   "campaign": {
     "id": "theCircleUndone",
@@ -678,7 +678,7 @@
     },
     {
       "path": "artifacts/migration/tcu/mechanism-scan.json",
-      "sha256": "deaa41c8f9993c499877746ccb83b65eb30e91c44990dcd92b53fcd9e589281b"
+      "sha256": "9b9076fb6b92d721a6185c0eae56d966102f8b61c6038dc11e96e3d60b5ddfb0"
     },
     {
       "path": "content/packs/tcuCampaign/manifest.js",
@@ -5410,11 +5410,11 @@
       "simplified": [],
       "ledger": {
         "path": "audit/tcu-player-acceptance.json",
-        "sha256": "bc08cc2ee2f4f28845da176fa422674ccf1005c151f53e5a207101b13ae55812"
+        "sha256": "552826cf8fac98bb6ea827470f48c41349f255874a33e2106533d235b43593f0"
       },
       "generatedModule": {
         "path": "src/cards/tcu-player-acceptance.js",
-        "sha256": "0deebab2b63fc43ebf1fb3466ee1ecde2e63e659aacda72507f5dfc887669ea5"
+        "sha256": "269d2e5d737c6586ebf9b29cada72de650dbc3f994e845e0e3b23311bb48cbf0"
       },
       "evidence": [
         "content/packs/tcuPlayer/manifest.js",
@@ -5629,7 +5629,7 @@
     "files": {
       "content/campaigns/theCircleUndone/keywords.js": "4505567dd5c59872093410a4eb171264b607f28ea39b13abdeba9a45bccf5287",
       "web/rulebook-data.js": "eb358d0b381aae56282c48244a6a0548a7691ad66f6b5db60847268f6da26f62",
-      "web/ui-cards.js": "f21fc7b4788e1002eaeca990fc9a213c7cc749d678daae79adbce0320ff79cf3",
+      "web/ui-cards.js": "bf8a736695661803cbeff14701acfc15914cb1b7d1988d1bb992d51fe4a6c808",
       "content/mechanics.js": "cd3fe2a750929fe31a8ae99547f16c728c07af5d0f0c6e09ef8eeb2f15ad304a",
       "tests/tcu-rules.test.mjs": "f0ca99664abf96629f8f6959d09ebd22ec08873397ab3158189990743870cf6c",
       "tests/tcu-rules.browser.mjs": "d117eef15ff4917d618c609d5cfce39d492e1804943afe4c24eb3c7b6dbe106a",
@@ -5647,11 +5647,11 @@
       "src/engine/cancel-note.js": "c048a6b87483d59c201213da84f893739c1093513358c286a1ce497a9ece23b1",
       "content/packs/tcuPlayer/manifest.js": "0586f51b0199a5c4e392e7343e14341d10e62e335cd3b75178c7256c4e3e2bee",
       "tools/audit-tcu-player.mjs": "abb4638a880cf20940435454d518cfd31007f89cac95280e62c7318639c54054",
-      "audit/tcu-player-acceptance.json": "bc08cc2ee2f4f28845da176fa422674ccf1005c151f53e5a207101b13ae55812",
-      "src/cards/tcu-player-acceptance.js": "0deebab2b63fc43ebf1fb3466ee1ecde2e63e659aacda72507f5dfc887669ea5",
+      "audit/tcu-player-acceptance.json": "552826cf8fac98bb6ea827470f48c41349f255874a33e2106533d235b43593f0",
+      "src/cards/tcu-player-acceptance.js": "269d2e5d737c6586ebf9b29cada72de650dbc3f994e845e0e3b23311bb48cbf0",
       "tests/tcu-player-ledger.test.mjs": "a0a9ea259b155bade59cfa86328db3d9a67cf13332d418f7a0d999649f2a277d",
-      "src/deck/availability.js": "674b2b60c655b878bf5b5e02f7cf8d04134935f1eef4742c9751da07560aa9f5",
-      "src/campaign/campaign.js": "73da55d817da5b4ae23c3362ec15894578953a6e75b0809a9b74462c15b028d7",
+      "src/deck/availability.js": "e865a733c178b7ae56345da23ffdebf60a8cf4741cb746669ba4539b182a7079",
+      "src/campaign/campaign.js": "35fba162a89e65dd695062f0f9c4b5c30e52c661108ea6e049f0acad2cd7d71f",
       "tests/tcu-player-m2-1.test.mjs": "35c5a0734c9b215105f4a4c919d8da4863b7ebc9e94394d9b031c8bd8ac3cb4e",
       "tests/tcu-player-m2-2.test.mjs": "d01c5b909f1070a23c8a5918b134418718270e921d8644441225baff8673d2fd",
       "tests/tcu-player-m2-3.test.mjs": "96600f3e7e76725560f719638d8003ae11edea57a56ac0245cad3478c168b1f6",
@@ -5866,7 +5866,7 @@
   "gate": {
     "scopeLedger": {
       "path": "artifacts/migration/tcu/scope.json",
-      "sha256": "30017af6dee66266e2a00d3d1bc21cb8aba366f90b207536fc856be397e04a03",
+      "sha256": "3964d749ee668feb7c7e47aaef5d8f360017f1a694cfc359b20c07ac1fae76a1",
       "pass": true
     },
     "records": {

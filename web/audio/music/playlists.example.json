@@ -1246,6 +1246,505 @@
         "eoteDespairAndTriumph"
       ],
       "includeCustom": true
+    },
+    "returnToNightOfTheZealot": {
+      "tracks": [
+        "darkestChild",
+        "comePlayWithMe",
+        "longNoteOne",
+        "darkWalk",
+        "onTheGround",
+        "chasePulse",
+        "ritual",
+        "theVoices",
+        "gatheringDarkness"
+      ],
+      "includeCustom": true
+    },
+    "returnToTheDunwichLegacy": {
+      "tracks": [
+        "echoesOfTime",
+        "rightBehindYou",
+        "unseenHorrors",
+        "deadlyRoulette",
+        "iKnewAGuy",
+        "dancesAndDames",
+        "theDread",
+        "decay",
+        "longNoteThree",
+        "chasePulse",
+        "nightBreak",
+        "wretchedDestroyer",
+        "ritual",
+        "ossuaryTwoTurn",
+        "ghostProcessional",
+        "lightlessDawn",
+        "shadowlandsFourBreath",
+        "gatheringDarkness",
+        "shadowlandsSevenCodex",
+        "shadowlandsAntechamber",
+        "ossuarySevenResolve",
+        "longNoteTwo"
+      ],
+      "includeCustom": true
+    },
+    "returnToThePathToCarcosa": {
+      "tracks": [
+        "eveningOfChaos",
+        "comePlayWithMe",
+        "darkestChild",
+        "danseMacabre",
+        "ghostProcessional",
+        "ossuaryOneBeginning",
+        "echoesOfTime",
+        "longNoteOne",
+        "decay",
+        "longNoteTwo",
+        "theDread",
+        "rightBehindYou",
+        "dancesAndDames",
+        "onTheGround",
+        "darkWalk",
+        "ossuarySixAir",
+        "ossuaryTwoTurn",
+        "longNoteThree",
+        "shadowlandsAntechamber",
+        "shadowlandsFourBreath",
+        "lightlessDawn",
+        "ossuarySevenResolve",
+        "shadowlandsSevenCodex"
+      ],
+      "includeCustom": true
+    },
+    "curseOfTheRougarou": {
+      "tracks": [
+        "ticDarkFog",
+        "fhvWaterPrelude",
+        "unseenHorrors"
+      ],
+      "includeCustom": true
+    },
+    "carnevaleOfHorrors": {
+      "tracks": [
+        "fhvDuetMusette",
+        "danseMacabre",
+        "eveningOfChaos"
+      ],
+      "includeCustom": true
+    },
+    "murderAtTheExcelsiorHotel": {
+      "tracks": [
+        "dancesAndDames",
+        "ticDistantTension",
+        "rightBehindYou"
+      ],
+      "includeCustom": true
+    },
+    "readOrDie": {
+      "tracks": [
+        "echoesOfTime",
+        "decay",
+        "unseenHorrors"
+      ],
+      "includeCustom": true
+    },
+    "allOrNothing": {
+      "tracks": [
+        "deadlyRoulette",
+        "iKnewAGuy",
+        "chasePulse"
+      ],
+      "includeCustom": true
+    },
+    "badBlood": {
+      "tracks": [
+        "eoteLostTime",
+        "tdeDreamlike",
+        "ancientRite"
+      ],
+      "includeCustom": true
+    },
+    "byTheBook": {
+      "tracks": [
+        "darkWalk",
+        "onTheGround",
+        "theVoices"
+      ],
+      "includeCustom": true
+    },
+    "theBlobThatAteEverything": {
+      "tracks": [
+        "ticDistantTension",
+        "eoteScpX2xUnseenPresence",
+        "controlledChaos",
+        "eoteTheComplex",
+        "eoteScpX4xMindLeech",
+        "eoteDayOfChaos"
+      ],
+      "includeCustom": true
+    },
+    "guardiansOfTheAbyss": {
+      "tracks": [
+        "tskTabuk",
+        "tskDesertCity",
+        "ritual",
+        "ancientRite",
+        "enterTheMaze",
+        "eoteBlackVortex"
+      ],
+      "includeCustom": true
+    },
+    "warOfTheOuterGods": {
+      "tracks": [
+        "gatheringDarkness",
+        "thunderDreams",
+        "wretchedDestroyer"
+      ],
+      "includeCustom": true
+    },
+    "theLabyrinthsOfLunacy": {
+      "tracks": [
+        "eoteShadowlands3Machine",
+        "enterTheMaze",
+        "ticClashDefiant"
+      ],
+      "includeCustom": true
+    },
+    "machinationsThroughTime": {
+      "tracks": [
+        "echoesOfTime",
+        "staticMotion",
+        "orion300xb"
+      ],
+      "includeCustom": true
+    },
+    "laidToRest": {
+      "tracks": [
+        "ghostProcessional",
+        "tcuOssuary5Rest",
+        "tcuLandOfTheDead"
+      ],
+      "includeCustom": true
+    },
+    "enthrallingEncore": {
+      "tracks": [
+        "eveningOfChaos",
+        "fhvAncientMysteryWaltzAllegro",
+        "ossuaryOneBeginning"
+      ],
+      "includeCustom": true
+    },
+    "redTideRising": {
+      "tracks": [
+        "ticNightOfChaos",
+        "ticAwkwardMeeting",
+        "chasePulse"
+      ],
+      "includeCustom": true
+    },
+    "relicsOfThePast": {
+      "tracks": [
+        "magicForest",
+        "truthInTheStones",
+        "ancientRite"
+      ],
+      "includeCustom": true
+    },
+    "returnToNightOfTheZealot/returnToTheGathering": {
+      "tracks": [
+        "darkestChild",
+        "comePlayWithMe",
+        "longNoteOne"
+      ],
+      "includeCustom": true
+    },
+    "returnToNightOfTheZealot/returnToTheMidnightMasks": {
+      "tracks": [
+        "darkWalk",
+        "onTheGround",
+        "chasePulse"
+      ],
+      "includeCustom": true
+    },
+    "returnToNightOfTheZealot/returnToTheDevourerBelow": {
+      "tracks": [
+        "ritual",
+        "theVoices",
+        "gatheringDarkness"
+      ],
+      "includeCustom": true
+    },
+    "returnToTheDunwichLegacy/returnToExtracurricularActivities": {
+      "tracks": [
+        "echoesOfTime",
+        "rightBehindYou",
+        "unseenHorrors"
+      ],
+      "includeCustom": true
+    },
+    "returnToTheDunwichLegacy/returnToTheHouseAlwaysWins": {
+      "tracks": [
+        "deadlyRoulette",
+        "iKnewAGuy",
+        "dancesAndDames"
+      ],
+      "includeCustom": true
+    },
+    "returnToTheDunwichLegacy/returnToTheMiskatonicMuseum": {
+      "tracks": [
+        "theDread",
+        "decay",
+        "longNoteThree"
+      ],
+      "includeCustom": true
+    },
+    "returnToTheDunwichLegacy/returnToTheEssexCountyExpress": {
+      "tracks": [
+        "chasePulse",
+        "nightBreak",
+        "wretchedDestroyer"
+      ],
+      "includeCustom": true
+    },
+    "returnToTheDunwichLegacy/returnToBloodOnTheAltar": {
+      "tracks": [
+        "ritual",
+        "ossuaryTwoTurn",
+        "ghostProcessional"
+      ],
+      "includeCustom": true
+    },
+    "returnToTheDunwichLegacy/returnToUndimensionedAndUnseen": {
+      "tracks": [
+        "unseenHorrors",
+        "lightlessDawn",
+        "shadowlandsFourBreath"
+      ],
+      "includeCustom": true
+    },
+    "returnToTheDunwichLegacy/returnToWhereDoomAwaits": {
+      "tracks": [
+        "gatheringDarkness",
+        "shadowlandsSevenCodex",
+        "ritual"
+      ],
+      "includeCustom": true
+    },
+    "returnToTheDunwichLegacy/returnToLostInTimeAndSpace": {
+      "tracks": [
+        "shadowlandsAntechamber",
+        "ossuarySevenResolve",
+        "longNoteTwo"
+      ],
+      "includeCustom": true
+    },
+    "returnToThePathToCarcosa/returnToCurtainCall": {
+      "tracks": [
+        "eveningOfChaos",
+        "comePlayWithMe",
+        "darkestChild"
+      ],
+      "includeCustom": true
+    },
+    "returnToThePathToCarcosa/returnToTheLastKing": {
+      "tracks": [
+        "danseMacabre",
+        "ghostProcessional",
+        "ossuaryOneBeginning"
+      ],
+      "includeCustom": true
+    },
+    "returnToThePathToCarcosa/returnToEchoesOfThePast": {
+      "tracks": [
+        "echoesOfTime",
+        "longNoteOne",
+        "decay"
+      ],
+      "includeCustom": true
+    },
+    "returnToThePathToCarcosa/returnToTheUnspeakableOath": {
+      "tracks": [
+        "longNoteTwo",
+        "theDread",
+        "rightBehindYou"
+      ],
+      "includeCustom": true
+    },
+    "returnToThePathToCarcosa/returnToAPhantomOfTruth": {
+      "tracks": [
+        "dancesAndDames",
+        "onTheGround",
+        "darkWalk"
+      ],
+      "includeCustom": true
+    },
+    "returnToThePathToCarcosa/returnToThePallidMask": {
+      "tracks": [
+        "ossuarySixAir",
+        "ossuaryTwoTurn",
+        "longNoteThree"
+      ],
+      "includeCustom": true
+    },
+    "returnToThePathToCarcosa/returnToBlackStarsRise": {
+      "tracks": [
+        "shadowlandsAntechamber",
+        "shadowlandsFourBreath",
+        "lightlessDawn"
+      ],
+      "includeCustom": true
+    },
+    "returnToThePathToCarcosa/returnToDimCarcosa": {
+      "tracks": [
+        "ossuarySixAir",
+        "ossuarySevenResolve",
+        "shadowlandsSevenCodex"
+      ],
+      "includeCustom": true
+    },
+    "curseOfTheRougarou/curseOfTheRougarou": {
+      "tracks": [
+        "ticDarkFog",
+        "fhvWaterPrelude",
+        "unseenHorrors"
+      ],
+      "includeCustom": true
+    },
+    "carnevaleOfHorrors/carnevaleOfHorrors": {
+      "tracks": [
+        "fhvDuetMusette",
+        "danseMacabre",
+        "eveningOfChaos"
+      ],
+      "includeCustom": true
+    },
+    "murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel": {
+      "tracks": [
+        "dancesAndDames",
+        "ticDistantTension",
+        "rightBehindYou"
+      ],
+      "includeCustom": true
+    },
+    "readOrDie/readOrDie": {
+      "tracks": [
+        "echoesOfTime",
+        "decay",
+        "unseenHorrors"
+      ],
+      "includeCustom": true
+    },
+    "allOrNothing/allOrNothing": {
+      "tracks": [
+        "deadlyRoulette",
+        "iKnewAGuy",
+        "chasePulse"
+      ],
+      "includeCustom": true
+    },
+    "badBlood/badBlood": {
+      "tracks": [
+        "eoteLostTime",
+        "tdeDreamlike",
+        "ancientRite"
+      ],
+      "includeCustom": true
+    },
+    "byTheBook/byTheBook": {
+      "tracks": [
+        "darkWalk",
+        "onTheGround",
+        "theVoices"
+      ],
+      "includeCustom": true
+    },
+    "theBlobThatAteEverything/theBlobThatAteEverything": {
+      "tracks": [
+        "ticDistantTension",
+        "eoteScpX2xUnseenPresence",
+        "controlledChaos"
+      ],
+      "includeCustom": true
+    },
+    "theBlobThatAteEverything/theBlobThatAteEverythingElse": {
+      "tracks": [
+        "eoteTheComplex",
+        "eoteScpX4xMindLeech",
+        "eoteDayOfChaos"
+      ],
+      "includeCustom": true
+    },
+    "guardiansOfTheAbyss/theEternalSlumber": {
+      "tracks": [
+        "tskTabuk",
+        "tskDesertCity",
+        "ritual"
+      ],
+      "includeCustom": true
+    },
+    "guardiansOfTheAbyss/theNightsUsurper": {
+      "tracks": [
+        "ancientRite",
+        "enterTheMaze",
+        "eoteBlackVortex"
+      ],
+      "includeCustom": true
+    },
+    "warOfTheOuterGods/warOfTheOuterGods": {
+      "tracks": [
+        "gatheringDarkness",
+        "thunderDreams",
+        "wretchedDestroyer"
+      ],
+      "includeCustom": true
+    },
+    "theLabyrinthsOfLunacy/theLabyrinthsOfLunacy": {
+      "tracks": [
+        "eoteShadowlands3Machine",
+        "enterTheMaze",
+        "ticClashDefiant"
+      ],
+      "includeCustom": true
+    },
+    "machinationsThroughTime/machinationsThroughTime": {
+      "tracks": [
+        "echoesOfTime",
+        "staticMotion",
+        "orion300xb"
+      ],
+      "includeCustom": true
+    },
+    "laidToRest/laidToRest": {
+      "tracks": [
+        "ghostProcessional",
+        "tcuOssuary5Rest",
+        "tcuLandOfTheDead"
+      ],
+      "includeCustom": true
+    },
+    "enthrallingEncore/enthrallingEncore": {
+      "tracks": [
+        "eveningOfChaos",
+        "fhvAncientMysteryWaltzAllegro",
+        "ossuaryOneBeginning"
+      ],
+      "includeCustom": true
+    },
+    "redTideRising/redTideRising": {
+      "tracks": [
+        "ticNightOfChaos",
+        "ticAwkwardMeeting",
+        "chasePulse"
+      ],
+      "includeCustom": true
+    },
+    "relicsOfThePast/relicsOfThePast": {
+      "tracks": [
+        "magicForest",
+        "truthInTheStones",
+        "ancientRite"
+      ],
+      "includeCustom": true
     }
   }
 }

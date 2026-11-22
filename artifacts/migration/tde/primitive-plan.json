@@ -84,28 +84,28 @@
           "kind": "window",
           "name": "afterAlarmRaised",
           "ok": true,
-          "detail": "93 windows"
+          "detail": "144 windows"
         }
       ],
       "files": [
         {
           "path": "src/engine/windows.js",
-          "sha256": "a480ab3957d786fc9829e4cb00ffccd5b7357c49f5641e2642e3364032b9dc5d",
+          "sha256": "0aed684bd2260a9b68992de2b95ceb0590300274cbba6a5fdcd1dd024cf697cf",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "5805a7f416a94057296fe9f2e6bf5675d1223f1bf15e856f2394c3e36a1fb681",
+          "sha256": "4a3706feb0f32a76e4ed306ed1536da66f92293cd525f4d5eb07088b43bdc11b",
           "exists": true
         },
         {
           "path": "tests/tde-completion-primitives.test.mjs",
-          "sha256": "ec22a2346dad73c278a45eda80327b19c6c69b7508d51be4cfb849bf670f9367",
+          "sha256": "e77e638a9fca95564c9797dbfb4cb757262fa5c093de4b3c9e58003e7d8be3c6",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -148,22 +148,22 @@
       "files": [
         {
           "path": "src/engine/play-attempt.js",
-          "sha256": "75f45ba599527a140a991723b16d8e0a459f8b5da2fac22644bfe4a8a9029273",
+          "sha256": "d4eab72535a074122eec8ee90db89a5ccbb7e7fc0f7da7fe78cfcdd841ce3385",
           "exists": true
         },
         {
           "path": "src/engine/actions.js",
-          "sha256": "8102adef5079256407dab8bcbd9aa2d7774d30bbc41a54658454b910d78e1c23",
+          "sha256": "373bb2fa07ac4424ba4dffc4776f465464ec69a7efc204824602d4c473c14377",
           "exists": true
         },
         {
           "path": "tests/tde-completion-primitives.test.mjs",
-          "sha256": "ec22a2346dad73c278a45eda80327b19c6c69b7508d51be4cfb849bf670f9367",
+          "sha256": "e77e638a9fca95564c9797dbfb4cb757262fa5c093de4b3c9e58003e7d8be3c6",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -206,22 +206,22 @@
       "files": [
         {
           "path": "src/engine/commit-rules.js",
-          "sha256": "bb0e99bff115ebab3a6a566614be26d00da7d6663cd7c79703de2773fee62858",
+          "sha256": "a194bd4b7b5083a52fc548bd894448c3e0892b114694d7d36227b790643ae8c0",
           "exists": true
         },
         {
           "path": "src/engine/tests.js",
-          "sha256": "70f8e5ccde5b4fbe7e9ac388119206f62a12265871e3bff800031129517c9d22",
+          "sha256": "c4ca1a838cfd0de062e4fca9cd4f5417e27ce3a3a7779eceec0cdf6e178215e0",
           "exists": true
         },
         {
           "path": "tests/tde-completion-primitives.test.mjs",
-          "sha256": "ec22a2346dad73c278a45eda80327b19c6c69b7508d51be4cfb849bf670f9367",
+          "sha256": "e77e638a9fca95564c9797dbfb4cb757262fa5c093de4b3c9e58003e7d8be3c6",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -257,13 +257,13 @@
           "kind": "ctx-api",
           "name": "addEffect",
           "ok": true,
-          "detail": "301 keys"
+          "detail": "444 keys"
         }
       ],
       "files": [
         {
           "path": "src/engine/modifiers.js",
-          "sha256": "6633e3629ad4040775c6e1c59bfe868eab24bba5fb28d33ea5ad48223fdd928e",
+          "sha256": "94de45dbc5e1c427f7b5990f53502f95778a2a071110630383d6e145696308e2",
           "exists": true
         },
         {
@@ -273,12 +273,12 @@
         },
         {
           "path": "tests/tde-completion-primitives.test.mjs",
-          "sha256": "ec22a2346dad73c278a45eda80327b19c6c69b7508d51be4cfb849bf670f9367",
+          "sha256": "e77e638a9fca95564c9797dbfb4cb757262fa5c093de4b3c9e58003e7d8be3c6",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -361,7 +361,7 @@
       "files": [
         {
           "path": "src/campaign/campaign-parts.js",
-          "sha256": "fd0fef97abf32c20ee518a36def3abc32b1aea2ccbe58e8bc755147618b34d2b",
+          "sha256": "59386d3fb5674e7062d6a9705407cb8eba20ea8bd9a5aa39002f705fea5a36f8",
           "exists": true
         },
         {
@@ -371,12 +371,12 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         },
         {
           "path": "docs/tde-release.md",
-          "sha256": "3654c0a9bca6d515f1e472b12b8047e56c23e2cb74ac35647deff2a149119c1c",
+          "sha256": "4e84da8ee18b83f1c432c274ccffed5034246734cc8fbbef34c11686730a72ab",
           "exists": true
         }
       ],
@@ -451,7 +451,7 @@
       "files": [
         {
           "path": "src/campaign/campaign-parts.js",
-          "sha256": "fd0fef97abf32c20ee518a36def3abc32b1aea2ccbe58e8bc755147618b34d2b",
+          "sha256": "59386d3fb5674e7062d6a9705407cb8eba20ea8bd9a5aa39002f705fea5a36f8",
           "exists": true
         },
         {
@@ -461,7 +461,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -544,7 +544,7 @@
       "files": [
         {
           "path": "src/campaign/campaign-parts.js",
-          "sha256": "fd0fef97abf32c20ee518a36def3abc32b1aea2ccbe58e8bc755147618b34d2b",
+          "sha256": "59386d3fb5674e7062d6a9705407cb8eba20ea8bd9a5aa39002f705fea5a36f8",
           "exists": true
         },
         {
@@ -554,7 +554,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -607,7 +607,7 @@
       "files": [
         {
           "path": "src/campaign/campaign-parts.js",
-          "sha256": "fd0fef97abf32c20ee518a36def3abc32b1aea2ccbe58e8bc755147618b34d2b",
+          "sha256": "59386d3fb5674e7062d6a9705407cb8eba20ea8bd9a5aa39002f705fea5a36f8",
           "exists": true
         },
         {
@@ -617,7 +617,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -670,7 +670,7 @@
       "files": [
         {
           "path": "src/campaign/campaign-parts.js",
-          "sha256": "fd0fef97abf32c20ee518a36def3abc32b1aea2ccbe58e8bc755147618b34d2b",
+          "sha256": "59386d3fb5674e7062d6a9705407cb8eba20ea8bd9a5aa39002f705fea5a36f8",
           "exists": true
         },
         {
@@ -680,7 +680,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -725,7 +725,7 @@
       "files": [
         {
           "path": "src/campaign/campaign-parts.js",
-          "sha256": "fd0fef97abf32c20ee518a36def3abc32b1aea2ccbe58e8bc755147618b34d2b",
+          "sha256": "59386d3fb5674e7062d6a9705407cb8eba20ea8bd9a5aa39002f705fea5a36f8",
           "exists": true
         },
         {
@@ -735,7 +735,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -811,7 +811,7 @@
           "kind": "scenario-runtime",
           "name": "counters",
           "ok": true,
-          "detail": "285 keys"
+          "detail": "396 keys"
         }
       ],
       "files": [
@@ -822,12 +822,12 @@
         },
         {
           "path": "src/engine/scenario-runtime-extras.js",
-          "sha256": "342599259902e14f0057077bf85f616d33e8b827a75b35cfa796a9acc45eb68d",
+          "sha256": "0c8e1117ca237fcbeddde18d55d6820049c6c9fbf0760b0bded8a93023621914",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "5805a7f416a94057296fe9f2e6bf5675d1223f1bf15e856f2394c3e36a1fb681",
+          "sha256": "4a3706feb0f32a76e4ed306ed1536da66f92293cd525f4d5eb07088b43bdc11b",
           "exists": true
         },
         {
@@ -837,7 +837,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -898,7 +898,7 @@
           "kind": "scenario-runtime",
           "name": "swarming",
           "ok": true,
-          "detail": "285 keys"
+          "detail": "396 keys"
         }
       ],
       "files": [
@@ -909,12 +909,12 @@
         },
         {
           "path": "src/engine/scenario-runtime-extras.js",
-          "sha256": "342599259902e14f0057077bf85f616d33e8b827a75b35cfa796a9acc45eb68d",
+          "sha256": "0c8e1117ca237fcbeddde18d55d6820049c6c9fbf0760b0bded8a93023621914",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "5805a7f416a94057296fe9f2e6bf5675d1223f1bf15e856f2394c3e36a1fb681",
+          "sha256": "4a3706feb0f32a76e4ed306ed1536da66f92293cd525f4d5eb07088b43bdc11b",
           "exists": true
         },
         {
@@ -924,7 +924,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -992,7 +992,7 @@
           "kind": "scenario-runtime",
           "name": "swarm",
           "ok": true,
-          "detail": "285 keys"
+          "detail": "396 keys"
         }
       ],
       "files": [
@@ -1003,12 +1003,12 @@
         },
         {
           "path": "src/engine/scenario-runtime-extras.js",
-          "sha256": "342599259902e14f0057077bf85f616d33e8b827a75b35cfa796a9acc45eb68d",
+          "sha256": "0c8e1117ca237fcbeddde18d55d6820049c6c9fbf0760b0bded8a93023621914",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "5805a7f416a94057296fe9f2e6bf5675d1223f1bf15e856f2394c3e36a1fb681",
+          "sha256": "4a3706feb0f32a76e4ed306ed1536da66f92293cd525f4d5eb07088b43bdc11b",
           "exists": true
         },
         {
@@ -1018,7 +1018,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -1100,7 +1100,7 @@
           "kind": "scenario-runtime",
           "name": "veiled",
           "ok": true,
-          "detail": "285 keys"
+          "detail": "396 keys"
         }
       ],
       "files": [
@@ -1111,12 +1111,12 @@
         },
         {
           "path": "src/engine/scenario-runtime-extras.js",
-          "sha256": "342599259902e14f0057077bf85f616d33e8b827a75b35cfa796a9acc45eb68d",
+          "sha256": "0c8e1117ca237fcbeddde18d55d6820049c6c9fbf0760b0bded8a93023621914",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "5805a7f416a94057296fe9f2e6bf5675d1223f1bf15e856f2394c3e36a1fb681",
+          "sha256": "4a3706feb0f32a76e4ed306ed1536da66f92293cd525f4d5eb07088b43bdc11b",
           "exists": true
         },
         {
@@ -1126,7 +1126,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -1200,23 +1200,23 @@
           "kind": "scenario-runtime",
           "name": "tokenBag",
           "ok": true,
-          "detail": "285 keys"
+          "detail": "396 keys"
         }
       ],
       "files": [
         {
           "path": "src/engine/token-bag.js",
-          "sha256": "f189e38ec60b3f5422238ab8c571add679fe564bacc1e7281fad577a08936497",
+          "sha256": "d4b1a9cc4895f36279062417f9bfe8edcf66dbb95651ef16a352001f0934505e",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime-extras.js",
-          "sha256": "342599259902e14f0057077bf85f616d33e8b827a75b35cfa796a9acc45eb68d",
+          "sha256": "0c8e1117ca237fcbeddde18d55d6820049c6c9fbf0760b0bded8a93023621914",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "5805a7f416a94057296fe9f2e6bf5675d1223f1bf15e856f2394c3e36a1fb681",
+          "sha256": "4a3706feb0f32a76e4ed306ed1536da66f92293cd525f4d5eb07088b43bdc11b",
           "exists": true
         },
         {
@@ -1226,7 +1226,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -1300,23 +1300,23 @@
           "kind": "scenario-runtime",
           "name": "verticalChain",
           "ok": true,
-          "detail": "285 keys"
+          "detail": "396 keys"
         }
       ],
       "files": [
         {
           "path": "src/engine/vertical-chain.js",
-          "sha256": "0e319b1c97ead9d2560a3790dd64d3d4d6cf84d90a015dfbca09257ce8ec075f",
+          "sha256": "96aac5ac7fa9086697a2f5b4b77137fe1745490dcd1a1ec24bc4e8b01bb346fa",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime-extras.js",
-          "sha256": "342599259902e14f0057077bf85f616d33e8b827a75b35cfa796a9acc45eb68d",
+          "sha256": "0c8e1117ca237fcbeddde18d55d6820049c6c9fbf0760b0bded8a93023621914",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "5805a7f416a94057296fe9f2e6bf5675d1223f1bf15e856f2394c3e36a1fb681",
+          "sha256": "4a3706feb0f32a76e4ed306ed1536da66f92293cd525f4d5eb07088b43bdc11b",
           "exists": true
         },
         {
@@ -1326,7 +1326,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -1400,7 +1400,7 @@
           "kind": "scenario-runtime",
           "name": "bondedLocation",
           "ok": true,
-          "detail": "285 keys"
+          "detail": "396 keys"
         }
       ],
       "files": [
@@ -1411,12 +1411,12 @@
         },
         {
           "path": "src/engine/scenario-runtime-extras.js",
-          "sha256": "342599259902e14f0057077bf85f616d33e8b827a75b35cfa796a9acc45eb68d",
+          "sha256": "0c8e1117ca237fcbeddde18d55d6820049c6c9fbf0760b0bded8a93023621914",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "5805a7f416a94057296fe9f2e6bf5675d1223f1bf15e856f2394c3e36a1fb681",
+          "sha256": "4a3706feb0f32a76e4ed306ed1536da66f92293cd525f4d5eb07088b43bdc11b",
           "exists": true
         },
         {
@@ -1426,7 +1426,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -1492,7 +1492,7 @@
       "files": [
         {
           "path": "src/campaign/epilogue-matrix.js",
-          "sha256": "3f03fe57431cb0128dfcec1b717d090c7f9b0ecaff7927dc6cca50d68b44e2dd",
+          "sha256": "37c353cab4535c81e3e549552f1070d29dce883a72957c756eb74bbd608a59e9",
           "exists": true
         },
         {
@@ -1502,7 +1502,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -1586,7 +1586,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -1668,7 +1668,7 @@
           "kind": "scenario-runtime",
           "name": "locationDoom",
           "ok": true,
-          "detail": "285 keys"
+          "detail": "396 keys"
         }
       ],
       "files": [
@@ -1679,12 +1679,12 @@
         },
         {
           "path": "src/engine/scenario-runtime-extras.js",
-          "sha256": "342599259902e14f0057077bf85f616d33e8b827a75b35cfa796a9acc45eb68d",
+          "sha256": "0c8e1117ca237fcbeddde18d55d6820049c6c9fbf0760b0bded8a93023621914",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "5805a7f416a94057296fe9f2e6bf5675d1223f1bf15e856f2394c3e36a1fb681",
+          "sha256": "4a3706feb0f32a76e4ed306ed1536da66f92293cd525f4d5eb07088b43bdc11b",
           "exists": true
         },
         {
@@ -1694,7 +1694,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -1761,7 +1761,7 @@
           "kind": "scenario-runtime",
           "name": "markers",
           "ok": true,
-          "detail": "285 keys"
+          "detail": "396 keys"
         }
       ],
       "files": [
@@ -1772,12 +1772,12 @@
         },
         {
           "path": "src/engine/scenario-runtime-extras.js",
-          "sha256": "342599259902e14f0057077bf85f616d33e8b827a75b35cfa796a9acc45eb68d",
+          "sha256": "0c8e1117ca237fcbeddde18d55d6820049c6c9fbf0760b0bded8a93023621914",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "5805a7f416a94057296fe9f2e6bf5675d1223f1bf15e856f2394c3e36a1fb681",
+          "sha256": "4a3706feb0f32a76e4ed306ed1536da66f92293cd525f4d5eb07088b43bdc11b",
           "exists": true
         },
         {
@@ -1787,7 +1787,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -1849,33 +1849,33 @@
           "kind": "window",
           "name": "assetDefeated",
           "ok": true,
-          "detail": "93 windows"
+          "detail": "144 windows"
         }
       ],
       "files": [
         {
           "path": "src/engine/asset-defeat.js",
-          "sha256": "32a74fdb39f9aefd043bb05385cb53ec173df75ef7fdce00714a6f999a75666b",
+          "sha256": "5fb79eddedc67330eec193938edada82613c81e0b3cd5c36cee61450faa03241",
           "exists": true
         },
         {
           "path": "src/engine/enemies.js",
-          "sha256": "a1f4f0772d22e7bb0511157c350006ccfe317fca6055357d159e7c70a09436dd",
+          "sha256": "10915d9b098abe46dbbfbe64b4755aecb0ade96d4817b2e2de51283bb3a07255",
           "exists": true
         },
         {
           "path": "src/engine/windows.js",
-          "sha256": "a480ab3957d786fc9829e4cb00ffccd5b7357c49f5641e2642e3364032b9dc5d",
+          "sha256": "0aed684bd2260a9b68992de2b95ceb0590300274cbba6a5fdcd1dd024cf697cf",
           "exists": true
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d",
+          "sha256": "73689b48713e20c315ff6f622345ecf8e61597e7d81edda4db7c5c6ba15eef99",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -1884,7 +1884,7 @@
           "path": "tests/tde-investigators.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 25,
+          "tests": 35,
           "fail": 0,
           "exitCode": 0,
           "skipped": false
@@ -1929,13 +1929,13 @@
           "kind": "ctx-api",
           "name": "moveHarm",
           "ok": true,
-          "detail": "301 keys"
+          "detail": "444 keys"
         },
         {
           "kind": "ctx-api",
           "name": "harmRoomOf",
           "ok": true,
-          "detail": "301 keys"
+          "detail": "444 keys"
         }
       ],
       "files": [
@@ -1946,17 +1946,17 @@
         },
         {
           "path": "src/engine/api-misc.js",
-          "sha256": "045d018f5b40a32efdfdb41788c934193907509e909364516bf1639113783765",
+          "sha256": "f7186da281f1888e4783f6cc13167df838939d31b7c8e02eadb7b4c046b05c3b",
           "exists": true
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d",
+          "sha256": "73689b48713e20c315ff6f622345ecf8e61597e7d81edda4db7c5c6ba15eef99",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -1965,7 +1965,7 @@
           "path": "tests/tde-investigators.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 25,
+          "tests": 35,
           "fail": 0,
           "exitCode": 0,
           "skipped": false
@@ -2018,34 +2018,34 @@
           "kind": "ctx-api",
           "name": "addCardCounter",
           "ok": true,
-          "detail": "301 keys"
+          "detail": "444 keys"
         },
         {
           "kind": "ctx-api",
           "name": "moveCardCounters",
           "ok": true,
-          "detail": "301 keys"
+          "detail": "444 keys"
         }
       ],
       "files": [
         {
           "path": "src/engine/card-counters.js",
-          "sha256": "62ff1ce3d00bc267be2f9a5bb318e8787022afb6323d70cfc5a26e49f8e2e384",
+          "sha256": "276600963536386a42494626e7324abe33389289d8e145fef8fd7d53b89cbf9e",
           "exists": true
         },
         {
           "path": "src/engine/api-misc.js",
-          "sha256": "045d018f5b40a32efdfdb41788c934193907509e909364516bf1639113783765",
+          "sha256": "f7186da281f1888e4783f6cc13167df838939d31b7c8e02eadb7b4c046b05c3b",
           "exists": true
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d",
+          "sha256": "73689b48713e20c315ff6f622345ecf8e61597e7d81edda4db7c5c6ba15eef99",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -2054,7 +2054,7 @@
           "path": "tests/tde-investigators.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 25,
+          "tests": 35,
           "fail": 0,
           "exitCode": 0,
           "skipped": false
@@ -2119,7 +2119,7 @@
       "files": [
         {
           "path": "src/engine/restricted-actions.js",
-          "sha256": "7be7d6e89382fbe2e552329e7a1c9a12f0a2556b1398ef3d9d5a28d36f6ebd2f",
+          "sha256": "51be4c4fa20ef6582af20eaea779dcfbb7a90016aad31ea5458926cfa5545075",
           "exists": true
         },
         {
@@ -2129,32 +2129,32 @@
         },
         {
           "path": "src/engine/turn.js",
-          "sha256": "48a3525644501dcc83d8d7ea45920b1fd6c8974f731c5b50135e1e7eac63958d",
+          "sha256": "e828a4f9d9de85f81239a554ca4c4f071a3ca9add052b5706126fef5c31f1533",
           "exists": true
         },
         {
           "path": "src/engine/moves.js",
-          "sha256": "26bce0f0592c82bdad760537747cc5a2bdc6a3096b2514794aa688eb6d49af41",
+          "sha256": "f69b0962c94830d6bab71f71bfca8b0d221c5da13f1484ff51cb42baff701e21",
           "exists": true
         },
         {
           "path": "src/engine/dispatch.js",
-          "sha256": "25da13f6d7646719a9187a660f55742c6058098951a1d9598ba87d9a817bb89e",
+          "sha256": "07b2692d5d1c63f4b83b52d1e45254f5379862acd47bbbd7f38131498d2107d2",
           "exists": true
         },
         {
           "path": "src/engine/table-decisions.js",
-          "sha256": "2805fbffb7103af4705a1cde49f8dca89064c2f15585058fd2a9eec97016e32b",
+          "sha256": "12ddee03f39ffb25517b77f91ef2cfd6ab9cc105b708a08efd96aa583719d829",
           "exists": true
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d",
+          "sha256": "73689b48713e20c315ff6f622345ecf8e61597e7d81edda4db7c5c6ba15eef99",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -2163,7 +2163,7 @@
           "path": "tests/tde-investigators.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 25,
+          "tests": 35,
           "fail": 0,
           "exitCode": 0,
           "skipped": false
@@ -2194,7 +2194,7 @@
           "kind": "window",
           "name": "searchWouldResolve",
           "ok": true,
-          "detail": "93 windows"
+          "detail": "144 windows"
         },
         {
           "kind": "source-pattern",
@@ -2207,17 +2207,17 @@
       "files": [
         {
           "path": "src/engine/deck-ops.js",
-          "sha256": "4745fbee363e9d34e71b5ab8dbc7cbb647ad5b0762f16b4397aa0e6d59c3590d",
+          "sha256": "bb3c0220305722daacd7a5586c6484963b3946d427476de1a9daa654e1091f26",
           "exists": true
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d",
+          "sha256": "73689b48713e20c315ff6f622345ecf8e61597e7d81edda4db7c5c6ba15eef99",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -2226,7 +2226,7 @@
           "path": "tests/tde-investigators.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 25,
+          "tests": 35,
           "fail": 0,
           "exitCode": 0,
           "skipped": false
@@ -2274,22 +2274,22 @@
       "files": [
         {
           "path": "src/engine/deck-ops.js",
-          "sha256": "4745fbee363e9d34e71b5ab8dbc7cbb647ad5b0762f16b4397aa0e6d59c3590d",
+          "sha256": "bb3c0220305722daacd7a5586c6484963b3946d427476de1a9daa654e1091f26",
           "exists": true
         },
         {
           "path": "src/engine/ability.js",
-          "sha256": "88e8cc8b521c7182a4ec39a06f437daa8018fdfdac8a2f23558a79039e5c5903",
+          "sha256": "d4a52470f3e0011e77d218526c0a36a6ce35afa3435a701cf720ee27c688ec87",
           "exists": true
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d",
+          "sha256": "73689b48713e20c315ff6f622345ecf8e61597e7d81edda4db7c5c6ba15eef99",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -2298,7 +2298,7 @@
           "path": "tests/tde-investigators.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 25,
+          "tests": 35,
           "fail": 0,
           "exitCode": 0,
           "skipped": false
@@ -2335,17 +2335,17 @@
       "files": [
         {
           "path": "src/engine/phases.js",
-          "sha256": "32a3bbb7b988b748da716050d6df6e4f83cb06d61fa97c684b288999321ed8e9",
+          "sha256": "c3303f433526e4bf9963e67f42f4c1f293357df4fd367bc590d5ee409dd17e33",
           "exists": true
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d",
+          "sha256": "73689b48713e20c315ff6f622345ecf8e61597e7d81edda4db7c5c6ba15eef99",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -2354,7 +2354,7 @@
           "path": "tests/tde-investigators.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 25,
+          "tests": 35,
           "fail": 0,
           "exitCode": 0,
           "skipped": false
@@ -2406,27 +2406,27 @@
       "files": [
         {
           "path": "src/engine/stats.js",
-          "sha256": "ffae0dc02d5d2f59631c8b000278a79c55d46f7a87315df3759442399f61402b",
+          "sha256": "1cded6b19ee168fa1c249428b90a94693936f0dc5aeae3eae7e569dec5faafc4",
           "exists": true
         },
         {
           "path": "src/engine/setup.js",
-          "sha256": "9dc7b2e5ba572567ce3146d686874ae9b1577b78a075f57291c824b4480ecd20",
+          "sha256": "357b4b03436a4e4e5173724da3890be623c7cf13cd43435e3efa00a862bd2d4e",
           "exists": true
         },
         {
           "path": "src/engine/tests.js",
-          "sha256": "70f8e5ccde5b4fbe7e9ac388119206f62a12265871e3bff800031129517c9d22",
+          "sha256": "c4ca1a838cfd0de062e4fca9cd4f5417e27ce3a3a7779eceec0cdf6e178215e0",
           "exists": true
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d",
+          "sha256": "73689b48713e20c315ff6f622345ecf8e61597e7d81edda4db7c5c6ba15eef99",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -2435,7 +2435,7 @@
           "path": "tests/tde-investigators.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 25,
+          "tests": 35,
           "fail": 0,
           "exitCode": 0,
           "skipped": false
@@ -2466,7 +2466,7 @@
           "kind": "ctx-api",
           "name": "playCardFromHandFree",
           "ok": true,
-          "detail": "301 keys"
+          "detail": "444 keys"
         },
         {
           "kind": "source-pattern",
@@ -2479,17 +2479,17 @@
       "files": [
         {
           "path": "src/engine/api-misc.js",
-          "sha256": "045d018f5b40a32efdfdb41788c934193907509e909364516bf1639113783765",
+          "sha256": "f7186da281f1888e4783f6cc13167df838939d31b7c8e02eadb7b4c046b05c3b",
           "exists": true
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d",
+          "sha256": "73689b48713e20c315ff6f622345ecf8e61597e7d81edda4db7c5c6ba15eef99",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -2498,7 +2498,7 @@
           "path": "tests/tde-investigators.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 25,
+          "tests": 35,
           "fail": 0,
           "exitCode": 0,
           "skipped": false
@@ -2541,27 +2541,27 @@
       "files": [
         {
           "path": "src/engine/as-if-location.js",
-          "sha256": "42c2fa1c97237b32b8a6da46b768f8dc5ca72b674a4ceb9f2b6969d42663e3f5",
+          "sha256": "91ad10a912ccb8c8a28bcfeb9c40a20d691012c7ae6aafae8f04730ee332d6f8",
           "exists": true
         },
         {
           "path": "src/engine/moves.js",
-          "sha256": "26bce0f0592c82bdad760537747cc5a2bdc6a3096b2514794aa688eb6d49af41",
+          "sha256": "f69b0962c94830d6bab71f71bfca8b0d221c5da13f1484ff51cb42baff701e21",
           "exists": true
         },
         {
           "path": "src/engine/dispatch.js",
-          "sha256": "25da13f6d7646719a9187a660f55742c6058098951a1d9598ba87d9a817bb89e",
+          "sha256": "07b2692d5d1c63f4b83b52d1e45254f5379862acd47bbbd7f38131498d2107d2",
           "exists": true
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d",
+          "sha256": "73689b48713e20c315ff6f622345ecf8e61597e7d81edda4db7c5c6ba15eef99",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -2570,7 +2570,7 @@
           "path": "tests/tde-investigators.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 25,
+          "tests": 35,
           "fail": 0,
           "exitCode": 0,
           "skipped": false
@@ -2613,27 +2613,27 @@
       "files": [
         {
           "path": "src/engine/dream-gate.js",
-          "sha256": "c5f5963ff56931b5f6a62c5184f532249117432d04d480f64d3bedf38b64bd58",
+          "sha256": "c8ad2aeabaf13deb9ee97101afd4d2585d06002251234f8c76460e5fb807e3fc",
           "exists": true
         },
         {
           "path": "src/engine/api-misc.js",
-          "sha256": "045d018f5b40a32efdfdb41788c934193907509e909364516bf1639113783765",
+          "sha256": "f7186da281f1888e4783f6cc13167df838939d31b7c8e02eadb7b4c046b05c3b",
           "exists": true
         },
         {
           "path": "src/engine/turn.js",
-          "sha256": "48a3525644501dcc83d8d7ea45920b1fd6c8974f731c5b50135e1e7eac63958d",
+          "sha256": "e828a4f9d9de85f81239a554ca4c4f071a3ca9add052b5706126fef5c31f1533",
           "exists": true
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d",
+          "sha256": "73689b48713e20c315ff6f622345ecf8e61597e7d81edda4db7c5c6ba15eef99",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -2642,7 +2642,7 @@
           "path": "tests/tde-investigators.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 25,
+          "tests": 35,
           "fail": 0,
           "exitCode": 0,
           "skipped": false
@@ -2690,22 +2690,22 @@
         },
         {
           "path": "src/engine/deck-ops.js",
-          "sha256": "4745fbee363e9d34e71b5ab8dbc7cbb647ad5b0762f16b4397aa0e6d59c3590d",
+          "sha256": "bb3c0220305722daacd7a5586c6484963b3946d427476de1a9daa654e1091f26",
           "exists": true
         },
         {
           "path": "src/engine/dispatch.js",
-          "sha256": "25da13f6d7646719a9187a660f55742c6058098951a1d9598ba87d9a817bb89e",
+          "sha256": "07b2692d5d1c63f4b83b52d1e45254f5379862acd47bbbd7f38131498d2107d2",
           "exists": true
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d2370601dd321799fd79adec4cb369bd215c874dac29b487e37a73bd6a45563d",
+          "sha256": "73689b48713e20c315ff6f622345ecf8e61597e7d81edda4db7c5c6ba15eef99",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "47b0f8cdcc64e60a259ff53a78a3bb876067abc984997c68a66b68a543f4c97e",
+          "sha256": "e6029b15014df70c0691a850c42634fcf673ebf14b1662ffbeb7e9b7e250b91d",
           "exists": true
         }
       ],
@@ -2714,7 +2714,7 @@
           "path": "tests/tde-investigators.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 25,
+          "tests": 35,
           "fail": 0,
           "exitCode": 0,
           "skipped": false

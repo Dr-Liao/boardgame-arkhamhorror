@@ -132,11 +132,11 @@
       }
     },
     "ledgers": {
-      "pass": false,
+      "pass": true,
       "checks": {
         "scope": {
-          "pass": false,
-          "sha256": "78fd6d2f4f1243cdb93af19df3246b2f90a8f7544e4e1157063b30ab07e969ed",
+          "pass": true,
+          "sha256": "106aa98013880ab89be60e0ae117a58a3577153c59665f6a924d56dcb1575c78",
           "path": "audit/tsk-scope.json",
           "gates": {
             "records": true,
@@ -167,8 +167,8 @@
           }
         },
         "scan": {
-          "pass": false,
-          "sha256": "be1a0d54acbb890e30ff3442a8c7c3f58d5602db1930d3a80f690a67202dae5a",
+          "pass": true,
+          "sha256": "defbb5d93e4e1f16e9ba2d54819843d0c2ccc421350b1b8b211151d45c5ec8a2",
           "path": "audit/tsk-mechanism-scan.json",
           "gates": {
             "scopePassed": true,
@@ -190,8 +190,8 @@
           }
         },
         "primitivePlan": {
-          "pass": false,
-          "sha256": "c057e3b7ea984085d54b206410d2ec458f29ab27a7a76de626b67b5a67622e27",
+          "pass": true,
+          "sha256": "0bf64369e4d913f30135252d39160330653ae92d618a397c2aaae06e6099886b",
           "path": "audit/tsk-primitive-plan.json",
           "gates": {
             "catalogEntriesCovered": true,
@@ -281,7 +281,7 @@
           "pass": true,
           "command": "node tools/import-scenario-guides.mjs",
           "exitCode": 0,
-          "tail": "Adventure guides: 120 scenarios verified.\n"
+          "tail": "Adventure guides: 131 scenarios verified.\n"
         },
         "story": {
           "pass": true,
@@ -323,7 +323,7 @@
     "allCards": {
       "pass": true,
       "path": "audit/tsk-all-card-acceptance.json",
-      "sha256": "09d2ee896553621653c6e390bf233d9b5396a534f421e61cabae7f107d53b36f",
+      "sha256": "a50548e1d7325941fe7605b1a5673d53d9426bb00d9d55401b2896855b2791a5",
       "summary": {
         "total": 439,
         "verified": 161,
@@ -535,10 +535,9 @@
       "tests": {
         "command": "node --test tests/architecture-guard.test.mjs tests/suite-manifest.test.mjs tests/card-entries.test.mjs tests/encounter-entries.test.mjs tests/scenario-guides.test.mjs tests/tsk-all-cards.test.mjs",
         "tests": 58,
-        "pass": 55,
-        "fail": 3,
+        "pass": 56,
+        "fail": 2,
         "failedTitles": [
-          "与磁盘账本逐字节一致（不一致需重跑 --write）",
           "近似披露完整：simplified 必有 disclosures，战役 verified 不得带近似前缀",
           "P8 TSK 逐卡账本"
         ]
@@ -548,19 +547,19 @@
           "pass": true,
           "command": "node tools/build-card-index.mjs --check",
           "exitCode": 0,
-          "tail": "✔ entries/index.js 与目录一致（1723 张卡）\n"
+          "tail": "✔ entries/index.js 与目录一致（1778 张卡）\n"
         },
         "encounterIndex": {
           "pass": true,
           "command": "node tools/build-encounter-index.mjs --check",
           "exitCode": 0,
-          "tail": "✔ encounter-entries/index.js 与目录一致（2623 个条目）\n"
+          "tail": "✔ encounter-entries/index.js 与目录一致（2778 个条目）\n"
         },
         "compliance": {
           "pass": true,
           "command": "node tools/audit-card-entry-compliance.mjs --check",
           "exitCode": 0,
-          "tail": "卡条目合规审计通过（无基线外新增违规）\n{\n \"directStateWrite\": 112,\n \"singleCardField\": 21,\n \"reprintDuplicate\": 0,\n \"playConditionGap\": 0,\n \"testWrapper\": 25,\n \"revelationTestCards\": 136,\n \"selfCodeInstanceLookup\": 22\n}\n"
+          "tail": "卡条目合规审计通过（无基线外新增违规）\n{\n \"directStateWrite\": 112,\n \"singleCardField\": 21,\n \"reprintDuplicate\": 0,\n \"playConditionGap\": 0,\n \"testWrapper\": 25,\n \"revelationTestCards\": 146,\n \"selfCodeInstanceLookup\": 22\n}\n"
         },
         "presentation": {
           "pass": true,
@@ -572,7 +571,7 @@
           "pass": true,
           "command": "node tools/check-doc-links.mjs",
           "exitCode": 0,
-          "tail": "文档链接体检：85 个文件、483 条本地链接全部可解析\n"
+          "tail": "文档链接体检：87 个文件、484 条本地链接全部可解析\n"
         }
       }
     },
@@ -616,7 +615,7 @@
         "pass": true,
         "command": "node tools/import-scenario-guides.mjs",
         "exitCode": 0,
-        "tail": "Adventure guides: 120 scenarios verified.\n"
+        "tail": "Adventure guides: 131 scenarios verified.\n"
       }
     },
     "flowDeclared": {
@@ -2664,7 +2663,7 @@
     },
     "allCards": {
       "path": "audit/tsk-all-card-acceptance.json",
-      "sha256": "09d2ee896553621653c6e390bf233d9b5396a534f421e61cabae7f107d53b36f",
+      "sha256": "a50548e1d7325941fe7605b1a5673d53d9426bb00d9d55401b2896855b2791a5",
       "summary": {
         "total": 439,
         "verified": 161,
@@ -2743,7 +2742,7 @@
       "pass": true,
       "command": "node tools/import-scenario-guides.mjs",
       "exitCode": 0,
-      "tail": "Adventure guides: 120 scenarios verified.\n"
+      "tail": "Adventure guides: 131 scenarios verified.\n"
     },
     "story": {
       "pass": true,
@@ -2759,19 +2758,19 @@
     },
     {
       "path": "audit/tsk-scope.json",
-      "sha256": "78fd6d2f4f1243cdb93af19df3246b2f90a8f7544e4e1157063b30ab07e969ed"
+      "sha256": "106aa98013880ab89be60e0ae117a58a3577153c59665f6a924d56dcb1575c78"
     },
     {
       "path": "audit/tsk-baseline.json",
-      "sha256": "8757a5d8044af19dcb9f6be8adcd2a941fb9f381451afe7729b0b16f494b541a"
+      "sha256": "0057cdf5da8700135dcff967a10569a86f9b154c4a132ab2db0ad91b4627065b"
     },
     {
       "path": "audit/tsk-mechanism-scan.json",
-      "sha256": "be1a0d54acbb890e30ff3442a8c7c3f58d5602db1930d3a80f690a67202dae5a"
+      "sha256": "defbb5d93e4e1f16e9ba2d54819843d0c2ccc421350b1b8b211151d45c5ec8a2"
     },
     {
       "path": "audit/tsk-primitive-plan.json",
-      "sha256": "c057e3b7ea984085d54b206410d2ec458f29ab27a7a76de626b67b5a67622e27"
+      "sha256": "0bf64369e4d913f30135252d39160330653ae92d618a397c2aaae06e6099886b"
     },
     {
       "path": "audit/tsk-primitive-catalog.json",
@@ -2783,7 +2782,7 @@
     },
     {
       "path": "audit/tsk-rules.json",
-      "sha256": "9fa216e4fda4dfee4eab70628f734319e9011b417ef55a75fb8e774d2a237b0b"
+      "sha256": "498e9d55612707600539d9e4f46625c4b43eb7c8fccf5308207f1e09f12f747c"
     },
     {
       "path": "audit/tsk-interactions.json",
@@ -2791,7 +2790,7 @@
     },
     {
       "path": "audit/tsk-investigators.json",
-      "sha256": "ee735eec30e5442457cf27afa591ec27584db2a0681f0c507e9aa937f028bc3a"
+      "sha256": "a5283a0546a61b8968c592029274a8bc8e3cc75175126876f3219683767c354f"
     },
     {
       "path": "audit/tsk-player-acceptance.json",
@@ -2831,7 +2830,7 @@
     },
     {
       "path": "audit/tsk-all-card-acceptance.json",
-      "sha256": "09d2ee896553621653c6e390bf233d9b5396a534f421e61cabae7f107d53b36f"
+      "sha256": "a50548e1d7325941fe7605b1a5673d53d9426bb00d9d55401b2896855b2791a5"
     },
     {
       "path": "audit/tsk-release-browser.json",
@@ -2867,7 +2866,7 @@
     },
     {
       "path": "content/registered.js",
-      "sha256": "95de3eb916f9ba0fdc1726da395182143e0fb7786e3ed2169be3a399fc1362d6"
+      "sha256": "494cf961b677db1788e34b6f7b73061a0a28b69c131b8dfd4537abc4c7609c79"
     },
     {
       "path": "content/mechanics.js",
@@ -2893,14 +2892,13 @@
     {
       "kind": "gate-pending",
       "gates": [
-        "ledgers",
         "guards"
       ]
     }
   ],
   "gate": {
     "registration": true,
-    "ledgers": false,
+    "ledgers": true,
     "allCards": true,
     "campaignE2E": true,
     "releaseBrowser": true,

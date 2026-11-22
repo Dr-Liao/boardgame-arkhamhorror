@@ -456,19 +456,19 @@
           "pass": true,
           "command": "node tools/build-card-index.mjs --check",
           "exitCode": 0,
-          "tail": "✔ entries/index.js 与目录一致（1723 张卡）\n"
+          "tail": "✔ entries/index.js 与目录一致（1778 张卡）\n"
         },
         "encounterIndex": {
           "pass": true,
           "command": "node tools/build-encounter-index.mjs --check",
           "exitCode": 0,
-          "tail": "✔ encounter-entries/index.js 与目录一致（2623 个条目）\n"
+          "tail": "✔ encounter-entries/index.js 与目录一致（2778 个条目）\n"
         },
         "compliance": {
           "pass": true,
           "command": "node tools/audit-card-entry-compliance.mjs --check",
           "exitCode": 0,
-          "tail": "卡条目合规审计通过（无基线外新增违规）\n{\n \"directStateWrite\": 112,\n \"singleCardField\": 21,\n \"reprintDuplicate\": 0,\n \"playConditionGap\": 0,\n \"testWrapper\": 25,\n \"revelationTestCards\": 136,\n \"selfCodeInstanceLookup\": 22\n}\n"
+          "tail": "卡条目合规审计通过（无基线外新增违规）\n{\n \"directStateWrite\": 112,\n \"singleCardField\": 21,\n \"reprintDuplicate\": 0,\n \"playConditionGap\": 0,\n \"testWrapper\": 25,\n \"revelationTestCards\": 146,\n \"selfCodeInstanceLookup\": 22\n}\n"
         },
         "presentation": {
           "pass": true,
@@ -480,7 +480,7 @@
           "pass": true,
           "command": "node tools/check-doc-links.mjs",
           "exitCode": 0,
-          "tail": "文档链接体检：85 个文件、483 条本地链接全部可解析\n"
+          "tail": "文档链接体检：87 个文件、484 条本地链接全部可解析\n"
         }
       }
     },
@@ -1282,7 +1282,7 @@
     },
     "investigators": {
       "path": "audit/fhv-investigators.json",
-      "sha256": "abac72b04e8636e7f26a17250c2741a514e09c01d10e9628cb54fad14d78c0c3",
+      "sha256": "03f2169cdf515819a00d7a7d23c20707de3cbaebb976fb837242cd27c64eea58",
       "pass": true,
       "command": "node tools/audit-fhv-investigators.mjs --check",
       "exitCode": 0,
@@ -1474,19 +1474,19 @@
           "pass": true,
           "command": "node tools/build-card-index.mjs --check",
           "exitCode": 0,
-          "tail": "✔ entries/index.js 与目录一致（1723 张卡）\n"
+          "tail": "✔ entries/index.js 与目录一致（1778 张卡）\n"
         },
         "encounterIndex": {
           "pass": true,
           "command": "node tools/build-encounter-index.mjs --check",
           "exitCode": 0,
-          "tail": "✔ encounter-entries/index.js 与目录一致（2623 个条目）\n"
+          "tail": "✔ encounter-entries/index.js 与目录一致（2778 个条目）\n"
         },
         "compliance": {
           "pass": true,
           "command": "node tools/audit-card-entry-compliance.mjs --check",
           "exitCode": 0,
-          "tail": "卡条目合规审计通过（无基线外新增违规）\n{\n \"directStateWrite\": 112,\n \"singleCardField\": 21,\n \"reprintDuplicate\": 0,\n \"playConditionGap\": 0,\n \"testWrapper\": 25,\n \"revelationTestCards\": 136,\n \"selfCodeInstanceLookup\": 22\n}\n"
+          "tail": "卡条目合规审计通过（无基线外新增违规）\n{\n \"directStateWrite\": 112,\n \"singleCardField\": 21,\n \"reprintDuplicate\": 0,\n \"playConditionGap\": 0,\n \"testWrapper\": 25,\n \"revelationTestCards\": 146,\n \"selfCodeInstanceLookup\": 22\n}\n"
         },
         "presentation": {
           "pass": true,
@@ -1498,7 +1498,7 @@
           "pass": true,
           "command": "node tools/check-doc-links.mjs",
           "exitCode": 0,
-          "tail": "文档链接体检：85 个文件、483 条本地链接全部可解析\n"
+          "tail": "文档链接体检：87 个文件、484 条本地链接全部可解析\n"
         }
       }
     }
@@ -1542,7 +1542,7 @@
     },
     {
       "path": "audit/fhv-investigators.json",
-      "sha256": "abac72b04e8636e7f26a17250c2741a514e09c01d10e9628cb54fad14d78c0c3"
+      "sha256": "03f2169cdf515819a00d7a7d23c20707de3cbaebb976fb837242cd27c64eea58"
     },
     {
       "path": "audit/fhv-investigators-browser.json",
@@ -1614,7 +1614,7 @@
     },
     {
       "path": "content/registered.js",
-      "sha256": "95de3eb916f9ba0fdc1726da395182143e0fb7786e3ed2169be3a399fc1362d6"
+      "sha256": "494cf961b677db1788e34b6f7b73061a0a28b69c131b8dfd4537abc4c7609c79"
     }
   ],
   "remaining": [

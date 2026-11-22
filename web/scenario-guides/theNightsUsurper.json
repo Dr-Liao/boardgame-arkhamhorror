@@ -1,0 +1,176 @@
+{
+  "id": "theNightsUsurper",
+  "campaignId": "guardiansOfTheAbyss",
+  "sourceKind": "authored",
+  "officialChinese": false,
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "夜之篡位者",
+          "text": "温洛克捻着胡子，斟酌着你们的话。作为正在达舒尔挖掘的探险队领队，是否让你们加入由他决定。他读过你们收集的证据，也知道开罗发生了什么，却不知道该怎么说服队里其他人。古庙还说得过去，可一道通往异次元的门？这个伊扎法拉？这些都不可能是真的吧？你们的研究与经历告诉你们并非如此：一个秘密组织——野兽兄弟会——正在埃及活动；若不阻止他们，他们新找到的「选民」将掀起一场以毁灭地球告终的战争。温洛克最终让步，允许你们使用探险队的资源。你们宁愿一无所获，也不愿找到那东西。"
+        }
+      ],
+      "setup": [
+        {
+          "id": "gatherSets",
+          "text": "收集遭遇组：夜之篡位者、埃及之沙、野兽兄弟会、深渊赠礼。"
+        },
+        {
+          "id": "placeLocations",
+          "text": "将探险营地放入场；每名调查员从探险营地开始游戏。"
+        },
+        {
+          "id": "setAside",
+          "text": "将深渊弯刀、召唤夜魇、单面地点超凡之门、双面敌人伊扎法拉、5 张双面异界地点，以及 2 张可怖山克放到一边。"
+        },
+        {
+          "id": "explorationDeck",
+          "text": "用 7 张剩余单面地点与深渊领域、黑风、金字塔下的恐怖、蝗虫成群各 1 张洗混，组建探索牌库。"
+        },
+        {
+          "id": "brotherhood",
+          "text": "战役模式：把记录在「逃脱的兄弟会特工」下的每名兄弟会敌人置于剧本参考卡下方。独立模式：洗混 6 名兄弟会敌人，在不看故事面的情况下随机取 3 名置于参考卡下方。"
+        },
+        {
+          "id": "strengthOfTheAbyss",
+          "text": "战役模式：按记录在「深渊中的沉梦者」旁的数值在剧本参考卡放置资源标记。独立模式：每名调查员放置 1 个资源标记。"
+        },
+        {
+          "id": "begin",
+          "text": "现在可以开始游戏。"
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "strengthOfTheAbyss",
+          "title": "深渊之力",
+          "text": "剧本参考卡上的资源标记代表深渊之力。它由战役记录（独立模式为调查员人数）初始化，并随卡牌指示改变。让深渊之力保持较低，最后的幕会更容易完成。"
+        },
+        {
+          "id": "explore",
+          "title": "探索",
+          "text": "从探索牌库顶逐张翻牌，直到翻出以符号相连的地点（置入战场并移动过去）或诡计（按正常流程结算）。途中翻出的其他地点在本次探索结束后洗回。超凡之门会在第一章背面揭示后洗入探索牌库。"
+        },
+        {
+          "id": "memories",
+          "title": "被记住的任务",
+          "text": "异界地点的故事卡可能让你们记住：释放或处决了夜魇、警告了萨尔科曼德的居民、切断所有退路、恳求援助，或冒犯了此界的主宰。这些记忆有助于满足最后一幕的条件。"
+        },
+        {
+          "id": "xzharah",
+          "title": "伊扎法拉",
+          "text": "伊扎法拉得到 +5[per_investigator] 生命值，且不能因伤害被击败。调查员可以与他谈判（以意志或智识进行强度等于深渊之力的检定），成功则将他翻面为故事面。最后一幕需要伊扎法拉被耗尽或以其他方式失去反抗能力。"
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "无结局",
+          "text": "若因所有调查员撤退或被击败而未达成结局，按参考直接进入结局 1。"
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "text": "「这只是一道拱门。老板，你这么紧张干什么？」温洛克抱臂。可这一切都透着不对劲——他确信这正是那群阿卡姆人寻找的地方：一道雕着精致花纹、却不通向任何地方的拱门；然而他确定，拱门的另一侧有什么东西。「这不是埃及的，」他眯眼看着，「甚至不像……人类的。」在战役日志记录「清算之日即将到来」。每名调查员获得等同胜利区卡牌胜利点数的经验。"
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "text": "伊扎法拉体内的精华渐渐消散。翻涌的雾气包围他、逼他跪倒，深渊的生物带着沉默而面无表情的恨意围住他。他的剑从手中滑落，剑刃在触地时碎裂。「……预言必须实现……」这是他最后一句恶毒的耳语；他的形体化入此界的雾中。在战役日志记录「深渊已被拯救」，并划掉所有「被深渊吞没」的记录。任意一名调查员可选择将召唤夜魇加入牌组（不计入牌组张数）。每名调查员获得等同胜利区卡牌胜利点数的经验。"
+        },
+        {
+          "id": "resolution3",
+          "title": "结局 3",
+          "text": "伊扎法拉冰冷的手按在跪倒于他面前的你们的肩上。「你们的忠诚已得到证明，」他宣告。深渊的生物围在你们周围，向新主人低头致敬——再没有人能反抗他。「你们之中少有能看见眼下之外、看见预言实现的人。但你们有资格睁开双眼，比那些我过去信任的蠢货更有资格。」他示意你们起身，把浸血之剑的剑柄放到你们手中。「起来吧，野兽的仆人，在我们之中取得你的位置。」在战役日志记录「你们与伊扎法拉联手」。任意一名调查员可选择将深渊弯刀加入牌组（不计入牌组张数）。每名调查员获得等同胜利区卡牌胜利点数的经验。"
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "The Night's Usurper",
+          "text": "Winlock fiddles with his mustache while he considers your words. As the leader of the expedition currently scouring Dashur, the decision of whether to let you join is up to him. He read the evidence you gathered and knows what happened in Cairo, but he does not know how to convince the rest of the crew. Ancient temples are one thing, but a gate to another dimension? This Xzharah? None of it can be real, right? Your research and experience say otherwise. A secret organization, the Brotherhood of the Beast, operates within Egypt, and if they are not stopped, their newfound Chosen One will begin a campaign of destruction that ends with the Earth. Winlock finally relents and grants you access to the expedition's resources. You would rather come up empty-handed than find what you are looking for."
+        }
+      ],
+      "setup": [
+        {
+          "id": "gatherSets",
+          "text": "Gather the encounter sets The Night's Usurper, Sands of Egypt, Brotherhood of the Beast, and Abyssal Gifts."
+        },
+        {
+          "id": "placeLocations",
+          "text": "Put the Expedition Camp into play. Each investigator begins play there."
+        },
+        {
+          "id": "setAside",
+          "text": "Set aside the Khopesh of the Abyss, the Summoned Nightgaunt, the single-sided Eldritch Gate location, the double-sided Xzharah enemy, the 5 double-sided Otherworld locations, and both copies of the Dreaded Shantak."
+        },
+        {
+          "id": "explorationDeck",
+          "text": "Create the exploration deck by shuffling together the 7 remaining single-sided locations and 1 copy each of Abyssal Reach, The Black Wind, Terror Under the Pyramids, and Swarm of Locusts."
+        },
+        {
+          "id": "brotherhood",
+          "text": "In campaign mode, place beneath the scenario reference card each Brotherhood enemy listed next to Brotherhood Agents Who Escaped in your Campaign Log. In standalone mode, shuffle the 6 Brotherhood enemies and place 3 of them beneath the scenario reference card without looking."
+        },
+        {
+          "id": "strengthOfTheAbyss",
+          "text": "In campaign mode, place resource tokens on the scenario reference card equal to the number recorded next to dreamers in the abyss. In standalone mode, place 1 resource token for each investigator."
+        },
+        {
+          "id": "begin",
+          "text": "You may begin the game."
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "strengthOfTheAbyss",
+          "title": "Strength of the Abyss",
+          "text": "Resources on the scenario reference card represent the strength of the abyss. The strength starts from your campaign records (or the investigator count in standalone mode) and changes as cards instruct. The final act may be easier if you keep the abyss weak."
+        },
+        {
+          "id": "explore",
+          "title": "Explore",
+          "text": "Draw the top card of the exploration deck until a location connected by matching symbols is drawn (put it into play and move there) or a treachery is drawn (resolve it normally). Other locations drawn are shuffled back at the end of the exploration. The Eldritch Gate is shuffled into the exploration deck after the first act is revealed."
+        },
+        {
+          "id": "memories",
+          "title": "Remembered Tasks",
+          "text": "The Otherworld story cards can remind you that you freed or executed the nightgaunts, warned the denizens of Sarkomand, cut off all escape, pledged for help, or affronted the ruler of this realm. These memories help satisfy the final act's conditions."
+        },
+        {
+          "id": "xzharah",
+          "title": "Xzharah",
+          "text": "Xzharah gets +5 [per_investigator] health and cannot be defeated by damage. An investigator may parley with him (test willpower or intellect equal to the strength of the abyss) to flip him to his story side. The final act requires Xzharah to be exhausted or otherwise neutralized."
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "No Resolution",
+          "text": "If no resolution was reached because every investigator resigned or was defeated, proceed to Resolution 1."
+        },
+        {
+          "id": "resolution1",
+          "title": "Resolution 1",
+          "text": "It's just an arch. Why are you so worked up, boss? Winlock crossed his arms. Something about all of this felt wrong; he was sure this was the place those folks from Arkham were looking for, a delicately patterned archway that led nowhere at all, and yet he was certain there was something on the other side. It doesn't even look human. In your Campaign Log, record that the Day of Reckoning is coming. Each investigator earns experience equal to the Victory X value of cards in the victory display."
+        },
+        {
+          "id": "resolution2",
+          "title": "Resolution 2",
+          "text": "The essence fades from Xzharah's body. Swirling clouds of mist force him to his knees, and creatures of the abyss surround him with quiet, expressionless hate. His sword falls from his grip and shatters on the ground. The prophecy must be fulfilled, he whispers as his form vanishes into the realm's ether. In your Campaign Log, record that the Abyss was saved and cross off all notes that a card was taken by the abyss. Any one investigator may choose to add the Summoned Nightgaunt to their deck; it does not count toward deck size. Each investigator earns experience equal to the Victory X value of cards in the victory display."
+        },
+        {
+          "id": "resolution3",
+          "title": "Resolution 3",
+          "text": "Xzharah places an ice-cold hand on your shoulder as you kneel before him. You have proven your loyalty, he decrees. Creatures of the abyss surround you, heads bowed in reverence to their new master. Few of your kind have the wit or the will to see beyond the present. He bids you stand and places the handle of his blood-soaked sword in your hands. Arise, Servant of the Beast, and take your place among us. In your Campaign Log, record that you joined forces with Xzharah. Any one investigator may choose to add the Khopesh of the Abyss to their deck; it does not count toward deck size. Each investigator earns experience equal to the Victory X value of cards in the victory display."
+        }
+      ]
+    }
+  }
+}

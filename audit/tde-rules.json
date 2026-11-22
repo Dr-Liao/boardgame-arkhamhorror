@@ -457,7 +457,7 @@
         "statusPassed": true,
         "desktopBrowser": true,
         "mobileBrowser": true,
-        "screenshots": 93
+        "screenshots": 73
       }
     },
     "related": []
@@ -594,10 +594,10 @@
   },
   "files": {
     "content/campaigns/theDreamEaters/keywords.js": "417ae76f8ed99fdbd0e8dd8f8b6feae690c7c5ef3e7fb510b64ef3ef10aa5259",
-    "web/rulebook-data.js": "71a772ad286cf0a04c4448bd3486f712b6c0e7a23c46e7fe9cd46d3db0f3d9c4",
-    "web/ui-cards.js": "17918682459dbd5a2af65b616aacc48375b449fbcfb50c99d2c9497e697f98de",
+    "web/rulebook-data.js": "eb358d0b381aae56282c48244a6a0548a7691ad66f6b5db60847268f6da26f62",
+    "web/ui-cards.js": "bf8a736695661803cbeff14701acfc15914cb1b7d1988d1bb992d51fe4a6c808",
     "content/campaigns/theDreamEaters/shared.js": "943fade87a7824527e52cde3552b76aa15b268d0fde69d5ab84e39d9d71c2617",
-    "content/mechanics.js": "ea861291928ea27cea5b6451d9ea56b19dd3e5323d487557347b589128702836",
+    "content/mechanics.js": "cd3fe2a750929fe31a8ae99547f16c728c07af5d0f0c6e09ef8eeb2f15ad304a",
     "tests/tde-rules.test.mjs": "682a74a0627dd5ea36463d3923dd20a4f1fb07c57740ad61d6100fdaba65c797",
     "tests/tde-rules.browser.mjs": "829de66de44749447381f3b9e17e4eba783b0b00fcb5bb691f63ab8122a08f6c",
     "audit/tde-browser-acceptance.json": "c7d19532a1dc2f87f0e7a4525f65cfdd0e80e39db4d82f1172e7e2b02c113a72"

@@ -1,0 +1,386 @@
+{
+  "id": "relicsOfThePast",
+  "campaignId": "relicsOfThePast",
+  "sourceKind": "authored",
+  "officialChinese": false,
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "挑战剧本：往昔遗物",
+          "children": [
+            {
+              "id": "body1",
+              "text": "要更好地理解我们的未来，我们必须先理解过去。密斯卡塔尼克大学对墨西哥丛林的考察失败的消息，很快就传到了你的耳朵里。阶梯金字塔、神话中的蛇人，以及在人迹罕至之处发现的外星遗物——这些故事激起了你的兴趣。你很快就收拾好行囊，计划亲自前往调查。"
+            },
+            {
+              "id": "body2",
+              "text": "密斯卡塔尼克大学的考察队进入了遗迹，却几乎没能取得任何进展。想到古墓深处可能还埋藏着多少被遗忘的宝物，你的心跳加速。你雇了向导，沿着泥泞的河岸走了三天。第四天清晨，你们找到了那道被藤蔓吞没的石门。向导在门口停住脚，脸色发白，怎么也不肯再往前走一步。「那里面的东西，不该被挖出来。」他说。"
+            },
+            {
+              "id": "body3",
+              "text": "你付了他钱，独自走进黑暗。火把的光在潮湿的石壁上跳动，空气里有一股陈年的尘土与蛇蜕的腥臭。台阶向下延伸到深处。你听见水声，听见石头开裂的声音，然后——你听见了别的东西。某种庞大的、在泥土里翻动的东西。你握紧了鞭子。你当然不是来打架的。但如果你必须打……那你最好先找到那些遗物。"
+            },
+            {
+              "id": "proceedToSetup",
+              "text": "前往「设置」。"
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "setup",
+          "title": "设置",
+          "children": [
+            {
+              "id": "gatherSets",
+              "text": "收集以下遭遇组的全部卡牌：往昔遗物、埃兹特里的覆灭、伊格的使徒、致命陷阱、被遗忘的遗迹、毒素、蛇群、伊格的毒液、地窖寒风、上锁的门、午夜假面。"
+            },
+            {
+              "id": "midnightMasks",
+              "text": "收集午夜假面遭遇组时，只收集五张诡计牌（2 张虚假线索与 3 张猎影）。不要收集该组的地点和其它卡牌。"
+            },
+            {
+              "id": "removeCards",
+              "text": "将「埃兹特里的覆灭」遭遇组原有的剧本提示卡、幕与议程移出游戏；改用「往昔遗物」遭遇组提供的新提示卡、幕与议程。此外，将「埃兹特里的覆灭」遭遇组中的古代遗物资产、瓦卢西亚的预示者敌人，以及秘密通道、古代石厅与时间石室地点移出游戏。"
+            },
+            {
+              "id": "explorationDeck",
+              "text": "准备探索牌库：将 5 处单面地点与以下卡牌洗混：各 1 张深渊黑暗与最后的错误，以及 3 张坑洞毒蛇。若为困难或专家难度，额外洗入 1 张上锁的门与 1 张被埋葬。"
+            },
+            {
+              "id": "setAside",
+              "text": "将以下卡牌放在一边（移出游戏）：复仇往昔诡计、内部密室地点、3 张伊格之子敌人，以及 4 张[[古代]]故事资产。"
+            },
+            {
+              "id": "placeEntryway",
+              "text": "将遗迹入口放入场。每位调查员从遗迹入口开始。"
+            },
+            {
+              "id": "poisoned",
+              "text": "将「中毒」弱点中不在任何调查员牌组里的部分放在一边。"
+            },
+            {
+              "id": "supplies",
+              "text": "每位调查员选择 1 件补给品：粉笔、指南针、探险日志、背包或火把（若只有一位调查员，可以选择 2 件）。"
+            },
+            {
+              "id": "agendaDoom",
+              "text": "按照调查员人数在议程 1 上放置毁灭标记（1/2/3/4 人：0/1/2/3）。"
+            },
+            {
+              "id": "shuffleRemainder",
+              "text": "将其余遭遇卡洗混，组成遭遇牌库。"
+            },
+            {
+              "id": "readyToBegin",
+              "text": "准备开始。"
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "challengeScenario",
+          "title": "挑战剧本",
+          "children": [
+            {
+              "id": "prerequisites",
+              "text": "挑战剧本是特殊的「打印即玩」剧本，利用《诡镇奇谈：卡牌版》收藏中已有的产品与额外的打印卡，创造新内容。「往昔遗物」挑战剧本围绕调查员蒙特雷·杰克展开，因此有以下前置要求：蒙特雷·杰克必须作为本剧本的调查员之一被选择。"
+            }
+          ]
+        },
+        {
+          "id": "explore",
+          "title": "探索（Explore）",
+          "children": [
+            {
+              "id": "body",
+              "text": "本剧本中部分能力带有「探索」行动标识，通常用于寻找新的地点。结算本挑战剧本的探索能力时，遵循《失落的时代》战役指南第 3 页的规则，但有以下例外：若从探索牌库抽到敌人，正常结算；若它被弃置，则放入遭遇弃牌堆，这视为一次「不成功」的探索。若从探索牌库抽到故事资产，结算其显现效果，这视为一次「成功」的探索。"
+            }
+          ]
+        },
+        {
+          "id": "suppliesRule",
+          "title": "补给品（Supplies）",
+          "children": [
+            {
+              "id": "body",
+              "text": "「往昔遗物」使用一套专属的补给品。补给品本身没有固有效果，但可能被卡牌能力引用。每位调查员可以选择 1 件补给品（单人游戏可以选择 2 件）：粉笔（用于在石头上写字）、指南针（帮助辨认方向）、探险日志（记录探险中的事件）、背包（安全存放你在墓中发现的任何东西）、火把（照亮黑暗区域或点燃壁灯）。"
+            }
+          ]
+        },
+        {
+          "id": "tokens",
+          "title": "混乱标记（90065 提示卡）",
+          "children": [
+            {
+              "id": "skullStandard",
+              "text": "[[颅骨]]（简单/普通）：-X。X 为场上有至少 1 点毁灭标记的地点数量。"
+            },
+            {
+              "id": "cultistStandard",
+              "text": "[[邪教徒]]（简单/普通）：-1。如果你已中毒，额外揭示一枚混乱标记。"
+            },
+            {
+              "id": "tabletStandard",
+              "text": "[[石板]]（简单/普通）：-3。如果你检定失败，在所在地点放置 1 个毁灭标记。"
+            },
+            {
+              "id": "elderThingStandard",
+              "text": "[[远古之物]]（简单/普通）：-3。如果你检定失败，最近的已就绪未交战[[蛇]]敌人向你移动一次。"
+            },
+            {
+              "id": "skullHard",
+              "text": "[[颅骨]]（困难/专家）：-X。X 为场上有至少 1 点毁灭标记的地点数量 +1。"
+            },
+            {
+              "id": "cultistHard",
+              "text": "[[邪教徒]]（困难/专家）：-2。如果你已中毒，额外揭示一枚混乱标记。"
+            },
+            {
+              "id": "tabletHard",
+              "text": "[[石板]]（困难/专家）：-4。在所在地点放置 1 个毁灭标记。"
+            },
+            {
+              "id": "elderThingHard",
+              "text": "[[远古之物]]（困难/专家）：-5。本次检定结算后，最近的已就绪未交战[[蛇]]敌人向你移动一次。"
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "无结局",
+          "children": [
+            {
+              "id": "body",
+              "text": "若没有任何调查员达成结局（全员被击败）：每位未被击败的调查员被击败并承受 1 点肉体创伤，然后按结局 2 结算。"
+            }
+          ]
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "children": [
+            {
+              "id": "body",
+              "text": "你挥鞭荡过最后的裂隙，一个翻滚在闭合的石门封死之前钻了出去。你站起身，回望身后的丛林，再次呼吸潮湿的空气。最后检查一次装备时，你发现一条鳞片闪闪的蛇形偷渡客钻进了你的背包。你捏住它的后颈，轻轻把它抛进草丛，看着它嘶嘶作响地游走。你只能满足于在埃兹特里遗迹中学到和找到的东西。是时候把丛林抛在身后了。"
+            },
+            {
+              "id": "rewards",
+              "text": "蒙特雷·杰克获得等于胜利区中每件[[古代]]故事资产胜利点数总和的经验。其他每位调查员获得等于胜利区中每个敌人与地点胜利点数总和的经验。检查每位撤退调查员的补给品；若带有探险日志的调查员撤退，每位调查员额外获得 1 点经验。蒙特雷·杰克可以将可靠的长鞭升级为进阶版，或把《被埋葬的秘密》进阶版降级为原本版本。"
+            }
+          ]
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "children": [
+            {
+              "id": "body",
+              "text": "你沿着崩塌的走廊狂奔，身后蛇形怪物的嘶鸣在石壁间回荡。道路通向一个深坑，你面临选择：试着跨过裂隙，还是回头面对追兵。你伸手取下腰间的长鞭，决定借它荡过去。你把鞭子甩向洞顶附近一截裸露的树根，开始荡跃。随着一声令人心碎的断裂，树根在重压下折断，你跌入深渊。你撞上尖石一路翻滚，最终落进坑底一条浅浅的溪流。你吐出血水，抬头看见蛇人的眼睛从远处俯视你，随后它们沿原路退去。你挣扎着站起，循着溪流前行，希望它终将带你出去。"
+            },
+            {
+              "id": "rewards",
+              "text": "每位调查员获得等于胜利区中所有卡牌胜利点数总和的经验。蒙特雷·杰克必须将《被埋葬的秘密》升级为进阶版，或把可靠的长鞭进阶版降级为原本版本。"
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "Challenge Scenario: Relics of the Past",
+          "children": [
+            {
+              "id": "body1",
+              "text": "To better understand our future, we must first understand our past. It didn't take long for the reports of Miskatonic University's failed expedition to the jungles of Mexico to reach your ears. Stories of step pyramids, mythical serpent-people, and otherworldly artifacts in places previously thought uninhabited have piqued your interest. It didn't take you long to pack your bags and make plans to head down and investigate it yourself."
+            },
+            {
+              "id": "body2",
+              "text": "The Miskatonic University expedition made it into the ruins but struggled to make any progress. Your heart races as you begin to consider what other forgotten treasures lie undiscovered in the heart of the tomb. You hire a guide and follow the muddy riverbank for three days. On the fourth morning, you find the stone door, swallowed by vines. The guide stops at the threshold, pale, refusing to take another step. \"The things in there should not be dug up,\" he says."
+            },
+            {
+              "id": "body3",
+              "text": "You pay him and walk into the darkness alone. Torchlight dances on the damp stone, and the air carries the stale dust and the acrid smell of shed snakeskin. The steps descend into the depths. You hear water, hear stone cracking, and then—you hear something else. Something huge, stirring in the earth. You tighten your grip on your whip. You didn't come here to fight. But if you must fight... you had better find the relics first."
+            },
+            {
+              "id": "proceedToSetup",
+              "text": "Proceed to Setup."
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "setup",
+          "title": "Setup",
+          "children": [
+            {
+              "id": "gatherSets",
+              "text": "Gather all cards from the following encounter sets: Relics of the Past, The Doom of Eztli, Agents of Yig, Deadly Traps, Forgotten Ruins, Poison, Serpents, Yig's Venom, Chilling Cold, Locked Doors, and The Midnight Masks."
+            },
+            {
+              "id": "midnightMasks",
+              "text": "When gathering The Midnight Masks encounter set, only gather the five treachery cards (2x False Lead and 3x Hunting Shadow). Do not gather the locations and other cards from that set."
+            },
+            {
+              "id": "removeCards",
+              "text": "Remove the original scenario reference card, acts, and agendas from The Doom of Eztli encounter set from the game. Use the new scenario reference card, acts, and agendas provided in the Relics of the Past encounter set. Additionally, remove the following cards from The Doom of Eztli encounter set from the game: the Relic of Ages asset, the Harbinger of Valusia enemy, and the Secret Passage, Ancient Hall, and Chamber of Time locations."
+            },
+            {
+              "id": "explorationDeck",
+              "text": "Build the exploration deck. This is done by taking the five single-sided locations and shuffling them together with each of the following: one copy each of the Deep Dark and Final Mistake treacheries, and three copies of Pit Viper. If playing on Hard or Expert difficulty, also shuffle in one copy of Locked Door and one copy of Entombed."
+            },
+            {
+              "id": "setAside",
+              "text": "Set the following cards aside, out of play: the Vengeant Past treachery, the Inner Chamber location, the three Brood of Yig enemies, and each of the four Ancient story assets."
+            },
+            {
+              "id": "placeEntryway",
+              "text": "Put the Entryway into play. Each investigator begins play in the Entryway."
+            },
+            {
+              "id": "poisoned",
+              "text": "Set aside each Poisoned weakness that is not already in an investigator's deck."
+            },
+            {
+              "id": "supplies",
+              "text": "Each investigator may choose one of the following supplies to bring for the expedition (if there is only one investigator, they may choose two supplies instead): Chalk, Compass, Journal, Satchel, or Torches."
+            },
+            {
+              "id": "agendaDoom",
+              "text": "Place doom on agenda 1 depending on the number of investigators (1/2/3/4 investigators: 0/1/2/3 doom)."
+            },
+            {
+              "id": "shuffleRemainder",
+              "text": "Shuffle the remainder of the encounter cards to build the encounter deck."
+            },
+            {
+              "id": "readyToBegin",
+              "text": "You are ready to begin."
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "challengeScenario",
+          "title": "Challenge Scenario",
+          "children": [
+            {
+              "id": "prerequisites",
+              "text": "Challenge scenarios are special print-and-play scenarios that utilize existing products in the Arkham Horror: The Card Game collection, along with additional print-and-play cards, to create new content. The Relics of the Past challenge scenario centers around the investigator Monterey Jack, and therefore has the following prerequisite: Monterey Jack must be chosen as one of the investigators when playing this scenario."
+            }
+          ]
+        },
+        {
+          "id": "explore",
+          "title": "Explore",
+          "children": [
+            {
+              "id": "body",
+              "text": "Some abilities in this scenario are identified with an Explore action designator. Such abilities are generally used to find new locations to put into play. When resolving Explore abilities found in this challenge scenario, follow all of the rules as outlined on page 3 of The Forgotten Age campaign guide, with the following exceptions: If an enemy is drawn from the exploration deck, it is resolved as normal. If it is discarded, place it in the encounter discard pile as you would normally. This is considered an \"unsuccessful\" exploration. If a story asset is drawn from the exploration deck, resolve its revelation effect. This is considered a \"successful\" exploration."
+            }
+          ]
+        },
+        {
+          "id": "suppliesRule",
+          "title": "Supplies",
+          "children": [
+            {
+              "id": "body",
+              "text": "Relics of the Past uses a list of supplies unique to this scenario. Supplies have no inherent effect, but may be referenced by card abilities. Each investigator may choose one of the following supplies to bring for the expedition (if there is only one investigator, they may choose two supplies instead): Chalk (for writing on stone surfaces), Compass (can help keep your bearings), Journal (to keep a record of the events of the expedition), Satchel (a safe place to store anything you find in the tomb), Torches (can light up dark areas, or set sconces alight)."
+            }
+          ]
+        },
+        {
+          "id": "tokens",
+          "title": "Chaos Tokens (90065 reference card)",
+          "children": [
+            {
+              "id": "skullStandard",
+              "text": "Skull (Easy/Standard): -X. X is the number of locations with 1 or more doom on them."
+            },
+            {
+              "id": "cultistStandard",
+              "text": "Cultist (Easy/Standard): -1. If you are poisoned, reveal another token."
+            },
+            {
+              "id": "tabletStandard",
+              "text": "Tablet (Easy/Standard): -3. If you fail, place 1 doom on your location."
+            },
+            {
+              "id": "elderThingStandard",
+              "text": "Elder Thing (Easy/Standard): -3. If you fail, the nearest ready unengaged Serpent enemy moves once toward your location."
+            },
+            {
+              "id": "skullHard",
+              "text": "Skull (Hard/Expert): -X. X is 1 more than the number of locations with 1 or more doom on them."
+            },
+            {
+              "id": "cultistHard",
+              "text": "Cultist (Hard/Expert): -2. If you are poisoned, reveal another token."
+            },
+            {
+              "id": "tabletHard",
+              "text": "Tablet (Hard/Expert): -4. Place 1 doom on your location."
+            },
+            {
+              "id": "elderThingHard",
+              "text": "Elder Thing (Hard/Expert): -5. After this test resolves, the nearest ready unengaged Serpent enemy moves once toward your location."
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "No Resolution",
+          "children": [
+            {
+              "id": "body",
+              "text": "If no resolution was reached because each investigator was defeated: Each investigator who has not been eliminated is defeated and suffers 1 physical trauma. Proceed to Resolution 2."
+            }
+          ]
+        },
+        {
+          "id": "resolution1",
+          "title": "Resolution 1",
+          "children": [
+            {
+              "id": "body",
+              "text": "With a lash of your whip you swing over the final gap, and a quick roll gets you under the closing stone door before it seals behind you. You rise to your feet, looking out over the jungle before you, breathing the humid air once more. Checking your gear one last time, you see a scaly, serpentine stowaway has found its way into your bag. Grabbing it behind the head, you toss it softly into the grass and watch as it slithers away with a hiss. You'll have to be satisfied with what you've learned, and what you've found, in the Ruins of Eztli. Time to put the jungle behind you."
+            },
+            {
+              "id": "rewards",
+              "text": "Monterey Jack earns experience equal to the combined Victory X value of each Ancient story asset in the victory display. Each other investigator earns experience equal to the combined Victory X value of each enemy and location in the victory display. Check the supplies of each investigator who resigned. If the investigator with the journal resigned, each investigator earns 1 bonus experience. Monterey Jack may either upgrade Trusty Bullwhip to its advanced version, or downgrade the advanced version of Buried Secrets to its original version."
+            }
+          ]
+        },
+        {
+          "id": "resolution2",
+          "title": "Resolution 2",
+          "children": [
+            {
+              "id": "body",
+              "text": "You race down the ruined corridor, the hissing of pursuing snake monstrosities echoing off the stone behind you. Your path leads you to a deep pit, and you are faced with a choice: try to cross the gap, or turn around to face your pursuers. You reach to your belt and retrieve your bullwhip, deciding to use it to cross the chasm. You lash the whip at an exposed tree root near the ceiling, and start your swing. With a heart-wrenching crack, the root snaps under your weight and you plummet into the chasm. You bounce off of sharp rocks as you tumble down, eventually landing in a shallow stream at the bottom. You spit blood, and then look up to see the eyes of the serpent-people peering down at you from far above, before they retreat back the way they came. You struggle to stand, and consider the stream at your feet. You stumble along, following its path, hoping it will eventually lead you out."
+            },
+            {
+              "id": "rewards",
+              "text": "Each investigator earns experience equal to the combined Victory X value of each card in the victory display. Monterey Jack must either upgrade Buried Secrets to its advanced version, or downgrade the advanced version of Trusty Bullwhip to its original version."
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

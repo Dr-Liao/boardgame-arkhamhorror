@@ -108,7 +108,9 @@ test('预置推荐卡组可离线读取，且为所属循环内的合法 ArkhamD
   const selectable = data.investigators.map(({ code }) => code)
   assert.deepEqual(Object.keys(recommendedDecks).filter(code => !selectable.includes(code)), [])
   // P5 supplies built-in automatic decks; published presets for this cycle can use P6 cards.
-  const pendingPresets = new Set(['09008', ...TDC_INVESTIGATOR_CODES, ...starterInvestigators, ...alternateInvestigatorCodes])
+  // 批次 4：Subject 5U-21 为自定义调查员（无 ArkhamDB 公开 0 XP 预设），按待补预设登记；
+  // 平行/印刷调查员由 alternateInvestigatorCodes 兜底。
+  const pendingPresets = new Set(['09008', '89001', ...TDC_INVESTIGATOR_CODES, ...starterInvestigators, ...alternateInvestigatorCodes])
   assert.deepEqual(selectable.filter(code => !pendingPresets.has(code) && !Object.hasOwn(recommendedDecks, code)), [])
   const fetch = t.mock.method(globalThis, 'fetch', () => {
     throw new Error('Offline recommendation attempted a network request')

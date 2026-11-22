@@ -430,6 +430,15 @@ export const CAMPAIGN_CYCLES = Object.freeze({
   allOrNothing: 11,
   badBlood: 11,
   byTheBook: 11,
+  theBlobThatAteEverything: 11,
+  theLabyrinthsOfLunacy: 11,
+  guardiansOfTheAbyss: 11,
+  warOfTheOuterGods: 11,
+  laidToRest: 11,
+  enthrallingEncore: 11,
+  redTideRising: 11,
+  relicsOfThePast: 11,
+  machinationsThroughTime: 11,
 })
 export function normalizeCardPoolScope(scope) {
   return CARD_POOL_SCOPES.includes(scope) ? scope : 'all'

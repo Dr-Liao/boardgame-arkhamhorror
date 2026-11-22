@@ -1,0 +1,162 @@
+{
+  "id": "theEternalSlumber",
+  "campaignId": "guardiansOfTheAbyss",
+  "locales": {
+    "en": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "The Eternal Slumber",
+          "text": "Greetings. I am sorry it has been so long since my last letter. I write to you now because there is nobody in Cairo I can trust, and I do not know if this letter will reach you safely. Something is wrong in this city. It began when the head curator of the Museum of Egyptian Antiquities fell asleep and simply never awoke. Then it happened again, and again. More and more people across the city are falling into comas, and now it happens every night. As I write, they are taking my husband John to the hospital. I am afraid, not only for myself but because I believe someone is deliberately inflicting this curse. If so, why? Please, I am begging you. I need your help. Yours sincerely, Jessie Burke."
+        }
+      ],
+      "setup": [
+        {
+          "id": "gatherSets",
+          "text": "Gather the encounter sets The Eternal Slumber, Sands of Egypt, Brotherhood of the Beast, and Abyssal Tribute."
+        },
+        {
+          "id": "placeLocations",
+          "text": "Put Streets of Cairo, Outskirts of Cairo, Temple Courtyard, Museum of Egyptian Antiquities, Cairo Bazaar, and Expedition Camp into play."
+        },
+        {
+          "id": "startAt",
+          "text": "Each investigator begins play at the Streets of Cairo."
+        },
+        {
+          "id": "setAside",
+          "text": "Set aside Neith, John and Jessie Burke, the Ancient Ankh, both copies of the Abyssal Revenant, and the 7 single-sided Expedition locations: Nile River, Sands of Dashur, Dunes of the Sahara, Untouched Vault, Faceless Sphinx, Desert Oasis, and Sandswept Ruins."
+        },
+        {
+          "id": "brotherhood",
+          "text": "Shuffle the 6 double-sided Brotherhood enemies (Professor Nathaniel Taylor, Dr. Layla El Masri, Dr. Wentworth Moore, Nadia Nimr, Farid, and Nassor) without looking at their story sides, and place them beneath the scenario reference card."
+        },
+        {
+          "id": "strengthOfTheAbyss",
+          "text": "For each investigator, place 1 resource token on the scenario reference card under Strength of the Abyss. For the rest of the scenario, resources on the scenario reference card represent the current strength of the abyss."
+        },
+        {
+          "id": "begin",
+          "text": "You may begin the game."
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "strengthOfTheAbyss",
+          "title": "Strength of the Abyss",
+          "text": "Resources on the scenario reference card represent the strength of the abyss. Add or remove tokens as the scenario instructs. The abyss has no inherent effect, but many encounter effects grow stronger with it. Should it grow too powerful, the city will never wake."
+        },
+        {
+          "id": "evidence",
+          "title": "Brotherhood Agents and Evidence",
+          "text": "When a Brotherhood enemy would enter the victory display, flip it over and resolve its story side. Those story sides are the evidence you seek. The investigators must collect all six before the agenda advances."
+        },
+        {
+          "id": "dreamers",
+          "title": "Dreamers",
+          "text": "Damage tokens on Cairo locations represent dreamers: victims cursed with eternal slumber. Once Neith is in play, awakeners may attempt to move a dreamer from their location to Neith as damage."
+        },
+        {
+          "id": "explore",
+          "title": "Explore",
+          "text": "After the first act is revealed, build the exploration deck from the set-aside Expedition locations and the listed treacheries. Draw from the top until a location connected by matching symbols is drawn (put it into play and move there) or a treachery is drawn (resolve it normally)."
+        }
+      ],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "No Resolution",
+          "text": "If no resolution was reached: the city of Cairo sleeps and will never wake. The Brotherhood rejoices in the west, for their prophecy is about to be fulfilled, and deep in the land of dreams their Chosen grips his weapon for the first time. In your Campaign Log, record dreamers in the abyss (X), where X is the strength of the abyss when the scenario ended. Record Brotherhood Agents Who Escaped: each unique Cultist enemy that was in play or beneath the scenario reference card. Record that the Brotherhood's schemes continue unabated."
+        },
+        {
+          "id": "resolution1",
+          "title": "Resolution 1",
+          "text": "Jessie Burke cries with joy as her husband opens his eyes for the first time in weeks. John turns to you with a dire expression: in his dreams he saw the one they call Xzharah, and he is like nothing you have ever seen. In your Campaign Log, record that the curse of slumber was lifted and cross off all notes that a card was taken by the abyss. Any one investigator may choose to add John and Jessie Burke to their deck; it does not count toward deck size. Each investigator earns experience equal to the Victory X value of cards in the victory display, and record dreamers in the abyss (X) and Brotherhood Agents Who Escaped."
+        },
+        {
+          "id": "resolution2",
+          "title": "Resolution 2",
+          "text": "Neith rises to her feet. Most of her power has been drained, but the strength of several dreamers still sustains her. She speaks of a day of reckoning planned for centuries, and warns that none can withstand Xzharah. It is the Abyss he wants. If you wish to stop him, head west; Xzharah awaits beyond the Gate. Her shadow consumes her body and only her amulet remains. In your Campaign Log, record that you are aware of Xzharah's plans. Any one investigator may add the Ancient Ankh to their deck without counting toward deck size. Each investigator earns experience equal to the Victory X value, and record dreamers in the abyss (X) and Brotherhood Agents Who Escaped."
+        }
+      ]
+    },
+    "zh": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "永恒沉睡",
+          "text": "亲爱的朋友：很抱歉这么久没有写信。我现在身在开罗，除了你们，我不知道还能信任谁，也不确定这封信能否安全送达。这座城市出了事：埃及古物博物馆的馆长睡下后就再没醒来，随后一次又一次地有人陷入昏迷。现在每夜都有。写这封信时，他们正把我的丈夫约翰送往医院。我害怕，不只是为自己，更因为我怀疑有人刻意在散播这诅咒。如果真是这样，又是为了什么？求求你们，帮帮我。——你们真诚的，杰西·伯克。"
+        }
+      ],
+      "setup": [
+        {
+          "id": "gatherSets",
+          "text": "收集遭遇组：永恒沉睡、埃及之沙、野兽兄弟会、深渊献祭。"
+        },
+        {
+          "id": "placeLocations",
+          "text": "将开罗街道、开罗城郊、神庙庭院、埃及古物博物馆、开罗集市、探险营地放入场。"
+        },
+        {
+          "id": "startAt",
+          "text": "每名调查员从开罗街道开始游戏。"
+        },
+        {
+          "id": "setAside",
+          "text": "将奈斯、约翰和杰西·伯克、古老圣甲虫护符、2 张深渊亡魂，以及 7 张单面探险地点（尼罗河、达舒尔沙地、撒哈拉沙丘、未受扰动的地窖、无面斯芬克斯、沙漠绿洲、风沙废墟）放到一边。"
+        },
+        {
+          "id": "brotherhood",
+          "text": "把 6 名双面兄弟会敌人（纳撒尼尔·泰勒教授、莱拉·艾尔·马斯里博士、温特沃斯·摩尔博士、纳迪娅·尼姆尔、法里德、纳索尔）在不看故事面的情况下洗混，背面朝上置于剧本参考卡下方。"
+        },
+        {
+          "id": "strengthOfTheAbyss",
+          "text": "每名调查员在剧本参考卡「深渊之力」处放置 1 个资源标记。本关余下时间，参考卡上的资源代表深渊之力的当前强度。"
+        },
+        {
+          "id": "begin",
+          "text": "现在可以开始游戏。"
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "strengthOfTheAbyss",
+          "title": "深渊之力",
+          "text": "剧本参考卡上的资源标记代表深渊之力。按剧本指示增减。深渊本身没有固有效果，但许多遭遇效果会随它增强；若它过于强大，这座城市将永远不会醒来。"
+        },
+        {
+          "id": "evidence",
+          "title": "兄弟会特工与证据",
+          "text": "当兄弟会敌人将要进入胜利区时，将其翻面并结算故事面。这些故事面就是你们寻找的证据。调查员必须在议程推进前集齐全部 6 张证据。"
+        },
+        {
+          "id": "dreamers",
+          "title": "沉梦者",
+          "text": "开罗地点上的伤害标记代表沉梦者——被永恒沉睡诅咒的受害者。奈斯入场后，调查员可以尝试把所在地点的 1 个沉梦者移给奈斯，作为 1 点伤害。"
+        },
+        {
+          "id": "explore",
+          "title": "探索",
+          "text": "第一章背面揭示后，用放到一边的探险地点与列出的诡计组建探索牌库。从牌库顶逐张翻牌，直到翻出以符号相连的地点（置入战场并移动过去）或诡计（按正常流程结算）。"
+        }
+      ],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "无结局",
+          "text": "若未达成任何结局：开罗陷入永眠，再也不会醒来。兄弟会在西方欢庆，因为预言即将实现；而在梦境深处，他们选中的「选民」第一次握紧了武器。在战役日志记录「深渊中的沉梦者（X）」，X 为结局时深渊之力的强度；记录「逃脱的兄弟会特工」，列出结局时在场或位于参考卡下方的每名独特异教徒敌人；并记录「兄弟会的阴谋仍在继续」。"
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "text": "杰西·伯克喜极而泣——数周来第一次，她的丈夫睁开了眼睛。约翰神情凝重地转向你们：在梦里他见到了人们称作伊扎法拉的存在，那是你们从未见过的东西。在战役日志记录「长眠诅咒已被解除」，并划掉所有「被深渊吞没」的记录。任意一名调查员可选择将约翰和杰西·伯克加入牌组（不计入牌组张数）。每名调查员获得等同胜利区卡牌胜利点数的经验；记录「深渊中的沉梦者（X）」与「逃脱的兄弟会特工」。"
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "text": "奈斯站起身。她的力量已被抽走大半，但数名沉梦者仍在维持着她。她谈到谋划了几个世纪的清算之日，并警告没有人能抵挡伊扎法拉——他要的是深渊；若想阻止他，就向西去，伊扎法拉在门后等着。她的影子吞没了身体，只留下护符。在战役日志记录「你们已知晓伊扎法拉的阴谋」。任意一名调查员可将古老圣甲虫护符加入牌组（不计入牌组张数）。每名调查员获得等同胜利区卡牌胜利点数的经验；记录「深渊中的沉梦者（X）」与「逃脱的兄弟会特工」。"
+        }
+      ]
+    }
+  }
+}

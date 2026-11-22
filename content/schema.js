@@ -114,16 +114,36 @@ export function assertPackManifest(pack) {
 
 export function assertCampaignManifest(campaign) {
   manifest(campaign, 'campaign')
+  if (campaign.sideStory !== undefined && typeof campaign.sideStory !== 'boolean') {
+    fail('campaign.sideStory', '必须是布尔值')
+  }
   if (campaign.opening !== undefined) {
     const opening = object(campaign.opening, 'campaign.opening')
     for (const key of Object.keys(opening)) {
-      if (!['experience', 'investigators'].includes(key)) fail(`campaign.opening.${key}`, '未知开局字段')
+      if (!['experience', 'investigators', 'requiredInvestigators', 'anyInvestigators'].includes(key)) fail(`campaign.opening.${key}`, '未知开局字段')
     }
     if (opening.experience !== undefined && (!Number.isSafeInteger(opening.experience) || opening.experience < 0)) {
       fail('campaign.opening.experience', '必须是非负整数')
     }
     if (opening.investigators !== undefined && !list(opening.investigators, 'campaign.opening.investigators').length) {
       fail('campaign.opening.investigators', '至少需要一名调查员')
+    }
+    // 批次 4：requiredInvestigators = 「指定调查员必须在场，其余座位任意」（挑战战役多人语义）。
+    if (opening.anyInvestigators !== undefined && typeof opening.anyInvestigators !== 'boolean') {
+      fail('campaign.opening.anyInvestigators', '必须是布尔值')
+    }
+    if (opening.anyInvestigators === true && opening.investigators === undefined) {
+      fail('campaign.opening.anyInvestigators', '需要同时声明 opening.investigators 作为必选调查员')
+    }
+    if (opening.requiredInvestigators !== undefined) {
+      const required = list(opening.requiredInvestigators, 'campaign.opening.requiredInvestigators')
+      if (!required.length) fail('campaign.opening.requiredInvestigators', '至少需要一名指定调查员')
+      if (new Set(required).size !== required.length) fail('campaign.opening.requiredInvestigators', '不能重复')
+      if (opening.investigators !== undefined) {
+        for (const code of required) {
+          if (!opening.investigators.includes(code)) fail('campaign.opening.requiredInvestigators', `必须属于可选调查员列表：${code}`)
+        }
+      }
     }
   }
   // 批次 2：主战役可在关间插入独立支线（每条支线每人支付 cost 经验）。

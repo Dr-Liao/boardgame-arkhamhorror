@@ -227,8 +227,13 @@ function scanEngineBoundary() {
   for (const file of files) {
     const source = readFileSync(file, 'utf8')
     const path = rel(file)
-    for (const match of source.matchAll(/['"](06\d{3}[a-zA-Z]?)['"]/g)) codes.push({ file: path, code: match[1] })
-    if (/\btde\b|theDreamEaters/i.test(source)) names.push(path)
+    // 边界检查只针对代码字面量：注释里提到旧循环名（TDE 等）不算越界，
+    // 否则任何跨循环说明性注释都会误报。先剥离 // 与 /* */ 注释再扫描。
+    const code = source
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/^\s*\/\/.*$/gm, '')
+    for (const match of code.matchAll(/['"](06\d{3}[a-zA-Z]?)['"]/g)) codes.push({ file: path, code: match[1] })
+    if (/\btde\b|theDreamEaters/i.test(code)) names.push(path)
   }
   return { files: files.length, codes, names }
 }

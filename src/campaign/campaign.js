@@ -156,7 +156,20 @@ export function refreshArcaneResearch(campaign) {
 }
 
 export const campaignOpeningExperience = campaign => campaign.scenarioResults?.length ? 0 : campaign.opening?.experience ?? 0
-export const campaignAllowsInvestigator = (campaign, code) => !campaign.opening?.investigators || campaign.opening.investigators.includes(code)
+export const campaignOnlyInvestigatorCodes = campaign => campaign.opening?.investigators || null
+export const campaignRequiredInvestigatorCodes = campaign =>
+  campaign.opening?.requiredInvestigators || (campaignOpensAnyInvestigator(campaign) ? campaign.opening?.investigators || [] : [])
+export const campaignOpensAnyInvestigator = campaign => campaign.opening?.anyInvestigators === true
+
+export const campaignAllowsInvestigator = (campaign, code) => {
+  const only = campaignOnlyInvestigatorCodes(campaign)
+  if (only && !campaignOpensAnyInvestigator(campaign)) return only.includes(code)
+  return true
+}
+export const campaignSeatingIncludesRequired = (campaign, codes) => {
+  const required = campaignRequiredInvestigatorCodes(campaign)
+  return !required.length || codes.some(code => required.includes(code))
+}
 
 export function registerCampaignInvestigator(campaign, inv, deck) {
   const id = `investigator-${++campaign.investigatorSeq}`

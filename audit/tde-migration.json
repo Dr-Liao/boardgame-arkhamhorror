@@ -1381,7 +1381,7 @@
   "sources": [
     {
       "path": "content/registered.js",
-      "sha256": "95de3eb916f9ba0fdc1726da395182143e0fb7786e3ed2169be3a399fc1362d6"
+      "sha256": "494cf961b677db1788e34b6f7b73061a0a28b69c131b8dfd4537abc4c7609c79"
     },
     {
       "path": "content/registry.js",
@@ -1453,7 +1453,7 @@
     },
     {
       "path": "web/ui-cards.js",
-      "sha256": "f21fc7b4788e1002eaeca990fc9a213c7cc749d678daae79adbce0320ff79cf3"
+      "sha256": "bf8a736695661803cbeff14701acfc15914cb1b7d1988d1bb992d51fe4a6c808"
     },
     {
       "path": "src/cards/cards-data.js",
@@ -1461,7 +1461,7 @@
     },
     {
       "path": "src/cards/tde-player-acceptance.js",
-      "sha256": "0c92e72f76f642db28c2f6e14b107fdd7e5ca6b567b4dce87a966fda23edfcc8"
+      "sha256": "4b6256a29a409049ed7d95781d080ac342dd174a0cbfeb93dc18f75441dc248f"
     },
     {
       "path": "src/cards/tde-campaign-acceptance.js",
@@ -1469,7 +1469,7 @@
     },
     {
       "path": "src/deck/availability.js",
-      "sha256": "674b2b60c655b878bf5b5e02f7cf8d04134935f1eef4742c9751da07560aa9f5"
+      "sha256": "e865a733c178b7ae56345da23ffdebf60a8cf4741cb746669ba4539b182a7079"
     },
     {
       "path": "src/campaign/epilogue-matrix.js",
@@ -2476,23 +2476,23 @@
   "evidence": {
     "files": {
       "artifacts/migration/tde/mechanism-scan.json": "19acbba9595c9d01a0051d48a7348a5fd0993001e3ab929ee7557f57ac701a56",
-      "artifacts/migration/tde/primitive-catalog.json": "939c85e9ebb343078e666378a86e1a6b3c8183f998c0bc9f81ff2d0234ab9292",
-      "artifacts/migration/tde/primitive-plan.json": "c3bb30c437e7113544c476ddf27b358c11b1db17794f658d38894d6f73d55b63",
+      "artifacts/migration/tde/primitive-catalog.json": "f10fcb0bab7b291d6aa0b188409e40db217a63ee405675af487b07657ffe524d",
+      "artifacts/migration/tde/primitive-plan.json": "649bebcde44403ad69eecf9ecbaaa01f2eafe6024239e2f47b2246feeaada3db",
       "artifacts/migration/tde/scope.json": "e36a32eda133d320ea18b2f9bc79722c384af96574726b343697431774df54fb",
       "audit/tde-all-card-acceptance.json": "31b93a2d5f6b0ab0b8fe150f166cc2dc1aa1648c89e5521ef6ba654fe75a5059",
       "audit/tde-browser-acceptance.json": "c7d19532a1dc2f87f0e7a4525f65cfdd0e80e39db4d82f1172e7e2b02c113a72",
-      "audit/tde-investigators.json": "a77e06689b5fa33b7528cd4fe52cb54880d5219633d245770d57aa8c8414373e",
+      "audit/tde-investigators.json": "7cd6e5b88be736233e7e9d2a8a17b8f77314ef20ad583cfdb68b502dff6bde4e",
       "audit/tde-parallel-acceptance.json": "4da9e2fb1dde99c3fa71e69db59c769f695b89583e1e9dee0454631b114ed344",
-      "audit/tde-player-acceptance.json": "3d1ec35e06c7e01085a0300dd30b4a5c4532b8cb984bcace39572ed76d0294c1",
+      "audit/tde-player-acceptance.json": "617025a987385bd351579c5cf3a38dffc9cfad5074cd1547fb20512a22a4cc5e",
       "audit/tde-primitive-requests.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
-      "audit/tde-rules.json": "556a40680796b6ddc89380028597e753ebebfaba330e51e051c7038a66415d72",
+      "audit/tde-rules.json": "511d88272b146827d60bbf8c4699fffcc486f9487476a4f1997e86d355d8de47",
       "audit/tde-scenario-acceptance.json": "41380cd1ff8cdd804e1a458467f4743cfd3f51db4c9f8ce8e9c755c0626aacfd",
       "audit/tde-scenario-gap-triage.json": "8c0b602227cd438541e9a8049f98bd914fea4ea09cf6c821377533e84c04aa9a",
       "audit/tde-scenario-source-lock.json": "7dbfb8ff22befdee20d6a0b8a36768a0d690922ca96b0439cebef0bd1a817c27",
       "audit/tde-story-acceptance.json": "23a7ccef2f730184df97db535b85c3b13b4a9ba869e9b5e1d05613ddbf5c3841",
       "content/campaigns/theDreamEaters/story-text.js": "ad30a1da065b51b01ff388a5f0e2ff88852e24068004f04834fc438814bac9f7",
       "src/cards/tde-campaign-acceptance.js": "f2b897f5d03eb23e97a99f69d5481a59fdc7e5cd5c8eac568384b7b02b8312c2",
-      "src/cards/tde-player-acceptance.js": "0c92e72f76f642db28c2f6e14b107fdd7e5ca6b567b4dce87a966fda23edfcc8"
+      "src/cards/tde-player-acceptance.js": "4b6256a29a409049ed7d95781d080ac342dd174a0cbfeb93dc18f75441dc248f"
     },
     "browser": {
       "path": "audit/tde-browser-acceptance.json",
@@ -2728,7 +2728,7 @@
         "nodeAcceptance": {
           "command": "node --test tests/tde-investigators.test.mjs",
           "status": 0,
-          "tests": 32,
+          "tests": 35,
           "fail": 0,
           "ok": true
         },

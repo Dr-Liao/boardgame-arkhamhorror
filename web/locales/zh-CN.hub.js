@@ -80,8 +80,6 @@ export default {
   'hub.skill.agility': '敏捷',
 
   // 回档开关
-  'hub.rollback.enabled': '允许',
-  'hub.rollback.disabled': '禁止',
 
   // AI 高级设置
   'hub.ai.title': 'AI 高级设置',
@@ -107,14 +105,8 @@ export default {
 
   // 游戏高级设置
   'hub.gameSettings.title': '游戏高级设置',
-  'hub.gameSettings.edit': '修改游戏高级设置',
-  'hub.gameSettings.closeAria': '关闭游戏高级设置',
-  'hub.gameSettings.cardPoolValue': '卡牌范围 {value}',
-  'hub.gameSettings.rollbackValue': '回档 {value}',
-  'hub.gameSettings.note': '这些选项在开局后固定，并随存档保留。',
-  'hub.gameSettings.cardPoolLabel': '可用卡牌',
-  'hub.gameSettings.rollbackLabel': '回档',
-  'hub.gameSettings.defaultAllowed': '默认允许',
+  'hub.gameSettings.rollbackLabel': '允许回档',
+  'hub.gameSettings.rollbackNote': '允许从关卡检查点重新开始并创建分支存档。',
 
   // 回档分支存档（checkpoint）
   'hub.checkpoint.disabled': '本局已关闭回档：不能从关卡检查点重新开始。',

@@ -1,0 +1,418 @@
+{
+  "id": "redTideRising",
+  "campaignId": "redTideRising",
+  "sourceKind": "authored",
+  "officialChinese": false,
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "挑战剧本：红潮涌起",
+          "children": [
+            {
+              "id": "body1",
+              "text": "人们从不在乎被落下的人。这是你离开孤儿院后，在街头学到的第一件事。你只能靠自己，用尽一切办法勉强过活。到目前为止，凭着你的机灵和妈妈被他们带走前留给你的护身符，你总算活了下来。偶尔会有人发善心，往你的杯子里丢一两个硬币；某个美好的早晨，一位从维尔玛餐厅出来的好心女士给了你她吃剩的香肠和鸡蛋。但大多数时候，你能依靠的只有你自己。其他街头小混混也许和你同坐一条船，但你几乎不会称他们为朋友——也许詹姆斯算一个，那也已经很勉强。不，饥饿、孤独、无聊和怀疑才是你最好的、也是仅有的朋友。而且尽管如此，这一切还是比孤儿院要好。"
+            },
+            {
+              "id": "body2",
+              "text": "然后，那个决定命运的日子来了。它开始得和别的日子没什么两样：你和詹姆斯在河滨区转悠，「收集」任何能卖给奥利弗·托马斯的东西。剩下的无疑会落到马文的帮派手里——那群抱团的街头孩子欺负其余所有人——但你的收获里有一样小玩意儿吸引了你的目光：一张照片。不是普通的照片，而是你父亲的照片。"
+            },
+            {
+              "id": "body3",
+              "text": "绝不会认错。你心里没有任何怀疑。照片里，父亲站在一栋你不认识的建筑前。他身后的招牌看起来是另一种语言，所以那大概是在很远很远的地方。无法判断照片是多久以前拍的。它破旧、肮脏，好几处都有缺口。你把它翻过来，那里用熟悉的笔迹写着：「红潮就要涌起了。保护好自己，我的小女孩。」"
+            },
+            {
+              "id": "body4",
+              "text": "你求詹姆斯告诉你照片从哪来，他说一个穿长羊毛外套、戴深棕色圆顶礼帽的男人在你撞上马文的帮派之前把它丢进了你的杯子。你立刻出发，四处打听那个戴圆顶礼帽的人。你……"
+            },
+            {
+              "id": "proceedToSetup",
+              "text": "前往「设置」。"
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "setup",
+          "title": "设置",
+          "children": [
+            {
+              "id": "gatherSets",
+              "text": "收集以下遭遇组的全部卡牌：红潮涌起、艾莲娜·哈珀失踪案、达贡的代理人、印斯茅斯之雾、本地人、地窖寒风、上锁的门、夜鹰、午夜假面。"
+            },
+            {
+              "id": "midnightMasks",
+              "text": "收集午夜假面遭遇组时，只收集五张诡计牌（2 张虚假线索与 3 张猎影）。不要收集该组的其它卡牌。"
+            },
+            {
+              "id": "scenarioReference",
+              "text": "将「艾莲娜·哈珀失踪案」遭遇组原有的剧本提示卡移出游戏；改用「红潮涌起」遭遇组提供的新提示卡。"
+            },
+            {
+              "id": "actAgendaDeck",
+              "text": "将「艾莲娜·哈珀失踪案」遭遇组的所有幕与议程移出游戏；仅用「红潮涌起」遭遇组提供的新幕与议程组成幕牌库与议程牌库。"
+            },
+            {
+              "id": "placeLocations",
+              "text": "将以下地点放入场：印斯茅斯广场、沼泽精炼厂、印斯茅斯港、鱼街桥、第一国民杂货店、吉尔曼宅邸、小书店。"
+            },
+            {
+              "id": "leadsDeck",
+              "text": "准备迹象牌堆：找出带有[[嫌犯]]特性的 6 名独特敌人，以及带有[[窝点]]特性的 6 处单面地点，将这 12 张卡牌洗混成迹象牌堆，放在剧本提示卡旁。"
+            },
+            {
+              "id": "drawLead",
+              "text": "抽取迹象牌堆顶的卡牌并结算其显现能力。如果它是地点，温蒂·亚当斯从该地点开始；如果它是敌人，温蒂·亚当斯从该敌人的所在地点开始。其他每位调查员从印斯茅斯广场开始。"
+            },
+            {
+              "id": "setAsideMonsters",
+              "text": "将以下每名[[怪物]]敌人放在一边：翼魔（Winged One）与 2 张夜鹰猎手（Hunting Nightgaunt）。"
+            },
+            {
+              "id": "setAsideAngryMob",
+              "text": "将愤怒暴民放在一边。"
+            },
+            {
+              "id": "adjustments",
+              "text": "根据调查员人数（困难难度人数 +1，专家难度人数 +2）：2 名调查员时，在议程 1 上放置 1 点毁灭；3 名调查员时放置 2 点；4 名调查员时，将 1 张随机放一边的[[怪物]]敌人洗入迹象牌堆。"
+            },
+            {
+              "id": "removeStoryAssets",
+              "text": "将托马斯·道森与艾莲娜·哈珀这两张故事资产移出游戏。"
+            },
+            {
+              "id": "mysteriousPhoto",
+              "text": "将双面神秘相片故事资产放入场，置于温蒂·亚当斯的控制之下；温蒂可以选择它以哪一面朝上入场。除温蒂·亚当斯被淘汰外，神秘相片不能离场。"
+            },
+            {
+              "id": "shuffleRemainder",
+              "text": "将其余遭遇卡洗混，组成遭遇牌库。"
+            },
+            {
+              "id": "readyToBegin",
+              "text": "准备开始。"
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "challengeScenario",
+          "title": "挑战剧本",
+          "children": [
+            {
+              "id": "prerequisites",
+              "text": "挑战剧本是特殊的「打印即玩」剧本，利用《诡镇奇谈：卡牌版》收藏中已有的产品与额外的打印卡，创造新内容。「红潮涌起」挑战剧本围绕调查员温蒂·亚当斯展开，因此有以下前置要求：温蒂·亚当斯必须作为本剧本的调查员之一被选择。"
+            }
+          ]
+        },
+        {
+          "id": "searchingForDad",
+          "title": "寻找父亲",
+          "children": [
+            {
+              "id": "body",
+              "text": "本剧本中，温蒂正在印斯茅斯寻找父亲的任何线索。迹象牌堆包含 6 名[[嫌犯]]敌人与 6 处[[窝点]]地点。当[[嫌犯]]与[[窝点]]卡牌离场时，温蒂必须从迹象牌堆抽取新的线索。目标是在议程 2b 之前清空迹象牌堆——牌堆剩下的牌越少越好。"
+            }
+          ]
+        },
+        {
+          "id": "mysteriousPhotoRule",
+          "title": "神秘相片",
+          "children": [
+            {
+              "id": "body",
+              "text": "除使用温蒂控制的双面神秘相片故事资产外，[[嫌犯]]与[[窝点]]卡牌不能加入胜利区。其正面能力让温蒂与[[嫌犯]]敌人谈判，并让所在地点的调查员共同花费线索，把没有线索的[[嫌犯]]加入胜利区；其背面能力通过调查对[[窝点]]地点做同样的事。每张以此法加入胜利区的卡牌都会提高剧本结束时的经验。"
+            }
+          ]
+        },
+        {
+          "id": "tokens",
+          "title": "混乱标记（90041 提示卡）",
+          "children": [
+            {
+              "id": "skullStandard",
+              "text": "[[颅骨]]（简单/普通）：-X。X 为胜利区[[嫌犯]]与[[窝点]]卡牌数量总和的一半（向上取整）。"
+            },
+            {
+              "id": "cultistStandard",
+              "text": "[[邪教徒]]（简单/普通）：-2。与[[嫌犯]]敌人谈判或调查[[窝点]]地点时改为 -4。"
+            },
+            {
+              "id": "tabletStandard",
+              "text": "[[石板]]（简单/普通）：-3。如果你检定成功，查看迹象牌堆顶的牌，你可以选择是否混洗迹象牌堆。"
+            },
+            {
+              "id": "elderThingStandard",
+              "text": "[[远古之物]]（简单/普通）：-1。如果你检定失败，将遭遇牌库顶的牌洗入迹象牌堆。"
+            },
+            {
+              "id": "skullHard",
+              "text": "[[颅骨]]（困难/专家）：-X。X 为胜利区[[嫌犯]]与[[窝点]]卡牌数量总和。"
+            },
+            {
+              "id": "cultistHard",
+              "text": "[[邪教徒]]（困难/专家）：-3。与[[嫌犯]]敌人谈判或调查[[窝点]]地点时改为 -5。"
+            },
+            {
+              "id": "tabletHard",
+              "text": "[[石板]]（困难/专家）：-4。如果你检定成功，查看迹象牌堆顶的牌，你可以选择是否混洗迹象牌堆。"
+            },
+            {
+              "id": "elderThingHard",
+              "text": "[[远古之物]]（困难/专家）：-2。如果你检定失败，将遭遇牌库顶的牌洗入迹象牌堆。"
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "无结局",
+          "children": [
+            {
+              "id": "body",
+              "text": "若没有任何调查员达成结局：如果全员被击败，按结局 2 结算；否则按结局 1 结算。"
+            }
+          ]
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "children": [
+            {
+              "id": "body",
+              "text": "你没找到父亲，但找到了退而求其次的东西：那个戴棕色圆顶礼帽的男人。他告诉你，父亲卷入了很糟糕的人，但他想脱身；他不能回家，否则你和自己都会有危险。他仍然希望你知道他爱你。"
+            },
+            {
+              "id": "rewards",
+              "text": "忽略胜利区中每张[[嫌犯]]与[[窝点]]卡牌的胜利点数。改为温蒂·亚当斯从胜利区第 3 张卡之后每张获得 1 点经验，其他调查员从第 5 张之后每张获得 1 点经验。若温蒂·亚当斯被击败，她必须将《被遗弃与被孤立》升级为进阶版，或把温蒂的护身符进阶版降级为原本版本；若她未被击败，她可以选择其中一项。"
+            }
+          ]
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "children": [
+            {
+              "id": "body",
+              "text": "你等追兵转过街角，悄悄回到公交站，搭上下一班回阿卡姆的车。你愤怒地揉皱父亲照片的边缘。一滴眼泪滑下脸颊。你仍然没有真正的线索。但再看一眼照片，一个希望仍留在你心中：父亲还活着。"
+            },
+            {
+              "id": "rewards",
+              "text": "忽略胜利区中每张[[嫌犯]]与[[窝点]]卡牌的胜利点数。改为温蒂·亚当斯从胜利区第 3 张卡之后每张获得 1 点经验，其他调查员从第 5 张之后每张获得 1 点经验。温蒂·亚当斯必须将《被遗弃与被孤立》升级为进阶版，或把温蒂的护身符进阶版降级为原本版本。"
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "Challenge Scenario: Red Tide Rising",
+          "children": [
+            {
+              "id": "body1",
+              "text": "People don't care about the ones who get left behind. That's the first thing you learned on the street, after you left the orphanage. You've had to fend for yourself, do whatever you can to scrape by. So far, with just your wits and the amulet Mama left you before they took her away, you've managed to survive. Occasionally, someone will show some compassion and throw a coin or two into your cup. One glorious morning, a nice lady leaving Velma's gave you her leftover sausage and eggs. But for the most part, you've only had yourself to rely on. The other street rats might be in the same boat as you, but you would hesitate to call any of them friends, save for maybe James, and that is a stretch. No—hunger, loneliness, boredom, and doubt are your best and only friends. And despite all that, it's still somehow better than the orphanage."
+            },
+            {
+              "id": "body2",
+              "text": "Then the fateful day arrived. It began like any other, with you and James working your way through Rivertown, \"collecting\" anything you might be able to sell to Oliver Thomas. The rest would surely go to Marvin's gang—a bunch of street kids who banded together to bully the rest—but there is one trinket among your earnings that sparks your eye: a photograph. Not just any photograph, but one of your father."
+            },
+            {
+              "id": "body3",
+              "text": "It is unmistakable. There is no doubt in your mind. In the photo, your father stands in front of a building you don't recognize. The sign behind him looks to be in a different language, so probably someplace far, far away. There's no way of telling how recently the photo was taken. It is worn, dirty, and nicked in several places. You turn it over and there, scrawled in familiar handwriting, you read: \"Soon the Red Tide rises. Stay safe, my little girl.\""
+            },
+            {
+              "id": "body4",
+              "text": "You beg James to tell you where the photo came from, and he claims a man in a long wool coat and a dark brown derby dropped it in your cup sometime before you ran into Marvin's gang. You set off at once, asking around to find the man in the derby. You..."
+            },
+            {
+              "id": "proceedToSetup",
+              "text": "Proceed to Setup."
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "setup",
+          "title": "Setup",
+          "children": [
+            {
+              "id": "gatherSets",
+              "text": "Gather all cards from the following encounter sets: Red Tide Rising, The Vanishing of Elina Harper, Agents of Dagon, Fog over Innsmouth, The Locals, Chilling Cold, Locked Doors, Nightgaunts, and The Midnight Masks."
+            },
+            {
+              "id": "midnightMasks",
+              "text": "When gathering The Midnight Masks encounter set, only gather the five treachery cards (2x False Lead and 3x Hunting Shadow). Do not gather any of the other cards from that encounter set."
+            },
+            {
+              "id": "scenarioReference",
+              "text": "Remove the scenario reference card from The Vanishing of Elina Harper encounter set from the game. Use the new scenario reference card provided in the Red Tide Rising encounter set."
+            },
+            {
+              "id": "actAgendaDeck",
+              "text": "Remove all of the acts and agendas from The Vanishing of Elina Harper encounter set from the game. Build the act and agenda decks using only the new act and agenda cards provided in the Red Tide Rising encounter set."
+            },
+            {
+              "id": "placeLocations",
+              "text": "Put the following locations into play: Innsmouth Square, Marsh Refinery, Innsmouth Harbour, Fish Street Bridge, First National Grocery, Gilman House, and The Little Bookshop."
+            },
+            {
+              "id": "leadsDeck",
+              "text": "Prepare the Leads deck: find the 6 unique enemies with the Suspect trait and the 6 single-sided locations with the Hideout trait, and shuffle these 12 cards together to form the Leads deck. Place it near the scenario reference card."
+            },
+            {
+              "id": "drawLead",
+              "text": "Draw the top card of the Leads deck, resolving its revelation ability. If it is a location, Wendy Adams begins play at that location. If it is an enemy, Wendy Adams begins play at that enemy's location. Each other investigator begins play at Innsmouth Square."
+            },
+            {
+              "id": "setAsideMonsters",
+              "text": "Set each of the following Monster enemies aside, out of play: Winged One and both copies of Hunting Nightgaunt."
+            },
+            {
+              "id": "setAsideAngryMob",
+              "text": "Set Angry Mob aside, out of play."
+            },
+            {
+              "id": "adjustments",
+              "text": "Depending on the number of investigators (treat the number of investigators as 1 higher if playing Hard difficulty, and 2 higher if playing Expert): 2 investigators, begin with 1 doom on agenda 1; 3 investigators, begin with 2 doom on agenda 1; 4 investigators, shuffle 1 random set-aside Monster enemy into the Leads deck."
+            },
+            {
+              "id": "removeStoryAssets",
+              "text": "Remove the Thomas Dawson and Elina Harper story assets from the game."
+            },
+            {
+              "id": "mysteriousPhoto",
+              "text": "Put the double-sided Mysterious Photo story asset into play, under the control of Wendy Adams. Wendy Adams may choose which side it enters play on. Mysterious Photo cannot leave play except if Wendy Adams is eliminated."
+            },
+            {
+              "id": "shuffleRemainder",
+              "text": "Shuffle the remainder of the encounter cards to build the encounter deck."
+            },
+            {
+              "id": "readyToBegin",
+              "text": "You are ready to begin."
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "challengeScenario",
+          "title": "Challenge Scenario",
+          "children": [
+            {
+              "id": "prerequisites",
+              "text": "Challenge scenarios are special print-and-play scenarios that utilize existing products in the Arkham Horror: The Card Game collection, along with additional print-and-play cards, to create new content. The Red Tide Rising challenge scenario centers around the investigator Wendy Adams, and therefore has the following prerequisite: Wendy Adams must be chosen as one of the investigators when playing this scenario."
+            }
+          ]
+        },
+        {
+          "id": "searchingForDad",
+          "title": "Searching for Dad",
+          "children": [
+            {
+              "id": "body",
+              "text": "In this scenario, Wendy is searching Innsmouth for any sign of her father. The Leads deck contains each of the 6 Suspect enemies and the 6 Hideout locations. As Suspect and Hideout cards leave play, Wendy must draw new leads from the Leads deck. The objective is to empty the Leads deck before agenda 2b is reached. The fewer cards that remain in the Leads deck, the better."
+            }
+          ]
+        },
+        {
+          "id": "mysteriousPhotoRule",
+          "title": "Mysterious Photo",
+          "children": [
+            {
+              "id": "body",
+              "text": "Suspect and Hideout cards cannot be added to the victory display except by using the double-sided Mysterious Photo story asset under Wendy's control. Its front side lets Wendy parley with Suspect enemies and add clueless Suspects at her location to the victory display by spending clues as a group. Its back side does the same for Hideout locations via investigation. Each card added to the victory display this way improves the experience gained at the end of the scenario."
+            }
+          ]
+        },
+        {
+          "id": "tokens",
+          "title": "Chaos Tokens (90041 reference card)",
+          "children": [
+            {
+              "id": "skullStandard",
+              "text": "Skull (Easy/Standard): -X. X is half the number of Suspect and Hideout cards in the victory display (rounded up)."
+            },
+            {
+              "id": "cultistStandard",
+              "text": "Cultist (Easy/Standard): -2. (-4 instead if you are parleying with a Suspect enemy or investigating a Hideout location)."
+            },
+            {
+              "id": "tabletStandard",
+              "text": "Tablet (Easy/Standard): -3. If you succeed, look at the top card of the Leads deck. You may choose to shuffle the Leads deck."
+            },
+            {
+              "id": "elderThingStandard",
+              "text": "Elder Thing (Easy/Standard): -1. If you fail, shuffle the top card of the encounter deck into the Leads deck."
+            },
+            {
+              "id": "skullHard",
+              "text": "Skull (Hard/Expert): -X. X is the number of Suspect and Hideout cards in the victory display."
+            },
+            {
+              "id": "cultistHard",
+              "text": "Cultist (Hard/Expert): -3. (-5 instead if you are parleying with a Suspect enemy or investigating a Hideout location)."
+            },
+            {
+              "id": "tabletHard",
+              "text": "Tablet (Hard/Expert): -4. If you succeed, look at the top card of the Leads deck. You may choose to shuffle the Leads deck."
+            },
+            {
+              "id": "elderThingHard",
+              "text": "Elder Thing (Hard/Expert): -2. If you fail, shuffle the top card of the encounter deck into the Leads deck."
+            }
+          ]
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "No Resolution",
+          "children": [
+            {
+              "id": "body",
+              "text": "If no resolution was reached because each investigator resigned: Proceed to Resolution 1. If no resolution was reached because each investigator was defeated: Proceed to Resolution 2."
+            }
+          ]
+        },
+        {
+          "id": "resolution1",
+          "title": "Resolution 1",
+          "children": [
+            {
+              "id": "body",
+              "text": "You didn't find Dad, but you were able to find the next best thing: the man in the brown derby. He tells you that your father fell in with some bad people, but he wanted out; he cannot come home, or you would be in danger. He still wanted you to know that he loves you."
+            },
+            {
+              "id": "rewards",
+              "text": "Ignore the Victory X value of each Suspect and Hideout card in the victory display. Instead, Wendy Adams earns 1 experience for each card in the victory display beyond the 3rd, and each other investigator earns 1 experience for each card in the victory display beyond the 5th. If Wendy Adams was defeated, she must either upgrade Abandoned and Alone to its advanced version, or downgrade the advanced version of Wendy's Amulet to its original version. If Wendy Adams was not defeated, she may either upgrade Wendy's Amulet to its advanced version, or downgrade the advanced version of Abandoned and Alone to its original version."
+            }
+          ]
+        },
+        {
+          "id": "resolution2",
+          "title": "Resolution 2",
+          "children": [
+            {
+              "id": "body",
+              "text": "You wait for your pursuers to round the corner before making your way stealthily back to the bus stop and getting on the next bus to Arkham. You crumple the sides of Dad's photo in anger. A stray teardrop trails down your cheek. You still have no real leads. But, glancing once more at the photo, one hope still lingers in your mind: Dad is alive. He has to be."
+            },
+            {
+              "id": "rewards",
+              "text": "Ignore the Victory X value of each Suspect and Hideout card in the victory display. Instead, Wendy Adams earns 1 experience for each card in the victory display beyond the 3rd, and each other investigator earns 1 experience for each card in the victory display beyond the 5th. Wendy Adams must either upgrade Abandoned and Alone to its advanced version, or downgrade the advanced version of Wendy's Amulet to its original version."
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

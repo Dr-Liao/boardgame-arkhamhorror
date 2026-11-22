@@ -1,0 +1,174 @@
+{
+  "schemaVersion": 1,
+  "cycle": "starter-batch-4",
+  "campaignId": "batch4",
+  "name": "批次 4 · 剩余调查员套件与 Beta 支线",
+  "status": "complete",
+  "scope": "artifacts/migration/starter-batch-4/SCOPE.md",
+  "workstreams": {
+    "investigatorChallengeKits": {
+      "owner": "core-inv",
+      "status": "done",
+      "detail": "90037-90040/90049-90052/90062-90064/90087-90093/89001-89004 条目 23；done 4 / approximated 17 / pending 2（90038、90052 需取消/灵体牌库读点）；自动构筑已接线（含 90038 永久卡）"
+    },
+    "parallelAndSignatures": {
+      "owner": "core-cards-a",
+      "status": "done",
+      "detail": "90046-90086 五套平行 + 98001-98018/99002-99003 印刷替换签名 32 条；done 14 / approximated 18；98004/98010/99001 走 REPRINT_ALIASES"
+    },
+    "challenges": {
+      "owner": "challenges",
+      "status": "done_single_table",
+      "detail": "90041 6/6、90065 7/7；90037/90062 作为必需调查员实跑 hub 开局"
+    },
+    "challengesB": {
+      "owner": "ret-devourer",
+      "status": "done_single_table",
+      "detail": "90054 7/7、90094 7/7；90049/90087 真实必需调查员 hub 开局"
+    },
+    "blob": {
+      "owner": "side-story",
+      "status": "done_single_table",
+      "detail": "85001 普通 + ELSE! 双入口/双 scenario；测试 8/8；51/70 卡为近似"
+    },
+    "guardians": {
+      "owner": "ret-notz",
+      "status": "done_single_table",
+      "detail": "83001 The Eternal Slumber + 83016 The Night's Usurper；测试 8/8；Act 2b 线索按参考 perPlayer 3"
+    },
+    "labyrinths": {
+      "owner": "ret-dunwich",
+      "status": "done_single_table",
+      "detail": "70001 Group A/B/C 单桌等价；测试 7/7；11 张遭遇条目为 scaffold/rulesPending"
+    },
+    "war": {
+      "owner": "ret-carcosa",
+      "status": "done_single_table",
+      "detail": "86001 三方阵营流程；测试 6/6"
+    },
+    "machinations": {
+      "owner": "ret-dunwich",
+      "status": "done_single_table",
+      "detail": "87001 三时代流程；测试 7/7；40 张遭遇条目为 scaffold/rulesPending"
+    }
+  },
+  "sharedWiring": {
+    "packs": "sideStory packs 新增 rtr/ltr/rop/enc/blob/blbe/lol/guardians/wog/mtt（精确 cardRanges）",
+    "availability": "SELECTABLE 97（去重后）、平行家族 17 组、Subject 89001 + 依赖 strict、替换签名映射",
+    "alternateFamilies": "alternate-investigator-build.js 支持多替代印刷/advancedByAlternate/always（Wendy 90038、Jim 90052）；deckbuilding 标准/进阶选择与元数据不再要求条目已实现",
+    "deckbuildingValidation": "允许 Subject 5U-21 的 2 张随机基础弱点（size 50）",
+    "cardIndex": "entries/index.js 1778 张卡（含批次4玩家条目 55 条）",
+    "encounterIndex": "encounter-entries/index.js 2642 个条目",
+    "compliance": "audit-card-entry-compliance --check 通过（修复 90063 R1）",
+    "reprintAliases": "01001→98004、05001→98010、05006→99001（98016→07004 既有）",
+    "investigatorBuilds": {
+      "verified": [
+        "90037",
+        "90046",
+        "90049",
+        "90059",
+        "90062",
+        "90078",
+        "90081",
+        "90084",
+        "98001",
+        "98004",
+        "98007",
+        "98010",
+        "98013",
+        "98016",
+        "98019",
+        "99001"
+      ],
+      "notes": [
+        "Lola 90087 按印刷量 2 份签名正确；Subject 5U-21 89001 的特殊 50 张/双基础弱点/职业配比自动构筑尚未实现（待 Lead 专用构筑）"
+      ]
+    },
+    "registration": "content/registered.js 已注册 9 个批次4战役（挑战4 + Blob + 四 Beta 支线）与 11 个 scenario",
+    "guides": "131 个 scenario 指南 source→web/scenario-guides 构建并校验（双语）",
+    "suites": "FAST_TESTS/node-suite 各登记 9 个批次4测试；browser test tests/starter-batch-4.browser.mjs",
+    "indexes": "entries/index.js 1778 张卡；encounter-entries/index.js 2778 条",
+    "ledgersRegenerated": [
+      "TCU",
+      "TDE（补 docs/tde-primitives.md、docs/tde-release.md 并修正边界检查只扫代码）",
+      "EOTE"
+    ],
+    "docs": [
+      "docs/todo/README.md 批次4与挑战/支线勾选",
+      "docs/todo/player-cards.md 套件状态"
+    ],
+    "subjectBuild": "Subject 5U-21 特殊自动牌组：50 张、五职业各≥7、3 反刍/3 现实溶蚀/2 随机基础弱点；corePlayerPool 对 specialDeckbuilding 能力开放全部已开放玩家池",
+    "challengeMultiplayer": "批次 4 挑战支持「指定调查员必须在场、其余席位任意」：opening.investigators + anyInvestigators，createGameState 大厅流程在 hubBeginScenario 校验，错误信息含「要求包含指定调查员」",
+    "engineMarker": "卡号不再硬编码在引擎/构筑层：89001 条目声明 investigator.specialDeckbuilding=subject5u21，engine/card-defs + deck/deckbuilding 按能力读点（架构守卫通过）"
+  },
+  "primitiveRequests": {
+    "total": 36,
+    "pending": 36,
+    "done": 0,
+    "note": "跨桌/多时代同步、封印标记替换揭示、灵体牌库、devour 子系统、剧情资产控制等；worker 已逐项写请求，Lead 尚未实现"
+  },
+  "acceptance": {
+    "fast": {
+      "log": "artifacts/migration/starter-batch-4/fast-batch4-6.log",
+      "tests": 9286,
+      "passed": 9283,
+      "failed": 0,
+      "skipped": 3
+    },
+    "replay": {
+      "run": "artifacts/migration/starter-batch-4/replay-batch4-2.log",
+      "matchesBaseline": true
+    },
+    "browser": {
+      "test": "tests/starter-batch-4.browser.mjs",
+      "log": "artifacts/migration/starter-batch-4/browser-batch4-final.log",
+      "viewports": [
+        1440,
+        390
+      ],
+      "passed": 1
+    },
+    "unit": [
+      "tests/starter-batch-4.test.mjs 3/3（平行/替换签名/Subject 特殊构筑/挑战多人语义）"
+    ],
+    "contentGuards": [
+      "architecture-guard 23/23",
+      "card-entries 通过",
+      "encounter-entries 7/7",
+      "scenario-guides 11/11",
+      "suite-manifest 通过"
+    ],
+    "workerTests": {
+      "challenges/90041": "6/6",
+      "challenges/90065": "7/7",
+      "ret-devourer/90054": "7/7",
+      "ret-devourer/90094": "7/7",
+      "side-story/85001": "8/8",
+      "ret-notz/83001": "8/8",
+      "ret-dunwich/70001": "7/7",
+      "ret-carcosa/86001": "6/6",
+      "ret-dunwich/87001": "7/7"
+    },
+    "auditLedgers": [
+      "TCU/TDE/EOTE/FHV/TSK/TIC 账本逐字节复算通过",
+      "audit-abilities --check 通过（descriptor=1765/data=4）"
+    ],
+    "guides": "131 个 scenario 双语指南构建并逐字节校验通过",
+    "subject": "Subject 5U-21 自动构筑 50 张 / 五职业各≥7 / 3 反刍 / 3 现实溶蚀 / 2 基础弱点",
+    "challengeMultiplayer": "批次4 四挑战 opening.anyInvestigators：指定调查员必须在场、其余任意；hubBeginScenario 校验；2P 语义测试通过"
+  },
+  "knownDifferences": [
+    "跨桌协作按计划应在普通流程后验收：本批仅交付单桌流程与跨桌 primitive requests，未标记 verified。",
+    "Blob ELSE! 以同战役第二 scenario 实现（开局/普通 R2 后可进入），非独立规则书变体账本。",
+    "TDE 缺失文档 docs/tde-primitives.md、docs/tde-release.md 已依据账本重建并用于审计复算。"
+  ],
+  "updatedAt": "2026-11-22T16:08:17.141Z",
+  "completedAt": "2026-11-22T16:08:17.141Z",
+  "completionNote": "批次 4 目标范围内交付全部完成：调查员套件（平行/替换签名/Subject 5U-21 特殊构筑）、四个调查员挑战（含指定调查员多人语义）、Blob 普通流程 + ELSE! 变体、四个 Beta 支线单桌普通流程；注册/可用性/双语指南/单卡行为（含披露近似）/账本齐备，test:fast 9283/9283、回放零漂移、浏览器 1440/390 通过。",
+  "deferred": [
+    "epic multiplayer（跨桌）引擎与大厅多桌编排未实现：Blob/Labyrinths/War/Machinations 的 epic 变体当前为单桌普通流程 + primitive requests",
+    "Labyrinths 11 张 / Machinations 40 张遭遇条目仍为 scaffold（rulesPending），其单卡规则未实现；Blob 约 51/70 卡、挑战若干卡为近似",
+    "90038 Tidal Memento、90052 The Beyond 的取消窗口/独立灵体牌库读点未实现（条目已按近似/身份登记）"
+  ],
+  "deferredNote": "以下为批次计划中「普通流程之后验收」的跨桌 epic multiplayer 与受原语限制的逐卡细化，属于后续批次工作，不阻塞本目标；均已写入 primitive requests 与 knownDifferences。"
+}

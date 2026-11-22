@@ -382,7 +382,7 @@ export default {
         label: campaign.name + (campaign.earlyAccess ? '（提前体验）' : '') })),
     },
     {
-      // 卡牌范围与回档开关在「游戏高级设置」弹窗里编辑（hub.js），不占用开局表单的通用下拉框。
+      // 卡牌范围与回档开关在战役选择面板内编辑。
       key: 'cardPoolScope', type: 'select', label: '卡牌范围', default: 'all',
       description: '渐进式：禁止超过当前循环的所有卡牌，只能使用当前战役循环及更早循环的卡牌（调查员、构筑与关间升级都受限）；全部：不限制卡牌来源。',
       options: [{ value: 'all', label: '全部' }, { value: 'progressive', label: '渐进式' }],

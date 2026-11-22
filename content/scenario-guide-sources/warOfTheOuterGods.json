@@ -1,0 +1,322 @@
+{
+  "id": "warOfTheOuterGods",
+  "campaignId": "warOfTheOuterGods",
+  "locales": {
+    "en": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "War of the Outer Gods",
+          "text": "Over a decade after the Great War, another kind of war has come to Earth—a conflict wrought by factions long hidden in the shadows of society. It began with the murders in Arkham—over a dozen bodies in half as many days. The police thought the perpetrator to be a serial killer at first, until the sixth victim's corpse turned up as a mangled heap of meat and viscera, like a meal chewed up and spit back out. No human could have performed such a grisly murder. When similar killings started to sprout up in other cities across North America, you sought to uncover the truth. A serial killer could not be in Arkham, Providence, Montréal, and New York City all at once. This had to be the work of an organization. But that wasn't all you discovered: there were commonalities between many of the victims, sorting them into three distinct groups. In Providence, many victims were older and well-educated. In Montréal, those killed lived in the woods outside the city, or had professions dealing with nature or biology in some capacity. In New York, bodies turned up deep in the sewers and underground subway tunnels, their identities shrouded in mystery. You have spent the past few weeks trying to unearth the truth behind these murders and the various factions carrying them out. In this time, the conflict has grown exponentially. Massacres. Bombings. Sightings of strange ceremonies in the streets. Entities blotting out the stars in the night sky. Swarms of locust-like insects devouring people whole. Mutated lizard creatures prowling the sewers. And worse yet, while Arkham seems to be the conflict's epicenter, these incidents are spreading all across the world. This is no ordinary war, and not one the authorities can deal with. You are the only one who suspects the truth. Somehow, you have to find out what these factions are fighting over, and put a stop to the conflict before it consumes the entire world in its madness. Proceed to _Setup_."
+        }
+      ],
+      "setup": [
+        {
+          "id": "gatherSets",
+          "text": "Gather all cards from the *War of the Outer Gods* encounter set. This set is indicated by this icon:"
+        },
+        {
+          "id": "gatherFactionSets",
+          "text": "Gather all 9 cards from each of the three other encounter sets: *Children of Paradise*, *Swarm of Assimilation*, and *Death of Stars*. Set these encounter sets aside, out of play. _(Note: 1 Ethereal Entity, 1 Trylogog, and 1 Bringer of Paradise are included in the_ War of the Outer Gods _encounter set, while the rest are included in these three encounter sets.)_ These sets are indicated by these icons:"
+        },
+        {
+          "id": "agendaDecks",
+          "text": "When setting up the agenda deck, put all three agenda decks into play, in this order (from top to bottom): green, blue, and then red."
+        },
+        {
+          "id": "placeLocations",
+          "text": "Set the Hub Dimension location aside and put the remaining 10 locations into play."
+        },
+        {
+          "id": "beginAtArkham",
+          "text": "Each investigator begins play at Arkham."
+        },
+        {
+          "id": "spawnCultists",
+          "text": "Search the *War of the Outer Gods* encounter set for 1 copy of Disciple of the Swarm, 1 copy of Nihilistic Stargazer, and 1 copy of Zealot of Paradise. Spawn each of those enemies (as directed by their \"*Spawn* –\" instructions)."
+        },
+        {
+          "id": "setAsideAssets",
+          "text": "Set the 5 following story assets aside, out of play: Cloak of the Outer Realm, Pocket Portal, Dreaded End, Blade of Ark'at, and Enchanted Skull."
+        },
+        {
+          "id": "shuffleRemainder",
+          "text": "Shuffle the remaining 19 encounter cards to form the encounter deck."
+        },
+        {
+          "id": "epicMultiplayer",
+          "text": "If you are playing in *Epic Multiplayer Mode*, the event organizer calculates and announces the global doom thresholds for each agenda."
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "factions",
+          "title": "Factions",
+          "text": "This scenario introduces three warring factions, each with their own sets of enemies, treacheries, and agendas. These factions can be differentiated by color—blue, green, or red. The _Cult of Silenus_ is the _blue_ faction. Blue cards can also be identified by their star and constellation patterns. The _Cult of Magh'an Ark'at_ is the _green_ faction. Green cards can also be identified by their scales and tendrils. The _Cult of Ezel-zen-rezl_ is the _red_ faction. Red cards can also be identified by their hive patterns and insect wings. Unless otherwise noted, each faction’s cards operate like normal cards of their type (enemies, treacheries, or agendas). If investigators are instructed to perform a sequence “in faction order,” first resolve that sequence for the green faction. Then resolve that sequence for the blue faction. Finally, resolve that sequence for the red faction. (*Note: This is also the order of agendas from top to bottom as depicted during setup.*)"
+        },
+        {
+          "id": "factionAgendas",
+          "title": "Faction Agendas",
+          "text": "During setup, three different agenda decks are assembled, one for each faction (green, blue, and red). These agenda decks represent the progress of each faction towards their goals. During the “place doom on the current agenda” step of the mythos phase, place 1 doom on each agenda, in faction order. During the “check doom threshold” step of the mythos phase, check the doom threshold for each agenda one at a time, in faction order (or if you are playing Epic Multiplayer Mode, in the order announced by the event organizer). While there are three agendas in play, doom on player cards does not contribute to the doom thresholds of any of those agendas. If a card effect instructs an investigator to place doom on “the current agenda,” the players may choose which agenda to place it on. When an agenda advances, all doom on each other agenda remains. Remove all doom from each other card in play (player cards, enemies, and locations), as normal."
+        },
+        {
+          "id": "inTheLead",
+          "title": "\"In the lead\"",
+          "text": "The faction that is \"in the lead\" is the faction that has advanced the farthest through their agenda deck. If there is a tie between two or more factions, the tied faction with the most doom on their agenda is the faction in the lead. If there is still a tie, the faction with the most enemies in play is the one in the lead."
+        },
+        {
+          "id": "warring",
+          "title": "Warring",
+          "text": "Warring is a keyword ability that causes the warring factions to move toward and attack one another during the enemy phase. During the “hunter enemies move” step of the enemy phase, each ready, unengaged enemy with the warring keyword moves once toward the nearest warring enemy of a different faction. Warring enemies move in faction order. Warring enemies already at a location with one or more enemies belonging to a different faction do not move. If there are multiple equidistant enemies who qualify as a target for this movement, the lead investigator chooses a target for the enemy to move towards. If there are no enemies who qualify as a target for this movement, the enemy does not move. If a warring enemy would be compelled to move to a location where the move is blocked by a card ability, the enemy does not move. During the “resolve enemy attacks” step of the enemy phase, each unengaged enemy with the warring keyword attacks a warring enemy at its location of a different faction. Warring enemies attack in faction order. If there are multiple enemies who qualify as a target for this attack, the warring enemy attacks the enemy (of a different faction) with the least remaining health. If there is a tie, the lead investigator may choose the target of the attack. An attack made in this way deals damage equal to the attacking enemy’s combined damage and horror values. _If an enemy attacks and defeats another enemy (other than a swarm card), place 1 doom on the agenda matching the attacking enemy’s faction._ Warring Example: *A Disciple of the Swarm is in Streets of New York City, a Hune-Stitched Herald is in Arkham, and a Zealot of Paradise is in Streets of Montréal. Each of them has the warring keyword, and each is ready and unengaged.* *During the “hunter enemies move” step of the enemy phase, each of these enemies moves once toward the nearest warring enemy of a different faction. In this case, the green enemy moves first, to Arkham. The Hune-Stitched Herald does not move, since there is already an enemy at its location. Finally, the Disciple of the Swarm moves to Arkham, as well.* *During the “resolve enemy attacks” step of the enemy phase, each of these enemies attacks a warring enemy of a different faction. First the Zealot of Paradise attacks the Disciple of the Swarm for 1 damage, since it has fewer remaining health than the Hune-Stitched Herald. Next, the Hune-Stitched Herald also attacks the Disciple of the Swarm, dealing 3 damage. This defeats the Disciple of the Swarm before it gets a chance to attack and causes 1 doom to be placed on the blue agenda.*"
+        },
+        {
+          "id": "wards",
+          "title": "Wards",
+          "text": "Wards allow investigators to reduce the amount of doom placed on agendas. When doom would be placed on an agenda, for each ward on that agenda, prevent that amount of doom from being placed. Then remove wards from that agenda equal to the amount of doom prevented."
+        },
+        {
+          "id": "placeAroundThisLocation",
+          "title": "\"Place around this location\"",
+          "text": "If investigators are instructed to place 1 or more clues \"around\" a location, those clues should be placed such that they are physically bordering the location card, but not placed onto the location card itself. Clues that are \"around\" a location are not considered to be \"on\" the location and cannot be discovered by any means."
+        },
+        {
+          "id": "swarmingX",
+          "title": "Swarming X",
+          "text": "The swarming X keyword represents a pack of enemies operating in unison. After an enemy with the swarming X keyword enters play, place the top X cards of your deck facedown underneath the enemy as swarm cards, without looking at them. The enemy those swarm cards are underneath is called the \"host enemy.\" Some scenario card effects may also instruct a player to add swarm cards to an enemy. This is done using the same process. If it is ever unclear which investigator should add swarm cards, the lead investigator does so. Each swarm card underneath the host enemy acts as a separate instance of that enemy. Each swarm card has the same values and text as its host card. *(For example, if an investigator is engaged with a host enemy with 2 swarm cards underneath it, that investigator is engaged with 3 enemies in total.)* Each swarm card attacks separately when enemies attack during the enemy phase. Once the host enemy and all of its swarm cards have attacked during this step, exhaust all of them. Each swarm card can be attacked or dealt damage separately, but the host enemy cannot be defeated while it still has swarm cards underneath it. When a swarm card is defeated, any excess damage may be dealt to another swarm card underneath the same host enemy, or if all of its swarm cards are gone, to the host enemy itself. *(For example, Roland Banks uses a .45 Automatic to attack a Trylogog with 2 swarm cards. The attack deals 2 damage. The first point of damage defeats 1 of the 2 swarm cards, so the excess point of damage may be dealt to another swarm card, defeating it as well.)* Anytime a swarm card leaves play, place it on the bottom of its owner's deck. If you are unsure of the owner of the swarm card, you may look at it to determine its owner. The host enemy and all of its swarm cards move, engage, and exhaust as a single entity. *(For example, if a host enemy or any of its swarm cards are evaded, all of them exhaust and become disengaged.)* When Victory X appears on an enemy with the Swarming X keyword, this text is only active for the host card. Swarm cards cannot enter the victory display and are never worth victory points."
+        }
+      ],
+      "story": [
+        {
+          "id": "act1",
+          "title": "War of the Outer Gods",
+          "text": "The war between the cults escalates. Investigators must find out what these factions are fighting over before the world is consumed."
+        },
+        {
+          "id": "act2",
+          "title": "Close the Portal",
+          "text": "A faction has reached the Hub Dimension. Seal the portal before the Outer Gods complete their schemes."
+        },
+        {
+          "id": "act3",
+          "title": "Close All Portals",
+          "text": "Every group must seal its portal. The fate of the Earth hangs in the balance."
+        },
+        {
+          "id": "greenFinal",
+          "title": "The Egg Hatches",
+          "text": "The green faction reaches its final agenda: Magh'an Ark'at, the Child of Paradise, awakens. If it is defeated, proceed to Resolution 4."
+        },
+        {
+          "id": "blueFinal",
+          "title": "Silenus Descends",
+          "text": "The blue faction reaches its final agenda: Silenus, the Empty Sky, descends. If it is defeated, proceed to Resolution 3."
+        },
+        {
+          "id": "redFinal",
+          "title": "Ezel-zen-rezl Emerges",
+          "text": "The red faction reaches its final agenda: Ezel-zen-rezl, the Lord of Swarms, emerges. If it is defeated, proceed to Resolution 2."
+        }
+      ],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "No Resolution",
+          "text": "*If no resolution was reached (each investigator was defeated)*: If you are playing in *Single Group Mode*, or if all groups were defeated in *Epic Multiplayer Mode*, find the faction that is in the lead and proceed accordingly. If the red faction was in the lead, skip to _Resolution 5_. If the blue faction was in the lead, skip to _Resolution 6_. If the green faction was in the lead, skip to _Resolution 7_. If you are playing in *Epic Multiplayer Mode*, you share in the resolution that the remaining players reach."
+        },
+        {
+          "id": "resolution1",
+          "title": "Resolution 1",
+          "text": "_Resolution 1_: The hub's many doorways are now sealed tight under your stern control. With the hub sealed, the cults fighting over its ownership should hopefully return to operating in secrecy—perhaps waiting for a time when the hub reopens and they can use it to advance their cruel agendas. Until then, the Earth is safe…relatively speaking. Any one investigator may choose to add the Cloak of the Outer Realms story asset to their deck. It does not count toward that investigator's deck size. Any one investigator may choose to add the Pocket Portal story asset to their deck. It does not count toward that investigator's deck size. Each investigator earns experience equal to the *Victory X* value of each card in the victory display. Each investigator earns 2 bonus experience as they have prevented all of the Outer Gods from completing their schemes."
+        },
+        {
+          "id": "resolution2",
+          "title": "Resolution 2",
+          "text": "_Resolution 2_: The swarm of Ezel is too countless to defeat through normal means. But there is a trick! Otherworldly though they may be, the insects are insects nonetheless, and many hives have among them a queen. Using all of your ingenuity, you devise a plan to crush the queen and thereby scatter the swarm. To your surprise, your plan works. With the queen dispatched, the swarm is aimless, its hunger replaced by a sense of desperation and panic. It is not long before the myriad creatures descend once more into the pit whence they came. Perhaps another queen will come to unite them, but you will seal that accursed pit long before that happens. For now, Earth is safe. Any one investigator may choose to add the Cloak of the Outer Realms story asset to their deck. It does not count toward that investigator's deck size. Any one investigator may choose to add the Enchanted Skull story asset to their deck. It does not count toward that investigator's deck size. Each investigator earns experience equal to the *Victory X* value of each card in the victory display."
+        },
+        {
+          "id": "resolution3",
+          "title": "Resolution 3",
+          "text": "_Resolution 3_: The shape of Silenus is formless, perhaps even devoid of matter altogether, but not without weakness. Using the rituals of its own cult against it, you devise a spell of such incandescent heat that not even the emptiness of space can devour it. When your rite is unleashed, the mists retreat in anguish, letting out no sound but the shrill hiss of air being sucked through a vacuum. You observe the sky in fear, hoping that the mist does not return the moment your ritual has ended. Minutes pass. Then hours. Familiar stars once more fill the night sky. Perhaps the entity is gone for good. If the notes of the creature's many observers are true, it will likely return in the future—maybe hundreds or thousands of years from now. You may have saved the Earth this day, but the understanding of the entity's true nature haunts you still. Any one investigator may choose to add the Cloak of the Outer Realms story asset to their deck. It does not count toward that investigator's deck size. Any one investigator may choose to add the Dreaded End story asset to their deck. It does not count toward that investigator's deck size. Each investigator earns experience equal to the *Victory X* value of each card in the victory display."
+        },
+        {
+          "id": "resolution4",
+          "title": "Resolution 4",
+          "text": "_Resolution 4_: Green blood and sticky pus erupts from the beast's carapace as it collapses, groaning with such force that it rumbles through the Earth. Thanks to your haste, you have felled the beast before it could grow too powerful to stop. Even in its infancy, it was a tremendous foe. You watch in revulsion as its body dissolves into sallow ichor. Some \"paradise\" this thing turned out to be. With the egg hatched and the thing inside destroyed, you hope that the cult of Ark'at will disperse, though you fear that retribution may someday come in return for your meddling. Any one investigator may choose to add the Cloak of the Outer Realms story asset to their deck. It does not count toward that investigator's deck size. Any one investigator may choose to add the Blade of Ark'at story asset to their deck. It does not count toward that investigator's deck size. Each investigator earns experience equal to the *Victory X* value of each card in the victory display."
+        },
+        {
+          "id": "resolution5",
+          "title": "Resolution 5",
+          "text": "_Resolution 5_: Little by little, the swarm deconstructs all matter on Earth, transforming each and every molecule to resemble their own. Your consciousness remains, trapped eternally in the awful, buzzing swarm. But all is well. You are with the queen now. A strange hunger gnaws at you. Your only desire is to assimilate. The swarm must grow! Each investigator is *killed*. The investigators lose the campaign."
+        },
+        {
+          "id": "resolution6",
+          "title": "Resolution 6",
+          "text": "_Resolution 6_: The Earth is just the first planet to be engulfed by Silenus, embodiment of the Empty Sky, the ravenous end of all things. As the planet's core plunges to absolute zero, all life is instantly snuffed out. From the opening made by the nexus on Earth, the entity then stretches out to all corners of the solar system, devouring all warmth along the way. Nothing can stop it now. Each investigator is *killed*. The investigators lose the campaign."
+        },
+        {
+          "id": "resolution7",
+          "title": "Resolution 7",
+          "text": "_Resolution 7_: The beast's rampage is impossible to stop. You were the only ones with any knowledge of how to defeat the thing. One by one, as it makes its way across the continents and through the oceans, cities fall. Armies are obliterated. Governments collapse. The monstrous creatures hatched by the cult of Ark'at continue their ravenous hunt until there is nothing left to rule over but the vast wastes of Earth and the crumbling ruins of human civilization. The \"paradise\" they so willingly killed for has come. Each investigator is *killed*. The investigators lose the campaign."
+        }
+      ]
+    },
+    "zh": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "外神之战",
+          "text": "大战结束十余年后，另一种战争降临地球——由长期潜伏于社会阴影中的教团挑起。阿卡姆、普罗维登斯、蒙特利尔与纽约接连出现凶案，死者隐约分成三组；看似连环杀手的行径，实则是三个教团在争夺某样东西。数周调查让你意识到：这场冲突已经蔓延为屠杀、爆炸、街头仪式、遮蔽星空的实体、吞噬人群的蝗群，以及在下水道中游荡的变异蜥蜴。阿卡姆是冲突的中心，而灾难正在向全世界扩散。你必须查明这些教团究竟在争夺什么，并赶在疯狂吞噬世界之前阻止他们。"
+        }
+      ],
+      "setup": [
+        {
+          "id": "gatherSets",
+          "text": "收集「外神之战」遭遇组的全部卡牌。"
+        },
+        {
+          "id": "gatherFactionSets",
+          "text": "收集另外三个遭遇组（「天堂之子」「同化虫群」「群星之死」）各 9 张卡牌，放到一边。"
+        },
+        {
+          "id": "agendaDecks",
+          "text": "组装议程牌库时，把三套议程牌库同时放入场，顺序从上到下为：绿色、蓝色、红色。"
+        },
+        {
+          "id": "placeLocations",
+          "text": "把 Hub Dimension 放到一边，其余 10 张地点放入场。"
+        },
+        {
+          "id": "beginAtArkham",
+          "text": "每位调查员从阿卡姆开始游戏。"
+        },
+        {
+          "id": "spawnCultists",
+          "text": "从「外神之战」遭遇组找出 Disciple of the Swarm、Nihilistic Stargazer、Zealot of Paradise 各 1 张，按各自「生成 -」指示生成。"
+        },
+        {
+          "id": "setAsideAssets",
+          "text": "把 5 张故事资产放到一边（场外）：Cloak of the Outer Realm、Pocket Portal、Dreaded End、Blade of Ark'at、Enchanted Skull。"
+        },
+        {
+          "id": "shuffleRemainder",
+          "text": "把剩余的 19 张遭遇卡洗混，组成遭遇牌库。"
+        },
+        {
+          "id": "epicMultiplayer",
+          "text": "进行史诗多人模式时，由主持人计算并宣布每套议程的全球毁灭阈值。"
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "factions",
+          "title": "阵营",
+          "text": "本剧本有三个交战阵营：蓝色（西勒诺斯教团）、绿色（玛格汗·阿卡特教团）、红色（埃泽尔-赞-雷兹尔教团）。除非另有说明，各阵营卡牌按正常卡牌规则结算。「按阵营顺序」结算时依次为绿色、蓝色、红色。"
+        },
+        {
+          "id": "factionAgendas",
+          "title": "阵营议程",
+          "text": "布置时三套阵营议程牌库同时在场。神话阶段的「放置毁灭」步骤按阵营顺序给每套议程各放 1 个毁灭；「检查毁灭阈值」步骤再按阵营顺序逐套检查（全球阈值为 6）。某套议程推进时，移除 6 点毁灭，超额毁灭移到同阵营的下一张议程。"
+        },
+        {
+          "id": "inTheLead",
+          "title": "「领先」",
+          "text": "在议程牌库上推进得最远的阵营为「领先」；平局时比较议程上的毁灭数；仍平局则比较在场敌人数。"
+        },
+        {
+          "id": "warring",
+          "title": "战争（Warring）",
+          "text": "敌人阶段的「猎人移动」步骤中，每个已重整、未交战且具战争关键词的敌人，向不同阵营最近的战争敌人移动一次；已与不同阵营敌人同地点的敌人不移动。「结算敌人攻击」步骤中，每个未交战的战争敌人攻击同地点不同阵营的一个战争敌人；若其击败另一敌人（虫群卡除外），在攻击方阵营的议程上放置 1 个毁灭。"
+        },
+        {
+          "id": "wards",
+          "title": "守护（Wards）",
+          "text": "当有毁灭将放到议程上时，该议程上每 1 个守护抵消 1 点毁灭，随后移除等量守护。"
+        },
+        {
+          "id": "placeAroundThisLocation",
+          "title": "「放置在 …… 周围」",
+          "text": "被要求把线索「放置在某地点周围」时，把线索放在该地点卡边缘之外，它们不属于该地点，不能被任何方式发现。"
+        },
+        {
+          "id": "swarmingX",
+          "title": "虫群 X（Swarming X）",
+          "text": "具虫群 X 关键词的敌人入场后，把牌库顶 X 张牌面朝下放到它下面作为虫群卡；每张虫群卡是独立的该敌人实例，随宿主一起移动/交战/横置；宿主的胜利点数只在宿主卡上生效。"
+        }
+      ],
+      "story": [
+        {
+          "id": "act1",
+          "title": "外神之战",
+          "text": "教团之间的战争不断升级。调查员必须查明他们在争夺什么，并在世界被吞噬前阻止他们。"
+        },
+        {
+          "id": "act2",
+          "title": "关闭传送门",
+          "text": "某一阵营已抵达 Hub Dimension。在传送门被彻底打开前封住它。"
+        },
+        {
+          "id": "act3",
+          "title": "关闭所有传送门",
+          "text": "每一桌都必须封住自己的传送门。地球的命运悬于一线。"
+        },
+        {
+          "id": "greenFinal",
+          "title": "蛋孵化了",
+          "text": "绿色阵营抵达终局议程：天堂之子玛格汗·阿卡特苏醒。若将其击败，前往结局 4。"
+        },
+        {
+          "id": "blueFinal",
+          "title": "西勒诺斯降临",
+          "text": "蓝色阵营抵达终局议程：虚空之空西勒诺斯降临。若将其击败，前往结局 3。"
+        },
+        {
+          "id": "redFinal",
+          "title": "埃泽尔-赞-雷兹尔现身",
+          "text": "红色阵营抵达终局议程：虫群之主埃泽尔-赞-雷兹尔现身。若将其击败，前往结局 2。"
+        }
+      ],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "无结局",
+          "text": "若未达成任何结局（每位调查员都被击败）：找出领先的阵营。红色领先跳到结局 5；蓝色领先跳到结局 6；绿色领先跳到结局 7。进行史诗多人模式时，你们与其余玩家共享其达成的结局。"
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "text": "每个阵营的传送门都被封住，战争暂时平息。调查员可让任意一位调查员把 Cloak of the Outer Realms 与 Pocket Portal 加入牌组（不计牌组张数）。每位调查员获得胜利区经验，并因阻止了所有外神的阴谋而额外获得 2 经验。"
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "text": "埃泽尔的虫群无穷无尽，但虫群仍有虫后。你们设法杀死虫后，虫群四散退回地底。任意一位调查员可把 Cloak of the Outer Realms、Enchanted Skull 加入牌组（不计牌组张数）。每位调查员获得胜利区经验。"
+        },
+        {
+          "id": "resolution3",
+          "title": "结局 3",
+          "text": "以西勒诺斯自己的仪式反制它，你们施放出连虚空都无法吞噬的白热咒法。迷雾退去，熟悉的星空重新布满夜空。任意一位调查员可把 Cloak of the Outer Realms、Dreaded End 加入牌组（不计牌组张数）。每位调查员获得胜利区经验。"
+        },
+        {
+          "id": "resolution4",
+          "title": "结局 4",
+          "text": "巨兽的外壳喷出绿色血液与粘稠脓液，随即崩塌。蛋已孵化，其中的存在却被消灭。任意一位调查员可把 Cloak of the Outer Realms、Blade of Ark'at 加入牌组（不计牌组张数）。每位调查员获得胜利区经验。"
+        },
+        {
+          "id": "resolution5",
+          "title": "结局 5",
+          "text": "虫群一点点分解地球上的一切物质，把每个分子都转化得与它们相同。你们的意识永存于那可怕的嗡鸣虫群中，与虫后同在。每位调查员被杀死，调查员输掉战役。"
+        },
+        {
+          "id": "resolution6",
+          "title": "结局 6",
+          "text": "地球只是西勒诺斯吞噬的第一颗行星。随着地核坠向绝对零度，所有生命瞬间湮灭；实体从地球的缺口伸向整个太阳系。每位调查员被杀死，调查员输掉战役。"
+        },
+        {
+          "id": "resolution7",
+          "title": "结局 7",
+          "text": "巨兽的暴走已无法阻止。城市一座座陷落，军队被消灭，政府崩溃。阿卡特教团孵化的怪物继续无情猎食，直到地球上只剩荒原与人类文明的废墟——他们不惜杀戮换来的「天堂」降临了。每位调查员被杀死，调查员输掉战役。"
+        }
+      ]
+    }
+  }
+}

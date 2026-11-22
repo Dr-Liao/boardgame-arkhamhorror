@@ -141,8 +141,6 @@
 .ah-ai-dialogue-modal > p, .ah-ai-dialogue-modal small { color: var(--office-muted); font-size: 11px; line-height: 1.6; }
 .ah-ai-dialogue-group { margin: 14px 0; padding: 12px; border: 1px solid var(--office-edge); background: #0e1c177d; }
 .ah-ai-dialogue-range { display: grid; grid-template-columns: minmax(120px, 1fr) minmax(150px, 1.2fr); align-items: center; gap: 12px; padding: 7px 0; color: #d4c7a0; font-size: 12px; }
-.ah-game-settings-select { display: grid; grid-template-columns: minmax(120px, 1fr) minmax(150px, 1.2fr); align-items: center; gap: 12px; padding: 7px 0; color: #d4c7a0; font-size: 12px; }
-.ah-game-settings-select select { width: 100%; min-height: 32px; border: 1px solid var(--office-edge); border-radius: 2px; background: #0e1c17; color: #e2c98f; padding: 5px 8px; font-size: 12px; }
 .ah-ai-dialogue-control { display: grid; grid-template-columns: 1fr 42px; align-items: center; gap: 8px; }
 .ah-ai-dialogue-control input { width: 100%; accent-color: #bda468; }
 .ah-ai-dialogue-control output { color: #f2dfb2; text-align: right; font-variant-numeric: tabular-nums; }

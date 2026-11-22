@@ -186,19 +186,9 @@ export const MUSIC_TRACKS = [
 ]
 export const MUSIC_PLAYLISTS = Object.freeze({
   common: Object.freeze(MUSIC_TRACKS.filter(track => track.file.startsWith('common/')).map(track => track.id)),
-  nightOfTheZealot: Object.freeze([...new Set(Object.values(SCENARIO_MUSIC.nightOfTheZealot).flatMap(chapter => chapter.tracks))]),
-  thePathToCarcosa: Object.freeze([...new Set(Object.values(SCENARIO_MUSIC.thePathToCarcosa).flatMap(chapter => chapter.tracks))]),
-  theDunwichLegacy: Object.freeze([...new Set(Object.values(SCENARIO_MUSIC.theDunwichLegacy).flatMap(chapter => chapter.tracks))]),
-  theForgottenAge: Object.freeze([...new Set(Object.values(SCENARIO_MUSIC.theForgottenAge).flatMap(chapter => chapter.tracks))]),
-  theCircleUndone: Object.freeze([...new Set(Object.values(SCENARIO_MUSIC.theCircleUndone).flatMap(chapter => chapter.tracks))]),
-  // P10：食梦者（五循环）营地/关间播放整条循环的曲目并集；章节内再按 scenarioPlaylistId 细分。
-  theDreamEaters: Object.freeze([...new Set(Object.values(SCENARIO_MUSIC.theDreamEaters).flatMap(chapter => chapter.tracks))]),
-  theInnsmouthConspiracy: Object.freeze([...new Set(Object.values(SCENARIO_MUSIC.theInnsmouthConspiracy).flatMap(chapter => chapter.tracks))]),
-  edgeOfTheEarth: Object.freeze([...new Set(Object.values(SCENARIO_MUSIC.edgeOfTheEarth).flatMap(chapter => chapter.tracks))]),
-  theScarletKeys: Object.freeze(Object.values(SCENARIO_MUSIC.theScarletKeys).flatMap(chapter => chapter.tracks)),
-  theFeastOfHemlockVale: Object.freeze(Object.values(SCENARIO_MUSIC.theFeastOfHemlockVale).flatMap(chapter => chapter.tracks)),
-  // P7 十循环：战役 hub 播放全部章节曲目并集。
-  theDrownedCity: Object.freeze(Object.values(SCENARIO_MUSIC.theDrownedCity).flatMap(chapter => chapter.tracks)),
+  ...Object.fromEntries(Object.entries(SCENARIO_MUSIC).map(([campaignId, chapters]) => [
+    campaignId, Object.freeze([...new Set(Object.values(chapters).flatMap(chapter => chapter.tracks))]),
+  ])),
   ...SCENARIO_PLAYLISTS,
 })
 export function musicTracksForPlaylist(id) {

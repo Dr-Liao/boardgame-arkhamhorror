@@ -80,8 +80,6 @@ export default {
   'hub.skill.agility': 'Agility',
 
   // Rollback toggle
-  'hub.rollback.enabled': 'Allowed',
-  'hub.rollback.disabled': 'Disabled',
 
   // AI advanced settings
   'hub.ai.title': 'AI advanced settings',
@@ -107,14 +105,8 @@ export default {
 
   // Game advanced settings
   'hub.gameSettings.title': 'Game advanced settings',
-  'hub.gameSettings.edit': 'Edit game advanced settings',
-  'hub.gameSettings.closeAria': 'Close game advanced settings',
-  'hub.gameSettings.cardPoolValue': 'Card pool: {value}',
-  'hub.gameSettings.rollbackValue': 'Rollback: {value}',
-  'hub.gameSettings.note': 'These options are fixed once the game starts and are kept with the save.',
-  'hub.gameSettings.cardPoolLabel': 'Available cards',
-  'hub.gameSettings.rollbackLabel': 'Rollback',
-  'hub.gameSettings.defaultAllowed': 'Allowed by default',
+  'hub.gameSettings.rollbackLabel': 'Allow rollback',
+  'hub.gameSettings.rollbackNote': 'Restart a scenario from a checkpoint and create a branched save.',
 
   // Checkpoint branches
   'hub.checkpoint.disabled': 'Rollback is disabled for this game: scenarios cannot be restarted from a checkpoint.',

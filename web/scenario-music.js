@@ -1,6 +1,6 @@
 // Curated by setting and pacing. Track files remain shared; playlists never copy audio.
 const chapter = (name, mood, tracks) => Object.freeze({ name, mood, tracks: Object.freeze(tracks) })
-export const SCENARIO_MUSIC = Object.freeze({
+const BASE_SCENARIO_MUSIC = Object.freeze({
   // 九循环：24 首新曲 + 12 首旧曲（33.3%），36 个位置无循环内重复。
   theFeastOfHemlockVale: Object.freeze({
     welcomeToHemlockVale: chapter('欢迎来到铁杉谷', '渡口上岸、海雾小镇、初见居民', ['fhvFirefliesAndStardust', 'fhvAlmostBliss', 'eoteEveningFallHarp']),
@@ -125,8 +125,89 @@ export const SCENARIO_MUSIC = Object.freeze({
   }),
 })
 
-export const scenarioPlaylistId = (campaignId, scenarioId) =>
-  SCENARIO_MUSIC[campaignId]?.[scenarioId] ? `${campaignId}/${scenarioId}` : null
+const returnChapters = (campaignId, overrides = {}) => Object.freeze(Object.fromEntries(
+  Object.entries(BASE_SCENARIO_MUSIC[campaignId]).map(([id, original]) => {
+    const { returnId = 'returnTo' + id[0].toUpperCase() + id.slice(1), name = '重返' + original.name,
+      tracks = original.tracks } = overrides[id] || {}
+    return [returnId, chapter(name, original.mood, tracks)]
+  })))
+
+export const SIDE_STORY_MUSIC = Object.freeze({
+  curseOfTheRougarou: Object.freeze({
+    curseOfTheRougarou: chapter('狼人诅咒', '河口沼泽、林中潜伏、追猎鲁加鲁', ['ticDarkFog', 'fhvWaterPrelude', 'unseenHorrors']),
+  }),
+  carnevaleOfHorrors: Object.freeze({
+    carnevaleOfHorrors: chapter('恐怖狂欢节', '威尼斯运河、假面游行、舞曲异变', ['fhvDuetMusette', 'danseMacabre', 'eveningOfChaos']),
+  }),
+  murderAtTheExcelsiorHotel: Object.freeze({
+    murderAtTheExcelsiorHotel: chapter('精益酒店谋杀案', '雨夜酒店、追查疑点、凶手潜伏', ['dancesAndDames', 'ticDistantTension', 'rightBehindYou']),
+  }),
+  readOrDie: Object.freeze({
+    readOrDie: chapter('读书至死', '图书馆禁书区、失控的咒语、暗处怪物', ['echoesOfTime', 'decay', 'unseenHorrors']),
+  }),
+  allOrNothing: Object.freeze({
+    allOrNothing: chapter('破釜沉舟', '地下赌场、孤注一掷、赌局失控', ['deadlyRoulette', 'iKnewAGuy', 'chasePulse']),
+  }),
+  badBlood: Object.freeze({
+    badBlood: chapter('血海深仇', '前世回忆、古物寻踪、宿敌对峙', ['eoteLostTime', 'tdeDreamlike', 'ancientRite']),
+  }),
+  byTheBook: Object.freeze({
+    byTheBook: chapter('循规蹈矩', '夜巡阿卡姆、命案线索、秘密仪式', ['darkWalk', 'onTheGround', 'theVoices']),
+  }),
+  theBlobThatAteEverything: Object.freeze({
+    theBlobThatAteEverything: chapter('吞噬万物', '绿光陨坑、小镇隔离、软泥扩散', ['ticDistantTension', 'eoteScpX2xUnseenPresence', 'controlledChaos']),
+    theBlobThatAteEverythingElse: chapter('吞噬万物 · ELSE! 变体', '米·戈介入、实验体变异、隔离区失控', ['eoteTheComplex', 'eoteScpX4xMindLeech', 'eoteDayOfChaos']),
+  }),
+  guardiansOfTheAbyss: Object.freeze({
+    theEternalSlumber: chapter('永恒沉睡', '开罗疑云、沙漠远征、遗迹诅咒', ['tskTabuk', 'tskDesertCity', 'ritual']),
+    theNightsUsurper: chapter('夜之篡位者', '神庙深处、深渊门扉、异界争夺', ['ancientRite', 'enterTheMaze', 'eoteBlackVortex']),
+  }),
+  warOfTheOuterGods: Object.freeze({
+    warOfTheOuterGods: chapter('外神之战', '教团混战、异象遮天、古神降临', ['gatheringDarkness', 'thunderDreams', 'wretchedDestroyer']),
+  }),
+  theLabyrinthsOfLunacy: Object.freeze({
+    theLabyrinthsOfLunacy: chapter('疯狂迷宫', '封闭密室、机关迷宫、分组突围', ['eoteShadowlands3Machine', 'enterTheMaze', 'ticClashDefiant']),
+  }),
+  machinationsThroughTime: Object.freeze({
+    machinationsThroughTime: chapter('时间阴谋', '时代交错、传送研究、时间线修复', ['echoesOfTime', 'staticMotion', 'orion300xb']),
+  }),
+  laidToRest: Object.freeze({
+    laidToRest: chapter('安魂镇息', '号角余音、异端者墓地、幽魂徘徊', ['ghostProcessional', 'tcuOssuary5Rest', 'tcuLandOfTheDead']),
+  }),
+  enthrallingEncore: Object.freeze({
+    enthrallingEncore: chapter('惑人返场', '空荡剧院、幽灵独奏、舞台扭曲', ['eveningOfChaos', 'fhvAncientMysteryWaltzAllegro', 'ossuaryOneBeginning']),
+  }),
+  redTideRising: Object.freeze({
+    redTideRising: chapter('红潮涌起', '印斯茅斯雾港、身世线索、街巷追逐', ['ticNightOfChaos', 'ticAwkwardMeeting', 'chasePulse']),
+  }),
+  relicsOfThePast: Object.freeze({
+    relicsOfThePast: chapter('往昔遗物', '密林探险、古墓机关、尘封遗物', ['magicForest', 'truthInTheStones', 'ancientRite']),
+  }),
+})
+
+export const SCENARIO_MUSIC = Object.freeze({
+  ...BASE_SCENARIO_MUSIC,
+  returnToNightOfTheZealot: returnChapters('nightOfTheZealot', {
+    theGathering: { name: '重返聚集于此' },
+  }),
+  returnToTheDunwichLegacy: returnChapters('theDunwichLegacy', {
+    extracurricularActivity: { returnId: 'returnToExtracurricularActivities' },
+    theMiskatonicMuseum: { name: '重返博物馆之夜' },
+    whereDoomAwaits: { tracks: [...BASE_SCENARIO_MUSIC.theDunwichLegacy.whereDoomAwaits.tracks, 'ritual'] },
+  }),
+  returnToThePathToCarcosa: returnChapters('thePathToCarcosa'),
+  ...SIDE_STORY_MUSIC,
+})
+
+const SIDE_STORY_BY_SCENARIO = new Map(Object.entries(SIDE_STORY_MUSIC).flatMap(([campaignId, chapters]) =>
+  Object.keys(chapters).map(scenarioId => [scenarioId, campaignId])))
+
+export const sideStoryCampaignId = scenarioId => SIDE_STORY_BY_SCENARIO.get(scenarioId)
+
+export function scenarioPlaylistId(campaignId, scenarioId) {
+  const owner = SCENARIO_MUSIC[campaignId]?.[scenarioId] ? campaignId : sideStoryCampaignId(scenarioId)
+  return owner ? `${owner}/${scenarioId}` : null
+}
 
 export const SCENARIO_PLAYLISTS = Object.freeze(Object.fromEntries(
   Object.entries(SCENARIO_MUSIC).flatMap(([campaignId, chapters]) =>

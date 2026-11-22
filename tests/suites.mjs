@@ -526,6 +526,17 @@ export const FAST_TESTS = Object.freeze([
   'challenge-allOrNothing.test.mjs', // 调查员挑战：All or Nothing（Skids）
   'challenge-badBlood.test.mjs', // 调查员挑战：Bad Blood（Agnes）
   'challenge-byTheBook.test.mjs', // 调查员挑战：By the Book（Roland + Directive）
+  // 批次 4：调查员挑战 90041/90065/90054/90094 + Blob / Beta 支线。
+  'starter-batch-4.test.mjs', // 批次 4：调查员套件/替换签名/Subject 特殊构筑
+  'challenge-redTideRising.test.mjs',
+  'challenge-relicsOfThePast.test.mjs',
+  'challenge-laidToRest.test.mjs',
+  'challenge-enthrallingEncore.test.mjs',
+  'side-story-machinationsThroughTime.test.mjs',
+  'side-story-theBlobThatAteEverything.test.mjs',
+  'side-story-theLabyrinthsOfLunacy.test.mjs',
+  'side-story-guardiansOfTheAbyss.test.mjs',
+  'side-story-warOfTheOuterGods.test.mjs',
   'starter-batch-3.test.mjs', // 批次 3：2026 核心盒 + 五个入门包开放/构筑/别名验收
   'batch3-primitives.test.mjs', // 批次 3：原语批 A/B 回归（窗口/字段/API）
 ])

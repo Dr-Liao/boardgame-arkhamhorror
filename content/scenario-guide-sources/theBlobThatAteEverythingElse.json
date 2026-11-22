@@ -1,0 +1,97 @@
+{
+  "id": "theBlobThatAteEverythingElse",
+  "campaignId": "theBlobThatAteEverything",
+  "note": "独立支线《吞噬万物》85001 ELSE! 变体（89005+ · The Blob That Ate Everything Else）· 中英文指南源。普通流程见 theBlobThatAteEverything.json；本文件覆盖变体差异与完整设置。",
+  "locales": {
+    "en": {
+      "intro": [
+        {
+          "id": "intro1",
+          "title": "The Blob That Ate Everything - ELSE!",
+          "text": "The report was not the whole story. Blackwater is still under quarantine, and the anomaly is not the only thing that came through the meteor. The Mi-Go are here too, harvesting, researching, and taking what they can while the blob devours everything in its path. This is the same disaster told from another angle - with four new corners of Blackwater and a reality that keeps dissolving around you."
+        },
+        {
+          "id": "intro2",
+          "text": "You begin exactly as in the base scenario, but the quarantine zone is larger and stranger. The anomaly's appetite is not limited to matter: light, language, luck, and the very idea of a discard pile can be devoured. Keep your notes; keep your nerve."
+        }
+      ],
+      "setup": [
+        { "id": "gatherSets", "text": "Gather all cards from The Blob That Ate Everything encounter set." },
+        { "id": "gatherElseSets", "text": "Gather The Blob That Ate Everything Else and Mi-Go Incursion II encounter sets. Set all Mi-Go Incursion II cards aside, out of play. Shuffle the 4 new Quarantine Zone locations together with the original Quarantine Zone locations and remove 5 at random." },
+        { "id": "setAside", "text": "Set aside Vulnerable Heart, both copies of Grasping Ooze, both copies of Cubic Ooze, and both copies of Oozewraith. Set aside the 7 Part 1 story cards (4 base + Escort the Car, Reclaim the Brain, Prevent Their Research). Set aside the 9 Replicating Aberrations, 89013 Mi-Go Destroyer, 89015 Mi-Go Scientist, both 89018 Mi-Go Researchers, Armored Car, Brain Case, and the reward assets G-Men, Corrosive Cloud, Alien Instruments. Set aside the 89005 Reality Acid reference card next to the scenario reference card." },
+        { "id": "subject", "text": "Put the Subject 8L-08 enemy into play next to the agenda deck; it is not at any location. Set aside the Single Group deck's Vulnerable Heart and other single-group cards; use the same acts and agendas as the base scenario." },
+        { "id": "placeLocations", "text": "Shuffle the Quarantine Zone locations (10 base + 4 ELSE) and remove 5 at random. Put The Crater in the center, then place the Research Site, Temporary HQ, and 2 random Quarantine zones in the inner ring; the Fungus Mound and 3 random Quarantine zones in the outer ring; and the remaining Quarantine zones in the corners. Each location is connected to orthogonally adjacent locations." },
+        { "id": "startAt", "text": "Each investigator begins play at the Temporary HQ." },
+        { "id": "countermeasures", "text": "Place 1 countermeasure on the scenario reference card (2 if there are 3 or 4 investigators)." },
+        { "id": "elseSets", "text": "In this variant, when the act 3 is resolved, read one random Part 1 story card from the 7-card pool. Whenever a Manifold enemy is defeated, the lead investigator may spend 1 countermeasure to prevent a Replicating Aberration from spawning; otherwise it spawns exhausted at that enemy's location." },
+        { "id": "realityAcid", "text": "When Reality Acid (85044) is resolved, consult the 89005 Reality Acid reference card and reveal 1 chaos token to determine which aspect of reality is devoured. If the listed aspect cannot be devoured, reveal again and consult the chart." }
+      ],
+      "specialRules": [
+        { "id": "blobX", "title": "Blob X", "text": "As an enemy with Blob X is defeated, deal X damage to Subject 8L-08. Blob X enemies do not enter the victory display unless they also have Victory X." },
+        { "id": "devour", "title": "Devour", "text": "Cards devoured are placed beneath Subject 8L-08 and are out of play. A devoured investigator is killed. A devoured token returns to the token pool. A location cannot be devoured if that would leave another location with no valid connections." },
+        { "id": "countermeasures", "title": "Countermeasures", "text": "Countermeasures may be spent via card abilities for powerful effects. The Research Site converts 2 clues into 1 countermeasure. In this variant they are also the currency to prevent a Replicating Aberration from spawning." },
+        { "id": "replicatingAberration", "title": "Replicating Aberration", "text": "When a Manifold enemy is defeated, the event organizer chooses the matching Replicating Aberration (89010a-i). Investigators may spend 1 countermeasure to prevent it; otherwise it spawns exhausted at the defeated enemy's location (or engaged with the investigator, for the investigator-targeted variants). When it leaves play, return it to the organizer." },
+        { "id": "elseLocations", "title": "ELSE! Locations", "text": "Main Street is connected to each Slimy Streets location while moving, and can swap groups (epic multiplayer only). Old Burial Hill exhausts spawning Manifold enemies and converts their Blob X defeat trigger into clue discovery for the rest of the round. Abandoned Windmill gets -4 shroud; on a successful investigation, move the clues to a Research Site or Temporary HQ instead. Abbatoir: once per game test agility (3) to move each Ooze twice toward the Abbatoir and give them +2 Blob X for the rest of the round." },
+        { "id": "realityAcid", "title": "Reality Acid (ELSE!)", "text": "Subject 8L-08 opens its maw and devours an aspect of reality. Reveal 1 chaos token and consult the 89005 reference card. Aspects that cannot be devoured call for a new token. This implementation approximates the chart with a fixed set of concrete in-game effects (nearest enemy, treachery, harm, weakness, deck top, hand, resources, discard top, light, language, and the investigators' souls)." },
+        { "id": "epicNote", "title": "Epic Multiplayer", "text": "Cross-table epic multiplayer (global health pool, shared countermeasures, global act thresholds, and per-group act variants 85005/85008/85037, including Main Street group swapping) is tracked by a separate primitive request and is not yet implemented. This module covers the full single-group ELSE! flow." }
+      ],
+      "story": [
+        { "id": "act1", "title": "Expose the Anomaly", "text": "The heart of the anomaly is exposed somewhere in the ooze. Track it down." },
+        { "id": "act2", "title": "Extraterrestrial Physiology", "text": "The heart will not stay in one place for long. Destroy it and weather the rain of ooze." },
+        { "id": "act3", "title": "Blackwater's Bane", "text": "A moment of respite; then another Part 1 story begins. The Mi-Go are still here." },
+        { "id": "storyElse", "title": "ELSE! Part 1 Stories", "text": "Escort the Car: the Armored Car must reach the Fungus Mound; the Mi-Go Destroyer spawns at the mound and gains +2 damage while attacking the car. Reclaim the Brain: the Mi-Go Scientist carries the Brain Case; recover it to the Research Site or lose it to the Fungus Mound. Prevent Their Research: both Mi-Go Researchers research Ooze enemies; stop them before 6 resources accumulate." },
+        { "id": "storyBase", "title": "Base Part 1 Stories", "text": "The four base stories (Rescue the Chemist, Recover the Sample, Drive Off the Mi-Go, Defuse the Explosives) are also in the ELSE! story pool. See the base scenario guide for their setup and outcomes." }
+      ],
+      "resolutions": [
+        { "id": "noResolution", "title": "No Resolution", "text": "If each investigator was defeated, the anomaly breaks out and devours you. Blackwater is no more. The investigators lose the campaign." },
+        { "id": "resolution1", "title": "Resolution 1", "text": "The quarantine is broken and the anomaly cannot be contained. It will devour the countryside, then New England, then the planet - and eventually the universe. Record that Subject 8L-08 devoured the entire universe. The investigators lose the campaign." },
+        { "id": "resolution2", "title": "Resolution 2", "text": "The anomaly is eliminated by a third party. Samples are collected and sent to Roswell; Blackwater is told the quarantine was due to an airborne virus. Record that the anomaly was contained. Each reward asset in play (Universal Solvent, Pet Oozeling, Mi-Go Weapon, Lt. Wilson Stewart) may be added to one investigator's deck (not counting toward deck size). Each investigator earns experience equal to the Victory X in the victory display plus 3 bonus experience." }
+      ]
+    },
+    "zh": {
+      "intro": [
+        {
+          "id": "intro1",
+          "title": "吞噬万物 · ELSE! 变体",
+          "text": "报告并没有写出全部真相。黑水镇仍处于隔离中，而随陨石而来的并不只有那个异变体。米·戈也来了——它们收割、研究，在软泥吞噬一切的同时抢走能抢的东西。这是同一场灾难的另一个视角：黑水镇多了四个陌生的角落，而你身边的「现实」正在不断溶解。"
+        },
+        {
+          "id": "intro2",
+          "text": "开局与普通流程完全相同，但隔离区更大、也更诡异。异变体的胃口并不限于物质：光、语言、运气，甚至连「弃牌堆」这个概念都可能被吞噬。记好笔记，稳住心神。"
+        }
+      ],
+      "setup": [
+        { "id": "gatherSets", "text": "收集《吞噬万物》遭遇组的所有卡牌。" },
+        { "id": "gatherElseSets", "text": "收集《吞噬万物 ELSE》与《米·戈入侵 II》遭遇组。《米·戈入侵 II》的所有卡牌放到一边（场外）。把 4 张新的隔离区地点与原有隔离区地点洗混，随机移除 5 张。" },
+        { "id": "setAside", "text": "把脆弱心脏、2 张紧噬软泥、2 张方体软泥、2 张软泥幽灵放到一边。把 7 张 Part 1 剧情卡（普通 4 张 + 护送装甲车、夺回脑匣、阻止他们的研究）放到一边。把 9 张复制异变体、89013 米·戈驱逐者、89015 米·戈科学家、2 张 89018 米·戈研究者、装甲车、脑匣，以及奖励资产 G-Men、腐蚀之云、异星仪器放到一边。把 89005 现实酸液参考卡放在场景参考卡旁。" },
+        { "id": "subject", "text": "把个体代号8L-08敌人生成在密谋牌库旁：它不在任何地点。幕与议程使用与普通流程相同的牌。" },
+        { "id": "placeLocations", "text": "洗混隔离区地点（普通 10 张 + ELSE 4 张）并随机移除 5 张。将陨石坑放在中心；内环放研究站、临时总部和 2 张随机隔离区；外环放真菌堆和 3 张随机隔离区；剩下 4 张隔离区放入角落。每个地点均与和它正交相邻的地点相连。" },
+        { "id": "startAt", "text": "每位调查员从临时总部开始游戏。" },
+        { "id": "countermeasures", "text": "在场景参考卡上放置 1 个反制措施（3 或 4 名调查员时改为 2 个）。" },
+        { "id": "elseSets", "text": "本变体中，幕 3 结算时从 7 张 Part 1 剧情卡中随机读取 1 张。每当[[异质]]敌人被击败，队长可以花费 1 个反制措施阻止复制异变体生成；否则复制异变体在该敌人所在地点横置生成。" },
+        { "id": "realityAcid", "text": "结算现实酸液（85044）时，查阅 89005 现实酸液参考卡并揭示 1 个混乱标记，确定被吞噬的「现实」面向。若该面向无法被吞噬，重新揭示并再次查阅。" }
+      ],
+      "specialRules": [
+        { "id": "blobX", "title": "Blob X（软泥 X）", "text": "带有 Blob X 的敌人被击败时，对个体代号8L-08造成 X 点伤害。带有 Blob X 的敌人被击败时不会放入胜利区，除非它还带有 Victory X。" },
+        { "id": "devour", "title": "吞噬（Devour）", "text": "被吞噬的卡牌放到个体代号8L-08下方并视为场外。被吞噬的调查员阵亡；被吞噬的标记回到标记池。若吞噬某地点会导致另一个地点失去所有有效连接，则不能吞噬该地点。" },
+        { "id": "countermeasures", "title": "反制措施", "text": "反制措施可通过卡牌能力花费以触发强力效果。研究站可用 2 个线索换取 1 个反制措施。在本变体中，反制措施还可用于阻止复制异变体生成。" },
+        { "id": "replicatingAberration", "title": "复制异变体", "text": "当[[异质]]敌人被击败时，活动组织者选择对应的复制异变体（89010a–i）。调查员可花费 1 个反制措施阻止；否则它在被击败敌人的所在地点横置生成（以调查员为目标的变体则与其交战）。复制异变体离场时归还组织者。" },
+        { "id": "elseLocations", "title": "ELSE! 地点", "text": "主街：移动时与每张粘稠街道互相连接（跨桌时可交换小组，见史诗多人）。旧墓山：[[异质]]敌人生成于此则横置；本回合内该敌人被击败时改为在旧墓山发现等于其 Blob X 值的线索。废弃风车：帷幕 -4；调查成功时改为把线索移动到研究站或临时总部。屠宰场：每局一次，检定敏捷(3)把每名[[软泥]]敌人向屠宰场移动两次，并使其本回合 Blob X +2。" },
+        { "id": "realityAcid", "title": "现实酸液（ELSE!）", "text": "个体代号8L-08张开巨口吞噬某种「现实」。揭示 1 个混乱标记并查阅 89005 参考卡。无法被吞噬的面向需重新揭示。本实现以一组固定的具体游戏效果近似该图表（最近的敌人、诡计、伤害与恐惧、弱点、牌库顶、手牌、资源、弃牌堆顶、光、语言、灵魂）。" },
+        { "id": "epicNote", "title": "史诗多人（Epic Multiplayer）", "text": "跨桌史诗多人（全局血量池、共享反制措施、全局幕线索阈值、各组幕变体 85005/85008/85037、主街跨桌交换小组）由单独的原语请求跟踪，尚未实现。本模块覆盖完整的单桌 ELSE! 流程。" }
+      ],
+      "story": [
+        { "id": "act1", "title": "暴露异变", "text": "异变体的心脏暴露在软泥之中，追踪它。" },
+        { "id": "act2", "title": "外星生理学", "text": "心脏不会在同一个位置停留太久。摧毁它，并承受随之而来的软泥之雨。" },
+        { "id": "act3", "title": "黑水之灾", "text": "短暂的喘息后，又一段 Part 1 剧情开始。米·戈还在这里。" },
+        { "id": "storyElse", "title": "ELSE! Part 1 剧情", "text": "护送装甲车：装甲车必须抵达真菌堆；米·戈驱逐者在真菌堆生成，攻击装甲车时 +2 伤害。夺回脑匣：米·戈科学家带着脑匣；把它抢回研究站，否则会被带回真菌堆。阻止他们的研究：2 名米·戈研究者会研究[[软泥]]敌人；在累计 6 个资源前阻止它们。" },
+        { "id": "storyBase", "title": "普通 Part 1 剧情", "text": "普通流程的 4 张剧情卡（拯救化学家、回收样本、赶走米·戈、拆除炸药）也在 ELSE! 的剧情池中，其设置与结果见普通流程指南。" }
+      ],
+      "resolutions": [
+        { "id": "noResolution", "title": "无结局", "text": "若每位调查员都被击败，异变体突破隔离区把你们吞噬。黑水镇不复存在。调查员输掉本战役。" },
+        { "id": "resolution1", "title": "结局 1", "text": "隔离区崩溃，异变体无法被收容。它将吞噬乡间、新英格兰、整个星球，最终是宇宙。在剧本日志中记录「个体代号8L-08吞噬了整个宇宙」。调查员输掉本战役。" },
+        { "id": "resolution2", "title": "结局 2", "text": "异变体被第三方消灭。样本被采集并送往罗斯威尔；黑水镇被告知隔离是因空气传播病毒。在剧本日志中记录「异变体已被收容」。场上每张奖励资产（万能溶剂、宠物软泥怪、米·戈武器、威尔逊·斯图尔特中尉）可加入任意一位调查员的牌组（不计入牌组张数）。每位调查员获得胜利区中 Victory X 的经验，并额外获得 3 点经验。" }
+      ]
+    }
+  }
+}

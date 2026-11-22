@@ -30,10 +30,15 @@ function packEntry(code) {
   }
 }
 
-function storyPack({ id, name, packCode, ranges, dependencies, encounterGroupIds }) {
+function storyPack({ id, name, packCode, ranges = null, dependencies, encounterGroupIds }) {
   const catalog = Object.values(ALL_CARDS)
     .filter(card => card.pack === packCode)
     .sort((a, b) => a.code.localeCompare(b.code))
+  // 批次 4：新包直接按目录实际卡号生成精确范围（含 90052b 这类字母后缀与双面卡），
+  // 避免手写范围漏掉变体号导致注册失败。
+  const cardRanges = ranges
+    ? ranges.map(range => ({ ...range }))
+    : catalog.map(card => ({ from: card.code, to: card.code }))
   return {
     schemaVersion: CONTENT_SCHEMA_VERSION,
     id,
@@ -42,7 +47,7 @@ function storyPack({ id, name, packCode, ranges, dependencies, encounterGroupIds
     minRulesVersion: 'n6.0',
     status: 'playable',
     dependencies,
-    cardRanges: ranges.map(range => ({ ...range })),
+    cardRanges,
     cards: catalog.map(card => packEntry(card.code)),
     encounterGroupIds: [...encounterGroupIds],
     behaviorIds: [],
@@ -85,5 +90,58 @@ export const sideStoryPacks = Object.freeze([
     id: 'btbCampaign', name: 'By the Book · 挑战内容', packCode: 'btb',
     ranges: [{ from: '90024', to: '90036' }, { from: '90033a', to: '90033b' }], dependencies: ['core'],
     encounterGroupIds: ['byTheBook'],
+  }),
+  // 批次 4：剩余调查员挑战（仅打包遭遇/剧情卡；玩家套件由 availability/构筑接线单独开放）。
+  storyPack({
+    id: 'rtrCampaign', name: 'Red Tide Rising · 挑战内容', packCode: 'rtr',
+    dependencies: ['core'],
+    encounterGroupIds: ['redTideRising'],
+  }),
+  storyPack({
+    id: 'ltrCampaign', name: 'Laid to Rest · 挑战内容', packCode: 'ltr',
+    dependencies: ['core'],
+    encounterGroupIds: ['laidToRest'],
+  }),
+  storyPack({
+    id: 'ropCampaign', name: 'Relics of the Past · 挑战内容', packCode: 'rop',
+    dependencies: ['core'],
+    encounterGroupIds: ['relicsOfThePast'],
+  }),
+  storyPack({
+    id: 'encCampaign', name: 'Enthralling Encore · 挑战内容', packCode: 'enc',
+    dependencies: ['core'],
+    encounterGroupIds: ['enthrallingEncore'],
+  }),
+  // 批次 4：The Blob That Ate Everything 普通 + ELSE! 变体。
+  storyPack({
+    id: 'blobCampaign', name: 'The Blob That Ate Everything · 支线内容', packCode: 'blob',
+    dependencies: ['core'],
+    encounterGroupIds: ['theBlobThatAteEverything'],
+  }),
+  storyPack({
+    id: 'blbeCampaign', name: 'The Blob That Ate Everything · ELSE! 变体', packCode: 'blbe',
+    dependencies: ['core', 'blobCampaign'],
+    encounterGroupIds: ['theBlobThatAteEverythingElse'],
+  }),
+  // 批次 4：Beta 支线（epic multiplayer）。
+  storyPack({
+    id: 'lolCampaign', name: 'The Labyrinths of Lunacy · 支线内容', packCode: 'lol',
+    dependencies: ['core'],
+    encounterGroupIds: ['theLabyrinthsOfLunacy'],
+  }),
+  storyPack({
+    id: 'guardiansCampaign', name: 'Guardians of the Abyss · 支线内容', packCode: 'guardians',
+    dependencies: ['core'],
+    encounterGroupIds: ['theEternalSlumber', 'theNightsUsurper'],
+  }),
+  storyPack({
+    id: 'wogCampaign', name: 'War of the Outer Gods · 支线内容', packCode: 'wog',
+    dependencies: ['core'],
+    encounterGroupIds: ['warOfTheOuterGods'],
+  }),
+  storyPack({
+    id: 'mttCampaign', name: 'Machinations Through Time · 支线内容', packCode: 'mtt',
+    dependencies: ['core'],
+    encounterGroupIds: ['machinationsThroughTime'],
   }),
 ])

@@ -2626,6 +2626,161 @@ import e90036 from './byTheBook/byTheBook/90036.js'
 import e90005 from './readOrDie/readOrDie/90005.js'
 import e90006 from './readOrDie/readOrDie/90006.js'
 import e90007 from './readOrDie/readOrDie/90007.js'
+import e90095 from './enthrallingEncore/enthrallingEncore/90095.js'
+import e90096 from './enthrallingEncore/enthrallingEncore/90096.js'
+import e90097 from './enthrallingEncore/enthrallingEncore/90097.js'
+import e90055 from './laidToRest/laidToRest/90055.js'
+import e90056 from './laidToRest/laidToRest/90056.js'
+import e90057a from './laidToRest/laidToRest/90057a.js'
+import e90057b from './laidToRest/laidToRest/90057b.js'
+import e90058 from './laidToRest/laidToRest/90058.js'
+import e70048 from './theLabyrinthsOfLunacy/theLabyrinthsOfLunacy/70048.js'
+import e70050 from './theLabyrinthsOfLunacy/theLabyrinthsOfLunacy/70050.js'
+import e70052 from './theLabyrinthsOfLunacy/theLabyrinthsOfLunacy/70052.js'
+import e70053 from './theLabyrinthsOfLunacy/theLabyrinthsOfLunacy/70053.js'
+import e70054 from './theLabyrinthsOfLunacy/theLabyrinthsOfLunacy/70054.js'
+import e70055 from './theLabyrinthsOfLunacy/theLabyrinthsOfLunacy/70055.js'
+import e70056 from './theLabyrinthsOfLunacy/theLabyrinthsOfLunacy/70056.js'
+import e70057 from './theLabyrinthsOfLunacy/theLabyrinthsOfLunacy/70057.js'
+import e70058 from './theLabyrinthsOfLunacy/theLabyrinthsOfLunacy/70058.js'
+import e70060 from './theLabyrinthsOfLunacy/theLabyrinthsOfLunacy/70060.js'
+import e70061 from './theLabyrinthsOfLunacy/theLabyrinthsOfLunacy/70061.js'
+import e83055 from './guardiansOfTheAbyss/theEternalSlumber/83055.js'
+import e83056 from './guardiansOfTheAbyss/theEternalSlumber/83056.js'
+import e83057 from './guardiansOfTheAbyss/theNightsUsurper/83057.js'
+import e90042 from './redTideRising/redTideRising/90042.js'
+import e90043 from './redTideRising/redTideRising/90043.js'
+import e90044 from './redTideRising/redTideRising/90044.js'
+import e90045a from './redTideRising/redTideRising/90045a.js'
+import e90045b from './redTideRising/redTideRising/90045b.js'
+import e90066a from './relicsOfThePast/relicsOfThePast/90066a.js'
+import e90066b from './relicsOfThePast/relicsOfThePast/90066b.js'
+import e90067 from './relicsOfThePast/relicsOfThePast/90067.js'
+import e90068 from './relicsOfThePast/relicsOfThePast/90068.js'
+import e90069 from './relicsOfThePast/relicsOfThePast/90069.js'
+import e90070 from './relicsOfThePast/relicsOfThePast/90070.js'
+import e90071 from './relicsOfThePast/relicsOfThePast/90071.js'
+import e90072 from './relicsOfThePast/relicsOfThePast/90072.js'
+import e90073 from './relicsOfThePast/relicsOfThePast/90073.js'
+import e90074 from './relicsOfThePast/relicsOfThePast/90074.js'
+import e90075 from './relicsOfThePast/relicsOfThePast/90075.js'
+import e90076 from './relicsOfThePast/relicsOfThePast/90076.js'
+import e90077 from './relicsOfThePast/relicsOfThePast/90077.js'
+import e89005 from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89005.js'
+import e89006 from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89006.js'
+import e89007 from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89007.js'
+import e89008 from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89008.js'
+import e89009 from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89009.js'
+import e89010a from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89010a.js'
+import e89010b from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89010b.js'
+import e89010c from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89010c.js'
+import e89010d from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89010d.js'
+import e89010e from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89010e.js'
+import e89010f from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89010f.js'
+import e89010g from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89010g.js'
+import e89010h from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89010h.js'
+import e89010i from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89010i.js'
+import e89011 from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89011.js'
+import e89012 from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89012.js'
+import e89013 from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89013.js'
+import e89014 from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89014.js'
+import e89015 from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89015.js'
+import e89016 from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89016.js'
+import e89017 from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89017.js'
+import e89018 from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89018.js'
+import e89019 from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89019.js'
+import e89020 from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89020.js'
+import e89021 from './theBlobThatAteEverything/theBlobThatAteEverythingElse/89021.js'
+import e85002 from './theBlobThatAteEverything/_shared/blob/85002.js'
+import e85003 from './theBlobThatAteEverything/_shared/blob/85003.js'
+import e85004 from './theBlobThatAteEverything/_shared/blob/85004.js'
+import e85006 from './theBlobThatAteEverything/_shared/blob_single_group/85006.js'
+import e85007 from './theBlobThatAteEverything/_shared/blob/85007.js'
+import e85009 from './theBlobThatAteEverything/_shared/blob_single_group/85009.js'
+import e85010 from './theBlobThatAteEverything/_shared/blob/85010.js'
+import e85011 from './theBlobThatAteEverything/_shared/blob/85011.js'
+import e85012 from './theBlobThatAteEverything/_shared/blob/85012.js'
+import e85013 from './theBlobThatAteEverything/_shared/blob/85013.js'
+import e85014 from './theBlobThatAteEverything/_shared/blob/85014.js'
+import e85015 from './theBlobThatAteEverything/_shared/blob/85015.js'
+import e85016 from './theBlobThatAteEverything/_shared/blob/85016.js'
+import e85017 from './theBlobThatAteEverything/_shared/blob/85017.js'
+import e85018 from './theBlobThatAteEverything/_shared/blob/85018.js'
+import e85019 from './theBlobThatAteEverything/_shared/blob/85019.js'
+import e85020 from './theBlobThatAteEverything/_shared/blob/85020.js'
+import e85021 from './theBlobThatAteEverything/_shared/migo_incursion/85021.js'
+import e85022 from './theBlobThatAteEverything/_shared/migo_incursion/85022.js'
+import e85023 from './theBlobThatAteEverything/_shared/migo_incursion/85023.js'
+import e85024 from './theBlobThatAteEverything/_shared/migo_incursion/85024.js'
+import e85025 from './theBlobThatAteEverything/_shared/migo_incursion/85025.js'
+import e85026 from './theBlobThatAteEverything/_shared/migo_incursion/85026.js'
+import e85027 from './theBlobThatAteEverything/_shared/migo_incursion/85027.js'
+import e85028 from './theBlobThatAteEverything/_shared/migo_incursion/85028.js'
+import e85029 from './theBlobThatAteEverything/_shared/migo_incursion/85029.js'
+import e85030 from './theBlobThatAteEverything/_shared/migo_incursion/85030.js'
+import e85031 from './theBlobThatAteEverything/_shared/migo_incursion/85031.js'
+import e85032 from './theBlobThatAteEverything/_shared/migo_incursion/85032.js'
+import e85033 from './theBlobThatAteEverything/_shared/migo_incursion/85033.js'
+import e85034 from './theBlobThatAteEverything/_shared/migo_incursion/85034.js'
+import e85035 from './theBlobThatAteEverything/_shared/migo_incursion/85035.js'
+import e85036 from './theBlobThatAteEverything/_shared/migo_incursion/85036.js'
+import e85038 from './theBlobThatAteEverything/_shared/blob_single_group/85038.js'
+import e85039 from './theBlobThatAteEverything/_shared/blob/85039.js'
+import e85040 from './theBlobThatAteEverything/_shared/blob/85040.js'
+import e85041 from './theBlobThatAteEverything/_shared/blob/85041.js'
+import e85042 from './theBlobThatAteEverything/_shared/blob/85042.js'
+import e85043 from './theBlobThatAteEverything/_shared/blob/85043.js'
+import e85044 from './theBlobThatAteEverything/_shared/blob/85044.js'
+import e85045 from './theBlobThatAteEverything/_shared/blob/85045.js'
+import e85046 from './theBlobThatAteEverything/_shared/blob/85046.js'
+import e85047 from './theBlobThatAteEverything/_shared/blob/85047.js'
+import e85048 from './theBlobThatAteEverything/_shared/blob/85048.js'
+import e85049 from './theBlobThatAteEverything/_shared/blob/85049.js'
+import e85050 from './theBlobThatAteEverything/_shared/blob/85050.js'
+import e85051 from './theBlobThatAteEverything/_shared/blob/85051.js'
+import e85052 from './theBlobThatAteEverything/_shared/blob/85052.js'
+import e85053 from './theBlobThatAteEverything/_shared/blob/85053.js'
+import e83058 from './guardiansOfTheAbyss/theNightsUsurper/83058.js'
+import e87002 from './machinationsThroughTime/machinationsThroughTime/87002.js'
+import e87003 from './machinationsThroughTime/machinationsThroughTime/87003.js'
+import e87004 from './machinationsThroughTime/machinationsThroughTime/87004.js'
+import e87006 from './machinationsThroughTime/machinationsThroughTime/87006.js'
+import e87012 from './machinationsThroughTime/machinationsThroughTime/87012.js'
+import e87013 from './machinationsThroughTime/machinationsThroughTime/87013.js'
+import e87014 from './machinationsThroughTime/machinationsThroughTime/87014.js'
+import e87015 from './machinationsThroughTime/machinationsThroughTime/87015.js'
+import e87021 from './machinationsThroughTime/machinationsThroughTime/87021.js'
+import e87022 from './machinationsThroughTime/machinationsThroughTime/87022.js'
+import e87023 from './machinationsThroughTime/machinationsThroughTime/87023.js'
+import e87024 from './machinationsThroughTime/machinationsThroughTime/87024.js'
+import e87030 from './machinationsThroughTime/machinationsThroughTime/87030.js'
+import e87031 from './machinationsThroughTime/machinationsThroughTime/87031.js'
+import e87032 from './machinationsThroughTime/machinationsThroughTime/87032.js'
+import e87033 from './machinationsThroughTime/machinationsThroughTime/87033.js'
+import e87034 from './machinationsThroughTime/machinationsThroughTime/87034.js'
+import e87035 from './machinationsThroughTime/machinationsThroughTime/87035.js'
+import e87036a from './machinationsThroughTime/machinationsThroughTime/87036a.js'
+import e87036b from './machinationsThroughTime/machinationsThroughTime/87036b.js'
+import e87038 from './machinationsThroughTime/machinationsThroughTime/87038.js'
+import e87039 from './machinationsThroughTime/machinationsThroughTime/87039.js'
+import e87040 from './machinationsThroughTime/machinationsThroughTime/87040.js'
+import e87041 from './machinationsThroughTime/machinationsThroughTime/87041.js'
+import e87042 from './machinationsThroughTime/machinationsThroughTime/87042.js'
+import e87043 from './machinationsThroughTime/machinationsThroughTime/87043.js'
+import e87044 from './machinationsThroughTime/machinationsThroughTime/87044.js'
+import e87045 from './machinationsThroughTime/machinationsThroughTime/87045.js'
+import e87046 from './machinationsThroughTime/machinationsThroughTime/87046.js'
+import e87047 from './machinationsThroughTime/machinationsThroughTime/87047.js'
+import e87048 from './machinationsThroughTime/machinationsThroughTime/87048.js'
+import e87049 from './machinationsThroughTime/machinationsThroughTime/87049.js'
+import e87050 from './machinationsThroughTime/machinationsThroughTime/87050.js'
+import e87051 from './machinationsThroughTime/machinationsThroughTime/87051.js'
+import e87052 from './machinationsThroughTime/machinationsThroughTime/87052.js'
+import e87053 from './machinationsThroughTime/machinationsThroughTime/87053.js'
+import e87054 from './machinationsThroughTime/machinationsThroughTime/87054.js'
+import e87055 from './machinationsThroughTime/machinationsThroughTime/87055.js'
+import e87056 from './machinationsThroughTime/machinationsThroughTime/87056.js'
+import e87057 from './machinationsThroughTime/machinationsThroughTime/87057.js'
 
 export const NON_PLAYER_ENTRY_LIST = [
   ewolfManDrew,
@@ -5251,6 +5406,161 @@ export const NON_PLAYER_ENTRY_LIST = [
   e90005,
   e90006,
   e90007,
+  e90095,
+  e90096,
+  e90097,
+  e90055,
+  e90056,
+  e90057a,
+  e90057b,
+  e90058,
+  e70048,
+  e70050,
+  e70052,
+  e70053,
+  e70054,
+  e70055,
+  e70056,
+  e70057,
+  e70058,
+  e70060,
+  e70061,
+  e83055,
+  e83056,
+  e83057,
+  e90042,
+  e90043,
+  e90044,
+  e90045a,
+  e90045b,
+  e90066a,
+  e90066b,
+  e90067,
+  e90068,
+  e90069,
+  e90070,
+  e90071,
+  e90072,
+  e90073,
+  e90074,
+  e90075,
+  e90076,
+  e90077,
+  e89005,
+  e89006,
+  e89007,
+  e89008,
+  e89009,
+  e89010a,
+  e89010b,
+  e89010c,
+  e89010d,
+  e89010e,
+  e89010f,
+  e89010g,
+  e89010h,
+  e89010i,
+  e89011,
+  e89012,
+  e89013,
+  e89014,
+  e89015,
+  e89016,
+  e89017,
+  e89018,
+  e89019,
+  e89020,
+  e89021,
+  e85002,
+  e85003,
+  e85004,
+  e85006,
+  e85007,
+  e85009,
+  e85010,
+  e85011,
+  e85012,
+  e85013,
+  e85014,
+  e85015,
+  e85016,
+  e85017,
+  e85018,
+  e85019,
+  e85020,
+  e85021,
+  e85022,
+  e85023,
+  e85024,
+  e85025,
+  e85026,
+  e85027,
+  e85028,
+  e85029,
+  e85030,
+  e85031,
+  e85032,
+  e85033,
+  e85034,
+  e85035,
+  e85036,
+  e85038,
+  e85039,
+  e85040,
+  e85041,
+  e85042,
+  e85043,
+  e85044,
+  e85045,
+  e85046,
+  e85047,
+  e85048,
+  e85049,
+  e85050,
+  e85051,
+  e85052,
+  e85053,
+  e83058,
+  e87002,
+  e87003,
+  e87004,
+  e87006,
+  e87012,
+  e87013,
+  e87014,
+  e87015,
+  e87021,
+  e87022,
+  e87023,
+  e87024,
+  e87030,
+  e87031,
+  e87032,
+  e87033,
+  e87034,
+  e87035,
+  e87036a,
+  e87036b,
+  e87038,
+  e87039,
+  e87040,
+  e87041,
+  e87042,
+  e87043,
+  e87044,
+  e87045,
+  e87046,
+  e87047,
+  e87048,
+  e87049,
+  e87050,
+  e87051,
+  e87052,
+  e87053,
+  e87054,
+  e87055,
+  e87056,
+  e87057,
 ]
 
 registerNonPlayerEntries(NON_PLAYER_ENTRY_LIST)

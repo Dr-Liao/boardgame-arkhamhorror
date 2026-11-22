@@ -1,6 +1,6 @@
 import { renderDraftPane } from './draft-mode.js'
 import { renderRulesText } from './card-text.js'
-import { registerDeckRules, deckRules, matchesCardRule, validateDeckRules, myriadUsage, cardAllowedByScope, campaignCycle, normalizeCardPoolScope, CARD_POOL_SCOPE_LABELS, CARD_POOL_RESTRICTION_ENABLED } from './deck-rules.js'
+import { registerDeckRules, deckRules, matchesCardRule, validateDeckRules, myriadUsage, cardAllowedByScope, campaignCycle } from './deck-rules.js'
 import { parseArkhamDbInput, loadArkhamDbDeck, loadRecommendedDeck, planArkhamDbImport } from './arkhamdb-import.js'
 import { listLocalDecks, saveLocalDeck, deleteLocalDeck, batchDeleteLocalDecks, slotsToCodes, formatDeckLibraryJson } from './deck-library.js'
 import { tableArt } from './table-art.js'
@@ -249,7 +249,6 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     state.arkhamSaveMode = 'solo'
     state.arkhamDeleteConfirmId = null
     state.arkhamAiSettingsOpen = false
-    state.arkhamGameSettingsOpen = false
     state.arkhamCampaignPicker = null
     // 两页内容高度不同：记录「新游戏」页自然高度，切到存档页时用它锁住弹窗。
     state.arkhamSetupStableHeight = null
@@ -278,9 +277,6 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       options.map(option => h('option', { value: String(option.value), selected: String(option.value) === String(value) }, option.label)))
   }
 
-  const cardPoolLabel = scope => CARD_POOL_SCOPE_LABELS[normalizeCardPoolScope(scope)]
-  const rollbackLabel = value => value === 'off' ? t('hub.rollback.disabled') : t('hub.rollback.enabled')
-
   function renderAiDialogueSettings(g) {
     const values = [
       [t('hub.ai.story'), state.setup.form.aiStoryAwareness === 'on' ? t('hub.toggle.on') : t('hub.toggle.off')],
@@ -293,49 +289,6 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       h('span', {}, h('strong', {}, t('hub.ai.title')), h('small', {}, values)),
       h('button', { type: 'button', className: 'bg-btn secondary',
         onclick: () => { state.arkhamAiSettingsOpen = true; render() } }, t('hub.ai.edit')))
-  }
-
-  // 「游戏高级设置」与 AI 高级设置并列，都只在开局界面出现；值写进开局表单，
-  // 由大厅 startGame 一并提交，服务端再落到 state（随存档保留）。
-  function renderGameSettings() {
-    const values = [
-      ...(CARD_POOL_RESTRICTION_ENABLED
-        ? [t('hub.gameSettings.cardPoolValue', { value: cardPoolLabel(state.setup.form.cardPoolScope) })]
-        : []),
-      t('hub.gameSettings.rollbackValue', { value: rollbackLabel(state.setup.form.allowRollback) }),
-    ].join(' · ')
-    return h('section', { className: 'ah-ai-dialogue-settings' },
-      h('span', {}, h('strong', {}, t('hub.gameSettings.title')), h('small', {}, values)),
-      h('button', { type: 'button', className: 'bg-btn secondary',
-        onclick: () => { state.arkhamGameSettingsOpen = true; render() } }, t('hub.gameSettings.edit')))
-  }
-
-  function renderGameSettingsModal(g) {
-    if (!state.arkhamGameSettingsOpen) return null
-    const spec = key => g.settingsSpec.find(item => item.key === key)
-    const scope = spec('cardPoolScope'), rollback = spec('allowRollback')
-    const close = () => { state.arkhamGameSettingsOpen = false; render() }
-    return h('div', { className: 'ah-ai-dialogue-backdrop', onclick: event => { if (event.target === event.currentTarget) close() } },
-      h('section', { className: 'ah-ai-dialogue-modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('hub.gameSettings.title'),
-        onkeydown: modalKeys(close), onclick: event => event.stopPropagation() },
-        h('header', {}, h('div', {}, h('small', {}, 'ARKHAM HORROR'), h('h2', {}, t('hub.gameSettings.title'))),
-          h('button', { type: 'button', className: 'bg-btn secondary', onclick: close, 'aria-label': t('hub.gameSettings.closeAria') }, t('common.close'))),
-        h('p', {}, t('hub.gameSettings.note')),
-        CARD_POOL_RESTRICTION_ENABLED ? h('div', { className: 'ah-ai-dialogue-group' },
-          h('h3', {}, scope.label),
-          h('div', { className: 'ah-game-settings-select' },
-            h('span', {}, t('hub.gameSettings.cardPoolLabel')),
-            select(scope.options, state.setup.form.cardPoolScope, value => { state.setup.form.cardPoolScope = value; render() },
-              { 'aria-label': scope.label })),
-          h('small', {}, scope.description)) : null,
-        h('div', { className: 'ah-ai-dialogue-group' },
-          h('h3', {}, t('hub.gameSettings.rollbackLabel')),
-          h('label', { className: 'ah-ai-dialogue-toggle' },
-            h('input', { type: 'checkbox', checked: state.setup.form.allowRollback !== 'off', 'aria-label': rollback.label,
-              onchange: event => { state.setup.form.allowRollback = event.target.checked ? 'on' : 'off' } }),
-            h('span', {}, rollback.label),
-            h('small', {}, t('hub.gameSettings.defaultAllowed'))),
-          h('small', {}, rollback.description))))
   }
 
   function renderAiDialogueModal(g) {
@@ -869,7 +822,10 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const focusSetupControl = id => queueMicrotask(() => document.getElementById(id)?.focus({ preventScroll: true }))
     const openPicker = () => {
       const category = selectedCampaign?.category || 'seasonOne'
-      state.arkhamCampaignPicker = { category, campaignId: form.campaignId, deckMode: form.deckMode || 'standard' }
+      state.arkhamCampaignPicker = {
+        category, campaignId: form.campaignId, deckMode: form.deckMode || 'standard',
+        cardPoolScope: form.cardPoolScope, allowRollback: form.allowRollback,
+      }
       render()
       focusSetupControl(`ah-campaign-tab-${category}`)
     }
@@ -890,7 +846,6 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         select(spec.options, form[spec.key], value => { form[spec.key] = value; render() }),
         spec.description ? h('small', {}, spec.description) : null)
       }),
-      renderGameSettings(g),
       renderAiDialogueSettings(g),
       renderOnlineSetup?.(g),
       h('div', { className: 'bg-modal-foot' },
@@ -956,18 +911,17 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
             onclick: openSavesTab }, t('hub.setup.tabSaves'))),
         savesTab ? saveList : newGame,
         state.error ? h('p', { role: 'alert' }, state.error) : null)),
-      renderGameSettingsModal(g),
       renderAiDialogueModal(g),
       picker && renderCampaignPicker(h, {
-        choices, picker, close: closePicker, onkeydown: modalKeys(closePicker),
+        choices, picker, settingsSpec: g.settingsSpec, close: closePicker, onkeydown: modalKeys(closePicker),
         onChange: (change, focusId) => {
           Object.assign(picker, change)
           render()
           if (focusId) focusSetupControl(focusId)
         },
         confirm: () => {
-          form.campaignId = picker.campaignId
-          form.deckMode = picker.deckMode
+          const { category, ...settings } = picker
+          Object.assign(form, settings)
           closePicker()
         },
       }))

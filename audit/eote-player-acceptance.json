@@ -25,7 +25,7 @@
     "buildable": 111,
     "dependencyOnly": 4,
     "basicWeaknesses": 4,
-    "testsPassed": 126
+    "testsPassed": 127
   },
   "shards": [
     {
@@ -492,7 +492,7 @@
     },
     {
       "path": "src/cards/entries/08098.js",
-      "sha256": "3851bd3cf983525f7f695c1784005a0dfab49083917fc69201fae36f1b684fdc"
+      "sha256": "e67eaf9ca604f7fa0bf0f555b5502a128f876c8690d504d6cbc31da1bef481a6"
     },
     {
       "path": "src/cards/entries/08099.js",
@@ -500,7 +500,7 @@
     },
     {
       "path": "src/cards/entries/08100.js",
-      "sha256": "abfcedcded07a791889f42ac1fc7168abe5c27bf73cbddc9edaad88a4dbc591a"
+      "sha256": "21ed1e7792c8b3fb8326d6259287fe17f779246e05d4c29e3487202bfa84654c"
     },
     {
       "path": "src/cards/entries/08101.js",
@@ -2526,7 +2526,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 481,
+          "line": 500,
           "test": "P6 08079 血债血偿：敌人攻击造成伤害/恐惧后按数量抽牌"
         }
       ]
@@ -2619,7 +2619,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 489,
+          "line": 508,
           "test": "P6 08082 抵挡：非精英敌人生成时攻击并自动躲避，随后附属且不能重整"
         }
       ]
@@ -2733,7 +2733,7 @@
         },
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 577,
+          "line": 596,
           "test": "P6 08086 迈克尔·李：发起攻击时横置花证据，成功后追加 1 伤害"
         }
       ]
@@ -2768,7 +2768,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 503,
+          "line": 522,
           "test": "P6 08087 狙击：添加「符号标记视为 0」的延迟效果"
         }
       ]
@@ -2826,7 +2826,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 513,
+          "line": 532,
           "test": "P6 08089 快拔枪套：把枪械附属到枪套并免费执行其攻击行动"
         }
       ]
@@ -2872,7 +2872,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 525,
+          "line": 544,
           "test": "P6 08091 恩科西·马巴蒂：真实 performTest 的 tokenReveal 窗口把符号标记改为咒印"
         }
       ]
@@ -3027,7 +3027,7 @@
         },
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 588,
+          "line": 607,
           "test": "P6 08097 袖珍望远镜：横置查看相连未揭示地点的揭示面"
         }
       ]
@@ -3046,12 +3046,17 @@
       "channel": "descriptor",
       "simplified": false,
       "simplification": null,
-      "implementation": "3851bd3cf983525f7f695c1784005a0dfab49083917fc69201fae36f1b684fdc",
+      "implementation": "e67eaf9ca604f7fa0bf0f555b5502a128f876c8690d504d6cbc31da1bef481a6",
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
           "line": 308,
           "test": "P6 08098/08100 远古海图：横置花秘密免费执行移动/调查行动"
+        },
+        {
+          "file": "eote-player-m2-3.test.mjs",
+          "line": 324,
+          "test": "P6 08098/08100 远古海图：不是自己的回合时玩家窗口不提供"
         }
       ]
     },
@@ -3073,7 +3078,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 324,
+          "line": 343,
           "test": "P6 08099 吉恩·波尔格：移动后把连接地点的线索搬到自己所在地点"
         }
       ]
@@ -3092,12 +3097,17 @@
       "channel": "descriptor",
       "simplified": false,
       "simplification": null,
-      "implementation": "abfcedcded07a791889f42ac1fc7168abe5c27bf73cbddc9edaad88a4dbc591a",
+      "implementation": "21ed1e7792c8b3fb8326d6259287fe17f779246e05d4c29e3487202bfa84654c",
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
           "line": 308,
           "test": "P6 08098/08100 远古海图：横置花秘密免费执行移动/调查行动"
+        },
+        {
+          "file": "eote-player-m2-3.test.mjs",
+          "line": 324,
+          "test": "P6 08098/08100 远古海图：不是自己的回合时玩家窗口不提供"
         }
       ]
     },
@@ -3119,7 +3129,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 336,
+          "line": 355,
           "test": "P6 08101/08103 占卜：不发现标准线索，改为按充能发现线索"
         }
       ]
@@ -3142,7 +3152,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 353,
+          "line": 372,
           "test": "P6 08102 保护魂灵：真实 assetLeavesPlay 窗口（盟友离场后返回拥有者手牌或抽 3 张）"
         }
       ]
@@ -3165,7 +3175,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 336,
+          "line": 355,
           "test": "P6 08101/08103 占卜：不发现标准线索，改为按充能发现线索"
         }
       ]
@@ -3200,7 +3210,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 564,
+          "line": 583,
           "test": "P6 08104/08106 威廉·韦伯教授：调查成功横置花秘密，取回道具或连接地点发现线索"
         }
       ]
@@ -3223,7 +3233,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 406,
+          "line": 425,
           "test": "P6 08105/08107 破冰锥：真实攻击检定窗口出现 +1 技能值（横置）"
         }
       ]
@@ -3258,7 +3268,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 564,
+          "line": 583,
           "test": "P6 08104/08106 威廉·韦伯教授：调查成功横置花秘密，取回道具或连接地点发现线索"
         }
       ]
@@ -3281,17 +3291,17 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 406,
+          "line": 425,
           "test": "P6 08105/08107 破冰锥：真实攻击检定窗口出现 +1 技能值（横置）"
         },
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 426,
+          "line": 445,
           "test": "P6 08107 破冰锥（3 级）：真实窗口弃掉自身换取成功后 +1 伤害"
         },
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 601,
+          "line": 620,
           "test": "P6 08107 破冰锥（3 级）：真实调查检定窗口弃掉自身换取额外 1 个线索"
         }
       ]
@@ -3314,7 +3324,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 470,
+          "line": 489,
           "test": "P6 08108 虚影易位：与 2 连接内的已揭示地点非精英敌人交换位置"
         }
       ]

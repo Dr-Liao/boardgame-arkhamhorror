@@ -94,6 +94,12 @@
       "order": 38
     },
     {
+      "id": "enemyWouldTakeDamage",
+      "label": "敌人将要受到伤害时",
+      "kind": "interrupt",
+      "order": 38
+    },
+    {
       "id": "assetDefeated",
       "label": "你控制的支援被击败时",
       "kind": "reaction",
@@ -102,6 +108,12 @@
     {
       "id": "enemyDamaged",
       "label": "敌人受到伤害后",
+      "kind": "reaction",
+      "order": 39
+    },
+    {
+      "id": "enemyDamagePlaced",
+      "label": "伤害放置到敌人后",
       "kind": "reaction",
       "order": 39
     },
@@ -484,6 +496,12 @@
       "order": 100
     },
     {
+      "id": "chaosRevealEffectWouldResolve",
+      "label": "即将结算标记触发的卡牌效果",
+      "kind": "interrupt",
+      "order": 100
+    },
+    {
       "id": "chaosRevealStepEnded",
       "label": "混乱标记揭示步骤结束后",
       "kind": "reaction",
@@ -492,6 +510,12 @@
     {
       "id": "chaosTokenChanged",
       "label": "封印、取消或忽略标记后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "chaosTokenPhysicallyRevealed",
+      "label": "揭示混乱标记后",
       "kind": "reaction",
       "order": 100
     },
@@ -510,6 +534,12 @@
     {
       "id": "consecutiveActions",
       "label": "连续两次同类行动后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "damagePlacedOnSelf",
+      "label": "伤害或恐惧放置到调查员后",
       "kind": "reaction",
       "order": 100
     },
@@ -580,6 +610,12 @@
       "order": 100
     },
     {
+      "id": "entersAttachedLocation",
+      "label": "敌人或调查员进入附属地点后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
       "id": "evadeFail",
       "label": "躲避失败后",
       "kind": "reaction",
@@ -588,6 +624,12 @@
     {
       "id": "evadeSuccess",
       "label": "躲避成功后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "failedTestMargin",
+      "label": "检定失败并确定失败差值时",
       "kind": "reaction",
       "order": 100
     },
@@ -684,6 +726,12 @@
     {
       "id": "promiseBroken",
       "label": "违背回合承诺后",
+      "kind": "reaction",
+      "order": 100
+    },
+    {
+      "id": "resourcesSpent",
+      "label": "花费资源后",
       "kind": "reaction",
       "order": 100
     },

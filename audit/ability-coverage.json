@@ -6,24 +6,24 @@
     "effectsEntries": 0,
     "effectsTopLevelFields": 0,
     "escapeCards": 0,
-    "descriptorEntries": 1710,
-    "descriptorAbilities": 2426,
+    "descriptorEntries": 1765,
+    "descriptorAbilities": 2484,
     "abilityKinds": 12,
     "windows": 144,
     "effectPrimitives": 56,
-    "nonPlayerCards": 440,
-    "behaviorLines": 92550,
+    "nonPlayerCards": 444,
+    "behaviorLines": 99408,
     "declaredScenarios": 3
   },
   "channels": {
-    "descriptor": 1710,
+    "descriptor": 1765,
     "data": 4
   },
   "nonPlayer": {
     "byScope": {
       "enemy": 150,
       "location": 117,
-      "storyAsset": 106,
+      "storyAsset": 110,
       "treachery": 35,
       "act": 11,
       "scenario": 8,
@@ -466,12 +466,16 @@
       "50045",
       "50046",
       "51068",
+      "83055",
+      "83056",
+      "83057",
+      "83058",
       "goatSpawn",
       "relentlessDarkYoung",
       "screechingByakhee",
       "wolfManDrew"
     ],
-    "abilities": 493,
+    "abilities": 498,
     "modifiers": 140
   },
   "declaration": {
@@ -500,11 +504,18 @@
       "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1/behavior.js",
       "content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js",
       "content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js",
+      "content/campaigns/enthrallingEncore/scenarios/enthrallingEncore/behavior.js",
+      "content/campaigns/guardiansOfTheAbyss/scenarios/theEternalSlumber/behavior.js",
+      "content/campaigns/guardiansOfTheAbyss/scenarios/theNightsUsurper/behavior.js",
+      "content/campaigns/laidToRest/scenarios/laidToRest/behavior.js",
+      "content/campaigns/machinationsThroughTime/scenarios/machinationsThroughTime/behavior.js",
       "content/campaigns/murderAtTheExcelsiorHotel/scenarios/murderAtTheExcelsiorHotel/behavior.js",
       "content/campaigns/nightOfTheZealot/scenarios/theDevourerBelow/behavior.js",
       "content/campaigns/nightOfTheZealot/scenarios/theGathering/behavior.js",
       "content/campaigns/nightOfTheZealot/scenarios/theMidnightMasks/behavior.js",
       "content/campaigns/readOrDie/scenarios/readOrDie/behavior.js",
+      "content/campaigns/redTideRising/scenarios/redTideRising/behavior.js",
+      "content/campaigns/relicsOfThePast/scenarios/relicsOfThePast/behavior.js",
       "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheDevourerBelow/behavior.js",
       "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheGathering/behavior.js",
       "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheMidnightMasks/behavior.js",
@@ -524,6 +535,8 @@
       "content/campaigns/returnToThePathToCarcosa/scenarios/returnToTheLastKing/behavior.js",
       "content/campaigns/returnToThePathToCarcosa/scenarios/returnToThePallidMask/behavior.js",
       "content/campaigns/returnToThePathToCarcosa/scenarios/returnToTheUnspeakableOath/behavior.js",
+      "content/campaigns/theBlobThatAteEverything/scenarios/theBlobThatAteEverything/behavior.js",
+      "content/campaigns/theBlobThatAteEverything/scenarios/theBlobThatAteEverythingElse/behavior.js",
       "content/campaigns/theCircleUndone/scenarios/atDeathsDoorstep/behavior.js",
       "content/campaigns/theCircleUndone/scenarios/beforeTheBlackThrone/behavior.js",
       "content/campaigns/theCircleUndone/scenarios/disappearanceAtTheTwilightEstate/behavior.js",
@@ -576,6 +589,7 @@
       "content/campaigns/theForgottenAge/scenarios/theUntamedWilds/behavior.js",
       "content/campaigns/theForgottenAge/scenarios/threadsOfFate/behavior.js",
       "content/campaigns/theForgottenAge/scenarios/turnBackTime/behavior.js",
+      "content/campaigns/theLabyrinthsOfLunacy/scenarios/theLabyrinthsOfLunacy/behavior.js",
       "content/campaigns/thePathToCarcosa/scenarios/aPhantomOfTruth/behavior.js",
       "content/campaigns/thePathToCarcosa/scenarios/blackStarsRise/behavior.js",
       "content/campaigns/thePathToCarcosa/scenarios/curtainCall/behavior.js",
@@ -593,9 +607,10 @@
       "content/campaigns/theScarletKeys/scenarios/riddlesAndRain/behavior.js",
       "content/campaigns/theScarletKeys/scenarios/sanguineShadows/behavior.js",
       "content/campaigns/theScarletKeys/scenarios/shadesOfSuffering/behavior.js",
-      "content/campaigns/theScarletKeys/scenarios/withoutATrace/behavior.js"
+      "content/campaigns/theScarletKeys/scenarios/withoutATrace/behavior.js",
+      "content/campaigns/warOfTheOuterGods/scenarios/warOfTheOuterGods/behavior.js"
     ],
-    "behaviorLines": 92550,
+    "behaviorLines": 99408,
     "declaredScenarios": 3
   },
   "cards": [
@@ -9074,6 +9089,31 @@
       "descriptors": 1
     },
     {
+      "code": "89001",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "89002",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "89002b",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "89003",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "89004",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
       "code": "90001",
       "channel": "descriptor",
       "descriptors": 1
@@ -9159,6 +9199,246 @@
       "descriptors": 1
     },
     {
+      "code": "90037",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "90038",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "90039",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "90040",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "90046",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "90047",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "90048",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "90049",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "90050",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "90051",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "90052",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "90059",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "90060",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "90061",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "90062",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "90063",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "90064",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "90078",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "90079",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "90080",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "90081",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "90082",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "90083",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "90084",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "90085",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "90086",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "90087",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "90088",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "90089",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "90090",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "90091",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "90092",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "90093",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "98001",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "98002",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "98003",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "98005",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "98006",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "98007",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "98008",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "98009",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "98011",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "98012",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "98013",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "98014",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "98015",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "98017",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "98018",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
       "code": "98019",
       "channel": "descriptor",
       "descriptors": 1
@@ -9172,6 +9452,16 @@
       "code": "98021",
       "channel": "descriptor",
       "descriptors": 1
+    },
+    {
+      "code": "99002",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "99003",
+      "channel": "descriptor",
+      "descriptors": 3
     }
   ]
 }

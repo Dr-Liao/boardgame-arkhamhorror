@@ -1,0 +1,271 @@
+{
+  "id": "theLabyrinthsOfLunacy",
+  "campaignId": "theLabyrinthsOfLunacy",
+  "sourceKind": "authored",
+  "officialChinese": false,
+  "note": "单桌普通流程（Group A/B/C 任选）指南；epic multiplayer 三桌同步与 mini-campaign 组顺序由跨桌引擎提供。",
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "疯狂迷宫",
+          "text": "单桌模式下，你们可以扮演 A、B 或 C 组中的任意一组。请按所选组的设置指示进行布置。哪一组被困在迷宫的这部分？"
+        },
+        {
+          "id": "groupA",
+          "title": "A 组",
+          "text": "你在一个陌生的地方醒来，完全不记得自己是怎么到这里的。你被密封在一间没有窗户的密室里，四周是铜制管道，空气中回荡着漏气的尖啸。地上留着一张便笺。"
+        },
+        {
+          "id": "groupB",
+          "title": "B 组",
+          "text": "你在一个高大的玻璃水箱里醒来，水漫过脚踝；玻璃外还有更多同样的水箱，笼罩在雾气中。水箱外的地上留着一张便笺。"
+        },
+        {
+          "id": "groupC",
+          "title": "C 组",
+          "text": "你在一间昏暗的房间醒来，只有几根蜡烛照明，堆满旧木桶、板条箱与腐朽的货架，看不到任何门窗。地上留着一张便笺。"
+        },
+        {
+          "id": "note",
+          "title": "便笺",
+          "text": "“你们好。我把你们聚在这里做一场实验。把它当作对人类意志的考验。你们会活下来，或者会死去。你们并不孤单，另外两组与你们同命运。你们会冒险去帮助他们吗？还是踩着他们的尸体寻得自由？”"
+        }
+      ],
+      "setup": [
+        {
+          "id": "gatherSets",
+          "text": "收集《疯狂迷宫》遭遇组；单桌模式再收集 Single Group 组，并把 Epic Multiplayer 组从游戏中移除。"
+        },
+        {
+          "id": "actDeck",
+          "text": "只用所选组的幕 1 与幕 2 版本组建幕牌库，移除其它组版本；三组共用幕 3「逃出生天」。"
+        },
+        {
+          "id": "placeInitial",
+          "text": "A 组：在 3 张密室中随机选 1 张放入场（其余移出游戏），奥秘之钥放在该地点。B 组：放置雨之密室与悲哀密室；随机一位调查员从雨之密室开始，其余从悲哀密室开始。C 组：放置夜之密室与悔恨密室，所有调查员从夜之密室开始；随机把 1 张密室压在剧本参考卡下方（揭示面朝下）。"
+        },
+        {
+          "id": "setAside",
+          "text": "把以下卡牌放在一边：奥秘之钥、神秘注射器、艾克索多隆、艾克索多隆的宠物、腐烂/饥饿/腐朽图样、2 张无面掳掠者及其余地点。"
+        },
+        {
+          "id": "eixodolonsNote",
+          "text": "队长控制艾克索多隆的便笺。"
+        },
+        {
+          "id": "addTokens",
+          "text": "把 2 枚本组的混乱标记加入混乱袋（A 组：古神；B 组：石板；C 组：邪教徒）。"
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "tokens",
+          "title": "混乱标记",
+          "text": "skull：-1 并额外揭示 1 个标记。cultist -3、tablet -4、elderthing -4；简单/普通时在检定失败后结算它们的效果，困难/专家在揭示时结算。困难/专家下 skull 失败时需选择受到 1 点伤害或 1 点恐惧。"
+        },
+        {
+          "id": "act2Setup",
+          "title": "幕 2 设置",
+          "text": "把 2 张无面掳掠者与遭遇弃牌堆洗入遭遇牌库；把 3 张迷宫走廊放入场（A 组：腐朽密室；B 组：腐烂密室与毒之密室；C 组：饥饿密室，并把宠物放在饥饿密室附近但不属于任何地点，视为“被锁起来”）。移除所有毁灭标记，进入幕 2 与密谋 2。"
+        },
+        {
+          "id": "act3Setup",
+          "title": "幕 3 设置",
+          "text": "放置废弃仓库；解除所有交战并把幸存调查员移动到废弃仓库；把艾克索多隆生成在废弃仓库；移除所有毁灭标记，进入幕 3 与密谋 3。"
+        },
+        {
+          "id": "levers",
+          "title": "拉杆（C 组）",
+          "text": "密谋推进前，一位调查员必须发动悔恨密室上的行动能力。该调查员查看暗置的密室：如果背景文字与拉动的拉杆相符，闸门升起，夜之密室的门打开；不符则该调查员被杀死。若无人拉动拉杆，距离悔恨密室最近的调查员被杀死。结算幕 2 设置。"
+        },
+        {
+          "id": "seepingDeath",
+          "title": "渗透的死亡（B 组）",
+          "text": "密谋推进前，一位调查员必须发动毒之密室上的行动能力。若该调查员“已被注射”，结算幕 3 设置；否则该调查员被杀死。若无人发动，移动每位调查员到毒之密室，所有“未被注射”的调查员被杀死。结算幕 3 设置。"
+        },
+        {
+          "id": "thePet",
+          "title": "宠物（C 组）",
+          "text": "密谋推进前处理艾克索多隆的宠物。若密谋推进时它仍“被锁起来”，它会挣脱：移动到饥饿密室，并按玩家顺序攻击饥饿密室的每位调查员。结算幕 3 设置。"
+        },
+        {
+          "id": "mastermind",
+          "title": "主谋",
+          "text": "密谋 3：每个扭曲地点获得每组每场游戏一次攻击艾克索多隆的能力。目标：每位调查员被击败时推进；推进时本组每位调查员被杀死，进入结局 1。"
+        }
+      ],
+      "story": [
+        {
+          "id": "storyCards",
+          "title": "场景剧情卡",
+          "text": "密谋 1 与 2 的强制能力：轮末若密谋上至少 1 个毁灭标记且尚无组触发，A 组队长随机选择并抽取 1 张放在一边的剧情卡；向三组宣布，其他队长抽取同一张剧情卡。"
+        },
+        {
+          "id": "act3",
+          "title": "逃出生天",
+          "text": "击败艾克索多隆后，废弃仓库的铁门可以被打开。逃出迷宫并结算本场景。"
+        }
+      ],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "没有结局",
+          "text": "若没有达成任何结局（每位调查员均被击败），进入结局 1。"
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "text": "你们的痛苦成为主人的武器，迷宫核心的仪式完成，世界将感受到这份恐惧与绝望。调查员失败。"
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "text": "主谋倒下，你们砸开铁门逃到米斯卡塔尼克河畔。你们活了下来，但在另一条时间线里，迷宫又迎来了新的客人。"
+        },
+        {
+          "id": "resolution3",
+          "title": "结局 3",
+          "text": "你们逃出了迷宫，但主谋临死前的话仍在耳边回响——他无处不在、无时不在，艾克索多隆仍活着。"
+        },
+        {
+          "id": "resolution4",
+          "title": "结局 4",
+          "text": "仪式失败。三组同时推开沉重的铁门，在河畔看着夕阳落下。调查员获胜！"
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "The Labyrinths of Lunacy",
+          "text": "When played as a single standalone scenario, you may play as either Group A, B, or C. Use the setup instructions for the group chosen to set up the game. Which group is trapped in this part of the labyrinth?"
+        },
+        {
+          "id": "groupA",
+          "title": "Group A",
+          "text": "You wake up in a strange place with no memory of how you arrived. You have been sealed in a windowless chamber filled with copper pipes, the faint whistling of escaping air all around you. There is a note lying on the ground nearby."
+        },
+        {
+          "id": "groupB",
+          "title": "Group B",
+          "text": "You wake up sealed in a tall glass tank, water filling the chamber to your ankles. Beyond the dull glass are many more tanks like yours, wreathed in mist. There is a note lying on the ground just outside the tank."
+        },
+        {
+          "id": "groupC",
+          "title": "Group C",
+          "text": "You wake up in a dark chamber lit only by a few candles. Old barrels, crates and rotten storage shelves fill the cramped room; there are no windows or doors. There is a note lying on the ground nearby."
+        },
+        {
+          "id": "note",
+          "title": "The Note",
+          "text": "Greetings. I have gathered you here as an experiment. Think of this as a test of human will. You will survive. Or you will die. You are not alone. Two other groups share in your fate. Will you risk your lives to aid them, or will you find freedom upon the backs of their corpses?"
+        }
+      ],
+      "setup": [
+        {
+          "id": "gatherSets",
+          "text": "Gather all cards from The Labyrinths of Lunacy encounter set. In Single Group Mode also gather the Single Group set and remove all Epic Multiplayer cards from the game."
+        },
+        {
+          "id": "actDeck",
+          "text": "Construct the act deck using only the chosen group's versions of acts 1 and 2. Remove every other version of those acts from the game. All groups share act 3, The Escape."
+        },
+        {
+          "id": "placeInitial",
+          "text": "Group A: randomly choose 1 of the 3 copies of Chamber of Secrets and put it into play; remove the other 2 from the game; the Key of Mysteries is placed in it. Group B: put Chamber of Rain and Chamber of Sorrows into play; one random investigator begins in the Chamber of Rain, the others in the Chamber of Sorrows. Group C: put Chamber of Night and Chamber of Regret into play; each investigator begins in the Chamber of Night; place 1 random set-aside Chamber of Secrets underneath the scenario reference card, revealed side down."
+        },
+        {
+          "id": "setAside",
+          "text": "Set the following cards aside, out of play: Key of Mysteries, Mysterious Syringe, Eixodolon, Eixodolon's Pet, the Rot/Hunger/Decay Diagrams, both copies of Faceless Abductor, and each other location."
+        },
+        {
+          "id": "eixodolonsNote",
+          "text": "The lead investigator takes control of Eixodolon's Note."
+        },
+        {
+          "id": "addTokens",
+          "text": "Add 2 of this group's chaos tokens to the chaos bag (Group A: elder thing, Group B: tablet, Group C: cultist)."
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "tokens",
+          "title": "Chaos Tokens",
+          "text": "Skull: -1 and reveal another token. Cultist: -3; Tablet: -4; Elder Thing: -4. On Easy/Standard, resolve the failure effect of cultist/tablet/elder thing only after failing; on Hard/Expert they resolve when the token is revealed. Skull on Hard/Expert also makes you choose 1 damage or 1 horror when you fail."
+        },
+        {
+          "id": "act2Setup",
+          "title": "Act 2 Setup",
+          "text": "Shuffle each set-aside Faceless Abductor and the encounter discard pile into the encounter deck. Put the 3 Labyrinthine Halls into play. Group A: Chamber of Decay. Group B: Chamber of Rot and Chamber of Poison. Group C: Chamber of Hunger, and put the set-aside Eixodolon's Pet into play near the Chamber of Hunger but not at any location (it is locked away). Remove all doom from play and proceed to act 2a and agenda 2a."
+        },
+        {
+          "id": "act3Setup",
+          "title": "Act 3 Setup",
+          "text": "Put the set-aside Abandoned Warehouse into play. Disengage all engaged enemies and move each surviving investigator to the Abandoned Warehouse. Put the set-aside Eixodolon into play at the Abandoned Warehouse. Remove all doom from play and proceed to act 3a and agenda 3a."
+        },
+        {
+          "id": "levers",
+          "title": "The Levers (Group C)",
+          "text": "Before the agenda advances, an investigator must activate the [action] ability on the Chamber of Regret. That investigator examines the hidden Chamber of Secrets. If the background text matches the pulled lever, the gate rises and the door in the Chamber of Night opens. If it does not match, that investigator is killed. If no one pulls a lever, the investigator nearest to the Chamber of Regret is killed. Resolve Act 2 Setup."
+        },
+        {
+          "id": "seepingDeath",
+          "title": "Seeping Death (Group B)",
+          "text": "Before the agenda advances, an investigator must activate the [action] ability on the Chamber of Poison. If that investigator has \"been injected\", resolve Act 3 Setup; otherwise that investigator is killed. If no one activates it, move each investigator to the Chamber of Poison and each non-injected investigator is killed. Resolve Act 3 Setup."
+        },
+        {
+          "id": "thePet",
+          "title": "The Pet (Group C)",
+          "text": "Before the agenda advances, deal with Eixodolon's Pet. If it is still locked away when the agenda advances, it breaks free: move it to the Chamber of Hunger and it attacks each investigator there in player order. Resolve Act 3 Setup."
+        },
+        {
+          "id": "mastermind",
+          "title": "The Mastermind",
+          "text": "Agenda 3: each Distortion location gains the ability to fight Eixodolon once per group per game. Objective: advance when each investigator has been defeated. When it advances, the group is killed and the scenario ends in Resolution 1."
+        }
+      ],
+      "story": [
+        {
+          "id": "storyCards",
+          "title": "Scenario Story Cards",
+          "text": "Agenda 1 and 2 have a forced ability: at the end of the round, if the agenda has at least 1 doom and no group has triggered it yet, Group A's lead investigator randomly chooses 1 set-aside story card and draws it; announce the card to all groups and each other lead investigator draws that same story card."
+        },
+        {
+          "id": "act3",
+          "title": "The Escape",
+          "text": "Once Eixodolon is defeated, the iron doors of the Abandoned Warehouse can be opened. Escape the labyrinth and resolve the scenario."
+        }
+      ],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "No Resolution",
+          "text": "If no resolution was reached (each investigator was defeated), go to Resolution 1."
+        },
+        {
+          "id": "resolution1",
+          "title": "Resolution 1",
+          "text": "In the wrong hands your anguish is a powerful weapon; the ritual at the labyrinth's core is completed and the world feels this fear and despair. The investigators lose."
+        },
+        {
+          "id": "resolution2",
+          "title": "Resolution 2",
+          "text": "The mastermind falls and you break open the iron doors, escaping to the docks of the Miskatonic River. You survived, but in another timeline the labyrinth has a new guest."
+        },
+        {
+          "id": "resolution3",
+          "title": "Resolution 3",
+          "text": "You escape the labyrinth, but the mastermind's dying words haunt you: he is everywhere and everywhen, and Eixodolon lives on."
+        },
+        {
+          "id": "resolution4",
+          "title": "Resolution 4",
+          "text": "The ritual has failed. All three groups open the heavy doors at the same moment and watch the sun set over the Miskatonic. The investigators win."
+        }
+      ]
+    }
+  }
+}

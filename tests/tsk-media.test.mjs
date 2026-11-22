@@ -5,13 +5,13 @@ import { readFileSync } from 'node:fs'
 import { chapters } from '../content/campaigns/theScarletKeys/shared.js'
 import { campaignPlaylistId, campaignPresentation } from '../web/campaign-presentation.js'
 import { musicTracksForPlaylist } from '../web/music-player.js'
-import { SCENARIO_MUSIC } from '../web/scenario-music.js'
+import { SCENARIO_MUSIC, SIDE_STORY_MUSIC } from '../web/scenario-music.js'
 
 const campaignId = 'theScarletKeys'
 
 test('绯红密钥十关各三首，旧曲复用不超过 40%，循环内无重复录音', () => {
   const oldTrackIds = new Set(Object.entries(SCENARIO_MUSIC)
-    .filter(([id]) => id !== campaignId)
+    .filter(([id]) => id !== campaignId && !Object.hasOwn(SIDE_STORY_MUSIC, id) && !id.startsWith('returnTo'))
     .flatMap(([, scenarios]) => Object.values(scenarios).flatMap(scenario => scenario.tracks)))
   assert.deepEqual(Object.keys(SCENARIO_MUSIC[campaignId]).sort(), chapters.map(chapter => chapter.id).sort())
 
