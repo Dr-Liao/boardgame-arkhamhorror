@@ -460,6 +460,17 @@ function discoverClueAt(state, inv, amount, events, opts = {}) {
       state._discoveringClue = false
     }
   }
+  // 批次 3（60253）：发现线索前的可替换窗口；条目置 context.replace 时本次发现改为卡牌结算。
+  if (hasWindowListener(state, 'discoverClue')) {
+    const replaceContext = reactionWindow(state, 'discoverClue', {
+      when: 'discoverClue', seat: inv.seat, location: targetId, amount,
+    }, events, { allowNested: true })
+    if (replaceContext?.replace === true || replaceContext?.cancelled === true || state._clueDiscoveryReplaced) {
+      delete state._clueDiscoveryReplaced
+      info(state, events, `🕸️ ${inv.name} 的线索发现被替换。`)
+      return true
+    }
+  }
   const coverUp = inv.threat.find((t) => {
     const th = getThreatEffect(t)
     return th && th.redirectClues && (t.counters || 0) > 0

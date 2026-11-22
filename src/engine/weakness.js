@@ -73,8 +73,16 @@ function resolveWeaknessBody(state, inv, def, events, texts) {
   if (def.type === 'enemy') {
     let location = inv.location
     // Phase 5（5a-25）：在「离你最远的地点」生成的弱点由条目级 weaknessSpawnsAtFarthestLocation 声明。
-    if (registeredEntry(def.code)?.weaknessSpawnsAtFarthestLocation) {
-      const farthest = farthestLocationsFor(state, inv)
+    const farthestFlag = registeredEntry(def.code)?.weaknessSpawnsAtFarthestLocation
+    const farthestEmptyFlag = registeredEntry(def.code)?.weaknessSpawnsAtFarthestEmptyLocation
+    if (farthestFlag || farthestEmptyFlag) {
+      let farthest = farthestLocationsFor(state, inv)
+      // 批次 3（12099）：印刷要求「最远的无人地点」；有无人候选时优先，否则回退最远地点。
+      if (farthestEmptyFlag) {
+        const empty = farthest.filter(id => !state.investigators.some(other =>
+          !other.defeated && !other.resigned && other.location === id))
+        if (empty.length) farthest = empty
+      }
       if (farthest.length === 1) location = farthest[0]
       else if (farthest.length > 1) location = requestChoice(state, {
         kind: 'location', source: def.code, seat: inv.seat, prompt: '选择距离你最远的地点生成随行鬼影。',

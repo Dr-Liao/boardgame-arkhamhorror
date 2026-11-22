@@ -1,0 +1,199 @@
+{
+  "id": "curseOfTheRougarou",
+  "campaignId": "curseOfTheRougarou",
+  "sourceKind": "authored",
+  "officialChinese": false,
+  "note": "独立支线：按剧本参考卡 81001 与参考侧支线设置页布置；可在关间插入主战役（每人 1 XP）。",
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "恐惧笼罩新奥尔良！",
+          "text": "《阿卡姆广告报》的敏妮·克莱因在维尔玛餐厅喝咖啡时，把一篇报道草稿塞给了你。若不是主编多伊尔·杰弗里斯嗤之以鼻，这篇报道本已付印。“我敢说他原话是：‘我才不会把某个巫毒疯子的胡言乱语当成新闻印出来。’”她解释道。从她脸上蔓延开的狡黠笑容，你能看出她嗅到了一个大新闻。"
+        },
+        {
+          "id": "intro2",
+          "text": "标题很耸动：九天之内三起命案，确实足以让一座城心惊胆战。但你怀疑整个新奥尔良并未被恐惧攫住，甚至未必知道这些命案。然而有些东西勾起了你的兴趣：报道里那位巫毒女祭司“埃斯普利女士”声称，一道恶毒的诅咒已在河口扎根。"
+        },
+        {
+          "id": "intro3",
+          "text": "“这里面有东西，对吧？我认得你那个表情。”敏妮说。你并不确定。埃斯普利女士若没说错，这头“鲁加鲁”绝不会只杀三个人。但诅咒？狼人？这种事怎会是真的？只能亲自去看。你披上外套，前往北站……"
+        }
+      ],
+      "setup": [
+        {
+          "id": "gatherSets",
+          "text": "收集以下遭遇组的所有卡牌：狼人诅咒（Curse of the Rougarou）与河口（The Bayou）。"
+        },
+        {
+          "id": "setAsideEncounterSets",
+          "text": "把狼人诅咒遭遇组放到一边（场外）。"
+        },
+        {
+          "id": "placeLocations",
+          "text": "按特性把每个地点分成 4 堆（新奥尔良、河畔、荒野、不洁之地）。随机选择 1 堆，从游戏中移除；再随机选择 1 堆，把它们放入场。其余 2 堆放一边（场外）。每位调查员从场上带 [[河口]] 特性的地点开始游戏。"
+        },
+        {
+          "id": "setAside",
+          "text": "把以下卡牌放到一边（场外）：埃斯普利女士、捕熊陷阱、渔网。"
+        },
+        {
+          "id": "shuffleRemainder",
+          "text": "洗混其余遭遇卡牌，组成遭遇牌库。"
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "act1Back",
+          "title": "理解诅咒",
+          "text": "把放一边的埃斯普利女士放入一个 [[河口]] 地点；把放一边的每个地点放入场；把放一边的狼人敌人生成在任意非 [[河口]] 地点；把遭遇弃牌堆与狼人诅咒遭遇组的每张遭遇卡洗入遭遇牌库；队长把放一边的“狼人诅咒”弱点放入其威胁区域。"
+        },
+        {
+          "id": "act2Back",
+          "title": "驯服狼人",
+          "text": "若同时满足以下全部条件，进入结局 3；否则把本幕翻回正面（a 面）：“我们必须更了解诅咒”——调查员作为团队有 4[per_investigator] 个线索；“我们必须困住它”——狼人上附属着 1 张 [[陷阱]] 卡；“我们必须保护自己”——狼人上至少有 1[per_investigator] 点伤害；“我们必须让它平静”——调查员记得曾“找到一块束缚之石”或“找到一个奇怪的玩偶”。"
+        },
+        {
+          "id": "rougarou",
+          "title": "狼人",
+          "text": "冷漠。反击。作为一位调查员与狼人交战的额外费用，调查员必须作为一个团队花费 1 个线索（若有 3 或 4 位调查员，改为 2 个线索）。强制 - 狼人在一个阶段内受到 1[per_investigator] 点伤害后：找出距离所有调查员最远的地点。移动狼人（每次移动一个地点），直到其进入该地点。"
+        },
+        {
+          "id": "tokens",
+          "title": "混乱标记",
+          "text": "简单/普通：[skull] -2（若你在 [[河口]] 地点改为 -4）。[cultist] -2；若狼人位于你所在地点，再揭示一个混乱标记。[tablet] 再揭示一个混乱标记；若检定失败，本轮结束前你不能移动。[elder_thing] -4；若狼人位于你所在地点，它攻击你。困难/专家：[skull] -3（若你在 [[河口]] 地点改为 -6）。[cultist] -3；若狼人位于你所在地点，再揭示一个混乱标记。[tablet] 同普通。[elder_thing] -4；若狼人在你所在地点或连接地点，它攻击你。"
+        }
+      ],
+      "story": [
+        {
+          "id": "act1",
+          "title": "寻找埃斯普利特",
+          "text": "你们穿过河口，来到那位巫毒女祭司的棚屋。埃斯普利女士听完你们的叙述，阴沉地点了点头。“狼人是旧世界的造物——是化为实体的诅咒。若要猎杀它，你们必须先理解它。”"
+        },
+        {
+          "id": "act2",
+          "title": "狩猎狼人",
+          "text": "野兽的踪迹把你们引向河口深处。在埃斯普利女士的指引下，你们或许能终结这道诅咒——也可能被它吞噬。"
+        }
+      ],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "没有结局",
+          "text": "如果没有达成任何结局（每位调查员都撤退或被击败），前往结局 1。"
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "text": "你们设法在黎明前回到安全之处，睡到午后。第二天去找埃斯普利女士时，你才得知昨夜遇害的是谁。怀着沉重的心情与挥之不去的恐惧，你选择埋葬她的尸体而非通知当局——越少人深入这片河口越好。在剧本日志中记录：狼人继续在河口出没。每位调查员获得等同于胜利区每张卡牌胜利 X 值的经验。"
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "text": "随着漆黑的泥血从伤口渗出，那生物发出一声可怜的哀嚎。当它的身体瘫倒在泥里时，已变回原本的模样——一个年轻、深色皮肤的男人，表情扭曲在痛苦中。你把他的尸体带回埃斯普利女士那里，她施展奇异法术，洗净了大地上的诅咒污痕。“若你需要我的帮助，随时呼唤我。”这位神秘女子说。在剧本日志中记录：狼人已被消灭，诅咒已解除。移除持有者牌组中的“狼人诅咒”弱点。任意一位调查员可选择把埃斯普利女士加入其牌组（不计入牌组张数）。每位调查员获得等同于胜利区每张卡牌胜利 X 值的经验。"
+        },
+        {
+          "id": "resolution3",
+          "title": "结局 3",
+          "text": "你们设法平息了那生物体内诅咒的愤怒与嗜血，片刻之后，一个年轻、深色皮肤的男人站在你们面前，喘息着、汗流浃背。他仿佛此刻才明白自己做过的一切，同意逃到大地某个偏僻角落，再不能伤害任何人。然而诅咒并未消失：他在你眼中看到了它，紧紧抓住你的手臂。“别让它控制你。”他警告道。“我曾软弱，但你——我看得出你很坚强。像我未能做到的那样，控制住这诅咒。”在剧本日志中记录：狼人逃走，你拥抱了诅咒。诅咒持有者必须把“兽性变化”加入其牌组（不计入牌组张数）。每位调查员获得等同于胜利区每张卡牌胜利 X 值的经验。"
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "Terror Grips New Orleans!",
+          "text": "Minnie Klein, your contact at the Arkham Advertiser, has slipped you a draft of the article over a cup of coffee at Velma's Diner. It would have gone to print had Doyle Jeffries, the lead editor, not scoffed at the concept. \"I believe his exact words were, 'I ain't printing the ravings of some Voodoo lunatic and passing it off as news,'\" she explained. From the sly grin spreading across her face, you could tell she smelled a story."
+        },
+        {
+          "id": "intro2",
+          "text": "The headline was sensationalist. Three killings, in nine days was enough to spook a town, sure. But you doubt all of New Orleans is gripped by terror, or even knows about the killings. Still, something piqued your interest. \"Lady Esprit,\" the Voodoo priestess from the article, claimed that a malign curse had taken root in the bayou."
+        },
+        {
+          "id": "intro3",
+          "text": "\"There's something to this, isn't there? I know that look,\" Minnie said. You weren't sure. If Lady Esprit was right, this \"roux-ga-roux\" wouldn't stop killing at three, that's for sure. But curses? Wolf-people? How could such things be real? Only one way to find out. You put on your coat and head for the Northside Station..."
+        }
+      ],
+      "setup": [
+        {
+          "id": "gatherSets",
+          "text": "Gather all cards from the following encounter sets: Curse of the Rougarou and The Bayou."
+        },
+        {
+          "id": "setAsideEncounterSets",
+          "text": "Set the Curse of the Rougarou encounter set aside, out of play."
+        },
+        {
+          "id": "placeLocations",
+          "text": "Sort each of the locations into 4 piles, by trait (New Orleans, Riverside, Wilderness, and Unhallowed). Randomly choose 1 of these piles and remove those locations from the game. Randomly choose another 1 of these piles and put those locations into play. Set each location in the other 2 piles aside, out of play. Each investigator begins play at a Bayou location in play."
+        },
+        {
+          "id": "setAside",
+          "text": "Set the following cards aside, out of play: Lady Esprit, Bear Trap, and Fishing Net."
+        },
+        {
+          "id": "shuffleRemainder",
+          "text": "Shuffle the remaining encounter cards to form the encounter deck."
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "act1Back",
+          "title": "Understanding the Curse",
+          "text": "Put the set-aside Lady Esprit into play at a Bayou location. Put into play each set-aside location. Put the set-aside The Rougarou enemy into play at any non-Bayou location. Shuffle the encounter discard pile and each encounter card from the Curse of the Rougarou encounter set into the encounter deck. The lead investigator puts the set-aside Curse of the Rougarou weakness into play in his or her threat area."
+        },
+        {
+          "id": "act2Back",
+          "title": "Taming the Rougarou",
+          "text": "If each of the following requirements are met, proceed to Resolution 3. Otherwise, flip this act back to its \"a\" side. - \"We must learn more about the curse.\" The investigators must have 4 [per_investigator] clues, as a group. - \"We must keep it contained.\" The Rougarou must have a Trap card attached to it. - \"We must protect ourselves.\" The Rougarou must have at least 1 [per_investigator] damage on it. - \"We must calm it down.\" The investigators must have either \"found a binding stone\" or \"found a strange doll.\""
+        },
+        {
+          "id": "rougarou",
+          "title": "The Rougarou",
+          "text": "Aloof. Retaliate. As an additional cost for an investigator to engage The Rougarou, the investigators must spend 1 clue, as a group (2 clues instead if there are 3 or 4 investigators). Forced - After The Rougarou takes 1 [per_investigator] damage during a single phase: Find the location that is farthest from all investigators. Move The Rougarou (one location at a time) until it enters that location."
+        },
+        {
+          "id": "tokens",
+          "title": "Chaos Tokens",
+          "text": "Easy/Standard: [skull] -2 (-4 instead if you are at a Bayou location). [cultist] -2. If the Rougarou is in your location, reveal another token. [tablet] Reveal another token. If you fail, until the end of the round, you cannot move. [elder_thing] -4. If the Rougarou is at your location, it attacks you. Hard/Expert: [skull] -3 (-6 instead if you are at a Bayou location). [cultist] -3. If the Rougarou is in your location, reveal another token. [tablet] Reveal another token. If you fail, until the end of the round, you cannot move. [elder_thing] -4. If the Rougarou is at your location or a connecting location, it attacks you."
+        }
+      ],
+      "story": [
+        {
+          "id": "act1",
+          "title": "Finding Lady Esprit",
+          "text": "You make your way through the bayou to the shack of the Voodoo priestess. Lady Esprit listens to your tale, then nods grimly. \"The rougarou is a creature of the old world - a curse made flesh. If you would hunt it, you must first understand it.\""
+        },
+        {
+          "id": "act2",
+          "title": "Hunting the Rougarou",
+          "text": "The trail of the beast leads you deeper into the bayou. With Lady Esprit's guidance you might yet end this curse - or be consumed by it."
+        }
+      ],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "No Resolution",
+          "text": "If no resolution was reached (each investigator resigned or was defeated), go to Resolution 1."
+        },
+        {
+          "id": "resolution1",
+          "title": "Resolution 1",
+          "text": "Somehow, you manage to make it back to safety before daybreak, resting until late in the afternoon. It isn't until you seek out Lady Esprit the next day that you realize who last night's victim was. With a heavy heart and an unshakable dread, you choose to bury her body instead of contacting the authorities - the less people who delve this deep into the bayou, the better. In your Campaign Log, record that the Rougarou continues to haunt the bayou. Each investigator earns experience equal to the Victory X value of each card in the victory display."
+        },
+        {
+          "id": "resolution2",
+          "title": "Resolution 2",
+          "text": "The creature gives a pitiful wail as dark miry blood oozes from its wounds. By the time its body collapses into the mud, it has transformed back into its original form - the form of a young, dark-skinned man, his expression twisted in agony. You bring his body back to Lady Esprit and she works her strange magic, removing the stain of the curse from the land. \"Call on me should you ever need my help,\" the mysterious woman tells you. In your Campaign Log, record that the Rougarou is destroyed, and the curse is lifted. Remove the Curse of the Rougarou weakness from its bearer's deck. Any one investigator may choose to add Lady Esprit to their deck. This card does not count toward that investigator's deck size. Each investigator earns experience equal to the Victory X value of each card in the victory display."
+        },
+        {
+          "id": "resolution3",
+          "title": "Resolution 3",
+          "text": "Somehow, you have managed to quell the rage and bloodlust of the curse within the creature, and in moments the shape of a young, dark-skinned man stands before you, panting and sweating. He seems to only just now understand everything he's done, and agrees to flee to a secluded corner of the earth where he can harm no one. However, the curse lives on. He sees it in your eyes and grips your arm tightly. \"Don't let it take control,\" he warns. \"I was weak, but you - I can tell you are strong. Control the curse as I could not.\" In your Campaign Log, record that the Rougarou escaped, and you embraced the curse. The bearer of the Curse of the Rougarou weakness must add Monstrous Transformation to their deck. This card does not count toward that investigator's deck size. Each investigator earns experience equal to the Victory X value of each card in the victory display."
+        }
+      ]
+    }
+  }
+}

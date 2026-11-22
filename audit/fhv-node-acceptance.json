@@ -841,7 +841,7 @@
     },
     {
       "path": "tests/fhv-player-m2-9.test.mjs",
-      "sha256": "d9c2559d7a11ca8cdcd750d636da65f581f2b24f225ae88e37f2a9ba5335ab74"
+      "sha256": "730e1a91984e081d8bcd42f0e86144270f66f4ece326575016d5102f195e6d6d"
     },
     {
       "path": "tests/fhv-player-m2-10.test.mjs",

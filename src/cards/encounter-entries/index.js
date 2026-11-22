@@ -2455,6 +2455,177 @@ import e11764 from './theDrownedCity/_shared/tdc_expedition/11764.js'
 import e11765 from './theDrownedCity/_shared/tdc_expedition/11765.js'
 import e11766 from './theDrownedCity/_shared/tdc_expedition/11766.js'
 import exsky from './theDrownedCity/obsidianCanyons/xsky.js'
+import e81002 from './curseOfTheRougarou/curseOfTheRougarou/81002.js'
+import e81003 from './curseOfTheRougarou/curseOfTheRougarou/81003.js'
+import e81004 from './curseOfTheRougarou/curseOfTheRougarou/81004.js'
+import e81005 from './curseOfTheRougarou/curseOfTheRougarou/81005.js'
+import e81006 from './curseOfTheRougarou/curseOfTheRougarou/81006.js'
+import e81007 from './curseOfTheRougarou/curseOfTheRougarou/81007.js'
+import e81008 from './curseOfTheRougarou/curseOfTheRougarou/81008.js'
+import e81009 from './curseOfTheRougarou/curseOfTheRougarou/81009.js'
+import e81010 from './curseOfTheRougarou/curseOfTheRougarou/81010.js'
+import e81011 from './curseOfTheRougarou/curseOfTheRougarou/81011.js'
+import e81012 from './curseOfTheRougarou/curseOfTheRougarou/81012.js'
+import e81013 from './curseOfTheRougarou/curseOfTheRougarou/81013.js'
+import e81014 from './curseOfTheRougarou/curseOfTheRougarou/81014.js'
+import e81015 from './curseOfTheRougarou/curseOfTheRougarou/81015.js'
+import e81016 from './curseOfTheRougarou/curseOfTheRougarou/81016.js'
+import e81017 from './curseOfTheRougarou/curseOfTheRougarou/81017.js'
+import e81018 from './curseOfTheRougarou/curseOfTheRougarou/81018.js'
+import e81019 from './curseOfTheRougarou/curseOfTheRougarou/81019.js'
+import e81020 from './curseOfTheRougarou/curseOfTheRougarou/81020.js'
+import e81021 from './curseOfTheRougarou/curseOfTheRougarou/81021.js'
+import e81022 from './curseOfTheRougarou/curseOfTheRougarou/81022.js'
+import e81023 from './curseOfTheRougarou/curseOfTheRougarou/81023.js'
+import e81024 from './curseOfTheRougarou/curseOfTheRougarou/81024.js'
+import e81025 from './curseOfTheRougarou/curseOfTheRougarou/81025.js'
+import e81026 from './curseOfTheRougarou/curseOfTheRougarou/81026.js'
+import e81027 from './curseOfTheRougarou/curseOfTheRougarou/81027.js'
+import e81028 from './curseOfTheRougarou/curseOfTheRougarou/81028.js'
+import e81029 from './curseOfTheRougarou/curseOfTheRougarou/81029.js'
+import e81031 from './curseOfTheRougarou/curseOfTheRougarou/81031.js'
+import e81032 from './curseOfTheRougarou/curseOfTheRougarou/81032.js'
+import e81033 from './curseOfTheRougarou/curseOfTheRougarou/81033.js'
+import e81034 from './curseOfTheRougarou/curseOfTheRougarou/81034.js'
+import e81035 from './curseOfTheRougarou/curseOfTheRougarou/81035.js'
+import e81036 from './curseOfTheRougarou/curseOfTheRougarou/81036.js'
+import e50017 from './returnToNightOfTheZealot/returnToTheGathering/50017.js'
+import e50018 from './returnToNightOfTheZealot/returnToTheGathering/50018.js'
+import e50019 from './returnToNightOfTheZealot/returnToTheGathering/50019.js'
+import e50020 from './returnToNightOfTheZealot/returnToTheGathering/50020.js'
+import e50021 from './returnToNightOfTheZealot/returnToTheGathering/50021.js'
+import e50044 from './returnToNightOfTheZealot/returnToTheMidnightMasks/50044.js'
+import e50045 from './returnToNightOfTheZealot/returnToTheMidnightMasks/50045.js'
+import e50046 from './returnToNightOfTheZealot/returnToTheMidnightMasks/50046.js'
+import e51061 from './returnToTheDunwichLegacy/_shared/beyond_the_threshold/51061.js'
+import e51066 from './returnToTheDunwichLegacy/_shared/creeping_cold/51066.js'
+import e51068 from './returnToTheDunwichLegacy/_shared/erratic_fear/51068.js'
+import e51064 from './returnToTheDunwichLegacy/_shared/resurgent_evils/51064.js'
+import e51071 from './returnToTheDunwichLegacy/_shared/yog_sothoths_emissaries/51071.js'
+import e51014 from './returnToTheDunwichLegacy/returnToExtracurricularActivities/51014.js'
+import e51028 from './returnToTheDunwichLegacy/returnToTheEssexCountyExpress/51028.js'
+import e51030 from './returnToTheDunwichLegacy/returnToTheEssexCountyExpress/51030.js'
+import e82002 from './carnevaleOfHorrors/carnevaleOfHorrors/82002.js'
+import e82002b from './carnevaleOfHorrors/carnevaleOfHorrors/82002b.js'
+import e82003 from './carnevaleOfHorrors/carnevaleOfHorrors/82003.js'
+import e82004 from './carnevaleOfHorrors/carnevaleOfHorrors/82004.js'
+import e82005 from './carnevaleOfHorrors/carnevaleOfHorrors/82005.js'
+import e82006 from './carnevaleOfHorrors/carnevaleOfHorrors/82006.js'
+import e82006b from './carnevaleOfHorrors/carnevaleOfHorrors/82006b.js'
+import e82007 from './carnevaleOfHorrors/carnevaleOfHorrors/82007.js'
+import e82008 from './carnevaleOfHorrors/carnevaleOfHorrors/82008.js'
+import e82009 from './carnevaleOfHorrors/carnevaleOfHorrors/82009.js'
+import e82010 from './carnevaleOfHorrors/carnevaleOfHorrors/82010.js'
+import e82011 from './carnevaleOfHorrors/carnevaleOfHorrors/82011.js'
+import e82012 from './carnevaleOfHorrors/carnevaleOfHorrors/82012.js'
+import e82013 from './carnevaleOfHorrors/carnevaleOfHorrors/82013.js'
+import e82014 from './carnevaleOfHorrors/carnevaleOfHorrors/82014.js'
+import e82015 from './carnevaleOfHorrors/carnevaleOfHorrors/82015.js'
+import e82016 from './carnevaleOfHorrors/carnevaleOfHorrors/82016.js'
+import e82017 from './carnevaleOfHorrors/carnevaleOfHorrors/82017.js'
+import e82017b from './carnevaleOfHorrors/carnevaleOfHorrors/82017b.js'
+import e82018 from './carnevaleOfHorrors/carnevaleOfHorrors/82018.js'
+import e82019 from './carnevaleOfHorrors/carnevaleOfHorrors/82019.js'
+import e82020 from './carnevaleOfHorrors/carnevaleOfHorrors/82020.js'
+import e82021 from './carnevaleOfHorrors/carnevaleOfHorrors/82021.js'
+import e82022 from './carnevaleOfHorrors/carnevaleOfHorrors/82022.js'
+import e82023 from './carnevaleOfHorrors/carnevaleOfHorrors/82023.js'
+import e82024 from './carnevaleOfHorrors/carnevaleOfHorrors/82024.js'
+import e82025 from './carnevaleOfHorrors/carnevaleOfHorrors/82025.js'
+import e82026 from './carnevaleOfHorrors/carnevaleOfHorrors/82026.js'
+import e82027 from './carnevaleOfHorrors/carnevaleOfHorrors/82027.js'
+import e82028 from './carnevaleOfHorrors/carnevaleOfHorrors/82028.js'
+import e82029 from './carnevaleOfHorrors/carnevaleOfHorrors/82029.js'
+import e82030 from './carnevaleOfHorrors/carnevaleOfHorrors/82030.js'
+import e82031 from './carnevaleOfHorrors/carnevaleOfHorrors/82031.js'
+import e82032 from './carnevaleOfHorrors/carnevaleOfHorrors/82032.js'
+import e82033 from './carnevaleOfHorrors/carnevaleOfHorrors/82033.js'
+import e82034 from './carnevaleOfHorrors/carnevaleOfHorrors/82034.js'
+import e82035 from './carnevaleOfHorrors/carnevaleOfHorrors/82035.js'
+import e82036 from './carnevaleOfHorrors/carnevaleOfHorrors/82036.js'
+import e82037 from './carnevaleOfHorrors/carnevaleOfHorrors/82037.js'
+import e50024 from './returnToNightOfTheZealot/returnToTheGathering/50024.js'
+import e50040 from './returnToNightOfTheZealot/_shared/ghouls_of_umôrdhoth/50040.js'
+import e50031 from './returnToNightOfTheZealot/returnToTheMidnightMasks/50031.js'
+import e52055 from './returnToThePathToCarcosa/returnToBlackStarsRise/52055.js'
+import e52056 from './returnToThePathToCarcosa/returnToBlackStarsRise/52056.js'
+import e52033 from './returnToThePathToCarcosa/returnToEchoesOfThePast/52033.js'
+import e52023 from './returnToThePathToCarcosa/returnToTheLastKing/52023.js'
+import e52024 from './returnToThePathToCarcosa/returnToTheLastKing/52024.js'
+import e52025 from './returnToThePathToCarcosa/returnToTheLastKing/52025.js'
+import e52026 from './returnToThePathToCarcosa/returnToTheLastKing/52026.js'
+import e52053 from './returnToThePathToCarcosa/returnToThePallidMask/52053.js'
+import e84002 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84002.js'
+import e84003 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84003.js'
+import e84004 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84004.js'
+import e84005 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84005.js'
+import e84006 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84006.js'
+import e84007 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84007.js'
+import e84008 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84008.js'
+import e84009 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84009.js'
+import e84010 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84010.js'
+import e84011 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84011.js'
+import e84012 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84012.js'
+import e84013 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84013.js'
+import e84014 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84014.js'
+import e84015 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84015.js'
+import e84016 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84016.js'
+import e84017 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84017.js'
+import e84018 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84018.js'
+import e84019 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84019.js'
+import e84020 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84020.js'
+import e84021 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84021.js'
+import e84022 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84022.js'
+import e84023 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84023.js'
+import e84024 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84024.js'
+import e84025 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84025.js'
+import e84026 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84026.js'
+import e84027 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84027.js'
+import e84028 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84028.js'
+import e84029 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84029.js'
+import e84030 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84030.js'
+import e84031 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84031.js'
+import e84032 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84032.js'
+import e84033 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84033.js'
+import e84034 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84034.js'
+import e84035 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84035.js'
+import e84036 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84036.js'
+import e84037 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84037.js'
+import e84038 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84038.js'
+import e84039 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84039.js'
+import e84040 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84040.js'
+import e84041 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84041.js'
+import e84042 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84042.js'
+import e84043 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84043.js'
+import e84044 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84044.js'
+import e84045 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84045.js'
+import e84046 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84046.js'
+import e84047 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84047.js'
+import e84048 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84048.js'
+import e84049 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84049.js'
+import e84050 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84050.js'
+import e84051 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84051.js'
+import e84052 from './murderAtTheExcelsiorHotel/murderAtTheExcelsiorHotel/84052.js'
+import e52066 from './returnToThePathToCarcosa/_shared/decaying_reality/52066.js'
+import e52069 from './returnToThePathToCarcosa/_shared/hasturs_envoys/52069.js'
+import e50037 from './returnToNightOfTheZealot/returnToTheDevourerBelow/50037.js'
+import e90012 from './allOrNothing/allOrNothing/90012.js'
+import e90013 from './allOrNothing/allOrNothing/90013.js'
+import e90014 from './allOrNothing/allOrNothing/90014.js'
+import e90015 from './allOrNothing/allOrNothing/90015.js'
+import e90016 from './allOrNothing/allOrNothing/90016.js'
+import e90021 from './badBlood/badBlood/90021.js'
+import e90022 from './badBlood/badBlood/90022.js'
+import e90023 from './badBlood/badBlood/90023.js'
+import e90023b from './badBlood/badBlood/90023b.js'
+import e90033a from './byTheBook/byTheBook/90033a.js'
+import e90033b from './byTheBook/byTheBook/90033b.js'
+import e90034 from './byTheBook/byTheBook/90034.js'
+import e90035 from './byTheBook/byTheBook/90035.js'
+import e90036 from './byTheBook/byTheBook/90036.js'
+import e90005 from './readOrDie/readOrDie/90005.js'
+import e90006 from './readOrDie/readOrDie/90006.js'
+import e90007 from './readOrDie/readOrDie/90007.js'
 
 export const NON_PLAYER_ENTRY_LIST = [
   ewolfManDrew,
@@ -4909,6 +5080,177 @@ export const NON_PLAYER_ENTRY_LIST = [
   e11765,
   e11766,
   exsky,
+  e81002,
+  e81003,
+  e81004,
+  e81005,
+  e81006,
+  e81007,
+  e81008,
+  e81009,
+  e81010,
+  e81011,
+  e81012,
+  e81013,
+  e81014,
+  e81015,
+  e81016,
+  e81017,
+  e81018,
+  e81019,
+  e81020,
+  e81021,
+  e81022,
+  e81023,
+  e81024,
+  e81025,
+  e81026,
+  e81027,
+  e81028,
+  e81029,
+  e81031,
+  e81032,
+  e81033,
+  e81034,
+  e81035,
+  e81036,
+  e50017,
+  e50018,
+  e50019,
+  e50020,
+  e50021,
+  e50044,
+  e50045,
+  e50046,
+  e51061,
+  e51066,
+  e51068,
+  e51064,
+  e51071,
+  e51014,
+  e51028,
+  e51030,
+  e82002,
+  e82002b,
+  e82003,
+  e82004,
+  e82005,
+  e82006,
+  e82006b,
+  e82007,
+  e82008,
+  e82009,
+  e82010,
+  e82011,
+  e82012,
+  e82013,
+  e82014,
+  e82015,
+  e82016,
+  e82017,
+  e82017b,
+  e82018,
+  e82019,
+  e82020,
+  e82021,
+  e82022,
+  e82023,
+  e82024,
+  e82025,
+  e82026,
+  e82027,
+  e82028,
+  e82029,
+  e82030,
+  e82031,
+  e82032,
+  e82033,
+  e82034,
+  e82035,
+  e82036,
+  e82037,
+  e50024,
+  e50040,
+  e50031,
+  e52055,
+  e52056,
+  e52033,
+  e52023,
+  e52024,
+  e52025,
+  e52026,
+  e52053,
+  e84002,
+  e84003,
+  e84004,
+  e84005,
+  e84006,
+  e84007,
+  e84008,
+  e84009,
+  e84010,
+  e84011,
+  e84012,
+  e84013,
+  e84014,
+  e84015,
+  e84016,
+  e84017,
+  e84018,
+  e84019,
+  e84020,
+  e84021,
+  e84022,
+  e84023,
+  e84024,
+  e84025,
+  e84026,
+  e84027,
+  e84028,
+  e84029,
+  e84030,
+  e84031,
+  e84032,
+  e84033,
+  e84034,
+  e84035,
+  e84036,
+  e84037,
+  e84038,
+  e84039,
+  e84040,
+  e84041,
+  e84042,
+  e84043,
+  e84044,
+  e84045,
+  e84046,
+  e84047,
+  e84048,
+  e84049,
+  e84050,
+  e84051,
+  e84052,
+  e52066,
+  e52069,
+  e50037,
+  e90012,
+  e90013,
+  e90014,
+  e90015,
+  e90016,
+  e90021,
+  e90022,
+  e90023,
+  e90023b,
+  e90033a,
+  e90033b,
+  e90034,
+  e90035,
+  e90036,
+  e90005,
+  e90006,
+  e90007,
 ]
 
 registerNonPlayerEntries(NON_PLAYER_ENTRY_LIST)

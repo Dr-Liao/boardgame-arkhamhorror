@@ -212,7 +212,8 @@ test('P8 FHV 发布账本：回归无新增失败、replay 一致、baseline 冻
   assert.equal(approximation.playerSimplified, summary.playerSimplified)
   assert.equal(approximation.campaignSimplified, summary.campaignSimplified)
   assert.equal(approximation.count, summary.playerSimplified + summary.campaignSimplified)
-  assert.equal(approximation.playerSimplified, 54)
+  // 10102 已由原语完整实现（working tree 条目去近似），重新审计后 player 近似 53 + campaign 近似 54。
+  assert.equal(approximation.playerSimplified, 53)
   assert.equal(approximation.campaignSimplified, 54)
   assert.equal(report.remaining.find(row => row.kind === 'scenario-data').count, summary.scenarioData)
   assert.equal(report.remaining.find(row => row.kind === 'scenario-reference').count, summary.scenarioReference)

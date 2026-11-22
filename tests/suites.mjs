@@ -14,6 +14,10 @@
 // 重新分层前请先跑它，别凭文件名的直觉。
 
 export const FAST_TESTS = Object.freeze([
+  'starter-batch-1.test.mjs',
+  'return-player.test.mjs',
+  'parallel-investigator.test.mjs',
+  'batch-two-flow.test.mjs',
   'draft-mode.test.mjs',
   'enemy-attack-presentation.test.mjs',
   'tic-scenario-reference-moving.test.mjs',
@@ -499,6 +503,31 @@ export const FAST_TESTS = Object.freeze([
   'tde-completion.test.mjs', // 食梦者 P10：发布账本门禁（audit/tde-migration.json 的 gate/确认/earlyAccess/remaining）
   'debug-engine.test.mjs', // 调试控制台：引擎 debug move 校验/执行/重放（7 种指令）
   'debug-console.test.mjs', // 调试控制台：服务端命令解析器 + Mod 钩子（中文指令/别名/名称匹配）
+  // 批次 2：重返战役（50/51/52）、独立支线与关间插入、调查员挑战
+  'ret-notz.test.mjs', // 重返夜之狂热：RtG/RtMM 真实开局/推进/结局/存档往返
+  'ret-notz-devourer.test.mjs', // 重返夜之狂热第三章（RtDB）：布置/幕密谋/结局/单卡规则/存档往返
+  'ret-dunwich-extracurricular.test.mjs',
+  'ret-dunwich-house.test.mjs',
+  'ret-dunwich-museum.test.mjs',
+  'ret-dunwich-essex.test.mjs',
+  'ret-dunwich-altar.test.mjs',
+  'ret-dunwich-undimensioned.test.mjs',
+  'ret-dunwich-hill.test.mjs',
+  'ret-dunwich-timelesspace.test.mjs',
+  'ret-carcosa-opening.test.mjs', // 重返卡尔克萨：八章真实引擎开局
+  'ret-carcosa-chapters.test.mjs', // 重返卡尔克萨：结局记录/存档往返/条目接线
+  'ret-carcosa-campaign.test.mjs', // 重返卡尔克萨：注册/flow/解锁顺序/大厅开局
+  'side-story-curseOfTheRougarou.test.mjs',
+  'side-story-carnevaleOfHorrors.test.mjs',
+  'side-story-murderAtTheExcelsiorHotel.test.mjs',
+  'return-side-story-insert.test.mjs', // 引擎契约：关间插入支线（扣经验/记录回写/回下一章/存档往返）
+  'return-to-campaigns.test.mjs', // 批次 2 战役/支线生产注册与大厅路径验收
+  'challenge-readOrDie.test.mjs', // 调查员挑战：Read or Die（Daisy）
+  'challenge-allOrNothing.test.mjs', // 调查员挑战：All or Nothing（Skids）
+  'challenge-badBlood.test.mjs', // 调查员挑战：Bad Blood（Agnes）
+  'challenge-byTheBook.test.mjs', // 调查员挑战：By the Book（Roland + Directive）
+  'starter-batch-3.test.mjs', // 批次 3：2026 核心盒 + 五个入门包开放/构筑/别名验收
+  'batch3-primitives.test.mjs', // 批次 3：原语批 A/B 回归（窗口/字段/API）
 ])
 
 export const SLOW_TESTS = Object.freeze([

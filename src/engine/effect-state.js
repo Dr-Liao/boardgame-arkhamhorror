@@ -23,7 +23,7 @@
 
 import { nextInstanceId } from './rules-state.js'
 import { normalizeTrigger } from './windows.js'
-import { modifierTargetKind } from './modifiers.js'
+import { isSkillModifierAmount, modifierTargetKind } from './modifiers.js'
 
 // 与 ability.js 的 LIMITS 同集合；效果能力沿用同一套上限记账。
 const LIMIT_VALUES = new Set(['oncePerTest', 'oncePerPhase', 'oncePerRound', 'oncePerTurn', 'oncePerGame'])
@@ -80,8 +80,8 @@ function normalizeModifierRecord(raw, origin) {
   if (!kind) throw new Error(`${origin}: 未知修正目标 ${JSON.stringify(raw.target)}`)
   if (kind === 'grant' && raw.value == null) throw new Error(`${origin}: ${raw.target} 必须声明 value`)
   const amount = raw.amount ?? 1
-  if (typeof amount !== 'number' && typeof amount !== 'function') {
-    throw new Error(`${origin}: 修正 amount 必须是数字或函数`)
+  if (typeof amount !== 'number' && typeof amount !== 'function' && !isSkillModifierAmount(raw.target, amount)) {
+    throw new Error(`${origin}: 非法修正 amount`)
   }
   return Object.freeze({ ...raw, amount })
 }
@@ -254,6 +254,13 @@ export function expireEffects(state, timing) {
     return !expired
   })
   return removed
+}
+
+export function consumeEffect(state, id) {
+  const index = state.effects?.findIndex(effect => effect.id === id) ?? -1
+  if (index < 0) return false
+  state.effects.splice(index, 1)
+  return true
 }
 
 // 来源离场：显式清掉绑定到这张卡的效果（leaveAsset 调用）。

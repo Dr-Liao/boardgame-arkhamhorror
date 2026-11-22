@@ -10,6 +10,7 @@ import { isDraftMode, draftLegalMoves, draftDecksReady, draftDeckStatus } from '
 import { contentRegistry } from '../../content/registered.js'
 import { cardPoolContext } from '../deck/card-pool.js'
 import { investigatorIdentity } from '../deck/investigator-identity.js'
+import { alternateInvestigatorFamily } from '../deck/alternate-investigator-build.js'
 // P5 批次 2：四模式开局（纯策略在 src/campaign/campaign-modes.js）。
 import { assignSeatPart, campaignPartsManifest, laneBalance, modeOptions } from '../campaign/campaign-modes.js'
 // P8：世界地图启程（《绯红密钥》）——只读地图原语；图/目的地/阈值全部由 manifest 传入。
@@ -258,7 +259,7 @@ function runInterlude(state, nextIndex, events) {
     campaign.retired.push(structuredClone(campaign.investigators[inv.seat]))
     const replacement = makeInvestigator(ALL_INVESTIGATORS[code], inv.seat)
     const built = buildDeck(ALL_INVESTIGATORS[code], {
-      seat: inv.seat, seed: Math.floor(randomValue(state) * 4294967296), playerPool: corePlayerPool(state),
+      seat: inv.seat, seed: Math.floor(randomValue(state) * 4294967296), playerPool: corePlayerPool(state, code),
     })
     registerCampaignInvestigator(campaign, replacement, built.deck)
     state.investigators[inv.seat] = replacement
@@ -511,6 +512,40 @@ function customizationSetupMoves(state, seat, record) {
   })
 }
 
+// 批次 2：关间可插入的独立支线（主战役 manifest.sideStories 声明；每人支付 cost 经验）。
+// 只有房主（主战役队长）看到并执行该动作；已经游玩过的支线不再出现。
+function sideStoryMoves(state, seat) {
+  if (state.uiState !== 'interlude') return []
+  if (state.laneRuntime || state.campaign?.mode === 'parallel' || state.campaign?.mode === 'pick') return []
+  if (seat !== (state.campaign?.leadSeat ?? 0)) return []
+  if (state.campaign?.sideStoryReturn) return []
+  const manifest = campaignFor(state)
+  const sides = manifest?.sideStories || []
+  if (!sides.length) return []
+  const played = new Set(state.campaign.sideStoriesPlayed || [])
+  const active = Object.values(state.campaign.investigators || {}).filter(record => record?.status === 'active')
+  if (!active.length) return []
+  const moves = []
+  for (const side of sides) {
+    if (played.has(side.campaignId)) continue
+    const target = contentRegistry.getCampaign(side.campaignId)
+    const scenarioId = side.scenarioId || target?.scenarioIds?.[0]
+    const scenario = scenarioId ? contentRegistry.getScenario(scenarioId) : null
+    if (!target || !scenario) continue
+    const affordable = active.every(record => Number.isSafeInteger(record.xp) && record.xp >= side.cost)
+    if (!affordable) continue
+    moves.push({
+      action: 'hubStartSideStory',
+      campaignId: side.campaignId,
+      scenarioId,
+      cost: side.cost,
+      label: `插入支线：${target.name}（每位调查员 -${side.cost} XP）`,
+      explanation: '在本次关间插入独立支线；结算后回到本关间，再继续原定下一章。',
+    })
+  }
+  return moves
+}
+
 function hubLegalMoves(state, seat = decisionSeat(state)) {
   const CAMPAIGN = campaignFor(state)
   if (state.status !== 'playing' || !actingSeats(state).includes(seat)) return []
@@ -536,8 +571,11 @@ function hubLegalMoves(state, seat = decisionSeat(state)) {
   }
   if (state.uiState === 'campaignHub') {
     if (seat !== 0) return []
-    moves.push(...HUB_DIFFICULTIES.map(difficulty => ({ action: 'hubSetDifficulty', difficulty,
-      label: `难度：${difficulty}` })))
+    // 批次 2：难度可选项以战役清单声明的混乱袋为界（独立支线/挑战只开放 Standard/Hard）；
+    // 声明四档的既有战役保持原样。
+    const campaignDifficulties = HUB_DIFFICULTIES.filter(difficulty => CAMPAIGN.chaosBags?.[difficulty])
+    moves.push(...(campaignDifficulties.length ? campaignDifficulties : HUB_DIFFICULTIES)
+      .map(difficulty => ({ action: 'hubSetDifficulty', difficulty, label: `难度：${difficulty}` })))
     // 双线战役：先选模式（未选时只给四个模式 + 队长）；分选给座位改线；
     // 分选/并行的运行时（lane adapter / 双运行时）在 P5 批次 3 才接通，这里不提供「进入准备」。
     const partSetup = modeSetupFor(state)
@@ -629,6 +667,7 @@ function hubLegalMoves(state, seat = decisionSeat(state)) {
   }
   if (state.uiState !== 'scenarioSetup' && state.uiState !== 'interlude') return []
   moves.push(...leaderMoves)
+  moves.push(...sideStoryMoves(state, seat))
   // 并行首次整备：每个座位可以改自己的线（房主在 hubReady 分支可改全部）。
   if (!state.campaign.scenarioResults.length && ['pick', 'parallel'].includes(state.campaign.mode)) {
     moves.push(...seatPartMoves(state).filter(move => move.seat === seat))
@@ -643,6 +682,10 @@ function hubLegalMoves(state, seat = decisionSeat(state)) {
   if (startingDeckPending && (!record.draftMode || draftDeckStatus(record).ready)) {
     moves.push({ action: 'hubConfirmDeck', label: '最终确认牌组' })
   }
+  const configurable = !deckReady && state.hubSeatSelected?.[seat] && alternateInvestigatorFamily(state.investigators[seat]?.code)
+    && (!record || record.status !== 'active' || initialHubPreparation(state) || replacement)
+    && (!record?.draftMode || draftDeckStatus(record).count === 0)
+  if (configurable) moves.push({ action: 'hubConfigureInvestigator', label: '配置调查员牌组版本' })
   if (isDraftMode(state)) {
     if (!record || record.status !== 'active' || (initialHubPreparation(state) && !record.draftMode)) {
       moves.push(...hubInvestigatorChoices(state, seat).map(code => ({ action: 'hubSelectInvestigator', code, label: `选择调查员：${ALL_INVESTIGATORS[code].nameZh || ALL_INVESTIGATORS[code].name}` })))
@@ -670,7 +713,8 @@ function hubLegalMoves(state, seat = decisionSeat(state)) {
     const poolContext = upgradePoolContext(state)
     for (const added of availablePurchases(effective, state.campaign.records, poolContext)) {
       for (const option of replacementOptions(effective, added, state.campaign.records, poolContext)) moves.push({ action: 'hubPurchase', added, removed: option.code,
-        label: `购入 ${cardName(added)}，${option.code ? '替换 ' + cardName(option.code) : '加入永久卡'}（${option.cost} XP）`, explanation: option.explanation })
+        ...(option.keepLower ? { keepLower: true } : {}),
+        label: `购入 ${cardName(added)}，${option.code ? (option.keepLower ? '保留 ' : '替换 ') + cardName(option.code) : '直接加入'}（${option.cost} XP）`, explanation: option.explanation })
     }
     if (!state.hubUpgradedSeats?.[seat] && moves.some(move => move.action === 'hubPurchase')) {
       moves.push({ action: 'hubAutoUpgrade', label: '自动选择一次合法升级' })

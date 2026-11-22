@@ -1,5 +1,6 @@
 import { investigatorRule, scenarioPlayableFor } from '../cards/card-rules.js'
 import { ALL_CARDS } from '../cards/cards-data.js'
+import { commitBaseSkillValue } from './commit-rules.js'
 import { describeLimitShort, limitUsed } from './limits.js'
 import { totalDoom } from './rules-state.js'
 import { commitProfile } from './lifecycle.js'
@@ -167,14 +168,16 @@ export function createStats(deps) {
     return active.length ? active[active.length - 1].value : null
   }
 
-  function getStat(state, inv, skill, skipSubstitute) {
+  function getStat(state, inv, skill, skipSubstitute, dependentSkills = [skill]) {
     let v = inv[skill] || 0
     const baseOverride = runtimeBaseStat(state, inv, skill)
     if (baseOverride != null) v = baseOverride
     if (inv.handlingEncounter?.bonus) v += inv.handlingEncounter.bonus
     // 修正管线（modifiers.js）：声明式修正 + 旧式 passive 字段的桥接。
     // 迁移完成的卡牌分支已从引擎删除，新的修正请写在 src/cards/entries/<code>.js 的 modifiers 里。
-    const { delta, floor } = statPipeline(state, inv, skill)
+    const readSkill = additional => dependentSkills.includes(additional)
+      ? 0 : getStat(state, inv, additional, skipSubstitute, [...dependentSkills, additional])
+    const { delta, floor } = statPipeline(state, inv, skill, readSkill)
     v += delta
     const resolvingAsset = inv.assets.find(asset => asset.id === state._resolvingAssetId)
     if (resolvingAsset?.triggeredSkillBonus?.round === state.round) v += resolvingAsset.triggeredSkillBonus.amount
@@ -182,8 +185,8 @@ export function createStats(deps) {
     v += scenarioBehavior(state).statModifier?.(state, inv, skill) || 0
     const substitute = inv.skillSubstitute
     if (!skipSubstitute && substitute && substitute.round === state.round
-        && substitute.from.includes(skill) && substitute.to !== skill) {
-      v = Math.max(v, getStat(state, inv, substitute.to, true))
+        && substitute.from.includes(skill) && !dependentSkills.includes(substitute.to)) {
+      v = Math.max(v, getStat(state, inv, substitute.to, true, [...dependentSkills, substitute.to]))
     }
     return v
   }
@@ -202,7 +205,8 @@ export function createStats(deps) {
   }
 
   function getMaxSanity(inv) {
-    return Math.max(0, inv.maxSanity + assetPassiveBonus(inv, 'sanityBonus')
+    const sanityBonus = registeredEntry(inv.code)?.investigator?.sanityBonus?.({ inv }) || 0
+    return Math.max(0, inv.maxSanity + sanityBonus + assetPassiveBonus(inv, 'sanityBonus')
       + (inv.assets || []).reduce((sum, asset) => sum + (asset.sanityModifier || 0), 0)
       + inv.threat.reduce((sum, card) => sum + (getThreatEffect(card)?.sanityModifier || 0), 0))
   }
@@ -295,8 +299,9 @@ export function createStats(deps) {
     const entry = registeredEntry(code)
     const profile = (entry?.abilities || []).find(ability => ability.kind === 'commit')?.skill
     const list = profile?.conditionalIcons
+    const test = state.skillTest
     const custom = profile?.iconBonus?.({ state, inv, owner: inv, code,
-      skill: Array.isArray(skill) ? skill : [skill], test: state.skillTest }) || 0
+      skill: [].concat(skill), test, baseSkillValue: test ? commitBaseSkillValue(state, test, baseStatValue, state.investigators[test.seat] || inv) : null }) || 0
     if (!Array.isArray(list) || !list.length) return custom
     let matched = null
     for (const item of list) {

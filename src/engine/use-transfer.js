@@ -45,7 +45,9 @@ export function useCostSources(state, card, registeredEntry) {
       && !assetTextBlanked(source, owner) && !assetTextBlankedExceptForced(source)
   })]
   if (type === 'secret') return [card, ...state.investigators.filter(inv => inv.location === owner.location && !inv.defeated && !inv.resigned)
-    .flatMap(inv => inv.assets).filter(source => source !== card && !assetTextBlankedExceptForced(source) && registeredEntry(source.code)?.assetRule?.sharedUses === 'secrets')]
+    .flatMap(inv => inv.assets).filter(source => source !== card && !assetTextBlankedExceptForced(source)
+      && (registeredEntry(source.code)?.assetRule?.sharedUses === 'secrets'
+        || registeredEntry(source.code)?.assetRule?.lendUsesAs === 'secrets'))]
   if (!['supply', 'ammo'].includes(type)) return [card]
   return [card, ...owner.assets.filter(source => source !== card && normalize(source.usesType) === 'supply'
     && !assetTextBlankedExceptForced(source) && registeredEntry(source.code)?.assetRule?.shareSuppliesAs?.includes(type))]

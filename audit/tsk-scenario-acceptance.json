@@ -806,7 +806,7 @@
     },
     {
       "path": "tools/import-scenario-guides.mjs",
-      "sha256": "44e4882dc8a1bfe25d161064466b1e416abe540cdec217501967c93782b456a3"
+      "sha256": "e403d735a38fcea9004e2ebe4acf71c37c04af55dc212701ac5b2dce97d1c8e3"
     },
     {
       "path": "tools/plan-tsk-campaign.mjs",

@@ -8,6 +8,7 @@ import { discardPlayerCards } from './player-zones.js'
 
 function matchesCost(code, { slot, trait }) {
   const definition = ALL_CARDS[code]
+  if (!slot && !trait) return Boolean(definition)
   return definition?.type === 'asset' && hasTrait(definition, trait) && definition.slots?.some(printed => {
     const normalized = printed.toLowerCase().replace(/\s+/g, '')
     return normalized === slot || normalized === slot + 'x2'
@@ -33,9 +34,10 @@ export function payPlayDiscardCost(state, inv, source, spec, events, deps) {
   if (!choices.length) return null
   const id = deps.requestChoice(state, {
     kind: 'card', source: { type: 'cost', kind: 'discard', code: source },
-    seat: inv.seat, prompt: '支付额外费用：选择并弃掉一张符合条件的支援。',
-    options: choices.map(row => ({ id: row.id, cardCode: row.code,
-      label: deps.cardName(row.code) + (row.from === 'hand' ? '（手牌）' : '（场上）') })),
+    seat: inv.seat, prompt: spec.upTo ? '支付额外费用：选择一张手牌弃掉，或结束支付。' : '支付额外费用：选择并弃掉一张符合条件的支援。',
+    options: [...(spec.upTo ? [{ id: 'done', label: '结束支付' }] : []),
+      ...choices.map(row => ({ id: row.id, cardCode: row.code,
+        label: deps.cardName(row.code) + (row.from === 'hand' ? '（手牌）' : '（场上）') }))],
   })
   const chosen = choices.find(row => row.id === id)
   const costDeps = { ...deps, afterHandDiscard, canDiscardControlledAsset, discardPlayerCards }

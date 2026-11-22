@@ -24,7 +24,7 @@ import {
 } from './investigator-form.js'
 import { requestChoice } from './resolution.js'
 import { investigatorRule } from '../cards/card-rules.js'
-import { applyStartingDeckExperience } from '../campaign/campaign.js'
+import { applyStartingDeckExperience, campaignAllowsInvestigator, campaignOpeningExperience } from '../campaign/campaign.js'
 import { deckAfterSurvey, restoreSurveyInvestigator, surveyForDestination, surveyForInvestigator } from './survey-preparation.js'
 import { expirePurchaseDiscounts } from '../campaign/purchase-discount.js'
 import { initBeginGameDisciplines, syncPassiveDeckTop } from './eote-investigator-support.js'
@@ -143,6 +143,20 @@ function makeInvestigator(invDef, seat) {
 
 function drawOpeningHand(state, inv) {
   const weaknesses = []
+  // 批次 3（2026 核心盒 Starting 关键词）：「Starting — You may begin the game with 1 copy
+  // of a starting card in your opening hand.」起手前把牌组里一张声明 Starting 的卡直接放入
+  // 起始手牌（每局一张；多个候选按牌组顺序取第一张）。读点只有这一处。
+  const startingCode = (inv.deck || []).find(code => {
+    const entry = registeredEntry(code)
+    return entry?.flags?.starting === true || entry?.flags?.startingCard === true
+  })
+  if (startingCode) {
+    const index = inv.deck.indexOf(startingCode)
+    if (index >= 0) {
+      inv.deck.splice(index, 1)
+      putInHand(state, inv, startingCode)
+    }
+  }
   // Phase 5（5a-33）：起手张数由调查员能力数据声明（默认 5）。
   // 第 5 步 P7：在场永久卡的条目级修正（05276 苦心钻研）在这里叠加；读点只有这一处。
   const target = (investigatorRule(inv.code)?.openingHandSize || 5)
@@ -167,9 +181,11 @@ function drawOpeningHand(state, inv) {
 function buildInvestigatorsDeck(state, inv, def, events) {
   const opts = {
     seat: inv.seat,
+    xpBudget: campaignOpeningExperience(state.campaign),
+    investigatorBuild: inv.investigatorBuild,
     seed: Math.floor(randomValue(state) * 4294967296),
-    playerPool: corePlayerPool(state),
-    basicWeaknessPool: basicWeaknessPool(state),
+    playerPool: corePlayerPool(state, inv.code),
+    basicWeaknessPool: basicWeaknessPool(state, inv.code),
   }
   if (inv.seat === 0 && state.customPlayerDeck) {
     const built = buildDeckFromList(def, state.customPlayerDeck, opts)
@@ -274,6 +290,7 @@ function prepareInvestigator(state, inv, events, startLocation, options = {}) {
   // 重置为 false」的字段不会在清理阶段被删掉（否则状态形状会随加载路径抖动）。
   clearInvestigatorTransients(campaignState, inv)
   delete inv.scenarioXpBonus
+  delete inv.hiddenExperienceOnElimination
   delete inv.actionHistory
   delete inv.roundActionHistory
   delete inv.enemyProtection
@@ -456,10 +473,18 @@ function syncRuntimeCardTable(state) {
   return true
 }
 
+// 批次 2：主战役 manifest.sideStories 声明的支线战役，其关卡数据也要注册进运行时
+// SCENARIOS；否则关间插入（hubStartSideStory）按 id 开局会报「未知关卡」。
+function registerCampaignContent(campaignId) {
+  registerCampaignScenarios(campaignId)
+  const manifest = contentRegistry.getCampaign(campaignId)
+  for (const side of manifest?.sideStories || []) registerCampaignScenarios(side.campaignId)
+}
+
 function refreshStateResources(state) {
   const campaignId = state.campaign?.id
   if (!campaignId || !contentRegistry.getCampaign(campaignId)) throw new Error(`存档所属战役 ${campaignId || '(缺失)'} 已不可用`)
-  registerCampaignScenarios(campaignId)
+  registerCampaignContent(campaignId)
   if (state.scenario?.id && !SCENARIOS[state.scenario.id]) throw new Error(`存档所在关卡 ${state.scenario.id} 已不可用`)
   state.resourceVersion = META.resourceVersion
   rebuildRuntimeCardTable(state)
@@ -474,7 +499,7 @@ function refreshStateResources(state) {
 // 内嵌资源与派生字段不参与卡号核对；其余位置出现的卡号必须能在当前资源中解析。
 
 function unknownCardCodes(state) {
-  if (state.campaign?.id) registerCampaignScenarios(state.campaign.id)
+  if (state.campaign?.id) registerCampaignContent(state.campaign.id)
   const missing = new Set()
   // P8：场景 StepCode（如《铁杉谷盛宴》10677a/10679a/10704 这类双面时间/参考卡）是内容身份，
   // 不是玩家牌组卡号。存档的 scenario.stepCode / timeMarker.stepCode / storyFaces[].code 会出现
@@ -506,7 +531,7 @@ function unknownCardCodes(state) {
 function createGameState(settings, players, { sharedFreeWindows = true } = {}) {
   const manifest = contentRegistry.assertLaunchable(settings.campaignId || contentRegistry.listCampaigns()[0].id)
   const CAMPAIGN = { ...manifest, scenarioOrder: manifest.scenarioIds }
-  registerCampaignScenarios(manifest.id)
+  registerCampaignContent(manifest.id)
   const rulesMode = settings.rulesMode || 'simplified'
   if (!['simplified', 'strict'].includes(rulesMode)) throw new Error('未知识别的规则模式')
   if (settings.playerDeck != null && !Array.isArray(settings.playerDeck)) throw new Error('自定义卡组必须是卡号数组')
@@ -521,7 +546,11 @@ function createGameState(settings, players, { sharedFreeWindows = true } = {}) {
   const seed = String(settings.seed ?? randomUUID())
   const randomState = { rngState: hashSeed(seed) >>> 0 }
   // 渐进式会同时收窄可选调查员；全部模式保持原来的候选表与随机流。
-  const invCodes = PLAYABLE_INVESTIGATORS.filter(code => allowsCard(code, poolContext))
+  const invCodes = (manifest.opening?.investigators || PLAYABLE_INVESTIGATORS).filter(code => allowsCard(code, poolContext))
+  if (manifest.opening?.investigators
+    && new Set(invCodes.map(code => investigatorIdentity(code, ALL_INVESTIGATORS))).size < players.length) {
+    throw new Error('本战役开放的调查员不足以填满当前席位')
+  }
   const rng = () => randomValue(randomState)
   // 调查员候选顺序只影响 AI 选人；用独立随机流，避免新增调查员改变主随机流
   // （否则旧种子对局的牌序、遭遇与混乱标记会随卡池扩张而漂移）。
@@ -536,6 +565,7 @@ function createGameState(settings, players, { sharedFreeWindows = true } = {}) {
   if (!allowsCard(humanPick, poolContext)) {
     throw new Error(`调查员超出当前卡牌范围（${CARD_POOL_SCOPE_LABELS[cardPoolScope]}）：${humanPick}`)
   }
+  if (!campaignAllowsInvestigator(manifest, humanPick)) throw new Error(`此战役不能使用该调查员：${humanPick}`)
 
   // 重放（src/engine/replay.js）需要按座位复现建局结果。AI 席位的调查员由 persona
   // 与独立随机流决定，而 persona 不进 state，所以允许显式给出逐座位卡号；
@@ -551,6 +581,7 @@ function createGameState(settings, players, { sharedFreeWindows = true } = {}) {
     seatInvestigators.forEach((code, index) => {
       if (!Object.hasOwn(ALL_INVESTIGATORS, code) || !canSelectInvestigator(code)) throw new Error(`调查员未开放：${code}`)
       if (!allowsCard(code, poolContext)) throw new Error(`调查员超出当前卡牌范围（${CARD_POOL_SCOPE_LABELS[cardPoolScope]}）：${code}`)
+      if (!campaignAllowsInvestigator(manifest, code)) throw new Error(`此战役不能使用该调查员：${code}`)
       if (players[index].seat === 0 && code !== humanPick) throw new Error('座位调查员与主角调查员不一致')
     })
   }
@@ -649,6 +680,7 @@ function createGameState(settings, players, { sharedFreeWindows = true } = {}) {
     tokenLabels: TOKEN_LABEL,
     campaign: {
       id: CAMPAIGN.id,
+      ...(CAMPAIGN.opening ? { opening: structuredClone(CAMPAIGN.opening) } : {}),
       name: CAMPAIGN.name,
       scenarioCount: CAMPAIGN.scenarioOrder.length,
       scenarioIndex: 0,
@@ -718,12 +750,14 @@ function pickAiInvestigator(player, order, used, allowed = PLAYABLE_INVESTIGATOR
 // ---------------------------------------------------------------------------
 
 // 从战役进入指定剧本：设置剧本数据、铺地图/敌人/遭遇牌堆/混乱袋、恢复调查员。
-
-function startScenario(state, index, events) {
+// `scenarioIdOverride`（批次 2 支线插入）：在关间直接运行其他战役的独立关卡时指定关卡 id；
+// 此时 index 仍是主战役当前关卡的索引（结算/购物簿记沿用主战役关卡序号）。
+function startScenario(state, index, events, scenarioIdOverride = null) {
   if (isDraftMode(state) && !draftDecksReady(state)) throw new Error('请先补足所有调查员的牌组。')
   const CAMPAIGN = campaignFor(state)
-  const scenarioId = CAMPAIGN.scenarioOrder[index]
+  const scenarioId = scenarioIdOverride || CAMPAIGN.scenarioOrder[index]
   const sc = structuredClone(SCENARIOS[scenarioId])
+  if (!sc) throw new Error(`未知关卡：${scenarioId}`)
   const survey = surveyForDestination(state, sc.id)
   resolveAgendaDoomThresholds(sc.agendas, state.numInvestigators)
   state.scenario = sc

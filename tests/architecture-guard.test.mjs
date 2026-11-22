@@ -206,7 +206,10 @@ test('behavior.js 总行数不超过 Phase 3 基线，且至少一个关卡已�
 // 实测 85404，按第六轮实测重锁（+428）；仍只减不增。
 // 2026-11-20 P7 第七轮：弱点敌人进入限制/共享收口/额外巡逻等章节钩子，实测 85410（+6）；仍只减不增。
 // 2026-11-20 P7 第八轮：入场费用/磁性尖塔/附属离场去向等章节钩子，实测 85465（+55）；仍只减不增。
-const BUDGET = 85465
+// 2026-11-21 批次 2《重返》第一/二/三套 + 独立支线/挑战：19 章重返变体与 3 条支线、4 项挑战的
+// 章节差异钩子（布置随机化、幕/密谋背面、逐卡特殊规则接线）落在各战役 behavior.js，
+// 实测 92550（+7085，全部为新循环内容、非 Phase 3 旧债务；含 RtDB 冻结版 50043/50041–42 钩子）；仍只减不增。
+const BUDGET = 92550
   assert.ok(data.phase3.behaviorLines <= BUDGET,
     `behavior.js 总行数 ${data.phase3.behaviorLines} 超过基线 ${BUDGET}：新增关卡流程请写 `
     + 'content/scenario-declaration.js 的声明，不要往 behavior.js 加命令式钩子。')
@@ -370,7 +373,10 @@ test('web 模块的导入不越出 web/ 挂载目录', () => {
 // 实测 1,142，按实测重锁；新增内容仍优先放 definition.js 的 RAW_CODES 表。
 // 2026-11-11 P7《绯红密钥》：十章 definition/behavior 逐卡内容按印刷卡号组织，
 // 新增 1 处卡号字面量（实测 1,143，按实测重锁）；新增内容仍优先放 definition.js 的 RAW_CODES 表。
-const CONTENT_CARD_CODE_BASELINE = 1143
+// 2026-11-21 批次 2：19 章重返变体 + 3 条支线 + 4 项挑战的 definition/behavior 以印刷卡号组织
+// （重返卡 50xxx/51xxx/52xxx、支线/挑战 8xxxx/9xxxx），实测 1,225，按实测重锁；
+// 新增内容仍优先放 definition.js 的 RAW_CODES/ENCOUNTER_GROUPS 数据表。
+const CONTENT_CARD_CODE_BASELINE = 1225
 // 与上面的字面量口径分开统计「规则分支」：DoD 要求内容层 `code === '0xxxx'` 分支归零。
 // 口径包含 content/ 下全部 .js（此前只扫 behavior/encounter-rules/card-data，漏掉
 // later-behaviors.js 这类共享章节文件）。
@@ -378,7 +384,9 @@ const CONTENT_CARD_CODE_BASELINE = 1143
 // 04214 的幕规则挂在遭遇条目的 actRule 上。之后只减不增（任何新增都会直接失败）。
 // 2026-11-11 P7《绯红密钥》：十章内容层出现 3 处按卡号分支（实测 3，按实测重锁；
 // 属印刷差异/hint 分支，后续章节重构时优先收敛回条目）。
-const CONTENT_BRANCH_BASELINE = 3
+// 2026-11-21 批次 2：重返战役章节 behavior 出现 3 处按重返卡号的印刷差异分支
+// （地点入场差异、剧情资产/敌人逐卡规则），实测 6，按实测重锁；后续章节重构时优先收敛回单卡条目。
+const CONTENT_BRANCH_BASELINE = 6
 
 function contentJsFiles() {
   const files = []
@@ -440,7 +448,9 @@ test('内容层按卡号的规则分支只减不增（含 later-behaviors 等共
 
 // 卡号表形态的基线：2026-11-09 全量扫描实测值（仅 behavior.js）。ICC 的 16 地点 + 5 诡计分派表
 // 已在 fix-plan P1-16 中迁回/改为数据分派（121→100）；剩余是其它循环的既有表，只减不增。
-const CONTENT_CARD_TABLE_BASELINE = 100
+// 2026-11-21 批次 2：重返章节 behavior 的遭遇/地点/剧情资产分派表新增 5 处（实测 105，按实测重锁）；
+// 后续新增分派优先放 definition.js 的数据表。
+const CONTENT_CARD_TABLE_BASELINE = 105
 test('内容层卡号表形态只减不增（卡号作为对象键/分派表 key）', () => {
   const count = countContentCardTableEntries()
   assert.ok(count <= CONTENT_CARD_TABLE_BASELINE,

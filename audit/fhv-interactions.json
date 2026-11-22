@@ -113,7 +113,7 @@
     },
     {
       "path": "audit/fhv-node-acceptance.json",
-      "sha256": "5ba46baea25335004f44e104714a1f7278ea70a17aa3bcfd09769148d77ebcbe"
+      "sha256": "68dba64784b7c012f486b1434c34f14b85b9e9d55a61082edfa85e23e7aedfd7"
     },
     {
       "path": "audit/fhv-regression.json",
@@ -121,7 +121,7 @@
     },
     {
       "path": "src/engine/campaign-flow.js",
-      "sha256": "00dd275497a8c8431d02587268f722612a9ae4d8cdf9f29fd31eac7ac2cb3b28"
+      "sha256": "73464588e9e0f7c688ed64a11710c32340a2af1ea268bd652ff609f4a42de5bc"
     },
     {
       "path": "src/engine/fhv-interactions.js",

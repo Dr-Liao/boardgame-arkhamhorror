@@ -21,6 +21,7 @@ import {
   storyEntry, storyEntryText, storyParagraphs, storyParagraphsOf, storyText,
 } from '../content/campaigns/edgeOfTheEarth/story-access.js'
 import { buildGuides, buildRulesScan } from '../tools/eote-guide-scan.mjs'
+import { contentRegistry } from '../content/registered.js'
 import {
   EN_FILES, ZH_FILES, assemble, check, scopeAlignment, storyInventory,
 } from '../tools/import-eote-story.mjs'
@@ -36,7 +37,8 @@ const SKIPPED_GUIDE_KEYS = new Set(['heading', 'tokens', 'label', 'tooltips', 'r
 const STATUSES = ['present-needs-review', 'untranslated', 'missing']
 const CHAPTER_STATUSES = [...STATUSES, 'mixed']
 
-// 生成指南（含全部 94 个已注册/迁移关卡：54 既有 + 8 EotE + 10 TSK + 12 FHV + 10 TDC）。
+// 生成指南（覆盖全部已注册关卡：基础 11 个战役 + 后续循环；数量以注册表为准，
+// 批次 2 新增「重返」战役后不再写死）。
 const BUILT_GUIDES = await buildScenarioGuides()
 
 /** 嵌套正文树 → 叶子数组 `[{ path, text }]`。 */
@@ -315,7 +317,8 @@ test('P7 story story-access API：章节/战役/扁平化/段落读取', () => {
 
 test('P7 guides 文件：8 章 json 存在、结构字段齐全（id/campaignId/locales 五段）', () => {
   const guides = BUILT_GUIDES
-  assert.equal(guides.size, 94, '应在既有 54 个关卡之外新增 8《地球边缘》+ 10《绯红密钥》+ 12《铁杉谷盛宴》+ 10《沉没之城》章节')
+  assert.equal(guides.size, contentRegistry.listScenarios().length,
+    '指南生成物数量必须与已注册关卡数一致（新增战役/章节后同步检查）')
   for (const [index, id] of SCENARIO_IDS.entries()) {
     const relative = GUIDE_FILES[index]
     assert.ok(existsSync(`${ROOT}${relative}`), `缺少 ${relative}`)
@@ -396,5 +399,5 @@ test('P7 guides 幂等：buildScenarioGuides 两次一致、磁盘文件逐字�
   }
   const result = spawnSync(process.execPath, ['tools/import-scenario-guides.mjs'], { cwd: ROOT, encoding: 'utf8' })
   assert.equal(result.status, 0, result.stderr || result.stdout)
-  assert.match(result.stdout, /94 scenarios verified/)
+  assert.match(result.stdout, new RegExp(`${BUILT_GUIDES.size} scenarios verified`))
 })

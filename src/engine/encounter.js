@@ -1,6 +1,8 @@
 import { availableResources } from './resource-bank.js'
 import { recordRoundAction } from './action-history.js'
 import { availablePlayResources } from './play-payment.js'
+import { quickPlayReduction } from './play-attempt.js'
+import { playTimingSource } from './play-timing.js'
 import { tokenCostAvailable } from './token-cost.js'
 import { afterUsesSpent } from './uses.js'
 import { enemyRuleFlags, investigatorRule } from '../cards/card-rules.js'
@@ -48,6 +50,7 @@ export function createEncounter(deps) {
     cardName,
     checkDefeated,
     chooseAmong,
+    concealedDamageTargets,
     controlledAbilityCards,
     descriptorOfKind,
   quickEventView,
@@ -389,11 +392,13 @@ function reactionWindow(state, when, context, events, opts = {}) {
           // 2026-10-27「如同手牌」通道：折扣由原语统一给出（直觉牌库 -2 等），候选可用性与实付同源。
           const def = cardDef(copyCode || code)
           const baseCost = playCost(state, inv, def)
-          if (availablePlayResources(state, inv, def) < (item.entry ? playChannels.discountedCost(baseCost, item.entry) : baseCost)) return false
+          const cost = item.entry ? playChannels.discountedCost(baseCost, item.entry) : baseCost
+          if (availablePlayResources(state, inv, def) < cost - quickPlayReduction(state, inv, def)) return false
           // 04111 坚韧不拔等：criteria 写成函数/数组的新通道（旧的对象形字段展开保持原样）。
           if (quick.criteria
             && (Array.isArray(quick.criteria) || typeof quick.criteria === 'function')
-            && !evaluateCriteria(quick.criteria, { state, inv, source: null, windowId: when, context })) return false
+            && !evaluateCriteria(quick.criteria, { state, inv, source: null, windowId: when, context,
+              helpers: { concealedDamageTargets: () => concealedDamageTargets(state, inv.seat, inv.location) } })) return false
           // resolve 型描述子自己判断可行性；数据体走效果解释器的校验。
           return Boolean(quick.descriptor.resolve) || !effectError(state, inv, quick.descriptor.effect)
         })
@@ -573,8 +578,8 @@ function fastHandPlays(state, inv, opts = {}) {
       // 05156「反应灵敏」：快速。在任意调查员的回合期间（不含行动期间）打出。
       // 引擎只在「行动之间」的玩家窗口传 betweenActions 标记；不能在技能检定/神话/敌人/维持窗口提供。
       if (entry?.betweenActionsAnyTurn) return opts.betweenActions === true
+      if (move.fastSourceId) return Boolean(playTimingSource(state, inv, cardDef(move.cardId), move.fastSourceId))
       if (opts.fastCards && inv.seat === state.currentSeat) return true
-      if (move.fastSourceId) return true
       return !quickEventView(move.cardId) && (entry?.fast
         || entry?.abilities.some(descriptor => descriptor.kind === 'played' && descriptor.fast))
     })

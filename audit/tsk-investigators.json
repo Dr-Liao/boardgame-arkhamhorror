@@ -316,7 +316,7 @@
   "sources": [
     {
       "path": "audit/tsk-baseline.json",
-      "sha256": "af551c9ccdb846a311ce7e7dda63fe43359ba3efed931e204e6c9f7d7d6b1f5f"
+      "sha256": "8757a5d8044af19dcb9f6be8adcd2a941fb9f381451afe7729b0b16f494b541a"
     },
     {
       "path": "audit/tsk-investigators-browser.json",
@@ -324,7 +324,7 @@
     },
     {
       "path": "audit/tsk-node-acceptance.json",
-      "sha256": "58fe7e7acf5996348e4dd5f8c9e3a1a5399e0e5744d7da7f198d40eb1cb52251"
+      "sha256": "cc39eabece21ac25c19bcdf18fb61413d47331fcbb556f66e2615efce4241e11"
     },
     {
       "path": "audit/tsk-regression.json",
@@ -420,15 +420,15 @@
     },
     {
       "path": "src/deck/availability.js",
-      "sha256": "f69169bed68b4f29e6a4173cebeba448b505804c2a166718effe0826f5000fe7"
+      "sha256": "674b2b60c655b878bf5b5e02f7cf8d04134935f1eef4742c9751da07560aa9f5"
     },
     {
       "path": "src/deck/deckbuilding.js",
-      "sha256": "6b546f1f7c87014c4c2a687a81ce96cd1f7f651f2d031c768bbe6f45ffaab1e1"
+      "sha256": "bb6b5e866ec4a981f4267fc5f98da9f7bb6b4811c225202280de1d9ec11910cc"
     },
     {
       "path": "web/deck-rules.js",
-      "sha256": "ab77908ae47e7fada8a33f63238517f9b4a2345db30990089e686b724760db71"
+      "sha256": "8df48d4a2843823f7d3f201cb543cce1e51eaed9854fe66c1e79cbd6464a0c20"
     }
   ],
   "evidence": [

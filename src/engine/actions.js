@@ -1,6 +1,8 @@
 import { putInHand } from './hand-entry.js'
+import { withPlayedEventDisposal } from './event-play-disposal.js'
+import { choosePlayShuffle, payAdditionalPlayDamage } from './play-attempt.js'
 import { hasWindowListener } from './window-listeners.js'
-import { cardEffectSource, withEffectSource } from './effect-provenance.js'
+import { cardEffectSource, withEffectSource, withEventTestBonus } from './effect-provenance.js'
 import { trackTestAssetSource } from './action-history.js'
 import { afterHandEmptied } from './hand-discard-window.js'
 import { eventWindowContext } from './event-window.js'
@@ -141,7 +143,9 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     return true
   }
   let chosenVariableCost = null
+  let playedAtLocation = null
   if (!def) return
+  if (capabilityBlocked(state, inv, 'play')) return
   // P6（九循环）：Double 特质的「作为额外费用，花费 1 个行动」。
   // 费用声明在 played 描述子 `cost: { action: N }`；不足时不开始结算（不产生任何写入）。
   const playedExtraAction = def.type === 'event'
@@ -166,7 +170,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     { playCost, cardDef, reactionWindow, shuffle, randomValue }, playDiscount)
   if (playAttempt.cancelled) return
   const discardPlayCost = registeredEntry(playedDef.code)?.discardPlayCost
-  if (discardPlayCost && !playDiscardCostChoices(state, inv, discardPlayCost).length) {
+  if (discardPlayCost && !discardPlayCost.upTo && !playDiscardCostChoices(state, inv, discardPlayCost).length) {
     restoreOtherHandCard()
     info(state, events, '没有能够支付额外弃置费用的牌。')
     return
@@ -253,16 +257,25 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     let playCostWindow = null
     {
       const playCostContext = { when: 'beforePlayCost', seat: inv.seat, location: inv.location,
-        cardCode: cardId, playedCardId: cardId, cardType: playedDef?.type || null, cost, costReduction: 0, costIncrease: 0, playUpgrades: null,
+        cardCode: cardId, playedCardId: cardId, playedCardCode: playedDef?.code, cardType: playedDef?.type || null,
+        cost, costReduction: 0, costIncrease: 0, playUpgrades: null, playAsIfLocation: null,
         ...(fastSourceId ? { fastSourceId } : {}),
         prompt: `打出「${cardName(cardId)}」的支付前窗口` }
       if (timingSource) {
+        playCostContext.availableResources = availablePlayResources(state, inv, playedDef)
         const descriptor = registeredEntry(timingSource.source.code).abilities.find(descriptor => descriptor.trigger.includes('beforePlayCost'))
         if (!descriptor || !executeDescriptor(state, { inv, source: timingSource.source, descriptor, context: playCostContext, events, windowId: 'beforePlayCost' })) throw new Error('快速打出费用支付失败')
       }
       triggerReaction(state, inv.seat, 'beforePlayCost', events, playCostContext)
       reactionWindow(state, 'beforePlayCost', playCostContext, events)
       playCostWindow = playCostContext
+      // 批次 3（60552）：把正在打出的事件改在连接地点结算。
+      if (playCostContext.playAsIfLocation != null && playedDef?.type === 'event') {
+        const here = state.locations.find(location => location.id === inv.location)
+        if (here?.connections?.includes(playCostContext.playAsIfLocation)) {
+          state._playAsIfLocation = { seat, locationId: playCostContext.playAsIfLocation }
+        }
+      }
       if (playCostContext.noAction) noAction = true
       if (playCostContext.costIncrease > 0) {
         cost += playCostContext.costIncrease
@@ -277,7 +290,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     delete inv.playDiscount
     const { remaining, payments, offered } = choosePlayUses(state, inv, playedDef, cost, deps)
     const cancelUnpaidPlay = message => {
-      if (offered && options.cancelUnpaidPlay) {
+      if (options.cancelUnpaidPlay && (offered || playAttempt.optionalReduction)) {
         // 行动及借机攻击由 dispatch 先结算，拒绝代付后须恢复整次打出的状态。
         cancelResolution(state, (restored, emitted) => info(restored, emitted, message))
       }
@@ -351,7 +364,14 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     }
     if (!payTokenCost(state, inv, registeredEntry(cardId)?.additionalTokenCost)) throw new Error('额外混乱标记费用已失效')
     spendPlayUses(state, payments, events, deps)
-    if (discardPlayCost) {
+    if (discardPlayCost?.upTo) {
+      playCostWindow.discardedCards = []
+      for (let index = 0; index < discardPlayCost.upTo; index++) {
+        const discarded = payPlayDiscardCost(state, inv, cardId, discardPlayCost, events, deps)
+        if (!discarded) break
+        playCostWindow.discardedCards.push(discarded)
+      }
+    } else if (discardPlayCost) {
       const discardedCard = payPlayDiscardCost(state, inv, cardId, discardPlayCost, events, deps)
       if (!discardedCard) {
         cancelResolution(state, (restored, emitted) => info(restored, emitted, '额外弃置费用已无法支付。'))
@@ -371,6 +391,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       consumeItemDiscountAtLocation(state, inv)
     }
     payAdditionalPlayHorror(state, inv, playedDef, events, deps)
+    payAdditionalPlayDamage(state, inv, playAttempt, events, deps)
     consumePlayThreatResources(state, inv, events)
     if (usesLolaDiscount) delete inv.lolaDiscount
     // P6（九循环）：Double 特质的额外行动费用在资源费用成功后一次性扣减（与打印文本同一时机）。
@@ -548,21 +569,30 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     const playedDescriptor = descriptorOfKind(copyCode || cardId, 'played')
     // 「临时武器」等从弃牌堆打出的事件需要知道自己来自哪里。
     const playedContext = { fromDiscard: fromDiscard || origin === 'discard', copyCode: copyCode || null,
-      cardId, playCost: paid.playCostContext || null }
+      cardId, playCost: paid.playCostContext || null, variableX: chosenVariableCost }
     const previousFromDiscard = state._fromDiscardCode
     state._fromDiscardCode = fromDiscard || origin === 'discard' ? cardId : null
+    // 批次 3（60552）：本次事件「如同在连接地点打出」——结算期间临时切换调查员位置。
+    const asIfLocation = state._playAsIfLocation?.seat === seat ? state._playAsIfLocation.locationId : null
+    const effectiveLocation = asIfLocation ?? inv.location
+    const originalLocation = inv.location
+    playedAtLocation = effectiveLocation
+    if (asIfLocation) inv.location = asIfLocation
     try {
-      if (playedDescriptor?.resolve) {
-        // Phase 5（5c-35）：quietPlay 的条目复刻「数据体事件卡」的日志——旧数据体不写
-        // 「使用「X」：…」这一行，迁移后若照写会改玩家可见日志、重放指纹立刻对不上（03189）。
-        executeDescriptor(state, { inv, source: { code: cardId, id: cardId }, descriptor: playedDescriptor,
-          context: playedContext, events,
-          silent: registeredEntry(cardId)?.quietPlay === true })
-      } else if (played) {
-        const source = cardEffectSource(state, { code: copyCode || cardId, id: cardId }, null, inv, { cardDef })
-        withEffectSource(state, source, () => resolveEffect(state, seat, played, makeRuntime(state, events)))
-      }
+      withEventTestBonus(state, seat, copyCode || cardId, playedContext.playCost?.skillBonus, () => withPlayedEventDisposal(playedContext, disposal, () => {
+        if (playedDescriptor?.resolve) {
+          // quietPlay 保留数据体事件的日志格式（03189）。
+          executeDescriptor(state, { inv, source: { code: cardId, id: cardId }, descriptor: playedDescriptor,
+            context: playedContext, events,
+            silent: registeredEntry(cardId)?.quietPlay === true })
+        } else if (played) {
+          const source = cardEffectSource(state, { code: copyCode || cardId, id: cardId }, null, inv, { cardDef })
+          withEffectSource(state, source, () => resolveEffect(state, seat, played, makeRuntime(state, events)))
+        }
+      }))
     } finally {
+      if (asIfLocation) inv.location = originalLocation
+      delete state._playAsIfLocation
       if (previousFromDiscard === undefined) delete state._fromDiscardCode
       else state._fromDiscardCode = previousFromDiscard
     }
@@ -597,22 +627,30 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     else if (registeredEntry(cardId)?.keepOnPlay !== true
       && !state.enemies.some(enemy => enemy.bindMonster?.ownerSeat === seat && enemy.bindMonster.code === cardId)) {
       const index = inv.discard.length
-      disposePlayedEvent(inv, cardId)
-      if (inv.discard[index] === cardId && hasWindowListener(state, 'eventPlayed')) discardedEvent = { code: cardId, index }
+      if (choosePlayShuffle(state, inv, playAttempt)) {
+        inv.deck = replacePlayerZoneCards(state, inv, shuffle([...inv.deck, cardId], () => randomValue(state)), 'shuffle')
+        info(state, events, `「${cardName(cardId)}」洗回 ${inv.name} 的牌库。`)
+      } else disposePlayedEvent(inv, cardId)
+      if (inv.discard[index] === cardId && (playedContext.returnAtEndOfTurn || hasWindowListener(state, 'eventPlayed'))) {
+        discardedEvent = { code: cardId, index }
+        if (playedContext.returnAtEndOfTurn) {
+          abilityApi(state, events).deferPlayedEventReturn({ when: 'eventPlayed', seat, discardedEvent }, seat)
+        }
+      }
     }
   }
   // 第 5 步 P7：事件打出并结算后开窗（05320 超级加倍；卡面用 api.replayPlayedCode 重放刚打出的事件）。
   // 只有事件卡开这个窗口；没有卡面挂载时 reactionWindow 是 no-op，不影响既有行为。
   if (def.type === 'event') {
     reactionWindow(state, 'eventPlayed', {
-      when: 'eventPlayed', seat, cardId, cardCode: copyCode || cardId, location: inv.location,
+      when: 'eventPlayed', seat, cardId, cardCode: copyCode || cardId, location: playedAtLocation ?? inv.location,
       ...(discardedEvent ? { discardedEvent } : {}),
       prompt: `${inv.name} 打出「${cardName(cardId)}」后`,
     }, events, { allowNested: options.grantedEvent === true })
   }
   const traits = (playedDef.traits || []).map(trait => String(trait).toLowerCase())
   if (traits.includes('spell')) triggerReaction(state, seat, 'spellPlayed', events, { location: inv.location, cardId })
-  if (def.type === 'asset' && playedAsset && registeredEntry(cardId)?.abilities?.some(row => row.trigger?.includes('assetPlayed'))) {
+  if (def.type === 'asset' && playedAsset && hasWindowListener(state, 'assetPlayed')) {
     reactionWindow(state, 'assetPlayed', { when: 'assetPlayed', seat, assetId: playedAsset.id,
       cardCode: cardId, location: inv.location }, events, { allowNested: true })
   }
@@ -667,6 +705,7 @@ function runInvestigate(state, seat, opts, events, noSpend) {
   // 「不使用智力，改为使用意志」通过能力效果的 `skill` 传进来，这里优先于地点的
   // 调查技能声明（地点 investigateSkill 用于「用敏捷调查」这类地点规则）。
   const skill = actionTestSkill(state, inv, 'intellect', opts.skill || scenarioBehavior(state).investigateSkill?.(state, inv, loc) || loc.investigateSkill || 'intellect', requestChoice)
+  const roundShroud = loc.roundShroudMod?.round === state.round ? loc.roundShroudMod.amount : 0
   const temporaryShroud = campaignState.turnShroudModifier(loc, state)
     + (loc.turnShroudMod?.round === state.round && loc.turnShroudMod.turnSeat === state.currentSeat
       ? loc.turnShroudMod.amount : 0)
@@ -683,7 +722,7 @@ function runInvestigate(state, seat, opts, events, noSpend) {
   // 「骷髅钥匙」：附属地点的帷幕设为 1（现在是附属条目上的声明式标记 shroudAsOne）。
   const keyed = (loc.attachments || []).some(entry => entry.shroudAsOne === true)
   const difficulty = keyed ? 1
-    : loc.shroud + (loc.shroudMod || 0) + temporaryShroud + scenarioShroud + (state.fogMod || 0) + (opts.shroudMod || 0)
+    : loc.shroud + (loc.shroudMod || 0) + roundShroud + temporaryShroud + scenarioShroud + (state.fogMod || 0) + (opts.shroudMod || 0)
   const noIntellectBoost = skill === 'intellect' && loc.noIntellectBoost
   // 2026-10-25 第五轮修复 05281（交叉复核）：倍化/限制基值时用「印刷基值 + 临时基值覆盖」读点，
   // 不再直读 inv[skill]，使「把基础技能值设为 X」对 doubleBaseSkill/noIntellectBoost 也生效。
@@ -822,7 +861,8 @@ function runInvestigate(state, seat, opts, events, noSpend) {
       awardLocationVictory(state, loc, events)
     } else {
       info(state, events, `🔍 ${inv.name} 调查失败（${SKILL_NAMES[skill]} ${r.value} vs ${difficulty}，标记 ${tokenLabel(r.token)}）。`)
-      reactionWindow(state, 'investigateFail', { when: 'investigateFail', seat, location: loc.id, failedBy: Math.max(0, difficulty - r.value), prompt: '调查检定失败后' }, events)
+      reactionWindow(state, 'investigateFail', { when: 'investigateFail', seat, location: loc.id,
+        failedBy: r.failedBy ?? Math.max(0, difficulty - r.value), prompt: '调查检定失败后' }, events)
       // 第四循环P2.1：闹鬼关键字——调查检定失败后结算该地点的每个闹鬼能力。
       // 攻击/躲避失败由卡面（混乱标记/敌人强制能力）显式调用 api.haunted，不在这里触发。
       hauntedAfterFail(state, seat, 'investigate', scenarioRuntime(state, events), events, { locationId: loc.id })

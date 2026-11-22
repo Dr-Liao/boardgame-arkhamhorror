@@ -8,7 +8,7 @@
 // 座位分线与非活动线 waiting。
 //
 // P10 口径（与 P9.5 的区别）：**spec 进程不再注册任何内容**（生产组合根已含 theDreamEaters），
-// 直接 import 生产引擎/mod 建局；真实大厅的「战役」下拉框本身就有《食梦者》（真实 /api/catalog），
+// 直接 import 生产引擎/mod 建局；真实大厅的战役选择弹窗包含《食梦者》（真实 /api/catalog），
 // /api/start 也**原样转发**真实大厅开局请求（真实 server 进程创建 TDE 会话，campaignId=theDreamEaters）——
 // 只把返回会话里的 state 换成 spec 进程用同一份生产内容建出的容器投影（为了确定性准备与按座位
 // 切换观察视图），随后点击产生的动作仍走真实 mod.validateMove/mod.applyMove。
@@ -27,6 +27,7 @@
 // 命令（BOARDGAME_PORT=8813；先检查 artifacts/migration/tde/p9-recon/.playwright.lock）：
 //   node ../../node_modules/@playwright/test/cli.js test --config tests/playwright/playwright.tde.config.mjs tde-dual-real.browser.mjs
 import { test, expect } from '@playwright/test'
+import { selectCampaign } from './playwright/campaign-picker.mjs'
 import { mkdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -343,13 +344,8 @@ async function openRealTdeLobby (page, world, { state, seats, seat = 0, autoPrep
   await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
   const setup = page.getByRole('dialog', { name: '调查准备设置' })
   await expect(setup).toBeVisible()
-  const campaign = setup.getByRole('combobox', { name: '战役', exact: true })
-  // P10：真实大厅（生产注册）的战役下拉本身含 theDreamEaters，直接选它走真实 /api/start。
-  const campaignOptions = await campaign.locator('option').evaluateAll(options =>
-    options.map(option => ({ value: option.value, label: option.textContent })))
-  expect(campaignOptions.map(option => option.value)).toContain(P95_CAMPAIGN_ID)
-  await campaign.selectOption(P95_CAMPAIGN_ID)
-  await expect.poll(async () => campaign.evaluate(select => select.selectedOptions[0]?.textContent || '')).toBe(CAMPAIGN_NAME)
+  await selectCampaign(page, setup, P95_CAMPAIGN_ID)
+  await expect(setup.locator('.ah-campaign-summary')).toContainText(CAMPAIGN_NAME)
   await setup.getByRole('combobox', { name: '席位数量' }).selectOption(String(seats))
   const started = page.waitForResponse(response => response.url().endsWith('/api/start'))
   await setup.getByRole('button', { name: '开始新游戏' }).click()

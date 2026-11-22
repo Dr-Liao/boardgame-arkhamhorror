@@ -20,6 +20,15 @@ import { fileURLToPath } from 'node:url'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { contentRegistry } from '../content/registered.js'
 
+// 批次 2：新增战役（重返/支线/挑战）借用基础循环遭遇卡的归属例外（见 resolvePlacement）。
+const BORROW_ONLY_CAMPAIGNS = new Set([
+  'returnToNightOfTheZealot', 'returnToTheDunwichLegacy', 'returnToThePathToCarcosa',
+  'curseOfTheRougarou', 'carnevaleOfHorrors', 'murderAtTheExcelsiorHotel',
+  'readOrDie', 'allOrNothing', 'badBlood', 'byTheBook',
+])
+// 本批新发行包：这些包里的卡只出现在新战役，按新战役归属。
+const NEW_STORY_PACKS = new Set(['rtnotz', 'rtdwl', 'rtptc', 'cotr', 'coh', 'hotel', 'rod', 'aon', 'bad', 'btb'])
+
 // 'card'：战役专属的「玩家侧弱点牌库」条目（如忒咳哩-哩 16 张弱点）需要玩家 scope 的
 // weakness 生命周期；它们仍按归属目录落盘，不进入常规非玩家实体枚举。
 const SCOPES = Object.freeze(['enemy', 'location', 'act', 'agenda', 'treachery', 'storyAsset', 'threat', 'scenario', 'card'])
@@ -227,6 +236,14 @@ export function resolvePlacement(entry, index = loadPlacementIndex()) {
     const group = canonical(card.encounterCode)
     hits = index.scenarios.filter(scenario => scenario.groupIds.has(group))
     matchedBy = 'group'
+  }
+  // 批次 2：新增的「重返 / 支线 / 挑战」战役会借用基础循环的遭遇卡（同一张 02094 同时出现在
+  // 基础敦威治与重返敦威治）。这些卡的实际文件仍放在基础战役目录，归属算法必须保持这一点：
+  // 对基础包（非本批新包）的卡，忽略新战役的借用命中，只按基础战役的命中计算归属；
+  // 新包（rtnotz/rtdwl/rtptc/cotr/coh/hotel/rod/aon/bad/btb）的卡仍按所属新战役定位。
+  if (card && card.pack && !NEW_STORY_PACKS.has(card.pack)) {
+    const baseHits = hits.filter(hit => !BORROW_ONLY_CAMPAIGNS.has(hit.campaignId))
+    if (baseHits.length) hits = baseHits
   }
   if (!hits.length) return emptyPlacement(entry, 'no-scenario')
   let bucket = bucketOf(hits)

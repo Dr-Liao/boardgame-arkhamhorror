@@ -2,10 +2,11 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
-import { contentRegistry } from '../content/registered.js'
+import { contentRegistry, currentContentBundle } from '../content/registered.js'
 import { createContentRegistry, campaignListForUi } from '../content/registry.js'
 import { scenarioZoneReport, countZone } from '../content/scenario-manifest.js'
-import { packs } from '../content/packs/manifests.js'
+// 批次 2：新增战役包依赖基础循环战役包（如 rtdwlCampaign→dunwichCampaign），
+// 注册组合根用当前生产 bundle 的完整包集，避免测试夹具缺少依赖包。
 import { sharedEncounterIdentities } from '../content/packs/shared-identities.js'
 import * as gathering from '../content/campaigns/nightOfTheZealot/scenarios/theGathering/index.js'
 import * as masks from '../content/campaigns/nightOfTheZealot/scenarios/theMidnightMasks/index.js'
@@ -41,9 +42,11 @@ test('P1 缺牌、别名歧义、重复区域与超过目录张数立即失败',
 
 test('P1 新增最小关卡仅需内容模块和注册项，UI 列表自动包含它', async () => {
   const campaign = structuredClone(contentRegistry.getCampaign('nightOfTheZealot'))
+  // 最小关卡测试只验证「内容模块 + 注册项即可被 UI 列表发现」；不引入支线战役依赖。
+  delete campaign.sideStories
   campaign.scenarioIds.push(minimal.manifest.id)
   campaign.unlock[minimal.manifest.id] = ['theDevourerBelow']
-  const registry = createContentRegistry({ packs, campaigns: [campaign], scenarios: [...entries, minimal] })
+  const registry = createContentRegistry({ packs: currentContentBundle().packs, campaigns: [campaign], scenarios: [...entries, minimal] })
   assert.equal(registry.getScenario('minimalScenario').name, '注册契约测试关')
   assert.equal(registry.getBehavior('minimalScenario').setupLocations()[0], 'start')
   assert.equal(campaignListForUi(registry)[0].scenarios.at(-1).id, 'minimalScenario')

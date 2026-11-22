@@ -11,6 +11,7 @@ import { renderStoryReader } from './story-reader.js'
 import { filterCards, renderCardFilters } from './card-filters.js'
 import { packLabel } from './pack-label.js'
 import { campaignPresentation, presentationAttributes } from './campaign-presentation.js'
+import { campaignChoices, renderCampaignPicker, renderCampaignSummary } from './campaign-picker.js'
 import { renderSupplyPicker, supplyPickerModel } from './supply-picker.js'
 import { captureScrollState, restoreScrollWhenMounted } from './scroll-state.js'
 import { installCardZoom } from './card-zoom.js'
@@ -249,6 +250,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     state.arkhamDeleteConfirmId = null
     state.arkhamAiSettingsOpen = false
     state.arkhamGameSettingsOpen = false
+    state.arkhamCampaignPicker = null
     // 两页内容高度不同：记录「新游戏」页自然高度，切到存档页时用它锁住弹窗。
     state.arkhamSetupStableHeight = null
     state.arkhamSaveError = null
@@ -297,7 +299,6 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   // 由大厅 startGame 一并提交，服务端再落到 state（随存档保留）。
   function renderGameSettings() {
     const values = [
-      t(state.setup.form.deckMode === 'draft' ? 'draft.title' : 'draft.standard'),
       ...(CARD_POOL_RESTRICTION_ENABLED
         ? [t('hub.gameSettings.cardPoolValue', { value: cardPoolLabel(state.setup.form.cardPoolScope) })]
         : []),
@@ -312,7 +313,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   function renderGameSettingsModal(g) {
     if (!state.arkhamGameSettingsOpen) return null
     const spec = key => g.settingsSpec.find(item => item.key === key)
-    const scope = spec('cardPoolScope'), rollback = spec('allowRollback'), deckMode = spec('deckMode')
+    const scope = spec('cardPoolScope'), rollback = spec('allowRollback')
     const close = () => { state.arkhamGameSettingsOpen = false; render() }
     return h('div', { className: 'ah-ai-dialogue-backdrop', onclick: event => { if (event.target === event.currentTarget) close() } },
       h('section', { className: 'ah-ai-dialogue-modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('hub.gameSettings.title'),
@@ -320,12 +321,6 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         h('header', {}, h('div', {}, h('small', {}, 'ARKHAM HORROR'), h('h2', {}, t('hub.gameSettings.title'))),
           h('button', { type: 'button', className: 'bg-btn secondary', onclick: close, 'aria-label': t('hub.gameSettings.closeAria') }, t('common.close'))),
         h('p', {}, t('hub.gameSettings.note')),
-        h('div', { className: 'ah-ai-dialogue-group ah-game-mode-settings' }, h('h3', {}, t('draft.modeLabel')),
-          select(deckMode.options.map(option => ({ ...option, label: t(option.value === 'draft' ? 'draft.title' : 'draft.standard') })), state.setup.form.deckMode || 'standard',
-            value => { state.setup.form.deckMode = value; render() },
-            { className: 'ah-game-mode-select', 'aria-label': t('draft.modeLabel'), 'aria-describedby': 'ah-game-mode-description' }),
-          h('p', { id: 'ah-game-mode-description', className: 'ah-game-mode-description', role: 'status' },
-            t(state.setup.form.deckMode === 'draft' ? 'draft.modeDescription' : 'draft.standardDescription'))),
         CARD_POOL_RESTRICTION_ENABLED ? h('div', { className: 'ah-ai-dialogue-group' },
           h('h3', {}, scope.label),
           h('div', { className: 'ah-game-settings-select' },
@@ -407,7 +402,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     if (event.key === 'Escape' && !state.busy) { event.preventDefault(); event.stopPropagation(); close(); return }
     if (event.key !== 'Tab') return
     const controls = [...event.currentTarget.querySelectorAll('button:not(:disabled), input, select, textarea, [tabindex="0"]')]
-      .filter(el => el.getClientRects().length && !el.closest('[hidden]'))
+      .filter(el => el.tabIndex >= 0 && el.getClientRects().length && !el.closest('[hidden]'))
     if (!controls.length) return
     const index = controls.indexOf(document.activeElement)
     if (index < 0 || (event.shiftKey ? index === 0 : index === controls.length - 1)) {
@@ -512,8 +507,36 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     target?.focus({ preventScroll: true })
   }
   const deckSeat = s => s?.mySeat ?? 0
-  const deckInvestigator = (s, g) => s?.state?.investigators?.[deckSeat(s)]
-    ? g?.clientData?.deckBuilder?.investigators.find(item => item.code === s.state.investigators[deckSeat(s)].code) : null
+  const configuredDeckInvestigator = (list, code, config) => {
+    const face = list.find(item => item.code === code)
+    if (!face?.alternateBuild) return face || null
+    const variant = face.alternateBuild
+    const back = list.find(item => item.code === (config?.back || face.code)) || face
+    const selected = config?.signatures || 'standard'
+    const advanced = selected === 'standard' ? [] : variant.advanced
+    const directives = config?.directives || variant.directives.slice(0, 3).map(card => card.code)
+    return { ...face, investigatorBuild: config || null, rules: back.rules, deckSize: back.deckSize, deckOptions: back.deckOptions,
+      allowedCards: [...back.allowedCards, ...(back.alternateBuild.startingCards || [])],
+      startingXp: back.alternateBuild.startingXp,
+      signatureCards: [...(selected === 'advanced' ? [] : face.signatureCards), ...advanced.filter(card => !card.subtype),
+        ...variant.directives.filter(card => directives.includes(card.code))],
+      signatureWeaknesses: [...(selected === 'advanced' ? [] : face.signatureWeaknesses), ...advanced.filter(card => card.subtype)] }
+  }
+  const deckInvestigator = (s, g) => {
+    const seat = s?.state?.investigators?.[deckSeat(s)]
+    const builder = g?.clientData?.deckBuilder
+    return withOpeningExperience(configuredDeckInvestigator(builder?.investigators || [], seat?.code, seat?.investigatorBuild), s, builder?.cardPool)
+  }
+  function withOpeningExperience(inv, session, pool) {
+    const campaign = session?.state?.campaign
+    const xp = campaign?.scenarioResults?.length ? 0 : campaign?.opening?.experience || 0
+    if (!inv || !xp) return inv
+    const startingXp = (inv.startingXp || 0) + xp
+    const cards = (pool || []).filter(card => card.xp > 0 && !card.upgradeOnly
+      && card.xp * (card.exceptional ? 2 : 1) <= startingXp
+      && inv.rules?.options.some(rule => rule.not !== true && matchesCardRule(card, rule, inv)))
+    return { ...inv, startingXp, allowedCards: [...new Set([...inv.allowedCards, ...cards.map(card => card.code)])] }
+  }
   // 按「卡牌范围」收窄构筑资料（导入/卡组库与服务端做同一判断）。
   const scopedBuilder = (s, builder) => {
     const scope = s ? s.state.cardPoolScope : state.setup?.form?.cardPoolScope || 'all'
@@ -524,9 +547,27 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       cardPool: (builder?.cardPool || []).filter(card => cardAllowedByScope(card.code, scope, cycle)),
     }
   }
+  function importPlan(deck, s, g) {
+    const builder = scopedBuilder(s, g?.clientData?.deckBuilder)
+    const current = deckInvestigator(s, g)
+    const config = deck.investigatorBuild || (current?.code === deck.investigatorCode ? current.investigatorBuild : null)
+    const investigator = withOpeningExperience(configuredDeckInvestigator(builder.investigators, deck.investigatorCode, config), s, builder.cardPool)
+    if (investigator) builder.investigators = builder.investigators.map(item => item.code === investigator.code ? investigator : item)
+    return planArkhamDbImport(deck, { ...builder, currentCode: current?.code })
+  }
+  async function applyImportedVariant(session, deck, g) {
+    if (!deck?.investigatorBuild || sameBuild(deck.investigatorBuild, deckInvestigator(session, g)?.investigatorBuild)) return session
+    if (!legal(session, 'hubConfigureInvestigator').length) return null
+    await submitMove({ action: 'hubConfigureInvestigator', build: deck.investigatorBuild }, session)
+    const updated = state.session
+    return sameBuild(deck.investigatorBuild, deckInvestigator(updated, g)?.investigatorBuild) ? updated : null
+  }
+  const sameBuild = (a, b) => (a?.back ?? null) === (b?.back ?? null) && (a?.signatures ?? null) === (b?.signatures ?? null)
+    && sameCards(a?.directives || [], b?.directives || [])
   // A local draft survives only while its saved source stays unchanged. An
   // automatic build or a saved edit must become the next editing baseline.
-  const deckDraftKey = (s, inv) => s ? JSON.stringify([s.sessionId, inv?.code, [...(recordForSeat(s, deckSeat(s))?.deck || [])].sort()]) : ''
+  const deckDraftKey = (s, inv) => s ? JSON.stringify([s.sessionId, inv?.code,
+    s.state.investigators[deckSeat(s)]?.investigatorBuild, [...(recordForSeat(s, deckSeat(s))?.deck || [])].sort()]) : ''
   const savedDraft = (s, inv) => s ? (recordForSeat(s, deckSeat(s))?.deck || []).filter(code => inv?.allowedCards.includes(code)) : []
   const sameCards = (a, b) => a.length === b.length && [...a].sort().join() === [...b].sort().join()
   const ensureDeckDraft = (s, g) => {
@@ -609,7 +650,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     try {
       const id = overwrite ? (targetId || lib.currentId) : null
       const deck = await saveLocalDeck(api, { id, name: lib.name.trim() || t('hub.deckLibrary.defaultName', { name: inv.name }),
-        investigatorCode: inv.code, codes: draft })
+        investigatorCode: inv.code, investigatorBuild: inv.investigatorBuild, codes: draft })
       lib.currentId = deck.id; lib.selectedId = deck.id; lib.name = deck.name
       lib.decks = [deck, ...(lib.decks || []).filter(item => item.id !== deck.id)]
       lib.notice = t(overwrite ? 'hub.deckLibrary.overwritten' : 'hub.deckLibrary.saved', { deck: deck.name, count: draft.length })
@@ -653,6 +694,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       const updated = await saveLocalDeck(api, {
         id: deck.id, name: String(nextName ?? '').trim() || deck.name,
         investigatorCode: deck.investigator_code, slots: deck.slots,
+        investigatorBuild: deck.investigatorBuild,
         arkhamdbId: deck.arkhamdbId, arkhamdbKind: deck.arkhamdbKind,
       })
       lib.decks = (lib.decks || []).map(item => item.id === updated.id ? updated : item)
@@ -670,6 +712,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       const copy = await saveLocalDeck(api, {
         name: t('hub.library.duplicateSuffix', { deck: deck.name }).slice(0, 60),
         investigatorCode: deck.investigator_code, slots: deck.slots,
+        investigatorBuild: deck.investigatorBuild,
         arkhamdbId: deck.arkhamdbId, arkhamdbKind: deck.arkhamdbKind,
       })
       lib.decks = [copy, ...(lib.decks || [])]
@@ -714,6 +757,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       const saved = await saveLocalDeck(api, {
         name: importedDeck.name,
         investigatorCode: importedDeck.investigatorCode,
+        investigatorBuild: importedDeck.investigatorBuild,
         codes: plan.codes,
         arkhamdbId: importedDeck.id,
         arkhamdbKind: importedDeck.kind,
@@ -755,7 +799,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         throw error
       })
       if (!deck) return
-      const plan = planArkhamDbImport(deck, { ...scopedBuilder(s, g.clientData?.deckBuilder), currentCode: inv.code })
+      const plan = importPlan(deck, s, g)
       if (!plan.ready || plan.mismatch || plan.errors.length) throw new Error(t('hub.deck.recommendedUnavailable'))
 
       const decks = await listLocalDecks(api)
@@ -818,15 +862,32 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   function renderSetupModal(g) {
     if (state.arkhamSaves === undefined) onOpenSetup()
     const savesTab = state.arkhamSetupTab === 'saves'
+    const form = state.setup.form
+    const choices = campaignChoices(g)
+    const selectedCampaign = choices.find(campaign => campaign.id === form.campaignId)
+    const picker = state.arkhamCampaignPicker
+    const focusSetupControl = id => queueMicrotask(() => document.getElementById(id)?.focus({ preventScroll: true }))
+    const openPicker = () => {
+      const category = selectedCampaign?.category || 'seasonOne'
+      state.arkhamCampaignPicker = { category, campaignId: form.campaignId, deckMode: form.deckMode || 'standard' }
+      render()
+      focusSetupControl(`ah-campaign-tab-${category}`)
+    }
+    const closePicker = () => {
+      state.arkhamCampaignPicker = null
+      render()
+      focusSetupControl('ah-campaign-picker-open')
+    }
     // 存档页内容更短：用切换前记录的「新游戏」页高度锁住弹窗（见 openSavesTab）。
     const stableEntryHeight = savesTab && state.arkhamSetupStableHeight ? `${state.arkhamSetupStableHeight}px` : null
     const themeAttributes = presentationAttributes({ campaign: { id: state.setup?.form?.campaignId } })
     const saves = state.arkhamSaves?.filter(item => (item.mode || (item.online ? 'online' : 'solo')) === (state.arkhamSaveMode || 'solo')) ?? state.arkhamSaves
     const newGame = h('div', { className: 'ah-hub-setup-fields' },
-      g.settingsSpec.filter(spec => spec.type === 'select' && !['playerCount', 'teammates', 'cardPoolScope', 'deckMode'].includes(spec.key)).map(spec => {
+      renderCampaignSummary(h, selectedCampaign, form.deckMode, openPicker),
+      g.settingsSpec.filter(spec => spec.type === 'select' && !['playerCount', 'teammates', 'campaignId', 'cardPoolScope', 'deckMode'].includes(spec.key)).map(spec => {
         return h('label', { className: 'bg-field' },
         h('span', {}, spec.label),
-        select(spec.options, state.setup.form[spec.key], value => { state.setup.form[spec.key] = spec.key === 'playerCount' ? Number(value) : value; render() }),
+        select(spec.options, form[spec.key], value => { form[spec.key] = value; render() }),
         spec.description ? h('small', {}, spec.description) : null)
       }),
       renderGameSettings(g),
@@ -872,10 +933,10 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
             state.arkhamDeleteConfirmId === item.sessionId
               ? h('button', { className: 'bg-btn', onclick: () => deleteSave(item.sessionId) }, t('hub.saves.confirmDelete'))
               : h('button', { className: 'bg-btn secondary', onclick: () => { state.arkhamDeleteConfirmId = item.sessionId; render() } }, t('hub.delete'))))))
-    return h('div', { className: 'bg-backdrop' },
+    return h('div', { className: 'bg-backdrop ah-setup-backdrop' },
       h('div', { className: 'bg-modal ah-hub-setup ah-office ah-theme', ...themeAttributes,
         style: stableEntryHeight ? { ...themeAttributes.style, '--ah-entry-stable-h': stableEntryHeight } : themeAttributes.style,
-        role: 'dialog', 'aria-modal': 'true', 'aria-label': t('hub.setup.dialogAria'),
+        role: 'dialog', 'aria-modal': 'true', 'aria-label': t('hub.setup.dialogAria'), inert: !!picker,
         onkeydown: modalKeys(() => { state.setup = null; render() }), onclick: event => event.stopPropagation() },
         h('button', { type: 'button', className: 'bg-btn secondary ah-hub-setup-cancel',
           onclick: () => { state.setup = null; render() } }, t('common.cancel')),
@@ -896,7 +957,20 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         savesTab ? saveList : newGame,
         state.error ? h('p', { role: 'alert' }, state.error) : null)),
       renderGameSettingsModal(g),
-      renderAiDialogueModal(g))
+      renderAiDialogueModal(g),
+      picker && renderCampaignPicker(h, {
+        choices, picker, close: closePicker, onkeydown: modalKeys(closePicker),
+        onChange: (change, focusId) => {
+          Object.assign(picker, change)
+          render()
+          if (focusId) focusSetupControl(focusId)
+        },
+        confirm: () => {
+          form.campaignId = picker.campaignId
+          form.deckMode = picker.deckMode
+          closePicker()
+        },
+      }))
   }
 
   function action(s, move, label = move.label, className = 'bg-btn') {
@@ -1365,6 +1439,24 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       h('div', { className: 'ah-departure-team' }, st.investigators.map(inv => departureMember(s, inv))))
   }
 
+  function investigatorBuildControls(s, inv, definition) {
+    if (!legal(s, 'hubConfigureInvestigator').length || !definition.alternateBuild) return null
+    const { original, alternate, directives } = definition.alternateBuild
+    const build = inv.investigatorBuild || { back: inv.code, signatures: 'standard', directives: directives.slice(0, 3).map(card => card.code) }
+    const save = changes => submitMove({ action: 'hubConfigureInvestigator', build: { ...build, ...changes } }, s)
+    const field = (label, value, options, onChange) => h('label', { className: 'ah-investigator-pack-filter' }, label,
+      h('select', { 'aria-label': label, disabled: locked(s), onchange: event => onChange(event.target.value) },
+        options.map(([code, name]) => h('option', { value: code, selected: code === value }, name))))
+    return h('div', { className: 'ah-investigator-filter-bar' },
+      field(t('hub.variant.back'), build.back, [[original, t('hub.variant.original')], [alternate, t('hub.variant.alternate')]], back => save({ back })),
+      field(t('hub.variant.signatures'), build.signatures, [['standard', t('hub.variant.standard')],
+        ['advanced', t('hub.variant.advanced')], ['both', t('hub.variant.both')]],
+        signatures => save({ signatures })),
+      ...build.directives.map((code, index) => field(t('hub.variant.directive', { number: index + 1 }), code,
+        directives.filter(card => card.code === code || !build.directives.includes(card.code)).map(card => [card.code, card.name]),
+        selected => save({ directives: build.directives.map((item, i) => i === index ? selected : item) }))))
+  }
+
   function investigators(s, g) {
     const st = s.state
     const builderInvestigators = g.clientData?.deckBuilder?.investigators || []
@@ -1458,6 +1550,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
                     onclick: () => inspectCard(candidate.code) }, tableIcon('book')))))))
               : h('p', { className: 'ah-office-empty' }, t('hub.investigators.empty'))) : null,
           active && inv.seat === (s.mySeat ?? 0) ? h('div', { className: 'ah-hub-actions' },
+            investigatorBuildControls(s, inv, detail),
             recommendedDeckAction(s, g),
             selected ? h('button', { className: 'bg-btn secondary', onclick: () => changeTab('deck') },
               t(recordDeckSaved(record) ? 'hub.task.reviewDeck' : 'hub.investigators.goDeck')) : null,
@@ -1540,6 +1633,18 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       })) : h('div', { className: 'ah-office-empty' }, tableIcon('book'), h('p', {}, t('hub.deck.empty'))))
   }
 
+  // 批次 2：关间插入独立支线（主战役 manifest.sideStories 声明；服务端给出 hubStartSideStory
+  // 合法动作与每人经验费用，前端只负责展示与提交，不复制扣费/返回下一章的规则）。
+  function sideStoryPanel(s) {
+    const moves = legal(s, 'hubStartSideStory')
+    if (!moves.length) return null
+    return h('section', { className: 'ah-hub-side-story', 'data-hub-side-story-panel': 'true', 'aria-label': t('hub.sideStory.aria') },
+      h('h3', {}, t('hub.sideStory.title')),
+      h('p', { className: 'ah-hub-side-story-hint' }, t('hub.sideStory.hint')),
+      h('div', { className: 'ah-hub-actions' },
+        moves.map(move => action(s, move, move.label, 'bg-btn secondary'))))
+  }
+
   function upgrades(s, g) {
     if (s.state.deckMode === 'draft') return draftPane(s, g)
     const st = s.state
@@ -1559,8 +1664,14 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const shown = filterCards(pool, cardFilters('upgrade'))
     if (shown.length && !shown.some(card=>card.code===state.arkhamUpgradeSelected)) state.arkhamUpgradeSelected = shown[0].code
     const options = shown.length ? purchases.filter(move => move.added === state.arkhamUpgradeSelected) : []
-    if (!options.some(move => move.removed === state.arkhamUpgradeRemoved)) state.arkhamUpgradeRemoved = options[0]?.removed
-    const selected = options.find(move => move.removed === state.arkhamUpgradeRemoved)
+    const selectReplacement = move => {
+      state.arkhamUpgradeRemoved = move?.removed
+      state.arkhamUpgradeKeepsLower = Boolean(move?.keepLower)
+      state.arkhamUpgradeNotice = null
+    }
+    const isSelected = move => move.removed === state.arkhamUpgradeRemoved && Boolean(move.keepLower) === state.arkhamUpgradeKeepsLower
+    if (!options.some(isSelected) && options.length) selectReplacement(options[0])
+    const selected = options.find(isSelected)
     const cost = Number(selected?.label.match(/（(\d+) XP）/)?.[1] || 0)
     const record = st.campaign.investigators[s.mySeat ?? 0]
     const draft = record?.upgradeDraft
@@ -1579,6 +1690,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       'data-zoom-code': code, 'data-zoom-name': name(code), onclick: () => inspectCard(code),
     }, art(code, name(code)))
     return h('section', { className: 'ah-hub-pane' }, h('h2', {}, t('hub.upgrade.title')),
+      sideStoryPanel(s),
       customizationPanel(s),
       st.uiState !== 'interlude' ? h('p', {}, t('hub.upgrade.interludeOnly')) : null,
       st.investigators.map(inv => h('article', { className: 'ah-hub-seat ah-office-upgrade-seat' },
@@ -1599,10 +1711,15 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
                 options.filter(move => move.removed == null).map(move => h('button', {
                   type: 'button', className: 'ah-upgrade-replacement',
                   'data-focus-key': 'replace:null', 'aria-pressed': String(move === selected),
-                  onclick: () => { state.arkhamUpgradeRemoved = move.removed; state.arkhamUpgradeNotice = null; render() },
+                  onclick: () => { selectReplacement(move); render() },
                 }, name(move.removed))),
+                options.filter(move => move.keepLower).map(move => h('button', {
+                  type: 'button', className: 'ah-upgrade-replacement',
+                  'data-focus-key': 'retain:' + move.removed, 'aria-pressed': String(move === selected),
+                  onclick: () => { selectReplacement(move); render() },
+                }, t('hub.upgrade.retainVersion', { name: name(move.removed) }))),
                 deckCodes.map(code => {
-                  const move = options.find(item => item.removed === code)
+                  const move = options.find(item => item.removed === code && !item.keepLower)
                   const reason = move ? null : blockedReason.get(code) || t('hub.upgrade.cannotReplace')
                   return h('button', {
                     type: 'button', className: 'ah-upgrade-replacement' + (move ? '' : ' is-locked'),
@@ -1614,7 +1731,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
                     title: move ? t('hub.upgrade.replaceTitle', { name: name(code) }) : reason,
                     'aria-label': move ? t('hub.upgrade.replaceAria', { name: name(code) }) : t('hub.upgrade.blocked', { name: name(code), reason }),
                     onclick: () => {
-                      if (move) { state.arkhamUpgradeRemoved = move.removed; state.arkhamUpgradeNotice = null }
+                      if (move) selectReplacement(move)
                       else state.arkhamUpgradeNotice = code
                       render()
                     },
@@ -1840,8 +1957,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     if (imp.pending.sessionId !== s.sessionId) { imp.pending = null; return }
     if (inv?.code !== imp.pending.code) { if (!state.busy) imp.pending = null; return }
     imp.pending = null
-    const builder = scopedBuilder(s, g.clientData?.deckBuilder)
-    const plan = imp.deck && planArkhamDbImport(imp.deck, { investigators: builder?.investigators, cardPool: builder?.cardPool, currentCode: inv.code })
+    const plan = imp.deck && importPlan(imp.deck, s, g)
     if (!plan?.ready || plan.mismatch) return
     state.arkhamDeckUndo = [[...(state.arkhamDeckDraft || [])]]; state.arkhamDeckRedo = []
     state.arkhamDeckDraft = [...plan.codes]
@@ -1852,21 +1968,37 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
 
   function importPanel(s, g, inv, draft, replaceDraft) {
     const imp = state.arkhamDeckImport
-    const builder = scopedBuilder(s, g.clientData?.deckBuilder)
     const deck = imp.deck
-    const plan = deck ? planArkhamDbImport(deck, { investigators: builder?.investigators, cardPool: builder?.cardPool, currentCode: inv?.code }) : null
+    const plan = deck ? importPlan(deck, s, g) : null
     const total = deck ? deck.entries.reduce((sum, entry) => sum + entry.count, 0) : 0
     const switchMove = plan?.ready && plan.mismatch ? legal(s, 'hubSelectInvestigator').find(move => move.code === plan.investigator.code) : null
     const list = (items, className) => h('ul', { className }, items.map(item => h('li', {},
       h('b', {}, `${item.name} ×${item.count}`), h('span', {}, item.reason))))
     const actions = !plan || !plan.ready ? null : !plan.mismatch
-      ? h('button', { className: 'bg-btn', disabled: state.busy, onclick: () => {
-        replaceDraft(plan.codes)
+      ? h('button', { className: 'bg-btn', disabled: state.busy, onclick: async () => {
+        const session = await applyImportedVariant(s, deck, g)
+        if (!session) { imp.error = t('hub.library.applyDisabledLocked'); render(); return }
+        if (deck.investigatorBuild) {
+          ensureDeckDraft(session, g)
+          state.arkhamDeckDraft = [...plan.codes]
+        } else replaceDraft(plan.codes)
         imp.open = false
         imp.notice = plan.errors.length ? t('hub.import.loadedWithErrors', { deck: deck.name }) : t('hub.import.loadedOk', { deck: deck.name })
         render()
       } }, draft.length ? t('hub.import.loadDraftReplace', { count: draft.length }) : t('hub.import.loadDraft'))
-      : switchMove ? h('button', { className: 'bg-btn', disabled: locked(s), onclick: () => {
+      : switchMove ? h('button', { className: 'bg-btn', disabled: locked(s), onclick: async () => {
+        if (deck.investigatorBuild) {
+          await submitMove(switchMove, s)
+          const session = state.session?.state.investigators?.[deckSeat(state.session)]?.code === plan.investigator.code
+            ? await applyImportedVariant(state.session, deck, g) : null
+          if (!session) { imp.error = t('hub.library.applyDisabledLocked'); render(); return }
+          ensureDeckDraft(session, g)
+          state.arkhamDeckDraft = [...plan.codes]
+          imp.open = false
+          imp.notice = t('hub.import.switched', { name: plan.investigator.name, deck: deck.name })
+          render()
+          return
+        }
         imp.pending = { sessionId: s.sessionId, code: plan.investigator.code }
         submitMove(switchMove, s)
       } }, t('hub.import.switchAndLoad', { name: plan.investigator.name }))
@@ -1901,14 +2033,9 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
 
   function libraryDeckModel(deck, s, g) {
     const builder = g?.clientData?.deckBuilder || { investigators: [], cardPool: [] }
-    const scoped = scopedBuilder(s, builder)
     const current = s ? deckInvestigator(s, g) : null
     const investigator = builder.investigators.find(item => item.code === deck.investigator_code) || null
-    const plan = deck.description ? planArkhamDbImport(deck.description, {
-      investigators: scoped.investigators,
-      cardPool: scoped.cardPool,
-      currentCode: current?.code,
-    }) : null
+    const plan = deck.description ? importPlan(deck.description, s, g) : null
     const rawCodes = slotsToCodes(deck.slots)
     const codes = plan?.codes?.length ? plan.codes : rawCodes
     const cardMap = new Map(builder.cardPool.map(card => [card.code, card]))
@@ -1930,6 +2057,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const ready = !!plan?.ready && !plan.errors.length && codes.length === size
     const blocked = plan?.blocked?.length || 0
     const equipped = !!(s && current?.code === deck.investigator_code
+      && (!deck.investigatorBuild || sameBuild(deck.investigatorBuild, current.investigatorBuild))
       && sameCards(codes, savedDraft(s, current)))
     const skillIcons = ['willpower', 'intellect', 'combat', 'agility', 'wild'].map(skill => [skill,
       cards.reduce((sum, card) => sum + (Number(card.icons?.[skill]) || 0) * (counts[card.code] || 0), 0)])
@@ -1962,6 +2090,9 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       if (!session || inv?.code !== model.investigator.code) return
       switchedInvestigator = true
     }
+    session = await applyImportedVariant(session, model.deck, g)
+    if (!session) { lib.error = t('hub.library.applyDisabledLocked'); render(); return }
+    inv = deckInvestigator(session, g)
     if (edit || model.plan.errors.length) {
       ensureDeckDraft(session, g)
       state.arkhamDeckUndo = [[...(state.arkhamDeckDraft || [])]]
@@ -1999,13 +2130,8 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   function libraryImportPanel(s, g) {
     const lib = deckLibrary()
     const imp = state.arkhamDeckImport ||= { text: '', open: false }
-    const builder = scopedBuilder(s, g?.clientData?.deckBuilder)
     const deck = imp.deck
-    const plan = deck ? planArkhamDbImport(deck, {
-      investigators: builder?.investigators,
-      cardPool: builder?.cardPool,
-      currentCode: s ? deckInvestigator(s, g)?.code : null,
-    }) : null
+    const plan = deck ? importPlan(deck, s, g) : null
     const total = deck ? deck.entries.reduce((sum, entry) => sum + entry.count, 0) : 0
     const list = (items, className) => h('ul', { className }, items.map(item => h('li', {},
       h('b', {}, `${item.name} ×${item.count}`), h('span', {}, item.reason))))
@@ -2389,7 +2515,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const fullPool = (g.clientData?.deckBuilder?.cardPool || []).map(card=>({...s.state.cards?.[card.code],...card}))
     const cardMap = Object.fromEntries(fullPool.map(card => [card.code, card]))
     const rules = inv ? deckRules(inv,draft,cardMap) : null
-    const startingExperience = [...new Set(draft)].reduce((sum, code) => sum + (cardMap[code]?.startingExperience || 0), 0)
+    const startingExperience = [...new Set(draft)].reduce((sum, code) => sum + (cardMap[code]?.startingExperience || 0), inv?.startingXp || 0)
     const experienceCost = card => (card?.xp || 0) * (card?.exceptional ? 2 : 1)
     const experienceSpent = draft.reduce((sum, code) => sum + experienceCost(cardMap[code]), 0)
     const pool = fullPool.filter(card => cardAllowedByScope(card.code, scope, cycle)
@@ -2541,7 +2667,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   }
 
   return { onOpenSetup,
-    renderSetupModal: g => stablePanel('.ah-hub-setup', () => renderSetupModal(g)),
+    renderSetupModal: g => stablePanel('.ah-setup-backdrop', () => renderSetupModal(g)),
     renderGame: s => stablePanel('.ah-hub', () => renderGame(s)),
     renderDeckModal: s => stablePanel('.ah-db-modal', () => renderDeckModal(s)),
     renderLibraryModal: s => stablePanel('.ah-deck-library-modal', () => renderLibraryModal(s)),

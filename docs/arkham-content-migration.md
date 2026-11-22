@@ -162,6 +162,11 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
 
 ### 4.3 第 2 步：拆分原语
 
+独立剧本可注册成一章战役，并用 `opening.experience` 配置起始构筑预算，`opening.investigators` 限定可选调查员。
+难度与混乱袋沿用清单的 `chaosBags`。玩家包声明 `includeInAutomaticWeaknessPool: true` 后，被战役引用时可加入自动构筑的基础弱点池。
+战役作者可在进入可选支线的分支上用 `when: { eachInvestigatorXp: N }` 检查每位现役调查员的经验，
+并用 `{ type: 'spendExperience', amount: N }` 一次付清。支线结算沿用原有结局效果，支线节点的 `next` 指向主线续章。
+
 把上一步的机制拆成**窄原语**，先实现通用层，不写卡：
 
 - 先盘点已有原语：`src/engine/effects.js` 的 `EFFECT_PRIMITIVES`、`ctx.api` 的 `api-*.js`、`ability.js` 的 `kind`、`matcher.js` 组合子、`targets.js` 的目标枚举、`play-condition.js` 的打出条件。能在现有原语里组合出来的，不新增。

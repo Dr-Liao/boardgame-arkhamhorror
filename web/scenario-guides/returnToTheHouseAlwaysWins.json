@@ -1,0 +1,249 @@
+{
+  "id": "returnToTheHouseAlwaysWins",
+  "campaignId": "returnToTheDunwichLegacy",
+  "sourceKind": "authored",
+  "officialChinese": false,
+  "note": "本关按重返剧本参考卡 51015 的设置差异布置；完整步骤见设置段落与特别规则。",
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "id": "intro-0",
+          "title": "冒险 I–B: 百赌百胜",
+          "children": [
+            {
+              "id": "intro-0-0",
+              "text": "阿米蒂奇博士建议你去找摩尔根寻求帮助。他并不知道摩尔根现在的情况，但是他对摩尔根最近的作为很不满意。摩尔根现在正在四叶草俱乐部，那是一个商业街上的地下赌场。要找到这个地方可不容易，你花了一点点小钱，才让几个餐馆服务员乖乖开口。你找到了剧院附近的“月下美人”义大利餐馆，当然这只是个掩饰，更深处藏著的，是铜臭味的秘密。\n\n在月下美人餐馆门口，一个穿著白色条纹西装的男人，正打量著你。“好好享受吧。”他为你们打开了餐馆的门，脸上浮现出一丝奸诈的笑容。"
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "returnToSetup",
+          "title": "重返设置差异",
+          "text": "遵循敦威治遗产的剧本手册进行冒险设置，但以下步骤例外：\n- 在找出遭遇组的卡牌时，还需要为重返百赌百胜找出几个新遭遇组，如下所示：\n(继续阅读背面。)"
+        },
+        {
+          "id": "baseSetup-0",
+          "text": "将下列遭遇组中的所有遭遇卡找出: 百赌百胜、坏运、娜奥米的打手、老鼠。"
+        },
+        {
+          "id": "baseSetup-1",
+          "text": "将遭遇牌丑陋异形和恐惧打击放在一旁，位于场外。"
+        },
+        {
+          "id": "baseSetup-2",
+          "text": "将俱乐部大厅、俱乐部酒吧、俱乐部卡牌室、月下美人放置入场。每位调查员从月下美人开始游戏。"
+        },
+        {
+          "id": "baseSetup-3",
+          "text": "将俱乐部赌场管理员放置入俱乐部大厅。"
+        },
+        {
+          "id": "baseSetup-4",
+          "text": "将下列卡牌放在一边：黑暗走廊、彼得·克劳佛、佛朗西斯·摩尔根博士，以及所有走廊后门。"
+        },
+        {
+          "id": "baseSetup-5",
+          "text": "注意： 在这场冒险开始时，密谋1a会给每个罪犯敌人冷漠关键词，这些敌人不会自动与你交战。在某个时间点，这些敌人会失去该关键词，之后，这些敌人会按照正常规则，自动与你交战。"
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "card-51016",
+          "title": "俱乐部大厅",
+          "text": "强制 - 俱乐部大厅被揭示后：将放在一边的俱乐部舞台放置入场。\n当前场景为场景1时，俱乐部大厅获得：“[action]：查看你牌库顶的1张卡牌。如果是[[盟友]]支援，你可以将其放置入场。否则，抽取该卡牌。(每轮仅限一次。)”"
+        },
+        {
+          "id": "card-51017",
+          "title": "俱乐部舞台",
+          "text": "俱乐部舞台与俱乐部酒吧连接。\n当前场景为场景1时，俱乐部舞台获得：“[action]花费1资源：将该资源放置在俱乐部舞台上。\n[free]如果俱乐部舞台上有1[per_investigator]个资源：从供应堆获得1[per_investigator]个线索。(每场游戏团队仅限一次。)”"
+        },
+        {
+          "id": "card-51018",
+          "title": "骗术穿帮",
+          "text": "涌动。\n显现 - 每位“作弊”的玩家失去2资源并受到1点伤害。"
+        },
+        {
+          "id": "card-51019",
+          "title": "提高赌注",
+          "text": "显现 - 你必须决定(选择一项)：\n- 记住你“作弊”了。\n- 失去5资源。\n- 将提高赌注放置入场，放到你的威胁区域。其获得：“你所在地点每个[[罪犯]]敌人失去冷漠。如果当前场景为场景2或3，你所在地点每个[[罪犯]]敌人+1攻击并+1躲避。”"
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "未达成结局",
+          "children": [
+            {
+              "id": "noResolution-0",
+              "text": "如果未达成任何结局(所有调查员都在场景3前投降，或被消灭): 你勉强活着离开了俱乐部。推进至 结局1"
+            }
+          ]
+        },
+        {
+          "id": "r1",
+          "title": "结局1",
+          "children": [
+            {
+              "id": "r1-0",
+              "text": "结局 1: 你飞一样地逃出了餐馆，直到离开这个街区。你停下大口喘着气，突然间，地面轻微晃动起来，人们从家中涌出，来到大街上看到底发生了什么。你推开人群冲到最前面，几分钟前你刚逃出来的月下美人，已经变成了一堆废墟。连同摩尔根博士一起，在这个世界上消失了。\n\n• 在剧本日志中记录， 欧巴尼恩帮对调查员不满。\n\n• 在剧本日志中记录，佛朗西斯·摩尔根博士被绑架。\n\n• 如果有调查员在冒险中“作弊”了，添加一个 [elder_thing] 到混乱袋，并持续至剧本结束。\n\n• 每位调查员获得等同于胜利牌区中胜利点数总值的经验。回想起今晚的恐惧，每位调查员获得额外1点经验。\n• 经验: （按上述说明计算）\n\n• 如果这是本战役的第一个冒险，推进至 冒险 I–A: 课外活动。 否则，推进至幕间故事 I：阿米蒂奇的命运。"
+            }
+          ]
+        },
+        {
+          "id": "r2",
+          "title": "结局 2",
+          "children": [
+            {
+              "id": "r2-0",
+              "text": "结局 2: “我到底怎么了……”你们在逃跑时，摩尔根博士终于清醒过来。你询问他还记得什么，他迷茫地摇了摇头。“一切都迷迷糊糊的，我那时连赢了好几把，可能一下兴奋就喝多了。但是，这个怪物。我从未见过那样的生物……”他的声音因为疲劳而变轻，你能看得出来，他正在飞速思考著。突然，他瞪大了眼睛，脸色也变得苍白。“我可能现在状况不太好，但我会不惜一切代价协助你们的调查。”\n\n• 在剧本日志中记录，欧巴尼恩帮对调查员不满。\n\n• 在剧本日志中，记录 调查员解救了佛朗西斯·摩尔根博士。任意一位调查员获得佛朗西斯·摩尔根博士，并可以加入其牌组中，该卡不计入卡牌张数限制。\n\n• 如果有调查员在冒险中“作弊”了，添加一个 [elder_thing] 到混乱袋，并持续至剧本结束。\n\n• 每位调查员获得等同于胜利牌区中胜利点数总值的经验。\n• 经验: （按上述说明计算）\n\n• 进入冒险 I–A: 课外活动。"
+            }
+          ]
+        },
+        {
+          "id": "r3",
+          "title": "结局 3",
+          "children": [
+            {
+              "id": "r3-0",
+              "text": "结局 3: 虽然你无法找到摩尔根博士，但你们救出的那个男人，十分感激你们的友善。他名叫彼得·克劳佛，是四叶草俱乐部所在大楼的主人。尽管发生了这种灾难，他还是保持着专业的冷静头脑。你们向着街道走去，一辆B-70克莱斯勒高级轿车停在你们面前，从里面走出一位留着褐色长发，眼眸细长的美丽女士。她身后跟着一个目光凶恶，身着黑色西服的大汉。 “彼得，”那女子看到你们时，好像松了一口气。 “你没事真是太好了。我听说你遇到麻烦了？”她转头看了看你们，“这些人是谁？”\n\n克劳佛拍了拍肩上的灰尘，一脸轻松。 “娜奥米，亲爱的，这些是我的朋友。他们……”他清了清喉咙。 “他们护送我离开了房子，”他停顿了一下，简短地解释道。 “我很感激他们。”那个女人叉起双手放在胸前，仔细地打量着你们，然后是一个很明显的假笑。\n\n“那好吧。我谢谢你们照顾彼得。你们可以走了，剩下的事交给我们处理。”她向那个壮汉点了点头，然后从后门走进了俱乐部，一边从大衣下拿出了枪。你不太清楚他们会怎么“处理”，不过你也不想知道具体方案。你们谢别了娜奥米和彼得，离开了这儿。\n\n• 在剧本日志中记录，调查员得到娜奥米的支持。\n\n• 在剧本日志中记录，佛朗西斯·摩尔根博士被绑架。\n\n• 如果有调查员在冒险中“作弊”了，添加一个 [elder_thing] 到混乱袋，并持续至剧本结束。\n\n• 每位调查员获得等同于胜利牌区中胜利点数总值的经验。\n• 经验: （按上述说明计算）\n\n• 进入幕间故事 I：阿米蒂奇的命运。"
+            }
+          ]
+        },
+        {
+          "id": "r4",
+          "title": "结局 4",
+          "children": [
+            {
+              "id": "r4-0",
+              "text": "结局 4: 你被消防员从废墟中拉了出来，“这儿还有人活著！”然后你感到自己被人抱了起来，放在担架上，有警察来盘问你发生了什么。你很清楚，他们不会相信你的故事，那个建筑里的怪物若非亲眼所见，有谁会信呢？你一下感到语塞，憋了半天，勉强讲了一些话作为塘塞。“我们会把你带回圣玛莉医院的，”一名护士把你送上了救护车。你感到事态已经开始变得复杂，于是趁著护士不注意，你偷偷地溜走了……\n\n• 在剧本日志中记录，欧巴尼恩帮对调查员不满。\n\n• 在剧本日志中记录，佛朗西斯·摩尔根博士被绑架。\n\n• 如果有调查员在冒险中“作弊”了，添加一个 [elder_thing] 到混乱袋，并持续至剧本结束。\n\n• 每位调查员受到1点肉体创伤。\n\n• 在冒险日志中记录，调查员们昏迷了数小时。\n\n• 每位调查员获得等同于胜利牌区中胜利点数总值的经验。回想起今晚的恐惧，每位调查员获得额外1点经验。\n• 经验: （按上述说明计算）\n\n• 如果这是本战役的第一个冒险，推进至 冒险 I–A: 课外活动。 否则，推进至幕间故事 I：阿米蒂奇的命运。"
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "id": "intro-0",
+          "title": "Scenario I-B: The House Always Wins",
+          "children": [
+            {
+              "id": "intro-0-0",
+              "text": "Dr. Armitage suggested you track down his associate Dr. Francis Morgan. He’s not sure whether Dr. Morgan is in trouble, but he’s not particularly happy with his colleague’s present choice of company. He’s in the Clover Club, a notorious gambling joint somewhere downtown. Finding the club’s exact location isn’t easy—you have to grease a few palms just to learn which of the Downtown restaurants operates as the club’s front. That restaurant is La Bella Luna, a somewhat upscale Italian eatery by the theatre. You change into your Sunday best and make your way there.\n\nIn front of La Bella Luna stands a man in a pinstripe suit who sizes you up as you approach. “Enjoy yourselves,” he says with a snake-like grin as he holds open the restaurant’s front door."
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "returnToSetup",
+          "title": "Return to Setup Changes",
+          "text": "Perform the setup as indicated in The Dunwich Legacy Campaign Guide, with the following exceptions:\n- When gathering encounter sets, also gather the new encounter sets for Return to The House Always Win shown here.\n(Continued on reverse side.)"
+        },
+        {
+          "id": "baseSetup-0",
+          "text": "Gather all cards from the following encounter sets: The House Always Wins, Bad Luck, Naomi’s Crew, Rats."
+        },
+        {
+          "id": "baseSetup-1",
+          "text": "Set the Hideous Abominations and Striking Fear encounter sets aside, out of play."
+        },
+        {
+          "id": "baseSetup-2",
+          "text": "Put the Clover Club Lounge, Clover Club Bar, Clover Club Cardroom, and La Bella Luna locations into play. Each investigator begins play in La Bella Luna."
+        },
+        {
+          "id": "baseSetup-3",
+          "text": "Put Clover Club Pit Boss into play in the Clover Club Lounge."
+        },
+        {
+          "id": "baseSetup-4",
+          "text": "Set the following cards aside, out of play: Darkened Hall, Peter Clover, Dr. Francis Morgan, and each copy of Back Hall Doorway."
+        },
+        {
+          "id": "baseSetup-5",
+          "text": "Note: At the start of this scenario, agenda 1a grants each Criminal enemy the aloof keyword, which stops those enemies from automatically engaging you. At some point, those enemies may lose the aloof keyword. Remember that enemies who are no longer aloof will automatically engage investigators at their location, as per normal."
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "card-51016",
+          "title": "Clover Club Lounge",
+          "text": "Forced - After Clover Club Lounge is revealed: Put the set-aside Clover Club Stage into play.\nWhile it is Act 1, Clover Club Lounge gains: \"[action]: Look at the top card of your deck. If it is an [[Ally]] asset, you may put it into play. Otherwise, draw it. (Limit once per round.)\""
+        },
+        {
+          "id": "card-51017",
+          "title": "Clover Club Stage",
+          "text": "Clover Club Bar is connected to Clover Club Stage.\nWhile it is Act 1, Clover Club Stage gains: \"[action] Spend 1 resource: Place that resource on Clover Club Stage.\n[fast] If there are 1 [per_investigator] resources on Clover Club Stage: Gain 1 [per_investigator] clues from the token pool. (Group limit once per game.)\""
+        },
+        {
+          "id": "card-51018",
+          "title": "Caught Cheating",
+          "text": "Surge.\nRevelation - Each player who has \"cheated\" must lose 2 resources and take 1 damage."
+        },
+        {
+          "id": "card-51019",
+          "title": "Raise the Stakes",
+          "text": "Revelation - You must (choose one):\n- Remember that you have \"cheated.\"\n- Lose 5 resources.\n- Put Raise the Stakes into play in your threat area. It gains: \"Each [[Criminal]] enemy at your location loses aloof. If it is Act 2 or 3, each [[Criminal]] enemy engaged with you gets +1 fight and +1 evade.\""
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "No Resolution",
+          "children": [
+            {
+              "id": "noResolution-0",
+              "text": "If no resolution was reached (each investigator resigned before Act 3 or was defeated): You barely made it out of the club alive. Go to Resolution 1."
+            }
+          ]
+        },
+        {
+          "id": "r1",
+          "title": "Resolution 1",
+          "children": [
+            {
+              "id": "r1-0",
+              "text": "Resolution 1: You flee to the end of the block and pause to recover. Before you can catch your breath, the ground shakes with a thunderous crash. People emerge from their homes and storefronts to see what the ruckus is, and a crowd forms on the street. You head to the front of the crowd and are horrified to see the building from which you fled just minutes earlier reduced to rubble. There is no sign of Dr. Morgan anywhere.\n\n• In your Campaign Log, record that the O’Bannion gang has a bone to pick with the investigators.\n\n• In your Campaign Log, record that Dr. Francis Morgan was kidnapped.\n\n• If any player “cheated,” add 1 [elder_thing] chaos token to the chaos bag for the remainder of the campaign.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display. Each investigator earns 1 experience as they reflect on the night’s events.\n• Experience: (calculate as instructed above)\n\n• If this is the first scenario of the campaign, proceed to Scenario I–A: Extracurricular Activity. Otherwise, proceed to Interlude I: Armitage’s Fate."
+            }
+          ]
+        },
+        {
+          "id": "r2",
+          "title": "Resolution 2",
+          "children": [
+            {
+              "id": "r2-0",
+              "text": "Resolution 2: “What in the world…?” Dr. Morgan finally breaks out of his daze as you make your way to safety. You ask him what he remembers, and he sputters and shakes his head. “It’s all a haze,” he explains, visibly exhausted. “I was having the run of my life! Perhaps I had one too many shots. But, those creatures—I haven’t seen anything like that since…” He trails off, and you can tell that his mind is racing. His eyes widen with realization and his face pales. “I may not be in the best shape, but I’ll help with your investigation. Whatever it takes.”\n\n• In your Campaign Log, record that the O’Bannion gang has a bone to pick with the investigators.\n\n• In your Campaign Log, record that the investigators rescued Dr. Francis Morgan. Any one investigator may choose to add Dr. Francis Morgan to their deck. This card does not count toward that investigator’s deck size.\n\n• If any player “cheated,” add 1 [elder_thing] chaos token to the chaos bag for the remainder of the campaign.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n• Experience: (calculate as instructed above)\n\n• Proceed to Scenario I–A: Extracurricular Activity."
+            }
+          ]
+        },
+        {
+          "id": "r3",
+          "title": "Resolution 3",
+          "children": [
+            {
+              "id": "r3-0",
+              "text": "Resolution 3: Although you were unable to find Dr. Morgan in the club, the man you rescued is grateful for your help. He introduces himself as Peter Clover, the owner of the establishment you’d just left. Despite the situation, he maintains an air of quiet professionalism. As you make your way towards the street, a well-polished Chrysler B-70 rolls up to you, and a gorgeous woman with long brown hair and narrow eyes exits. She is flanked by dangerous-looking men who slip their hands under their suit jackets when they see you. “Peter,” she says with a sigh of relief, “Good, you’re okay. I heard there was trouble?” She turns and glares at you with deadly eyes. “Who are they?”\n\nMr. Clover dusts off his vest, unworried. “Naomi, my dear, these are friends of mine. They…” he clears his throat. “They escorted me off the premises,” he explains after a short pause. “They have earned our gratitude.” The woman crosses her arms and takes a moment to size you up before giving you a smirk.\n\n“Very well then. I must thank you for taking care of Peter. Run along now; we’ll handle things from here.” She nods to the goons flanking her and they walk past you toward the club’s rear entrance, pulling firearms out from underneath their coats. You’re not sure what ‘handling things’ means, but you’re pretty sure you don’t want to be here when the gunfire starts. You thank Naomi and Peter, and head off.\n\n• In your Campaign Log, record that Naomi has the investigators’ backs.\n\n• In your Campaign Log, record that Dr. Francis Morgan was kidnapped.\n\n• If any player “cheated,” add 1 [elder_thing] chaos token to the chaos bag for the remainder of the campaign.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n• Experience: (calculate as instructed above)\n\n• Proceed to Interlude I: Armitage’s Fate."
+            }
+          ]
+        },
+        {
+          "id": "r4",
+          "title": "Resolution 4",
+          "children": [
+            {
+              "id": "r4-0",
+              "text": "Resolution 4: You are pulled from the debris by several firefighters, one of whom exclaims, “We’ve got a live one!” A few of them patch you up, and the cops ask you what happened. You’re certain they wouldn’t believe your story about horrible monstrosities demolishing the building from within. Unsure of what to say, you give a vague statement about not remembering much. “We’re bringing you to St. Mary’s,” one of the nurses says, pointing to a nearby ambulance. Knowing now how dire the situation is, you slip away while she is distracted by something else in the rubble…\n\n• In your Campaign Log, record that the O’Bannion gang has a bone to pick with the investigators.\n\n• In your Campaign Log, record that Dr. Francis Morgan was kidnapped.\n\n• If any player “cheated,” add 1 [elder_thing] chaos token to the chaos bag for the remainder of the campaign.\n\n• Each investigator suffers 1 physical trauma.\n\n• In your Campaign Log, record that the investigators were unconscious for several hours.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display. Each investigator earns 1 experience as they reflect on the night’s events.\n• Experience: (calculate as instructed above)\n\n• If this is the first scenario of the campaign, proceed to Scenario I–A: Extracurricular Activity. Otherwise, proceed to Interlude I: Armitage’s Fate."
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

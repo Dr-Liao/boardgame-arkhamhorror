@@ -417,6 +417,19 @@ export const CAMPAIGN_CYCLES = Object.freeze({
   // P7（九循环 M3 战役）：铁杉谷盛宴 10 段是第十循环，已注册进生产组合根并在大厅可启动。
   theFeastOfHemlockVale: 10,
   theDrownedCity: 11,
+  // 批次 2：重返战役沿用被重返战役的循环编号（渐进牌池与基础战役同口径解锁；
+  // 50xxx–52xxx 重返玩家卡段号超出 1–11，按「未知循环不限制」处理）。
+  returnToNightOfTheZealot: 1,
+  returnToTheDunwichLegacy: 2,
+  returnToThePathToCarcosa: 3,
+  // 批次 2：独立支线与调查员挑战没有循环归属，按最新循环开放全部已发布牌池。
+  curseOfTheRougarou: 11,
+  carnevaleOfHorrors: 11,
+  murderAtTheExcelsiorHotel: 11,
+  readOrDie: 11,
+  allOrNothing: 11,
+  badBlood: 11,
+  byTheBook: 11,
 })
 export function normalizeCardPoolScope(scope) {
   return CARD_POOL_SCOPES.includes(scope) ? scope : 'all'
@@ -427,7 +440,7 @@ export function campaignCycle(campaignId) {
 export function cardCycle(code) {
   const match = /^(\d{2})\d{3}[a-z]?$/.exec(String(code ?? ''))
   const cycle = match ? Number(match[1]) : 0
-  return cycle >= 1 && cycle <= 11 ? cycle : null
+  return cycle >= 1 && cycle <= 12 ? cycle : null
 }
 export function cardAllowedByScope(code, scope, currentCycle) {
   if (!CARD_POOL_RESTRICTION_ENABLED) return true

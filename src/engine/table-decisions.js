@@ -6,17 +6,19 @@ import { discardPlayerCards, replacePlayerZoneCards } from './player-zones.js'
 import { investigatorRule } from '../cards/card-rules.js'
 import { allowsCard, cardPoolContext } from '../deck/card-pool.js'
 import { campaignInvestigatorRecords, investigatorIdentity } from '../deck/investigator-identity.js'
+import { alternateBuildFor } from '../deck/alternate-investigator-build.js'
 import { locationEntryNotice } from './location-facts.js'
 // P6（食梦者调查员）：托尼·摩尔根的「只能用于交战/攻击带赏金敌人的额外行动」需要读赏金计数。
 import { cardCounterOf } from './card-counters.js'
 // P5 批次 3：开局先手可能从章对门（partGate）起步，需要按双线条件过滤选项。
 import { flowCondition } from '../campaign/campaign-flow.js'
+import { campaignAllowsInvestigator, campaignOpeningExperience } from '../campaign/campaign.js'
 import { takeStartingAdjustments } from '../campaign/starting-adjustments.js'
 import { mulliganCandidates } from './tarot-slot.js'
 import { actionEntityById, entityActionDescriptors } from './parley.js'
 import { attachmentIgnoresOpportunityAttack } from './attachment-rules.js'
 import { teamCanActivate } from './team-abilities.js'
-import { firstActionExemptsOpportunityAttack } from './action-history.js'
+import { firstActionExemptsOpportunityAttack, performedActionKinds } from './action-history.js'
 
 export function createTableDecisions(deps) {
   const {
@@ -138,7 +140,8 @@ export function createTableDecisions(deps) {
     const context = cardPoolContext(state)
     // P10：真人候选含 SELECTABLE（第五循环食梦者 5 人在大厅可选）；AI 自动选人仍走
     // PLAYABLE_INVESTIGATORS（pickAiInvestigator 的默认池），避免既有种子对局选人漂移。
-    return SELECTABLE_INVESTIGATORS.filter(code => !unavailable.has(identity(code)) && allowsCard(code, context))
+    return SELECTABLE_INVESTIGATORS.filter(code => !unavailable.has(identity(code)) && allowsCard(code, context)
+      && campaignAllowsInvestigator(state.campaign, code))
   }
 
   function initialHubPreparation(state) {
@@ -157,6 +160,11 @@ export function createTableDecisions(deps) {
       return state.uiState === 'interlude' ? '关间只能为死亡或疯狂的调查员挑选替补，不能更换现役调查员' : '当前调查员仍在战役中，不能更换'
     }
     if (move.action === 'hubBeginScenario' && state.deckMode === 'draft' && !draftDecksReady(state)) return '请先补足所有调查员的牌组。'
+    if (move.action === 'hubConfigureInvestigator') {
+      if (!hubLegalMoves(state, seat).some(legal => legal.action === move.action)) return '当前不能配置调查员牌组版本'
+      try { alternateBuildFor(state.investigators[seat].code, move.build) } catch (error) { return error.message }
+      return null
+    }
     if (move.action === 'hubSetDeck') {
       if (!hubLegalMoves(state, seat).some(m => m.action === 'hubSetDeck')) return '当前不能保存牌组'
       if (!Array.isArray(move.codes)) return '牌组必须是卡号数组'
@@ -164,13 +172,15 @@ export function createTableDecisions(deps) {
       // （开放玩家池按「卡牌范围」收窄）。旧实现用 corePlayerPool（战役起始池），会把构筑界面
       // 里能选的卡（例如当前战役内容包之外的已开放循环卡）误报成
       // 「未获运行时许可 / 不在 playerPool 白名单内」，玩家保存自定义牌组被假阳性挡住。
-      const built = buildDeckFromList(ALL_INVESTIGATORS[state.investigators[seat].code], move.codes,
-        { seat, seed: 1, deferBasicWeakness: !state._legacyStartingDeckRules,
-          playerPool: availablePlayerPool(state), basicWeaknessPool: basicWeaknessPool(state) })
+      const inv = state.investigators[seat]
+      const built = buildDeckFromList(ALL_INVESTIGATORS[inv.code], move.codes,
+        { seat, seed: 1, xpBudget: campaignOpeningExperience(state.campaign), deferBasicWeakness: !state._legacyStartingDeckRules, investigatorBuild: inv.investigatorBuild,
+          playerPool: availablePlayerPool(state), basicWeaknessPool: basicWeaknessPool(state, inv.code) })
       return built.errors?.length ? `自定义卡组无效：${built.errors.join('；')}` : null
     }
     return hubLegalMoves(state, seat).some(legal => Object.entries(legal)
-      .filter(([key]) => !['label', 'explanation', 'disabled'].includes(key)).every(([key, value]) => move[key] === value)) ? null : '当前不可执行该局外操作'
+      .filter(([key]) => !['label', 'explanation', 'disabled'].includes(key)).every(([key, value]) => move[key] === value)
+      && (move.action !== 'hubPurchase' || Boolean(legal.keepLower) === Boolean(move.keepLower))) ? null : '当前不可执行该局外操作'
   }
 
   function autoHubMove(state, seat, includeHuman = false) {
@@ -251,7 +261,7 @@ export function createTableDecisions(deps) {
     if (move.action === 'entityAbility') {
       const entity = actionEntityById(state, move.entityId)
       const descriptor = entityActionDescriptors(entity)[move.abilityIndex]
-      return descriptor ? { descriptor, cost: { ...descriptor.cost, ...(descriptor.kind === 'free' ? { action: false } : {}) } } : null
+      return descriptor ? { descriptor, source: entity, cost: { ...descriptor.cost, ...(descriptor.kind === 'free' ? { action: false } : {}) } } : null
     }
     if (move.action !== 'ability') return null
     let card = controlledAbilityCard(inv, move.assetId)
@@ -263,7 +273,8 @@ export function createTableDecisions(deps) {
         card = candidate
       }
     }
-    return assetEffect(inv, card)?.abilities?.[move.abilityIndex] || null
+    const ability = assetEffect(inv, card)?.abilities?.[move.abilityIndex]
+    return ability ? { ...ability, source: card } : null
   }
 
   // 第 5 步 P6：「这个行动是不是『打出法术卡牌 / 激活法术能力』」——法术专用额外行动（玛丽·朗博）
@@ -327,8 +338,15 @@ export function createTableDecisions(deps) {
   function restrictedKindOfMove(state, inv, move) {
     if (!inv || !move) return null
     const kind = actionKind(state, inv, move)
-    if (kind === 'engage' && inv.assets.some(asset => registeredEntry(asset.code)?.assetRule?.restrictedAction === 'engage' && !asset.restrictedActionSpent)) return 'engage'
+    const kinds = performedActionKinds(move, kind, registeredEntry)
+    if (kinds.includes('engage') && inv.assets.some(asset => registeredEntry(asset.code)?.assetRule?.restrictedAction === 'engage' && !asset.restrictedActionSpent)) return 'engage'
     if (kind === 'parley' && inv.parleyOnlyActions > 0) return 'parley'
+    if (kind === 'fight' && inv.fightOnlyActions > 0) return 'fight'
+    // 批次 3（12007 特里希）：额外行动只能用于躲避（比 fightEvade 更严格）。
+    if (kind === 'evade' && inv.evadeOnlyActions > 0) return 'evade'
+    // 批次 3（60551）：额外行动只能用于打出事件。
+    if (move.action === 'play' && inv.eventPlayOnlyActions > 0
+      && cardDef(move.cardId || move.copyCode)?.type === 'event') return 'eventPlay'
     if (isSpellAction(state, inv, move)) return 'spell'
     // 地球边缘 P5（08014a 陈丽丽）：免费战斗/躲避额度（grantFreeActions 发放）。
     if ((inv.fightEvadeOnlyActions || 0) > 0 && ['fight', 'evade'].includes(kind)) return 'fightEvade'

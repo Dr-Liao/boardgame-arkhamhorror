@@ -6,9 +6,12 @@ test('P2 局外面板建档、构筑、显式读档与删除确认', async ({ pa
   await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
   const setup = page.locator('.ah-hub-setup')
   await expect(setup).toBeVisible()
-  await expect(setup.locator('.bg-field')).toHaveCount(2)
+  // 新版开局弹窗把「战役」改成封面对话框按钮；通用下拉只剩席位数量（playerCount）。
+  const seatField = setup.locator('.bg-field').filter({ hasText: /玩家人数|席位数量/ })
+  await expect(seatField).toHaveCount(1)
+  await expect(setup.locator('.ah-campaign-summary')).toBeVisible()
   await setup.getByText(/玩家人数|席位数量/).locator('..').locator('select').selectOption('1')
-  await expect(setup.locator('.bg-field')).toHaveCount(2)
+  await expect(seatField).toHaveCount(1)
   const created = page.waitForResponse('**/api/start')
   await setup.getByRole('button', { name: '开始新游戏' }).click()
   const createdResult = await created

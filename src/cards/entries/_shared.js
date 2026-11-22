@@ -147,3 +147,11 @@ export function shuffleThreatIntoDeck({ inv, source, api }) {
     api.shuffleDeck(inv.seat)
   }
 }
+export function firstMatchingToken(tokens, { api, inv, source }, resolve) {
+  let used = false
+  return token => {
+    if (used || !tokens.includes(token)) return
+    used = true
+    api.triggerChaosRevealEffect(inv.seat, source.code, () => resolve(token))
+  }
+}

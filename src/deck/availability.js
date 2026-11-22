@@ -39,7 +39,15 @@ export { TSK_PLAYER_CARD_CODES, TSK_PLAYER_VERIFIED_CODES, TSK_PLAYER_BUILDABLE_
 export { FHV_PLAYER_CARD_CODES, FHV_PLAYER_VERIFIED_CODES, FHV_PLAYER_BUILDABLE_CODES, FHV_PLAYER_BASIC_WEAKNESS_CODES, FHV_PLAYER_DEPENDENCY_CODES, FHV_PLAYER_RESEARCHED_CODES }
 import { expansionPlayerCodes } from '../../content/expansions.js'
 import { coreCardVerified, CORE_ACCEPTANCE_PROFILE } from '../cards/core-acceptance.js'
-import { tfaPlayerCardVerified, tfaPlayerBuildable, IMPLEMENTED_PLAYER_CODES } from '../../content/packs/tfaPlayer/manifest.js'
+import { tfaPlayerCardVerified, tfaPlayerBuildable, IMPLEMENTED_PLAYER_CODES, manifest as tfaPlayerPack } from '../../content/packs/tfaPlayer/manifest.js'
+import { starterInvestigators, starterPlayerCards, starterSignatures, starterWeaknesses } from './starter-packs.js'
+// 批次 3：2026 核心盒玩家侧（5 调查员 + 10 签名 + 8 基础弱点 + 54 普通玩家卡）。
+import {
+  CORE2026_INVESTIGATOR_CODES, CORE2026_SIGNATURE_CODES, CORE2026_SIGNATURES_BY_INVESTIGATOR,
+  CORE2026_BASIC_WEAKNESS_CODES, CORE2026_PLAYER_CARD_CODES,
+} from './core2026-packs.js'
+import { alternateDependencies, alternateInvestigatorCodes, alternateSignatureRequirements } from './alternate-investigator-build.js'
+import { returnBuildableCards, returnPlayerCards, returnResearchUpgrades, returnWeaknesses } from './return-packs.js'
 // P7（M2 玩家卡）：87 张逐卡验收后开放 strict 可用性；85 张可构筑，2 张基础弱点只作依赖。
 // 可构筑码表来自生成物（src/cards/tcu-player-acceptance.js → manifest），这里不手写卡号清单。
 import {
@@ -86,6 +94,9 @@ export const SELECTABLE_INVESTIGATOR_CODES = Object.freeze([
   // 池子变长会让既有 golden replay 的 AI 选人漂移；真人可从大厅选到五位铁杉谷调查员。
   ...FHV_INVESTIGATOR_CODES,
   ...TDC_INVESTIGATOR_CODES,
+  ...starterInvestigators,
+  ...CORE2026_INVESTIGATOR_CODES,
+  ...alternateInvestigatorCodes,
 ])
 
 export const CORE_PLAYER_CODES = Object.freeze([
@@ -104,6 +115,7 @@ export const ALL_BASIC_WEAKNESS_CODES = Object.freeze([
   ...CORE_BASIC_WEAKNESS_CODES,
   ...DUNWICH_BASIC_WEAKNESS_CODES,
   ...CARCOSA_BASIC_WEAKNESS_CODES,
+  ...tfaPlayerPack.basicWeaknessCodes,
   ...TCU_PLAYER_BASIC_WEAKNESS_CODES,
   // P7：食梦者 4 张基础弱点（06035–06038）只作随机基础弱点依赖。
   ...TDE_PLAYER_BASIC_WEAKNESS_CODES,
@@ -116,6 +128,9 @@ export const ALL_BASIC_WEAKNESS_CODES = Object.freeze([
   // P6（九循环）：铁杉谷盛宴 4 张基础弱点（10135–10138）只作随机基础弱点依赖候选。
   ...FHV_PLAYER_BASIC_WEAKNESS_CODES,
   ...TDC_PLAYER_BASIC_WEAKNESS_CODES,
+  ...starterWeaknesses,
+  ...CORE2026_BASIC_WEAKNESS_CODES,
+  ...returnWeaknesses,
 ])
 export const CORE_STORY_CODES = Object.freeze(['01117'])
 export const CORE_UPGRADE_CODES = Object.freeze([
@@ -188,6 +203,9 @@ export const SIGNATURES_BY_INVESTIGATOR = Object.freeze({
   '10012': Object.freeze(['10013', '10014']),
   '10015': Object.freeze(['10017', '10018']),
   ...TDC_SIGNATURES_BY_INVESTIGATOR,
+  ...starterSignatures,
+  ...CORE2026_SIGNATURES_BY_INVESTIGATOR,
+  ...alternateSignatureRequirements,
 })
 export const SIMPLIFIED_CARD_CODES = Object.freeze([...CORE_PLAYER_CODES, ...CORE_SIGNATURE_CODES, ...CORE_BASIC_WEAKNESS_CODES, ...CORE_STORY_CODES])
 export {
@@ -236,6 +254,9 @@ export const ALL_BUILDABLE_CODES = Object.freeze([
   // P6（九循环）：铁杉谷盛宴 102 张可入牌组玩家卡（4 基础弱点/11 绑定依赖/3 Research 不进）。
   ...FHV_PLAYER_BUILDABLE_CODES,
   ...TDC_PLAYER_BUILDABLE_CODES,
+  ...starterPlayerCards,
+  ...CORE2026_PLAYER_CARD_CODES,
+  ...returnBuildableCards,
 ])
 // P10（M5 发布）：食梦者战役包 playable 后，283 条战役记录（249 主卡 + 34 关联面）从
 // catalog-only 升为 strict——与 P9 全卡账本「P10 升 playable 后全部 strict」的验收口径一致。
@@ -258,7 +279,10 @@ const cards = new Set([...SIMPLIFIED_CARD_CODES, ...CORE_UPGRADE_CODES, ...expan
   ...eoteSignatures, ...eoteDisciplineCodes, ...tskSignatures, ...TSK_PLAYER_VERIFIED_CODES,
   ...fhvSignatures, ...fhvBonded, ...FHV_PLAYER_VERIFIED_CODES,
   ...TDC_DEPENDENCY_CODES, ...TDC_PLAYER_ACCEPTED_CODES,
-  ...DUNWICH_BASIC_WEAKNESS_CODES, ...CARCOSA_BASIC_WEAKNESS_CODES])
+  ...DUNWICH_BASIC_WEAKNESS_CODES, ...CARCOSA_BASIC_WEAKNESS_CODES,
+  ...Object.values(starterSignatures).flat(), ...starterPlayerCards, ...starterWeaknesses,
+  ...CORE2026_SIGNATURE_CODES, ...CORE2026_PLAYER_CARD_CODES, ...CORE2026_BASIC_WEAKNESS_CODES,
+  ...returnPlayerCards, ...returnWeaknesses, ...alternateDependencies])
 const strictAcceptedCodes = new Set([...investigators, ...cards])
 const strictScenarioCodes = new Set(Object.values(SCENARIO_CARD_IDENTITIES).flatMap(categories =>
   Object.values(categories).flatMap(entries => Object.values(entries).map(entry => entry.originalCode))))
@@ -282,8 +306,9 @@ export function getAvailability(code) {
     strictAccepted: isStrictAccepted(code),
     selectable: investigators.has(code),
     deckbuilding: ALL_BUILDABLE_CODES.includes(code),
-    upgradeOnly: CORE_UPGRADE_CODES.includes(code) || TDC_PLAYER_RESEARCHED_CODES.includes(code),
-    dependencyOnly: CORE_SIGNATURE_CODES.includes(code) || dunwichSignatures.includes(code)
+    upgradeOnly: CORE_UPGRADE_CODES.includes(code) || FHV_PLAYER_RESEARCHED_CODES.includes(code)
+      || TDC_PLAYER_RESEARCHED_CODES.includes(code) || returnResearchUpgrades.includes(code),
+    dependencyOnly: CORE_SIGNATURE_CODES.includes(code) || alternateDependencies.includes(code) || dunwichSignatures.includes(code)
       || carcosaSignatures.includes(code) || tfaSignatures.includes(code) || tcuSignatures.includes(code)
       || tdeSignatures.includes(code)
       || ticSignatures.includes(code)
@@ -297,10 +322,18 @@ export function getAvailability(code) {
       || TIC_PLAYER_BASIC_WEAKNESS_CODES.includes(code)
       || EOTE_PLAYER_BASIC_WEAKNESS_CODES.includes(code)
       || TDE_PLAYER_DEPENDENCY_CODES.includes(code)
+      || Object.values(starterSignatures).some(signatures => signatures.includes(code))
+      || CORE2026_SIGNATURE_CODES.includes(code) || CORE2026_BASIC_WEAKNESS_CODES.includes(code)
       || ALL_BASIC_WEAKNESS_CODES.includes(code),
     scenarioOnly: CORE_STORY_CODES.includes(code),
     acceptanceProfile: coreCardVerified(code) ? CORE_ACCEPTANCE_PROFILE.id : null,
     reason: coreCardVerified(code) ? '初始包已通过逐卡行为验收；范围与测试见 audit/core-acceptance.json。'
+      : CORE2026_INVESTIGATOR_CODES.includes(code) || CORE2026_SIGNATURE_CODES.includes(code)
+        ? '批次 3：2026 核心盒调查员与签名/专属卡已完成逐人行为验收，可在大厅选择与构筑。'
+      : CORE2026_BASIC_WEAKNESS_CODES.includes(code)
+        ? '批次 3：2026 核心盒基础弱点（随机基础弱点池候选，只作构筑依赖）。'
+      : CORE2026_PLAYER_CARD_CODES.includes(code)
+        ? '批次 3：2026 核心盒普通玩家卡已完成逐卡主要印刷效果验收，进入构筑界面与玩家卡池。'
       : FHV_PLAYER_CARD_CODES.includes(code)
         ? 'P6 铁杉谷盛宴一般玩家卡已完成逐卡主要印刷效果验收（102 张可入牌组；4 张基础弱点 10135–10138 只作依赖，11 张绑定/场外依赖与 3 张 Research 卡不进构筑池），进入构筑界面与玩家卡池；战役与八章仍待 P7–P8。'
       : EOTE_PLAYER_CARD_CODES.includes(code)

@@ -62,6 +62,10 @@ for (const [id, label, kind] of [
 ]) define(id, label, kind)
 // 2026-10-25 修复战役新增的窗口：05152 的「所附属支援离场后」与 05280 的三类取消面向。
 define('assetLeavesPlay', '支援离场后', 'reaction')
+// 批次 3（60562/60563/60565/60566/60578/60581）：玩家地点附属的通用「进入附属地点后」窗口。
+define('entersAttachedLocation', '敌人或调查员进入附属地点后', 'reaction')
+// 批次 3（60451）：伤害/恐惧实际放置到调查员本人后的反应窗口（区别于放置前的 harmDealt 中断）。
+define('damagePlacedOnSelf', '伤害或恐惧放置到调查员后', 'reaction')
 define('wouldDiscardFromHand', '将要弃掉手牌时', 'interrupt')
 define('handCardDiscarded', '一张手牌被弃掉后', 'reaction')
 define('handEmptied', '调查员失去最后一张手牌后', 'reaction')
@@ -87,10 +91,15 @@ define('investigationPhaseStarts', '调查阶段开始时', 'reaction')
 define('investigationPhaseEnds', '调查阶段结束时', 'reaction')
 define('testInitiated', '发起技能检定时', 'interrupt')
 define('beforeChaosTokenReveal', '将要从混乱袋揭示标记时', 'interrupt')
+define('chaosTokenPhysicallyRevealed', '揭示混乱标记后', 'reaction')
+define('chaosRevealEffectWouldResolve', '即将结算标记触发的卡牌效果', 'interrupt')
+define('failedTestMargin', '检定失败并确定失败差值时', 'reaction')
 define('encounterCardWouldDraw', '将要抽遭遇牌库顶牌时', 'interrupt')
 define('roundStarts', '一轮开始时', 'reaction')
 define('enemyPhaseEnds', '敌人阶段结束时', 'reaction')
 define('upkeepEnd', '重整阶段结束时', 'reaction')
+// 批次 3（12103）：扣除资源后的反应窗口。
+define('resourcesSpent', '花费资源后', 'reaction')
 define('assetHarmPlaced', '伤害或恐惧放置到支援后', 'reaction')
 define('weaponFightInitiated', '使用武器发起攻击时', 'reaction')
 define('blessTokensWouldReturnToPool', '检定的祝福将要归还标记池时', 'interrupt')
@@ -157,6 +166,8 @@ define('enemyWouldBeEvaded','敌人将要被躲避','interrupt',38)
 define('enemyMoved','敌人移动后','reaction',39)
 define('enemyEnteredLocation','敌人进入地点后','reaction',39)
 define('enemyDamaged','敌人受到伤害后','reaction',39)
+define('enemyWouldTakeDamage', '敌人将要受到伤害时', 'interrupt', 38)
+define('enemyDamagePlaced', '伤害放置到敌人后', 'reaction', 39)
 define('enemyDefeated', '敌人被击败时', 'reaction', 39)
 // P6（食梦者）：你控制的支援被击败时（伤害/恐惧达到其上限）。
 // 调用点：src/engine/asset-defeat.js 的 checkAssetDefeated（applyHarm 与「移动伤害」共用同一判定）。

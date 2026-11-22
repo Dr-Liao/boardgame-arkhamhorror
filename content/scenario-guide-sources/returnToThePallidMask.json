@@ -1,0 +1,299 @@
+{
+  "id": "returnToThePallidMask",
+  "campaignId": "returnToThePathToCarcosa",
+  "sourceKind": "authored",
+  "officialChinese": false,
+  "note": "本关按重返剧本参考卡 52048 的设置差异布置；完整步骤见设置段落与特别规则。",
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "id": "intro-0",
+          "title": "冒险 VI: 苍白面具",
+          "children": [
+            {
+              "id": "intro-0-0",
+              "text": "查看冒险日志。如果你没能逃脱幻影的凝视或你没能找到奈杰尔：进入引言1。"
+            },
+            {
+              "id": "intro-0-1",
+              "text": "如果你找到了奈杰尔的住宅或你找到了奈杰尔·英格兰姆：跳到引言2。"
+            },
+            {
+              "id": "intro-0-2",
+              "text": "引言1: 污秽霉变的空气里挟着灰尘，刺激着你的喉咙，把你从梦中拽醒。你躺在一块冰冷的石板上，四周是幽暗无光的地下通道。你怎么会来到这里的？“这里”又是什么地方？一股寒意流遍你的全身，让你毛发倒立。你站起身，打量着周遭的环境。你周围的墙壁和天花板上装饰着白骨，无论望向哪里，都能看到张口的颅骨在盯着你。\n\n• 在冒险日志中，记录下你在地下墓穴中醒来。"
+            },
+            {
+              "id": "intro-0-3",
+              "text": "引言2: 奈杰尔‧英格兰姆家里找不到任何能解答你有关《黄衣之王》疑问的东西，但你的下一步行动找到了方向。你在他咖啡桌上找到的破旧地图描绘的是恶名昭着的巴黎地下墓穴。地图上用钢笔特地圈出了一个房间，旁边写着：“打开通路的关键就在这里！”你强忍恐惧，立即出发前往伊苏尔墓园大街的地下墓穴入口。\n\n• 在冒险日志中，记录下你自行进入地下墓穴。"
+            },
+            {
+              "id": "intro-0-4",
+              "text": "进入石丸春子提供的信息。"
+            },
+            {
+              "id": "intro-0-5",
+              "text": "否则，跳到冒险设置。"
+            },
+            {
+              "id": "intro-0-6",
+              "text": "石丸春子提供的信息: 你刚经过一道拱门，看见一个绵羊的头骨上蚀刻着一个熟悉的符号：许多同轴的半圆形成的圆环上排列着奇异的符文。图案下方有两条波纹状的线条，连到头骨的下颚。你认出了这是春子给你看过的图案。你好奇为什么它会出现在这里，于是对着这颗头骨仔细端详起来。你刚刚触碰到下颚骨，它的嘴突然张开了。白骨散落到地上，墙壁滑动，露出了一条新的道路。\n\n• 请记住“你开启了一条秘密通道”。\n\n前往冒险设置。"
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "returnToSetup",
+          "title": "重返设置差异",
+          "text": "遵循卡尔克萨之路的剧本手册进行冒险设置，但以下步骤例外：\n- 在找出遭遇组的卡牌时，还需要为重返苍白面具找出几个新遭遇组，如下所示：\n- 在创建地下墓穴牌库时，首先按照常规设置将暗影坟墓和堵塞通道放在一边。\n- 接着，将本遭遇组中4张新的地下墓穴地点与剩余地下墓穴地点放在一起，按照常规设置决定你的起始地点。\n(继续阅读背面。)"
+        },
+        {
+          "id": "baseSetup-0",
+          "text": "收齐以下遭遇组的所有卡牌：苍白面具、食尸鬼、如影随形、寒冷刺骨。"
+        },
+        {
+          "id": "baseSetup-1",
+          "text": "找出暗影坟墓和堵塞通道(每张均为地下墓穴地点的已揭示面)。将这些卡牌放在一边，位于场外。"
+        },
+        {
+          "id": "baseSetup-2",
+          "text": "查看冒险日志："
+        },
+        {
+          "id": "baseSetup-3",
+          "text": "如果“你在地下墓穴中醒来”：将一个随机的地下墓穴地点放置入场(放在一边的暗影坟墓和堵塞通道除外)，地下墓穴一面朝上。接下来的本场冒险中，将该地点作为“起始地点”。将1个资源标记放在这个地点上，表示该地点为起始地点。先不要将调查员放置到此处。"
+        },
+        {
+          "id": "baseSetup-4",
+          "text": "找出地狱之门(地下墓穴地点的已揭示面)。将地狱之门放置入场，地下墓穴一面朝上放置。接下来的本场冒险中，将地狱之门作为“起始地点”。将1个资源标记放在地狱之门上，表示该地点为起始地点。先不要将调查员放置到此处。"
+        },
+        {
+          "id": "baseSetup-5",
+          "text": "将所有其他地点放在一边，单独放作一堆并且命名为“地下墓穴牌堆”。要创建地下墓穴牌堆时按照以下步骤执行："
+        },
+        {
+          "id": "baseSetup-6",
+          "text": "将放在一边的暗影坟墓、堵塞通道、3张其他地下墓穴地点卡牌一同混洗，构成地下墓穴牌堆底部的5张卡牌，地下墓穴一面朝上放置。"
+        },
+        {
+          "id": "baseSetup-7",
+          "text": "随后，将其他所有地下墓穴地点卡牌混洗后随机摆放在牌堆顶部。地下墓穴牌堆内的所有卡牌均应以地下墓穴面朝上放置，以使得玩家无法分辨地下墓穴地点卡牌的内容。"
+        },
+        {
+          "id": "baseSetup-8",
+          "text": "每位调查员从起始地点开始游戏。（注意在地点翻至已揭示面时，触发该地点上的强制效果）。如果“你开启了一条秘密通道”，选择一个地下墓穴地点放在起始地点的相邻位置，翻开该地点卡牌。"
+        },
+        {
+          "id": "baseSetup-9",
+          "text": "苍白面具下的男子弱点的承受者查找其牌库，找出该弱点并将该弱点放在一边，位于场外。"
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "card-52049",
+          "title": "秘密通道",
+          "text": "[action]如果你控制黑玛瑙扣环：你将扣环放入头骨的眼窝，通道开启了。揭示秘密通道右方的地下墓穴地点。\n强制 - 在秘密通道揭示时：将地下墓穴牌库顶的1张地下墓穴放置入场，放在秘密通道的右方。"
+        },
+        {
+          "id": "card-52050",
+          "title": "骸骨堆",
+          "text": "强制 - 在骸骨堆揭示时：将地下墓穴牌库顶的4张地下墓穴放置入场，分别放在白骨迷阵的上方、下方、左方和右方。当本轮结束时，查找遭遇牌库和遭遇弃牌堆，找出一个畸形骸骨敌人并将其生成在骸骨堆。"
+        },
+        {
+          "id": "card-52051",
+          "title": "研究站点",
+          "text": "[reaction]在你成功调查研究站点后：揭示任意一个地下墓穴地点。(团队每场游戏仅限一次。)\n强制 - 在研究站点揭示时：将地下墓穴牌库顶的1张地下墓穴放置入场，放在任意一个其他地点的上方、下方或右方。"
+        },
+        {
+          "id": "card-52052",
+          "title": "颅骨之海",
+          "text": "强制 - 在你于颅骨之海结束回合后：你必须受到1点直接恐惧，或从手牌选择并弃掉3张卡牌。\n强制 - 在颅骨之海揭示时：将地下墓穴牌库顶的1张地下墓穴放置入场，放在离颅骨之海最远的地点的上方、下方或右方，并在其上放置1点恐惧标记。直到冒险结束，颅骨之海与标记地点互相连接。"
+        },
+        {
+          "id": "card-52053",
+          "title": "畸形骸骨",
+          "text": "猎手。\n强制 - 在畸形骸骨将要结算其猎手关键词时：如果其2个地点内没有调查员，不结算其猎手关键词，改为将其移动到离调查员最近的地下墓穴地点。\n强制 - 在畸形骸骨攻击你时：它会造成伤害或恐惧，而不是两者同时。"
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "未达成结局",
+          "children": [
+            {
+              "id": "noResolution-0",
+              "text": "如果未达成任何结局（每位调查员被击败）: 警察把你摇醒，架了起来。你感觉自己的头好像被火车撞过一样，头疼欲裂。眼前的男子拿着手电筒照了照你的眼睛，并用法语问了你几个问题。你只觉头晕眼花，根本答不上话。他指了指的附近的楼梯，把你推出了地下墓穴。你踉跄着走到伊苏尔墓园大街上，拖着步子回到你住宿的旅店。\n\n之后几天你一直在研究地下墓穴里的那个奇怪图文的含义，但你一无所获。你开始感觉这是白费力气。就快放弃的时候，你看见桌子上一本褪了色的黄色书本就躺在你手边。你惊讶地发现这是未删节版的《黄衣之王》剧本。书的封面上用黑色墨水画着同样的图文，就是这个图文让你几宿未眠却仍然无法解读。是谁放在这里的？它怎么会到你旅店房间里来的？但撇开这些不谈，你知道现在要做什么了。这部剧中藏着秘密——这个秘密一直就在剧中——而你却像一个傻瓜一样，出于迷信，始终避而不读它的第二幕。它只是文字，它不可能像那些你遇到过的生物和疯子那样伤害你。战栗之下，你翻到书本的第二部分，开始阅读。\n\n• 在冒险日志中，记录下你已知晓大门所在。\n\n• 每位调查员必须选择是否要阅读《黄衣之王》第二幕。至少一位调查员必须阅读第二幕。在冒险日志中，记录选择阅读第二幕的每位调查员的名字。阅读第二幕的每位调查员从收藏中找出一张随机的疯狂或契约基础弱点，然后将它放进自己的牌组(不计入牌组张数上限)。每位阅读第二幕的调查员取得2点额外的经验值，因为其洞见了褴褛之王的阴谋。\n\n• 从混乱袋中移除所有的[cultist]、[tablet]、以及[elder_thing]，并加2个[elder_thing]进去。\n\n• 如果石丸春子（皮包骨头）位于胜利区，在你的冒险日志的“贵宾遇害”下方记录其名字。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。\n• 经验值: （按上述说明计算）"
+            }
+          ]
+        },
+        {
+          "id": "r1",
+          "title": "结局1",
+          "children": [
+            {
+              "id": "r1-0",
+              "text": "结局1: 这颗烧焦的颅骨里藏着所有的答案。你非常确定。你已经竭尽所能研究了颅骨上的图文，但答案始终是一个谜。你把这颗颅骨带给各界专家、密学家和教授看过。你甚至不止一次尝试与这颗颅骨对话。恼怒之下，你把顾骨放到床头柜上，决定好好睡上一觉，这还是你从地下墓穴出来以后第一次躺下休息。虽然你已入眠，但颅骨前额上蚀刻的图文却仍然徘徊在你眼前。\n\n突然间，你灵光乍现，赶紧起身赶往罗浮宫，这座坐落在巴黎的着名博物馆里藏有数万件油画、绘画和考古发现。你花费了数日在博物馆中探索——每一件展品， 每一套收藏，每一幅艺术品中都可能藏有关于这个图文涵义的线索。终于你看到了它：这幅油画描绘了暴雨之下一座美丽的小岛。浪涛冲撃着外城墙，潮水随时会把整座岛屿淹没。耀眼的闪电映衬着城镇最高处修道院的塔楼。一道乌云形成的旋风在上空中翻腾。而你手中烧焦颅骨上的图文完美地重现出了修道院彩色玻璃上的图案。这幅作品的标题就叫：“道路终现”。\n\n• 在冒险日志中，记录下你已知晓大门所在。\n\n• 从混乱袋中移除所有的[cultist]、[tablet]、以及[elder_thing]，并加2个[cultist]进去。\n\n• 如果石丸春子（皮包骨头）位于胜利区，在你的冒险日志的“贵宾遇害”下方记录其名字。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。\n• 经验值: （按上述说明计算）"
+            }
+          ]
+        },
+        {
+          "id": "r2",
+          "title": "结局2",
+          "children": [
+            {
+              "id": "r2-0",
+              "text": "结局2: 你掉进了一个无尽而空虚的深渊。在你坠落的过程中甚至没有一丝空气拂过你的头发。这是一条剥离了现实的通道。终于，你穿过一道看不见的门径，进入了一片新的领域。在你的头顶和脚底是两条天际线，它们像是彼此扭曲的倒影一般。在中间，乌云形成的旋涡和汹涌的浪潮在回旋。你仔细研究这两边——看到了熟悉的城市和它奇怪的镜像。这是不是卡尔克萨之路？这是不是世界交汇，连接不同现实的通道？如果是，剩下的就是找到这座次元门在地球上的位置。你掉入了底下的旋涡。\n\n警察把你摇醒，架了起来。你感觉自己的头好像被火车撞过一样，头疼欲裂。眼前的男子拿着手电筒照了照你的眼睛。并用法语问了你几个问题。你清醒过来，瞪大了双眼，一把抽出了被这个男子抓着的手臂，留下一脸惊愕的他。“我要马上走了！”\n\n• 在冒险日志中，记录下你已知晓大门所在。在“追踪陌生人”下方作2次记录。\n\n• 从混乱袋中移除所有的[cultist]、[tablet]、以及[elder_thing]，并加2个[tablet]进去。\n\n• 如果石丸春子（皮包骨头）位于胜利区，在你的冒险日志的“贵宾遇害”下方记录其名字。\n\n• 每位调查员取得经验值，数量等于胜利区所有卡牌的胜利X数值之和。\n• 经验值: （按上述说明计算）"
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "id": "intro-0",
+          "title": "Scenario VI: The Pallid Mask",
+          "children": [
+            {
+              "id": "intro-0-0",
+              "text": "Check Campaign Log. If you did not escape the gaze of the phantom, or if you were unable to find Nigel: Read Intro 1."
+            },
+            {
+              "id": "intro-0-1",
+              "text": "If you found Nigel’s abode, or if you found Nigel Engram, skip to Intro 2."
+            },
+            {
+              "id": "intro-0-2",
+              "text": "Intro 1: You are stirred awake by dirty, stale air and dust in your throat. You are lying on a slab of cold stone inside a lightless underground passageway. How did you get here? And where is “here” exactly? A shiver courses up your body, and your hair stands on end. Rising to your feet, you take stock of your surroundings. Bones decorate the walls and ceiling around you, open-mouthed skulls peering back at you everywhere you look.\n\n• Record in your Campaign Log that you awoke inside the catacombs."
+            },
+            {
+              "id": "intro-0-3",
+              "text": "Intro 2: The contents of Nigel Engram’s home answer none of your questions about The King in Yellow, but do hint at where you should head next. The old, tattered map you found on his coffee table depicts a section of the infamous Catacombs of Paris. One particular room on the map has been circled with pen, and next to it is written: “The key to opening the Path lies here!” You swallow your fear and head immediately for the entrance to the catacombs underneath Rue de la Tombe‑Issoire.\n\n• Record in your Campaign Log that you entered the catacombs on your own."
+            },
+            {
+              "id": "intro-0-4",
+              "text": "Proceed to Haruko’s Information."
+            },
+            {
+              "id": "intro-0-5",
+              "text": "Otherwise, skip to Setup."
+            },
+            {
+              "id": "intro-0-6",
+              "text": "Haruko’s Information: Just past the archway closest to you, you see a familiar symbol etched into the skull of a sheep: rows of concentric semicircles, lined with exotic runes. Two wavy lines descend from the design, leading into the skull’s lower jawbone. You recognize it as the pattern Haruko had shown you. Wondering why it would appear here, you examine the skull in greater detail. As soon as you touch the underside of the skull’s jawbone, its mouth suddenly opens. Bones collapse to the ground as the wall slides to reveal a new path.\n\n• Remember that “you opened a secret passageway.”\n\nProceed to Setup."
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "returnToSetup",
+          "title": "Return to Setup Changes",
+          "text": "Perform the setup as indicated in The Path to Carcosa Campaign Guide, with the following exceptions:\n- When gathering encounter sets, also gather the new encounter set for Return to The Pallid Mask shown here.\n- When building the Catacombs deck, first set aside the Tomb of Shadows and the Blocked Passage, as normal. \n- Next, add the 4 new Catacombs locations included in this encounter set with the remaining Catacombs locations, and determine your starting location, as normal.\n(Continued on reverse side.)"
+        },
+        {
+          "id": "baseSetup-0",
+          "text": "Gather all cards from the following encounter sets: The Pallid Mask, Ghouls, Hauntings, and Chilling Cold."
+        },
+        {
+          "id": "baseSetup-1",
+          "text": "Find the Tomb of Shadows and the Blocked Passage (each one is the revealed side of a Catacombs location). Set them aside, out of play."
+        },
+        {
+          "id": "baseSetup-2",
+          "text": "Check Campaign Log."
+        },
+        {
+          "id": "baseSetup-3",
+          "text": "If you awoke inside the catacombs: Put a random Catacombs location (other than the set-aside Tomb of Shadows or Blocked Passage) into play, Catacombs side faceup. For the remainder of the scenario, that location is referred to as “the starting location.” Place a resource token on this location to mark it as the starting location. Do not place investigators here yet."
+        },
+        {
+          "id": "baseSetup-4",
+          "text": "If you entered the catacombs on your own: Find The Gate to Hell (it is the revealed side of a Catacombs location). Put The Gate to Hell into play, Catacombs side faceup. For the remainder of the scenario, The Gate to Hell is referred to as “the starting location.” Place a resource token on The Gate to Hell to mark it as the starting location. Do not place investigators here yet."
+        },
+        {
+          "id": "baseSetup-5",
+          "text": "Set all of the other locations aside as a separate “Catacombs Deck.” To do this, perform the following:"
+        },
+        {
+          "id": "baseSetup-6",
+          "text": "Shuffle the set-aside Tomb of Shadows, the set-aside Blocked Passage, and 3 other Catacombs locations together to form the bottom 5 cards of the Catacombs Deck, Catacombs side faceup."
+        },
+        {
+          "id": "baseSetup-7",
+          "text": "Then, place all of the other Catacombs locations on top, in a random order. All of the cards in the Catacombs Deck should be showing only the Catacombs side, so that the players do not know which is which."
+        },
+        {
+          "id": "baseSetup-8",
+          "text": "Each investigator begins play at the starting location. (Remember to trigger the Forced effect on that location when it is revealed.)If “you opened a secret passageway,” choose a Catacombs location adjacent to the starting location and reveal it."
+        },
+        {
+          "id": "baseSetup-9",
+          "text": "The bearer of The Man in the Pallid Mask weakness searches their deck for it and sets it aside, out of play."
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "card-52049",
+          "title": "Secret Passage",
+          "text": "[action] If you control Clasp of Black Onyx: You place the clasp within the skull's eye socket, and the passage opens. Reveal the Catacombs location to the right of Secret Passage.\nForced - When Secret Passage is revealed: Put the topmost Catacombs in the Catacombs deck into play to the right of Secret Passage."
+        },
+        {
+          "id": "card-52050",
+          "title": "Mound of Bones",
+          "text": "Forced - When Mound of Bones is revealed: Put the top 4 Catacombs in the Catacombs deck into play above, below, to the left, and to the right of Mound of Bones. At the end of the current round, search the encounter deck and discard pile for a Malformed Skeleton and spawn it at Mound of Bones."
+        },
+        {
+          "id": "card-52051",
+          "title": "Research Site",
+          "text": "[reaction] After you successfully investigate Research Site: Reveal any Catacombs location. (Group limit once per game.)\nForced - When Research Site is revealed: Put the topmost Catacombs in the Catacombs deck into play above, below, or to the right of any other location."
+        },
+        {
+          "id": "card-52052",
+          "title": "Sea of Skulls",
+          "text": "Forced - After you end your turn at Sea of Skulls: You must either take 1 direct horror or choose and discard 3 cards from your hand.\nForced - When Sea of Skulls is revealed: Put the topmost Catacombs in the Catacombs deck into play above, below, or to the right of the location farthest from Sea of Skulls and mark it with a horror token. For the remainder of the game, Sea of Skulls is connected to the marked location."
+        },
+        {
+          "id": "card-52053",
+          "title": "Malformed Skeleton",
+          "text": "Hunter.\nForced - When Malformed Skeleton would resolve its hunter keyword: If there are no investigators within 2 locations of Malformed Skeleton, instead of resolving its hunter keyword, move it to the Catacombs location nearest to an investigator.\nForced - When Malformed Skeleton attacks you: It deals either its damage or its horror, instead of both."
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "No Resolution",
+          "children": [
+            {
+              "id": "noResolution-0",
+              "text": "If no resolution was reached (each investigator was defeated): You are shaken awake by a police officer and lifted to your feet. You feel as though the weight of a train has slammed into your head. The pain is unbearable. The man shines a flashlight in your eyes and asks you several questions in French. Dazed as you are, you find it difficult to answer. He points toward the staircase nearby and pushes you away from the catacombs. You stumble onto the Rue de la Tombe‑Issoire and slowly make your way to a hotel where you can stay the night.\n\nSeveral days of research later, the meaning of the strange diagrams you saw within the catacombs still escapes you. You feel as though you have been led on a wild goose chase. Just as you are about to give up, you see a faded yellow book on the table nearest to you. You are stunned to discover that it is the unabridged script of The King in Yellow. Drawn on the cover in black ink is the very same diagram whose meaning you have been struggling to interpret for several sleepless nights. Who had placed it here? How had it come to your hotel room? Regardless, you know what you must do. The play holds the secrets—it has all along—and yet like a fool you have avoided reading Act II out of superstition. Its words cannot harm you any more than the creatures and fanatics you have already encountered. Trembling, you open to the second part, and begin to read.\n\n• In your Campaign Log, record that you know the site of the gate.\n\n• Each investigator must choose whether or not to read Act II of The King in Yellow. At least one investigator must read Act II. In your Campaign Log, record the names of each investigator who chose to read Act II. Each investigator who read Act II searches the collection for a random basic Madness or Pact weakness, and adds it to their deck (does not count toward deck size). Each investigator who read Act II earns 2 additional experience as they gain insight into the machinations of the Tattered King.\n\n• Remove all [cultist], [tablet], and [elder_thing] tokens from the chaos bag. Then, add 2 [elder_thing] tokens to the chaos bag.\n\n• If Ishimaru Haruko (Just Skin and Bones) is in the victory display, record her name in your Campaign Log, under “VIPs Slain.”\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n• Experience: (calculate as instructed above)"
+            }
+          ]
+        },
+        {
+          "id": "r1",
+          "title": "Resolution 1",
+          "children": [
+            {
+              "id": "r1-0",
+              "text": "Resolution 1: The burned skull holds the key to everything. You are sure of it. You have tried every method available to you in studying the diagram it bears, but the answer eludes you still. You have brought the skull to experts, occultists, and professors. You have even tried speaking with the skull on more than one occasion. Exasperated, you place the skull on your night table and try to get some sleep for the first time since escaping the catacombs. As you fall asleep, you cannot shake the sight of the diagram etched in the skull’s forehead.\n\nYou awaken with a spark of inspiration and rush to the Musée du Louvre, a famous Parisian museum housing tens of thousands of paintings, drawings, and archaeological finds. You spend days exploring the museum—every display, every collection, every single object of art that might hold a clue to the diagram’s meaning. Finally, you see it: a painting depicting a beautiful island town weathering a torrential storm. Waves crash against the stone of the outer wall, the tide threatening to swallow the island whole. Lightning flashes around the tower of the abbey above the village. A whirlwind of black clouds churns in the sky above. The diagram from the burned skull you hold in your hands is recreated perfectly in the stained glass of the abbey. The title of the piece is “The Path Is Open.”\n\n• In your Campaign Log, record that you know the site of the gate.\n\n• Remove all [cultist], [tablet], and [elder_thing] tokens from the chaos bag. Then, add 2 [cultist] tokens to the chaos bag.\n\n• If Ishimaru Haruko (Just Skin and Bones) is in the victory display, record her name in your Campaign Log, under “VIPs Slain.”\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n• Experience: (calculate as instructed above)"
+            }
+          ]
+        },
+        {
+          "id": "r2",
+          "title": "Resolution 2",
+          "children": [
+            {
+              "id": "r2-0",
+              "text": "Resolution 2: You fall ceaselessly through the empty abyss. No air slows your descent or courses through your hair. It is a passageway devoid of reality. Finally, you pass through an invisible gateway and enter another realm. Looming above and below you are two skylines, one a warped reflection of the other. A vortex of swirling black clouds and crashing waves lies in between them. You study both sides—the familiar city and its strange mirror. Could this be the path to Carcosa? A passageway between realities, where realms converge? If so, all that is left is to find where this gate appears on Earth. You fall into the vortex below.\n\nYou are shaken awake by a police officer and lifted to your feet. You feel as though the weight of a train has slammed into your head. The pain is unbearable. The man shines a flashlight in your eyes and asks you several questions in French. Your eyes widen with realization and you wrest your arm free from the confused man’s grip. “I have to go at once!”\n\n• In your Campaign Log, record that you know the site of the gate. Add two tally marks under “Chasing the Stranger.”\n\n• Remove all [cultist], [tablet], and [elder_thing] tokens from the chaos bag. Then, add 2 [tablet] tokens to the chaos bag.\n\n• If Ishimaru Haruko (Just Skin and Bones) is in the victory display, record her name in your Campaign Log, under “VIPs Slain.”\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n• Experience: (calculate as instructed above)"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

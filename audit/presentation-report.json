@@ -130,15 +130,15 @@
   },
   {
    "path": "games/arkhamhorror/web/game-ui.js",
-   "sha256": "f666ba827532f912c51d6a3d149419710b979fa5c246fc551a80d542eaa51aed"
+   "sha256": "bd45a1b0865e87d4e48dbb66039bc2798be9d2fb786775b0ffcf1964e0c50eba"
   },
   {
    "path": "games/arkhamhorror/web/hub.js",
-   "sha256": "aa4239cf5e439bb143af873149bc3ac85cac35760ac6e34e2d31f8c68d545b62"
+   "sha256": "c31b2025b1845a17fd7dbf9fc41b3161a8fc35b6cc41772d8728279e80db3ecf"
   },
   {
    "path": "games/arkhamhorror/web/hub-office.css",
-   "sha256": "8e0e38bac76f39657c818a11e16e2f15518334cd11302f7dd0557b47fee0a61b"
+   "sha256": "4424437760eb089734a73f8fce7da2082edce2d498a8038d74edf5ce26f70872"
   },
   {
    "path": "games/arkhamhorror/web/table-art.js",
@@ -146,11 +146,11 @@
   },
   {
    "path": "games/arkhamhorror/web/table-regions.js",
-   "sha256": "c13fb81cd7751fba20fdea09dba094bb5d7ea79bb886319e709f737ae490b265"
+   "sha256": "ccef7b0bf95b368f9e0162fac0b7ef9ef6b118b6230074ab291aecd553d3a8d6"
   },
   {
    "path": "games/arkhamhorror/web/table-components.js",
-   "sha256": "55ff82e83263c1dd8eb871cade5170883c6b5333b7a95e544e500e87ae3b4597"
+   "sha256": "11f574186e85549f8d539dadee1b335a438d76a8e81a8b99f083fc73a076f2c7"
   },
   {
    "path": "games/arkhamhorror/web/card-text.js",
@@ -194,7 +194,7 @@
   },
   {
    "path": "games/arkhamhorror/web/card-interactions.css",
-   "sha256": "f0d1a47859d6b600df0267611974c17af8eb246071f309a9235dcd92c400a391"
+   "sha256": "1675c803b5fa55eccaf79ca7dab76fab5060c26e5bc5af38071a87107f976e12"
   },
   {
    "path": "games/arkhamhorror/web/supply-picker.js",
@@ -202,7 +202,7 @@
   },
   {
    "path": "games/arkhamhorror/web/table-surface.css",
-   "sha256": "0a63ffc3a82f81d51c23f4ce6500f2f50a871bb78600abdce037c01680e1d1f5"
+   "sha256": "83499c6343405426e1b1713f8b5375ef75e4e598aa3f2da05cd866d615fd2e72"
   },
   {
    "path": "games/arkhamhorror/web/map-layout.js",
@@ -317,7 +317,7 @@
   }
  },
  "phase": "N2",
- "presentationVersion": "59e1e77ef01454a6d8de882e8b18fc34a80df4e59c35803a81730ecf6cee850c",
+ "presentationVersion": "fe0023c478d66c9aa59d48f7a99533e577d607cd0dbdb264dab9c6d97bf6d61c",
  "samples": [
   {
    "code": "01001",

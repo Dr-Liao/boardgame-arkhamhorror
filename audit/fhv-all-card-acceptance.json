@@ -33,7 +33,7 @@
     "investigatorVerified": 20,
     "player": 120,
     "playerVerified": 120,
-    "playerSimplified": 54,
+    "playerSimplified": 53,
     "missing": [],
     "blocked": [],
     "gateComplete": true,
@@ -6908,15 +6908,14 @@
       "partition": "fhvPlayer",
       "scope": "player",
       "implemented": true,
-      "simplified": true,
+      "simplified": false,
       "status": "verified",
       "entry": "src/cards/entries/10102.js",
       "evidence": [
         "audit/fhv-player-acceptance.json",
         "audit/fhv-node-acceptance.json",
         "tests/fhv-player-m2-9.test.mjs"
-      ],
-      "disclosure": "[object Object]"
+      ]
     },
     {
       "code": "10103",

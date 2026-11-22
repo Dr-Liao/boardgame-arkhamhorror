@@ -1,0 +1,205 @@
+{
+  "id": "murderAtTheExcelsiorHotel",
+  "campaignId": "murderAtTheExcelsiorHotel",
+  "sourceKind": "authored",
+  "officialChinese": false,
+  "note": "独立支线：按剧本参考卡 84001 与参考侧支线设置页布置；真凶随机，可在关间插入主战役（每人 3 XP）。",
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "id": "intro1",
+          "title": "精益酒店谋杀案",
+          "text": "艾肖希尔酒店是阿卡姆最体面的地方。但今夜，225 房间的一位客人倒在血泊中死去——而所有证据都指向你们。警察正在赶来，你们必须赶在他们之前查明真相。"
+        },
+        {
+          "id": "intro2",
+          "text": "窗外风雨大作。凶手就藏在这些走廊的某处，而这一夜才刚刚开始。"
+        },
+        {
+          "id": "intro3",
+          "text": "在调查时限耗尽之前，追踪迹象、洗清嫌疑、活着度过今夜。"
+        }
+      ],
+      "setup": [
+        {
+          "id": "gatherSets",
+          "text": "收集精益酒店谋杀案遭遇组的所有卡牌。"
+        },
+        {
+          "id": "placeLocations",
+          "text": "把 225 房间、门厅、套房阳台、二楼走廊、餐厅放入场；其余地点放到一边（场外）。"
+        },
+        {
+          "id": "startAt",
+          "text": "队长从 225 房间开始游戏；其他调查员从门厅开始游戏。"
+        },
+        {
+          "id": "setAside",
+          "text": "把门罗警司、放一边的阿卡姆警官与「你都做了什么？」弱点放到一边（场外）。"
+        },
+        {
+          "id": "trueCulprit",
+          "text": "从 10 张「真凶」议程（v. I–X）中随机选择 1 张，作为第 3 张议程洗入议程牌库；其余真凶卡放回盒中。"
+        },
+        {
+          "id": "leadsDeck",
+          "text": "把异星装置、经理的钥匙、仪式古书、不祥溶液、陈旧的挂坠盒洗成迹象牌库。"
+        },
+        {
+          "id": "begin",
+          "text": "现在可以开始游戏了。"
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "trueCulprit",
+          "title": "随机真凶",
+          "text": "第 3 张议程由 10 张「真凶」议程随机决定，每张指定不同的真凶。击败真凶（完成议程目标）→ 结局 1；议程因毁灭阈值推进 → 结局 2。"
+        },
+        {
+          "id": "playAgain",
+          "title": "再玩一次",
+          "text": "首次以结局 2 或结局 3 结束时，你们可以选择「再玩一次」：重置本关再追查一次；不选择则进入结局结算。"
+        },
+        {
+          "id": "tokens",
+          "title": "混乱标记",
+          "text": "简单/普通：[skull] -X（X = 场上[[客人]]敌人数量/胜利区[[无辜]]敌人数量）。[cultist] -1。[tablet] -3。[elder_thing] -3；若失败且胜利区有[[无辜]]敌人，按数量受到恐惧。困难/专家：[cultist] -2、[tablet] -5、[elder_thing] -3。"
+        }
+      ],
+      "story": [
+        {
+          "id": "interlude",
+          "title": "真相",
+          "text": "你们拼凑起证据。这起谋杀并非表面那样：某种超自然力量正在艾肖希尔酒店中运作，而它的代理人此刻就混在客人之间。"
+        },
+        {
+          "id": "culprit",
+          "title": "真凶",
+          "text": "凶手终于出现在你们面前。剩下的只有终结这一切。"
+        }
+      ],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "没有结局",
+          "text": "如果没有达成任何结局：若有人撤退，记录「调查员逃离了犯罪现场」并前往结局 3；否则记录「艾肖希尔酒店又添一名受害者」并前往结局 2。"
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "text": "艾肖希尔酒店暂时恢复了平静。在剧本日志中记录：酒店暂时恢复平静。每位调查员获得胜利区经验。队长把「你都做了什么？」加入牌组（不计入牌组张数）。任意调查员可选择把「血迹斑斑的匕首」加入牌组（不计入张数）。若警察站在你这边，任意调查员可选择把门罗警司加入牌组。若警察不在你这边且胜利区有[[警察]]敌人，队长从收藏中随机获得一个基础弱点（侦探或疯狂类）并加入牌组。"
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "text": "谋杀仍未解决。在剧本日志中记录：谋杀仍未解决。每位调查员获得胜利区经验。队长把「你都做了什么？」加入牌组。任意调查员可选择把「血迹斑斑的匕首」加入牌组。"
+        },
+        {
+          "id": "resolution3",
+          "title": "结局 3",
+          "text": "谋杀仍未解决。在剧本日志中记录：谋杀仍未解决。每位调查员获得胜利区经验。队长把「你都做了什么？」加入牌组，并从收藏中随机获得一个基础弱点（侦探或疯狂类）。任意调查员可选择把「血迹斑斑的匕首」加入牌组。"
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "id": "intro1",
+          "title": "Murder at the Excelsior Hotel",
+          "text": "The Excelsior Hotel is the finest establishment in Arkham. Tonight, a guest in Room 225 lies dead in a pool of blood - and every piece of evidence points to you. The police are on their way. You must find the truth before they arrive."
+        },
+        {
+          "id": "intro2",
+          "text": "A storm rages outside. Somewhere in these halls is a killer, and the night has only just begun."
+        },
+        {
+          "id": "intro3",
+          "text": "You have until the investigation runs out of time. Follow the leads, clear your name, and survive the night."
+        }
+      ],
+      "setup": [
+        {
+          "id": "gatherSets",
+          "text": "Gather all cards from the Murder at the Excelsior Hotel encounter set."
+        },
+        {
+          "id": "placeLocations",
+          "text": "Put Room 225, the Foyer, the Suite Balcony, the Second Floor Hall, and the Restaurant into play. Set each other location aside, out of play."
+        },
+        {
+          "id": "startAt",
+          "text": "The lead investigator begins play in Room 225. Each other investigator begins play in the Foyer."
+        },
+        {
+          "id": "setAside",
+          "text": "Set aside Sergeant Monroe, each set-aside Arkham Officer, and the What Have You Done? weakness."
+        },
+        {
+          "id": "trueCulprit",
+          "text": "Randomly choose 1 of the 10 The True Culprit agendas (v. I-X) and shuffle it into the agenda deck as the third agenda. Return the others to the box."
+        },
+        {
+          "id": "leadsDeck",
+          "text": "Shuffle Alien Device, Manager's Key, Tome of Rituals, Sinister Solution, and Time-Worn Locket into the Leads deck."
+        },
+        {
+          "id": "begin",
+          "text": "You may begin the game."
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "trueCulprit",
+          "title": "The True Culprit",
+          "text": "The third agenda is chosen at random from the 10 The True Culprit agendas. Each one names a different culprit. Defeat the culprit to reach Resolution 1. If the agenda advances by reaching its doom threshold, proceed to Resolution 2."
+        },
+        {
+          "id": "playAgain",
+          "title": "Play Again",
+          "text": "The first time you reach Resolution 2 or Resolution 3, you may choose to play again: reset the scenario and try once more. If you do not, proceed to the resolution's consequences."
+        },
+        {
+          "id": "tokens",
+          "title": "Chaos Tokens",
+          "text": "Easy/Standard: [skull] -X (X = number of Guest enemies in play / Innocent enemies in the victory display). [cultist] -1. [tablet] -3. [elder_thing] -3; if you fail and there are Innocent enemies in the victory display, take 1 horror for each. Hard/Expert: [cultist] -2, [tablet] -5, [elder_thing] -3."
+        }
+      ],
+      "story": [
+        {
+          "id": "interlude",
+          "title": "The Truth",
+          "text": "You piece together the evidence. The murder is not what it seemed: an unnatural force has been at work in the Excelsior, and its agent walks among the guests even now."
+        },
+        {
+          "id": "culprit",
+          "title": "The True Culprit",
+          "text": "The murderer is before you at last. All that remains is to end it."
+        }
+      ],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "No Resolution",
+          "text": "If no resolution was reached: if any investigator resigned, record that the investigators fled the scene of the crime and proceed to Resolution 3. Otherwise, record that the Excelsior claims another victim and proceed to Resolution 2."
+        },
+        {
+          "id": "resolution1",
+          "title": "Resolution 1",
+          "text": "The Excelsior is quiet for now. In your Campaign Log, record that the Excelsior is quiet for now. Each investigator earns experience equal to the Victory X value of each card in the victory display. The lead investigator adds What Have You Done? to their deck (it does not count toward deck size). Any investigator may choose to add Bloodstained Dagger to their deck (it does not count toward deck size). If the police are on your side, any investigator may choose to add Sergeant Monroe to their deck. If the police are not on your side and a Police enemy is in the victory display, the lead investigator searches the collection for a random basic Detective or Madness weakness and adds it to their deck."
+        },
+        {
+          "id": "resolution2",
+          "title": "Resolution 2",
+          "text": "The murders continue unsolved. In your Campaign Log, record that the murders continue unsolved. Each investigator earns experience equal to the Victory X value of each card in the victory display. The lead investigator adds What Have You Done? to their deck. Any investigator may choose to add Bloodstained Dagger to their deck."
+        },
+        {
+          "id": "resolution3",
+          "title": "Resolution 3",
+          "text": "The murders continue unsolved. In your Campaign Log, record that the murders continue unsolved. Each investigator earns experience equal to the Victory X value of each card in the victory display. The lead investigator adds What Have You Done? to their deck and searches the collection for a random basic Detective or Madness weakness, adding it to their deck. Any investigator may choose to add Bloodstained Dagger to their deck."
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "id": "byTheBook",
+  "campaignId": "byTheBook",
+  "sourceKind": "authored",
+  "officialChinese": false,
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "循规蹈矩",
+          "text": "繁琐的程序令人窒息。自从你来到阿卡姆，案子越来越难推进。你以为自己会追踪走私犯和黑帮，而不是「想象出来的怪物」。但你这桩荒唐案子悬而未决越久，你越觉得也许它并不荒唐。也许那些怪物也不是想象出来的。局里对各类案件有无数规章，但对「活人献祭」却出奇地沉默。所以当你听说黑洞穴里发现的尸体时，你不知道从何查起。询问当地人和死者家属一无所获；洞穴里留下的证据也毫无帮助——祭品和宣称这些献祭是「礼物」的文字，以及一棵狰狞巨树的描绘。于是你做了最擅长的事：埋头调查，找到了串起所有死亡的线索。所有死者都围绕一个人：达米安·格雷先生。这位国会议员不是阿卡姆人，在本地没有亲友，也没有任何需要他驻留的委员会。可他在过去几个月一直待在阿卡姆，目的不明。他与每位死者之间最多只隔两层关系，这让你觉得可疑。更可疑的是，尽管没人威胁过格雷先生的人身安全，却二十四小时有警察护送他。你必须弄清真相，而且要快。现在你到处都能看见那棵该死的树。每天都有更多人失踪，甚至有人声称看见羊头怪物在巷子里游荡。但如果格雷先生真是幕后黑手，你必须小心。诬告政客，你的职业生涯无疑会完蛋。是时候做你该做的事了：找出证据、查明真相、把罪魁带来问话。每个「i」都点上，每个「t」都划好。"
+        }
+      ],
+      "setup": [
+        {
+          "id": "gatherSets",
+          "text": "收集以下遭遇组的全部卡牌：循规蹈矩、午夜假面、莎布·尼古拉丝之仆、乌默尔多斯教团、刺骨严寒、黑暗邪教、夜鹰、惊惧。"
+        },
+        {
+          "id": "removeCards",
+          "text": "将午夜假面遭遇组原有的剧本提示卡、幕牌库与议程牌库移出游戏，连同「你的房子」地点与两张「神秘咏唱」诡计；改用「循规蹈矩」扩展提供的新提示卡、幕与议程。"
+        },
+        {
+          "id": "chooseLocations",
+          "text": "随机选择两个「商业区」地点之一与两个「南区」地点之一放入场；把另一版的商业区与南区移出游戏。"
+        },
+        {
+          "id": "placeLocations",
+          "text": "将北区、东城区、河岸城、圣玛丽医院、墓地、米斯卡塔尼克大学与阿卡姆警察局放入场。"
+        },
+        {
+          "id": "startAt",
+          "text": "每位调查员从阿卡姆警察局开始。"
+        },
+        {
+          "id": "conspirators",
+          "text": "把乌默尔多斯教团与黑暗邪教遭遇组里的 9 名[[异教徒]]敌人洗混，然后作为「同谋」在每个地点下方暗置 1 名。"
+        },
+        {
+          "id": "rolandClue",
+          "text": "罗兰·班克斯开局时获得 1 个线索（从供应堆）。"
+        },
+        {
+          "id": "readyToBegin",
+          "text": "现在可以开始游戏了。"
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "rule1",
+          "text": "同谋：场上每个地点下方都暗置 1 名[[异教徒]]敌人作为同谋。幕 1 允许调查员团队花费线索，把所在地点的同谋翻开放入场并与其交战（或以警察局的能力花费线索、谈判并将其加入胜利区）。"
+        },
+        {
+          "id": "rule2",
+          "text": "以规办事：本关的目标是把 10 名[[异教徒]]敌人加入胜利区：9 名同谋 + 被揭示的 Mr. Grey。非弱点[[异教徒]]敌人「将被击败」时会改为治疗至剩 1 点生命，因此必须用「谈判」把它们捕获（阿卡姆警察局能力）。"
+        },
+        {
+          "id": "rule3",
+          "text": "挑战剧本：「循规蹈矩」挑战剧本围绕平行调查员罗兰·班克斯（90024，含 3 张 Directive）展开，本批只交付 1P 单开路径。"
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "text": "若没有任何调查员达成结局：罗兰·班克斯撤退则按结局 1 结算，否则按结局 2 结算。"
+        },
+        {
+          "id": "resolution1",
+          "text": "结局 1：证据已呈上，案子结了；你回到调查走私犯和普通罪犯的日常。那些对谋杀负责的人——至少你抓住的那些——都被关进了牢里。但回到平常的案子并不容易，不安的疑虑牵扯着你的思绪：是什么驱使格雷先生和其他人犯下这些骇人罪行？罗兰·班克斯获得经验等于胜利区中每名敌人的胜利点数总和；其他调查员获得经验等于胜利区中每个地点的胜利点数总和。若胜利区有 4–5 名[[异教徒]]敌人，罗兰下一场冒险初始手牌 +1；6–7 名 +2；8–9 名 +3；10 名 +3 且可从混乱袋移除一枚非符号标记。若 Mr. Grey 在胜利区，罗兰可以把「罗兰的 .38 特制手枪」升级为进阶版，或把「掩盖罪证」进阶版降级为原本版本。"
+        },
+        {
+          "id": "resolution2",
+          "text": "结局 2：任何程序或训练都无法让你准备好面对调查中出现的怪物——无论人性的还是字面意义的。尽管你竭尽全力，你还是被迫结案并低调行事。再查下去，可能就是你的末日。格雷先生和他的手下也许永远不会为他们的罪行承担后果，但至少你现在知道了这座城表面下的真正腐败。下次你会准备得更好。有没有规矩都一样。罗兰·班克斯获得经验等于胜利区中每名敌人的胜利点数总和；其他调查员获得经验等于胜利区中每个地点的胜利点数总和。罗兰·班克斯必须把「掩盖罪证」升级为进阶版，或把「罗兰的 .38 特制手枪」进阶版降级为原本版本。"
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "Challenge Scenario: By the Book",
+          "text": "Red tape is stifling. Ever since you arrived in Arkham, your cases have gotten harder and harder to navigate. You thought you would be tracking down smugglers and mobsters, not imaginary monsters. But the longer your absurd cases remain open, the more you begin to think maybe they aren't so absurd, after all. And perhaps that means the monsters aren't imaginary, either. One man lies at the center of all of the victims: Mr. Damien Grey. The congressman is not from Arkham, has no relatives or loved ones in the area, and is on no committee that would require his presence in town. You have to get to the bottom of this mystery, and soon. But if Mr. Grey is indeed behind this, you'll have to be careful. Falsely accusing a politician would certainly spell the end of your career. Time to do what you came to do: dig up the proof, discover the truth, and bring the culprits in for questioning. Every \"i\" dotted, every \"t\" crossed."
+        }
+      ],
+      "setup": [
+        {
+          "id": "gatherSets",
+          "text": "Gather all cards from the following encounter sets: By the Book, The Midnight Masks, Agents of Shub-Niggurath, Cult of Umordhoth, Chilling Cold, Dark Cult, Nightgaunts, and Striking Fear."
+        },
+        {
+          "id": "removeCards",
+          "text": "Remove the original scenario reference card, act deck, and agenda deck from The Midnight Masks encounter set from the game, along with the Your House location and both copies of the Mysterious Chanting treachery. Use the new scenario reference, act, and agenda cards provided in the By the Book encounter set."
+        },
+        {
+          "id": "chooseLocations",
+          "text": "Choose one of the two Downtown locations and one of the two Southside locations at random and put them into play. Remove the other versions of Downtown and Southside from the game."
+        },
+        {
+          "id": "placeLocations",
+          "text": "Put the Northside, Easttown, Rivertown, St. Mary's Hospital, Graveyard, Miskatonic University, and Arkham Police Station locations into play."
+        },
+        {
+          "id": "startAt",
+          "text": "Each investigator begins play at the Arkham Police Station."
+        },
+        {
+          "id": "conspirators",
+          "text": "Shuffle the 9 Cultist enemies from the Cult of Umordhoth and Dark Cult encounter sets together, then place one of those enemies facedown underneath each location in play, as a conspirator."
+        },
+        {
+          "id": "rolandClue",
+          "text": "Roland Banks begins the game with 1 clue (from the token pool)."
+        },
+        {
+          "id": "readyToBegin",
+          "text": "You are ready to begin."
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "rule1",
+          "title": "conspirators",
+          "text": "Each location in play has a Cultist enemy facedown beneath it, as a conspirator. The act allows the investigators to spend clues as a group to flip a conspirator at their location and put it into play, and conspirators can be captured at the Arkham Police Station by spending clues equal to their remaining health."
+        },
+        {
+          "id": "rule2",
+          "title": "byTheBook",
+          "text": "The goal is to add 10 Cultist enemies to the victory display: the 9 conspirators plus Mr. Grey. Non-weakness Cultist enemies that would be defeated are healed until they have 1 remaining health instead, so they must be captured via parley at the Arkham Police Station."
+        },
+        {
+          "id": "rule3",
+          "title": "challengeScenario",
+          "text": "The By the Book challenge scenario centers around the parallel investigator Roland Banks (90024, with 3 Directive assets). This mod delivers the 1-player standalone path in this batch."
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "text": "If no resolution was reached: if Roland Banks resigned, proceed to Resolution 1; otherwise proceed to Resolution 2."
+        },
+        {
+          "id": "resolution1",
+          "text": "Roland Banks earns experience equal to the combined Victory X value of each enemy in the victory display. Each other investigator earns experience equal to the combined Victory X value of each location in the victory display. If there are 4-5 Cultist enemies in the victory display, Roland begins the next scenario with 1 additional card in hand (6-7: 2; 8-9: 3; 10: 3 and remove a non-symbol token). If Mr. Grey is in the victory display, Roland may either upgrade Roland's .38 Special to its advanced version, or downgrade the advanced version of Cover Up to its original version."
+        },
+        {
+          "id": "resolution2",
+          "text": "Roland Banks earns experience equal to the combined Victory X value of each enemy in the victory display. Each other investigator earns experience equal to the combined Victory X value of each location in the victory display. Roland Banks must either upgrade Cover Up to its advanced version, or downgrade the advanced version of Roland's .38 Special to its original version."
+        }
+      ]
+    }
+  }
+}

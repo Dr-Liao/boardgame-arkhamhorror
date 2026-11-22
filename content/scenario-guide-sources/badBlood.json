@@ -1,0 +1,169 @@
+{
+  "id": "badBlood",
+  "campaignId": "badBlood",
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "血海深仇",
+          "text": "你一直知道自己身上有些……不同。从小在梦里，你就看见另一个国度、另一种人生——充满魔法与威严、征服与迫害的人生。当你发现那把奇怪而古老的钥匙的那一刻——当你认出把手上花纹与齿形的那一刻——你就知道那些梦根本不是梦，而是记忆。另一段人生的记忆。一个叫「希波利尔」的地方的记忆。随着记忆回归，魔法也回来了。几个月来你秘密练习，深入记忆、磨炼力量。但最近，你的梦变得黑暗而血腥。前世的你并不像你这样仁慈宽容。她冷酷、渴望力量、令人恐惧。你选择只把这种奇怪的力量用于帮助他人，而不是伤害他们。但你不是唯一一个记忆开始回归的人。几周前，艾尔佩斯·博丹第一次来餐厅。起初她只是个普通客人，像其他客人一样点蛋、培根和黑咖啡。但她的眼神里有某种东西——某种认出你的火花，或好奇——让你警惕。然后是问题。她先问起你挂在脖子上的钥匙。你带着最友善的微笑，说了惯常的谎话——那是家传之物，没有价值，只有纪念意义。但她没有罢休。她开始刺探你的生活、你的家庭、你的梦。艾尔佩斯不是普通客人。她不是在闲聊，她在寻找答案，就像你一样。于是你也去调查了。但阿卡姆没有艾尔佩斯居住的记录，少数知道她的人只用压低而惊恐的声音说话，给不了多少线索。后来北区的古董商店打来电话：艾尔佩斯一直在寻找像你「传家宝」一样的古物，甚至说出了「希波利尔」这个名字。她正在寻找能解锁更多记忆的东西，就像你一样——但她不是你这样。那种阴险的冷笑，人们提到她名字时颤抖的恐惧……你不愿去想，一个心怀恶意、拥有你记忆中那种力量的人会做出什么……"
+        }
+      ],
+      "setup": [
+        {
+          "id": "gatherSets",
+          "text": "收集以下遭遇组的全部卡牌：血海深仇、命运之线、普纳科提克兄弟会、午夜假面、上锁的门、夜鹰、黑暗邪教。收集午夜假面遭遇组时只取 5 张诡计卡（2 张「假线索」与 3 张「追猎之影」）与以下地点：北区、商业区（阿卡姆第一银行）、东城区、米斯卡塔尼克大学、河岸城；不要取该组其余的卡。"
+        },
+        {
+          "id": "scenarioReference",
+          "text": "将「命运之线」遭遇组原有的剧本提示卡移出游戏，改用「血海深仇」扩展提供的新提示卡。"
+        },
+        {
+          "id": "placeLocations",
+          "text": "将北区、商业区、东城区、米斯卡塔尼克大学、河岸城、市政厅、薇尔玛餐厅、古董商店放入场。"
+        },
+        {
+          "id": "startAt",
+          "text": "每位调查员从薇尔玛餐厅开始。"
+        },
+        {
+          "id": "randomLocation",
+          "text": "从「命运之线」遭遇组原幕牌库的背面找出以下地点：埃兹特利展区、黑洞穴、铁轨、阿卡姆警察局。随机选择 1 张放入场（忽略其显现能力），其余移出游戏。"
+        },
+        {
+          "id": "actAgendaDecks",
+          "text": "只使用「血海深仇」扩展提供的幕与议程卡构筑幕牌库与议程牌库。"
+        },
+        {
+          "id": "removeStoryAssets",
+          "text": "将「伊奇塔卡（被遗忘的守护者）」故事资产与「探险日志」故事资产移出游戏。"
+        },
+        {
+          "id": "placeElspeth",
+          "text": "将「艾尔佩斯·博丹」敌人放入古董商店。"
+        },
+        {
+          "id": "placeMemories",
+          "text": "在场上每个地点放置 1 个资源，作为「记忆」。"
+        },
+        {
+          "id": "readyToBegin",
+          "text": "现在可以开始游戏了。"
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "rule1",
+          "text": "巡逻：某些敌人拥有巡逻关键字。在敌方阶段（框架步骤 3.2），每个重整且未交战的巡逻敌人沿最短路径向指定地点移动。若有多个地点符合指定条件，由领队选择。若巡逻移动被卡牌能力阻挡，该敌人不移动。"
+        },
+        {
+          "id": "rule2",
+          "text": "收集记忆：本剧本中，艾格尼丝与艾尔佩斯竞速收集记忆。艾格尼丝可以用幕 1 正面的 [fast] 能力收集记忆；艾尔佩斯在敌方阶段结束时若处于重整状态且所在地点有记忆，会自动收集该记忆（本 Mod 以「重整状态 + 有记忆」简化参考的混乱标记合计 6 点规则）。"
+        },
+        {
+          "id": "rule3",
+          "text": "警报：每次调查员在躲避拥有警报关键字的敌人时检定失败，结算完检定结果后，该敌人对躲避的调查员发动攻击。该敌人不会因警报攻击而横置。"
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "text": "若全员被击败：按结局 2 结算。艾尔佩斯饶你一命，只留下你前世生活的碎片。艾格尼丝获得经验等于胜利区卡牌胜利点总和，或她已收集记忆数，二者取高；其他调查员只获得胜利点。艾格尼丝必须把「黑暗回忆」升级为进阶版，或把「希波利尔传家宝」进阶版降级为原本版本。"
+        },
+        {
+          "id": "resolution1",
+          "text": "结局 1：本来可以很简单。你本可以现在就了结她，阻止她用力量威胁他人……但那样，你和她又有什么区别？你放下手，魔法消散在冷空气中。「为什么？」她问，声音因痛苦而沙哑。你摇摇头，告诉她错了。真正的力量是带来和平的能力，而不是发动战争的能力。「蠢货，」她咆哮着爬起来，「你终究是个弱者。你会后悔让我活着。」你看着她带着前世的碎片蹒跚离开。她的力量大打折扣，但仍是个问题。你长舒一口气——你不想让这股力量改变你是谁。艾格尼丝获得经验等于胜利区卡牌胜利点总和，或她已收集记忆数，二者取高；其他调查员只获得胜利点。艾格尼丝可以把「希波利尔传家宝」升级为进阶版，或把「黑暗回忆」进阶版降级为原本版本。"
+        },
+        {
+          "id": "resolution2",
+          "text": "结局 2：艾尔佩斯占了上风。她抬手，魔法威胁着把你撕碎，露出冷笑。你闭上眼准备迎接——却没有致命一击。她把你拽起来，拍掉你围裙上的灰。「来吧，」她带着恶魔般的笑意低语，「你不是哀嚎的动物。你忘了你真正是什么了吗？我们真正是什么？」然后，没有更多惩罚，她离开了，只留给你前世生活的碎片。艾格尼丝获得经验等于胜利区卡牌胜利点总和，或她已收集记忆数，二者取高；其他调查员只获得胜利点。艾格尼丝必须把「黑暗回忆」升级为进阶版，或把「希波利尔传家宝」进阶版降级为原本版本。"
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "Challenge Scenario: Bad Blood",
+          "text": "You've always known there was something different about you. From a young age, in your dreams, you saw another realm. Another life. One of magick and majesty, of conquest and persecution. The moment you found that strange, old key—the moment you recognized the filigree along its handle, the pattern of its teeth—you knew those dreams weren't dreams at all, but memories. Memories of another life. Of a place called \"Hyperborea.\" And as the memories returned, the magic did, too. But lately, your dreams have turned dark and grisly. Your former self was not as caring or forgiving as you. She was ruthless. Power-hungry. Terrible to behold. Then came a call from the Curiositie Shoppe in Northside: Elspeth Baudin had been searching for artifacts like your own \"heirloom,\" even going so far as to utter the name Hyperborea. She is searching for something that can unlock more of her memories, just like you—but she is not like you."
+        }
+      ],
+      "setup": [
+        {
+          "id": "gatherSets",
+          "text": "Gather all cards from the following encounter sets: Bad Blood, Threads of Fate, Pnakotic Brotherhood, The Midnight Masks, Locked Doors, Nightgaunts, and Dark Cult. When gathering The Midnight Masks encounter set, only gather the 5 treachery cards (2x False Lead and 3x Hunting Shadow) and the following locations: Northside, Downtown (First Bank of Arkham), Easttown, Miskatonic University, and Rivertown. Do not gather the rest of the locations or the act, agenda, and scenario reference cards from that set."
+        },
+        {
+          "id": "scenarioReference",
+          "text": "Remove the original scenario reference card from the Threads of Fate encounter set from the game. Use the new scenario reference card provided in the Bad Blood encounter set."
+        },
+        {
+          "id": "placeLocations",
+          "text": "Put Northside, Downtown, Easttown, Miskatonic University, Rivertown, Town Hall, Velma's Diner, and Curiositie Shoppe into play."
+        },
+        {
+          "id": "startAt",
+          "text": "Each investigator begins play in Velma's Diner."
+        },
+        {
+          "id": "randomLocation",
+          "text": "Search the reverse sides of the original act deck from the Threads of Fate encounter set for the following locations: Eztli Exhibit, Black Cave, Train Tracks, and Arkham Police Station. Choose one at random and put it into play, ignoring its revelation ability. Remove the remainder of the original act and agenda cards from the Threads of Fate encounter set from the game."
+        },
+        {
+          "id": "actAgendaDecks",
+          "text": "Build the act and agenda decks using only the new act and agenda cards provided in the Bad Blood encounter set."
+        },
+        {
+          "id": "removeStoryAssets",
+          "text": "Remove the Ichtaca (The Forgotten Guardian) story asset and the Expedition Journal story asset from the game."
+        },
+        {
+          "id": "placeElspeth",
+          "text": "Place the Elspeth Baudin enemy into play at the Curiositie Shoppe."
+        },
+        {
+          "id": "placeMemories",
+          "text": "Place 1 resource on each location in play, as a \"memory.\""
+        },
+        {
+          "id": "readyToBegin",
+          "text": "You are ready to begin."
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "rule1",
+          "title": "patrol",
+          "text": "Some enemies have the patrol keyword. During the enemy phase (in framework step 3.2), each ready, unengaged enemy with the patrol keyword moves to a connecting location along the shortest path toward the designated location. If there are multiple locations that qualify, the lead investigator may choose which location the enemy moves toward."
+        },
+        {
+          "id": "rule2",
+          "title": "collectingMemories",
+          "text": "In this scenario, Agnes and Elspeth are racing to collect memories. Agnes can collect memories using the fast ability on act 1a. Elspeth collects memories automatically via the Forced abilities on agenda 1a; this mod simplifies the chaos-token accumulation rule to: at the end of the enemy phase, if Elspeth is ready and there is a memory at her location, she collects it."
+        },
+        {
+          "id": "rule3",
+          "title": "alert",
+          "text": "Each time an investigator fails a skill test while attempting to evade an enemy with the alert keyword, after applying all results for that skill test, that enemy performs an attack against the evading investigator. An enemy does not exhaust after performing an alert attack."
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "text": "If no resolution was reached because each investigator was defeated: Proceed to Resolution 2. Agnes Baker earns experience equal to either the combined Victory X value of each card in the victory display, or equal to the number of memories she had collected at the end of the game, whichever is higher. Each other investigator only earns the combined Victory X value of each card in the victory display."
+        },
+        {
+          "id": "resolution1",
+          "text": "Agnes Baker earns experience equal to either the combined Victory X value of each card in the victory display, or equal to the number of memories she had collected at the end of the game, whichever is higher. Each other investigator only earns the combined Victory X value of each card in the victory display. Agnes Baker may either upgrade Heirloom of Hyperborea to its advanced version, or downgrade the advanced version of Dark Memory to its original version."
+        },
+        {
+          "id": "resolution2",
+          "text": "Agnes Baker earns experience equal to either the combined Victory X value of each card in the victory display, or equal to the number of memories she had collected at the end of the game, whichever is higher. Each other investigator only earns the combined Victory X value of each card in the victory display. Agnes Baker must either upgrade Dark Memory to its advanced version, or downgrade the advanced version of Heirloom of Hyperborea to its original version."
+        }
+      ]
+    }
+  }
+}

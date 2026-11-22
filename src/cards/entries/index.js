@@ -1316,6 +1316,414 @@ import e11114 from './11114.js'
 import e11116 from './11116.js'
 import e11117 from './11117.js'
 import e11125 from './11125.js'
+import e60101 from './60101.js'
+import e60102 from './60102.js'
+import e60103 from './60103.js'
+import e60104 from './60104.js'
+import e60105 from './60105.js'
+import e60106 from './60106.js'
+import e60107 from './60107.js'
+import e60109 from './60109.js'
+import e60110 from './60110.js'
+import e60111 from './60111.js'
+import e60112 from './60112.js'
+import e60114 from './60114.js'
+import e60115 from './60115.js'
+import e60116 from './60116.js'
+import e60117 from './60117.js'
+import e60118 from './60118.js'
+import e60120 from './60120.js'
+import e60121 from './60121.js'
+import e60122 from './60122.js'
+import e60123 from './60123.js'
+import e60124 from './60124.js'
+import e60125 from './60125.js'
+import e60126 from './60126.js'
+import e60127 from './60127.js'
+import e60128 from './60128.js'
+import e60129 from './60129.js'
+import e60130 from './60130.js'
+import e60131 from './60131.js'
+import e60132 from './60132.js'
+import e60201 from './60201.js'
+import e60202 from './60202.js'
+import e60203 from './60203.js'
+import e60204 from './60204.js'
+import e60205 from './60205.js'
+import e60206 from './60206.js'
+import e60207 from './60207.js'
+import e60208 from './60208.js'
+import e60209 from './60209.js'
+import e60210 from './60210.js'
+import e60211 from './60211.js'
+import e60213 from './60213.js'
+import e60214 from './60214.js'
+import e60215 from './60215.js'
+import e60216 from './60216.js'
+import e60217 from './60217.js'
+import e60220 from './60220.js'
+import e60221 from './60221.js'
+import e60222 from './60222.js'
+import e60223 from './60223.js'
+import e60224 from './60224.js'
+import e60225 from './60225.js'
+import e60227 from './60227.js'
+import e60228 from './60228.js'
+import e60229 from './60229.js'
+import e60230 from './60230.js'
+import e60231 from './60231.js'
+import e60233 from './60233.js'
+import e60301 from './60301.js'
+import e60302 from './60302.js'
+import e60303 from './60303.js'
+import e60304 from './60304.js'
+import e60305 from './60305.js'
+import e60306 from './60306.js'
+import e60309 from './60309.js'
+import e60310 from './60310.js'
+import e60311 from './60311.js'
+import e60315 from './60315.js'
+import e60316 from './60316.js'
+import e60317 from './60317.js'
+import e60320 from './60320.js'
+import e60321 from './60321.js'
+import e60322 from './60322.js'
+import e60323 from './60323.js'
+import e60324 from './60324.js'
+import e60325 from './60325.js'
+import e60326 from './60326.js'
+import e60328 from './60328.js'
+import e60329 from './60329.js'
+import e60331 from './60331.js'
+import e60407 from './60407.js'
+import e60408 from './60408.js'
+import e60409 from './60409.js'
+import e60410 from './60410.js'
+import e60411 from './60411.js'
+import e60416 from './60416.js'
+import e60419 from './60419.js'
+import e60421 from './60421.js'
+import e60423 from './60423.js'
+import e60424 from './60424.js'
+import e60425 from './60425.js'
+import e60426 from './60426.js'
+import e60427 from './60427.js'
+import e60428 from './60428.js'
+import e60430 from './60430.js'
+import e60431 from './60431.js'
+import e60432 from './60432.js'
+import e60501 from './60501.js'
+import e60503 from './60503.js'
+import e60504 from './60504.js'
+import e60505 from './60505.js'
+import e60506 from './60506.js'
+import e60507 from './60507.js'
+import e60509 from './60509.js'
+import e60511 from './60511.js'
+import e60513 from './60513.js'
+import e60515 from './60515.js'
+import e60524 from './60524.js'
+import e60526 from './60526.js'
+import e60527 from './60527.js'
+import e60528 from './60528.js'
+import e60529 from './60529.js'
+import e60226 from './60226.js'
+import e60232 from './60232.js'
+import e60318 from './60318.js'
+import e60502 from './60502.js'
+import e60512 from './60512.js'
+import e60520 from './60520.js'
+import e60521 from './60521.js'
+import e60530 from './60530.js'
+import e60415 from './60415.js'
+import e60522 from './60522.js'
+import e60523 from './60523.js'
+import e60525 from './60525.js'
+import e60327 from './60327.js'
+import e60330 from './60330.js'
+import e60332 from './60332.js'
+import e60401 from './60401.js'
+import e60402 from './60402.js'
+import e60403 from './60403.js'
+import e60404 from './60404.js'
+import e60406 from './60406.js'
+import e60412 from './60412.js'
+import e60420 from './60420.js'
+import e60422 from './60422.js'
+import e60429 from './60429.js'
+import e60508 from './60508.js'
+import e60531 from './60531.js'
+import e50001 from './50001.js'
+import e50002 from './50002.js'
+import e50003 from './50003.js'
+import e50004 from './50004.js'
+import e50005 from './50005.js'
+import e50006 from './50006.js'
+import e50007 from './50007.js'
+import e50008 from './50008.js'
+import e50009 from './50009.js'
+import e50010 from './50010.js'
+import e51001 from './51001.js'
+import e51002 from './51002.js'
+import e51003 from './51003.js'
+import e51004 from './51004.js'
+import e51005 from './51005.js'
+import e51006 from './51006.js'
+import e51007 from './51007.js'
+import e51008 from './51008.js'
+import e51009 from './51009.js'
+import e51010 from './51010.js'
+import e51011 from './51011.js'
+import e52001 from './52001.js'
+import e52002 from './52002.js'
+import e52003 from './52003.js'
+import e52004 from './52004.js'
+import e52005 from './52005.js'
+import e52006 from './52006.js'
+import e52007 from './52007.js'
+import e52008 from './52008.js'
+import e52009 from './52009.js'
+import e52010 from './52010.js'
+import e52011 from './52011.js'
+import e52012 from './52012.js'
+import e52013 from './52013.js'
+import e90002 from './90002.js'
+import e90010 from './90010.js'
+import e90018 from './90018.js'
+import e90019 from './90019.js'
+import e90030 from './90030.js'
+import e90031 from './90031.js'
+import e90001 from './90001.js'
+import e90003 from './90003.js'
+import e90008 from './90008.js'
+import e90009 from './90009.js'
+import e90017 from './90017.js'
+import e90024 from './90024.js'
+import e90025 from './90025.js'
+import e90026 from './90026.js'
+import e90027 from './90027.js'
+import e90028 from './90028.js'
+import e90029 from './90029.js'
+import e81030 from './81030.js'
+import e12016 from './12016.js'
+import e12017 from './12017.js'
+import e12018 from './12018.js'
+import e12019 from './12019.js'
+import e12021 from './12021.js'
+import e12022 from './12022.js'
+import e12023 from './12023.js'
+import e12026 from './12026.js'
+import e12027 from './12027.js'
+import e12028 from './12028.js'
+import e12029 from './12029.js'
+import e12030 from './12030.js'
+import e12033 from './12033.js'
+import e12035 from './12035.js'
+import e12036 from './12036.js'
+import e12037 from './12037.js'
+import e12040 from './12040.js'
+import e12041 from './12041.js'
+import e12043 from './12043.js'
+import e12045 from './12045.js'
+import e12046 from './12046.js'
+import e12047 from './12047.js'
+import e12048 from './12048.js'
+import e12051 from './12051.js'
+import e12052 from './12052.js'
+import e12053 from './12053.js'
+import e12054 from './12054.js'
+import e12055 from './12055.js'
+import e12057 from './12057.js'
+import e12058 from './12058.js'
+import e12059 from './12059.js'
+import e12060 from './12060.js'
+import e12061 from './12061.js'
+import e12062 from './12062.js'
+import e12063 from './12063.js'
+import e12066 from './12066.js'
+import e12067 from './12067.js'
+import e12068 from './12068.js'
+import e12070 from './12070.js'
+import e12071 from './12071.js'
+import e60151 from './60151.js'
+import e60152 from './60152.js'
+import e60153 from './60153.js'
+import e60154 from './60154.js'
+import e60156 from './60156.js'
+import e60157 from './60157.js'
+import e60158 from './60158.js'
+import e60159 from './60159.js'
+import e60160 from './60160.js'
+import e60161 from './60161.js'
+import e60162 from './60162.js'
+import e60163 from './60163.js'
+import e60164 from './60164.js'
+import e60165 from './60165.js'
+import e60166 from './60166.js'
+import e60167 from './60167.js'
+import e60168 from './60168.js'
+import e60170 from './60170.js'
+import e60171 from './60171.js'
+import e60172 from './60172.js'
+import e60173 from './60173.js'
+import e60174 from './60174.js'
+import e60175 from './60175.js'
+import e60177 from './60177.js'
+import e60178 from './60178.js'
+import e60179 from './60179.js'
+import e60180 from './60180.js'
+import e60181 from './60181.js'
+import e60182 from './60182.js'
+import e60251 from './60251.js'
+import e60252 from './60252.js'
+import e60253 from './60253.js'
+import e60254 from './60254.js'
+import e60255 from './60255.js'
+import e60256 from './60256.js'
+import e60257 from './60257.js'
+import e60258 from './60258.js'
+import e60259 from './60259.js'
+import e60260 from './60260.js'
+import e60261 from './60261.js'
+import e60262 from './60262.js'
+import e60264 from './60264.js'
+import e60265 from './60265.js'
+import e60266 from './60266.js'
+import e60268 from './60268.js'
+import e60269 from './60269.js'
+import e60271 from './60271.js'
+import e60272 from './60272.js'
+import e60273 from './60273.js'
+import e60274 from './60274.js'
+import e60276 from './60276.js'
+import e60277 from './60277.js'
+import e60278 from './60278.js'
+import e60279 from './60279.js'
+import e60280 from './60280.js'
+import e60281 from './60281.js'
+import e60282 from './60282.js'
+import e60351 from './60351.js'
+import e60352 from './60352.js'
+import e60353 from './60353.js'
+import e60354 from './60354.js'
+import e60355 from './60355.js'
+import e60356 from './60356.js'
+import e60357 from './60357.js'
+import e60358 from './60358.js'
+import e60359 from './60359.js'
+import e60360 from './60360.js'
+import e60362 from './60362.js'
+import e60363 from './60363.js'
+import e60364 from './60364.js'
+import e60365 from './60365.js'
+import e60366 from './60366.js'
+import e60367 from './60367.js'
+import e60368 from './60368.js'
+import e60369 from './60369.js'
+import e60370 from './60370.js'
+import e60373 from './60373.js'
+import e60374 from './60374.js'
+import e60375 from './60375.js'
+import e60376 from './60376.js'
+import e60377 from './60377.js'
+import e60378 from './60378.js'
+import e60380 from './60380.js'
+import e60382 from './60382.js'
+import e60383 from './60383.js'
+import e60451 from './60451.js'
+import e60452 from './60452.js'
+import e60453 from './60453.js'
+import e60454 from './60454.js'
+import e60456 from './60456.js'
+import e60457 from './60457.js'
+import e60458 from './60458.js'
+import e60461 from './60461.js'
+import e60462 from './60462.js'
+import e60463 from './60463.js'
+import e60464 from './60464.js'
+import e60465 from './60465.js'
+import e60466 from './60466.js'
+import e60467 from './60467.js'
+import e60468 from './60468.js'
+import e60470 from './60470.js'
+import e60471 from './60471.js'
+import e60472 from './60472.js'
+import e60473 from './60473.js'
+import e60474 from './60474.js'
+import e60475 from './60475.js'
+import e60476 from './60476.js'
+import e60477 from './60477.js'
+import e60478 from './60478.js'
+import e60479 from './60479.js'
+import e60480 from './60480.js'
+import e60481 from './60481.js'
+import e60482 from './60482.js'
+import e60483 from './60483.js'
+import e60551 from './60551.js'
+import e60552 from './60552.js'
+import e60553 from './60553.js'
+import e60554 from './60554.js'
+import e60555 from './60555.js'
+import e60556 from './60556.js'
+import e60557 from './60557.js'
+import e60558 from './60558.js'
+import e60559 from './60559.js'
+import e60561 from './60561.js'
+import e60562 from './60562.js'
+import e60563 from './60563.js'
+import e60564 from './60564.js'
+import e60565 from './60565.js'
+import e60566 from './60566.js'
+import e60567 from './60567.js'
+import e60568 from './60568.js'
+import e60569 from './60569.js'
+import e60570 from './60570.js'
+import e60571 from './60571.js'
+import e60572 from './60572.js'
+import e60573 from './60573.js'
+import e60574 from './60574.js'
+import e60575 from './60575.js'
+import e60576 from './60576.js'
+import e60577 from './60577.js'
+import e60578 from './60578.js'
+import e60579 from './60579.js'
+import e60580 from './60580.js'
+import e60581 from './60581.js'
+import e60582 from './60582.js'
+import e12001 from './12001.js'
+import e12002 from './12002.js'
+import e12003 from './12003.js'
+import e12004 from './12004.js'
+import e12005 from './12005.js'
+import e12006 from './12006.js'
+import e12007 from './12007.js'
+import e12008 from './12008.js'
+import e12072 from './12072.js'
+import e12074 from './12074.js'
+import e12075 from './12075.js'
+import e12076 from './12076.js'
+import e12079 from './12079.js'
+import e12080 from './12080.js'
+import e12081 from './12081.js'
+import e12082 from './12082.js'
+import e12083 from './12083.js'
+import e12084 from './12084.js'
+import e12085 from './12085.js'
+import e12086 from './12086.js'
+import e12087 from './12087.js'
+import e12088 from './12088.js'
+import e12009 from './12009.js'
+import e12010 from './12010.js'
+import e12011 from './12011.js'
+import e12012 from './12012.js'
+import e12013 from './12013.js'
+import e12014 from './12014.js'
+import e12015 from './12015.js'
+import e12098 from './12098.js'
+import e12099 from './12099.js'
+import e12102 from './12102.js'
+import e12103 from './12103.js'
+import e12104 from './12104.js'
 
 export const CARD_ENTRY_LIST = [
   e01001,
@@ -2633,6 +3041,414 @@ export const CARD_ENTRY_LIST = [
   e11116,
   e11117,
   e11125,
+  e60101,
+  e60102,
+  e60103,
+  e60104,
+  e60105,
+  e60106,
+  e60107,
+  e60109,
+  e60110,
+  e60111,
+  e60112,
+  e60114,
+  e60115,
+  e60116,
+  e60117,
+  e60118,
+  e60120,
+  e60121,
+  e60122,
+  e60123,
+  e60124,
+  e60125,
+  e60126,
+  e60127,
+  e60128,
+  e60129,
+  e60130,
+  e60131,
+  e60132,
+  e60201,
+  e60202,
+  e60203,
+  e60204,
+  e60205,
+  e60206,
+  e60207,
+  e60208,
+  e60209,
+  e60210,
+  e60211,
+  e60213,
+  e60214,
+  e60215,
+  e60216,
+  e60217,
+  e60220,
+  e60221,
+  e60222,
+  e60223,
+  e60224,
+  e60225,
+  e60227,
+  e60228,
+  e60229,
+  e60230,
+  e60231,
+  e60233,
+  e60301,
+  e60302,
+  e60303,
+  e60304,
+  e60305,
+  e60306,
+  e60309,
+  e60310,
+  e60311,
+  e60315,
+  e60316,
+  e60317,
+  e60320,
+  e60321,
+  e60322,
+  e60323,
+  e60324,
+  e60325,
+  e60326,
+  e60328,
+  e60329,
+  e60331,
+  e60407,
+  e60408,
+  e60409,
+  e60410,
+  e60411,
+  e60416,
+  e60419,
+  e60421,
+  e60423,
+  e60424,
+  e60425,
+  e60426,
+  e60427,
+  e60428,
+  e60430,
+  e60431,
+  e60432,
+  e60501,
+  e60503,
+  e60504,
+  e60505,
+  e60506,
+  e60507,
+  e60509,
+  e60511,
+  e60513,
+  e60515,
+  e60524,
+  e60526,
+  e60527,
+  e60528,
+  e60529,
+  e60226,
+  e60232,
+  e60318,
+  e60502,
+  e60512,
+  e60520,
+  e60521,
+  e60530,
+  e60415,
+  e60522,
+  e60523,
+  e60525,
+  e60327,
+  e60330,
+  e60332,
+  e60401,
+  e60402,
+  e60403,
+  e60404,
+  e60406,
+  e60412,
+  e60420,
+  e60422,
+  e60429,
+  e60508,
+  e60531,
+  e50001,
+  e50002,
+  e50003,
+  e50004,
+  e50005,
+  e50006,
+  e50007,
+  e50008,
+  e50009,
+  e50010,
+  e51001,
+  e51002,
+  e51003,
+  e51004,
+  e51005,
+  e51006,
+  e51007,
+  e51008,
+  e51009,
+  e51010,
+  e51011,
+  e52001,
+  e52002,
+  e52003,
+  e52004,
+  e52005,
+  e52006,
+  e52007,
+  e52008,
+  e52009,
+  e52010,
+  e52011,
+  e52012,
+  e52013,
+  e90002,
+  e90010,
+  e90018,
+  e90019,
+  e90030,
+  e90031,
+  e90001,
+  e90003,
+  e90008,
+  e90009,
+  e90017,
+  e90024,
+  e90025,
+  e90026,
+  e90027,
+  e90028,
+  e90029,
+  e81030,
+  e12016,
+  e12017,
+  e12018,
+  e12019,
+  e12021,
+  e12022,
+  e12023,
+  e12026,
+  e12027,
+  e12028,
+  e12029,
+  e12030,
+  e12033,
+  e12035,
+  e12036,
+  e12037,
+  e12040,
+  e12041,
+  e12043,
+  e12045,
+  e12046,
+  e12047,
+  e12048,
+  e12051,
+  e12052,
+  e12053,
+  e12054,
+  e12055,
+  e12057,
+  e12058,
+  e12059,
+  e12060,
+  e12061,
+  e12062,
+  e12063,
+  e12066,
+  e12067,
+  e12068,
+  e12070,
+  e12071,
+  e60151,
+  e60152,
+  e60153,
+  e60154,
+  e60156,
+  e60157,
+  e60158,
+  e60159,
+  e60160,
+  e60161,
+  e60162,
+  e60163,
+  e60164,
+  e60165,
+  e60166,
+  e60167,
+  e60168,
+  e60170,
+  e60171,
+  e60172,
+  e60173,
+  e60174,
+  e60175,
+  e60177,
+  e60178,
+  e60179,
+  e60180,
+  e60181,
+  e60182,
+  e60251,
+  e60252,
+  e60253,
+  e60254,
+  e60255,
+  e60256,
+  e60257,
+  e60258,
+  e60259,
+  e60260,
+  e60261,
+  e60262,
+  e60264,
+  e60265,
+  e60266,
+  e60268,
+  e60269,
+  e60271,
+  e60272,
+  e60273,
+  e60274,
+  e60276,
+  e60277,
+  e60278,
+  e60279,
+  e60280,
+  e60281,
+  e60282,
+  e60351,
+  e60352,
+  e60353,
+  e60354,
+  e60355,
+  e60356,
+  e60357,
+  e60358,
+  e60359,
+  e60360,
+  e60362,
+  e60363,
+  e60364,
+  e60365,
+  e60366,
+  e60367,
+  e60368,
+  e60369,
+  e60370,
+  e60373,
+  e60374,
+  e60375,
+  e60376,
+  e60377,
+  e60378,
+  e60380,
+  e60382,
+  e60383,
+  e60451,
+  e60452,
+  e60453,
+  e60454,
+  e60456,
+  e60457,
+  e60458,
+  e60461,
+  e60462,
+  e60463,
+  e60464,
+  e60465,
+  e60466,
+  e60467,
+  e60468,
+  e60470,
+  e60471,
+  e60472,
+  e60473,
+  e60474,
+  e60475,
+  e60476,
+  e60477,
+  e60478,
+  e60479,
+  e60480,
+  e60481,
+  e60482,
+  e60483,
+  e60551,
+  e60552,
+  e60553,
+  e60554,
+  e60555,
+  e60556,
+  e60557,
+  e60558,
+  e60559,
+  e60561,
+  e60562,
+  e60563,
+  e60564,
+  e60565,
+  e60566,
+  e60567,
+  e60568,
+  e60569,
+  e60570,
+  e60571,
+  e60572,
+  e60573,
+  e60574,
+  e60575,
+  e60576,
+  e60577,
+  e60578,
+  e60579,
+  e60580,
+  e60581,
+  e60582,
+  e12001,
+  e12002,
+  e12003,
+  e12004,
+  e12005,
+  e12006,
+  e12007,
+  e12008,
+  e12072,
+  e12074,
+  e12075,
+  e12076,
+  e12079,
+  e12080,
+  e12081,
+  e12082,
+  e12083,
+  e12084,
+  e12085,
+  e12086,
+  e12087,
+  e12088,
+  e12009,
+  e12010,
+  e12011,
+  e12012,
+  e12013,
+  e12014,
+  e12015,
+  e12098,
+  e12099,
+  e12102,
+  e12103,
+  e12104,
 ]
 
 export const CARD_ENTRY_BY_CODE = new Map(CARD_ENTRY_LIST.map(entry => [entry.code, entry]))

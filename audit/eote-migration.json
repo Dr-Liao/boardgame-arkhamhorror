@@ -3589,7 +3589,7 @@
       "audit/eote-primitive-plan.json": "91b56f8a413ae76c40ae8417665042c9b246d4eafea7859253d5e9c8e6362955",
       "audit/eote-primitive-requests.json": "8699aeb37738f0c0ed6c6e4bf786e7f3fd70a3ae0f9c947164e8c5c615a2b18b",
       "audit/eote-regression.json": "36a01fdd2b44bc72f8470e97df4844025e51e486addf8c6edb27ec9a3b1e557d",
-      "audit/eote-release-acceptance.json": "a5b6d392f4faf1c054f936cb0c9055eb78907a31ea69962c162eb3197efc2fa8",
+      "audit/eote-release-acceptance.json": "fcf6282a78c4eb8af2554d21318617fa015a215763936f0d126de96f23a244ee",
       "audit/eote-release-browser.json": "ad85bfa1bc19e2bdc111941e815be8d3ed190fd021ef88f3707e389d63b259d3",
       "audit/eote-rules.json": "fc978861b893820f5e91df7d7b6171b60def9b26ee0ec271191cf48d076f5fa6",
       "audit/eote-scenario-acceptance.json": "f7341108405fa7144e8f4c6776e628f9bac2a81932e042b5de0b6f3166158de2",
@@ -3610,11 +3610,11 @@
   "sources": [
     {
       "path": "content/registered.js",
-      "sha256": "8c9204dc062e13af8bf40327a4bb4ebdfda18f2cacef9a01f5936338d0cb8e5d"
+      "sha256": "95de3eb916f9ba0fdc1726da395182143e0fb7786e3ed2169be3a399fc1362d6"
     },
     {
       "path": "content/registry.js",
-      "sha256": "e7d924738ba416e9699af5aecd9e95b1be42c6e8cbbc6f1f3f8d7cb5ef75e557"
+      "sha256": "14c803f54ec7e8cb190362069aa879f342a0ff1b44176f735054dddc3a6fb642"
     },
     {
       "path": "content/campaigns/edgeOfTheEarth/shared.js",
@@ -3690,7 +3690,7 @@
     },
     {
       "path": "audit/eote-release-acceptance.json",
-      "sha256": "a5b6d392f4faf1c054f936cb0c9055eb78907a31ea69962c162eb3197efc2fa8"
+      "sha256": "fcf6282a78c4eb8af2554d21318617fa015a215763936f0d126de96f23a244ee"
     },
     {
       "path": "content/packs/eoteCampaign/manifest.js",

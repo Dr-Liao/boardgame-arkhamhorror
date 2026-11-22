@@ -236,11 +236,12 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
     return Boolean(blank && blank.round === state.round && blank.phase === state.phase)
   }
   const previousAbilityWindow = state._abilityWindow
+  const participants = aliveInvestigators(state).filter(inv => opts.privateSeat == null || inv.seat === opts.privateSeat)
   state._abilityWindow = true
   try {
     // 1) 强制能力：无条件结算，不询问。
     //    先玩家卡（逐座位），再非玩家卡（每张实体卡一次，由决定座位代表执行）。
-    for (const inv of aliveInvestigators(state)) {
+    for (const inv of participants) {
       for (const { source, code, fromHandIndex, entry, effect, controlled } of descriptorSources(state, inv)) {
         // 非玩家实体由下面的专用块按「每张实体卡一次」结算，避免逐座位重复执行；
         // 受控的剧情支援（controlled）按玩家卡来源处理。
@@ -297,7 +298,7 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
       }
     }
     // 2) 可选反应：逐个座位询问，直到让过。
-    for (const inv of aliveInvestigators(state)) {
+    for (const inv of opts.privateSeat == null ? aliveInvestigators(state) : participants) {
       if (context?.cancelled) break
       const candidates = []
       for (const { source, code, fromHandIndex, entry, effect, controlled, fromChannel } of descriptorSources(state, inv, { includeDiscard: opts.quickEventWindow === true })) {

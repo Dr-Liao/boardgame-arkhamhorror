@@ -19,7 +19,7 @@ const PART_IDS = Object.freeze(['A', 'B'])
 const PENDING_EFFECT_OPS = Object.freeze(['chaosByDifficulty', 'removeCampaignCard'])
 const CONDITION_FIELDS = Object.freeze([
   'all', 'any', 'not', 'hasRecord', 'capturedInvestigators', 'activeCapturedInvestigator',
-  'compare', 'completed', 'completedStep', 'resolution', 'record', 'recordCount', 'equals', 'atLeast', 'includes',
+  'compare', 'completed', 'completedStep', 'resolution', 'record', 'recordCount', 'equals', 'atLeast', 'includes', 'eachInvestigatorXp',
   'part', 'parts', 'mode', 'modeIn', 'activeParts',
 ])
 const COMPARE_OPS = Object.freeze(['>', '>=', '<', '<=', '==='])
@@ -127,6 +127,7 @@ export function flowCondition(condition, campaign) {
     return ({ '>': left > right, '>=': left >= right, '<': left < right,
       '<=': left <= right, '===': left === right })[condition.compare.op] ?? false
   }
+  if (Object.hasOwn(condition, 'eachInvestigatorXp')) return canSpendCampaignExperience(campaign, condition.eachInvestigatorXp)
   if (condition.completed) return campaign.scenarioResults.some(r => r.scenarioId === condition.completed)
   // P2-C（EotE）：`completedStep` 读「已完成步骤」集合（含非关卡步骤），与 `completed`（只读
   // scenarioResults 的关卡 id）分开；数组形式要求全部完成，任一完成请用 any 组合。
@@ -151,6 +152,12 @@ export function flowCondition(condition, campaign) {
   if (Object.hasOwn(condition, 'atLeast')) return Number(value || 0) >= condition.atLeast
   if (Object.hasOwn(condition, 'includes')) return Array.isArray(value) && value.includes(condition.includes)
   throw new Error('未知战役条件')
+}
+
+export function canSpendCampaignExperience(campaign, amount) {
+  if (!Number.isSafeInteger(amount) || amount < 1) return false
+  const records = Object.values(campaign.investigators || {}).filter(record => record?.status === 'active')
+  return records.length > 0 && records.every(record => Number.isSafeInteger(record.xp) && record.xp >= amount)
 }
 
 // ---------------------------------------------------------------------------
@@ -223,6 +230,10 @@ function conditionError(condition, recordSchema = null) {
       if (error) return error
     }
     return null
+  }
+  if (Object.hasOwn(condition, 'eachInvestigatorXp')) {
+    if (keys.length > 1) return 'eachInvestigatorXp 不能与其它条件字段并列'
+    return Number.isSafeInteger(condition.eachInvestigatorXp) && condition.eachInvestigatorXp > 0 ? null : '经验要求必须是正整数'
   }
   if (Object.hasOwn(condition, 'completed')) {
     if (keys.length > 1) return 'completed 不能与其它条件字段并列'
@@ -328,6 +339,9 @@ function effectError(effect) {
   if (effect.type === 'increment') {
     if (typeof effect.key !== 'string' || !effect.key) return 'increment 效果缺少 key'
     if (!Number.isFinite(effect.amount)) return '战役记录增量必须是有限数值'
+  }
+  if (effect.type === 'spendExperience' && (!Number.isSafeInteger(effect.amount) || effect.amount < 1)) {
+    return '经验费用必须是正整数'
   }
   return null
 }

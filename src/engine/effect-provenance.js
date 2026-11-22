@@ -23,6 +23,7 @@
 // 约定：不按 actor 座位、不按 trait/阵营、不按「敌人检定里拿到的卡」推断来源。
 
 const frames = new WeakMap()
+const eventTestBonuses = new WeakMap()
 
 const KINDS = new Set(['basicAction', 'playerCard', 'encounterCard', 'scenarioRule'])
 // 玩家卡来源：注意 'story'（剧情资产）也在这里——无人控制的剧情资产同样是玩家卡效果。
@@ -77,6 +78,23 @@ export function cardEffectSource(state, source, descriptor, inv, { cardDef } = {
 /** 当前结算来源；没有帧就是 null。 */
 export function currentEffectSource(state) {
   return frames.get(state)?.source || null
+}
+
+export function withEventTestBonus(state, seat, code, amount, resolve) {
+  if (!amount) return resolve()
+  const previous = eventTestBonuses.get(state)
+  eventTestBonuses.set(state, { seat, code, amount })
+  try {
+    return resolve()
+  } finally {
+    if (previous) eventTestBonuses.set(state, previous)
+    else eventTestBonuses.delete(state)
+  }
+}
+
+export function eventTestBonus(state, seat) {
+  const bonus = eventTestBonuses.get(state)
+  return bonus?.seat === seat && currentEffectSource(state)?.code === bonus.code ? bonus.amount : 0
 }
 
 /** 以某来源执行一段结算；来源为 null 时不入栈（等价于「来源未知」）。 */
@@ -180,6 +198,12 @@ export function enemyIsSlumbering(state, enemy, { entryOf, isBlanked } = {}) {
  * originOverride 只给引擎内部的合法目标枚举用，绝不从玩家命令字段取值。
  */
 export function enemyEffectAllowed(state, enemy, operation, deps = {}, originOverride = null) {
+  // 批次 3（60553）：敌人声明「免疫玩家卡牌效果」时，只有玩家卡来源被拒绝，剧本/遭遇照常。
+  const immuneEntry = typeof deps.entryOf === 'function' ? deps.entryOf(enemy?.originalCode || enemy?.code) : null
+  if (immuneEntry?.enemyRule?.playerCardEffectImmune === true) {
+    const origin = originOverride || currentEffectSource(state)
+    if (origin?.kind === 'playerCard') return false
+  }
   if (!enemyIsSlumbering(state, enemy, deps)) return true
   if (SLUMBERING_OPS.has(operation)) return false
   const origin = originOverride || currentEffectSource(state)
@@ -196,8 +220,13 @@ export function enemyEffectAllowed(state, enemy, operation, deps = {}, originOve
  *     剧本自动结算，必须放行；只有**明确来自玩家卡**的效果才拒绝。
  */
 export function enemyPlayerEffectBlocked(state, enemy, deps = {}) {
+  if (!enemy) return true
+  const entry = typeof deps.entryOf === 'function' ? deps.entryOf(enemy.originalCode || enemy.code) : null
+  const playerCardSource = currentEffectSource(state)?.kind === 'playerCard'
+  // 批次 3（60553）：免疫玩家卡牌效果是持续规则，不依赖沉睡。
+  if (entry?.enemyRule?.playerCardEffectImmune === true) return playerCardSource
   if (!enemyIsSlumbering(state, enemy, deps)) return false
-  return currentEffectSource(state)?.kind === 'playerCard'
+  return playerCardSource
 }
 
 /**

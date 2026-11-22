@@ -59,7 +59,7 @@ export function summarizeTestResult(skillTest, raw = {}) {
     autoFail,
     // 成功/失败差额统一成非负数：窗口条件（failedByAtMost / successByAtLeast）读同一份。
     successBy: success ? Math.max(0, value - difficulty) : 0,
-    failedBy: success ? 0 : Math.max(0, difficulty - value),
+    failedBy: success ? 0 : Math.max(0, raw.failedBy ?? difficulty - value),
     drawn: Object.freeze([...(raw.drawn || [])]),
     cancelled: Object.freeze([...(raw.cancelled || skillTest?.cancelledCommitments?.map(item => item.code) || [])]),
     source: raw.source || skillTest?.source || null,

@@ -3,10 +3,18 @@ import { vehicleOf } from './vehicles.js'
 import { barrierCount } from './edge-barriers.js'
 import { enemyIsAloof } from './enemy-aloof.js'
 import { capturedActionError } from './capture.js'
+import { discardPlayerCards } from './player-zones.js'
 // hidden-rules.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 「隐私卡 / 文本空白 / 布尔规则」的读点：隐藏卡（hidden）、被清空的调查员/敌人文本、
 // 敌人能否攻击/被攻击/引发借机攻击，以及移动前的禁止判定。
 
+
+export const isHiddenPlayerWeakness = code => registeredEntry(code)?.hiddenRule?.playerWeakness === true
+
+export function hiddenScenarioExperience(inv) {
+  return inv.hiddenExperienceOnElimination ?? (inv.hiddenCards || []).reduce((total, code) =>
+    total + (isHiddenPlayerWeakness(code) ? registeredEntry(code).hiddenRule.scenarioXpModifier || 0 : 0), 0)
+}
 
 export function createHiddenRules(deps) {
   const {
@@ -25,7 +33,8 @@ export function createHiddenRules(deps) {
   }
 
   function hiddenRule(state, code) {
-    return hiddenDefinition(state, code)?.hiddenRule || null
+    return hiddenDefinition(state, code)?.hiddenRule
+      || (isHiddenPlayerWeakness(code) ? registeredEntry(code).hiddenRule : null)
   }
 
   function hasHiddenCard(inv, code = null) {
@@ -46,7 +55,8 @@ export function createHiddenRules(deps) {
     if (handIndex < 0 || !hasHiddenCard(inv, code)) return false
     inv.hand.splice(handIndex, 1)
     removeHiddenMarker(inv, code)
-    state.encounterDiscard.push(code)
+    if (isHiddenPlayerWeakness(code)) discardPlayerCards(state, inv, code)
+    else state.encounterDiscard.push(code)
     info(state, events, `${inv.name} 弃掉了隐私牌「${cardName(code)}」。`)
     return true
   }
@@ -55,7 +65,7 @@ export function createHiddenRules(deps) {
     inv.hand.push(definition.code)
     inv.hiddenCards ||= []
     inv.hiddenCards.push(definition.code)
-    info(state, events, `${inv.name} 秘密将一张隐私遭遇卡加入手牌。`)
+    if (!isHiddenPlayerWeakness(definition.code)) info(state, events, `${inv.name} 秘密将一张隐私遭遇卡加入手牌。`)
     privateInfo(state, events, inv.seat, `你秘密将「${definition.name}」加入手牌：${definition.text || ''}`, {
       kind: 'automatic', phase: state.phase, round: state.round, text: `你获得隐私牌「${definition.name}」`,
       code: definition.originalCode || definition.code, name: definition.name, effect: 'encounter', seat: inv.seat,

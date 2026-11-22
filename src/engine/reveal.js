@@ -1,4 +1,6 @@
 import { payAdditionalPlayHorror } from './play-attempt.js'
+import { recordPlayedCard } from './action-history.js'
+import { capabilityBlocked } from './modifiers.js'
 import { splicePlayerDiscard } from './player-zones.js'
 import { availableResources } from './resource-bank.js'
 import { choosePlayUses, spendPlayUses } from './play-payment.js'
@@ -6,6 +8,7 @@ import { payTokenCost } from './token-cost.js'
 import { consumeNextPlayDiscount } from './effect-state.js'
 import { afterHandEmptied } from './hand-discard-window.js'
 import { hasWindowListener } from './window-listeners.js'
+import { limitUsed, limitWaiverAsset } from './limits.js'
 // 揭示与描述子执行（runActReveal / runAgendaForced / resolveTreacheryEffect /
 // executeDescriptor）从 engine.js 拆出的模块（Phase 6 · 6d-26）。
 //
@@ -241,6 +244,7 @@ function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, ev
   // 折扣（直觉牌库 -2 等）由 channelDiscount 显式给出，不再写 inv.playDiscount。
   let handCode = null
   if (!alreadyPaid && descriptor.fromHand && descriptor.kind !== 'action' && !descriptor.noPlayCost) {
+    if (capabilityBlocked(state, inv, 'play')) return false
     const index = Number.isInteger(fromHandIndex) && inv.hand[fromHandIndex] === descriptor.code
       ? fromHandIndex
       : (inv.hand || []).indexOf(descriptor.code)
@@ -258,6 +262,7 @@ function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, ev
     consumeNextPlayDiscount(state, inv.seat)
     payAdditionalPlayHorror(state, inv, def, events, deps)
     consumePlayThreatResources(state, inv, events)
+    recordPlayedCard(state, inv, def, registeredEntry)
     info(state, events, fromChannel?.channel === 'hunch'
       ? `🔮 ${inv.name} 从直觉牌库快速打出「${cardName(handCode)}」。`
       : `⚡ ${inv.name} 快速打出「${cardName(handCode)}」。`)
@@ -269,7 +274,16 @@ function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, ev
   // 只有 kind 'action' 的描述子消耗行动点：free / reaction / forced 都是 0 费，
   // 不能因为 cost 里没写 action:false 就在窗口结算里扣行动（Phase 1 修正）。
   if (!alreadyPaid && !ignoreCosts && descriptor.kind === 'action' && cost.action !== false) spendAction(state, inv)
-  if (!repeatedEffect) markLimitUsed(state, inv, descriptor, context, windowId, source)
+  if (!repeatedEffect) {
+    const waiver = limitWaiverAsset(inv, descriptor)
+    const waive = waiver && (limitUsed(state, inv, descriptor, context, windowId, source, false)
+      || requestChoice(state, { kind: 'reaction', source: waiver.id, seat: inv.seat, canSkip: true,
+        prompt: `是否横置「${cardName(waiver.code)}」，使此次发动不计入使用上限？`,
+        options: [{ id: 'skip', label: '计入使用上限' },
+          { id: 'waive', cardCode: waiver.code, label: '横置支援，免计次数' }] }) === 'waive')
+    if (waive) waiver.exhausted = true
+    else markLimitUsed(state, inv, descriptor, context, windowId, source)
+  }
   // 日志文案：从牌桌「能力」入口（doAbility）进来的描述子必须复刻旧式能力文案
   // （`使用「X」的能力：…`），否则迁移一张卡就改一行玩家可见日志，重放指纹会对不上。
   // 事件卡（fromHand）与窗口触发的描述子沿用 Phase 2 起的短文案；

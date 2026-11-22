@@ -3,6 +3,8 @@ import { bondedSetKey } from './bonded.js'
 import { notifyPlacedAsset } from './investigator-mechanics.js'
 import { putInHand } from './hand-entry.js'
 import { attachControlledAsset, claimHostedAsset } from './hosted-assets.js'
+import { createChaosReveal } from './chaos-reveal.js'
+import { currentEffectSource } from './effect-provenance.js'
 ﻿// 能力 API · 卡牌与状态写入口（Phase 6 · 6d-7 第一批）。
 //
 // `abilityApi(state, events)` 是个 179 个方法的巨型对象，按域拆开的第一块：
@@ -263,11 +265,29 @@ export function createCardApi(state, events, deps) {
     // Phase 5（5a-14）：「梦魇」这类弱点让玩家弃掉牌库顶 N 张（走剧本运行时）。
     scenarioDiscardTop: (seat, count = 3) => scenarioRuntime(state, events).discardTop(seat, count),
     // Phase 5（5a-12）：「最终狂想曲」这类「一次性揭示 N 枚标记（不生成检定）」。
-    revealChaosTokens: count => {
+    revealChaosTokens: (count, options = {}) => {
+      if (!Number.isSafeInteger(count) || count < 1) return []
+      const seat = options.seat ?? currentEffectSource(state)?.controllerSeat ?? state.currentSeat
+      const reveal = createChaosReveal(state, events, deps)
       beginChaosTest(state)
-      const tokens = Array.from({ length: Math.min(count, state.chaosBag.length) }, () => drawChaosToken(state))
-      endChaosTest(state, tokens)
+      const context = reveal.before(seat, count, options.source)
+      const { revealed: tokens } = reveal.draw(context, count, context.replacementToken ? [context.replacementToken] : [])
+      for (const token of tokens) reveal.revealed(seat, token)
+      endChaosTest(state, options.seat == null ? tokens : [])
       return tokens
+    },
+    addChaosRevealCancellation: (context, { seat, source } = {}) => {
+      if (context?.when !== 'beforeChaosTokenReveal' || !state.investigators[seat]) return false
+      ;(context.cancellationPlans ||= []).push({ seat, source })
+      return true
+    },
+    triggerChaosRevealEffect: (seat, sourceCode, resolve) =>
+      createChaosReveal(state, events, deps).resolveCardEffect(seat, sourceCode, resolve),
+    modifyChaosRevealEffect: (context, { cancel = false, additional = 0 } = {}) => {
+      if (context?.when !== 'chaosRevealEffectWouldResolve') return false
+      if (cancel) context.cancelled = true
+      if (Number.isSafeInteger(additional) && additional > 0) context.additional += additional
+      return true
     },
     // Phase 5（5b-8）：「戴红手套的男子」把两项技能的基础值提升为 6。
     setStatOverride: (card, skills) => {

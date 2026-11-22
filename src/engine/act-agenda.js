@@ -423,7 +423,7 @@ export function createActAgenda(deps) {
           options.onSuccess?.(r, loc)
         } else {
           reactionWindow(state, 'investigateFail', { when: 'investigateFail', seat, location: loc.id,
-            failedBy: Math.max(0, difficulty - r.value), prompt: '调查检定失败后' }, events)
+            failedBy: r.failedBy ?? Math.max(0, difficulty - r.value), prompt: '调查检定失败后' }, events)
           options.onFail?.(r, loc)
         }
       },

@@ -292,10 +292,12 @@ export function createPlayerApi(state, events, deps) {
       api().drawCards(context.seat, 1)
       return true
     },
-    modifyPlay(context, { discount = 0, fast = false } = {}) {
+    modifyPlay(context, { discount = 0, fast = false, noOpportunityAttack = false, skillBonus = 0 } = {}) {
       if (!['beforePlayCost', 'beforePlayAttempt'].includes(context.when)) return false
       context.costReduction = (context.costReduction || 0) + discount
       if (fast) context.noAction = true
+      if (noOpportunityAttack) context.noOpportunityAttack = true
+      if (Number.isFinite(skillBonus) && skillBonus) context.skillBonus = (context.skillBonus || 0) + skillBonus
       return true
     },
     sealRevealed(sourceId, indexes) {

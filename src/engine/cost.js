@@ -26,10 +26,10 @@
 // 允许写表达式的费用字段（与 ability.js 的 COST_KEYS 取交集，布尔字段除外）。
 export const NUMERIC_COST_KEYS = Object.freeze([
   'resources', 'clues', 'uses', 'horror', 'damageSelf', 'assetDamage', 'discardHand', 'discardHandIcons', 'discardControlledAsset',
-  'damage', 'doomOnSource', 'drawEncounter', 'groupClues',
+  'damage', 'doomOnSource', 'drawEncounter', 'groupClues', 'action',
 ])
 
-// 布尔费用字段：只能是 true/false，不参与表达式求值。
+// action 同时接受旧式布尔标记和数值费用。
 export const FLAG_COST_KEYS = Object.freeze(['action', 'exhaust', 'discardSelf', 'exileSelf'])
 
 export const COST_EXPRESSION_KEYS = Object.freeze([
@@ -143,7 +143,7 @@ export function evaluateCost(cost, ctx = {}) {
   for (const key of NUMERIC_COST_KEYS) {
     const value = out[key]
     if (value == null) continue
-    if (typeof value === 'number') continue
+    if (typeof value === 'number' || (key === 'action' && typeof value === 'boolean')) continue
     try {
       out[key] = typeof value === 'function'
         ? Math.max(0, Number(value(ctx)) || 0)
@@ -167,7 +167,8 @@ export function normalizeCostValues(cost, ctx = {}) {
   const value = evaluateCost(cost, ctx)
   for (const key of NUMERIC_COST_KEYS) {
     // 未声明的字段保持 undefined（不能被当成 NaN）。
-    if (value[key] !== undefined && !Number.isFinite(value[key])) return null
+    if (value[key] !== undefined && !(key === 'action' && typeof value[key] === 'boolean')
+      && !Number.isFinite(value[key])) return null
   }
   return value
 }
@@ -182,6 +183,7 @@ const PER_LABELS = Object.freeze({
 
 const COST_LABELS = Object.freeze({
   resources: '资源', clues: '线索', uses: '使用次数', horror: '恐惧',
+  action: '行动',
   damageSelf: '伤害', assetDamage: '自身伤害', discardHand: '手牌', discardHandIcons:'印刷技能图标', discardControlledAsset:'受控支援',
 })
 
@@ -191,6 +193,7 @@ export function describeCost(cost, ctx = {}) {
   if (cost.exhaust) parts.push('横置')
   for (const key of NUMERIC_COST_KEYS) {
     if (cost[key] == null) continue
+    if (key === 'action' && !isCostExpression(cost[key])) continue
     const label = COST_LABELS[key] || key
     if (typeof cost[key] === 'number') {
       if (cost[key] > 0) parts.push(`${cost[key]} ${label}`)

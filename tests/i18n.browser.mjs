@@ -42,12 +42,21 @@ test('Arkham 界面跟随大厅语言，游戏内切换即时重绘且不重置�
     await expect(setup).toBeVisible()
     await expect(setup).toHaveAttribute('aria-label', en['hub.setup.dialogAria'])
     await expect(setup.locator('.bg-modal-foot .bg-btn').last()).toHaveText(en['hub.setup.start'])
+    const campaignButton = setup.getByRole('button', { name: 'Choose a campaign', exact: true })
+    await campaignButton.click()
+    const picker = page.getByRole('dialog', { name: 'Choose a campaign', exact: true })
+    await expect(picker.getByRole('tab', { name: 'Season One' })).toBeVisible()
+    await expect(picker.getByRole('radio', { name: 'Standard mode' })).toBeChecked()
+    await picker.getByRole('button', { name: /The Dunwich Legacy/ }).click()
+    await picker.getByRole('button', { name: 'Confirm selection' }).click()
+    await expect(campaignButton).toContainText('The Dunwich Legacy')
 
     // 从弹窗开局；开始后进入战役 hub（Mod 自己渲染的页面）。
     const started = page.waitForResponse(response => response.url().endsWith('/api/start'))
     await setup.locator('.bg-modal-foot .bg-btn').last().click()
     const startedBody = await (await started).json()
     expect(startedBody.ok, startedBody.error).toBe(true)
+    expect(startedBody.session.state.campaign.id).toBe('theDunwichLegacy')
     const sessionId = startedBody.session.sessionId
 
     // 战役 hub 页签是 core 词典里的主路径文案（之前已本地化），这里验证英文确实进了 Mod。

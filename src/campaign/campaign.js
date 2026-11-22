@@ -1,6 +1,7 @@
 import { ALL_CARDS, INVESTIGATORS } from '../cards/cards-data.js'
 import { canSelectInvestigator, isCardAvailable } from '../deck/availability.js'
 import { campaignInvestigatorRecords, investigatorIdentity } from '../deck/investigator-identity.js'
+import { investigatorBackExperience, investigatorDeckDefinition, retainedUpgradeTraits } from '../deck/alternate-investigator-build.js'
 import { allowsCard, filterCardCodes } from '../deck/card-pool.js'
 import { brandedSpellOptions } from '../deck/branded-spell.js'
 import { matchesDeckOptions, cardLimit, isPlayable, scoreCard, hashSeed, DRAFT_PLAYER_CARD_CODES, UPGRADE_PLAYER_CARD_CODES } from '../deck/deckbuilding.js'
@@ -26,6 +27,19 @@ export function campaignGrantedCards(record) {
 const campaignGrantedFor = record => code => campaignGrantedCards(record).includes(code)
 const ordinaryFor = record => code =>
   !campaignGrantedFor(record)(code) && (record.draftMode ? DRAFT_PLAYER_CARD_CODES.includes(code) : ordinary(code))
+
+function countedDeck(record, deck = record.deck) {
+  if (!record.retainedUpgrades?.length) return deck
+  const kept = [...(record.retainedUpgrades || [])]
+  return deck.filter(code => {
+    const index = kept.indexOf(code)
+    if (index < 0) return true
+    kept.splice(index, 1)
+    return false
+  })
+}
+
+const ordinaryDeck = (record, deck) => countedDeck(record, deck).filter(ordinaryFor(record))
 // 第 123 轮（第 8 批）：升级前置记录、开局经验、永久资产身份、同名去重全部由条目声明：
 // `researchRequirement` / `startingXp` / `shrewdAnalysis` / `arcaneResearch` / `uniqueInDeck`。
 const entryFlagOf = code => registeredEntry(code) || null
@@ -51,6 +65,30 @@ const permanentPricingFor = record => {
 const permanentPricingUsed = record => Number.isSafeInteger(record?.upgradeDiscountUsed)
   ? record.upgradeDiscountUsed : 0
 
+function exileRepurchaseQuote(record, code, cost) {
+  if (cost <= 0) return []
+  const scenarioIndex = record.currentScenarioIndex
+  const purchases = (record.purchases || []).filter(item => item.scenarioIndex === scenarioIndex)
+  const exiled = (record.removedCards || []).filter(item =>
+    item.scenarioIndex === scenarioIndex && item.reason === 'exiled' && item.code === code).length
+  if (exiled <= purchases.filter(item => item.added === code).length) return []
+  const sources = record.deck.filter(card => entryFlagOf(card)?.campaignDeck?.exileRepurchaseDiscount)
+  const used = purchases.flatMap(item => item.exileRepurchaseDiscounts || [])
+  const copies = new Map()
+  const discounts = []
+  for (const source of sources) {
+    const copy = (copies.get(source) || 0) + 1
+    copies.set(source, copy)
+    const { amount, limit } = entryFlagOf(source).campaignDeck.exileRepurchaseDiscount
+    if (used.filter(item => item.source === source && item.copy === copy).length >= limit) continue
+    const available = Math.min(amount, cost)
+    discounts.push({ source, copy, amount: available })
+    cost -= available
+    if (cost <= 0) break
+  }
+  return discounts
+}
+
 // 个别调查员在战役开始时带有额外经验（马泰奥神父：+5，由 04004 条目声明）。
 
 // 「老练分析」（04106）：带（未鉴定）/（未翻译）副标题的卡牌升级时，
@@ -59,7 +97,7 @@ const UNRESOLVED_SUBTITLE = /(未鉴定|未翻译|Unidentified|Untranslated)/
 const shrewdAnalysisEligible = (record, removedCode, context = null) => {
   const removedDef = ALL_CARDS[removedCode]
   if (!removedDef || !UNRESOLVED_SUBTITLE.test(String(removedDef.subnameZh || removedDef.subname || ''))) return []
-  const inv = INVESTIGATORS[record.code]
+  const inv = investigatorDeckDefinition(record)
   if (!deckCardWithFlag(record, 'shrewdAnalysis')) return []
   return filterCardCodes(UPGRADE_PLAYER_CARD_CODES, context).filter(code => {
     const def = ALL_CARDS[code]
@@ -117,11 +155,15 @@ export function refreshArcaneResearch(campaign) {
   return refreshed
 }
 
+export const campaignOpeningExperience = campaign => campaign.scenarioResults?.length ? 0 : campaign.opening?.experience ?? 0
+export const campaignAllowsInvestigator = (campaign, code) => !campaign.opening?.investigators || campaign.opening.investigators.includes(code)
+
 export function registerCampaignInvestigator(campaign, inv, deck) {
   const id = `investigator-${++campaign.investigatorSeq}`
-  const startingXp = entryFlagOf(inv.code)?.startingXp ?? 0
+  const startingXp = (entryFlagOf(inv.code)?.startingXp ?? 0) + investigatorBackExperience(inv) + campaignOpeningExperience(campaign)
   const record = {
     id, seat: inv.seat, code: inv.code, name: inv.name, deck: [...deck].sort(),
+    ...(inv.investigatorBuild ? { investigatorBuild: structuredClone(inv.investigatorBuild) } : {}),
     currentScenarioIndex: campaign.scenarioIndex || 0,
     xp: startingXp, earnedXp: startingXp, spentXp: 0, trauma: { physical: 0, mental: 0 },
     status: 'active', purchases: [], removedCards: [],
@@ -141,8 +183,10 @@ export function applyStartingDeckExperience(campaign, record, built, context = n
       record.brandedSpell = selectPurchaseOption(context, brand, record.seat, '选择要在战役记录上烙印的法术。', options)
     }
   } else if (record.brandedSpell) delete record.brandedSpell
-  if (!record.startingDeckExperience && !built.startingExperience) return
-  const earned = (registeredEntry(record.code)?.startingXp || 0) + (built.startingExperience || 0)
+  const backXp = investigatorBackExperience(record)
+  const openingXp = campaignOpeningExperience(campaign)
+  if (!record.startingDeckExperience && !built.startingExperience && !backXp && !openingXp && !record.investigatorBuild) return
+  const earned = (registeredEntry(record.code)?.startingXp || 0) + (built.startingExperience || 0) + backXp + openingXp
   const spent = built.startingExperienceSpent || 0
   record.earnedXp = earned
   record.spentXp = spent
@@ -165,7 +209,8 @@ export function updateCampaignStatus(campaign, seat) {
 
 export function replacementCandidates(campaign, context = null) {
   const used = new Set(campaignInvestigatorRecords(campaign).map(record => investigatorIdentity(record.code)))
-  return Object.keys(INVESTIGATORS).filter(code => canSelectInvestigator(code) && !used.has(investigatorIdentity(code)) && allowsCard(code, context))
+  return Object.keys(INVESTIGATORS).filter(code => canSelectInvestigator(code) && campaignAllowsInvestigator(campaign, code)
+    && !used.has(investigatorIdentity(code)) && allowsCard(code, context))
 }
 
 export function awardExperience(campaign, seat, amount) {
@@ -200,6 +245,9 @@ export function campaignCardChange(campaign, seat, code, action, reason, options
     const index = record.deck.indexOf(code)
     if (index < 0) throw new Error('战役牌组不含待移除卡牌')
     record.deck.splice(index, 1)
+    if (record.retainedUpgrades?.filter(card => card === code).length > record.deck.filter(card => card === code).length) {
+      record.retainedUpgrades.splice(record.retainedUpgrades.indexOf(code), 1)
+    }
     const granted = (record.campaignCards || []).indexOf(code)
     if (granted >= 0) record.campaignCards.splice(granted, 1)
     record.removedCards.push({ code, reason, scenarioIndex: campaign.scenarioIndex })
@@ -230,7 +278,7 @@ function nonReplaceableReason(card) {
 }
 
 // 单张替换的判定（顺序与 legalMoves 完全一致）：成功给出报价，失败给出界面可直接展示的中文原因。
-function replacementVerdict(record, addedCode, added, inv, removedCode, mayFillVacancy) {
+function replacementVerdict(record, addedCode, added, inv, removedCode, mayFillVacancy, keepLower = false) {
   const removed = removedCode ? ALL_CARDS[removedCode] : null
   if (record.draftMode && added.permanent && removedCode) return { ok: false, reason: '永久卡直接加入牌组，不能替换普通卡。' }
   if (!removedCode) {
@@ -238,23 +286,26 @@ function replacementVerdict(record, addedCode, added, inv, removedCode, mayFillV
     if (!added.permanent && !mayFillVacancy) return { ok: false, reason: '牌组已满，需要先替换掉一张普通卡。' }
   } else if (removedCode === addedCode) {
     return { ok: false, reason: '不能把这张卡替换成同一张卡。' }
-  } else if (!ordinaryFor(record)(removedCode) || (removed && (removed.permanent || removed.signatureFor || removed.subtype))) {
+  } else if (!ordinaryFor(record)(removedCode)
+    || (record.retainedUpgrades?.includes(removedCode) && !countedDeck(record).includes(removedCode))
+    || (removed && (removed.permanent || removed.signatureFor || removed.subtype))) {
     return { ok: false, reason: nonReplaceableReason(removed) }
   }
   const limit = record.draftMode ? draftCardLimit(added) : cardLimit(added)
   const label = added.nameZh || added.name
-  const count = record.deck.filter(code => ALL_CARDS[code]?.name === added.name).length
+  const count = countedDeck(record).filter(code => ALL_CARDS[code]?.name === added.name).length
     - (removed?.name === added.name ? 1 : 0)
   if (record.brandedSpell === added.name && count >= 1) {
     return { ok: false, reason: '牌组中最多保留一张已烙印的法术。' }
   }
   if (count >= limit) return { ok: false, reason: `牌组中已有 ${count} 张同名的「${label}」，达到 ${limit} 张上限。` }
   const deck = [...record.deck]
-  if (removedCode) deck.splice(deck.indexOf(removedCode), 1)
+  if (removedCode && !keepLower) deck.splice(deck.indexOf(removedCode), 1)
   deck.push(addedCode)
   // Story assets earned by resolutions (e.g. Lita) are campaign dependencies,
   // not ordinary deck slots. They must not block every subsequent upgrade.
-  const validatable = deck.filter(ordinaryFor(record))
+  const checked = keepLower ? { ...record, retainedUpgrades: [...(record.retainedUpgrades || []), removedCode] } : record
+  const validatable = ordinaryDeck(checked, deck)
   if (record.draftMode) {
     const rules = deckRules(inv, validatable, ALL_CARDS)
     const remaining = rules.size - validatable.filter(code => !ALL_CARDS[code].permanent && !ALL_CARDS[code].ignoreDeckLimit).length
@@ -272,6 +323,11 @@ function replacementVerdict(record, addedCode, added, inv, removedCode, mayFillV
     return { ok: false, reason: added.permanent && counted < rulesSize
       ? '永久卡不占牌组槽位，只能直接加入牌组，不能替换普通卡。'
       : `替换后牌组不合法：${errors[0]}` }
+  }
+  if (keepLower) {
+    const cost = (added.xp || 0) * (added.exceptional ? 2 : 1)
+    return cost <= record.xp ? { ok: true, quote: { cost, explanation: '全额支付经验并保留旧版' } }
+      : { ok: false, reason: `保留旧版需要 ${cost} XP。` }
   }
   const adaptableUsed = (record.purchases || []).filter(purchase => purchase.scenarioIndex === record.currentScenarioIndex && purchase.adaptable).length
   // Phase 5（5b-9）：「适应性」这类「关间免费替换等级 0 卡」由条目级 adaptableSwaps 声明（次数即上限）。
@@ -310,6 +366,12 @@ function replacementVerdict(record, addedCode, added, inv, removedCode, mayFillV
   const purchaseDiscount = temporaryPurchaseDiscount(record, added, removed, pricedQuote.cost)
   if (purchaseDiscount) pricedQuote = { ...pricedQuote, cost: pricedQuote.cost - purchaseDiscount, purchaseDiscount,
     explanation: `${pricedQuote.explanation}（临时减免 ${purchaseDiscount} 经验）` }
+  const exileRepurchaseDiscounts = exileRepurchaseQuote(record, addedCode, pricedQuote.cost)
+  if (exileRepurchaseDiscounts.length) {
+    const amount = exileRepurchaseDiscounts.reduce((sum, item) => sum + item.amount, 0)
+    pricedQuote = { ...pricedQuote, cost: pricedQuote.cost - amount, exileRepurchaseDiscounts,
+      explanation: `${pricedQuote.explanation}（重新购入放逐卡减免 ${amount} 经验）` }
+  }
   if (pricedQuote.cost > record.xp) return { ok: false, reason: `经验不足：这次替换需要 ${pricedQuote.cost} XP，当前只有 ${record.xp} XP。` }
   return { ok: true, quote: pricedQuote, adaptable }
 }
@@ -321,7 +383,7 @@ function replacementVerdict(record, addedCode, added, inv, removedCode, mayFillV
 export function replacementAnalysis(record, addedCode, campaignRecords = null, context = null, knownLegal = null) {
   const result = { allowed: false, removals: [], blocked: [] }
   const added = ALL_CARDS[addedCode]
-  const inv = INVESTIGATORS[record.code]
+  const inv = investigatorDeckDefinition(record)
   // 2026-11-13 P1-17：战役禁用卡（02310 等）与存在抹除名单不得进入牌组。
   if (context?.invalidCards?.includes(addedCode)) return result
   if (!added || record.status !== 'active' || campaignDeckLocked(record)
@@ -331,7 +393,7 @@ export function replacementAnalysis(record, addedCode, campaignRecords = null, c
   if (requiredResearch && !campaignRecords?.[requiredResearch] && !record.research?.[requiredResearch]) return result
   result.allowed = true
   const invRulesSize = deckRules(inv, record.deck, ALL_CARDS).size
-  const ordinaryCount = record.deck.filter(code => ordinaryFor(record)(code) && !ALL_CARDS[code]?.permanent).length
+  const ordinaryCount = ordinaryDeck(record).filter(code => !ALL_CARDS[code]?.permanent).length
   const mayFillVacancy = ordinaryCount < invRulesSize
   for (const removedCode of [null, ...new Set(record.deck)]) {
     if (entryFlagOf(addedCode)?.researchUpgradeFrom && removedCode !== entryFlagOf(addedCode).researchUpgradeFrom) continue
@@ -340,6 +402,12 @@ export function replacementAnalysis(record, addedCode, campaignRecords = null, c
     const verdict = replacementVerdict(record, addedCode, added, inv, removedCode, mayFillVacancy)
     if (verdict.ok) result.removals.push({ code: removedCode, ...verdict.quote, adaptable: verdict.adaptable })
     else if (removedCode) result.blocked.push({ code: removedCode, reason: verdict.reason })
+    const lower = ALL_CARDS[removedCode]
+    if (lower?.name === added.name && (lower.xp || 0) < (added.xp || 0) && !added.permanent
+      && retainedUpgradeTraits(record).some(trait => lower.traits?.some(value => value.toLowerCase() === trait.toLowerCase()))) {
+      const retained = replacementVerdict(record, addedCode, added, inv, removedCode, mayFillVacancy, true)
+      if (retained.ok) result.removals.push({ code: removedCode, ...retained.quote, keepLower: true })
+    }
   }
   return result
 }
@@ -398,21 +466,28 @@ export function purchaseCard(campaign, seat, addedCode, removedCode, context = n
   if (campaign.phase !== 'interlude' || campaign.upgradesAllowed === false) throw new Error('只能在允许升级的关间阶段升级牌组')
   const record = campaign.investigators[seat]
   if (!record) throw new Error('未知战役调查员')
-  const option = replacementOptions(record, addedCode, campaign.records, context).find(item => item.code === removedCode)
+  const option = replacementOptions(record, addedCode, campaign.records, context)
+    .find(item => item.code === removedCode && Boolean(item.keepLower) === Boolean(context?.keepLower))
   if (!option) throw new Error('非法升级：卡池、经验、职业、张数或移除依赖不满足')
   const choices = purchaseRuleChoices(record, addedCode, removedCode)
   if (!choices) throw new Error('牌组必须有一张可烙印的单张非签名法术支援')
   const decisions = Object.fromEntries(choices.map(({ key, prompt, options }) =>
     [key, selectPurchaseOption(context, addedCode, seat, prompt, options)]))
-  if (removedCode) record.deck.splice(record.deck.indexOf(removedCode), 1, addedCode)
+  if (option.keepLower) {
+    record.deck.push(addedCode)
+    record.retainedUpgrades ||= []
+    record.retainedUpgrades.push(removedCode)
+  } else if (removedCode) record.deck.splice(record.deck.indexOf(removedCode), 1, addedCode)
   else record.deck.push(addedCode)
   record.deck.sort()
   record.xp -= option.cost
   record.spentXp += option.cost
   const purchase = { added: addedCode, removed: removedCode, cost: option.cost, scenarioIndex: campaign.scenarioIndex, adaptable: !!option.adaptable,
+    ...(option.keepLower ? { keepLower: true } : {}),
     // 永久卡关间计价（08059 掉进兔子洞）：记录本单用了升级减免/新购加价，供逐关间计数与界面展示。
     ...(option.upgradeDiscount ? { upgradeDiscount: option.upgradeDiscount } : {}),
-    ...(option.purchaseCostDelta ? { purchaseCostDelta: option.purchaseCostDelta } : {}), ...decisions }
+    ...(option.purchaseCostDelta ? { purchaseCostDelta: option.purchaseCostDelta } : {}),
+    ...(option.exileRepurchaseDiscounts ? { exileRepurchaseDiscounts: option.exileRepurchaseDiscounts } : {}), ...decisions }
   record.purchases.push(purchase)
   // 升级减免的已用次数（每个关间前 N 次，refreshArcaneResearch 在关间入口重置）。
   if (option.upgradeDiscount) record.upgradeDiscountUsed = permanentPricingUsed(record) + 1
@@ -435,7 +510,7 @@ export function purchaseCard(campaign, seat, addedCode, removedCode, context = n
   if (decisions.brandedSpell) record.brandedSpell = decisions.brandedSpell
   // 04106 老练分析：升级「(未鉴定)/(未翻译)」卡时，牌组里有老练分析则用 0 经验
   // 再把另一张同名副本升级为新版本（选择为自动执行，记入 purchases 供界面展示）。
-  if (removedCode) {
+  if (removedCode && !option.keepLower) {
     const extra = shrewdAnalysisUpgrade(campaign, seat, removedCode, context)
     if (extra) purchase.shrewdAnalysisUpgrade = extra
   }
@@ -460,7 +535,7 @@ export function finishUpgradeDraft(campaign, seat, commit) {
   const original = campaign.investigators[seat]
   if (!original?.upgradeDraft) throw new Error('没有待确认的升级草稿')
   if (commit && original.upgradeDraft.record.deck.some(code => registeredEntry(code)?.deckConstruction)) {
-    const errors = validateDeckRules(INVESTIGATORS[original.code], original.upgradeDraft.record.deck.filter(ordinaryFor(original)), ALL_CARDS).errors
+    const errors = validateDeckRules(investigatorDeckDefinition(original), ordinaryDeck(original.upgradeDraft.record), ALL_CARDS).errors
     if (errors.length) throw new Error(`请先完成扩充后的牌组：${errors[0]}`)
   }
   if (commit) campaign.investigators[seat] = original.upgradeDraft.record
@@ -473,9 +548,9 @@ export function finishUpgradeDraft(campaign, seat, commit) {
 
 export function recommendUpgrade(record, campaignRecords = null, context = null) {
   record = upgradeRecord(record)
-  const inv = INVESTIGATORS[record.code]
+  const inv = investigatorDeckDefinition(record)
   const candidates = availablePurchases(record, campaignRecords, context)
-    .flatMap(added => replacementOptions(record, added, campaignRecords, context).map(option => {
+    .flatMap(added => replacementOptions(record, added, campaignRecords, context).filter(option => !option.keepLower).map(option => {
       const before = ALL_CARDS[option.code]
       const after = ALL_CARDS[added]
       const sameName = before?.name === after.name

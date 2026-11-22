@@ -8,6 +8,7 @@ import { requestChoice } from '../engine/resolution.js'
 import { randomValue } from '../engine/rules-state.js'
 import { resolveSurvivors } from '../../content/campaigns/theDunwichLegacy/later-behaviors.js'
 import { crossOffMemento, mementosDiscovered } from './mementos.js'
+import { canSpendCampaignExperience } from './campaign-flow.js'
 
 // Called inside the existing replayable resolution transaction. A saved choice
 // replays from its base state, so neither rewards nor bag changes are duplicated.
@@ -744,6 +745,16 @@ export function applyCampaignEffect(state, effect, log) {
   if (effect.type === 'registered') return runCampaignEffectHandler(state,effect,log)
   if (effect.type === 'chaos') changeChaosBag(state, effect.token, effect.amount, { permanent: true })
   else if (effect.type === 'log') log(effect.text)
+  else if (effect.type === 'spendExperience') {
+    const campaign = state.campaign
+    if (!canSpendCampaignExperience(campaign, effect.amount)) throw new Error('至少一位现役调查员无法支付经验费用')
+    for (const record of activeRecords(state)) {
+      record.xp -= effect.amount
+      record.spentXp += effect.amount
+      log(`⭐ ${record.name} 支付 ${effect.amount} XP。`)
+    }
+    campaign.xp = Object.values(campaign.investigators).reduce((sum, record) => sum + record.xp, 0)
+  }
   else if (effect.type === 'storyCard') awardStoryCard(state, effect.code, state.campaign.flow.nodeId)
   else if (effect.type === 'addCampaignCardToDeck') {
     // 第 2 步 P2.10：剧情/战役资产加入战役牌组（不洗牌、不占 30 张，下一章随牌组带入）。

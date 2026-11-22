@@ -1,3 +1,4 @@
+import { selectCampaign } from './playwright/campaign-picker.mjs'
 import { test, expect } from '@playwright/test'
 import { fileURLToPath } from 'node:url'
 import { midnightConclusion, move } from './fixtures/midnight-story.mjs'
@@ -15,7 +16,7 @@ test('敦威治关卡页只显示关卡，调查纪事显示完整序章与导�
   await page.locator('.bg-card').filter({hasText:'诡镇奇谈'}).click()
   const setup=page.getByRole('dialog',{name:'调查准备设置'})
   await setup.getByRole('combobox',{name:'席位数量'}).selectOption('1')
-  await setup.getByRole('combobox',{name:'战役',exact:true}).selectOption('theDunwichLegacy')
+  await selectCampaign(page, setup, 'theDunwichLegacy')
   await setup.getByRole('button',{name:'开始新游戏'}).click()
   const hub=page.locator('.ah-hub')
   await expect(hub.locator('.ah-workflow-guide').getByRole('button',{name:'选择开场案件'})).toBeVisible()

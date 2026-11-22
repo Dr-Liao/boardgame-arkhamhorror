@@ -43,6 +43,9 @@ export function availableResources(inv) {
   return (inv?.resources || 0) + (bankAssetOf(inv)?.resources || 0)
 }
 
+// 批次 3（12103）：资源扣除后的窗口派发钩子（由引擎装配注入，避免 resource-bank 依赖引擎窗口）。
+let resourcesSpentHook = null
+export function setResourcesSpentHook(hook) { resourcesSpentHook = typeof hook === 'function' ? hook : null }
 export function spendFromPool(inv, amount, state = null, requestChoice = null) {
   const spend = Math.min(availableResources(inv), Math.max(0, Math.floor(Number(amount) || 0)))
   if (!spend) return 0
@@ -61,6 +64,7 @@ export function spendFromPool(inv, amount, state = null, requestChoice = null) {
   }
   if (asset) asset.resources = banked - fromBank
   inv.resources -= spend - fromBank
+  if (state) resourcesSpentHook?.(state, inv, spend)
   return spend
 }
 

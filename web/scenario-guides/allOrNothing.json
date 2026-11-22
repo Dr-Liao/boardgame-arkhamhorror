@@ -1,0 +1,146 @@
+{
+  "id": "allOrNothing",
+  "campaignId": "allOrNothing",
+  "sourceKind": "authored",
+  "officialChinese": false,
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "破釜沉舟",
+          "text": "你愿意不惜一切代价把一切扳正。你母亲沉重的医院债务不会自己还清，于是你想出了一个计划：赌博。孤注一掷、把所有东西押在牌运上的肾上腺素飙升，也是不错的附加享受。最近生活似乎总给你发烂牌，但你往往能把糟糕的牌打成赢局。当幸运女神站在你这边时，谁还需要技巧？你最爱的是二十一点。不知怎的，正确的牌总在正确的时候出现；当庄家再次爆点时，你努力掩饰自己的得意。你似乎每晚都手气火热，面前的筹码越堆越高。这样的连胜足以偿还债务，但你的好运常常同时招来庄家和其他赌客的怒火。你知道何时收手。这些年来，你赢得了一个名声，有人称之为「出千」。因此你被迫保持低调，在轮换的赌场名单上赌博。在所有赢过的地方里，你最爱的还是四叶草俱乐部。这家地下酒吧每晚都有巨额金钱流转，但它由欧巴尼恩帮控制——令人生畏、不择手段、冷酷无情。没人想引起帮派的注意，而你的名声显然已经引起了。但四叶草俱乐部有一条高于一切的底线：庄家永远赢。今晚一定会不同。你竖起衣领，走进月下美人餐厅。餐厅几乎空无一人，隐约的喧闹音乐从后厅传来。显然所有客人都聚在那里了。你满脑子只想着喝一杯，然后大赢一场……"
+        }
+      ],
+      "setup": [
+        {
+          "id": "gatherSets",
+          "text": "收集以下遭遇组的全部卡牌：破釜沉舟、百赌百胜、坏运气、娜奥米的船员、午夜假面、鼠群。除「破釜沉舟」外均可从核心包与《敦威治遗产》豪华扩展找到。收集午夜假面遭遇组时只取 5 张诡计卡（2 张「假线索」与 3 张「追猎之影」），不要取该组的地点、幕、议程与剧本提示卡。"
+        },
+        {
+          "id": "scenarioReference",
+          "text": "将「百赌百胜」遭遇组原有的剧本提示卡移出游戏，改用「破釜沉舟」扩展提供的新提示卡。"
+        },
+        {
+          "id": "newActAgenda",
+          "text": "将「百赌百胜」遭遇组原有的剧本提示卡、幕牌库与议程牌库移出游戏；只使用「破釜沉舟」扩展提供的新剧本提示卡、幕与议程卡构成幕牌库与议程牌库。"
+        },
+        {
+          "id": "removeFromGame",
+          "text": "将 Peter Clover 支援与 Francis Morgan 医生故事资产移出游戏。"
+        },
+        {
+          "id": "setAside",
+          "text": "将以下卡牌放到一边（场外）：每张「后厅门廊」地点、每张「俱乐部保安」敌人，以及「西尔班·莱利」敌人。"
+        },
+        {
+          "id": "placeLocations",
+          "text": "将其余地点放入场：黑暗走廊、俱乐部大厅、俱乐部酒吧、俱乐部卡牌室、月下美人。每位调查员从月下美人开始。"
+        },
+        {
+          "id": "placePitBoss",
+          "text": "将「赌场管理员」敌人放入俱乐部大厅。"
+        },
+        {
+          "id": "readyToBegin",
+          "text": "现在可以开始游戏了。"
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "rule1",
+          "text": "挑战剧本：挑战剧本围绕调查员「Skids」奥图尔展开。本 Mod 本批只交付 1P 单开路径：「Skids」奥图尔（平行正面 90008）必须作为唯一调查员入场。"
+        },
+        {
+          "id": "rule2",
+          "text": "筹码与资源：本关的胜负围绕资源展开：幕 1 在回合结束时检查是否有调查员 ≥15 资源；幕 2 要求尽可能带着资源撤退，撤退者的资源会放在幕卡上，并按幕上资源总额结算额外奖励经验与下关额外资源。"
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "text": "若全员被击败：按结局 2 结算。你被欧巴尼恩帮的打手拖进暗室，最后被丢在俱乐部后巷的垃圾堆里。每位调查员获得经验等于胜利区所有卡牌的胜利点数总和。「Skids」奥图尔必须把「医院债务」升级为进阶版，或把「在逃中」进阶版降级为原本版本。"
+        },
+        {
+          "id": "resolution1",
+          "text": "结局 1：心跳如鼓，兴奋在血管里奔流，你分不清是从欧巴尼恩帮手里赢钱，还是从他们手里逃出来更刺激。今晚证明了「Skids」奥图尔永远会赢……每位调查员获得经验等于胜利区所有卡牌的胜利点数总和。按幕 2 上资源的数量（每 10 资源一档），「Skids」奥图尔在下一场冒险开始时获得额外资源，40/50/60 档还额外获得 1/2/3 点奖励经验。若「在逃中」在牌组中，「Skids」奥图尔可以把「在逃中」升级为进阶版。"
+        },
+        {
+          "id": "resolution2",
+          "text": "结局 2：你终究没能悄无声息地离开。几分钟内，你被欧巴尼恩帮无情的手下围住，拖进一间暗室。等他们教训够了，你被丢在俱乐部后巷的垃圾堆里。总的来说还算走运。你把四叶草俱乐部从赌博名单上划掉。每位调查员获得经验等于胜利区所有卡牌的胜利点数总和。「Skids」奥图尔必须把「医院债务」升级为进阶版，或把「在逃中」进阶版降级为原本版本。"
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "Challenge Scenario: All or Nothing",
+          "text": "You're willing to do whatever it takes to make things right. Your mother's massive hospital debts won't pay themselves off, so you've come up with a plan: gambling. The adrenaline rush of going all in and risking everything on the mercy of the cards is also a nice perk. Lately it feels as though life has dealt you a bad hand, but you're often able to turn terrible hands into winning ones. Who needs skill when Lady Luck is on your side? Your game of choice is blackjack, and tonight you are at the Clover Club. The brazen O'Bannions are not fond of being taken advantage of, and will use any means necessary to prevent it. Here, the house always wins. Surely that will change tonight."
+        }
+      ],
+      "setup": [
+        {
+          "id": "gatherSets",
+          "text": "Gather all cards from the following encounter sets: All or Nothing, The House Always Wins, Bad Luck, Naomi's Crew, The Midnight Masks, and Rats. When gathering The Midnight Masks encounter set, only gather the 5 treachery cards (2x False Lead and 3x Hunting Shadow). Do not gather the locations, act, agenda, and scenario reference cards from that set."
+        },
+        {
+          "id": "scenarioReference",
+          "text": "Remove the original scenario reference card from The House Always Wins encounter set from the game. Use the new scenario reference card provided in the downloadable All or Nothing encounter set."
+        },
+        {
+          "id": "newActAgenda",
+          "text": "Remove the original scenario reference card, act deck, and agenda deck from The House Always Wins encounter set from the game. Use the new scenario reference card, and build the act and agenda decks using only the new act and agenda cards provided in the All or Nothing encounter set."
+        },
+        {
+          "id": "removeFromGame",
+          "text": "Remove the Peter Clover asset and the Dr. Francis Morgan story asset from the game. These cards are not used in this challenge scenario."
+        },
+        {
+          "id": "setAside",
+          "text": "Set the following cards aside, out of play: each copy of the Back Hall Doorway location, each copy of the Clover Club Bouncer enemy, and the Siobhan Riley enemy."
+        },
+        {
+          "id": "placeLocations",
+          "text": "Put each of the remaining locations into play: Darkened Hall, Clover Club Lounge, Clover Club Bar, Clover Club Cardroom, and La Bella Luna. Each investigator begins play in La Bella Luna."
+        },
+        {
+          "id": "placePitBoss",
+          "text": "Put the Clover Club Pit Boss enemy into play in the Clover Club Lounge."
+        },
+        {
+          "id": "readyToBegin",
+          "text": "You are ready to begin."
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "rule1",
+          "title": "challengeScenario",
+          "text": "Challenge scenarios are special print-and-play scenarios that utilize existing products in the Arkham Horror: The Card Game collection. The All or Nothing challenge scenario centers around the investigator \"Skids\" O'Toole. This mod delivers the 1-player standalone path in this batch: parallel \"Skids\" O'Toole (90008) must be the only investigator."
+        },
+        {
+          "id": "rule2",
+          "title": "resources",
+          "text": "This scenario revolves around resources: act 1 checks at the end of the round whether an investigator has 15 or more resources; act 2 asks you to escape with as many resources as possible, placing each resigning investigator's resources on the act and awarding bonus experience and next-scenario resources based on that total."
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "text": "If no resolution was reached because each investigator was defeated: Proceed to Resolution 2. Each investigator earns experience equal to the combined Victory X value of each card in the victory display. \"Skids\" O'Toole must either upgrade Hospital Debts to its advanced version, or downgrade the advanced version of On the Lam to its original version."
+        },
+        {
+          "id": "resolution1",
+          "text": "Each investigator earns experience equal to the combined Victory X value of each card in the victory display. For every 10 resources on act 2a, \"Skids\" O'Toole begins the next scenario with 1 additional resource; at 40/50/60 resources, he also earns 1/2/3 bonus experience. \"Skids\" O'Toole may either upgrade On the Lam to its advanced version, or downgrade the advanced version of Hospital Debts to its original version."
+        },
+        {
+          "id": "resolution2",
+          "text": "Each investigator earns experience equal to the combined Victory X value of each card in the victory display. \"Skids\" O'Toole must either upgrade Hospital Debts to its advanced version, or downgrade the advanced version of On the Lam to its original version."
+        }
+      ]
+    }
+  }
+}

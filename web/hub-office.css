@@ -143,13 +143,6 @@
 .ah-ai-dialogue-range { display: grid; grid-template-columns: minmax(120px, 1fr) minmax(150px, 1.2fr); align-items: center; gap: 12px; padding: 7px 0; color: #d4c7a0; font-size: 12px; }
 .ah-game-settings-select { display: grid; grid-template-columns: minmax(120px, 1fr) minmax(150px, 1.2fr); align-items: center; gap: 12px; padding: 7px 0; color: #d4c7a0; font-size: 12px; }
 .ah-game-settings-select select { width: 100%; min-height: 32px; border: 1px solid var(--office-edge); border-radius: 2px; background: #0e1c17; color: #e2c98f; padding: 5px 8px; font-size: 12px; }
-.ah-game-mode-settings { display: grid; gap: 12px; }
-.ah-game-mode-settings h3 { margin: 0; }
-.ah-game-mode-select { appearance: none; color-scheme: dark; width: min(100%, 360px); min-height: 44px; border: 1px solid #806f48; border-radius: 4px; background-color: #0e1c17; background-image: linear-gradient(45deg, transparent 50%, #e2c98f 50%), linear-gradient(135deg, #e2c98f 50%, transparent 50%); background-position: calc(100% - 20px) 19px, calc(100% - 14px) 19px; background-size: 6px 6px; background-repeat: no-repeat; color: #f2dfb2; padding: 10px 40px 10px 12px; font: inherit; font-size: 14px; cursor: pointer; }
-.ah-game-mode-select:hover { border-color: #bda468; }
-.ah-game-mode-select:focus-visible { outline: 2px solid #d6bc7d; outline-offset: 3px; }
-.ah-game-mode-select option { background: #14241e; color: #f2dfb2; }
-.ah-ai-dialogue-modal .ah-game-mode-description { margin: 0; color: var(--office-muted); font-size: 12px; line-height: 1.8; overflow-wrap: anywhere; }
 .ah-ai-dialogue-control { display: grid; grid-template-columns: 1fr 42px; align-items: center; gap: 8px; }
 .ah-ai-dialogue-control input { width: 100%; accent-color: #bda468; }
 .ah-ai-dialogue-control output { color: #f2dfb2; text-align: right; font-variant-numeric: tabular-nums; }

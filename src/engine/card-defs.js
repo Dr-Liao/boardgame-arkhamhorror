@@ -9,6 +9,8 @@ import { investigatorRule } from '../cards/card-rules.js'
 import { isPublicBeneath } from './commit-origins.js'
 import { contentRegistry } from '../../content/registered.js'
 import { allowsCard, cardPoolContext } from '../deck/card-pool.js'
+import { starterPlayerCardsFor, starterWeaknessFor } from '../deck/starter-packs.js'
+import { CORE2026_INVESTIGATOR_CODES, CORE2026_BASIC_WEAKNESS_CODES, CORE2026_PLAYER_CARD_CODES } from '../deck/core2026-packs.js'
 import { assetTextBlanked, assetTextBlankedExceptForced } from './card-text.js'
 import { hasTrait } from './matcher.js'
 import { choiceOptionsFor, choiceSeats } from './resolution.js'
@@ -289,10 +291,11 @@ export function createCardDefs(deps) {
 
   // 可构筑玩家卡池：传入 state 时按「卡牌范围」收窄（渐进式只给当前循环及更早的卡）。
   // 不传 state 的旧调用保持全量池；战役起始牌组额外拿到本战役已开放玩家包的卡（P10）。
-  function corePlayerPool(state = null) {
+  function corePlayerPool(state = null, investigatorCode = null) {
     const context = cardPoolContext(state)
     const base = playablePool()
-    const campaignCodes = campaignDeckbuildingCodes(state)
+    const campaignCodes = [...campaignDeckbuildingCodes(state), ...starterPlayerCardsFor(investigatorCode),
+      ...(CORE2026_INVESTIGATOR_CODES.includes(investigatorCode) ? CORE2026_PLAYER_CARD_CODES : [])]
     const baseCodes = new Set(base.map(card => card.code))
     const pool = campaignCodes.length
       ? [...base, ...expandedPlayablePool().filter(card => campaignCodes.includes(card.code) && !baseCodes.has(card.code))]
@@ -308,14 +311,22 @@ export function createCardDefs(deps) {
     return context ? pool.filter(card => allowsCard(card.code, context)) : pool
   }
 
-  function basicWeaknessPool(state = null) {
+  function basicWeaknessPool(state = null, investigatorCode = null, { automatic = false } = {}) {
+    const packs = state?.campaign ? campaignManifestFor(state).requiredPackIds.map(id => contentRegistry.getPack(id)) : []
+    const starterWeakness = starterWeaknessFor(investigatorCode)
+    // 批次 3：2026 核心盒调查员没有固定基础弱点，随机池 = 2016 核心 + 2026 核心基础弱点。
+    // 重印号（12097/12100/12101 分别等于 01096/03040/01097）不重复进随机池：
+    // 随机弱点的身份按 canonical 卡认定，别名不能作为候选（构筑校验只认条目实现）。
+    const core2026Weaknesses = CORE2026_INVESTIGATOR_CODES.includes(investigatorCode)
+      ? CORE2026_BASIC_WEAKNESS_CODES.filter(code => isCardAvailable(code) && !ALL_CARDS[code]?.duplicateOfCode) : []
+    if (automatic && !starterWeakness && !core2026Weaknesses.length
+      && !packs.some(pack => pack?.includeInAutomaticWeaknessPool)) return undefined
     const core = Object.values(BASIC_WEAKNESSES)
       // Phase 5（5a-10）：「随机基础弱点」自身的卡号在卡号规则数据里，不再写进引擎。
       .filter((c) => isCardAvailable(c.code) && c.pack === 'core' && c.code !== RANDOM_BASIC_WEAKNESS_CODE)
       .map((c) => c.code)
-    const packs = state?.campaign ? campaignManifestFor(state).requiredPackIds.map(id => contentRegistry.getPack(id)) : []
     const extra = packs.flatMap(pack => pack?.basicWeaknessCodes || []).filter(code => isCardAvailable(code))
-    return [...new Set([...core, ...extra])]
+    return [...new Set([...core, ...core2026Weaknesses, ...extra, ...(starterWeakness ? [starterWeakness] : [])])]
   }
 
   function newCardInstance(state, code, fields = {}) {

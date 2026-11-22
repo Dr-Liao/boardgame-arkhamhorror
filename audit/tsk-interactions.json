@@ -104,7 +104,7 @@
     },
     {
       "path": "audit/tsk-node-acceptance.json",
-      "sha256": "58fe7e7acf5996348e4dd5f8c9e3a1a5399e0e5744d7da7f198d40eb1cb52251"
+      "sha256": "cc39eabece21ac25c19bcdf18fb61413d47331fcbb556f66e2615efce4241e11"
     },
     {
       "path": "audit/tsk-regression.json",
@@ -116,7 +116,7 @@
     },
     {
       "path": "src/integration/mechanic-view.js",
-      "sha256": "779b67729d48080d6d2b996588d4185f79960dc331c215dd1691d88c7a7bf3be"
+      "sha256": "10babd9156fcce53e432ca606a7104b66c58978559c62403979476542b2ea2da"
     },
     {
       "path": "tests/tsk-interaction-fixture.mjs",
@@ -132,7 +132,7 @@
     },
     {
       "path": "web/mechanic-ui.js",
-      "sha256": "087207abc54c6413f31081b4092ee42ab06426f698a01de066d420abac8a6fde"
+      "sha256": "553db01fcc388db9a15873c9e4fa40d229cb1dbda9719f33bcdb55dd2de28ad8"
     }
   ]
 }

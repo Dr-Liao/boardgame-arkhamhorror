@@ -1,0 +1,297 @@
+{
+  "id": "returnToUndimensionedAndUnseen",
+  "campaignId": "returnToTheDunwichLegacy",
+  "sourceKind": "authored",
+  "officialChinese": false,
+  "note": "本关按重返剧本参考卡 51041 的设置差异布置；完整步骤见设置段落与特别规则。",
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "id": "intro-0",
+          "title": "冒险 V: 无人知晓",
+          "children": [
+            {
+              "id": "intro-0-0",
+              "text": "你在敦威治村展开了调查，找到了大量的文件、日志、论文。等你阅读完这些内容，已经感到疲倦不堪。这些文件的作者基本是同一个人——一个叫赛斯·毕晓普的男人。当你向其他村民打听这个人时，他们告诉你，赛斯的确是本地人。几个月前发生的“敦威治恐怖事件”（这是阿米蒂奇起的名字），赛斯就是目击者之一。奇怪的是，从那之后，赛斯很少在村里闲逛，偶尔看到他几回，他都是红着眼睛，脸色苍白，满头是汗。\n\n毫无疑问，赛斯已经有点精神失常了。在你深入研究赛斯那些无比疯狂的文字后，你开始怀疑，他是否参与了这次的事件。他在文件中声称已经“发现了父亲的遗物”，并且使用了奥术的手段，在一些生物体内“灌入了父亲的精华”，最后，他开始把人作为实验对象。文件中虽然有很多图表来解释详细的流程，但你还是很难理解。\n\n你决定找出赛斯，当面质问他。不过还没来得及行动，就听到村民的叫喊声：“那玩意回来了！那个杀了弗莱一家的东西回来了！它把毕晓普的家像纸片一样撕了个粉碎！”正在慌乱叫喊的是柯蒂斯·沃特雷，他是沃特雷家族中和魔法没什么关系的人。柯蒂斯和其他的村民乱成了一锅粥，大家呼喊着四处逃避。"
+            },
+            {
+              "id": "intro-0-1",
+              "text": "第1部分: 你试着让村民们冷静下来，好向你解释到底发生了什么。他们告诉你，在村子北边发生了地震，当有人去看时，发现毕晓普的农场几乎被夷为平地。地上有一道深深的痕迹，直接通往冷泉幽谷。“你们知道该怎么办的吧？上次阿卡姆来的人，就成功保护了村子。”有一个村民说道。\n\n柯蒂斯吓得快哭了，他紧紧咬着嘴唇，不停地摇头。“我们都看不到那个东西，那个怪物只有用教授制作的粉末才会现身，”他说道，“现在我才不想看到那个怪物……”看来有人必须要去阻止那怪物。但是如果你发现的文件内容是真的话，怪物绝对不止一只……\n\n• 在冒险日志中，记录下你们安抚了村民。 前往 设置。"
+            },
+            {
+              "id": "intro-0-2",
+              "text": "第2部分: 你马上告知村民，现在情况非常危险，并让他们尽快离开敦威治。有些人想起了上一次发生的事件，于是匆忙地回家收拾行李。柯蒂斯绝望地跪在地上，头上冒着冷汗。“怎么又是它，它是来报复我们的……”柯蒂斯喃喃自语道。“如果你们有那个教授的粉末就好了。我们现在连这个怪物都看不到，但是他洒了粉末，那怪物就现身了。我到现在，都忘不掉那个可怕的场景……”看来有人必须要去阻止那怪物。但是如果你发现的文件内容是真的话，怪物绝对不止一只……\n\n• 在冒险日志中，记录下你们警告了村民。 前往 设置。"
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "returnToSetup",
+          "title": "重返设置差异",
+          "text": "遵循敦威治遗产的剧本手册进行冒险设置，但以下步骤例外：\n- 在找出遭遇组的卡牌时，还需要为重返无人知晓找出几个新遭遇组，如下所示：\n(继续阅读背面。)"
+        },
+        {
+          "id": "baseSetup-0",
+          "text": "将下列遭遇组中，所有遭遇卡找出: 无人知晓、夜鹰、兽之奴仆、敦威治、以及 恐惧打击。"
+        },
+        {
+          "id": "baseSetup-1",
+          "text": "在下列地点卡中，各随机选择一张放置入场，将另一张同名卡牌移出游戏：敦威治村、冷泉幽谷、憎恶荒野、十里牧场、恶魔花园、沃特雷家的废墟。每位调查员从敦威治村开始游戏。"
+        },
+        {
+          "id": "baseSetup-2",
+          "text": "检查冒险日志中“犹格·索托斯的祭品”数量。"
+        },
+        {
+          "id": "baseSetup-3",
+          "text": "若有超过四个名字、将两张犹格·索托斯之子放在一边。将另外3张移出游戏。"
+        },
+        {
+          "id": "baseSetup-4",
+          "text": "若刚好有三个名字，将1张犹格·索托斯之子生成在冷泉幽谷，将2张放在一边。并将另外2张移出游戏。"
+        },
+        {
+          "id": "baseSetup-5",
+          "text": "若刚好有两个名字，将1张犹格·索托斯之子生成在冷泉幽谷，将2张放在一边。并将最后一张移出游戏。"
+        },
+        {
+          "id": "baseSetup-6",
+          "text": "如果有一个或更少的名字、将1张犹格·索托斯之子生成在冷泉幽谷，将1张生成在憎恶荒野，将3张放在一边。"
+        },
+        {
+          "id": "baseSetup-7",
+          "text": "将4张深奥的咒文放在一边。"
+        },
+        {
+          "id": "baseSetup-8",
+          "text": "牌组中带有伊本巴奇之粉末的调查员，可以查找其牌堆，将该卡放置入场。"
+        },
+        {
+          "id": "baseSetup-9",
+          "text": "每位调查员从收藏中，随机抽取一张疯狂、损伤、或 契约 弱点卡，并加入其牌组中，持续到剧本结束。"
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "card-51042",
+          "title": "犹格·索托斯之子",
+          "text": "庞大。\n犹格·索托斯之子得到+1[per_investigator]生命值，且不能因深奥的咒文以外的能力被伤害或攻击。\n强制 - 犹格·索托斯之子每轮第一次移动后，如果其未交战：其立即再次向一个随机地点移动。"
+        },
+        {
+          "id": "card-51043",
+          "title": "犹格·索托斯之子",
+          "text": "庞大。\n犹格·索托斯之子得到+2[per_investigator]生命值，且不能因深奥的咒文以外的能力被伤害或攻击。"
+        },
+        {
+          "id": "card-51044",
+          "title": "犹格·索托斯之子",
+          "text": "庞大。反击。\n犹格·索托斯之子得到+1[per_investigator]生命值，且不能因深奥的咒文以外的能力被伤害或攻击。"
+        },
+        {
+          "id": "card-51045",
+          "title": "犹格·索托斯之子",
+          "text": "庞大。\n犹格·索托斯之子得到+1[per_investigator]生命值，且不能因深奥的咒文以外的能力被伤害或攻击。\n强制 - 犹格·索托斯之子进入你所在地点后，或你进入犹格·索托斯之子所在地点后：检定[willpower](3)。如果你检定失败，受到1点恐惧。"
+        },
+        {
+          "id": "card-51046",
+          "title": "不可察觉的生物",
+          "text": "涌动。\n显现 - 附属到场上一个未附属不可察觉的生物的犹格·索托斯之子敌人上。移除该敌人上的1个线索。\n被附属的敌人获得[[精英]]。"
+        },
+        {
+          "id": "card-51068",
+          "title": "暴力命令",
+          "text": "显现 - 将暴力命令放置入场，放到你的威胁区域。\n[action]：对你所在地点的一位调查员造成2点伤害，弃掉暴力命令。\n强制 - 当你的回合结束时：检定[willpower](3)。如果你检定失败，受到1点恐惧。"
+        },
+        {
+          "id": "card-51069",
+          "title": "魔掌",
+          "text": "显现 - 将魔掌放置入场，放到你的威胁区域。\n[free]如果魔掌在你的威胁区，在你回合期间，受到2点伤害并弃掉魔掌：你本回合可以进行额外一次行动。\n强制 - 当你的回合结束时：受到1点恐惧。"
+        },
+        {
+          "id": "card-51070",
+          "title": "知识渴求",
+          "text": "显现 - 如果你没有线索，知识渴求获得涌动。否则，检定[intellect](X)。其中X为你拥有的线索数量(最多为5)。你检定失败且每低于难度1点，你必须受到1点恐惧，或将你的1个线索放到你所在地点。"
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "未达成结局",
+          "children": [
+            {
+              "id": "noResolution-0",
+              "text": "如果所有调查员都撤退或被击败: 前往 结局 1。"
+            }
+          ]
+        },
+        {
+          "id": "r1",
+          "title": "结局 1",
+          "children": [
+            {
+              "id": "r1-0",
+              "text": "结局 1： 你尽可能地去阻止狂暴的怪物，但是怪物的数量比你预想的还要多，你意识到光靠自己，不可能驱除所有的怪物。最后，你又累又困，只好返回西布伦的家中，祈祷这一夜平安地过去。\n\n• 在冒险日志中，记录下 X之犹格·索托斯之子逃跑。 X是场上和放在一边的犹格·索托斯之子的总数。\n\n• 若有调查员的牌组中有伊本巴奇之粉末，将其移出牌组。\n\n• 每位调查员获得等同于胜利牌区中胜利点数总值的经验。\n• 经验: （按上述说明计算）"
+            }
+          ]
+        },
+        {
+          "id": "r2",
+          "title": "结局 2",
+          "children": [
+            {
+              "id": "r2-0",
+              "text": "结局 2： 你终于杀死了最后一只怪物，事情应该是暂告一段落。你拖着疲惫的身体，回到了西布伦的家中，准备休息。\n\n• 在冒险日志中，记录下 没有犹格·索托斯之子逃跑。\n\n• 若有调查员的牌组中有伊本巴奇之粉末，将其移出牌组。\n\n• 每位调查员获得等同于胜利牌区中胜利点数总值的经验。\n• 经验: （按上述说明计算）"
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "id": "intro-0",
+          "title": "Scenario V: Undimensioned and Unseen",
+          "children": [
+            {
+              "id": "intro-0-0",
+              "text": "Your search of the village of Dunwich has uncovered a number of documents, journal entries, and esoteric theories. Reading through these materials leaves you exhausted and emotionally drained. Most of the content was written by a single source­ —a man named Seth Bishop. When you ask around town, you learn that Seth is a citizen of Dunwich. Along with several others, Seth had witnessed firsthand the devastation wrought by the events of “the Dunwich horror,” as Armitage had dubbed the incident. Curiously, since that time, very few people had seen Seth around town, and those who did claimed his eyes had been bloodshot and his face sweaty and pale.\n\nYou don’t doubt that somebody who has seen what Seth has seen would appear nervous or paranoid. But the more you read of his frantic and unhinged writings, the more you believe he is involved in recent events. His writings speak of having “gathered the remains” and of using arcane methods to “imbue the fathers’ essence” into other creatures, and eventually, into other people. The explanations and diagrams that follow are unfathomably complex and defy understanding.\n\nBefore you are able to find Seth and confront him, several men and women from the village approach you in a panic. “It’s back!” one of them wails. You recognize him as Curtis Whateley, of the undecayed branch. “Whatever it was that killed them Fryes, it’s back! Up and smashed the Bishops’ home like it were made o’ paper!” Curtis and the other townsfolk are clamoring amongst themselves, raising their voices in a panic."
+            },
+            {
+              "id": "intro-0-1",
+              "text": "Part 1: You aim to calm the townsfolk so they can explain to you what is going on. They inform you that there was a rumbling to the north, and when they went to investigate they found the Bishops’ farmhouse had been torn to shreds. A trail of heavy tracks led into nearby Cold Spring Glen. “You know what to do, right? You Arkham folk stopped that thing last time,” one of the townsfolk says. Curtis shakes his head and bites at his lip.\n\n“We couldn’t even see that hellish thing until the old professor sprayed that there powder on it,” He says. “To this day, I wish I hadn’t seen it at all…” Something must be done to stop the monster’s rampage. But, if the documents you found are true, there may be more than one such creature on the loose….\n\n• Record in your Campaign Log that you calmed the townsfolk. Continue to Setup."
+            },
+            {
+              "id": "intro-0-2",
+              "text": "Part 2: You warn the townsfolk that they are in grave danger, and urge them to flee Dunwich while they can. Several of them immediately heed your advice, remembering the terrible monstrosity that had previously endangered the town. Curtis drops to his knees in despair, sweating feverishly. “It’s that thing again, ain’t it? It’s come back fer us,” Curtis stutters. “I hope you’ve got some of that powder the old professor had last time. We couldn’t even see the damned thing until he sprayed it. To this day, I wish I hadn’t seen it at all…” Something must be done to stop the monster’s rampage. But, if the documents you found are true, there may be more than one such creature on the loose….\n\n• Record in your Campaign Log that you warned the townsfolk. Continue to Setup."
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "returnToSetup",
+          "title": "Return to Setup Changes",
+          "text": "Perform the setup as indicated in The Dunwich Legacy Campaign Guide, with the following exceptions:\n- When gathering encounter sets, also gather the new encounter sets for Return to Undimensioned and Unseen shown here.\n(Continued on reverse side.)"
+        },
+        {
+          "id": "baseSetup-0",
+          "text": "Gather all cards from the following encounter sets: Undimensioned and Unseen, Whippoorwills, Beast-thralls, Dunwich, and Striking Fear."
+        },
+        {
+          "id": "baseSetup-1",
+          "text": "Put one of the two versions of the following locations into play at random: Dunwich Village, Cold Spring Glen, Blasted Heath, Ten-Acre Meadow, Devil’s Hop Yard, and Whateley Ruins. Remove the other versions of each of those locations from the game. Each investigator begins play in Dunwich Village."
+        },
+        {
+          "id": "baseSetup-2",
+          "text": "Check the number of names recorded under “Sacrificed to Yog‑Sothoth” in your Campaign Log."
+        },
+        {
+          "id": "baseSetup-3",
+          "text": "If there are 4 or more names listed, set 2 copies of Brood of Yog‑Sothoth aside, out of play. Then, remove the final 3 copies of Brood of Yog‑Sothoth from the game."
+        },
+        {
+          "id": "baseSetup-4",
+          "text": "If there are exactly 3 names listed, put 1 copy of Brood of Yog‑Sothoth into play in Cold Spring Glen, and set 2 copies of Brood of Yog‑Sothoth aside, out of play. Then, remove the final 2 copies of Brood of Yog‑Sothoth from the game."
+        },
+        {
+          "id": "baseSetup-5",
+          "text": "If there are exactly 2 names listed, put 1 copy of Brood of Yog‑Sothoth into play in Cold Spring Glen, and set 3 copies of Brood of Yog‑Sothoth aside, out of play. Then, remove the final copy of Brood of Yog‑Sothoth from the game."
+        },
+        {
+          "id": "baseSetup-6",
+          "text": "If there are 1 or fewer names listed, put 1 copy of Brood of Yog‑Sothoth into play in Cold Spring Glen, put 1 copy of Brood of Yog‑Sothoth into play in Blasted Heath. Then, set the final 3 copies of Brood of Yog‑Sothoth aside, out of play."
+        },
+        {
+          "id": "baseSetup-7",
+          "text": "Set each copy of Esoteric Formula aside, out of play."
+        },
+        {
+          "id": "baseSetup-8",
+          "text": "An investigator with the Powder of Ibn-Ghazi in their deck may search their deck for it and put it into play."
+        },
+        {
+          "id": "baseSetup-9",
+          "text": "Each investigator searches the collection for a random basic Madness, Injury, or Pact weakness and adds it to their deck for the remainder of the campaign."
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "card-51042",
+          "title": "Brood of Yog-Sothoth",
+          "text": "Massive.\nBrood of Yog-Sothoth gets +1 [per_investigator] health and cannot be damaged or attacked except using the ability on Esoteric Formula.\nForced - After Brood of Yog-Sothoth moves for the first time each round, if it is unengaged: It immediately moves again toward a random location."
+        },
+        {
+          "id": "card-51043",
+          "title": "Brood of Yog-Sothoth",
+          "text": "Massive.\nBrood of Yog-Sothoth gets +2 [per_investigator] health and cannot be damaged or attacked except using the ability on Esoteric Formula."
+        },
+        {
+          "id": "card-51044",
+          "title": "Brood of Yog-Sothoth",
+          "text": "Massive. Retaliate.\nBrood of Yog-Sothoth gets +1 [per_investigator] health and cannot be damaged or attacked except using the ability on Esoteric Formula."
+        },
+        {
+          "id": "card-51045",
+          "title": "Brood of Yog-Sothoth",
+          "text": "Massive. Retaliate.\nBrood of Yog-Sothoth gets +1 [per_investigator] health and cannot be damaged or attacked except using the ability on Esoteric Formula.\nForced - After Brood of Yog-Sothoth enters your location, or vice versa: Test [willpower] (3). If you fail, take 1 horror."
+        },
+        {
+          "id": "card-51046",
+          "title": "Imperceptible Creature",
+          "text": "Surge.\nRevelation - Attach to a Brood of Yog-Sothoth enemy in play without a copy of Imperceptible Creature attached. Remove 1 clue from that enemy.\nAttached enemy gains [[Elite]]."
+        },
+        {
+          "id": "card-51068",
+          "title": "Violent Commands",
+          "text": "Revelation - Put Violent Commands into play in your threat area.\n[action]: Deal 2 damage to an investigator at your location and discard Violent Commands.\nForced - At the end of your turn: Test [willpower] (3). If you fail, take 1 horror."
+        },
+        {
+          "id": "card-51069",
+          "title": "Idle Hands",
+          "text": "Revelation - Put Idle Hands into play in your threat area.\n[fast] If Idle Hands is in your threat area, during your turn, take 2 damage and discard Idle Hands: You may take an additional action this turn.\nForced - At the end of your turn: Take 1 horror."
+        },
+        {
+          "id": "card-51070",
+          "title": "Need for Knowledge",
+          "text": "Revelation - If you have no clues, Need for Knowledge gains surge. Otherwise, test [intellect] (X), where X equals the number of clues you have (to a maximum of 5). For each point you fail by, you must either take 1 horror or place 1 of your clues on your location."
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "No Resolution",
+          "children": [
+            {
+              "id": "noResolution-0",
+              "text": "If no resolution was reached (each investigator resigned or was defeated): Go to Resolution 1."
+            }
+          ]
+        },
+        {
+          "id": "r1",
+          "title": "Resolution 1",
+          "children": [
+            {
+              "id": "r1-0",
+              "text": "Resolution 1: You did all you could to stop the rampaging monsters, but there were more of them than you realized and you weren’t able to slay them all. Exhausted and terrified, you retreat to Zebulon’s home and hope to survive the night.\n\n• In your Campaign Log, record that X brood escaped into the wild. X is the total number of Brood of Yog‑Sothoth still in play or set aside.\n\n• If an investigator’s deck contains the Powder of Ibn-Ghazi card, remove it from that investigator’s deck.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n• Experience: (calculate as instructed above)"
+            }
+          ]
+        },
+        {
+          "id": "r2",
+          "title": "Resolution 2",
+          "children": [
+            {
+              "id": "r2-0",
+              "text": "Resolution 2: After slaying what seems to be the last of the rampaging monsters you retreat to Zebulon’s home, exhausted and rattled by your experience.\n\n• In your Campaign Log, record that no brood escaped into the wild.\n\n• If an investigator’s deck contains the Powder of Ibn-Ghazi card, remove it from that investigator’s deck.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n• Experience: (calculate as instructed above)"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

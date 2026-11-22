@@ -107,7 +107,7 @@ const DESCRIPTOR_KEYS = new Set(['kind', 'id', 'label', 'text', 'trigger', 'crit
   'becomesAsset', 'exileAfterPlay', 'addToVictory',
   // Phase 5（5c）：能力"按哪种行动结算"。旧式能力把这件事写在 `effect.kind`（`fight`/`evade`），
   // 描述子用 resolve 实现时没有 effect 数据体，需要显式声明，否则借机攻击判定会把它当成普通行动。
-  'countsAs',
+  'countsAs', 'additionalActionKinds',
   // 第 2 步 P2.7：能力按哪种行动结算（'parley' 谈判不引发借机攻击）。
   'actionKind',
   'range',
@@ -186,7 +186,7 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'searchedCardRule',
   'onUsesEmptied',
   'cannotAffectOtherInvestigators',
-  'trackActionHistory', 'trackDefeatedEnemyHealth', 'sharedSlotGroup', 'ignoreSkillSubstitution',
+  'trackActionHistory', 'trackDefeatedEnemyHealth', 'trackDefeatedEnemyPrintedHealth', 'sharedSlotGroup', 'ignoreSkillSubstitution',
   'trackRoundActionHistory', 'campaignDeck',
   'zoneReplacement',
   'deckConstruction',
@@ -336,6 +336,22 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'attachedSkillBonus',
   // Phase 5（5a-25）：弱点在离承受者最远的地点生成（随行鬼影）。
   'weaknessSpawnsAtFarthestLocation',
+  // 批次 3（12099）：弱点在离承受者最远且无调查员的地点生成。
+  'weaknessSpawnsAtFarthestEmptyLocation',
+  // 批次 3（12098/12012）：威胁区卡不能被移出游戏（除非结算强制移除）。
+  'cannotLeavePlay',
+  // 批次 3（12003）：游戏结束时无条件承受 1 点肉体创伤。
+  'physicalTraumaAtGameEnd',
+  // 批次 3（12006）：游戏结束时仍在手牌则少获得 N 点经验。
+  'xpPenaltyInHand',
+  // 批次 3（12012）：在场期间不能触发其它支援上的能力。
+  'cannotTriggerOtherAssetAbilities',
+  // 批次 3（12052）：轮末把该装备返回手牌。
+  'returnAssetToHandAtRoundEnd',
+  // 批次 3（60454）：同地点任意调查员受伤时，每轮第一次让该调查员受恐惧。
+  'locationHarmFirstPerRound',
+  // 批次 3（60465）：轮末把该装备洗回牌库。
+  'shuffleAssetIntoDeckAtRoundEnd',
   // Phase 5（5a-26）：复制牌库下方的事件（彩绘世界）/ 附属期间让敌人 aloof（藏身地点）。
   'copiesBeneathEvents',
   'grantsHidingSpot',
@@ -497,7 +513,9 @@ export function normalizeDescriptor(raw, { code, index }) {
     for (const key of Object.keys(raw.cost)) {
       if (!COST_KEYS.has(key)) throw new Error(`${origin}: 未知费用 ${key}`)
       // Phase 2（C3）：数值费用允许数字 / 函数 / 声明式表达式。
-      if (NUMERIC_COST_KEYS.includes(key)) validateCostValue(key, raw.cost[key], `${origin} 的 cost`)
+      if (NUMERIC_COST_KEYS.includes(key) && !(key === 'action' && typeof raw.cost[key] === 'boolean')) {
+        validateCostValue(key, raw.cost[key], `${origin} 的 cost`)
+      }
     }
   }
   // Phase 2（C4）：limit 可以是旧字符串，也可以是 { scope, owner, count }。
@@ -523,6 +541,10 @@ export function normalizeDescriptor(raw, { code, index }) {
   if (kind === 'commit' && raw.skill?.conditionalIcons != null) {
     validateConditionalIcons(raw.skill.conditionalIcons, origin)
   }
+  if (kind === 'commit' && raw.skill?.cancelFailureEffects != null
+    && typeof raw.skill.cancelFailureEffects !== 'boolean') {
+    throw new TypeError(`${origin}: cancelFailureEffects 必须是布尔值`)
+  }
   // Phase 5（5c-8）：`played` 平时是生命周期钩子、不声明 trigger；但**快速事件**可以在
   // 反应窗口打出（旧 DSL 写成 `fast: true, reaction: { when }`），所以允许 fast 的 played 声明 trigger。
   const fastPlayed = kind === 'played' && raw.fast === true
@@ -532,6 +554,10 @@ export function normalizeDescriptor(raw, { code, index }) {
   const target = normalizeTarget(raw.target, origin)
   if (raw.countsAs != null && (typeof raw.countsAs !== 'string' || !raw.countsAs)) {
     throw new Error(`${origin}: countsAs 必须是非空字符串（如 'fight' / 'evade'）`)
+  }
+  if (raw.additionalActionKinds != null && (kind !== 'played' || !Array.isArray(raw.additionalActionKinds)
+    || raw.additionalActionKinds.some(action => typeof action !== 'string' || !action))) {
+    throw new Error(`${origin}: additionalActionKinds 必须是事件行动类型列表`)
   }
   if (raw.partOfAbility != null && (!Number.isInteger(raw.partOfAbility) || raw.partOfAbility < 0)) throw new Error(`${origin}: partOfAbility 必须是非负能力索引`)
   const label = raw.label || raw.text || code
@@ -565,6 +591,7 @@ export function normalizeDescriptor(raw, { code, index }) {
     addToVictory: raw.addToVictory === true,
     // Phase 5：这条能力"按哪种行动结算"（借机攻击判定用）。
     countsAs: raw.countsAs || null,
+    ...(raw.additionalActionKinds ? { additionalActionKinds: Object.freeze([...raw.additionalActionKinds]) } : {}),
     // 第 2 步 P2.7：显式的行动种类（'parley' 谈判 / 'circle' 阵法…），优先于 countsAs；
     // 非玩家实体只有带 actionKind 的 action 才允许注册。
     actionKind: raw.actionKind || null,
@@ -616,6 +643,13 @@ export function registerCardAbilities(entries) {
     const origin = `能力条目 ${entry.code || '<无 code>'}`
     assertKnownKeys(entry, ENTRY_KEYS, origin)
     validateSealEntry(entry)
+    if (entry.hiddenRule?.playerWeakness != null && typeof entry.hiddenRule.playerWeakness !== 'boolean') {
+      throw new TypeError(`${entry.code}: hiddenRule.playerWeakness 必须是布尔值`)
+    }
+    if (entry.hiddenRule?.scenarioXpModifier != null && (!entry.hiddenRule.playerWeakness
+      || !Number.isSafeInteger(entry.hiddenRule.scenarioXpModifier))) {
+      throw new TypeError(`${entry.code}: hiddenRule.scenarioXpModifier 需要隐私玩家弱点与整数修正`)
+    }
     // P7 TDC 11752：威胁区卡声明「你不能触发[[符文]]或[[神器]]卡牌的能力」。
     // 读点：ability-rules.js#descriptorUsable（action/free/reaction 同一入口，forced 不受影响）。
     // 两种等价写法：threatEffect.cannotTriggerAbilityTraits（引擎规范键）或
@@ -672,9 +706,12 @@ export function registerCardAbilities(entries) {
     }
     const discardPlayCost = entry.discardPlayCost
     if (discardPlayCost != null && (typeof discardPlayCost !== 'object' || Array.isArray(discardPlayCost)
-      || Object.keys(discardPlayCost).some(key => !['trait', 'slot', 'zones'].includes(key))
-      || typeof discardPlayCost.trait !== 'string' || !discardPlayCost.trait.trim()
-      || !['hand', 'arcane', 'body', 'accessory', 'ally', 'tarot'].includes(discardPlayCost.slot)
+      || Object.keys(discardPlayCost).some(key => !['trait', 'slot', 'zones', 'upTo'].includes(key))
+      || (discardPlayCost.upTo == null && (typeof discardPlayCost.trait !== 'string' || !discardPlayCost.trait.trim()
+        || !['hand', 'arcane', 'body', 'accessory', 'ally', 'tarot'].includes(discardPlayCost.slot)))
+      || (discardPlayCost.upTo != null && (!Number.isSafeInteger(discardPlayCost.upTo) || discardPlayCost.upTo < 1
+        || discardPlayCost.trait != null || discardPlayCost.slot != null
+        || discardPlayCost.zones?.length !== 1 || discardPlayCost.zones[0] !== 'hand'))
       || !Array.isArray(discardPlayCost.zones) || !discardPlayCost.zones.length
       || discardPlayCost.zones.some(zone => !['hand', 'play'].includes(zone)))) {
       throw new TypeError(origin + ': 非法额外打出弃置费用')
@@ -922,6 +959,16 @@ export function registerCardAbilities(entries) {
     if (entry.assetRule?.ignoreAgendaForced != null && typeof entry.assetRule.ignoreAgendaForced !== 'boolean') throw new TypeError('Invalid agenda forced ignore rule')
     // 07338 潜水服：伤害转移读点在 enemies.js#applyHarm（每次结算最多 1 点）。
     if (entry.assetRule?.redirectOneDamageToSelf != null && typeof entry.assetRule.redirectOneDamageToSelf !== 'boolean') throw new TypeError('Invalid damage redirect rule')
+    const harmAssignmentTraitLimit = entry.assetRule?.harmAssignmentTraitLimit
+    if (entry.assetRule?.waivesAbilityLimit != null && (typeof entry.assetRule.waivesAbilityLimit !== 'string'
+      || !entry.assetRule.waivesAbilityLimit.trim())) throw new TypeError(`${origin}: 非法发动次数豁免`)
+    const exileRepurchaseDiscount = entry.campaignDeck?.exileRepurchaseDiscount
+    if (exileRepurchaseDiscount != null && (!Number.isSafeInteger(exileRepurchaseDiscount.amount)
+      || !Number.isSafeInteger(exileRepurchaseDiscount.limit) || exileRepurchaseDiscount.amount < 1
+      || exileRepurchaseDiscount.limit < 1)) throw new TypeError(`${origin}: 非法重新购入放逐卡减免`)
+    if (harmAssignmentTraitLimit != null && (typeof harmAssignmentTraitLimit.trait !== 'string'
+      || !harmAssignmentTraitLimit.trait.trim() || !Number.isSafeInteger(harmAssignmentTraitLimit.maximum)
+      || harmAssignmentTraitLimit.maximum < 0)) throw new TypeError(`${origin}: 非法支援伤害分配上限`)
     if (entry.treacheryRule?.attackBonus != null) {
       const bonus = entry.treacheryRule.attackBonus
       assertKnownKeys(bonus, new Set(['damage', 'horror', 'discardOnAttack']), 'treacheryRule.attackBonus')
@@ -967,6 +1014,10 @@ export function registerCardAbilities(entries) {
     if (entry.enemyRule?.damageReductionFromAllSources != null) {
       const amount = entry.enemyRule.damageReductionFromAllSources
       if (!Number.isSafeInteger(amount) || amount < 0) throw new TypeError('enemyRule.damageReductionFromAllSources 必须是非负整数')
+    }
+    if (entry.enemyRule?.maxDamagePerSource != null
+      && (!Number.isSafeInteger(entry.enemyRule.maxDamagePerSource) || entry.enemyRule.maxDamagePerSource < 0)) {
+      throw new TypeError('enemyRule.maxDamagePerSource 必须是非负整数')
     }
     if (entry.enemyRule?.damageReductionExceptSourceTraits != null) {
       const rule = entry.enemyRule.damageReductionExceptSourceTraits
@@ -1225,7 +1276,10 @@ export function registerCardAbilities(entries) {
       physicalTraumaIfUsesBelow: entry.physicalTraumaIfUsesBelow ?? null,
       negotiationDifficultyReduction: entry.negotiationDifficultyReduction ?? null,
       rerollRevealedTokenOnSuccess: entry.rerollRevealedTokenOnSuccess === true,
-      chaosTokenExtraReveal: entry.chaosTokenExtraReveal === true,
+      // 批次 3（12068）：既支持旧的 true，也保留对象数据 { symbolHorror, keepWhenEmpty }。
+      chaosTokenExtraReveal: entry.chaosTokenExtraReveal === true ? true
+        : (entry.chaosTokenExtraReveal && typeof entry.chaosTokenExtraReveal === 'object' && !Array.isArray(entry.chaosTokenExtraReveal)
+          ? Object.freeze({ ...entry.chaosTokenExtraReveal }) : false),
       weaknessExhaustsAssets: entry.weaknessExhaustsAssets === true,
       playedEventsToDeckTop: entry.playedEventsToDeckTop === true,
       chooseResourceCostOnPlay: entry.chooseResourceCostOnPlay === true,
@@ -1242,6 +1296,15 @@ export function registerCardAbilities(entries) {
       weaknessHandNote: entry.weaknessHandNote ? String(entry.weaknessHandNote) : null,
       attachedSkillBonus: entry.attachedSkillBonus ?? null,
       weaknessSpawnsAtFarthestLocation: entry.weaknessSpawnsAtFarthestLocation === true,
+      weaknessSpawnsAtFarthestEmptyLocation: entry.weaknessSpawnsAtFarthestEmptyLocation === true,
+      cannotLeavePlay: entry.cannotLeavePlay === true,
+      physicalTraumaAtGameEnd: entry.physicalTraumaAtGameEnd === true,
+      xpPenaltyInHand: Number.isSafeInteger(entry.xpPenaltyInHand) ? entry.xpPenaltyInHand : null,
+      cannotTriggerOtherAssetAbilities: entry.cannotTriggerOtherAssetAbilities === true,
+      returnAssetToHandAtRoundEnd: entry.returnAssetToHandAtRoundEnd === true,
+      locationHarmFirstPerRound: entry.locationHarmFirstPerRound && typeof entry.locationHarmFirstPerRound === 'object'
+        && !Array.isArray(entry.locationHarmFirstPerRound) ? Object.freeze({ ...entry.locationHarmFirstPerRound }) : null,
+      shuffleAssetIntoDeckAtRoundEnd: entry.shuffleAssetIntoDeckAtRoundEnd === true,
       copiesBeneathEvents: entry.copiesBeneathEvents === true,
       grantsHidingSpot: entry.grantsHidingSpot === true,
       ambushAttachment: entry.ambushAttachment === true,
@@ -1343,9 +1406,12 @@ export function registerCardAbilities(entries) {
       cannotAffectOtherInvestigators: entry.cannotAffectOtherInvestigators === true,
       trackActionHistory: entry.trackActionHistory === true,
       trackDefeatedEnemyHealth: entry.trackDefeatedEnemyHealth === true,
+      trackDefeatedEnemyPrintedHealth: entry.trackDefeatedEnemyPrintedHealth === true,
       sharedSlotGroup: entry.sharedSlotGroup || null,
       ...(entry.trackRoundActionHistory === true ? { trackRoundActionHistory: true } : {}),
-      ...(entry.campaignDeck ? { campaignDeck: Object.freeze({ ...entry.campaignDeck }) } : {}),
+      ...(entry.campaignDeck ? { campaignDeck: Object.freeze({ ...entry.campaignDeck,
+        ...(exileRepurchaseDiscount ? { exileRepurchaseDiscount: Object.freeze({ ...exileRepurchaseDiscount }) } : {}),
+      }) } : {}),
       ignoreSkillSubstitution: entry.ignoreSkillSubstitution || null,
       zoneReplacement: entry.zoneReplacement || null,
       deckConstruction: entry.deckConstruction || null,
@@ -1357,6 +1423,7 @@ export function registerCardAbilities(entries) {
       onFound: typeof entry.onFound === 'function' ? entry.onFound : null,
       assetRule: entry.assetRule ? Object.freeze({ ...entry.assetRule,
         ...(playCostUses ? { playCostUses: Object.freeze({ ...playCostUses }) } : {}),
+        ...(harmAssignmentTraitLimit ? { harmAssignmentTraitLimit: Object.freeze({ ...harmAssignmentTraitLimit }) } : {}),
       }) : null,
       additionalTokenCost: entry.additionalTokenCost ? Object.freeze({ ...entry.additionalTokenCost }) : null,
       playCostModifier: entry.playCostModifier || null,

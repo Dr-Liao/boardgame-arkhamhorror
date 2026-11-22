@@ -2,6 +2,11 @@ import { commitProfile } from './lifecycle.js'
 import { handCommitBlocker } from './tarot-slot.js'
 import { availableResources, spendFromPool } from './resource-bank.js'
 import { payTokenCost, tokenCostAvailable } from './token-cost.js'
+import { capabilityBlocked } from './modifiers.js'
+
+export function commitBaseSkillValue(state, test, baseStatValue, performer = state.investigators[test.seat]) {
+  return test.explicitBaseValue ?? [test.skill].flat().reduce((sum, skill) => sum + baseStatValue(state, performer, skill), 0)
+}
 
 export function commitResourceCost(state, owner, code, deps) {
   const rate = (owner.threat || []).reduce((sum, card) => sum + (deps.registeredEntry(card.code)?.investigator?.commitResourceCostPerIcon || 0), 0)
@@ -25,6 +30,7 @@ export function allowsConnectingCommit(state, owner, code, deps) {
 export function canCommitToTest(state, owner, code, deps, options = {}) {
   const test = state.skillTest
   if (!test || !owner) return false
+  if (capabilityBlocked(state, owner, 'commit')) return false
   if (test.blockCommitSeats?.includes(owner.seat)) return false
   const { cardDef, commitIcons, registeredEntry } = deps
   const profile = commitProfile(code) || {}
@@ -39,7 +45,7 @@ export function canCommitToTest(state, owner, code, deps, options = {}) {
   if (profile.selfTestOnly && owner.seat !== test.seat) return false
   if (profile.otherTestOnly && owner.seat === test.seat) return false
   if (profile.commitCondition && !profile.commitCondition({ state, owner,
-    performer: state.investigators[test.seat], test, baseSkillValue: [].concat(test.skill).reduce((sum, skill) => sum + deps.baseStatValue(state, state.investigators[test.seat], skill), 0) })) return false
+    performer: state.investigators[test.seat], test, baseSkillValue: commitBaseSkillValue(state, test, deps.baseStatValue) })) return false
   if (profile.requireClueAtLocation && !(state.locations.find(loc => loc.id === owner.location)?.clues > 0)) return false
   if (profile.requireEngagedEnemy && !deps.enemiesEngagedWith(state,owner).length) return false
   if (profile.requireDifficultyAboveBase) {
@@ -55,6 +61,6 @@ export function canCommitToTest(state, owner, code, deps, options = {}) {
   if (rows.some(row => commitProfile(row.code)?.noOtherCommits && row.code !== code)) return false
   if (profile.scenarioAbilityOnly && !test.source?.scenarioAbility && !test.source?.ability) return false
   if (/最多投入1张|Max 1 committed/i.test(card.textZh || card.text || '') && rows.some(row => row.code === code)) return false
-  if (card.subtype && !profile.mustCommitNextTest && !profile.subtractIcons) return false
+  if (card.subtype && !profile.mustCommitNextTest && !profile.subtractIcons && !profile.canCommitWeakness) return false
   return profile.anySkill || commitIcons(state, owner, code, test.skill) !== 0
 }

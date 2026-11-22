@@ -74,6 +74,9 @@ function assertSupported(manifestValue, currentRulesVersion, path) {
 
 export function assertPackManifest(pack) {
   manifest(pack, 'pack')
+  if (pack.includeInAutomaticWeaknessPool !== undefined && typeof pack.includeInAutomaticWeaknessPool !== 'boolean') {
+    fail('pack.includeInAutomaticWeaknessPool', '必须是布尔值')
+  }
   refs(pack.dependencies, 'pack.dependencies')
   if (!Array.isArray(pack.cardRanges)) fail('pack.cardRanges', '必须是数组')
   for (const [i, rangeValue] of pack.cardRanges.entries()) {
@@ -111,6 +114,34 @@ export function assertPackManifest(pack) {
 
 export function assertCampaignManifest(campaign) {
   manifest(campaign, 'campaign')
+  if (campaign.opening !== undefined) {
+    const opening = object(campaign.opening, 'campaign.opening')
+    for (const key of Object.keys(opening)) {
+      if (!['experience', 'investigators'].includes(key)) fail(`campaign.opening.${key}`, '未知开局字段')
+    }
+    if (opening.experience !== undefined && (!Number.isSafeInteger(opening.experience) || opening.experience < 0)) {
+      fail('campaign.opening.experience', '必须是非负整数')
+    }
+    if (opening.investigators !== undefined && !list(opening.investigators, 'campaign.opening.investigators').length) {
+      fail('campaign.opening.investigators', '至少需要一名调查员')
+    }
+  }
+  // 批次 2：主战役可在关间插入独立支线（每条支线每人支付 cost 经验）。
+  if (campaign.sideStories !== undefined) {
+    if (!Array.isArray(campaign.sideStories)) fail('campaign.sideStories', '必须是数组')
+    const sideIds = new Set()
+    for (const [index, side] of campaign.sideStories.entries()) {
+      const entry = object(side, `campaign.sideStories[${index}]`)
+      for (const key of Object.keys(entry)) {
+        if (!['campaignId', 'cost', 'scenarioId'].includes(key)) fail(`campaign.sideStories[${index}].${key}`, '未知字段')
+      }
+      const sideCampaignId = id(entry.campaignId, `campaign.sideStories[${index}].campaignId`)
+      if (sideIds.has(sideCampaignId)) fail('campaign.sideStories', `重复支线 ${sideCampaignId}`)
+      sideIds.add(sideCampaignId)
+      if (!Number.isSafeInteger(entry.cost) || entry.cost < 1) fail(`campaign.sideStories[${index}].cost`, '必须支付至少 1 点经验')
+      if (entry.scenarioId !== undefined) id(entry.scenarioId, `campaign.sideStories[${index}].scenarioId`)
+    }
+  }
   string(campaign.name, 'campaign.name')
   refs(campaign.requiredPackIds, 'campaign.requiredPackIds')
   const order = refs(campaign.scenarioIds, 'campaign.scenarioIds')
@@ -285,6 +316,20 @@ export function assertContentBundle(bundle, currentRulesVersion) {
       const scenario = scenarios.get(scenarioId)
       if (!scenario || scenario.campaignId !== campaign.id) fail(`campaign.${campaign.id}`, `缺少所属关卡 ${scenarioId}`)
     }
+    // 批次 2：关间可插入的支线战役必须已注册、可启动且关卡归属正确。
+    for (const side of campaign.sideStories || []) {
+      const target = campaigns.get(side.campaignId)
+      if (!target) fail(`campaign.${campaign.id}`, `缺少支线战役 ${side.campaignId}`)
+      const scenarioId = side.scenarioId ?? target.scenarioIds[0]
+      const scenario = scenarios.get(scenarioId)
+      if (!scenario || scenario.campaignId !== target.id || !target.scenarioIds.includes(scenarioId)) {
+        fail(`campaign.${campaign.id}`, `支线 ${side.campaignId} 的关卡 ${scenarioId} 未注册`)
+      }
+      if (campaign.scenarioIds.includes(scenarioId)) fail(`campaign.${campaign.id}`, `支线关卡 ${scenarioId} 不能同时是本战役章节`)
+      if (side.scenarioId === undefined && target.scenarioIds.length !== 1) {
+        fail(`campaign.${campaign.id}`, `支线 ${side.campaignId} 有多关，必须显式声明 scenarioId`)
+      }
+    }
   }
   for (const scenario of scenarios.values()) {
     const campaign = campaigns.get(scenario.campaignId)
@@ -322,6 +367,18 @@ export function assertLaunchableCampaign(bundle, campaignId, currentRulesVersion
   requireReady(campaign, `campaign.${campaignId}`)
   campaign.requiredPackIds.forEach(requirePack)
   for (const scenarioId of campaign.scenarioIds) {
+    const scenario = scenarios.get(scenarioId)
+    requireReady(scenario, `scenario.${scenarioId}`)
+    const missing = missingMechanics(scenario.requiredMechanicIds)
+    if (missing.length) fail(`scenario.${scenarioId}`, `缺少机制 ${missing.join('、')}`)
+    scenario.requiredPackIds.forEach(requirePack)
+  }
+  // 批次 2：插入用的支线战役与其关卡也必须可启动（否则主战役会因坏支线无法启动）。
+  for (const side of campaign.sideStories || []) {
+    const target = campaigns.get(side.campaignId)
+    requireReady(target, `campaign.${side.campaignId}`)
+    target.requiredPackIds.forEach(requirePack)
+    const scenarioId = side.scenarioId ?? target.scenarioIds[0]
     const scenario = scenarios.get(scenarioId)
     requireReady(scenario, `scenario.${scenarioId}`)
     const missing = missingMechanics(scenario.requiredMechanicIds)

@@ -16,6 +16,7 @@
 // server 进程（生产组合根）与真实 web/；8 章逐章实机证据在 tests/tde-scenarios.browser.mjs。
 //
 // 证据命令：node ../../node_modules/@playwright/test/cli.js test --config tests/playwright/playwright.tde.config.mjs
+import { selectCampaign } from './playwright/campaign-picker.mjs'
 import { test, expect } from '@playwright/test'
 import { mkdirSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -141,12 +142,8 @@ for (const [label, width, height] of [['desktop', 1440, 950], ['mobile', 390, 84
     await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
     const setup = page.getByRole('dialog', { name: '调查准备设置' })
     await expect(setup).toBeVisible()
-    const campaignSelect = setup.getByRole('combobox', { name: '战役', exact: true })
-    const campaignOptions = await campaignSelect.locator('option').evaluateAll(options =>
-      options.map(option => ({ value: option.value, label: option.textContent })))
-    expect(campaignOptions.map(option => option.value)).toContain(TDE_CAMPAIGN)
-    expect(campaignOptions.find(option => option.value === TDE_CAMPAIGN)?.label).toContain('食梦者')
-    await campaignSelect.selectOption(TDE_CAMPAIGN)
+    await selectCampaign(page, setup, TDE_CAMPAIGN)
+    await expect(setup.locator('.ah-campaign-summary')).toContainText('食梦者')
     await setup.getByRole('combobox', { name: '席位数量' }).selectOption('4')
     await screenshot(`p10-release-lobby-${label}`)
 

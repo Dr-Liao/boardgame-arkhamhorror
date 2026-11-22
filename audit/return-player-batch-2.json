@@ -1,0 +1,603 @@
+{
+  "schemaVersion": 1,
+  "status": "complete",
+  "base": "019eef91",
+  "reference": {
+    "path": "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+    "sha256": "07ce283c7046c181f9e8a65e3d96016c2678850e41081ca87be0c8715eae1a1a"
+  },
+  "packs": [
+    {
+      "id": "rtnotz",
+      "openPlayerCards": [
+        "50001",
+        "50002",
+        "50003",
+        "50004",
+        "50005",
+        "50006",
+        "50007",
+        "50008",
+        "50009",
+        "50010"
+      ],
+      "verifiedWeaknesses": []
+    },
+    {
+      "id": "rtdwl",
+      "openPlayerCards": [
+        "51001",
+        "51002",
+        "51003",
+        "51004",
+        "51005",
+        "51006",
+        "51007",
+        "51008",
+        "51009",
+        "51010"
+      ],
+      "verifiedWeaknesses": [
+        "51011"
+      ]
+    },
+    {
+      "id": "rtptc",
+      "openPlayerCards": [
+        "52001",
+        "52002",
+        "52003",
+        "52004",
+        "52005",
+        "52006",
+        "52007",
+        "52008",
+        "52009",
+        "52010"
+      ],
+      "verifiedWeaknesses": [
+        "52011",
+        "52012",
+        "52013"
+      ]
+    }
+  ],
+  "researchUpgrades": [
+    "51004",
+    "52004"
+  ],
+  "revisedCoreImports": {
+    "01689": "51007"
+  },
+  "alternateSignatures": {
+    "fronts": [
+      "90001",
+      "90008",
+      "90017",
+      "90024"
+    ],
+    "implemented": [
+      "90002",
+      "90003",
+      "90009",
+      "90010",
+      "90018",
+      "90019",
+      "90030",
+      "90031"
+    ],
+    "directives": [
+      "90025",
+      "90026",
+      "90027",
+      "90028",
+      "90029"
+    ],
+    "options": [
+      "同一调查员的正面与背面独立选择",
+      "标准签名、进阶签名或两套",
+      "平行罗兰从五张准则中选三张"
+    ],
+    "entryPoints": [
+      "调查准备大厅",
+      "自动构筑",
+      "手动构筑",
+      "关间升级",
+      "战役存档与本地卡组库"
+    ]
+  },
+  "registeredPlayerPacks": {
+    "rtnotzPlayer": [],
+    "rtdwlPlayer": [
+      "51011"
+    ],
+    "rtptcPlayer": [
+      "52011",
+      "52012",
+      "52013"
+    ]
+  },
+  "production": {
+    "registeredAt": "content/registered.js（批次 2 合并：重返 50/51/52 战役与章节、三条独立支线、四项调查员挑战）",
+    "returnCampaigns": [
+      {
+        "campaignId": "returnToNightOfTheZealot",
+        "baseCampaign": "nightOfTheZealot",
+        "scenarios": [
+          "returnToTheGathering",
+          "returnToTheMidnightMasks",
+          "returnToTheDevourerBelow"
+        ],
+        "referenceCodes": [
+          "50011",
+          "50025",
+          "50032a"
+        ],
+        "requiredPackIds": [
+          "core",
+          "notz",
+          "rtnotzCampaign",
+          "rtnotzPlayer"
+        ],
+        "opening": {
+          "experience": 0
+        },
+        "defaultWeaknessPool": "核心基础弱点（rtnotz 盒没有基础弱点）",
+        "sideStories": [
+          {
+            "campaignId": "curseOfTheRougarou",
+            "cost": 1
+          },
+          {
+            "campaignId": "carnevaleOfHorrors",
+            "cost": 3
+          },
+          {
+            "campaignId": "murderAtTheExcelsiorHotel",
+            "cost": 3
+          }
+        ],
+        "tests": [
+          "tests/ret-notz.test.mjs",
+          "tests/ret-notz-devourer.test.mjs"
+        ],
+        "dossier": "artifacts/migration/batch-2-remaining/ret-notz-dossier.md"
+      },
+      {
+        "campaignId": "returnToTheDunwichLegacy",
+        "baseCampaign": "theDunwichLegacy",
+        "scenarios": [
+          "returnToExtracurricularActivities",
+          "returnToTheHouseAlwaysWins",
+          "returnToTheMiskatonicMuseum",
+          "returnToTheEssexCountyExpress",
+          "returnToBloodOnTheAltar",
+          "returnToUndimensionedAndUnseen",
+          "returnToWhereDoomAwaits",
+          "returnToLostInTimeAndSpace"
+        ],
+        "referenceCodes": [
+          "51012",
+          "51020",
+          "51022",
+          "51028",
+          "51030",
+          "51039",
+          "51048",
+          "51054"
+        ],
+        "requiredPackIds": [
+          "core",
+          "dunwichCampaign",
+          "rtdwlCampaign",
+          "rtdwlPlayer"
+        ],
+        "opening": {
+          "experience": 0
+        },
+        "defaultWeaknessPool": "51011 进入战役默认弱点池（requiredPackIds 引入 rtdwlPlayer）",
+        "sideStories": [
+          {
+            "campaignId": "curseOfTheRougarou",
+            "cost": 1
+          },
+          {
+            "campaignId": "carnevaleOfHorrors",
+            "cost": 3
+          },
+          {
+            "campaignId": "murderAtTheExcelsiorHotel",
+            "cost": 3
+          }
+        ],
+        "tests": [
+          "tests/ret-dunwich-extracurricular.test.mjs",
+          "tests/ret-dunwich-house.test.mjs",
+          "tests/ret-dunwich-museum.test.mjs",
+          "tests/ret-dunwich-essex.test.mjs",
+          "tests/ret-dunwich-altar.test.mjs",
+          "tests/ret-dunwich-undimensioned.test.mjs",
+          "tests/ret-dunwich-hill.test.mjs",
+          "tests/ret-dunwich-timelesspace.test.mjs"
+        ],
+        "dossier": "artifacts/migration/batch-2-remaining/ret-dunwich-dossier.md"
+      },
+      {
+        "campaignId": "returnToThePathToCarcosa",
+        "baseCampaign": "thePathToCarcosa",
+        "scenarios": [
+          "returnToCurtainCall",
+          "returnToTheLastKing",
+          "returnToEchoesOfThePast",
+          "returnToTheUnspeakableOath",
+          "returnToAPhantomOfTruth",
+          "returnToThePallidMask",
+          "returnToBlackStarsRise",
+          "returnToDimCarcosa"
+        ],
+        "referenceCodes": [
+          "52014",
+          "52018",
+          "52023",
+          "52031",
+          "52035",
+          "52047",
+          "52053",
+          "52060"
+        ],
+        "requiredPackIds": [
+          "core",
+          "carcosaCampaign",
+          "rtptcCampaign",
+          "rtptcPlayer"
+        ],
+        "opening": {
+          "experience": 0
+        },
+        "defaultWeaknessPool": "52011–52013 进入战役默认弱点池（requiredPackIds 引入 rtptcPlayer）",
+        "sideStories": [
+          {
+            "campaignId": "curseOfTheRougarou",
+            "cost": 1
+          },
+          {
+            "campaignId": "carnevaleOfHorrors",
+            "cost": 3
+          },
+          {
+            "campaignId": "murderAtTheExcelsiorHotel",
+            "cost": 3
+          }
+        ],
+        "tests": [
+          "tests/ret-carcosa-opening.test.mjs",
+          "tests/ret-carcosa-chapters.test.mjs",
+          "tests/ret-carcosa-campaign.test.mjs"
+        ],
+        "dossier": "artifacts/migration/batch-2-remaining/ret-carcosa-dossier.md"
+      }
+    ],
+    "sideStories": [
+      {
+        "campaignId": "curseOfTheRougarou",
+        "scenarioId": "curseOfTheRougarou",
+        "referenceCode": "81001",
+        "openingExperience": 1,
+        "chaosBags": [
+          "standard",
+          "hard"
+        ],
+        "insertionCostPerInvestigator": 1,
+        "encounterEntries": 35,
+        "playerCards": [
+          "81030"
+        ],
+        "tests": [
+          "tests/side-story-curseOfTheRougarou.test.mjs"
+        ],
+        "guideSource": "content/scenario-guide-sources/curseOfTheRougarou.json",
+        "dossier": "artifacts/migration/batch-2-remaining/side-story-delivery.md"
+      },
+      {
+        "campaignId": "carnevaleOfHorrors",
+        "scenarioId": "carnevaleOfHorrors",
+        "referenceCode": "82001",
+        "openingExperience": 3,
+        "chaosBags": [
+          "standard",
+          "hard"
+        ],
+        "insertionCostPerInvestigator": 3,
+        "encounterEntries": 39,
+        "tests": [
+          "tests/side-story-carnevaleOfHorrors.test.mjs"
+        ],
+        "guideSource": "content/scenario-guide-sources/carnevaleOfHorrors.json",
+        "dossier": "artifacts/migration/batch-2-remaining/side-story-delivery.md"
+      },
+      {
+        "campaignId": "murderAtTheExcelsiorHotel",
+        "scenarioId": "murderAtTheExcelsiorHotel",
+        "referenceCode": "84001",
+        "openingExperience": 3,
+        "chaosBags": [
+          "standard",
+          "hard"
+        ],
+        "insertionCostPerInvestigator": 3,
+        "encounterEntries": 51,
+        "tests": [
+          "tests/side-story-murderAtTheExcelsiorHotel.test.mjs"
+        ],
+        "guideSource": "content/scenario-guide-sources/murderAtTheExcelsiorHotel.json",
+        "dossier": "artifacts/migration/batch-2-remaining/side-story-delivery.md"
+      }
+    ],
+    "sideStoryInsertion": {
+      "mechanism": "campaign manifest.sideStories + hubStartSideStory（关间支线，不占用流程节点）",
+      "hostCampaigns": [
+        "nightOfTheZealot",
+        "theDunwichLegacy",
+        "thePathToCarcosa",
+        "theForgottenAge",
+        "theCircleUndone",
+        "returnToNightOfTheZealot",
+        "returnToTheDunwichLegacy",
+        "returnToThePathToCarcosa"
+      ],
+      "semantics": [
+        "每人按 cost 支付经验且不足时不出现在合法动作",
+        "支线记录 schema/记录并入宿主战役",
+        "campaign.sideStoriesPlayed 去重，结算后回原关间",
+        "campaign.sideStoryReturn 回到原定下一章",
+        "存档 JSON 往返一致"
+      ],
+      "tests": [
+        "tests/return-side-story-insert.test.mjs",
+        "tests/return-to-campaigns.test.mjs"
+      ]
+    },
+    "challenges": [
+      {
+        "campaignId": "readOrDie",
+        "scenarioId": "readOrDie",
+        "referenceCode": "90004",
+        "requiredInvestigator": "90001",
+        "openingExperience": 3,
+        "difficulties": [
+          "easy",
+          "standard",
+          "hard",
+          "expert"
+        ],
+        "tests": [
+          "tests/challenge-readOrDie.test.mjs"
+        ]
+      },
+      {
+        "campaignId": "allOrNothing",
+        "scenarioId": "allOrNothing",
+        "referenceCode": "90011",
+        "requiredInvestigator": "90008",
+        "openingExperience": 3,
+        "difficulties": [
+          "easy",
+          "standard",
+          "hard",
+          "expert"
+        ],
+        "tests": [
+          "tests/challenge-allOrNothing.test.mjs"
+        ]
+      },
+      {
+        "campaignId": "badBlood",
+        "scenarioId": "badBlood",
+        "referenceCode": "90020",
+        "requiredInvestigator": "90017",
+        "openingExperience": 3,
+        "difficulties": [
+          "easy",
+          "standard",
+          "hard",
+          "expert"
+        ],
+        "tests": [
+          "tests/challenge-badBlood.test.mjs"
+        ]
+      },
+      {
+        "campaignId": "byTheBook",
+        "scenarioId": "byTheBook",
+        "referenceCode": "90032",
+        "requiredInvestigator": "90024",
+        "openingExperience": 3,
+        "difficulties": [
+          "easy",
+          "standard",
+          "hard",
+          "expert"
+        ],
+        "tests": [
+          "tests/challenge-byTheBook.test.mjs"
+        ]
+      }
+    ],
+    "sharedMechanisms": [
+      "content/campaigns/returnCampaignShared.js：从基础战役清单派生重返战役（flow 节点键、值、解锁全部重映射）",
+      "content/schema.js：campaign.opening / campaign.sideStories / 支线战役与章节交叉校验，非单章支线不允许",
+      "src/engine/setup.js：startScenario(state, index, events, scenarioIdOverride) 与 registerCampaignContent（支线章节随宿主注册）",
+      "src/engine/dispatch.js：hubStartSideStory（关间·仅队长·未游玩·每人 XP 门槛与扣费·记录合并·sideStoryReturn）",
+      "src/engine/hub.js：sideStoryMoves 合法动作；难度按钮按 campaign.chaosBags 过滤（独立支线只给 Standard/Hard）",
+      "src/engine/campaign-flow.js：支线 visitId（nodeId:sideStory:scenarioId）与回到原定下一章",
+      "src/campaign/story.js：RETURN_TO_BASE_IDS 让 19 章重返变体复用基础序章/导入/结局长文，标题保留重返章节名",
+      "tools/build-return-guides.mjs：重返指南生成（中英同构、缺译不回落英文、note 摘要）",
+      "tools/encounter-entry-placement.mjs：重返/支线/挑战不参与基础卡借用的归属重判（仅新增新卡按各自战役归属）"
+    ]
+  },
+  "acceptance": {
+    "tests": [
+      "tests/return-to-campaigns.test.mjs",
+      "tests/return-side-story-insert.test.mjs",
+      "tests/ret-notz.test.mjs",
+      "tests/ret-notz-devourer.test.mjs",
+      "tests/ret-dunwich-extracurricular.test.mjs",
+      "tests/ret-dunwich-house.test.mjs",
+      "tests/ret-dunwich-museum.test.mjs",
+      "tests/ret-dunwich-essex.test.mjs",
+      "tests/ret-dunwich-altar.test.mjs",
+      "tests/ret-dunwich-undimensioned.test.mjs",
+      "tests/ret-dunwich-hill.test.mjs",
+      "tests/ret-dunwich-timelesspace.test.mjs",
+      "tests/ret-carcosa-opening.test.mjs",
+      "tests/ret-carcosa-chapters.test.mjs",
+      "tests/ret-carcosa-campaign.test.mjs",
+      "tests/side-story-curseOfTheRougarou.test.mjs",
+      "tests/side-story-carnevaleOfHorrors.test.mjs",
+      "tests/side-story-murderAtTheExcelsiorHotel.test.mjs",
+      "tests/challenge-readOrDie.test.mjs",
+      "tests/challenge-allOrNothing.test.mjs",
+      "tests/challenge-badBlood.test.mjs",
+      "tests/challenge-byTheBook.test.mjs"
+    ],
+    "replayBaseline": "artifacts/migration/batch-2-parallel/replay-before.json",
+    "replayRun": "artifacts/migration/batch-2-remaining/replay-compare.log",
+    "replayMatchesBaseline": true,
+    "replayNote": "现有回放夹具（6 条）逐条一致，批次 2 新增内容未改变存量行为",
+    "cardsCheck": "通过（entries/index.js 1504 张卡 + 一卡一文件与卡号归属守卫）",
+    "encounterCheck": "通过（encounter-entries/index.js 2623 条 + 归属算法 0 unresolved + 一卡一文件守卫）",
+    "cardEntryComplianceAudit": {
+      "directStateWrite": 112,
+      "singleCardField": 21,
+      "reprintDuplicate": 0,
+      "playConditionGap": 0,
+      "testWrapper": 25,
+      "revelationTestCards": 135,
+      "selfCodeInstanceLookup": 22,
+      "baselineOutsideViolations": 0
+    },
+    "scenarioGuides": {
+      "registeredScenarios": 120,
+      "guidesWritten": 120,
+      "run": "node tools/import-scenario-guides.mjs --write",
+      "guardTests": [
+        "tests/scenario-guides.test.mjs",
+        "tests/eote-story.test.mjs"
+      ]
+    },
+    "browser": {
+      "run": "artifacts/migration/batch-2-remaining/browser-guides-final.log",
+      "config": "tests/playwright/playwright.config.mjs（系统 Edge）",
+      "tests": [
+        "tests/scenario-guides.browser.mjs"
+      ],
+      "viewports": [
+        1440,
+        390
+      ],
+      "passed": 2,
+      "failed": 0
+    },
+    "fastRun": "artifacts/migration/batch-2-remaining/fast-release-concurrency6.log",
+    "fastTests": {
+      "tests": 9197,
+      "passed": 9194,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 3
+    },
+    "registryCounts": {
+      "campaigns": 21,
+      "scenarios": 120
+    },
+    "fastNote": "并发默认值下 AI HTTP/决策 HTTP 用例会出现 30s 超时抖动（单测重跑 38/38 通过）；最终证据用 --test-concurrency=6 的稳定运行。",
+    "baselineCheck": {
+      "status": "not-applicable",
+      "note": "tools/audit-baseline.mjs 是 P10 循环发布基线（快照 tests=6422，早于批次 1），本批为内容批次不在其刷新节点；已确认其漂移早于本批改动，不做 --write。"
+    },
+    "hubBrowser": {
+      "run": "artifacts/migration/batch-2-remaining/browser-hub-rerun.log",
+      "config": "tests/playwright/playwright.config.mjs（系统 Edge）",
+      "tests": [
+        "tests/p2-hub.browser.mjs"
+      ],
+      "viewports": [
+        1440,
+        390
+      ],
+      "passed": 3,
+      "failed": 0,
+      "note": "首次与全量 fast 并发运行时超时抖动（1 失败），单独复跑 3/3 通过；覆盖关间升级面板与新支线面板的 1440/390 无横向溢出。"
+    }
+  },
+  "knownApproximations": [
+    "重返敦威治/卡尔克萨：部分章节以 manifest/behavior 静态声明近似随机二选一与地点变体，逐项见 ret-dunwich-dossier.md 与 ret-carcosa-dossier.md",
+    "RtDB 50032b 以 scenarioFlags 记账（非实体附属卡）；50035 按每次伤害封顶（钩子无攻击上下文）；50043 无教徒时以 searchEncounterCard 近似搜索附属",
+    "三条支线：25 张卡 implemented:false（缺原语，逐卡 note 说明）；玩家侧待补 81019/82022–82026/84006/84008/84028 等迹象资产与 84007 弱点描述子，见 side-story-delivery.md",
+    "四项调查员挑战按 1P 单开验收（opening.investigators 固定单一调查员）；多人挑战限制、Read or Die 书卷牌组门槛、可选 Return to 变体留批次 4，见 challenges-dossier.md",
+    "重返章节结局长文复用基础战役文本（RETURN_TO_BASE_IDS），重返专属结局细节以章节摘要与指南为准",
+    "Read or Die 的未揭示地点进入锁沿用共享 locationRule.entryError，本批未改共享条目；Armitage 槽位/Jazz 移动行动需 02040/02060 共享扩展，留批次 4（见 challenges-dossier.md）",
+    "关间插入支线的浏览器证据覆盖面板渲染与 1440/390 无横向溢出（p2-hub 浏览器回归），按钮点击→进入支线的端到端由 Node 引擎验收覆盖"
+  ],
+  "followup": {
+    "verified": [
+      "平行阿格妮丝与 10102 的洗回及回合结束弃牌回收互斥",
+      "51009 选择隐匿迷你卡代替伤害，51010 按检定指定的基础技能值计算投入资格和图标",
+      "引用重返玩家包的战役通过自动构筑确认抽取该包基础弱点",
+      "原创独立剧本正常进入大厅，以声明的经验、调查员、难度及混乱袋开局",
+      "原创战役支线验证全队费用、保存选择、奖励与创伤回写，并进入原定下一章"
+    ],
+    "tests": [
+      "tests/parallel-investigator.test.mjs",
+      "tests/fhv-player-m2-9.test.mjs",
+      "tests/batch-two-flow.test.mjs",
+      "tests/return-player.test.mjs"
+    ],
+    "flowRun": "artifacts/migration/batch-2-parallel/followup-flow.log",
+    "browserRun": "artifacts/migration/batch-2-parallel/followup-browser.log",
+    "concealedBrowserRun": "artifacts/migration/batch-2-parallel/followup-concealed-browser.log",
+    "replayRun": "artifacts/migration/batch-2-parallel/followup-replay-final.log",
+    "fastRun": "artifacts/migration/batch-2-parallel/followup-release.log"
+  },
+  "parallelRegression": {
+    "tests": [
+      "tests/parallel-investigator.test.mjs",
+      "tests/deck-library.test.mjs",
+      "tests/return-player.test.mjs"
+    ],
+    "targetedRun": "artifacts/migration/batch-2-parallel/final-targeted.log",
+    "tableRulesRun": "artifacts/migration/batch-2-parallel/player-rules.log",
+    "playerPacksRun": "artifacts/migration/batch-2-parallel/return-pool.log",
+    "scenarioRegistry": "artifacts/migration/batch-2-parallel/scenario-registry.json",
+    "replayBaseline": "artifacts/migration/batch-2-parallel/replay-before.json",
+    "replayRun": "artifacts/migration/batch-2-remaining/replay-compare.log",
+    "replayMatchesBaseline": true,
+    "browserRun": "artifacts/migration/batch-2-parallel/library-browser-final.log",
+    "browserViewports": [
+      1440,
+      390
+    ],
+    "cardIndexesVerified": true,
+    "fastRun": "artifacts/migration/batch-2-remaining/fast-final.log"
+  },
+  "regression": {
+    "tests": "tests/return-player.test.mjs",
+    "targetedRun": "artifacts/migration/batch-2/targeted.log",
+    "releaseRetestRun": "artifacts/migration/batch-2/release-retest.log",
+    "replayBaseline": "artifacts/migration/batch-2/replay-before.json",
+    "replayRun": "artifacts/migration/batch-2/replay-compare.log",
+    "replayMatchesBaseline": true,
+    "browserRun": "artifacts/migration/batch-2/player-browser.log",
+    "browserViewports": [
+      1440,
+      390
+    ],
+    "cardIndexesVerified": true,
+    "fastRun": "artifacts/migration/batch-2/fast-restarted.log",
+    "fastTests": {
+      "passed": 9078,
+      "failed": 0,
+      "skipped": 3
+    }
+  }
+}

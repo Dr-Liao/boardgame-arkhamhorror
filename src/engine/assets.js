@@ -1,4 +1,7 @@
-import { payAdditionalPlayHorror } from './play-attempt.js'
+import { choosePlayShuffle, payAdditionalPlayDamage, payAdditionalPlayHorror, preparePlayAttempt, quickPlayReduction } from './play-attempt.js'
+import { capabilityBlocked } from './modifiers.js'
+import { withPlayedEventDisposal } from './event-play-disposal.js'
+import { withEventTestBonus } from './effect-provenance.js'
 import { replacePlayerZoneCards } from './player-zones.js'
 import { discardEncounterAttachment } from './scenario-decks.js'
 import { returnAssetClues } from './asset-clues.js'
@@ -10,7 +13,7 @@ import { assetTextBlanked } from './card-text.js'
 import { consumeNextPlayDiscount } from './effect-state.js'
 import { afterHandEmptied } from './hand-discard-window.js'
 import { canDiscardControlledAsset, discardControlledAsset } from './asset-departure.js'
-import { choosePlayUses, spendPlayUses } from './play-payment.js'
+import { availablePlayResources, choosePlayUses, spendPlayUses } from './play-payment.js'
 import { availableResources } from './resource-bank.js'
 // assets.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 支援的生命周期与槽位：装备/替换/离场、手牌位与武器位、被动加成、
@@ -114,7 +117,7 @@ export function createAssets(deps) {
   // extraCards 传入「正在尝试打出/装备的卡」——它还没有被控制，但装备判定必须把它
   // 一起算进豁免，否则第一张[[工具]]会按「手槽已满」被要求先弃置资产
   // （2026-10-26 修复：玩家报告柯尔特在场时打出放大镜仍触发腾槽弃牌）。
-  function slotExemptionRelief(inv, extraCards = []) {
+  function slotExemptionRelief(inv, extraCards = [], filter = () => true) {
     const controlled = [...(inv.assets || []), ...(inv.threat || [])]
     const specs = []
     for (const holder of controlled) {
@@ -123,7 +126,7 @@ export function createAssets(deps) {
         if (entry && entry.slot) specs.push(entry)
       }
     }
-    const items = [...controlled, ...extraCards]
+    const items = [...controlled, ...extraCards].filter(filter)
     const defOf = item => (item.code ? cardDef(item.code) : item)
     const matches = (item, entry) => {
       const def = defOf(item)
@@ -161,9 +164,12 @@ export function createAssets(deps) {
     return relief
   }
 
-  function slotUsage(inv) {
+  function slotUsage(inv, traitsAny = null) {
+    const wanted = traitsAny?.map(trait => trait.toLowerCase())
+    const matches = asset => !wanted || (cardDef(asset.code)?.traits || []).some(trait => wanted.includes(trait.toLowerCase()))
     const usage = {}
     for (const a of [...inv.assets, ...(inv.threat || [])]) {
+      if (!matches(a)) continue
       for (const s of occupiedSlots(inv, a)) {
         if (s === 'handx2') usage.hand = (usage.hand || 0) + 2
         else if (s === 'arcanex2') usage.arcane = (usage.arcane || 0) + 2
@@ -171,7 +177,7 @@ export function createAssets(deps) {
       }
     }
     // 槽位占用豁免（slotExemptions）：按槽位扣掉豁免数量，canEquip 的容量比较因此自动生效。
-    for (const [slot, count] of Object.entries(slotExemptionRelief(inv))) {
+    for (const [slot, count] of Object.entries(slotExemptionRelief(inv, [], matches))) {
       if (count > 0 && usage[slot]) usage[slot] = Math.max(0, usage[slot] - count)
     }
     return usage
@@ -538,8 +544,15 @@ export function createAssets(deps) {
     // 隐私弱点（03084d「你不能打出事件」）兜底：候选窗口已按同一读点过滤，
     // 这里再拦一次，避免内容层/通道直接调用执行器时绕过窗口。
     const def = cardDef(copyCode || peek)
-    if (playTypeBlocked(state, inv, def?.type)) return false
-    const cost = Math.max(0, playCost(state, inv, def) - (discount || 0))
+    if (playTypeBlocked(state, inv, def?.type) || capabilityBlocked(state, inv, 'play')) return false
+    const attempt = preparePlayAttempt(state, inv, copyCode || peek, events, deps, discount)
+    if (attempt.cancelled) return false
+    const costWindow = { when: 'beforePlayCost', seat: inv.seat, location: inv.location,
+      cardCode: copyCode || peek, playedCardId: peek, playedCardCode: def?.code, cardType: def?.type || null,
+      cost: Math.max(0, attempt.cost - attempt.costReduction), costReduction: 0, costIncrease: 0,
+      availableResources: availablePlayResources(state, inv, def) }
+    if (quickPlayReduction(state, inv, def)) reactionWindow(state, 'beforePlayCost', costWindow, events, { allowNested: true })
+    const cost = Math.max(0, costWindow.cost + costWindow.costIncrease - costWindow.costReduction)
     const { remaining, payments } = choosePlayUses(state, inv, def, cost, deps)
     if (availableResources(inv) < remaining) return false
     if (!payTokenCost(state, inv, registeredEntry(copyCode || peek)?.additionalTokenCost)) return false
@@ -551,6 +564,7 @@ export function createAssets(deps) {
     recordPlayedCard(state, inv, def, registeredEntry)
     consumePlayThreatResources(state, inv, events)
     payAdditionalPlayHorror(state, inv, def, events, deps)
+    payAdditionalPlayDamage(state, inv, attempt, events, deps)
     const fastLabel = fromChannel?.channel === 'hunch'
       ? `🔮 ${inv.name} 从直觉牌库快速打出「${cardName(code)}」。`
       : `⚡ ${inv.name} 快速打出「${copyCode ? `彩绘世界／${cardName(copyCode)}` : cardName(code)}」。`
@@ -559,17 +573,20 @@ export function createAssets(deps) {
     // 都由这里的同一执行器结算（alreadyPaid：费用与「快速打出」日志已在上面付过/写过）。
     const quick = quickEventView(copyCode || code)
     const descriptor = quick?.descriptor || null
+    const disposal = {}
     if (!fromChannel) afterHandEmptied(state, inv, events, reactionWindow)
     state._reaction = context
     try {
-      if (descriptor) {
-        executeDescriptor(state, {
-          inv, source: { code }, descriptor, context, events, windowId: context.when ?? null,
-          alreadyPaid: true, silent: true,
-        })
-      } else {
-        resolveEffect(state, inv.seat, withEffectCode(playedEffect(copyCode || code), copyCode || code), makeRuntime(state, events))
-      }
+      withEventTestBonus(state, inv.seat, copyCode || code, costWindow.skillBonus, () => withPlayedEventDisposal(context, disposal, () => {
+        if (descriptor) {
+          executeDescriptor(state, {
+            inv, source: { code }, descriptor, context, events, windowId: context.when ?? null,
+            alreadyPaid: true, silent: true,
+          })
+        } else {
+          resolveEffect(state, inv.seat, withEffectCode(playedEffect(copyCode || code), copyCode || code), makeRuntime(state, events))
+        }
+      }))
     } finally {
       delete state._reaction
     }
@@ -583,7 +600,7 @@ export function createAssets(deps) {
       const entryFlags = registeredEntry(copyCode || code) || {}
       const removeAfterPlay = playedFlags.removeAfterPlay === true || entryFlags.removeAfterPlay === true
       const shuffleBackAfterPlay = playedFlags.shuffleBackAfterPlay === true || entryFlags.shuffleBackAfterPlay === true
-      const exileAfterPlay = playedFlags.exileAfterPlay === true || entryFlags.exileAfterPlay === true
+      const exileAfterPlay = disposal.exileAfterPlay === true || playedFlags.exileAfterPlay === true || entryFlags.exileAfterPlay === true
       const addToVictory = playedFlags.addToVictory === true || entryFlags.addToVictory === true
       if (context.eventToVictory === code) {
         state.victoryDisplay.push({ id: nextInstanceId(state, 'c'), code, originalCode: code, victory: cardDef(code)?.victory || 0 })
@@ -600,12 +617,20 @@ export function createAssets(deps) {
         // 快速事件是先离手、结算完才弃牌；若这里再弃一次，同一张卡会同时待在底下和弃牌堆。
         const movedBeneath = (inv.beneath || []).length > beneathBefore
           && (inv.beneath || []).slice(beneathBefore).includes(code)
-        if (!movedBeneath) disposePlayedEvent(inv, code)
+        if (!movedBeneath) {
+          if (choosePlayShuffle(state, inv, attempt)) {
+            inv.deck = replacePlayerZoneCards(state, inv, shuffle([...inv.deck, code], () => randomValue(state)), 'shuffle')
+          } else disposePlayedEvent(inv, code)
+        }
       }
     }
     if (def?.type === 'event' && registeredEntry(inv.code)?.abilities?.some(row => row.trigger?.includes('eventPlayed'))) {
       reactionWindow(state, 'eventPlayed', { when: 'eventPlayed', seat: inv.seat, cardId: code,
         cardCode: copyCode || code, location: inv.location }, events, { allowNested: true })
+    }
+    if (def?.traits?.some(trait => trait.toLowerCase() === 'spell') && inv.assets.some(asset =>
+      registeredEntry(asset.code)?.abilities.some(row => row.trigger.includes('spellPlayed')))) {
+      deps.triggerReaction(state, inv.seat, 'spellPlayed', events, { location: inv.location, cardId: copyCode || code })
     }
   }
 

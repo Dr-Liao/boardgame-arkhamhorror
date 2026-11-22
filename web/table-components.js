@@ -130,6 +130,8 @@ export const NAMED_COUNTER_DISPLAY = Object.freeze({
 })
 export const USE_TOKEN_DISPLAY = Object.freeze({
   secret: Object.freeze({ icon: 'arcane', labelKey: 'table.marker.secret' }),
+  // 批次 3：2026 核心盒 60269「文学分析」以复数 'secrets' 补充书籍支援的秘密。
+  secrets: Object.freeze({ icon: 'arcane', labelKey: 'table.marker.secret' }),
   charge: Object.freeze({ icon: 'star', labelKey: 'table.marker.charge' }),
   brilliance: Object.freeze({ icon: 'eye', labelKey: 'table.marker.brilliance' }),
   // 十循环《沉没之城》任务卡「信仰之行」的征兆计数（11754a/b）。

@@ -29,5 +29,6 @@ export function hasWindowListener(state, windowId) {
       ...(inv?.hand || []).map(code => ({ code })), ...(inv?.assets || []), ...(inv?.threat || []),
       ...(inv?.attachments || []), ...(inv?.assets || []).flatMap(asset => asset.attachments || [])]),
   ]
-  return sources.some(listeners)
+  return sources.some(listeners) || (state.effects || []).some(effect => effect.abilities?.some(descriptor =>
+    [].concat(descriptor.trigger || []).includes(windowId)))
 }

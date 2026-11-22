@@ -16,7 +16,7 @@ export function assetTextBlankedExceptForced(asset) {
 export function assetTextBlanked(asset, inv) {
   // P7 TDC 11688 黏土恐怖 [fast]：「将本支援印刷文本框视为空白直到本轮结束（特性除外）」。
   // 空白标记由 api.scenario.blankStoryAssetText 写入，turn.js 在轮次推进时清除。
-  if (asset?.textBlank === true) return true
+  if (asset?.textBlank === true || asset?.inactiveFaceDown === true) return true
   const traits = ALL_CARDS[asset?.code]?.traits || []
   if (!traits.length) return false
   const threat = inv?.threat || []
@@ -24,4 +24,8 @@ export function assetTextBlanked(asset, inv) {
   const blankedTraits = threat.flatMap(item => registeredEntry(item.originalCode || item.code)?.blanksTraits || [])
   return blankedTraits.length > 0
     && traits.some(trait => blankedTraits.includes(String(trait).toLowerCase()))
+}
+
+export function assetRegulationEnabled(state, inv, asset) {
+  return asset?.ignoreRegulationRound !== state.round && !assetTextBlanked(asset, inv) && !assetTextBlankedExceptForced(asset)
 }

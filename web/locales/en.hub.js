@@ -5,6 +5,14 @@
 // Reuses core's hub.tab.* / hub.stage.* / hub.difficulty.* / table.rulebook / common.*; do not redefine them here.
 // Placeholders must match zh-CN.hub.js one-for-one; values must not contain CJK characters.
 export default {
+  'hub.variant.back': 'Deckbuilding side',
+  'hub.variant.original': 'Original',
+  'hub.variant.alternate': 'Parallel',
+  'hub.variant.signatures': 'Signature set',
+  'hub.variant.standard': 'Standard signatures',
+  'hub.variant.advanced': 'Advanced signatures',
+  'hub.variant.both': 'Both sets',
+  'hub.variant.directive': 'Directive {number}',
   // Shared / separators / option values
   'hub.list.separator': ', ',
   'hub.list.semicolon': '; ',
@@ -17,6 +25,9 @@ export default {
   'hub.feedback': 'Feedback',
   'hub.feedback.button': '💬 Feedback',
   'hub.interlude.title': 'Interlude log',
+  'hub.sideStory.title': 'Side Stories',
+  'hub.sideStory.hint': 'You may insert a standalone side story during this interlude. Each investigator pays the listed experience; after it resolves you return to this interlude and continue the campaign.',
+  'hub.sideStory.aria': 'Insert side story',
 
   // Classes / packs / outcomes
   'hub.class.guardian': 'Guardian',
@@ -143,6 +154,17 @@ export default {
   'hub.setup.tabSaves': 'Saved games',
   'hub.setup.starting': 'Creating…',
   'hub.setup.start': 'Start new game',
+  'hub.campaignPicker.title': 'Choose a campaign',
+  'hub.campaignPicker.categories': 'Campaign categories',
+  'hub.campaignPicker.seasonOne': 'Season One',
+  'hub.campaignPicker.returnTo': 'Return To',
+  'hub.campaignPicker.sideStories': 'Side Stories',
+  'hub.campaignPicker.mode': 'Campaign mode',
+  'hub.campaignPicker.draft': 'Draft mode',
+  'hub.campaignPicker.scenarios': 'Scenarios: {count}',
+  'hub.campaignPicker.earlyAccess': 'Early access',
+  'hub.campaignPicker.empty': 'No playable campaigns in this category.',
+  'hub.campaignPicker.confirm': 'Confirm selection',
   'hub.saves.typeAria': 'Save type',
   'hub.saves.modeSolo': 'Solo',
   'hub.saves.modeOnline': 'Online',
@@ -329,6 +351,7 @@ export default {
   'hub.upgrade.cannotReplace': 'This card cannot be replaced by the current upgrade plan.',
   'hub.upgrade.replaceTitle': 'Replace "{name}"',
   'hub.upgrade.replaceAria': 'Replace {name}',
+  'hub.upgrade.retainVersion': 'Keep the lower-level {name}',
   'hub.upgrade.blocked': '{name}: {reason}',
   'hub.upgrade.replacementNote': 'Every card in the deck is listed here; grey cards cannot be selected this time. Hover or tap to see why.',
   'hub.upgrade.extraAdd': 'Added extra',

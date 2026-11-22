@@ -12,6 +12,7 @@
 //     逐章检查指南与伙伴/物资/钥匙/寒霜/纪念逝者记录的投影延续。
 //
 // 证据账本：audit/eote-scenarios-browser.json（tools/playwright-eote-p7-reporter.mjs）。
+import { selectCampaign } from './playwright/campaign-picker.mjs'
 import { test, expect } from '@playwright/test'
 import { mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -418,10 +419,7 @@ for (const [viewport, width, height] of VIEWPORTS) {
     await gotoHall(page)
     const dialog = await openSetup(page)
     // 大厅真实设置项：战役选择器存在且至少有可启动战役；席位 2（1 人 + AI 队友）。
-    const campaignSelect = dialog.getByRole('combobox', { name: '战役', exact: true })
-    const options = await campaignSelect.locator('option').evaluateAll(nodes => nodes.map(node => node.value))
-    expect(options.length, '大厅战役选择器').toBeGreaterThan(0)
-    await campaignSelect.selectOption('nightOfTheZealot').catch(() => {})
+    await selectCampaign(page, dialog, 'nightOfTheZealot')
     await dialog.getByRole('combobox', { name: '席位数量' }).selectOption('2')
     await shot(page, testInfo, `${viewport}-lobby-skeleton`)
     const session = await startHallGame(page, {
@@ -453,11 +451,8 @@ for (const [viewport, width, height] of VIEWPORTS) {
     const errors = []
     page.on('pageerror', error => errors.push(error.message))
     const dialog = await openSetup(page)
-    const campaignSelect = dialog.getByRole('combobox', { name: '战役', exact: true })
-    const labels = await campaignSelect.locator('option').evaluateAll(nodes => nodes.map(node => ({ value: node.value, label: node.textContent })))
-    expect(labels.map(item => item.value)).toContain(CAMPAIGN_ID)
-    expect(labels.find(item => item.value === CAMPAIGN_ID)?.label).toContain(CAMPAIGN_NAME)
-    await campaignSelect.selectOption(CAMPAIGN_ID)
+    await selectCampaign(page, dialog, CAMPAIGN_ID)
+    await expect(dialog.locator('.ah-campaign-summary')).toContainText(CAMPAIGN_NAME)
     await dialog.getByRole('combobox', { name: '席位数量' }).selectOption('2')
     await shot(page, testInfo, `${viewport}-eote-lobby`)
     const session = await startHallGame(page, { campaignId: CAMPAIGN_ID, playerCount: 2, teammates: 1, opponents: [null] })

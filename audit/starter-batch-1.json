@@ -1,0 +1,407 @@
+{
+  "schemaVersion": 1,
+  "status": "complete",
+  "base": "019eef91",
+  "reference": {
+    "path": "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+    "sha256": "07ce283c7046c181f9e8a65e3d96016c2678850e41081ca87be0c8715eae1a1a"
+  },
+  "resolvedIntegrations": {
+    "explicitWeaknessPool": [
+      "04038",
+      "04040"
+    ],
+    "researchUpgrades": [
+      "10059",
+      "10060",
+      "10061"
+    ],
+    "followUpPrintings": {
+      "60336": {
+        "canonical": "60233",
+        "reason": "仅本地图鉴收录，参考卡库没有此卡号。对应原版 60233 已开放。"
+      },
+      "01689": {
+        "canonical": "51007",
+        "reason": "随重返敦威治遗产原版交付。"
+      }
+    },
+    "revisedCoreImport": {
+      "01685": "60227"
+    }
+  },
+  "packs": [
+    {
+      "pack": "nat",
+      "open": [
+        "60101",
+        "60102",
+        "60103",
+        "60104",
+        "60105",
+        "60106",
+        "60107",
+        "60109",
+        "60110",
+        "60111",
+        "60112",
+        "60114",
+        "60115",
+        "60116",
+        "60117",
+        "60118",
+        "60120",
+        "60121",
+        "60122",
+        "60123",
+        "60124",
+        "60125",
+        "60126",
+        "60127",
+        "60128",
+        "60129",
+        "60130",
+        "60131",
+        "60132"
+      ],
+      "implementedPendingAcceptance": [],
+      "pending": [],
+      "reprints": {
+        "60108": "01017",
+        "60113": "01023",
+        "60119": "01025"
+      },
+      "localOnly": []
+    },
+    {
+      "pack": "har",
+      "open": [
+        "60201",
+        "60202",
+        "60203",
+        "60204",
+        "60205",
+        "60206",
+        "60207",
+        "60208",
+        "60209",
+        "60210",
+        "60211",
+        "60213",
+        "60214",
+        "60215",
+        "60216",
+        "60217",
+        "60220",
+        "60221",
+        "60222",
+        "60223",
+        "60224",
+        "60225",
+        "60226",
+        "60227",
+        "60228",
+        "60229",
+        "60230",
+        "60231",
+        "60232",
+        "60233"
+      ],
+      "implementedPendingAcceptance": [],
+      "pending": [],
+      "reprints": {
+        "60212": "02020",
+        "60218": "02186",
+        "60219": "01039"
+      },
+      "localOnly": [
+        "60336"
+      ]
+    },
+    {
+      "pack": "win",
+      "open": [
+        "60301",
+        "60302",
+        "60303",
+        "60304",
+        "60305",
+        "60306",
+        "60309",
+        "60310",
+        "60311",
+        "60315",
+        "60316",
+        "60317",
+        "60318",
+        "60320",
+        "60321",
+        "60322",
+        "60323",
+        "60324",
+        "60325",
+        "60326",
+        "60327",
+        "60328",
+        "60329",
+        "60330",
+        "60331",
+        "60332"
+      ],
+      "implementedPendingAcceptance": [],
+      "pending": [],
+      "reprints": {
+        "60307": "01044",
+        "60308": "04107",
+        "60312": "03194",
+        "60313": "03030",
+        "60314": "04232",
+        "60319": "01053"
+      },
+      "localOnly": []
+    },
+    {
+      "pack": "jac",
+      "open": [
+        "60401",
+        "60402",
+        "60403",
+        "60404",
+        "60406",
+        "60407",
+        "60408",
+        "60409",
+        "60410",
+        "60411",
+        "60412",
+        "60415",
+        "60416",
+        "60419",
+        "60420",
+        "60421",
+        "60422",
+        "60423",
+        "60424",
+        "60425",
+        "60426",
+        "60427",
+        "60428",
+        "60429",
+        "60430",
+        "60431",
+        "60432"
+      ],
+      "implementedPendingAcceptance": [],
+      "pending": [],
+      "reprints": {
+        "60405": "02029",
+        "60413": "03034",
+        "60414": "02153",
+        "60417": "04032",
+        "60418": "02190"
+      },
+      "localOnly": []
+    },
+    {
+      "pack": "ste",
+      "open": [
+        "60501",
+        "60502",
+        "60503",
+        "60504",
+        "60505",
+        "60506",
+        "60507",
+        "60508",
+        "60509",
+        "60511",
+        "60512",
+        "60513",
+        "60515",
+        "60520",
+        "60521",
+        "60522",
+        "60523",
+        "60524",
+        "60525",
+        "60526",
+        "60527",
+        "60528",
+        "60529",
+        "60530",
+        "60531"
+      ],
+      "implementedPendingAcceptance": [],
+      "pending": [],
+      "reprints": {
+        "60510": "01075",
+        "60514": "04034",
+        "60516": "04200",
+        "60517": "01079",
+        "60518": "02113",
+        "60519": "04201"
+      },
+      "localOnly": []
+    }
+  ],
+  "primitiveRequests": [],
+  "knownDifferences": {
+    "60124": "按本地印刷卡面发现两条线索；参考规则代码当前只给一条。",
+    "60332": "手牌和快速反应事件可选打出方式、减费及检定加值。部分特殊出牌来源尚不枚举支援赋予的快速入口。",
+    "60401": "标准检定和场外批次、额外揭示、石像及混乱袋旧计划均可组合。逐抽直至指定符号的旧规则仍先确定符号，再对该组应用额外揭示与取消。"
+  },
+  "regression": {
+    "tests": "tests/starter-batch-1.test.mjs",
+    "replayBaseline": "artifacts/migration/starter-batch-1/replay-final-stage-before.json",
+    "initialFastRun": "artifacts/migration/starter-batch-1/fast-accepted.log",
+    "initialFastRetest": [
+      "tests/eote-all-cards.test.mjs",
+      "tests/tsk-rules.test.mjs"
+    ],
+    "cardChecks": [
+      "artifacts/starter-nat-qa.mjs",
+      "artifacts/migration/starter-batch-1/workers/jac-ste-acceptance.mjs",
+      "artifacts/migration/starter-batch-1/final-wave-har-win-smoke.txt"
+    ],
+    "replayMatchesBaseline": true,
+    "cardIndexesVerified": true,
+    "targetedRun": "artifacts/migration/starter-batch-1/final-wave-targeted.log",
+    "browserRun": "artifacts/migration/starter-batch-1/final-wave-browser.log",
+    "browserViewports": [1440, 390],
+    "fastRun": "artifacts/migration/starter-batch-1/final-wave-fast-verified.log",
+    "fastTests": { "passed": 9074, "failed": 0, "skipped": 3 },
+    "previousFastRun": "artifacts/migration/starter-batch-1/continuation-fast-verified.log"
+  },
+  "resolvedPrimitives": [
+    {
+      "card": "60226",
+      "primitive": "addEffectiveSkillToOtherSkills",
+      "status": "done"
+    },
+    {
+      "card": "60232",
+      "primitive": "limitHarmAssignmentToTrait",
+      "status": "done"
+    },
+    {
+      "card": "60318",
+      "primitive": "discardPlayerDeckUntil",
+      "status": "done"
+    },
+    {
+      "card": "60415",
+      "primitive": "lookThenChooseReturnStrategy",
+      "status": "done"
+    },
+    {
+      "card": "60502",
+      "primitive": "cancelFailedTestConsequences",
+      "status": "done"
+    },
+    {
+      "card": "60512",
+      "primitive": "nextTestWithinTurn",
+      "status": "done"
+    },
+    {
+      "card": "60520",
+      "primitive": "exileDefeatedAsset",
+      "status": "done"
+    },
+    {
+      "card": "60521",
+      "primitive": "exileDefeatedAsset",
+      "status": "done"
+    },
+    {
+      "card": "60522",
+      "primitive": "nextRoundScopedAssetActivation",
+      "status": "done"
+    },
+    {
+      "card": "60523",
+      "primitive": "conditionalExilePlayedEvent",
+      "status": "done"
+    },
+    {
+      "card": "60525",
+      "primitive": "moveEnemyToEncounterDeck",
+      "status": "done"
+    },
+    {
+      "card": "60530",
+      "primitive": "actionOrdinalDifficulty",
+      "status": "done"
+    },
+    {
+      "card": "60327",
+      "primitive": "configureFirearmAttackTest",
+      "status": "done"
+    },
+    {
+      "card": "60330",
+      "primitive": "commitFromAnotherDiscard",
+      "status": "done"
+    },
+    {
+      "card": "60332",
+      "primitive": "chooseEventEnhancements",
+      "status": "done"
+    },
+    {
+      "card": "60401",
+      "primitive": "chaosRevealBatchCancellation",
+      "status": "done"
+    },
+    {
+      "card": "60402",
+      "primitive": "abilityLimitExemption",
+      "status": "done"
+    },
+    {
+      "card": "60403",
+      "primitive": "preventTokenCancellation",
+      "status": "done"
+    },
+    {
+      "card": "60404",
+      "primitive": "outOfTestChaosWindows",
+      "status": "done"
+    },
+    {
+      "card": "60406",
+      "primitive": "reorderTestRevealAndCommit",
+      "status": "done"
+    },
+    {
+      "card": "60412",
+      "primitive": "reactionPlayCostDiscount",
+      "status": "done"
+    },
+    {
+      "card": "60420",
+      "primitive": "tokenTriggeredCardEffect",
+      "status": "done"
+    },
+    {
+      "card": "60422",
+      "primitive": "reactionPlayCostAndAoo",
+      "status": "done"
+    },
+    {
+      "card": "60429",
+      "primitive": "typedUseCounters",
+      "status": "done"
+    },
+    {
+      "card": "60508",
+      "primitive": "adjustFailedResultMargin",
+      "status": "done"
+    },
+    {
+      "card": "60531",
+      "primitive": "exileRepurchaseDiscount",
+      "status": "done"
+    }
+  ]
+}

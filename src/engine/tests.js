@@ -3,7 +3,8 @@ import { discardPlayerCards, replacePlayerZoneCards, splicePlayerDiscard } from 
 import { recordRoundAction } from './action-history.js'
 import { modifierTotal } from './modifiers.js'
 import { ignoreLocationTrigger } from './location-effect-scope.js'
-import { currentEffectSource } from './effect-provenance.js'
+import { currentEffectSource, eventTestBonus } from './effect-provenance.js'
+import { canChangeChaosToken, createChaosReveal } from './chaos-reveal.js'
 import { withFailureRecipient, effectRecipient } from './effect-recipient.js'
 import { bondedSetKey } from './bonded.js'
 import { availableResources } from './resource-bank.js'
@@ -11,7 +12,7 @@ import { enemyRuleFlags, investigatorRule } from '../cards/card-rules.js'
 import { SKILL_NAMES } from './presentation-constants.js'
 import { handCommitBlocker } from './tarot-slot.js'
 import { afterHandDiscard, afterHandEmptied } from './hand-discard-window.js'
-import { allowsConnectingCommit, canCommitToTest, commitResourceCost, payCommitResourceCost } from './commit-rules.js'
+import { allowsConnectingCommit, canCommitToTest, commitBaseSkillValue, commitResourceCost, payCommitResourceCost } from './commit-rules.js'
 import { noteChaosTokenChange } from './chaos-bag.js'
 import { returnCommitment } from './commit-origins.js'
 import { addPoolTokens, releasePoolTokens } from './chaos-token-pool.js'
@@ -186,7 +187,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   noteRoundEvent(state, state.investigators?.[seat], 'tests', 1)
   sampleRoundEvents(state)
   // P2.5：多技能合成检定。单技能时 skillList=[skill]，所有求和退化为原值，行为逐字不变。
-  let skillList = normalizeTestSkills(skill)
+  let skillList = skill === null && Number.isFinite(options.baseValue) && options.iconWeights ? [] : normalizeTestSkills(skill)
   let skillContext = skillList.length === 1 ? skillList[0] : [...skillList]
   const skillLabel = testSkillLabel(skillList)
   const skillTotal = () => skillList.reduce((sum, name) => sum + getStat(state, inv, name), 0)
@@ -223,6 +224,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   // 这些是**运行时元数据**：用非枚举属性写入（不进入存档与重放指纹，避免只加字段就全量指纹漂移）。
   const defineMeta = (key, value) => Object.defineProperty(state.skillTest, key,
     { value, enumerable: false, writable: true, configurable: true })
+  if (Number.isFinite(options.baseValue)) defineMeta('explicitBaseValue', options.baseValue)
   if (options.source?.assetId != null) defineMeta('assetSourceId', options.source.assetId)
   if (!state.skillTest.actionKind && (options.source?.actionKind || options.testTarget?.actionKind)) {
     defineMeta('actionKind', String(options.source?.actionKind || options.testTarget.actionKind))
@@ -236,6 +238,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   if (!state.skillTest.target && explicitTarget?.kind && explicitTarget.id != null) defineMeta('target', explicitTarget)
   const inv = state.investigators[seat]
   const events = []
+  const chaosReveal = createChaosReveal(state, events, { reactionWindow, requestChoice, tokenLabel })
   difficulty = Math.max(0, difficulty)
   const enemyId = state.skillTest.target?.kind === 'enemy' ? state.skillTest.target.id : options.source?.enemyId
   const enemy = enemyId == null ? null : state.enemies.find(item => item.id === enemyId)
@@ -262,13 +265,21 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   }
   // 全局难度修正（03288 北部塔楼：a 密谋毁灭多于 c 时所有技能检定 -1）。
   const globalDifficulty = scenarioBehavior(state).testDifficultyModifier?.(state, inv, skillContext, difficulty, options.source) || 0
-  if (globalDifficulty) {
-    difficulty = Math.max(0, difficulty + globalDifficulty)
+  const testDifficulty = globalDifficulty + modifierTotal(state, inv, 'testDifficulty', { skill: skillContext, source: options.source })
+  if (testDifficulty) {
+    difficulty = Math.max(0, difficulty + testDifficulty)
     state.skillTest.difficulty = difficulty
   }
   // 「纳克特手稿」：本回合下一场检定不揭示混乱标记。
-  if (inv.nextTestNoTokens?.round === state.round) {
+  const tokenSkip = inv.nextTestNoTokens
+  if (tokenSkip?.round === state.round && (tokenSkip.turnSerial == null
+    || (tokenSkip.turnSerial === state.turnSerial && state.phase === 'investigation'
+      && state.currentSeat === seat && !inv.turnEnded))) {
     delete inv.nextTestNoTokens
+    state.skillTest.skipTokens = true
+  }
+  if (options.autoSuccess) {
+    state.skillTest.autoSuccess = true
     state.skillTest.skipTokens = true
   }
   // 2026-10-25 第七轮修复 05029：资源技能检定——以当前资源数作为基值。
@@ -281,7 +292,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     state.skillTest.difficulty = difficulty
   }
   const initialBonus = typeof options.skillBonus === 'function' ? options.skillBonus() : options.skillBonus || 0
-  let value = startingStat + initialBonus
+  let value = startingStat + initialBonus + eventTestBonus(state, seat)
   for (const capture of state.victoryDisplay || []) {
     if (!options.source?.code || cardDef(capture.code)?.name !== cardDef(options.source.code)?.name) continue
     for (const attachment of capture.attachments || []) if (attachment.contributesIconsToSameNameTests) {
@@ -330,7 +341,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     }
   }
   {
-    const context = { when: 'testBegins', seat, location: inv.location, skill: skillContext, difficulty, baseValue: statReference,
+    const context = { when: 'testBegins', seat, location: inv.location, skill: skillContext, difficulty, baseValue: skill === null ? startingStat : statReference,
       ...(options.actionKind ? { actionKind: String(options.actionKind) } : {}) }
     triggerReaction(state, seat, 'testBegins', events, context)
     reactionWindow(state, 'testBegins', { ...context, prompt: `${inv.name} 的${skillLabel}检定开始` }, events)
@@ -385,14 +396,28 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   }
   value += state.skillTest.pendingBonus || 0
   state.skillTest.pendingBonus = 0
-  value += applyFreeTriggers(state, inv, skillContext, events)
+  value += applyFreeTriggers(state, inv, skillContext, events, options.modifierSkills)
+  let earlyReveal = null
+  if (state.skillTest.revealBeforeCommit && !state.skillTest.skipTokens && !inv.ignoreChaosThisTurn) {
+    const count = 1 + (options.extraChaosChoices || 0)
+    const context = chaosReveal.before(seat, count)
+    earlyReveal = chaosReveal.draw(context, count, context.replacementToken ? [context.replacementToken] : [])
+    if (count > 1) earlyReveal.revealed = chaosReveal.keepOne(seat, options.extraChaosSource, earlyReveal.revealed)
+    for (const token of earlyReveal.revealed) chaosReveal.revealed(seat, token)
+  }
   state.skillTest.stage = 'ST.2'
 
   const committed = []
   const committedCodes = new Set()
   const commitments = []
+  let failureEffectsCancelled = false
+  const checkFailureCancellation = () => {
+    failureEffectsCancelled = state.skillTest.committed.some(item => !item.cancelled && !item.withdrawn
+      && commitProfile(item.code)?.cancelFailureEffects === true)
+  }
   let failureRecipientSeat
   const failureEffects = resolve => {
+    if (failureEffectsCancelled) return
     if (failureRecipientSeat === undefined) {
       const recipients = [...new Set(commitments.filter(item => commitProfile(item.code)?.redirectFailureEffects).map(item => item.seat))]
       failureRecipientSeat = recipients.length > 1 ? Number(requestChoice(state, { kind: 'investigator', seat,
@@ -418,8 +443,6 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     && !helpers.includes(other) && !remoteMinhs.includes(other) && !crossCommitOwners.includes(other)
     && other.hand.some(code => allowsConnectingCommit(state, other, code, deps)))
   const testOwners = [inv, ...remoteMinhs, ...crossCommitOwners, ...connectingOwners]
-  // Phase 2（C1）：capability:commit —— 不能投入卡牌（队友投入不受影响）。
-  const cannotCommit = capabilityBlocked(state, inv, 'commit')
   for (const owner of testOwners) {
     if (state.skillTest.blockCommitSeats?.includes(owner.seat)) continue
     if (owner !== inv && owner.threat.some(card => registeredEntry(card.code)?.cannotAffectOtherInvestigators)) continue
@@ -428,11 +451,11 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       // P8（食梦者 06319–06321 无眠之旅）：「每轮你不能投入超过 1 张卡牌到技能检定中」。
       // 计数在真正投入后由 noteHiddenCommit 写入 `state.scenarioFlags.hiddenCommitCounts`（按轮重置）。
       if (hiddenCommitLimitReached(state, owner)) break
+      if (capabilityBlocked(state, owner, 'commit')) break
       state.skillTest.value = value + skillTotal() - statReference
       const grantedByCard = connectingOwners.includes(owner)
       const candidates = owner.hand.map((code, index) => ({ code, index }))
         .filter(item => !grantedByCard || allowsConnectingCommit(state, owner, item.code, deps))
-        .filter(() => !(cannotCommit && owner === inv))
         // 第 2 步 P2.9：手牌里有「不能投入」的卡（高塔）时，本人不能投入任何卡牌。
         // 2026-10-25 本循环修复 05042：按「手牌所有者」判定，而不是只查检定发起者——
         // 卡面「你不能在技能检定投入卡牌」不区分是谁的检定（本人/协助/远程投入都受限）。
@@ -444,18 +467,21 @@ function performTest(state, seat, skill, difficulty, options = {}) {
           if (hasHiddenCard(owner, item.code)) return rule?.allowCommit === true
           const profile = commitProfile(item.code)
           return runtimeCardAvailable(state, owner, item.code)
-            && (!isWeaknessCode(item.code) || profile?.mustCommitNextTest === true || profile?.subtractIcons === true)
-            && (commitIcons(state, owner, item.code, skillList) > 0 || profile?.anySkill === true)
+            && (!isWeaknessCode(item.code) || profile?.mustCommitNextTest === true || profile?.subtractIcons === true
+              || profile?.canCommitWeakness === true)
+            && (commitIcons(state, owner, item.code, skillList) !== 0 || profile?.anySkill === true)
         })
         .filter(item => lolaCanUseCard(owner, item.code))
         .filter(item => !activeHiddenRules(state, owner).some(hidden =>
           hidden.rule.cannotCommitTypes?.includes(cardDef(item.code)?.type)))
         .filter(item => scenarioBehavior(state).canCommitCard?.(state, owner, item.code) !== false)
         .filter(item => owner === inv || !commitProfile(item.code)?.selfTestOnly)
+        // 批次 3（12081/60582）：lateCommit 卡只能在揭示混乱标记后投入（见 ST.5 窗口）。
+        .filter(item => commitProfile(item.code)?.lateCommit !== true)
         .filter(item => !commitProfile(item.code)?.otherTestOnly || owner !== inv)
         .filter(item => !commitProfile(item.code)?.commitCondition
           || commitProfile(item.code).commitCondition({ state, owner, performer: inv, test: state.skillTest,
-            baseSkillValue: skillList.reduce((sum, name) => sum + deps.baseStatValue(state, inv, name), 0) }))
+            baseSkillValue: commitBaseSkillValue(state, state.skillTest, deps.baseStatValue, inv) }))
         .filter(item => !commitProfile(item.code)?.requireClueAtLocation || (state.locations.find(loc => loc.id === owner.location)?.clues || 0) > 0)
         .filter(item => !commitProfile(item.code)?.requireDifficultyAboveBase
           || difficulty - skillTotal() >= commitProfile(item.code).requireDifficultyAboveBase)
@@ -652,15 +678,17 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   }
   let defiedToken = null
   const defied = commitments.find(item => commitProfile(item.code)?.defiance)
-  if (defied) {
+  const defiedChoices = defied ? ['skull', 'cultist', 'tablet', 'elderthing']
+    .filter(token => canChangeChaosToken(state, seat, token)) : []
+  if (defiedChoices.length) {
     defiedToken = requestChoice(state, { kind: 'token', source: defied.code, seat, prompt: `${cardName(defied.code)}：选择本次检定要忽略的混乱符号。`,
-      options: ['skull', 'cultist', 'tablet', 'elderthing'].map(id => ({ id, label: tokenLabel(id) })) })
+      options: defiedChoices.map(id => ({ id, label: tokenLabel(id) })) })
   }
   playerWindow(state, 'test.afterCommit', events, options.peril || !state.skillTest.helpRequested ? seat : null,
     { onlySeats: testWindowSeats(state, seat) })
   value += state.skillTest.pendingBonus || 0
   state.skillTest.pendingBonus = 0
-  value += applyFreeTriggers(state, inv, skillContext, events)
+  value += applyFreeTriggers(state, inv, skillContext, events, options.modifierSkills)
   value += skillTotal() - statReference
   state.skillTest.stage = 'ST.3'
   const sealElderSign = commitments.some(item => commitProfile(item.code)?.elderSignInsteadOfChaos)
@@ -679,13 +707,14 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     applyPendingFlipAfterTests(state, seat)
     state.skillTest.stage = 'ST.8'
     resolveDeferredTestEffects(state, result)
+    for (const item of state.skillTest.borrowedReturns || []) returnCommitment(state, item)
     for (const item of state.skillTest.committed) {
       const profile = commitProfile(item.code)
       const owner = state.investigators[item.seat]
       const ctx = { state, inv: owner, source: item, result, test: state.skillTest, api: abilityApi(state, events) }
-      profile?.afterTest?.(ctx)
+      if (!failureEffectsCancelled || !profile?.redirectFailureEffects) profile?.afterTest?.(ctx)
       if (returnCommitment(state, item)) continue
-      const destination = (result?.success ? item.onSuccessDestination : item.onFailDestination)
+      const destination = (result?.success ? item.onSuccessDestination : !failureEffectsCancelled && item.onFailDestination)
         || item.destination || profile?.destination?.(ctx)
       if (destination === 'attached') continue
       if (destination === 'setAside') {
@@ -700,6 +729,11 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       if (destination === 'hand') { putInHand(state, owner, item.code); continue }
       if (destination === 'deckTop') { owner.deck.push(item.code); continue }
       if (destination === 'deckBottom') { owner.deck.unshift(item.code); continue }
+      if (destination === 'shuffleIntoDeck') {
+        owner.deck.push(item.code)
+        owner.deck = replacePlayerZoneCards(state, owner, shuffle(owner.deck, () => randomValue(state)), 'shuffle')
+        continue
+      }
       if (destination === 'play' && ctx.api.putCommittedIntoPlay(owner.seat, item.code)) continue
       if (profile?.exileAfterTest || destination === 'removedFromGame') {
         state.removedFromGame ||= []
@@ -726,8 +760,22 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   }
 
   let summary = null
+  let adjustedFailure
+  const failureMargin = (margin, autoFail) => {
+    if (!hasWindowListener(state, 'failedTestMargin')) return margin
+    const context = { when: 'failedTestMargin', seat, location: inv.location,
+      failedBy: margin, difficulty, autoFail }
+    reactionWindow(state, 'failedTestMargin', context, events, { allowNested: true })
+    if (margin !== context.failedBy) {
+      adjustedFailure = context.failedBy
+      state.skillTest.failedBy = adjustedFailure
+    }
+    return context.failedBy
+  }
   const resolveResult = result => {
-    if (!result.success) {
+    if (adjustedFailure != null) result.failedBy = adjustedFailure
+    if (failureEffectsCancelled) result.failureEffectsCancelled = true
+    if (!result.success && !failureEffectsCancelled) {
       for (const item of commitments) {
         const fail = commitProfile(item.code)?.onFail
         const owner = state.investigators[item.seat]
@@ -814,14 +862,11 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   // P6（食梦者 · 派翠丝·海瑟薇）：本次检定结束后可把弃牌堆留 1 张、其余洗回牌库。
   let elderShuffleDiscardAfterTest = null
   const drawn = []
-  const cancelledTokens = []
+  const cancelledTokens = [...(earlyReveal?.cancelled || [])]
   const ignoredTokens = []
   let chosenToken = null
   let firstRerollOffered = false
-  const tokenChanged = (token, change, actorSeat = seat) => {
-    if (hasWindowListener(state, 'chaosTokenChanged')) reactionWindow(state, 'chaosTokenChanged',
-      { when: 'chaosTokenChanged', seat: actorSeat, token, change }, events, { allowNested: true })
-  }
+  const tokenChanged = (token, change, actorSeat = seat) => chaosReveal.changed(token, change, seat, actorSeat)
   const pendingOnFail = []
   let wendyRedrawUsed = false
   let strokeOfLuckExiled = false
@@ -830,11 +875,13 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   // 07185：本次检定是否已经结算过「攻击淹没地点敌人 → 额外揭示」。
   let extraFloodedAttackTokenUsed = false
   let extraThreatTokens = inv.threat.reduce((total, threat) => total + (getThreatEffect(threat)?.extraChaosTokens || 0), 0)
-  const pendingTokens = []
+  const pendingTokens = [...(earlyReveal?.revealed || [])]
+  let earlyTokens = pendingTokens.length
   const replacedEffectTokens = []
   const processedPhysicalTokens = new Set()
   let guard = 0
   while (guard++ < 100) {
+    if (guard === 1 && earlyReveal && !pendingTokens.length) break
     if (inv.ignoreChaosThisTurn) { drawn.push('0'); break }
     // 「手稿」等：本次检定不揭示混乱标记。
     if (state.skillTest?.skipTokens && !state.skillTest.skipTokensUsed) {
@@ -843,13 +890,22 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       drawn.push('0')
       break
     }
-    let token = sealElderSign ? 'eldersign' : null
+    const virtualFace = pendingTokens[0]?.virtual === true ? pendingTokens.shift().face : null
+    let token = virtualFace || (sealElderSign && !earlyReveal ? 'eldersign' : null)
+    let alreadyRevealed = false
+    let cancellationContext = null
+    const takeBatch = (count, given = []) => {
+      const batch = chaosReveal.draw(cancellationContext, count, given)
+      cancellationContext = null
+      cancelledTokens.push(...batch.cancelled)
+      return batch.revealed
+    }
     if (token == null && !pendingTokens.length && aliveInvestigators(state).some(owner => descriptorSources(state, owner).some(row =>
       row.entry?.abilities?.some(descriptor => descriptor.trigger?.includes('beforeChaosTokenReveal'))))) {
       if (inv.assets.some(asset => registeredEntry(asset.code)?.flags?.sealedTokenReplacement)) state.skillTest.stage = 'ST.3'
-      const context = { when: 'beforeChaosTokenReveal', seat, location: inv.location }
-      reactionWindow(state, 'beforeChaosTokenReveal', context, events, { allowNested: true })
+      const context = chaosReveal.before(seat, 1)
       if (context.replacementToken) token = context.replacementToken
+      if (context.cancellationPlans?.length) cancellationContext = context
       if (!token && context.revealUntilSymbol && !extraChaosUsed && state.chaosBag.length) {
         extraChaosUsed = true
         const revealed = []
@@ -869,11 +925,21 @@ function performTest(state, seat, skill, difficulty, options = {}) {
         }
       }
     }
-    if (token == null && pendingTokens.length) token = pendingTokens.shift()
+    if (token == null && pendingTokens.length) {
+      token = pendingTokens.shift()
+      if (earlyTokens > 0) { earlyTokens--; alreadyRevealed = true }
+    }
     const extraChoices = Math.max(options.extraChaosChoices || 0, state.skillTest?.extraChaosChoices || 0)
     if (token == null && !extraChaosUsed && extraChoices > 0) {
       extraChaosUsed = true
-      const pool = Array.from({ length: Math.min(state.chaosBag.length, 1 + extraChoices) }, () => drawChaosToken(state))
+      const pool = cancellationContext ? takeBatch(1 + extraChoices)
+        : Array.from({ length: Math.min(state.chaosBag.length, 1 + extraChoices) }, () => drawChaosToken(state))
+      if (!pool.length) break
+      if (pool.some(face => !canChangeChaosToken(state, seat, face))) {
+        const kept = chaosReveal.keepOne(seat, options.extraChaosSource, pool)
+        token = kept[0]
+        pendingTokens.push(...kept.slice(1))
+      } else {
       const chosen = requestChoice(state, { kind: 'token', source: state.skillTest?.extraChaosSource || options.extraChaosSource || null, seat,
         prompt: `额外揭示了 ${pool.length} 个混乱标记，选择 1 个结算。`,
         options: pool.map((face, index) => ({ id: String(index), label: tokenLabel(face) })) })
@@ -887,6 +953,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       token = pool[Number(chosen)]
       chosenToken = token
       info(state, events, `${inv.name} 结算额外混乱标记 ${tokenLabel(token)}，其余标记归还。`)
+      }
     }
     // Phase 5（5a-10）：「花 1 充能改揭示 2 枚标记」由条目级 chaosTokenExtraReveal 声明。
     const statue = token == null && inv.assets.find(asset => registeredEntry(asset.code)?.chaosTokenExtraReveal && (asset.uses || 0) > 0)
@@ -894,12 +961,29 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       const answer = requestChoice(state, { kind: 'reaction', source: statue.id, seat, canSkip: true, prompt: '是否花费 1 充能，改为揭示 2 个混乱标记并选择 1 个？', options: [{ id: 'skip', label: '不花费充能' }, { id: 'trigger', label: '花费 1 充能' }] })
       if (answer === 'trigger') {
         statue.uses -= 1
-        const first = drawChaosToken(state)
-        const second = state.chaosBag.length ? drawChaosToken(state) : null
-        const chosen = requestChoice(state, { kind: 'token', source: statue.id, seat, prompt: '选择要结算的混乱标记。', options: [{ id: '0', label: tokenLabel(first) }, ...(second == null ? [] : [{ id: '1', label: tokenLabel(second) }])] })
-        token = chosen === '0' ? first : second
-        info(state, events, inv.name + ' 使用「诡秘石像」：揭示 ' + tokenLabel(first) + ' 与 ' + tokenLabel(second) + '，选择 ' + tokenLabel(token) + '。')
-        if ((statue.uses || 0) <= 0) {
+        if (cancellationContext) {
+          const kept = chaosReveal.keepOne(seat, statue.id, takeBatch(2))
+          token = kept[0]
+          pendingTokens.push(...kept.slice(1))
+        } else {
+          const first = drawChaosToken(state)
+          const second = state.chaosBag.length ? drawChaosToken(state) : null
+          if ([first, second].some(face => face != null && !canChangeChaosToken(state, seat, face))) {
+            const kept = chaosReveal.keepOne(seat, statue.id, [first, second].filter(face => face != null))
+            token = kept[0]
+            pendingTokens.push(...kept.slice(1))
+          } else {
+            const chosen = requestChoice(state, { kind: 'token', source: statue.id, seat, prompt: '选择要结算的混乱标记。', options: [{ id: '0', label: tokenLabel(first) }, ...(second == null ? [] : [{ id: '1', label: tokenLabel(second) }])] })
+            token = chosen === '0' ? first : second
+            info(state, events, inv.name + ' 使用「诡秘石像」：揭示 ' + tokenLabel(first) + ' 与 ' + tokenLabel(second) + '，选择 ' + tokenLabel(token) + '。')
+          }
+        }
+        const extraReveal = registeredEntry(statue.code)?.chaosTokenExtraReveal
+        if (extraReveal?.symbolHorror && ['skull', 'cultist', 'tablet', 'elderthing'].includes(String(token))) {
+          applyHorror(state, inv, Number(extraReveal.symbolHorror) || 1, events)
+          info(state, events, `「${cardName(statue.code)}」揭示符号标记：${inv.name} 受到 1 点恐惧。`)
+        }
+        if ((statue.uses || 0) <= 0 && extraReveal?.keepWhenEmpty !== true) {
           leaveAsset(state, inv, statue)
           inv.discard.push(statue.code)
           info(state, events, '「诡秘石像」充能耗尽，弃掉。')
@@ -911,7 +995,9 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       const plan = campaignBeforeChaosReveal(state, seat, inv, events)
       if (plan?.token) token = plan.token
       else if (plan?.count > 1) {
-        const pool = Array.from({ length: plan.count }, () => drawChaosToken(state))
+        const pool = cancellationContext ? takeBatch(plan.count)
+          : Array.from({ length: plan.count }, () => drawChaosToken(state))
+        if (!pool.length) break
         const keep = Math.max(1, Math.min(pool.length, plan.choose || 1))
         const options = plan.symbolOnly
           ? pool.map((face, index) => ({ face, index })).filter(item => ['skull', 'cultist', 'tablet', 'elderthing', 'autofail'].includes(item.face))
@@ -937,7 +1023,15 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       }
     }
     if (token == null) token = codexSealedElderSign(state, inv, seat, events)
+    if (cancellationContext) {
+      const given = token == null ? [] : [token, ...pendingTokens.splice(0)]
+      const batch = takeBatch(Math.max(1, given.length), given)
+      if (!batch.length) break
+      token = batch[0]
+      pendingTokens.push(...batch.slice(1))
+    }
     if (token == null) token = drawChaosToken(state)
+    if (!alreadyRevealed && !virtualFace) chaosReveal.revealed(seat, token)
     while (extraThreatTokens > 0 && state.chaosBag.length > 0) {
       pendingTokens.push(drawChaosToken(state))
       extraThreatTokens--
@@ -952,16 +1046,19 @@ function performTest(state, seat, skill, difficulty, options = {}) {
         if (source) abilityApi(state, events).returnAssetToHand(owner.seat, source)
       }
     }
-    while (state.skillTest.tokenRedraws > 0) {
+    while (!virtualFace && state.skillTest.tokenRedraws > 0 && canChangeChaosToken(state, seat, token)) {
       const selected = requestChoice(state, { kind: 'token', seat, source: 'tokenRedraws', prompt: `是否取消并归还 ${tokenLabel(token)}，再揭示一个标记？`,
         options: [{ id: 'skip', label: '保留标记' }, { id: 'redraw', label: '取消并重抽' }] })
       if (selected !== 'redraw') break
       state.skillTest.tokenRedraws--
       cancelledTokens.push(token)
       returnChaosToken(state, token)
+      tokenChanged(token, 'cancel')
       token = drawChaosToken(state)
+      chaosReveal.revealed(seat, token)
     }
-    if (investigatorRule(inv.code)?.chaosTokenRedraw && !wendyRedrawUsed && !investigatorTextBlanked(state, inv)) {
+    if (!virtualFace && investigatorRule(inv.code)?.chaosTokenRedraw && !wendyRedrawUsed && !investigatorTextBlanked(state, inv)
+      && canChangeChaosToken(state, seat, token)) {
       const candidates = inv.hand.map((code, index) => ({ code, index }))
         .filter(item => !isWeaknessCode(item.code) && canDiscardFromHand(inv, item.code))
       if (candidates.length) {
@@ -979,7 +1076,9 @@ function performTest(state, seat, skill, difficulty, options = {}) {
           cancelledTokens.push(token)
           info(state, events, `${inv.name} 弃掉「${cardName(code)}」，取消并归还混乱标记 ${tokenLabel(token)}，重新抽取。`)
           returnChaosToken(state, token)
+          tokenChanged(token, 'cancel')
           token = drawChaosToken(state)
+          chaosReveal.revealed(seat, token)
         }
       }
     }
@@ -987,7 +1086,8 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     let luckyDice = inv.assets.find(asset => registeredEntry(asset.code)?.rerollTokenCost)
     let luckyGuard = 0
     // 卡面：只能对「非 auto_fail」的标记使用。
-    while (luckyDice && token !== 'autofail' && availableResources(inv) >= 2 && luckyGuard++ < 20) {
+    while (!virtualFace && luckyDice && token !== 'autofail' && canChangeChaosToken(state, seat, token)
+      && availableResources(inv) >= 2 && luckyGuard++ < 20) {
       const answer = requestChoice(state, { kind: 'reaction', source: luckyDice.id, seat, canSkip: true,
         prompt: `幸运骰：是否支付 2 资源，取消并归还 ${tokenLabel(token)}，然后重新揭示？`,
         options: [{ id: 'skip', label: '保留该标记' }, { id: 'trigger', label: '支付 2 资源并重抽' }] })
@@ -995,7 +1095,9 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       resourceBank.spendFromPool(inv, 2, state)
       cancelledTokens.push(token)
       returnChaosToken(state, token)
+      tokenChanged(token, 'cancel')
       token = drawChaosToken(state)
+      chaosReveal.revealed(seat, token)
       info(state, events, `${inv.name} 使用「幸运骰」归还混乱标记并重新揭示 ${tokenLabel(token)}。`)
       if (token === 'autofail') {
         // 新标记为 auto_fail：把幸运骰子移出游戏（不是弃置）。
@@ -1009,9 +1111,10 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     }
     state.skillTest.stage = 'ST.4'
     const frameStart = state.chaos.frames.at(-1) ?? 0
-    const tokenIndex = state.chaos.revealed.findIndex((face, index) => index >= frameStart && face === token && !processedPhysicalTokens.has(index))
+    const tokenIndex = virtualFace ? -1 : state.chaos.revealed.findIndex((face, index) => index >= frameStart && face === token && !processedPhysicalTokens.has(index))
     // 「逆反」：忽略本次检定所有符号标记的效果（含修正值）。
-    const ignoreSymbolEffects = commitments.some(item => commitProfile(item.code)?.ignoreSymbolEffects)
+    const ignoreSymbolEffects = canChangeChaosToken(state, seat, token)
+      && commitments.some(item => commitProfile(item.code)?.ignoreSymbolEffects)
     token = ignoreSymbolEffects ? token
       : scenarioBehavior(state).chaosTokenRevealed?.(state, inv, token, scenarioRuntime(state, events)) || token
     // 马泰奥神父：任何调查员揭示 autofail 时，改为 elder_sign（每局一次）。
@@ -1019,13 +1122,14 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       const mateo = aliveInvestigators(state).find(owner =>
         investigatorRule(owner.code)?.autofailToElderSign && !owner.mateoSignUsed
         && !investigatorTextBlanked(state, owner))
-      if (mateo) {
+      if (mateo && canChangeChaosToken(state, mateo.seat, token)) {
         const answer = requestChoice(state, { kind: 'reaction', source: mateo.code, seat: mateo.seat, canSkip: true,
           prompt: `揭示了 ${tokenLabel(token)}，是否取消它并改为 ${tokenLabel('eldersign')}（每局一次）？`,
           options: [{ id: 'skip', label: '保留自动失败' }, { id: 'trigger', label: '改为旧印' }] })
         if (answer === 'trigger') {
           mateo.mateoSignUsed = true
           returnChaosToken(state, token)
+          tokenChanged(token, 'cancel', mateo.seat)
           token = 'eldersign'
           info(state, events, `✨ ${mateo.name} 取消了自动失败标记，改为结算 ${tokenLabel('eldersign')}（本局一次已用）。`)
         }
@@ -1037,18 +1141,18 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     const effectContext = { when: 'tokenEffectWouldResolve', seat, location: inv.location, token,
       ...(['bless', 'curse'].includes(token) ? { tokenIndex } : {}),
       prompt: `是否替换 ${tokenLabel(token)} 的效果？` }
-    if (options.rerollFirstChaosToken && !firstRerollOffered && state.chaos.revealed.includes(token)) {
+    if (!virtualFace && options.rerollFirstChaosToken && !firstRerollOffered && state.chaos.revealed.includes(token)) {
       firstRerollOffered = true
       const picked = requestChoice(state, { kind: 'token', seat, source: options.source?.code,
         prompt: '是否取消并重抽第一个混乱标记？',
         options: [{ id: 'skip', label: '保留标记' }, { id: 'redraw', label: '取消并重抽' }] })
       if (picked === 'redraw') effectContext.returnAndReroll = { seat }
     }
-    if (!effectContext.returnAndReroll) {
+    if (!virtualFace && !effectContext.returnAndReroll) {
     reactionWindow(state, 'tokenEffectWouldResolve', effectContext, events)
     collectForcedCommitments()
     }
-    if (effectContext.returnAndReroll) {
+    if (effectContext.returnAndReroll && canChangeChaosToken(state, effectContext.returnAndReroll.seat ?? seat, token)) {
       cancelledTokens.push(token)
       returnChaosToken(state, token)
       tokenChanged(token, 'cancel', effectContext.returnAndReroll.seat)
@@ -1057,7 +1161,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     if (effectContext.rerollToken) { cancelledTokens.push(token); continue }
     // P7 TDC 11757b「取消任意类型当前标记」：tokenEffectWouldResolve 窗口可设置 context.cancelled，
     // 该标记的效果不结算（取消也计入已揭示；与需要返袋的重抽语义分离）。
-    if (effectContext.cancelled) {
+    if (effectContext.cancelled && canChangeChaosToken(state, effectContext.cancellationActorSeat ?? seat, token)) {
       cancelledTokens.push(token)
       tokenChanged(token, 'cancel', seat)
       info(state, events, `🚫 取消了 ${tokenLabel(token)} 的效果。`)
@@ -1069,7 +1173,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     let revealedResolution = null
     const tokenInterrupt = aliveInvestigators(state).some(owner => descriptorSources(state, owner).some(row =>
       row.entry?.abilities?.some(descriptor => descriptor.trigger?.includes('tokenReveal'))))
-    if (tokenInterrupt) {
+    if (!virtualFace && tokenInterrupt) {
       const symbol = ['skull', 'cultist', 'tablet', 'elderthing'].includes(token)
       if (symbol && !ignoreSymbolEffects && !tokenEffectOverride) revealedResolution = resolveSpecialToken(state, seat, inv, token, events)
       let previewDelta = tokenEffectOverride ? tokenEffectOverride.delta : /^[+-]?\d+$/.test(token) ? Number(token)
@@ -1083,17 +1187,61 @@ function performTest(state, seat, skill, difficulty, options = {}) {
         testValue: previewFail ? 0 : Math.max(0, value + delta + previewDelta),
         prompt: `揭示混乱标记 ${tokenLabel(token)}` }
       reactionWindow(state, 'tokenReveal', context, events)
-      if (context.replacementToken && context.replacementToken !== token) {
+      if (context.replacementToken && context.replacementToken !== token
+        && canChangeChaosToken(state, context.replacingSeat ?? seat, token)) {
         cancelledTokens.push(token)
         returnChaosToken(state, token)
+        tokenChanged(token, 'cancel', context.replacingSeat)
         token = context.replacementToken
         revealedResolution = null
         tokenEffectOverride = null
       }
     }
-    if (aliveInvestigators(state).some(owner => descriptorSources(state, owner).some(row =>
+    if (!virtualFace && aliveInvestigators(state).some(owner => descriptorSources(state, owner).some(row =>
       row.entry?.abilities?.some(descriptor => descriptor.trigger?.includes('chaosTokenRevealed'))))) {
-      reactionWindow(state, 'chaosTokenRevealed', { when: 'chaosTokenRevealed', seat, location: inv.location, token, tokenIndex }, events, { allowNested: true })
+      const revealedContext = reactionWindow(state, 'chaosTokenRevealed', { when: 'chaosTokenRevealed', seat, location: inv.location, token, tokenIndex }, events, { allowNested: true })
+      // 批次 3（60458）：取消当前已揭示标记，补揭示直到符号标记（由条目 api.revealTokenUntilSymbol 请求）。
+      if (revealedContext?.revealUntilSymbol) {
+        const symbolFaces = ['skull', 'cultist', 'tablet', 'elderthing']
+        let guard = 0
+        while (!symbolFaces.includes(token) && state.chaosBag.length && guard++ < 40
+          && canChangeChaosToken(state, seat, token)) {
+          cancelledTokens.push(token)
+          returnChaosToken(state, token)
+          tokenChanged(token, 'cancel')
+          token = drawChaosToken(state)
+          chaosReveal.revealed(seat, token)
+        }
+        info(state, events, `🪆 取消已揭示标记，补揭示到符号标记 ${tokenLabel(token)}。`)
+      }
+    }
+    // 批次 3（60383/60471）：投入卡的「揭示标记后 / 揭示符号后」回调。
+    if (!virtualFace) {
+      const symbolFaces = ['skull', 'cultist', 'tablet', 'elderthing']
+      for (const item of state.skillTest.committed) {
+        const profile = commitProfile(item.code)
+        if (!profile) continue
+        const owner = state.investigators[item.seat] || inv
+        const tokenApi = abilityApi(state, events)
+        if (profile.onChaosTokenRevealed) profile.onChaosTokenRevealed({ state, inv: owner, source: item, test: state.skillTest, token, api: tokenApi })
+        if (symbolFaces.includes(token) && profile.onSymbolRevealed) profile.onSymbolRevealed({ state, inv: owner, source: item, test: state.skillTest, token, api: tokenApi })
+      }
+      // 60383 的回调可再发放重抽额度；此处的第二次循环消费它（原重抽循环在本循环之前）。
+      let lateRedrawGuard = 0
+      while (state.skillTest.tokenRedraws > 0 && canChangeChaosToken(state, seat, token) && lateRedrawGuard++ < 20) {
+        const selected = requestChoice(state, { kind: 'token', seat, source: 'tokenRedraws',
+          prompt: `是否取消并归还 ${tokenLabel(token)}，再揭示一个标记？`,
+          options: [{ id: 'skip', label: '保留标记' }, { id: 'redraw', label: '取消并重抽' }] })
+        if (selected !== 'redraw') break
+        state.skillTest.tokenRedraws--
+        cancelledTokens.push(token)
+        const cancelledFace = token
+        returnChaosToken(state, token)
+        tokenChanged(token, 'cancel')
+        token = drawChaosToken(state)
+        chaosReveal.revealed(seat, token)
+        info(state, events, `🎲 取消并归还 ${tokenLabel(cancelledFace)}，重新揭示 ${tokenLabel(token)}。`)
+      }
     }
     const physicalIndex = tokenIndex
     if (physicalIndex >= 0) processedPhysicalTokens.add(physicalIndex)
@@ -1110,6 +1258,12 @@ function performTest(state, seat, skill, difficulty, options = {}) {
         token = treatment.face
         revealedResolution = null
       }
+    }
+    const replacementFaces = !virtualFace && !tokenEffectOverride && inv.threat.map(card =>
+      getThreatEffect(card)?.tokenFaceReplacements?.[token]).find(faces => faces?.length)
+    if (replacementFaces) {
+      pendingTokens.unshift(...replacementFaces.map(face => ({ virtual: true, face })))
+      continue
     }
     drawn.push(token)
     // 07185 伏兵出水：攻击淹没地点的敌人时，揭示标记后立刻再揭示一个（每次检定最多一次）。
@@ -1165,8 +1319,10 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     }
     if (state.skillTest.cancelledSymbol === token) {
       noteChaosTokenChange(state, seat)
+      tokenChanged(token, 'cancel')
       info(state, events, `「${cardName(state.skillTest.cancelledSymbolSource)}」取消了 ${tokenLabel(token)}。`)
       lastTokenDelta = 0
+      if (virtualFace && pendingTokens.length) continue
       break
     }
     if (['skull', 'cultist', 'tablet', 'elderthing', 'autofail'].includes(token) && !ignoreSymbolEffects) {
@@ -1182,9 +1338,11 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       value += symbolContext.testBonus || 0
     }
     if (token === defiedToken) {
+      tokenChanged(token, 'ignore')
       noteChaosTokenChange(state, seat)
       info(state, events, `「${cardName(defied.code)}」忽略了 ${tokenLabel(token)} 的修正值与效果。`)
       lastTokenDelta = 0
+      if (virtualFace && pendingTokens.length) continue
       break
     }
     if (tokenEffectOverride) {
@@ -1380,6 +1538,24 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   if (state.skillTest?.autoSuccess === true) elderAutoSuccess = true
   if (cancelledTokens.length || state.skillTest.ignoredTokenModifiers) noteChaosTokenChange(state, seat)
   state.skillTest.stage = 'ST.5'
+  // 批次 3（12081/60582）：揭示混乱标记后可从手牌投入带 lateCommit 档案的卡（图标计入本次差值）。
+  for (const owner of aliveInvestigators(state)) {
+    if (state.skillTest.blockCommitSeats?.includes(owner.seat)) continue
+    for (const code of [...owner.hand]) {
+      if (commitProfile(code)?.lateCommit !== true) continue
+      if (!canCommitToTest(state, owner, code, deps)) continue
+      const answer = requestChoice(state, { kind: 'reaction', seat: owner.seat, source: code, canSkip: true,
+        prompt: `已揭示混乱标记：是否投入「${cardName(code)}」？`,
+        options: [{ id: 'skip', label: '不投入' }, { id: 'commit', label: '投入' }] })
+      if (answer !== 'commit') continue
+      const before = state.skillTest.committed.length
+      abilityApi(state, events).commitCards(owner.seat, [code])
+      if (state.skillTest.committed.length > before) {
+        // commitCards 已经把图标计入 state.skillTest.value；这里只记日志，避免图标重复计入。
+        info(state, events, `🧩 ${owner.name} 在揭示标记后投入「${cardName(code)}」（图标 +${commitIcons(state, owner, code, skillList)}）。`)
+      }
+    }
+  }
   if (state.skillTest.retargetDifficulty) difficulty = state.skillTest.difficulty
   // 「本次攻击期间揭示了 X 则自动失败」（04273 陈旧猎枪的卡膛）：在成算之前把检定改为自动失败。
   // 与 autofail 标记同一条失败路径，因此不会产生伤害、不会被「成功」类反应误读。
@@ -1444,8 +1620,10 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   state.skillTest.value = autoFail ? 0 : Math.max(0, value + delta)
   if (autoFail) {
     state.skillTest.stage = 'ST.6'
+    checkFailureCancellation()
+    const failedBy = failureMargin(Math.max(0, difficulty), true)
     failureEffects(() => { for (const fx of pendingOnFail.filter(fx=>fx.type!=='drawEnemyTrait')) applyTokenFx(state, failureRecipientSeat, effectRecipient(state, inv), fx, events) })
-    const failContext = { skill: skillContext, difficulty, failedBy: Math.max(0, difficulty),
+    const failContext = { skill: skillContext, difficulty, failedBy,
       committed: commitments.map(item => ({ ...item })) }
     triggerReaction(state, seat, 'skillTestFail', events, failContext)
     // 04159 反复尝试等「投入了技能牌的其他调查员」也会获得自己的 skillTestFail 窗口。
@@ -1460,7 +1638,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       runLocationTestFail(state, inv, result, events)
     })
     campaignFailedTestWindow(state, seat, { skill: skillContext, difficulty, baseValue: statReference, source: options.source,
-      peril: options.peril, resolve: options.resolve, failedBy: difficulty }, events, summarizeTestResult(null, { ...result, seat, skill: skillContext }))
+      peril: options.peril, resolve: options.resolve, failedBy }, events, summarizeTestResult(null, { ...result, seat, skill: skillContext }))
     return result
   }
   value += delta
@@ -1530,7 +1708,9 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   if (success && state._treacheryResolving) {
     triggerReaction(state, seat, 'treacheryTestSuccess', events, { location: inv.location, skill: skillContext, cardCode: state._treacheryResolving })
   }
+  const failedBy = success ? 0 : failureMargin(Math.max(0, difficulty - value), false)
   if (!success) {
+    checkFailureCancellation()
     failureEffects(() => { for (const fx of pendingOnFail.filter(fx=>fx.type!=='drawEnemyTrait')) applyTokenFx(state, failureRecipientSeat, effectRecipient(state, inv), fx, events) })
   }
 
@@ -1672,7 +1852,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     }
   }
   if (!success) {
-    const failContext = { skill: skillContext, difficulty, failedBy: Math.max(0, difficulty - value),
+    const failContext = { skill: skillContext, difficulty, failedBy,
       committed: commitments.map(item => ({ ...item })) }
     triggerReaction(state, seat, 'skillTestFail', events, failContext)
     // 04159 反复尝试：投入技能牌的其他调查员也获得自己的 skillTestFail 窗口。
@@ -1682,7 +1862,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   }
   // 技能牌失败奖励（如「重拾信念」）：奖励给执行检定的调查员，而不是投入者。
   const failRewardSeat = state.skillTest?.seat ?? seat
-  if (!success) {
+  if (!success && !failureEffectsCancelled) {
     for (const item of commitments) {
       const fail = commitProfile(item.code)?.onFail
       if (!fail) continue
@@ -1725,7 +1905,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   // 「学无止境」：检定失败并结算完后重新尝试该检定。
   if (!success) {
     campaignFailedTestWindow(state, seat, { skill: skillContext, difficulty, baseValue: statReference, source: options.source,
-      peril: options.peril, resolve: options.resolve, failedBy: Math.max(0, difficulty - value) }, events, summarizeTestResult(null, { ...result, seat, skill: skillContext }))
+      peril: options.peril, resolve: options.resolve, failedBy }, events, summarizeTestResult(null, { ...result, seat, skill: skillContext }))
   }
   // 检定结束：本次检定内的效果到期（A1）。
   // 「下一次技能检定 +N」类效果（08013a「演武·战斗」、08053/08058「红色闹钟」等）只在
@@ -1747,6 +1927,8 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   for (const effect of carriedOverEffects) state.effects.push(effect)
   return {
     success, value, difficulty,
+    ...(adjustedFailure != null ? { failedBy: adjustedFailure } : {}),
+    ...(failureEffectsCancelled ? { failureEffectsCancelled: true } : {}),
     token: drawn[drawn.length - 1],
     committed, autoFail, drawn, elderSign, cancelledTokens,
     damageBonus: skillFx.damageBonus,

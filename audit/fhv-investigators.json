@@ -314,7 +314,7 @@
     },
     {
       "path": "audit/fhv-node-acceptance.json",
-      "sha256": "5ba46baea25335004f44e104714a1f7278ea70a17aa3bcfd09769148d77ebcbe"
+      "sha256": "68dba64784b7c012f486b1434c34f14b85b9e9d55a61082edfa85e23e7aedfd7"
     },
     {
       "path": "audit/fhv-regression.json",
@@ -418,15 +418,15 @@
     },
     {
       "path": "src/deck/availability.js",
-      "sha256": "f69169bed68b4f29e6a4173cebeba448b505804c2a166718effe0826f5000fe7"
+      "sha256": "674b2b60c655b878bf5b5e02f7cf8d04134935f1eef4742c9751da07560aa9f5"
     },
     {
       "path": "src/deck/deckbuilding.js",
-      "sha256": "6b546f1f7c87014c4c2a687a81ce96cd1f7f651f2d031c768bbe6f45ffaab1e1"
+      "sha256": "bb6b5e866ec4a981f4267fc5f98da9f7bb6b4811c225202280de1d9ec11910cc"
     },
     {
       "path": "web/deck-rules.js",
-      "sha256": "ab77908ae47e7fada8a33f63238517f9b4a2345db30990089e686b724760db71"
+      "sha256": "8df48d4a2843823f7d3f201cb543cce1e51eaed9854fe66c1e79cbd6464a0c20"
     }
   ],
   "evidence": [

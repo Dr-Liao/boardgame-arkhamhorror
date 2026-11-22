@@ -53,6 +53,10 @@ export function effectDefinitionError(effect) {
   if (effect.type === 'sequence' && (!Array.isArray(effect.effects) || !effect.effects.length)) return '顺序结算缺少子效果'
   if (effect.type === 'substituteSkill' && (!Array.isArray(effect.from) || !effect.from.length || !effect.to)) return '属性替代缺少来源或目标'
   if (effect.type === 'targetedEffect' && !effect.effect) return '目标效果缺少子效果'
+  if (effect.type === 'attachBarricade' && effect.redirectSpawn != null
+    && typeof effect.redirectSpawn !== 'boolean') return '屏障的生成重定向必须是布尔值'
+  if (effect.type === 'blankEnemy' && [effect.damagePenalty, effect.horrorPenalty].some(value =>
+    value != null && (!Number.isSafeInteger(value) || value < 0))) return '攻击数值减值必须是非负整数'
   for (const child of [...(effect.options || []).map(option => option.effect), ...(effect.effects || []), effect.success, effect.fail, effect.effect, effect.successEffect, effect.failEffect]) {
     const error = effectDefinitionError(child)
     if (error) return error

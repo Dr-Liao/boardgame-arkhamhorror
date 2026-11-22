@@ -8,10 +8,13 @@ export function tracksHistory(state, inv, key, registeredEntry) {
   return codes.some(code => registeredEntry(typeof code === 'string' ? code : code.code)?.[key])
 }
 
-export function performedActionKinds(move, kind) {
+export function performedActionKinds(move, kind, registeredEntry) {
   const kinds = [kind]
   if (move.action === 'ability' || move.action === 'entityAbility') kinds.push('activate')
-  if (move.action === 'play') kinds.push('play')
+  if (move.action === 'play') {
+    const played = registeredEntry?.(move.copyCode || move.cardId)?.abilities.find(descriptor => descriptor.kind === 'played')
+    kinds.push(...(played?.additionalActionKinds || []), 'play')
+  }
   return [...new Set(kinds)]
 }
 
@@ -19,7 +22,7 @@ export function recordPerformedAction(state, inv, move, kind, registeredEntry) {
   if (['draw', 'resource'].includes(kind)) recordRoundAction(state, inv, 'actions', kind, registeredEntry)
   if (!state.investigators.some(owner => tracksHistory(state, owner, 'trackActionHistory', registeredEntry))) return []
   if (inv.actionHistory?.turn !== state.turnSerial) inv.actionHistory = { turn: state.turnSerial, entries: [] }
-  const current = performedActionKinds(move, kind)
+  const current = performedActionKinds(move, kind, registeredEntry)
   const previous = inv.actionHistory.entries.at(-1) || []
   inv.actionHistory.entries.push(current)
   return current.filter(value => previous.includes(value))
@@ -44,6 +47,17 @@ export function recordRoundAction(state, inv, category, kind, registeredEntry) {
   } else inv.roundActionHistory[category].push(kind)
 }
 
+export function roundActionCount(state, inv, kind) {
+  const history = inv.roundActionHistory
+  return history?.round === state.round ? history.actions.filter(item => item === kind).length : 0
+}
+
+export function recordRegulatedAction(state, inv, kind, registeredEntry) {
+  if (inv.assets.some(asset => registeredEntry(asset.code)?.assetRule?.regulationAction === kind)) {
+    recordRoundAction(state, inv, 'actions', kind, registeredEntry)
+  }
+}
+
 export function trackTestAssetSource(state, inv, registeredEntry) {
   return registeredEntry(inv.code)?.campaignDeck?.trackTestAssetSource === true
     || state.investigators.some(owner => tracksHistory(state, owner, 'trackTestAssetSource', registeredEntry))
@@ -53,12 +67,17 @@ export function defeatedHealthThisTurn(state, inv) {
   return inv.defeatedHealthHistory?.turn === state.turnSerial ? inv.defeatedHealthHistory.total : 0
 }
 
+export function defeatedPrintedHealthThisTurn(state, inv) {
+  return inv.defeatedPrintedHealthHistory?.turn === state.turnSerial ? inv.defeatedPrintedHealthHistory.total : 0
+}
+
 export function roundPlayRules(state, registeredEntry) {
   return Object.entries(state.scenario?.locations || {}).map(([id, location]) =>
     registeredEntry(location.originalCode || location.code || id)?.locationRule?.firstMatchingTraitOfRound).filter(Boolean)
 }
 
 export function recordPlayedCard(state, inv, card, registeredEntry) {
+  recordRegulatedAction(state, inv, 'play', registeredEntry)
   const trackAsset = registeredEntry(inv.code)?.investigator?.firstAssetOfRound && card.type === 'asset'
   if (!trackAsset && !roundPlayRules(state, registeredEntry).length) return
   if (inv.playedCardsHistory?.round !== state.round) inv.playedCardsHistory = { round: state.round, traits: [] }

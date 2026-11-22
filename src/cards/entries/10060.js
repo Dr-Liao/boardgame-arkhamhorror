@@ -37,6 +37,7 @@ export default {
   code: CODE,
   name: 'Ravenous Myconid (Carnivorous Strain)',
   researchRequirement: 'classifiedNewSpecies',
+  researchUpgradeFrom: '10044',
   uses: 0,
   usesType: GROWTH,
   abilities: [

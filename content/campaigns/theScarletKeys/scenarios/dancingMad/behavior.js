@@ -328,6 +328,7 @@ export const scenarioGaps = Object.freeze([
 export const implementedEncounterCodes = Object.freeze([...CHAPTER_ENTRY_CODES])
 
 export const behavior = {
+  exposeConcealedByEffect: (state, inv, id, api, location) => behavior.exposeMiniCard(state, inv, id, api, location),
   id: CHAPTER_ID,
   implementedEncounterCodes,
   scenarioApproximations,
@@ -632,8 +633,8 @@ export const behavior = {
   },
 
   /** 揭露一张隐匿迷你卡：诱饵移除；真身按「隐匿 X」入场并切到战斗警报。 */
-  exposeMiniCard(state, inv, miniCardId, api) {
-    const card = concealedAt(state, inv.location).find(item => item.id === miniCardId)
+  exposeMiniCard(state, inv, miniCardId, api, targetLocation = inv.location) {
+    const card = concealedAt(state, targetLocation).find(item => item.id === miniCardId)
     if (!card) return null
     const locationId = card.locationId
     const result = exposeMini(state, api, miniCardId, inv?.seat ?? null)

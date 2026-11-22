@@ -11,6 +11,12 @@ export const manifest = Object.freeze({
   minRulesVersion: 'n4.2',
   status: 'playable',
   requiredPackIds: ['core', 'notz'],
+  // 批次 2：关间可插入的独立支线（每人支付 cost 经验；结算后回到原定下一章）。
+  sideStories: [
+    { campaignId: 'curseOfTheRougarou', cost: 1 },
+    { campaignId: 'carnevaleOfHorrors', cost: 3 },
+    { campaignId: 'murderAtTheExcelsiorHotel', cost: 3 },
+  ],
   scenarioIds: ['theGathering', 'theMidnightMasks', 'theDevourerBelow'],
   unlock: {
     theGathering: [],

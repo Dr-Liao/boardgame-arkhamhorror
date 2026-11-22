@@ -13,10 +13,11 @@ export async function listLocalDecks(api) {
   return (await api('GET', ROOT)).decks
 }
 
-export async function saveLocalDeck(api, { id, name, investigatorCode, codes, slots, arkhamdbId, arkhamdbKind }) {
+export async function saveLocalDeck(api, { id, name, investigatorCode, investigatorBuild, codes, slots, arkhamdbId, arkhamdbKind }) {
   const body = {
     name,
     investigator_code: investigatorCode,
+    ...(investigatorBuild !== undefined ? { investigatorBuild } : {}),
     slots: slots && typeof slots === 'object' && !Array.isArray(slots) ? slots : codesToSlots(codes || []),
     ...(arkhamdbId ? { arkhamdbId, ...(arkhamdbKind ? { arkhamdbKind } : {}) } : {}),
   }
@@ -35,6 +36,7 @@ export function formatDeckLibraryJson(deck) {
   return JSON.stringify({
     name: deck?.name || '',
     investigator_code: deck?.investigator_code || deck?.description?.investigatorCode || '',
+    ...(deck?.investigatorBuild ? { investigatorBuild: deck.investigatorBuild } : {}),
     slots: deck?.slots || {},
     ...(deck?.arkhamdbId ? { id: Number(deck.arkhamdbId) || deck.arkhamdbId } : {}),
   }, null, 2)

@@ -136,7 +136,7 @@ function sendEnemyToShadows(state, api, enemy, options = {}) {
  * 揭露某地点的一张迷你卡：真身 → 把对应敌人从阴影放回该地点；诱饵 → 结算地点规则
  * （09580 拥挤商铺：把本地点 1 个线索移到最近的异教徒）。
  */
-function exposeAt(state, api, seat, locationId) {
+function exposeAt(state, api, seat, locationId, selectedMiniId = null) {
   const concealed = concealedApi(api)
   if (!concealed) return { exposed: false }
   const candidates = concealed.at(locationId) || []
@@ -145,7 +145,7 @@ function exposeAt(state, api, seat, locationId) {
     return { exposed: false }
   }
   const options = candidates.map((card, index) => ({ id: card.id, label: `隐匿迷你卡 #${index + 1}` }))
-  const id = choose(api, {
+  const id = selectedMiniId ?? choose(api, {
     kind: 'card', source: 'dealingsExpose', seat,
     prompt: '选择要揭露的隐匿迷你卡（正面向下，不显示身份）。', options,
   })
@@ -961,6 +961,7 @@ export const implementedEncounterCodes = Object.freeze(['09584', '09585', '09586
   '09587', '09588', '09589', '09571', '09571b', '09590a', '09590b'])
 
 export const behavior = {
+  exposeConcealedByEffect: (state, inv, id, api, location) => exposeAt(state, api, inv.seat, location, id),
   id: CHAPTER_ID,
   name: '暗中交易',
   scenarioApproximations,

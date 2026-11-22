@@ -23,6 +23,12 @@ export const manifest = {
   minRulesVersion: 'n4.2',
   status: 'playable',
   requiredPackIds: ['core', 'carcosaCampaign'],
+  // 批次 2：关间可插入的独立支线（每人支付 cost 经验；结算后回到原定下一章）。
+  sideStories: [
+    { campaignId: 'curseOfTheRougarou', cost: 1 },
+    { campaignId: 'carnevaleOfHorrors', cost: 3 },
+    { campaignId: 'murderAtTheExcelsiorHotel', cost: 3 },
+  ],
   scenarioIds: chapters.map(chapter => chapter.id),
   unlock: Object.fromEntries(chapters.map((chapter, index) =>
     [chapter.id, index ? [chapters[index - 1].id] : []])),

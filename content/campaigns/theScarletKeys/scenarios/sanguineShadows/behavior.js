@@ -905,6 +905,7 @@ function enemyHealthOf(enemy) {
 // behavior
 // ---------------------------------------------------------------------------
 export const behavior = {
+  exposeConcealedByEffect: exposeAt,
   id: CHAPTER_ID,
   implementedEncounterCodes: Object.freeze([
     RAW_CODES.laChicaRoja, RAW_CODES.laChicaRojaAlly, RAW_CODES.boundNightgaunt,

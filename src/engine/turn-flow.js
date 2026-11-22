@@ -14,7 +14,9 @@ import { noteChaosTokenChange } from './chaos-bag.js'
 import { afterHandDiscard } from './hand-discard-window.js'
 import { vehicleOf } from './vehicles.js'
 import { reactionSource } from './reaction-source.js'
+import { hasWindowListener } from './window-listeners.js'
 import { nextPlayDiscount } from './effect-state.js'
+import { normalizeCostValues } from './cost.js'
 // 2026-11-16 P2-3/P2-5：《绯红密钥》定制卡的 `customizationEffects.playCost`（-1 费用类）真实读点。
 // 此前只注册不读（费用修正实际未生效）；与条目的 `playCostModifier` 二选一，避免同一效果双重减费。
 import { customizationChecked, customizationPlayCostDelta } from './tsk-customizable.js'
@@ -192,6 +194,7 @@ export function createTurnFlow(deps) {
       && attachments.some(item => registeredEntry(item.code)?.grantsHidingSpot && item.location === enemy.location)
     // 剧本赋予的冷漠（02063 四叶草俱乐部）在敌人移动后仍然保留。
     enemy.aloof = !!enemy.printedAloof || enemy.hidingSpotAloof || enemy.grantedAloof === true
+      || enemy.aloofUntilRound === state.round
     // Phase 5（5a-27）：「伏击」这类敌人入场即触发伤害的附属由条目级 ambushAttachment 声明。
     const ambush = spawned && attachments.find(item => registeredEntry(item.code)?.ambushAttachment && item.location === enemy.location)
     if (ambush) {
@@ -199,6 +202,14 @@ export function createTurnFlow(deps) {
       state.investigators[ambush.ownerSeat]?.discard.push(ambush.code)
       enemy.defeatedBy = ambush.ownerSeat
       damageEnemy(state, enemy, 2, ambush.ownerSeat, events)
+    }
+    // 批次 3（60562/60563/60565/60566/60578/60581）：敌人入场或移动进入带玩家地点附属的地点后，
+    // 打开通用「进入附属地点后」窗口；是否结算由各附属条目的 forced/reaction 声明决定。
+    if ((state.playerLocationAttachments || []).some(item => item.location === enemy.location)
+      && hasWindowListener(state, 'entersAttachedLocation')) {
+      reactionWindow(state, 'entersAttachedLocation', { when: 'entersAttachedLocation', enemy,
+        enemyId: enemy.id, location: enemy.location, spawned, seat: enemy.engagedSeat ?? null },
+        events, { allowNested: true })
     }
     if (!state.enemies.includes(enemy)) return
     const snare = attachments.find(item => registeredEntry(item.code)?.snareAttachment && item.location === enemy.location && !enemy.elite)
@@ -453,6 +464,14 @@ export function createTurnFlow(deps) {
       turnBeginningWindow(state, events)
       return
     }
+    // 批次 3（60480）：重复调查阶段——先重开阶段，阶段结束时的代价留到下一次阶段交界结算。
+    if (state.investigationRepeat) {
+      const record = state.investigationRepeat
+      delete state.investigationRepeat
+      state.investigationRepeatEnd = record
+      beginInvestigationPhase(state, events, true)
+      return
+    }
     if (useGoldPocketWatch(state, 'end', 'investigation', events)) {
       beginInvestigationPhase(state, events, true)
       return
@@ -624,7 +643,9 @@ export function createTurnFlow(deps) {
     }
     if (['ability', 'entityAbility'].includes(move.action)) {
       const ability = abilityOfMove(state, inv, move)
-      cost = ability?.cost?.action === false ? 0 : typeof ability?.cost?.action === 'number' ? ability.cost.action : 1
+      const action = normalizeCostValues({ action: ability?.cost?.action },
+        { state, inv, source: ability?.source, descriptor: ability?.descriptor })?.action
+      cost = action === false ? 0 : typeof action === 'number' ? action : 1
       // Phase 5：描述子可以用 countsAs 声明「按哪种行动结算」（旧式能力把这件事写在 effect.kind 上，
       // 例如「意志闪避」按 evade 结算、不引发借机攻击）。
       kind = ability?.descriptor
@@ -669,5 +690,14 @@ export function createTurnFlow(deps) {
 
   function playConditionHelpers(...args) { return createAbilityRulesApi().playConditionHelpers(...args) }
 
-  return { tryAquinnahRedirect, codexSealedElderSign, elderSignEffect, spawnStoryEnemy, processPlayerEnemyEntry, groupPayment, addVictory, descriptorReactionSpec, cannotPlayTypes, chooseEnemyFrom, sealRevealedChaosToken, discardHandTo, discardChosenCards, advanceInvestigator, scenarioResignAvailable, playCost, itemDiscountAtLocation, consumeItemDiscountAtLocation, charlesPayCandidate, tomeActionEligible, actionCost, canParleyCultist, litaControlled, litaUncontrolled, unique, evaluateCriteria, playConditionHelpers }
+  // 批次 3（60480）：登记「重复一次调查阶段」。回合结束推进会消费它并直接重开调查阶段。
+  function repeatInvestigationPhase(state, events, { seat = state.currentSeat, physicalTrauma = 0 } = {}) {
+    if (!state || state.phase !== 'investigation' || state.investigationRepeat) return false
+    const inv = state.investigators[seat]
+    if (!inv || inv.defeated || inv.resigned) return false
+    state.investigationRepeat = { seat, physicalTrauma: Number.isSafeInteger(physicalTrauma) ? physicalTrauma : 0 }
+    info(state, events, `🔁 ${inv.name} 将重复本次调查阶段。`)
+    return true
+  }
+  return { repeatInvestigationPhase, tryAquinnahRedirect, codexSealedElderSign, elderSignEffect, spawnStoryEnemy, processPlayerEnemyEntry, groupPayment, addVictory, descriptorReactionSpec, cannotPlayTypes, chooseEnemyFrom, sealRevealedChaosToken, discardHandTo, discardChosenCards, advanceInvestigator, scenarioResignAvailable, playCost, itemDiscountAtLocation, consumeItemDiscountAtLocation, charlesPayCandidate, tomeActionEligible, actionCost, canParleyCultist, litaControlled, litaUncontrolled, unique, evaluateCriteria, playConditionHelpers }
 }

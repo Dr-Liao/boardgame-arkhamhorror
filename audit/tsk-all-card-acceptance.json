@@ -273,7 +273,7 @@
       },
       {
         "file": "audit/tsk-investigators.json",
-        "sha256": "a5c7b18b3f8b280aaefc19f3ad2e5219e4600b466a9703c8b2cd72421d4d0fd0"
+        "sha256": "ee735eec30e5442457cf27afa591ec27584db2a0681f0c507e9aa937f028bc3a"
       },
       {
         "file": "audit/tsk-campaign-plan.json",
@@ -381,7 +381,7 @@
       },
       {
         "file": "tests/tsk-shared-encounters-a.test.mjs",
-        "sha256": "55b9d956584e3b77069606a9a33ab8d055576c4c7fffeaf27c92a43d6e5bd8fc",
+        "sha256": "1bf9dd6130f34079999b5903ffaaeb9133d3bc362227e46e67c6b991f03047a6",
         "passed": 40,
         "failed": 0,
         "spawnExit": 0,

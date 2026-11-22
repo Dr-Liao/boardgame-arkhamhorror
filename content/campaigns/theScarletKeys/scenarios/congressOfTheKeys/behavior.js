@@ -1541,6 +1541,7 @@ export const scenarioGaps = Object.freeze([
 // behavior（引擎钩子）
 // ---------------------------------------------------------------------------
 export const behavior = {
+  exposeConcealedByEffect: (state, inv, id, api) => exposeAt(state, inv.seat, id, api),
   id: CHAPTER_ID,
   // 本章目录下真正有单卡条目的卡号（地点/幕/密谋/提示卡不建条目）。
   implementedEncounterCodes: Object.freeze([RAW_CODES.mimeticNemesis]),

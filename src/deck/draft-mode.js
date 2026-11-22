@@ -1,4 +1,5 @@
 import { ALL_CARDS, INVESTIGATORS } from '../cards/cards-data.js'
+import { investigatorBackExperience, investigatorDeckDefinition } from './alternate-investigator-build.js'
 import { DRAFT_PLAYER_CARD_CODES, EXPANDED_PLAYER_CARD_CODES, isPlayable, matchesDeckOptions, signatureAndWeaknesses } from './deckbuilding.js'
 import { brandedSpellOptions } from './branded-spell.js'
 import { allowsCard, cardPoolContext } from './card-pool.js'
@@ -6,7 +7,7 @@ import { deckRules, validateDeckRules } from './deck-rules.js'
 import { randomValue } from '../engine/rules-state.js'
 import { requestChoice } from '../engine/resolution.js'
 import { registeredEntry } from '../engine/ability.js'
-import { applyStartingDeckExperience, purchaseCard, registerCampaignInvestigator, replacementOptions, applyPermanentPurchaseEffects } from '../campaign/campaign.js'
+import { applyStartingDeckExperience, campaignOpeningExperience, purchaseCard, registerCampaignInvestigator, replacementOptions, applyPermanentPurchaseEffects } from '../campaign/campaign.js'
 
 export const INITIAL_DRAFT_REROLLS = 5
 export const isDraftMode = state => state.deckMode === 'draft'
@@ -25,6 +26,7 @@ const startingExperience = deck => [...new Set(deck)].reduce((sum, code) =>
 function deckWithoutCampaignGrants(record) {
   const granted = new Map()
   for (const code of record?.campaignCards || []) granted.set(code, (granted.get(code) || 0) + 1)
+  for (const code of record?.retainedUpgrades || []) granted.set(code, (granted.get(code) || 0) + 1)
   if (!granted.size) return record?.deck || []
   const deck = []
   for (const code of record.deck || []) {
@@ -43,10 +45,11 @@ export function draftDeckStatus(record) {
   if (!record?.draftMode) return null
   const deck = deckWithoutCampaignGrants(record)
   const codes = deck.filter(ordinary)
-  const size = deckRules(INVESTIGATORS[record.code], codes, ALL_CARDS).size
+  const definition = investigatorDeckDefinition(record)
+  const size = deckRules(definition, codes, ALL_CARDS).size
   const count = counted(codes).length
   return { size, count, missing: Math.max(0, size - count),
-    ready: !validateDeckRules(INVESTIGATORS[record.code], codes, ALL_CARDS, { draftMode: true }).errors.length }
+    ready: !validateDeckRules(definition, codes, ALL_CARDS, { draftMode: true }).errors.length }
 }
 
 export function draftDecksReady(state) {
@@ -62,9 +65,10 @@ function beginRefill(state, record) {
 }
 
 function candidates(state, record, initial, refill = false) {
-  const inv = INVESTIGATORS[record.code]
+  const inv = investigatorDeckDefinition(record)
   const context = cardPoolContext(state)
-  const availableStartingXp = initial && !refill && record.startingDeckExperience ? record.xp : 0
+  const hasStartingBudget = record.startingDeckExperience || investigatorBackExperience(record) || campaignOpeningExperience(state.campaign)
+  const availableStartingXp = initial && !refill && hasStartingBudget ? record.xp : 0
   return DRAFT_PLAYER_CARD_CODES.map(code => ALL_CARDS[code]).filter(card => {
     if (!isPlayable(card) || card.signatureFor || card.subtype) return false
     if (!allowsCard(card.code, context) || !matchesDeckOptions(inv, card, record.deck)) return false
@@ -98,16 +102,22 @@ function generate(state, record, initial, refill = false) {
   record.draftMode.locked = false
 }
 
-export function startInitialDraft(state, seat) {
+export function startInitialDraft(state, seat, basicWeaknessPool) {
   const inv = state.investigators[seat]
   let record = state.campaign.investigators[seat]
   if (record?.draftMode && record.code === inv.code) return
   const sig = signatureAndWeaknesses(INVESTIGATORS[inv.code], () => randomValue(state),
-    { deferBasicWeakness: !state._legacyStartingDeckRules })
+    { deferBasicWeakness: !state._legacyStartingDeckRules, investigatorBuild: inv.investigatorBuild, basicWeaknessPool })
   const retained = record?.deck.filter(code => ALL_CARDS[code]?.subtype === 'basicweakness') || []
   const dependencies = [...sig.signatureCards, ...sig.signatureWeaknesses, ...(retained.length ? retained : sig.basicWeaknesses)]
   if (!record) record = registerCampaignInvestigator(state.campaign, inv, dependencies)
-  else record.deck = dependencies
+  else {
+    record.deck = dependencies
+    if (inv.investigatorBuild) {
+      record.investigatorBuild = structuredClone(inv.investigatorBuild)
+      applyStartingDeckExperience(state.campaign, record, {})
+    }
+  }
   record.startingDeckReady = false
   record.draftMode = { phase: 'initial', options: [], freeRerolls: INITIAL_DRAFT_REROLLS, locked: false, round: roundKey(state) }
   generate(state, record, true)
@@ -173,13 +183,16 @@ export function applyDraftMove(state, seat, move) {
     const deck = deckWithoutCampaignGrants(record)
     if (initial) {
       const bonus = startingExperience(deck)
-      if (bonus) applyStartingDeckExperience(state.campaign, record, {
+      if (bonus || record.startingDeckExperience || investigatorBackExperience(record) || campaignOpeningExperience(state.campaign)) {
+        applyStartingDeckExperience(state.campaign, record, {
         startingExperience: bonus, startingExperienceSpent: deck.reduce((sum, code) => sum + experienceCost(ALL_CARDS[code]), 0),
-      }, { choosePurchaseEffect: spec => requestChoice(state, spec) })
+        }, { choosePurchaseEffect: spec => requestChoice(state, spec) })
+      }
     }
-    const size = deckRules(INVESTIGATORS[record.code], deck, ALL_CARDS).size
+    const definition = investigatorDeckDefinition(record)
+    const size = deckRules(definition, deck, ALL_CARDS).size
     if (counted(deck).length >= size) {
-      const errors = validateDeckRules(INVESTIGATORS[record.code], deck.filter(ordinary), ALL_CARDS, { draftMode: true }).errors
+      const errors = validateDeckRules(definition, deck.filter(ordinary), ALL_CARDS, { draftMode: true }).errors
       if (errors.length) throw new Error(`选牌未满足调查员构筑要求：${errors[0]}`)
       record.startingDeckReady = refill || !!state._legacyStartingDeckRules
       if (!record.startingDeckReady) record.startingDeckConfirmationPending = true

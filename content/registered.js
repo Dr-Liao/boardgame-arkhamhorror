@@ -1,5 +1,6 @@
 import { createContentRegistry } from './registry.js'
 import { packs } from './packs/manifests.js'
+import { returnCampaignPacks } from './packs/returnCampaign/manifests.js'
 import { expansionBundles } from './expansions.js'
 import { manifest as nightOfTheZealot } from './campaigns/nightOfTheZealot/manifest.js'
 import * as gathering from './campaigns/nightOfTheZealot/scenarios/theGathering/index.js'
@@ -154,6 +155,48 @@ import * as tdcObsidianCanyons from './campaigns/theDrownedCity/scenarios/obsidi
 import * as tdcSepulchreOfTheSleeper from './campaigns/theDrownedCity/scenarios/sepulchreOfTheSleeper/index.js'
 import * as tdcTheDoomOfArkhamPartI from './campaigns/theDrownedCity/scenarios/theDoomOfArkhamPartI/index.js'
 import * as tdcTheDoomOfArkhamPartII from './campaigns/theDrownedCity/scenarios/theDoomOfArkhamPartII/index.js'
+// 批次 2（「重返」与首批平行调查员）：重返敦威治遗产 / 重返卡尔克萨之路进入生产组合根。
+// 「重返夜之狂热」待其三章齐备后同批注册（见下方 returnTo... 区块）。
+import { manifest as returnToTheDunwichLegacy } from './campaigns/returnToTheDunwichLegacy/manifest.js'
+import * as retDwlExtracurricularActivities from './campaigns/returnToTheDunwichLegacy/scenarios/returnToExtracurricularActivities/index.js'
+import * as retDwlTheHouseAlwaysWins from './campaigns/returnToTheDunwichLegacy/scenarios/returnToTheHouseAlwaysWins/index.js'
+import * as retDwlTheMiskatonicMuseum from './campaigns/returnToTheDunwichLegacy/scenarios/returnToTheMiskatonicMuseum/index.js'
+import * as retDwlTheEssexCountyExpress from './campaigns/returnToTheDunwichLegacy/scenarios/returnToTheEssexCountyExpress/index.js'
+import * as retDwlBloodOnTheAltar from './campaigns/returnToTheDunwichLegacy/scenarios/returnToBloodOnTheAltar/index.js'
+import * as retDwlUndimensionedAndUnseen from './campaigns/returnToTheDunwichLegacy/scenarios/returnToUndimensionedAndUnseen/index.js'
+import * as retDwlWhereDoomAwaits from './campaigns/returnToTheDunwichLegacy/scenarios/returnToWhereDoomAwaits/index.js'
+import * as retDwlLostInTimeAndSpace from './campaigns/returnToTheDunwichLegacy/scenarios/returnToLostInTimeAndSpace/index.js'
+import { manifest as returnToThePathToCarcosa } from './campaigns/returnToThePathToCarcosa/manifest.js'
+import * as retCarcosaCurtainCall from './campaigns/returnToThePathToCarcosa/scenarios/returnToCurtainCall/index.js'
+import * as retCarcosaTheLastKing from './campaigns/returnToThePathToCarcosa/scenarios/returnToTheLastKing/index.js'
+import * as retCarcosaEchoesOfThePast from './campaigns/returnToThePathToCarcosa/scenarios/returnToEchoesOfThePast/index.js'
+import * as retCarcosaTheUnspeakableOath from './campaigns/returnToThePathToCarcosa/scenarios/returnToTheUnspeakableOath/index.js'
+import * as retCarcosaAPhantomOfTruth from './campaigns/returnToThePathToCarcosa/scenarios/returnToAPhantomOfTruth/index.js'
+import * as retCarcosaThePallidMask from './campaigns/returnToThePathToCarcosa/scenarios/returnToThePallidMask/index.js'
+import * as retCarcosaBlackStarsRise from './campaigns/returnToThePathToCarcosa/scenarios/returnToBlackStarsRise/index.js'
+import * as retCarcosaDimCarcosa from './campaigns/returnToThePathToCarcosa/scenarios/returnToDimCarcosa/index.js'
+// 批次 2：独立支线（Curse of the Rougarou）作为独立单章战役注册；主战役的关间插入
+// 由各主战役 manifest 的 `sideStories` 声明 + hubStartSideStory 驱动（引擎已接通）。
+import { manifest as curseOfTheRougarou } from './campaigns/curseOfTheRougarou/manifest.js'
+import * as curseOfTheRougarouChapter from './campaigns/curseOfTheRougarou/scenarios/curseOfTheRougarou/index.js'
+// 批次 2：「重返夜之狂热」三章齐备（RtG/RtMM/RtDB），与 51/52 同批进入生产组合根。
+import { manifest as returnToNightOfTheZealot } from './campaigns/returnToNightOfTheZealot/manifest.js'
+import * as retNotzGathering from './campaigns/returnToNightOfTheZealot/scenarios/returnToTheGathering/index.js'
+import * as retNotzMasks from './campaigns/returnToNightOfTheZealot/scenarios/returnToTheMidnightMasks/index.js'
+import * as retNotzDevourer from './campaigns/returnToNightOfTheZealot/scenarios/returnToTheDevourerBelow/index.js'
+import { manifest as carnevaleOfHorrors } from './campaigns/carnevaleOfHorrors/manifest.js'
+import * as carnevaleOfHorrorsChapter from './campaigns/carnevaleOfHorrors/scenarios/carnevaleOfHorrors/index.js'
+import { manifest as murderAtTheExcelsiorHotel } from './campaigns/murderAtTheExcelsiorHotel/manifest.js'
+import * as murderAtTheExcelsiorHotelChapter from './campaigns/murderAtTheExcelsiorHotel/scenarios/murderAtTheExcelsiorHotel/index.js'
+// 批次 2：四项调查员挑战（独立单章战役；opening 固定指定调查员与 3 点起始经验）。
+import { manifest as readOrDie } from './campaigns/readOrDie/manifest.js'
+import * as readOrDieChapter from './campaigns/readOrDie/scenarios/readOrDie/index.js'
+import { manifest as allOrNothing } from './campaigns/allOrNothing/manifest.js'
+import * as allOrNothingChapter from './campaigns/allOrNothing/scenarios/allOrNothing/index.js'
+import { manifest as badBlood } from './campaigns/badBlood/manifest.js'
+import * as badBloodChapter from './campaigns/badBlood/scenarios/badBlood/index.js'
+import { manifest as byTheBook } from './campaigns/byTheBook/manifest.js'
+import * as byTheBookChapter from './campaigns/byTheBook/scenarios/byTheBook/index.js'
 
 let bundle = {
   packs: [...packs, ...expansionBundles.map(entry => entry.manifest), dunwichCampaignPack, dunwichInvestigators,
@@ -163,7 +206,9 @@ let bundle = {
     tskCampaignPack, tskInvestigators, tskPlayer],
   campaigns: [nightOfTheZealot, theDunwichLegacy, thePathToCarcosa, theForgottenAge, theCircleUndone,
     theDreamEaters, theInnsmouthConspiracy, eoteCampaignManifest, tskCampaignManifest, fhvCampaignManifest,
-    tdcCampaignManifest],
+    tdcCampaignManifest, returnToTheDunwichLegacy, returnToThePathToCarcosa,
+    curseOfTheRougarou, carnevaleOfHorrors, murderAtTheExcelsiorHotel, returnToNightOfTheZealot,
+    readOrDie, allOrNothing, badBlood, byTheBook],
   scenarios: [gathering, masks, devourer, extracurricularActivity, theHouseAlwaysWins, theMiskatonicMuseum,
     theEssexCountyExpress, bloodOnTheAltar, undimensionedAndUnseen, whereDoomAwaits, lostInTimeAndSpace,
     curtainCall, theLastKing, echoesOfThePast, theUnspeakableOath, aPhantomOfTruth, thePallidMask,
@@ -185,7 +230,15 @@ let bundle = {
     fhvDawnOfTheFinalDay, fhvPreludeTheFinalEvening, fhvFateOfTheVale,
     tdcOneLastJob, tdcTheWesternWall, tdcTheDrownedQuarter, tdcTheApiary, tdcTheGrandVault,
     tdcCourtOfTheAncients, tdcObsidianCanyons, tdcSepulchreOfTheSleeper,
-    tdcTheDoomOfArkhamPartI, tdcTheDoomOfArkhamPartII],
+    tdcTheDoomOfArkhamPartI, tdcTheDoomOfArkhamPartII,
+    retDwlExtracurricularActivities, retDwlTheHouseAlwaysWins, retDwlTheMiskatonicMuseum,
+    retDwlTheEssexCountyExpress, retDwlBloodOnTheAltar, retDwlUndimensionedAndUnseen,
+    retDwlWhereDoomAwaits, retDwlLostInTimeAndSpace,
+    retNotzGathering, retNotzMasks, retNotzDevourer,
+    retCarcosaCurtainCall, retCarcosaTheLastKing, retCarcosaEchoesOfThePast, retCarcosaTheUnspeakableOath,
+    retCarcosaAPhantomOfTruth, retCarcosaThePallidMask, retCarcosaBlackStarsRise, retCarcosaDimCarcosa,
+    curseOfTheRougarouChapter, carnevaleOfHorrorsChapter, murderAtTheExcelsiorHotelChapter,
+    readOrDieChapter, allOrNothingChapter, badBloodChapter, byTheBookChapter],
 }
 export let contentRegistry = createContentRegistry(bundle)
 

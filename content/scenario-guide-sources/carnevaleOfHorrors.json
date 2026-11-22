@@ -1,0 +1,245 @@
+{
+  "id": "carnevaleOfHorrors",
+  "campaignId": "carnevaleOfHorrors",
+  "locales": {
+    "en": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "The Carnevale is Coming…",
+          "text": "\"Look,\" Sheriff Engel insists, \"I know it sounds crazy, but that's really all there is to it.\" He sighs and sits back down, pouring a cup of joe for you and one for himself. \"A dame in Uptown spotted a cracked egg wearing this mask and holdin' a bloody butcher's cleaver,\" he says, motioning to the black leather mask sitting on his desk. It has a comically long nose and a strange symbol scrawled in yellow on its forehead. \"So, she calls it in. My boys and I picked him up on the corner of Saltonstall & Garrison.\" The sheriff's jaw clenches and his brows furrow as he recounts the story. \"Fella did nothing but laugh as we slapped the bracelets on him. Called himself Zanni. Said nothing except the 'carnival is coming', whatever the hell that meant. Wasn't until the next day we found the victim's body. Defense wanted him in a straitjacket. We were happy to oblige.\""
+        },
+        {
+          "id": "intro2",
+          "text": "There isn't much time to spare. If your research is right, there is more to this case than meets the eye. This \"Zanni\" wasn't talking about Darke's Carnival, but rather, the Carnevale of Venice, which begins just before the next full moon…"
+        }
+      ],
+      "setup": [
+        {
+          "id": "gatherSets",
+          "text": "Gather all cards from the Carnevale of Horrors encounter set."
+        },
+        {
+          "id": "removeLocation",
+          "text": "Choose 1 location at random and remove it from the game. If San Marco Basilica or Canal-Side is chosen, randomly choose a different location instead."
+        },
+        {
+          "id": "placeLocations",
+          "text": "Put the other 8 locations into play, in a random circular formation."
+        },
+        {
+          "id": "abbess",
+          "text": "Put Abbess Allegra Di Biase into play at San Marco Basilica."
+        },
+        {
+          "id": "startAt",
+          "text": "Each investigator begins play at San Marco Basilica."
+        },
+        {
+          "id": "carnevaleGoers",
+          "text": "Shuffle the 7 Masked Carnevale-Goers and put 1 into play at each location other than San Marco Basilica, Masked Carnevale-Goer side face-up. Do not look at their other sides."
+        },
+        {
+          "id": "setAside",
+          "text": "Set the following cards aside, out of play: Cnidathqua, Pantalone, Medico Della Peste, Bauta, Gilded Volto."
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "counterClockwise",
+          "title": "Counter-clockwise",
+          "text": "Some cards instruct the players to find the nearest location in the counter-clockwise direction. This is an exception to the above rule and should be followed as though locations are connected counter-clockwise."
+        },
+        {
+          "id": "acrossFrom",
+          "title": "“Across from”",
+          "text": "The location “across from” another location is the farthest location, equidistant in both the clockwise and counter-clockwise directions. For the purposes of this scenario, “across from your location” and “across from you” have the same meaning."
+        },
+        {
+          "id": "act1Back",
+          "title": "The Beast Emerges",
+          "text": "Put the set-aside Cnidathqua enemy into play in the center of all of the locations. For the remainder of the scenario, Cnidathqua is considered to be in play but is not at any location. The lead investigator chooses a Masked Carnevale-Goer in play and flips it to its other side."
+        },
+        {
+          "id": "cnidathqua",
+          "title": "Cnidathqua",
+          "text": "You may fight Cnidathqua as if it were at your location (it is not engaged with you). Cnidathqua cannot be evaded. Forced - After you fail a test while attacking Cnidathqua: Search the encounter deck and discard pile for a Writhing Appendage and spawn it engaged with you."
+        },
+        {
+          "id": "tokens",
+          "title": "Chaos Tokens",
+          "text": "Easy/Standard: [skull] -2. This token has an additional -1 for each Innocent Reveler underneath the agenda deck. [cultist] Reveal another token. If you fail this test, draw the top card of the encounter deck. [tablet] -3. If you fail, deal 1 damage or 1 horror to the nearest Innocent Reveler in play. [elder_thing] -4. If you fail and Cnidathqua is in play, it attacks you. Hard/Expert: [skull] -2. This token has an additional -1 for each Innocent Reveler underneath the act or agenda decks. [cultist] same. [tablet] -4. [elder_thing] -6."
+        }
+      ],
+      "story": [
+        {
+          "id": "act1",
+          "title": "The Carnevale Conspiracy",
+          "text": "The streets of Venice are packed with masked revelers. Somewhere among them, the servants of Cnidathqua move unseen, and the innocent are being taken one by one."
+        },
+        {
+          "id": "act2",
+          "title": "Get to the Boats!",
+          "text": "The eclipse darkens the sky as the canals begin to churn. You must reach the boats before the city is lost."
+        },
+        {
+          "id": "act3",
+          "title": "Row!",
+          "text": "The gondola bucks against the black water. All around you, the Carnevale's revelers raise their voices in a single, terrible chant."
+        }
+      ],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "No Resolution",
+          "text": "If no resolution was reached (each investigator was defeated): You sputter awake as an oar gently taps your shoulder. \"Tutto bene?\" The gondolier holding the oar says with a concerned expression. The city is devastated. Most of the boats in the canal are wrecked, and the streets are covered not in confetti, but in blood. In your Campaign Log, record that many were sacrificed to Cnidathqua during the Carnevale. Each investigator earns experience equal to the Victory X value of each card in the victory display. Skip to Additional Rewards."
+        },
+        {
+          "id": "resolution1",
+          "title": "Resolution 1",
+          "text": "The city is still recovering from the events during the eclipse. With nearly all evidence of the creature melted away by the hot sun, many attribute the violence during the Carnevale to local crime lord Cascio Di Boerio and his crew. In your Campaign Log, record that the sun banished Cnidathqua into the depths. Each investigator earns experience equal to the Victory X value of each card in the victory display. Skip to Additional Rewards."
+        },
+        {
+          "id": "resolution2",
+          "title": "Resolution 2",
+          "text": "The creature recoils as globules of its jelly-like flesh rip and tear from its body, splashing into the lagoon. It makes no sound as its torn body sinks into the depths. In your Campaign Log, record that Cnidathqua retreated to nurse its wounds. Each investigator earns experience equal to the Victory X value of each card in the victory display. Proceed to Additional Rewards."
+        },
+        {
+          "id": "additionalRewards",
+          "title": "Additional Rewards",
+          "text": "In player order, each investigator may choose one of the following Mask cards to add to their deck: Pantalone, Medico Della Peste, Bauta, or Gilded Volto. The chosen card does not count toward that investigator's deck size. If there are no Innocent Revelers underneath the act deck and at least 1 underneath the agenda deck, proceed to Sacrifice Made. If there are no Innocent Revelers underneath the agenda deck and 3 underneath the act deck, skip to Abbess Satisfied."
+        },
+        {
+          "id": "sacrificeMade",
+          "title": "Sacrifice Made",
+          "text": "Too many lives were lost during the eclipse to stop the machinations of Cnidathqua's servants. Each investigator searches the collection for a random basic Madness, Injury, or Monster weakness and adds it to their deck."
+        },
+        {
+          "id": "abbessSatisfied",
+          "title": "Abbess Satisfied",
+          "text": "Any one investigator may choose to add Abbess Allegria Di Biase to their deck. This card does not count toward that investigator's deck size."
+        }
+      ]
+    },
+    "zh": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "狂欢节即将来临……",
+          "text": "“听着，”恩格尔警长坚持道，“我知道这听起来很疯狂，但真的就是这样。”他叹了口气，坐回椅子，给你和他自己各倒了一杯咖啡。“上城的一位女士看见一个裂开的鸡蛋戴着这张面具，手里拿着血淋淋的剁肉刀，”他指着桌上那副黑色皮面具说。面具上有可笑的长鼻子，额头用黄色涂着一个奇怪的符号。“她报了警，我和手下在萨尔顿斯托尔与加里森街角抓住了他。”警长讲述时下颌紧绷、眉头紧锁。“那家伙被铐上时只是笑，自称‘赞尼’，别的什么都不说，只反复说‘狂欢节要来了’，谁知道那是什么意思。直到第二天我们才发现受害者的尸体。辩护律师想让他进精神病院，我们欣然照办。”"
+        },
+        {
+          "id": "intro2",
+          "text": "时间不多了。如果你的研究没错，这案子另有隐情：这个“赞尼”说的不是达克狂欢节，而是威尼斯狂欢节——就在下一个满月前开幕……"
+        }
+      ],
+      "setup": [
+        {
+          "id": "gatherSets",
+          "text": "收集恐怖狂欢节遭遇组的所有卡牌。"
+        },
+        {
+          "id": "removeLocation",
+          "text": "随机选择 1 张地点，从游戏中移除。若选中圣马可大教堂或运河畔，改随机选择另一张地点。"
+        },
+        {
+          "id": "placeLocations",
+          "text": "把其余 8 张地点以随机圆形阵型放入场。"
+        },
+        {
+          "id": "abbess",
+          "text": "把院长阿莱格里娅·迪·比亚塞放入圣马可大教堂。"
+        },
+        {
+          "id": "startAt",
+          "text": "每位调查员从圣马可大教堂开始游戏。"
+        },
+        {
+          "id": "carnevaleGoers",
+          "text": "洗混 7 名「戴面具的狂欢节行人」，在除圣马可大教堂外的每张地点各放 1 名，戴面具的一面朝上。不要查看它们的另一面。"
+        },
+        {
+          "id": "setAside",
+          "text": "把以下卡牌放到一边（场外）：奈达斯奎、潘塔洛内、瘟疫医生、包塔、镀金沃尔托。"
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "counterClockwise",
+          "title": "逆时针",
+          "text": "部分卡牌让你寻找「逆时针方向最近的地点」。这是对常规规则的例外，视同地点按逆时针相连来处理。"
+        },
+        {
+          "id": "acrossFrom",
+          "title": "“对面”",
+          "text": "某地点“对面”的位置是指与它距离最远、沿顺/逆时针都等距的地点。本剧本中“你所在地点的对面”与“你的对面”同义。"
+        },
+        {
+          "id": "act1Back",
+          "title": "野兽现身",
+          "text": "把放一边的奈达斯奎敌人生成在所有地点的中心。本剧本余下时间内，奈达斯奎视为在场，但不在任何地点。队长选择场上一名戴面具的狂欢节行人并把它翻面。"
+        },
+        {
+          "id": "cnidathqua",
+          "title": "奈达斯奎",
+          "text": "你可以攻击奈达斯奎，如同它位于你所在地点（但不与其交战）。不能躲避奈达斯奎。强制——你攻击奈达斯奎时检定失败后：从遭遇牌库和遭遇弃牌堆找出一张盘绕附肢，将其生成并与你交战。"
+        },
+        {
+          "id": "tokens",
+          "title": "混乱标记",
+          "text": "简单/普通：[skull] -2；议程牌库下方的每名无辜的狂欢者再 -1。[cultist] 再揭示一个混乱标记；若失败，抽取遭遇牌库顶 1 张。[tablet] -3；若失败，对最近的无辜的狂欢者造成 1 伤害或 1 恐惧。[elder_thing] -4；若失败且奈达斯奎在场，它攻击你。困难/专家：[skull] 计入场景与议程牌库下方；[tablet] -4；[elder_thing] -6。"
+        }
+      ],
+      "story": [
+        {
+          "id": "act1",
+          "title": "狂欢节阴谋",
+          "text": "威尼斯的街道挤满了戴面具的狂欢者。在人群之中，奈达斯奎的仆从正悄无声息地行动，无辜者一个接一个被带走。"
+        },
+        {
+          "id": "act2",
+          "title": "前往船只！",
+          "text": "日食使天空昏暗，运河开始翻涌。你们必须在城市沦陷前赶到船上。"
+        },
+        {
+          "id": "act3",
+          "title": "划船！",
+          "text": "贡多拉在漆黑的水面上颠簸。四周，狂欢节的参与者们齐声发出可怕而单一的吟唱。"
+        }
+      ],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "没有结局",
+          "text": "如果没有达成任何结局（每位调查员都被击败）：你在船桨轻拍肩膀时呛咳着醒来。“Tutto bene？”握着船桨的贡多拉船夫关切地说。城市满目疮痍：运河里大部分船只已毁，街道上覆盖的不是彩纸，而是鲜血。在剧本日志中记录：狂欢节期间许多人被献祭给了奈达斯奎。每位调查员获得胜利区经验。前往「额外奖励」。"
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "text": "日食期间事件过后，城市仍在恢复。几乎所有的生物痕迹都被烈日融化，许多人把狂欢节期间的暴力归咎于本地犯罪头目卡西奥·迪·博埃里奥及其团伙。在剧本日志中记录：太阳把奈达斯奎驱逐回深渊。每位调查员获得胜利区经验。前往「额外奖励」。"
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "text": "那生物退缩了，果冻般的肉块从它身上撕裂、剥落，溅入潟湖。它没有发出任何声音，破碎的身躯沉入深处。在剧本日志中记录：奈达斯奎退回去养伤。每位调查员获得胜利区经验。前往「额外奖励」。"
+        },
+        {
+          "id": "additionalRewards",
+          "title": "额外奖励",
+          "text": "按玩家顺序，每位调查员可选择 1 张面具卡加入牌组（不计入牌组张数）：潘塔洛内、瘟疫医生、包塔、镀金沃尔托。若场景牌库下方没有无辜的狂欢者且密谋牌库下方至少有 1 名，进入「献祭已成」；若密谋牌库下方没有且场景牌库下方有 3 名，进入「院长满意」。"
+        },
+        {
+          "id": "sacrificeMade",
+          "title": "献祭已成",
+          "text": "日食期间死去的人太多了，未能阻止奈达斯奎仆从的阴谋。野兽已被喂饱，它的爪牙更加强大。每位调查员从收藏中随机获得 1 个基础弱点（疯狂/创伤/怪物）。"
+        },
+        {
+          "id": "abbessSatisfied",
+          "title": "院长满意",
+          "text": "任意一位调查员可选择把院长阿莱格里娅·迪·比亚塞加入其牌组（不计入牌组张数）。"
+        }
+      ]
+    }
+  },
+  "note": "独立支线：按剧本参考卡 82001 与参考侧支线设置页布置；可在关间插入主战役（每人 3 XP）。"
+}

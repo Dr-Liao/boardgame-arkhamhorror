@@ -979,6 +979,8 @@ const hasTraitLocation = trait => location =>
 // 行为（引擎钩子）
 // ---------------------------------------------------------------------------
 export const behavior = {
+  concealedTargetsByEffect: state => exposeBlockedReason(state) ? [] : undefined,
+  exposeConcealedByEffect: exposeAt,
   id: CHAPTER_ID,
   implementedEncounterCodes: Object.freeze([
     RAW_CODES.thorneEnemy, RAW_CODES.thorneAsset, RAW_CODES.voidChimeraTrueForm,

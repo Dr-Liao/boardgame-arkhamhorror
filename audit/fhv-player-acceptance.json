@@ -25,14 +25,14 @@
     "total": 120,
     "verified": 120,
     "missing": 0,
-    "simplified": 54,
-    "simplifiedDisclosed": 54,
+    "simplified": 53,
+    "simplifiedDisclosed": 53,
     "buildable": 102,
     "dependencyOnly": 11,
     "basicWeaknesses": 4,
     "researched": 3,
     "testsPassed": 142,
-    "primitiveRequests": 45,
+    "primitiveRequests": 0,
     "deferredRequests": 45
   },
   "shards": [
@@ -504,15 +504,15 @@
     },
     {
       "path": "src/cards/entries/10059.js",
-      "sha256": "bd381bc3d4ef1a955095dc6b9460f46353173e519ee5fb0d8caad694cb9dbf77"
+      "sha256": "c847ade35cfad815a81d9991709e8c1db5d35bec81b6937727fd6e72159a94b2"
     },
     {
       "path": "src/cards/entries/10060.js",
-      "sha256": "49bb9721d68c71556853703e1a21ab251a5023cdf264aa6ab3170cc061cc1857"
+      "sha256": "c470c1bb9481a3a2b2a8dad36c9cc667f5dcc11a1f663be62b562f9c4f1adb01"
     },
     {
       "path": "src/cards/entries/10061.js",
-      "sha256": "2ea085024ee3bb5519aa7a4443035a934f50e0d7c29be9292525dfd1e989a039"
+      "sha256": "ada2ac48f2379642051ce58e17e781d45dba552f23c5fe3a8f3b421b3825fff3"
     },
     {
       "path": "src/cards/entries/10062.js",
@@ -676,7 +676,7 @@
     },
     {
       "path": "src/cards/entries/10102.js",
-      "sha256": "10a1a5cde304076b22ad2469136389c570092b256bd5cd2fd6eb659cb7a9122f"
+      "sha256": "d0c430bf8ccf65de9bb69fd18229698a7083ec3ed9037b01747ff793b5e7743d"
     },
     {
       "path": "src/cards/entries/10103.js",
@@ -2163,7 +2163,7 @@
           }
         ]
       },
-      "implementation": "bd381bc3d4ef1a955095dc6b9460f46353173e519ee5fb0d8caad694cb9dbf77",
+      "implementation": "c847ade35cfad815a81d9991709e8c1db5d35bec81b6937727fd6e72159a94b2",
       "evidence": [
         {
           "file": "fhv-player-m2-5.test.mjs",
@@ -2188,7 +2188,7 @@
       "channel": "descriptor",
       "simplified": false,
       "simplification": null,
-      "implementation": "49bb9721d68c71556853703e1a21ab251a5023cdf264aa6ab3170cc061cc1857",
+      "implementation": "c470c1bb9481a3a2b2a8dad36c9cc667f5dcc11a1f663be62b562f9c4f1adb01",
       "evidence": [
         {
           "file": "fhv-player-m2-5.test.mjs",
@@ -2213,7 +2213,7 @@
       "channel": "descriptor",
       "simplified": false,
       "simplification": null,
-      "implementation": "2ea085024ee3bb5519aa7a4443035a934f50e0d7c29be9292525dfd1e989a039",
+      "implementation": "ada2ac48f2379642051ce58e17e781d45dba552f23c5fe3a8f3b421b3825fff3",
       "evidence": [
         {
           "file": "fhv-player-m2-5.test.mjs",
@@ -3831,38 +3831,9 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment",
-          "field",
-          "flag"
-        ],
-        "count": 4,
-        "disclosures": [
-          {
-            "source": "flag",
-            "path": "entry.simplified",
-            "detail": "entry.simplified=true"
-          },
-          {
-            "source": "flag",
-            "path": "simplified",
-            "detail": "simplified=true"
-          },
-          {
-            "source": "field",
-            "path": "note",
-            "detail": "approximation: 「当你回合结束时返回手牌」没有事件卡延迟去向读点（09074 同一缺口），按「结算后立即返回手牌」近似；见 primitive-requests/10102.json。"
-          },
-          {
-            "source": "comment",
-            "line": 20,
-            "detail": "近似 披露（simplified）：「当你回合结束时返回手牌」没有事件卡延迟去向读点（09074 同一缺口），"
-          }
-        ]
-      },
-      "implementation": "10a1a5cde304076b22ad2469136389c570092b256bd5cd2fd6eb659cb7a9122f",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "d0c430bf8ccf65de9bb69fd18229698a7083ec3ed9037b01747ff793b5e7743d",
       "evidence": [
         {
           "file": "fhv-player-m2-9.test.mjs",
@@ -3920,7 +3891,7 @@
       "evidence": [
         {
           "file": "fhv-player-m2-9.test.mjs",
-          "line": 272,
+          "line": 276,
           "test": "P6 10103 超凡织造：Double 额外花 1 行动；依次打出两张[[法术]]事件（各减 1 费、结算时 +2）"
         }
       ]
@@ -3945,7 +3916,7 @@
       "evidence": [
         {
           "file": "fhv-player-m2-9.test.mjs",
-          "line": 311,
+          "line": 315,
           "test": "P6 10104 所罗门之钥：祝福多于诅咒时移除祝福治愈 2 点；诅咒多于祝福时移除诅咒获得 2 资源"
         }
       ]
@@ -3999,7 +3970,7 @@
       "evidence": [
         {
           "file": "fhv-player-m2-9.test.mjs",
-          "line": 359,
+          "line": 363,
           "test": "P6 10105 上古封印：检定结束揭示 2 诅咒/2 祝福后，把对应绑定召唤物放置入场并移出游戏"
         }
       ]
@@ -4058,7 +4029,7 @@
       "evidence": [
         {
           "file": "fhv-player-m2-9.test.mjs",
-          "line": 397,
+          "line": 401,
           "test": "P6 10106 钥匙看管者：祝福揭示时受 1 恐惧并发现 1 线索；离场时收回场外绑定集合"
         }
       ]
@@ -4117,7 +4088,7 @@
       "evidence": [
         {
           "file": "fhv-player-m2-9.test.mjs",
-          "line": 441,
+          "line": 445,
           "test": "P6 10107 黄铜仆从：诅咒揭示时受 1 伤害并对你地点/连接地点的敌人造成 2 伤害"
         }
       ]
@@ -4142,7 +4113,7 @@
       "evidence": [
         {
           "file": "fhv-player-m2-9.test.mjs",
-          "line": 472,
+          "line": 476,
           "test": "P6 10108 火柴盒：使用（3 补给）；快速横置花 1 补给使你地点本回合隐蔽值 -1，用尽弃掉"
         }
       ]
@@ -5380,7 +5351,7 @@
     },
     {
       "path": "tests/fhv-player-m2-9.test.mjs",
-      "sha256": "d9c2559d7a11ca8cdcd750d636da65f581f2b24f225ae88e37f2a9ba5335ab74"
+      "sha256": "730e1a91984e081d8bcd42f0e86144270f66f4ece326575016d5102f195e6d6d"
     }
   ],
   "evidence": [

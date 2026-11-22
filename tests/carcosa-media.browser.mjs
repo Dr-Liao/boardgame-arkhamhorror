@@ -1,3 +1,4 @@
+import { selectCampaign } from './playwright/campaign-picker.mjs'
 import { test, expect } from '@playwright/test'
 import { mkdirSync } from 'node:fs'
 
@@ -72,10 +73,9 @@ test('卡尔克萨可从大厅启动并使用专属主视觉与歌单', async ({
   await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
   const setup = page.getByRole('dialog', { name: '调查准备设置' })
   await setup.getByRole('combobox', { name: '席位数量' }).selectOption('1')
-  await setup.getByRole('combobox', { name: '战役', exact: true }).selectOption('thePathToCarcosa')
+  await selectCampaign(page, setup, 'thePathToCarcosa')
   await setup.getByRole('button', { name: '开始新游戏' }).click()
-  await expect(page.locator('.ah-hub')).toBeVisible()
-  await expect(page.locator('[data-presentation-theme="thePathToCarcosa"]')).toBeVisible()
+  await expect(page.locator('.ah-hub')).toHaveAttribute('data-presentation-theme', 'thePathToCarcosa')
   const hero = page.locator('img[src$="thePathToCarcosa/hub/theatre.webp"]').first()
   await expect(hero).toBeAttached()
   await expect.poll(() => hero.evaluate(image => image.naturalWidth)).toBeGreaterThan(1500)

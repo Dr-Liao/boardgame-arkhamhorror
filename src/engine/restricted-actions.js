@@ -30,6 +30,11 @@ export const RESTRICTED_ACTION_FIELDS = Object.freeze({
   itemPlay: 'itemPlayOnlyActions',
   // 地球边缘 P5：08014a 陈丽丽的免费战斗/躲避行动。
   fightEvade: 'fightEvadeOnlyActions',
+  fight: 'fightOnlyActions',
+  // 批次 3（12007 特里希）：额外行动只能用于躲避。
+  evade: 'evadeOnlyActions',
+  // 批次 3（60551）：额外行动只能用于打出事件。
+  eventPlay: 'eventPlayOnlyActions',
   // 八循环 P5：09001 卡森「额外行动只能用于本能力」的受限额度。
   crossSeatAction: 'crossSeatActionOnlyActions',
   parley: 'parleyOnlyActions',

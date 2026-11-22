@@ -11,6 +11,7 @@
 // 面板只在声明 parts 的战役里出现，所以本 spec 用 webServer 注册的「双线演示」战役
 // （ARKHAM_BROWSER_DEMO=dualHub）作为入口；结果由 tools/playwright-tde-ui-reporter.mjs
 // 写成 audit/tde-ui-browser.json（runner 生成，不手写）。
+import { selectCampaign } from './playwright/campaign-picker.mjs'
 import { test, expect } from '@playwright/test'
 import { mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -22,7 +23,7 @@ async function startDualDemo(page, playerCount = '3') {
   await page.goto('/index.html')
   await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
   const setup = page.getByRole('dialog', { name: '调查准备设置' })
-  await setup.getByRole('combobox', { name: '战役', exact: true }).selectOption('dualHubDemo')
+  await selectCampaign(page, setup, 'dualHubDemo')
   await setup.getByRole('combobox', { name: '席位数量' }).selectOption(playerCount)
   const started = page.waitForResponse('**/api/start')
   await setup.getByRole('button', { name: '开始新游戏' }).click()
@@ -121,7 +122,7 @@ test('M5 非双线战役不出现开局模式门，页签照常可用', async ({
   await page.goto('/index.html')
   await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
   const setup = page.getByRole('dialog', { name: '调查准备设置' })
-  await setup.getByRole('combobox', { name: '战役', exact: true }).selectOption('nightOfTheZealot')
+  await selectCampaign(page, setup, 'nightOfTheZealot')
   await setup.getByRole('combobox', { name: '席位数量' }).selectOption('2')
   await setup.getByRole('button', { name: '开始新游戏' }).click()
   const hub = page.locator('.ah-hub')
@@ -139,7 +140,7 @@ for (const [label, width, height] of [['desktop', 1440, 950], ['mobile', 390, 84
     await page.goto('/index.html')
     await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
     const setup = page.getByRole('dialog', { name: '调查准备设置' })
-    await setup.getByRole('combobox', { name: '战役', exact: true }).selectOption('dualHubDemo')
+    await selectCampaign(page, setup, 'dualHubDemo')
     await setup.getByRole('combobox', { name: '席位数量' }).selectOption('4')
     const started = page.waitForResponse('**/api/start')
     await setup.getByRole('button', { name: '开始新游戏' }).click()
@@ -271,7 +272,7 @@ test('M5 并行开局后局内不做分屏：两条线在后台同时运行，�
   await page.goto('/index.html')
   await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
   const setup = page.getByRole('dialog', { name: '调查准备设置' })
-  await setup.getByRole('combobox', { name: '战役', exact: true }).selectOption('dualHubDemo')
+  await selectCampaign(page, setup, 'dualHubDemo')
   await setup.getByRole('combobox', { name: '席位数量' }).selectOption('4')
   const started = page.waitForResponse('**/api/start')
   await setup.getByRole('button', { name: '开始新游戏' }).click()
@@ -316,7 +317,7 @@ for (const [label, width, height] of [['desktop', 1440, 950], ['mobile', 390, 84
     await page.goto('/index.html')
     await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
     const setup = page.getByRole('dialog', { name: '调查准备设置' })
-    await setup.getByRole('combobox', { name: '战役', exact: true }).selectOption('dualHubDemo')
+    await selectCampaign(page, setup, 'dualHubDemo')
     await setup.getByRole('combobox', { name: '席位数量' }).selectOption('4')
     await setup.getByRole('button', { name: '开始新游戏' }).click()
     const hub = page.locator('.ah-hub')
@@ -359,7 +360,7 @@ for (const [label, width, height] of [['desktop', 1440, 950], ['mobile', 390, 84
     await page.goto('/index.html')
     await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
     const setup = page.getByRole('dialog', { name: '调查准备设置' })
-    await setup.getByRole('combobox', { name: '战役', exact: true }).selectOption('dualHubDemo')
+    await selectCampaign(page, setup, 'dualHubDemo')
     await setup.getByRole('combobox', { name: '席位数量' }).selectOption('1')
     const started = page.waitForResponse('**/api/start')
     await setup.getByRole('button', { name: '开始新游戏' }).click()

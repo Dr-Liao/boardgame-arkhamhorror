@@ -6,6 +6,10 @@ import { enemyIsPart } from './enemy-parts.js'
 import { enemyCanEnterLocation } from './enemy-entry.js'
 import { mechanicState } from './mechanic-state.js'
 import { putInHand } from './hand-entry.js'
+// 批次 3（12052 / 60465）：轮末把装备返回手牌 / 洗回牌库时复用牌库区写入与洗牌原语。
+import { replacePlayerZoneCards } from './player-zones.js'
+import { randomValue } from './rules-state.js'
+import { shuffle } from '../deck/deckbuilding.js'
 import { hasPlayerWindow, playerWindowContext } from './player-mechanics.js'
 import { hasWindowListener } from './window-listeners.js'
 // 回合与阶段推进（神话 / 敌人 / 轮末 / 回合开始与结束）从 engine.js 拆出的模块
@@ -53,6 +57,19 @@ export function grantActionOnNextTurn(state, seat, amount = 1) {
   return true
 }
 
+export function grantActionThisRound(state, seat, amount = 1) {
+  const inv = state.investigators[seat]
+  if (!inv || inv.defeated || inv.resigned || !Number.isSafeInteger(amount) || amount < 1) return false
+  if (state.phase === 'investigation' && state.currentSeat === seat
+    && !inv.turnEnded && !state.turnsTaken?.includes(seat)) {
+    inv.actionsLeft += amount
+  } else {
+    const existing = inv.bonusActionsThisRound
+    inv.bonusActionsThisRound = { round: state.round, amount: (existing?.round === state.round ? existing.amount : 0) + amount }
+  }
+  return true
+}
+
 export function createTurn(deps) {
   const {
     upkeepPhase,
@@ -72,6 +89,7 @@ export function createTurn(deps) {
     chooseTurn,
     disengageEnemy,
     distanceToInvestigator,
+    eliminateInvestigator,
     drawEncounter,
     enemiesEngagedWith,
     // 07327 缟玛瑙守卫：地点声明「敌军阶段期间，重整的古神敌人可以攻击本地点的调查员」。
@@ -131,10 +149,25 @@ function runMythos(state, repeated = false) {
     for (const inv of state.investigators) {
       if (!inv || inv.defeated || inv.resigned) continue
       // Phase 6（6e-14）：轮末弃置从条目级字段读（旧 DSL 条目回落）。
-      for (const asset of inv.assets.filter(item =>
-        (registeredEntry(item.code)?.discardAtRoundEnd)).slice()) {
-        leaveAsset(state, inv, asset, [])
-        inv.discard.push(asset.code)
+      for (const asset of inv.assets.slice()) {
+        const entry = registeredEntry(asset.code)
+        if (entry?.discardAtRoundEnd) {
+          leaveAsset(state, inv, asset, [])
+          inv.discard.push(asset.code)
+          continue
+        }
+        // 批次 3（12052 / 60465）：轮末把装备返回手牌 / 洗回牌库。
+        // 条目级字段（装备自身条目）或实例级标记（事件把某张支援放进场后标记）都生效。
+        if (entry?.returnAssetToHandAtRoundEnd || asset.returnToHandAtRoundEnd === true) {
+          leaveAsset(state, inv, asset, [])
+          if (!asset.removedFromGame && !asset.returnedToHand) putInHand(state, inv, asset.originalCode || asset.code)
+          continue
+        }
+        if (entry?.shuffleAssetIntoDeckAtRoundEnd || asset.shuffleIntoDeckAtRoundEnd === true) {
+          leaveAsset(state, inv, asset, [])
+          if (!asset.removedFromGame && !asset.returnedToHand) inv.deck.push(asset.originalCode || asset.code)
+          inv.deck = replacePlayerZoneCards(state, inv, shuffle(inv.deck, () => randomValue(state)), 'shuffle')
+        }
       }
     }
   }
@@ -634,10 +667,15 @@ function turnBeginningWindow(state, events) {
   state.turnSerial = (state.turnSerial || 0) + 1
   if (inv) {
     inv.turnEnded = false
+    clearRestrictedAction(inv, 'fight')
     inv.actionsTakenThisTurn = 0
     if (inv.bonusActionsOnNextTurn) {
       inv.actionsLeft += inv.bonusActionsOnNextTurn
       delete inv.bonusActionsOnNextTurn
+    }
+    if (inv.bonusActionsThisRound) {
+      if (inv.bonusActionsThisRound.round === state.round) inv.actionsLeft += inv.bonusActionsThisRound.amount
+      delete inv.bonusActionsThisRound
     }
     resetTskTurnTracking(state, inv)
     for (const asset of inv.assets) delete asset.restrictedActionSpent
@@ -730,6 +768,19 @@ function runBetweenInvestigationPhases(state, events) {
   // 只在真有监听者时开窗：空窗口会改变重放指纹（与神话阶段结束同一口径）。
   if (hasWindowListener(state, 'investigationPhaseEnds')) {
     reactionWindow(state, 'investigationPhaseEnds', { when: 'investigationPhaseEnds', round: state.round }, events)
+  }
+  // 批次 3（60480）：重复调查阶段结束时，打出者被击败（击败链路按战役规则结算创伤）。
+  if (state.investigationRepeatEnd) {
+    const record = state.investigationRepeatEnd
+    delete state.investigationRepeatEnd
+    const victim = state.investigators[record.seat]
+    if (victim && !victim.defeated && !victim.resigned && typeof eliminateInvestigator === 'function') {
+      info(state, events, `💀 ${victim.name} 的重复调查阶段结束：被击败。`)
+      victim.defeated = true
+      victim.defeatCause = 'card'
+      eliminateInvestigator(state, victim, events)
+      if (typeof checkOutcome === 'function') checkOutcome(state, events)
+    }
   }
   // 第 5 步 P6：调查阶段结束——直觉牌库顶那张没打出的牌洗回直觉牌库。
   for (const inv of aliveInvestigators(state)) hunchDeck.returnCard(state, inv, events)

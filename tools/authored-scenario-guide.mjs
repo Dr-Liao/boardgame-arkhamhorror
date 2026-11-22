@@ -38,6 +38,8 @@ export function buildAuthoredScenarioGuide(manifest, source) {
   if (source?.id !== manifest.id || source?.campaignId !== manifest.campaignId || !isRecord(source.locales)) {
     throw new TypeError(`${manifest.id} 指南的关卡、战役或语言标识不匹配`)
   }
+  // 设置面板摘要（可选）：与生成式指南的 note 同一读点（content/scenario-guides.js#scenarioSetupNote）。
+  const note = source.note === undefined ? undefined : text(source.note, `${manifest.id}/note`)
   const locales = {}
   for (const language of ['zh', 'en']) {
     const locale = source.locales[language]
@@ -60,5 +62,6 @@ export function buildAuthoredScenarioGuide(manifest, source) {
   for (const outcome of manifest.resolutionIds) {
     if (!resolutionIds.has(outcome)) throw new TypeError(`${manifest.id} 指南缺少结局 ${outcome}`)
   }
-  return { id: manifest.id, campaignId: manifest.campaignId, sourceKind: 'authored', officialChinese: false, locales }
+  return { id: manifest.id, campaignId: manifest.campaignId, sourceKind: 'authored', officialChinese: false,
+    ...(note ? { note } : {}), locales }
 }

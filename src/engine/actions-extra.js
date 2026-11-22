@@ -385,11 +385,12 @@ export function createActionsExtra(deps) {
   function doPayDebt(state, seat, threatId, events) {
     const inv = state.investigators[seat]
     const t = inv.threat.find(item => item.id === threatId)
-    if (!t || !getThreatEffect(t)?.debt) return
+    const term = t && getThreatEffect(t)
+    if (!term?.debt) return
     resourceBank.spendFromPool(inv, 1, state)
     t.resources = (t.resources || 0) + 1
     t.debtPaymentsThisRound = (t.debtPaymentsThisRound || 0) + 1
-    info(state, events, `${inv.name} 向医院债务支付 1 资源（债务 ${t.resources}/6）。`)
+    info(state, events, `${inv.name} 向医院债务支付 1 资源（债务 ${t.resources}/${term.debtTarget ?? 6}）。`)
   }
 
   function doPurgeThreat(state, seat, threatId, events) {

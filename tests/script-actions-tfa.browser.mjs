@@ -1,3 +1,4 @@
+import { selectCampaign } from './playwright/campaign-picker.mjs'
 import { test, expect } from '@playwright/test'
 import { mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -12,7 +13,7 @@ async function enterUntamedWilds(page) {
   await page.goto('/index.html')
   await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
   const setup = page.locator('.ah-hub-setup')
-  await setup.getByRole('combobox', { name: '战役' }).selectOption('theForgottenAge')
+  await selectCampaign(page, setup, 'theForgottenAge')
   await setup.getByRole('combobox', { name: '席位数量' }).selectOption('1')
   await setup.getByRole('button', { name: '开始新游戏' }).click()
   const hub = page.locator('.ah-hub')

@@ -1496,6 +1496,7 @@ export function redirectConcealedLocation(state, locationId) {
 // 行为对象（引擎按注册的关卡行为调用）
 // ---------------------------------------------------------------------------
 export const behavior = {
+  exposeConcealedByEffect: (state, inv, id, api) => exposeMiniCardAt(state, id, inv, api),
   id: CHAPTER_ID,
   preScenarioSetup,
   setupScenario,

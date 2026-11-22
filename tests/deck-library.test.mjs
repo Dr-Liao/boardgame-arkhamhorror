@@ -6,7 +6,7 @@ import path from 'node:path'
 import { createServer } from '../../../lib/server.js'
 import arkham from '../index.js'
 import { deckLibraryFile } from '../src/integration/deck-library.js'
-import { codesToSlots } from '../web/deck-library.js'
+import { codesToSlots, formatDeckLibraryJson } from '../web/deck-library.js'
 import { planArkhamDbImport } from '../web/arkhamdb-import.js'
 import { buildDeck, deckBuilderData } from '../src/deck/deckbuilding.js'
 import { INVESTIGATORS } from '../src/cards/cards-data.js'
@@ -98,6 +98,28 @@ test('本地卡组库拒绝无效数据、跨站请求与非 JSON 写入', { tim
   assert.equal((await request('POST', 'decks', { investigator_code: '01001', slots: {} }, { origin: 'https://evil.example' })).status, 405)
   assert.equal((await request('POST', 'decks', undefined, { 'content-type': 'text/plain' })).status, 405)
   assert.equal((await request('GET', 'decks')).decks.length, 0)
+}))
+
+test('本地卡组库保存混搭构筑并可通过导出 JSON 恢复', { timeout: 30000 }, () => withHall(async request => {
+  const investigatorBuild = { back: '01003', signatures: 'both', directives: [] }
+  const { playerCards } = buildDeck(INVESTIGATORS['90008'], { investigatorBuild })
+  const body = { name: '混搭牌组', investigator_code: '90008', slots: codesToSlots(playerCards), investigatorBuild }
+  const invalid = await request('POST', 'decks', { ...body, investigatorBuild: { ...investigatorBuild, back: '01002' } })
+  assert.equal(invalid.status, 400, invalid.error)
+  const saved = await request('POST', 'decks', body)
+  assert.equal(saved.status, 200, saved.error)
+  const { decks: [listed] } = await request('GET', 'decks')
+  assert.deepEqual(listed.description.investigatorBuild, investigatorBuild)
+  const raw = JSON.parse(formatDeckLibraryJson(listed))
+  const query = new URLSearchParams({
+    investigator: raw.investigator_code,
+    slots: Object.entries(raw.slots).map(pair => pair.join(':')).join(','),
+    investigatorBuild: JSON.stringify(raw.investigatorBuild),
+  })
+  const restored = await request('GET', 'arkhamdb/resolve?' + query)
+  assert.equal(restored.status, 200, restored.error)
+  assert.deepEqual(restored.deck.investigatorBuild, investigatorBuild)
+  assert.equal(restored.deck.entries.reduce((sum, card) => sum + card.count, 0), playerCards.length)
 }))
 
 test('损坏的卡组库文件被隔离而不是覆盖', { timeout: 30000 }, () => withHall(async () => {

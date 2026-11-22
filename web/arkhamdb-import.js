@@ -48,6 +48,7 @@ export function loadArkhamDbDeck(parsed, { fetchImpl = globalThis.fetch.bind(glo
     const params = new URLSearchParams({ investigator: String(json.investigator_code), slots: slotQuery(json.slots) })
     if (json.name) params.set('name', String(json.name).slice(0, 120))
     if (json.id != null) params.set('id', String(json.id))
+    if (json.investigatorBuild != null) params.set('investigatorBuild', JSON.stringify(json.investigatorBuild))
     const ignore = slotQuery(json.ignoreDeckLimitSlots)
     if (ignore) params.set('ignore', ignore)
     if (json.taboo_id != null) params.set('taboo', String(json.taboo_id))
@@ -100,5 +101,10 @@ export function planArkhamDbImport(deck, { investigators = [], cardPool = [], cu
   const cardMap = Object.fromEntries(cardPool.filter(card => allowed.has(card.code)).map(card => [card.code, card]))
   if (investigator.rules) registerDeckRules(investigator.code, investigator.rules)
   const errors = blocked.length ? [] : validateDeckRules(investigator, codes, cardMap).errors
+  if (!blocked.length && investigator.startingXp) {
+    const spent = codes.reduce((sum, code) => sum + (cardMap[code].xp || 0) * (cardMap[code].exceptional ? 2 : 1), 0)
+    const budget = [...new Set(codes)].reduce((sum, code) => sum + (cardMap[code].startingExperience || 0), investigator.startingXp)
+    if (spent > budget) errors.push(t('hub.builder.cardUnavailable'))
+  }
   return { investigator, mismatch: investigator.code !== currentCode, codes, auto, blocked, notes, errors, ready: !blocked.length }
 }

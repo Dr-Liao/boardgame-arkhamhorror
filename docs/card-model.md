@@ -104,6 +104,8 @@ lifecycleChannel(code)  // → { played, commit, weakness, entersPlay, leavesPla
 - 描述子优先于 `EFFECTS`：迁移 = 把数据搬进描述子 + 删掉旧条目；
 - 一处读点漏改的后果是"某条路径仍读旧通道"，由 `tests/card-lifecycle.test.mjs` 的通道断言兜住。
 
+攻击和效果伤害共用两种伤害时机。`enemyWouldTakeDamage` 在放置伤害前提供来源、目标和当前伤害量。反应通过 `api.increaseEnemyDamage(context, amount)` 增加这次伤害。`enemyRule.maxDamagePerSource` 限制每次来源可放置的伤害量。`enemyDamagePlaced` 在一次伤害放置后提供实际放置量和超出目标生命值的部分，每次放置只触发一次。
+
 ### 3.2 目标枚举（`target`）
 
 需要先选目标的能力在描述子上声明：
@@ -161,6 +163,8 @@ api.addEffect({
 持续效果的 `modifiers` 与卡面修正走同一条管线，只是多了一个到期时间；读点是
 `effect-state.effectModifiers`，由引擎通过 `setModifierHooks` 注入（避免 `modifiers.js` 反向 import）。
 
+指定技能的修正可以用 `amount: { skill: 'intellect' }` 读取另一项当前有效技能值。效果随存档保留，技能相互参照时只结算未在当前求值链中出现的引用。 `testDifficulty` 在检定开始时修正难度。
+
 ### 4.1 布尔修正（C1，Phase 2）
 
 ```js
@@ -199,6 +203,16 @@ api.addEffect({
 | 受限额外槽（只放命中的卡） | `restrictedSlots: [{ slot, traitsAny?, unique?, count }]` | `restrictedSlotInfo`：容量只给命中谓词的候选；在场受限卡可移入受限槽，因此其占用要从普通槽里扣掉。`traitsAny` 按特性（01008 书位 / 02147 武器位 / 05112 法术位），`unique:false` 按独特性（04006 米奇「只放非独特盟友」） |
 | 占用豁免（最多 N 张命中卡不占槽） | `slotExemptions: [{ slot, traitsAny?, count }]`（05009） | `slotExemptionRelief(inv, extraCards)`：在场卡与候选卡一起算豁免；字段/特性都可泛化，不再有「工具手槽」专用读点 |
 | 实例不占槽（剧情支援改印表槽位） | 实例字段 `slots: []` | `slotUsage` / `restrictedSlotInfo` 优先读实例槽位 |
+
+永久支援翻面使用 `api.turnAssetFacedown(seat, asset)`。翻面后重算该调查员的装备槽与败退条件。
+准则限制使用 `api.ignoreAssetRegulation(seat, asset)` 暂停至本轮结束，牌上其余效果仍按原时机结算。
+声明 `assetRule.regulationAction` 的支援使用 `roundActionCount` 读取攻击、移动或出牌的本轮次数，
+可把上限写成对应的 `capability:<id>` 修正。
+
+无技能种类的检定使用 `api.test(seat, null, difficulty, { baseValue, iconWeights })`。
+`baseValue` 提供固定基础值，`iconWeights` 独立定义哪些图标可投入以及各图标如何计入检定。
+威胁区的 `weakness.tokenFaceReplacements` 可将一枚物理标记视作多张符号面结算，原标记按原本的混乱袋规则处理。
+负责轮末移动的效果可在 `roundEnds` 使用 `moveTo` 的 `maxDistance`、`optional` 和 `keepEngaged` 字段，逐步进行移动与目标校验。
 
 曾有 4 套并行写法（`extraSlots.handWeapon`、`tomeHandSlotsPerCopy`、`passive.handSlotsBonus`、以及只写不读的
 `passive.handSlotsTrait`），盟友槽另有 `allySlotsForNonUnique` + `allySlotsOk` 旁路。它们各自在 `canEquip` 里写旁路，
@@ -334,6 +348,16 @@ api.commitCards(inv.seat, ['01025'])    // 强制投入（不询问）
 `tokens`（ST.4–7）/ `results`（ST.8）。
 
 ### `ctx.api` 的 Phase 2 增量
+
+投入档案的 `skill.cancelFailureEffects` 在失败确定后取消来源、混乱标记及投入牌的失败效果。检定结果仍为失败，通用失败反应和检定收尾继续结算。
+
+`api.skipNextTestTokens(seat, { endOfTurn: true })` 把跳过标记的效果限定在当前回合。`api.exilePlayedEvent(context)` 和 `api.exileAssetInstead(context)` 分别修改当前打出的事件和当前被击败支援的最终去向，使用同一份战役流放记录。
+
+一次性的持续效果可以绑定到来源实例，触发时用 `api.consumeEffect(id)` 移除该效果。未触发的效果由统一到期点清理。
+
+混乱标记揭示支持批次取消和场外揭示，取消或忽略窗口同时保留执行者与标记所属座位。效果来源调用 `api.triggerChaosRevealEffect` 时可响应 `chaosRevealEffectWouldResolve`。提前揭示仅调整检定流程的揭示时机，仍由原检定结算标记、技能和结果。
+
+`failedTestMargin` 在失败确定后调整差值，独立于检定值与成败判定。依赖失败差值的效果使用结果的 `failedBy`。来源支援资助的重购在报价及购买记录中写入实际减免，按上一场冒险的放逐数量和每个来源的使用次数核算。
 
 ```
 harm({ damage, horror, strategy })               // B2：distribute / self / assetsFirst / soakFirst / assetsOnly
@@ -670,3 +694,19 @@ P7 的逐章验收与生产注册仍以路线图为准；下列接口通过专�
 - 数值及布尔修正的 `condition` 必须是条件对象，自定义函数写为 `{when:fn}`。直接写函数将被校验拒绝，避免静默丢失条件。
 
 专项覆盖见 `tests/tic-scenario-*.test.mjs`、`tests/tic-flashbacks.test.mjs` 与各片区测试。P7 队列、完整章节流程、指南和浏览器证据继续在本循环文档中收拢。
+
+## 重返玩家卡共用规则
+
+事件结算需要在本回合结束时取回自己时，可调用 `api.returnPlayedEventAtEndOfTurn(context)`。
+事件进入弃牌堆后，系统才登记返回的实际副本。洗回牌库等去向替代效果会跳过该登记。
+
+以伤害揭露隐匿迷你卡时，`concealedDamageTargets` 与 `exposeConcealedInsteadOfDamage` 共用地点限制和揭露次数。
+调用方在成功揭露后跳过原本的伤害分配。
+技能投入的条件和动态图标优先读取当前检定明确指定的基础值，普通检定则读取调查员的基础技能值。
+
+- `attachBarricade` 的 `redirectSpawn` 让非精英敌人在合规的相连地点生成。没有合法位置时，沿用生成失败的流程。带 `enemyEnteredLocation` 的手牌反应可在移动入场后的自动交战前结算。
+- `blankEnemy` 的 `damagePenalty` 和 `horrorPenalty` 各自叠加，随本阶段的文本空白效果到期。攻击结算先应用减值，再将最终伤害与恐惧钳制为非负值。
+- `api.fight` 的 `areaDamage` 指定基础 `enemyAmount` 和负面标记带来的 `investigatorDamageOnSymbol`。攻击加值只给主要目标，其他敌人走独立的伤害结算。
+- `hiddenRule.playerWeakness` 声明玩家隐私弱点。`placeHiddenWeakness` 仅向持有者展示卡面，`discardHiddenWeakness` 使用玩家弃牌堆。`hiddenRule.scenarioXpModifier` 计入当关经验，淘汰时保存该修正供结算使用。
+- `api.removeOwnedCopies` 按同编号和所有者移除玩家牌，涵盖受另一位调查员控制的支援。`occupiedAssetSlotsAtLeast` 查询满足特性的实际占用槽位。
+- `canMakeRoomForAsset` 检查唯一性和可腾出的槽位。直接放置用 `makeRoomForAsset` 处理腾槽，再由 `putIntoPlay` 入场。

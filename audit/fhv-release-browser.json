@@ -69,7 +69,7 @@
         },
         {
           "type": "evidence",
-          "description": "权限边界（准备阶段）：座位 1 没有 hubBeginScenario 且被拒绝；座位 1 的 debug 命令被拒绝；客人大厅 /api/debug=404；revision 保持 8"
+          "description": "权限边界（准备阶段）：座位 1 没有 hubBeginScenario 且被拒绝；座位 1 的 debug 命令被拒绝；客人大厅 /api/debug=404；revision 保持 10"
         },
         {
           "type": "evidence",
@@ -85,7 +85,7 @@
         },
         {
           "type": "evidence",
-          "description": "轮流操作：座位 0 房主行动并结束回合 → 座位 1 客人行动；座位 0 在客人回合提交行动被拒绝（revision 保持 17）"
+          "description": "轮流操作：座位 0 房主行动并结束回合 → 座位 1 客人行动；座位 0 在客人回合提交行动被拒绝（revision 保持 19）"
         },
         {
           "type": "screenshot",
@@ -97,7 +97,7 @@
         },
         {
           "type": "evidence",
-          "description": "断线恢复：客人页面关闭重开后 sessionId=bg-1-mwkdm36l、scenario=welcomeToHemlockVale、手牌一致（5 张）、对方手牌仍为空"
+          "description": "断线恢复：客人页面关闭重开后 sessionId=bg-1-mwrpmuzr、scenario=welcomeToHemlockVale、手牌一致（5 张）、对方手牌仍为空"
         },
         {
           "type": "screenshot",
@@ -169,7 +169,7 @@
         },
         {
           "type": "evidence",
-          "description": "关卡进行中（第二日黎明） 存档摘要：compatible=true、stage=inScenario、revision=24、persist=true"
+          "description": "关卡进行中（第二日黎明） 存档摘要：compatible=true、stage=inScenario、revision=25、persist=true"
         },
         {
           "type": "claim",
@@ -177,7 +177,7 @@
         },
         {
           "type": "evidence",
-          "description": "断线恢复（浏览器断网→恢复→真实刷新）：sessionId=bg-3-mwkdhjdy、scenario=dawnOfTheSecondDay、uiState=inScenario、revision=24→24、手牌 5 张一致"
+          "description": "断线恢复（浏览器断网→恢复→真实刷新）：sessionId=bg-3-mwrpi3ql、scenario=dawnOfTheSecondDay、uiState=inScenario、revision=25→25、手牌 5 张一致"
         },
         {
           "type": "screenshot",
@@ -189,7 +189,7 @@
         },
         {
           "type": "evidence",
-          "description": "升级窗（购买）：节点 dawn2Prep，未花费 XP 3 → 2；purchases=[{\"added\":\"01016\",\"removed\":\"01017\",\"cost\":1,\"scenarioIndex\":7,\"adaptable\":false}]"
+          "description": "升级窗（购买）：节点 dawn2Prep，未花费 XP 3 → 2；purchases=[{\"added\":\"01016\",\"removed\":\"01020\",\"cost\":1,\"scenarioIndex\":7,\"adaptable\":false}]"
         },
         {
           "type": "screenshot",
@@ -241,7 +241,7 @@
         },
         {
           "type": "evidence",
-          "description": "刷新页面 → 存档管理读档恢复：sessionId=bg-3-mwkdhjdy、uiState=campaignResult、scenario=fateOfTheVale、revision=48→48"
+          "description": "刷新页面 → 存档管理读档恢复：sessionId=bg-3-mwrpi3ql、uiState=campaignResult、scenario=fateOfTheVale、revision=49→49"
         },
         {
           "type": "screenshot",
@@ -315,7 +315,7 @@
         },
         {
           "type": "evidence",
-          "description": "真实打出支援：01086 刀子；在场支援=[\"01086\"]"
+          "description": "真实打出支援：05024 指纹采集工具；在场支援=[\"05024\"]"
         },
         {
           "type": "screenshot",
@@ -331,7 +331,7 @@
         },
         {
           "type": "evidence",
-          "description": "序曲整备（保留支援）：整备包裹来源 welcomeToHemlockVale，保留支援=01086，目的地=5 个"
+          "description": "序曲整备（保留支援）：整备包裹来源 welcomeToHemlockVale，保留支援=05024，目的地=5 个"
         },
         {
           "type": "screenshot",
@@ -347,7 +347,7 @@
         },
         {
           "type": "evidence",
-          "description": "带支援入场：01086 在《岩间密语 · Written in Rock》开局真实在场；整备包裹已消费（surveyPreparation=null），手牌 5 张"
+          "description": "带支援入场：05024 在《岩间密语 · Written in Rock》开局真实在场；整备包裹已消费（surveyPreparation=null），手牌 5 张"
         },
         {
           "type": "screenshot",
@@ -355,7 +355,7 @@
         },
         {
           "type": "evidence",
-          "description": "关卡进行中（岩间密语） 存档摘要：compatible=true、stage=inScenario、revision=17、persist=true"
+          "description": "关卡进行中（岩间密语） 存档摘要：compatible=true、stage=inScenario、revision=18、persist=true"
         },
         {
           "type": "screenshot",
@@ -367,7 +367,7 @@
         },
         {
           "type": "evidence",
-          "description": "刷新页面 → 存档管理读档恢复：sessionId=bg-1-mwkdfk9p、uiState=inScenario、scenario=writtenInRock、revision=17→17"
+          "description": "刷新页面 → 存档管理读档恢复：sessionId=bg-1-mwrpgatd、uiState=inScenario、scenario=writtenInRock、revision=18→18"
         },
         {
           "type": "screenshot",
@@ -435,7 +435,7 @@
         },
         {
           "type": "evidence",
-          "description": "权限边界（准备阶段）：座位 1 没有 hubBeginScenario 且被拒绝；座位 1 的 debug 命令被拒绝；客人大厅 /api/debug=404；revision 保持 8"
+          "description": "权限边界（准备阶段）：座位 1 没有 hubBeginScenario 且被拒绝；座位 1 的 debug 命令被拒绝；客人大厅 /api/debug=404；revision 保持 10"
         },
         {
           "type": "evidence",
@@ -451,7 +451,7 @@
         },
         {
           "type": "evidence",
-          "description": "轮流操作：座位 0 房主行动并结束回合 → 座位 1 客人行动；座位 0 在客人回合提交行动被拒绝（revision 保持 17）"
+          "description": "轮流操作：座位 0 房主行动并结束回合 → 座位 1 客人行动；座位 0 在客人回合提交行动被拒绝（revision 保持 19）"
         },
         {
           "type": "screenshot",
@@ -463,7 +463,7 @@
         },
         {
           "type": "evidence",
-          "description": "断线恢复：客人页面关闭重开后 sessionId=bg-1-mwkdoi84、scenario=welcomeToHemlockVale、手牌一致（5 张）、对方手牌仍为空"
+          "description": "断线恢复：客人页面关闭重开后 sessionId=bg-1-mwrppgws、scenario=welcomeToHemlockVale、手牌一致（5 张）、对方手牌仍为空"
         },
         {
           "type": "screenshot",
@@ -535,7 +535,7 @@
         },
         {
           "type": "evidence",
-          "description": "关卡进行中（第二日黎明） 存档摘要：compatible=true、stage=inScenario、revision=24、persist=true"
+          "description": "关卡进行中（第二日黎明） 存档摘要：compatible=true、stage=inScenario、revision=25、persist=true"
         },
         {
           "type": "claim",
@@ -543,7 +543,7 @@
         },
         {
           "type": "evidence",
-          "description": "断线恢复（浏览器断网→恢复→真实刷新）：sessionId=bg-4-mwkdjr28、scenario=dawnOfTheSecondDay、uiState=inScenario、revision=24→24、手牌 5 张一致"
+          "description": "断线恢复（浏览器断网→恢复→真实刷新）：sessionId=bg-4-mwrpk8pw、scenario=dawnOfTheSecondDay、uiState=inScenario、revision=25→25、手牌 5 张一致"
         },
         {
           "type": "screenshot",
@@ -555,7 +555,7 @@
         },
         {
           "type": "evidence",
-          "description": "升级窗（购买）：节点 dawn2Prep，未花费 XP 3 → 2；purchases=[{\"added\":\"01016\",\"removed\":\"01017\",\"cost\":1,\"scenarioIndex\":7,\"adaptable\":false}]"
+          "description": "升级窗（购买）：节点 dawn2Prep，未花费 XP 3 → 2；purchases=[{\"added\":\"01016\",\"removed\":\"01020\",\"cost\":1,\"scenarioIndex\":7,\"adaptable\":false}]"
         },
         {
           "type": "screenshot",
@@ -607,7 +607,7 @@
         },
         {
           "type": "evidence",
-          "description": "刷新页面 → 存档管理读档恢复：sessionId=bg-4-mwkdjr28、uiState=campaignResult、scenario=fateOfTheVale、revision=48→48"
+          "description": "刷新页面 → 存档管理读档恢复：sessionId=bg-4-mwrpk8pw、uiState=campaignResult、scenario=fateOfTheVale、revision=49→49"
         },
         {
           "type": "screenshot",
@@ -681,7 +681,7 @@
         },
         {
           "type": "evidence",
-          "description": "真实打出支援：01087 手电筒；在场支援=[\"01087\"]"
+          "description": "真实打出支援：05024 指纹采集工具；在场支援=[\"05024\"]"
         },
         {
           "type": "screenshot",
@@ -697,7 +697,7 @@
         },
         {
           "type": "evidence",
-          "description": "序曲整备（保留支援）：整备包裹来源 welcomeToHemlockVale，保留支援=01087，目的地=5 个"
+          "description": "序曲整备（保留支援）：整备包裹来源 welcomeToHemlockVale，保留支援=05024，目的地=5 个"
         },
         {
           "type": "screenshot",
@@ -713,7 +713,7 @@
         },
         {
           "type": "evidence",
-          "description": "带支援入场：01087 在《岩间密语 · Written in Rock》开局真实在场；整备包裹已消费（surveyPreparation=null），手牌 5 张"
+          "description": "带支援入场：05024 在《岩间密语 · Written in Rock》开局真实在场；整备包裹已消费（surveyPreparation=null），手牌 5 张"
         },
         {
           "type": "screenshot",
@@ -721,7 +721,7 @@
         },
         {
           "type": "evidence",
-          "description": "关卡进行中（岩间密语） 存档摘要：compatible=true、stage=inScenario、revision=17、persist=true"
+          "description": "关卡进行中（岩间密语） 存档摘要：compatible=true、stage=inScenario、revision=18、persist=true"
         },
         {
           "type": "screenshot",
@@ -733,7 +733,7 @@
         },
         {
           "type": "evidence",
-          "description": "刷新页面 → 存档管理读档恢复：sessionId=bg-2-mwkdgjb0、uiState=inScenario、scenario=writtenInRock、revision=17→17"
+          "description": "刷新页面 → 存档管理读档恢复：sessionId=bg-2-mwrph7i1、uiState=inScenario、scenario=writtenInRock、revision=18→18"
         },
         {
           "type": "screenshot",
@@ -777,560 +777,560 @@
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "release",
-      "bytes": 417611,
-      "sha256": "911d1573e151a9380940fa7add4dd4dbe82c5c7b1d3e71a487f2d059455853f4"
+      "bytes": 407372,
+      "sha256": "c520b342196454c9271fd1025ff5d0e6e7c1a56fbf01dc33ca44c3e1c0bec95d"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-codex-panel-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "release",
-      "bytes": 189150,
-      "sha256": "c64996b773f067a75a6a2c6bcd8da8935ebda92d89a958feadb5ef964a9089e5"
+      "bytes": 189298,
+      "sha256": "0bd5eaa3e1923f7c34aae7842165741e3ef2bf6ca1c7d02b484d328648c2b9e7"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-day2-purchased-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "progression",
-      "bytes": 326754,
-      "sha256": "1c3d9c580b6ced7082aed24b30472cea941509c44405e5f3f8954b3c1de9b0ce"
+      "bytes": 324567,
+      "sha256": "a7d1f5b425c1c6e6b16294c45b5a909600521bb6a5d4c69c892bb593b06ac173"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-day2-purchased-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "progression",
-      "bytes": 181489,
-      "sha256": "1194ad5a6ea685d2b62fd635c32f09a4f25578ea3e29d91285192d6dfbce6cd0"
+      "bytes": 179049,
+      "sha256": "6a44608bab34eae707382fa08c633adbc667354b6e0a0cebc7314f82a8437677"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-day2-upgrade-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "progression",
-      "bytes": 664068,
-      "sha256": "a19129dda4b2611a127541cfa7a2cbc60c6b451f9c5ef2482691fea5c7fa2da0"
+      "bytes": 662984,
+      "sha256": "90eede39332c5cdf75388cd17d175c980400f2ea7f85e4408b45dd334b28f212"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-day2-upgrade-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "progression",
-      "bytes": 250945,
-      "sha256": "9d6af9bfb50696d20cd2fb79558eca19d4a02e93a35a90f7ae7d1e81b5a86c5f"
+      "bytes": 249698,
+      "sha256": "9b4f71ab71dd0451f4f1dbea4be05ad1ffc4bf658e28b2100f084f49c2bf67f9"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-day3-skip-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "progression",
-      "bytes": 326830,
-      "sha256": "219e4225171a6a1859be5c91a554f3ce3b4d3acefa2da91803aa43d0a5804828"
+      "bytes": 325062,
+      "sha256": "fa9afe30c660258ef39ac3051135f0de1e5879d3b5a71e57b2e24fa833da6e3b"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-day3-skip-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "progression",
-      "bytes": 182734,
-      "sha256": "0fcfc3b46cb07659a435d830e39638fa9e9bfbe8bc221bd67947c913a56d83e4"
+      "bytes": 180277,
+      "sha256": "227a4b242456f81ceac3c6570f44229da9f61d838f626d6c5717ca5a49a07d9a"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-day3-upgrade-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "progression",
-      "bytes": 664180,
-      "sha256": "29b031b329e17e5b7f5ff14b3496eb50b6c1eef3a39050b19bd69bf34b489813"
+      "bytes": 663096,
+      "sha256": "3374e6de856e7434ba25b8c0bc1b5c2cd07fe7775e1be5722877143303a0fd1a"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-day3-upgrade-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "progression",
-      "bytes": 250945,
-      "sha256": "9d6af9bfb50696d20cd2fb79558eca19d4a02e93a35a90f7ae7d1e81b5a86c5f"
+      "bytes": 249698,
+      "sha256": "9b4f71ab71dd0451f4f1dbea4be05ad1ffc4bf658e28b2100f084f49c2bf67f9"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-guide-welcomeToHemlockVale-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "release",
-      "bytes": 448384,
-      "sha256": "8a55f64c102fe7b2158cebc12102c23dcbc18214d88a9dd22d7e0a2cb56d5354"
+      "bytes": 472909,
+      "sha256": "6622eee82b6203e21094130a34e869b196ecb6665e61adcfc3852052bd35c1d3"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-guide-welcomeToHemlockVale-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "release",
-      "bytes": 133427,
-      "sha256": "7cc4a93d577a557459c35ff06920be7828cae6a4bef3b6f23006108f230d061d"
+      "bytes": 145824,
+      "sha256": "68bd1627aae485581cb86d2859accc1fc6d793e9ebdea0a04f92ca763d15459e"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-lobby-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "release",
-      "bytes": 489434,
-      "sha256": "297ca318180ad3b16ab35a5b3ec465ffba81f5e02790d006e319aad6bfd5df68"
+      "bytes": 442616,
+      "sha256": "ef12232981d289e4a7f5c6592250a582451bf5bea3f9a207795acc878bebc87e"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-lobby-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "release",
-      "bytes": 144428,
-      "sha256": "473f5a1867d022c865114007c4736f6f7c956425d2ebc3279f23ee2c601119d0"
+      "bytes": 138042,
+      "sha256": "7f45121f271fa0113825523c52e604a2faccc4c7f0388f115a690f56f33d16ce"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-online-desktop-guest-hub.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "online",
-      "bytes": 870119,
-      "sha256": "afb83de38e29824ac628de7e187ee46b5ce23f4833476ac3eb28022b7e5a2eee"
+      "bytes": 867782,
+      "sha256": "8413ba9d5ff32ee908ee6c8128cf24fcc9d59002ea66b58da8cab6105f3744ed"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-online-desktop-guest-reconnect.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "online",
-      "bytes": 876179,
-      "sha256": "24f9b6032ded0f323731d5c4036e45d7b99d799b0ccd3faa93f37d99d6826a30"
+      "bytes": 936002,
+      "sha256": "ce4256b6d3a53a7865e06252c264419945121cd4726e1f4273b856d20b4d2ff5"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-online-desktop-guest-table.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "online",
-      "bytes": 1051385,
-      "sha256": "c31bcec65b2833c92a24fe3de1b1091e53947ea26513207c8970407cd8b0decc"
+      "bytes": 1076641,
+      "sha256": "d65c03356e9831fac0c26457d8d1bd0f9dae94f7d37396865cd2d9bfab57dee0"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-online-desktop-host-after-turn.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "online",
-      "bytes": 909342,
-      "sha256": "5261fb2cf9132bc515cc04ea67c5797fbfc7402053c9e05b9085c08840e9b566"
+      "bytes": 932640,
+      "sha256": "6bd048039a0c8091b5c78e6f2fb28a53c6fa2cb7ca777f4b2e650c66f2fdda04"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-online-desktop-host-hub.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "online",
-      "bytes": 875206,
-      "sha256": "429257c6f21d0eb19c9346b2f51c7f88a85f9882557d4fa28878f061de42c23c"
+      "bytes": 642592,
+      "sha256": "9d7629ce3708714154bba05e6dc38ca5e3c6c6602bcab7af5e7194bef31032d1"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-online-desktop-host-reload.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "online",
-      "bytes": 855921,
-      "sha256": "0a7e32d3dcd473de98d82ff5ce66ceafec20ef80eeb86a1514159095ff9f90d6"
+      "bytes": 915936,
+      "sha256": "95e1e2fa38a5f86e313b6904e82c26042898eab32dfc03dfcb67c7f460871ab6"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-online-desktop-host-table.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "online",
-      "bytes": 1060649,
-      "sha256": "f918bb493c1461e6ca54c1cb03750ec730eb6efaf7d798be7171fe94775db9bf"
+      "bytes": 1084695,
+      "sha256": "dca5d2f4950ec21561d479fcce120a3bc276ab02708a30086e7a430f0d79cd97"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-online-mobile-guest-hub.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "online",
-      "bytes": 206316,
-      "sha256": "c98e6874e0bc12a135b22cf99691aba2a10d25594218ded12828f498b7cbc90e"
+      "bytes": 232988,
+      "sha256": "ac0fa601565e68d177dfea3151cd6049e486653c6c1024ae3a80b3b852f88a54"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-online-mobile-guest-reconnect.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "online",
-      "bytes": 240293,
-      "sha256": "09f7c2420e50497299428df251b1af946d22e990e216a1d866206ee54a3c7e3e"
+      "bytes": 277864,
+      "sha256": "e5b2f69786793161371abe5debd02e699751f38666800065a234fa335e85c149"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-online-mobile-guest-table.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "online",
-      "bytes": 241254,
-      "sha256": "1da9e8bd87a021615c57933a0ff3935f5680591b05d55ca6603e9858be591a95"
+      "bytes": 277361,
+      "sha256": "f1235de4e7ca5e1ea1749e831357e22ce11da6744d566a045f208dcfe1cf5d49"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-online-mobile-host-after-turn.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "online",
-      "bytes": 239123,
-      "sha256": "46549f4e7ee60905a62ca6cbeb76ee9fc17176b21b24bd9c5d9f8549ce9acc29"
+      "bytes": 277279,
+      "sha256": "30ae3af7f3422ac04be1f93bdb5f5d6636babec4c9a0b7a89d60094916947f48"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-online-mobile-host-hub.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "online",
-      "bytes": 209202,
-      "sha256": "715dcc909072b97dc16bc9812cecb2d07977c844590b6975f1471576b1ae5203"
+      "bytes": 241421,
+      "sha256": "af5e8af3bea844c36b60768532e1cd45025795b8c8ed548f23cbbc59ad4ba529"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-online-mobile-host-reload.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "online",
-      "bytes": 238094,
-      "sha256": "037d612d051c2941ebe6fc03c99317938e1b2dffba37b2dde97dc1785148d432"
+      "bytes": 278114,
+      "sha256": "22c4f08b9a0b2f71c056aaa57f0c7a2f05b22005684549cb3cbc6f273584a677"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-online-mobile-host-table.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "online",
-      "bytes": 244008,
-      "sha256": "c6edd86d35d4959a9437ef1e061c31b4e69ed582bfb6f1a66332023a70bbffbe"
+      "bytes": 286613,
+      "sha256": "18d36b48ab84c15969a14b3256f8ed5944d385caf744e9967807b020503cc36f"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-played-asset-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "release",
-      "bytes": 910692,
-      "sha256": "14d3d1d8f6e2e004bb87966d0968f78e24babedfe8e37bc47a86d9cd083bcc05"
+      "bytes": 968321,
+      "sha256": "c1de8971b79b681ec7af91f3e788dd371fe0e2445896f345b4aa37680b20e139"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-played-asset-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "release",
-      "bytes": 245693,
-      "sha256": "2b7a02d6356e7e5b74925b421b59262e8380d987e4609c920637eb77644b6060"
+      "bytes": 276151,
+      "sha256": "9d0ac18624edb532b54776f54d96af49c9ab88005b37fd9ae08914e7ce48ce98"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-prepared-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "release",
-      "bytes": 292019,
-      "sha256": "df47b12347ee01bfcb043a653260d8fb19e69b82fd9fcd8f41fd6377372b8d4d"
+      "bytes": 318090,
+      "sha256": "fa344d51299212bc572552bcdb1a16fce7637e0b0d5aa6fcd965fbd62b3e88cc"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-prepared-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "release",
-      "bytes": 112486,
-      "sha256": "9848d87f0c37dcc1a522b859e3b2f10ba58b1ee325c406cc177c429471969f42"
+      "bytes": 106078,
+      "sha256": "7546b5fba658dfe572a769b31eee380600abe29e3d0a0ac098ee759ada12f503"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-campaignResult-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "progression",
-      "bytes": 591601,
-      "sha256": "b0562e6ad58189bc0bb85f6e4021e1d7d65ec02caca992c8d3be2f28f04755b4"
+      "bytes": 588789,
+      "sha256": "77c47fffeb157ec06c236f02968b3db2b7000f606afb3b0afad43fca7d464047"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-campaignResult-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "progression",
-      "bytes": 85336,
-      "sha256": "fbd2046e9e85784e624750e5cf5c711a8d0f3a4def5fe9daf887ddc160dcadfb"
+      "bytes": 85009,
+      "sha256": "751d49449de3519d45d1c4bd97da276b8db6ed9c3e83bb6145d61fa5a9c4872e"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-day2-table-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "progression",
-      "bytes": 891390,
-      "sha256": "57477a31bc96805f9e690669fd363602604c9aea1b510344870168895f1af3a5"
+      "bytes": 954303,
+      "sha256": "2016b86691e76e07d8585f62f75c2ec86e94d97c77686ab22af456d2a5a1c711"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-day2-table-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "progression",
-      "bytes": 239090,
-      "sha256": "e8b1aaf6131cbed78b6973f9ae23c39ceb10b4e26ebb92cc4572a9d71b0d89c9"
+      "bytes": 271089,
+      "sha256": "ce62c82381d228931d399475b2e7768e03005fc5b200fde6da0eceab91c4b67b"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-day3-table-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "progression",
-      "bytes": 884062,
-      "sha256": "504b0242cdafd11b5ba090bb8dc65a59263bbbbc64332844cde10c3d4afc2663"
+      "bytes": 936121,
+      "sha256": "ef9ec65b6195ff0cb2a5c438bc17ec19e29d6b5ddd2bd8eb92b16cdd6c12335a"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-day3-table-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "progression",
-      "bytes": 235916,
-      "sha256": "0bb0103bb8fa594a8a9794a87d55a1d9162903d6a7cfe36c60d9c4d9783f414c"
+      "bytes": 265334,
+      "sha256": "332ad73d52a8f80ea44143a08060b6f634454c79de3ce28ad10416a512c5552d"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-fateOfTheVale-table-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "progression",
-      "bytes": 955584,
-      "sha256": "4054d9043ea4ca0ff9bfda3a6e3b135f1c6e03fb7bf43be2c726cf037f72ce72"
+      "bytes": 995274,
+      "sha256": "fe3342d3224481ae907b6e4af6a2cf2c463dd8d9a666a03c68bd4d83c7c5e365"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-fateOfTheVale-table-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "progression",
-      "bytes": 273278,
-      "sha256": "670bbda3c50d02b1e524c12d3bf1640d408571c6ab38f0b56d4362c5d22cb7ef"
+      "bytes": 296947,
+      "sha256": "8a9aead80ef480567dc1d9921422aff455388dbf019c8dc2b77053055ffc38e1"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-final-result-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "progression",
-      "bytes": 637297,
-      "sha256": "1d66f3387c96495aea8072de274902e1ec21f0fd3e155d8de6eef56149f61d78"
+      "bytes": 634122,
+      "sha256": "65588c4a9344d58b7c3d6f544aa85de13151ea89d7c3874fe0115c825a8eb2e5"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-final-result-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "progression",
-      "bytes": 89414,
-      "sha256": "ac1752f983618a2418e19cdb743399a5832fd3a60f478102bd8032378aa7425b"
+      "bytes": 88863,
+      "sha256": "29cfee0571fb5e8f7b0907cb5967f6718359d4a7ef2705e5ea910d9421159cd4"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-finalEvening-table-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "progression",
-      "bytes": 876011,
-      "sha256": "b2261e8c73d751f931182c5d3fecf83cb6f2a521c25c3512edcb940102526dd0"
+      "bytes": 926882,
+      "sha256": "6f66a5b8258d1b875865c8db7ab8d142811d0d1520f877ea7ba7bf504d14f6e0"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-finalEvening-table-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "progression",
-      "bytes": 225415,
-      "sha256": "6373d06c2f8369c54c394b4bd125f24ce979f4b4083b819dc2b3c0bbdf5392c3"
+      "bytes": 267863,
+      "sha256": "e7a29dd5eb8d0a04b31036da06c380ba74a21f3781cf0fda7a1bfb3a4026416c"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-theTwistedHollow-table-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "progression",
-      "bytes": 948082,
-      "sha256": "461f6ad7e9ba63d2f58f4e32aa2200decac6d85616f25274c1162d05cf3da935"
+      "bytes": 993846,
+      "sha256": "05cfb3f85f67078cd291d9a675e7a78ae3f1155f810c938f95702cdb27debdf6"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-theTwistedHollow-table-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "progression",
-      "bytes": 223064,
-      "sha256": "d8a09698e1522bcb4eb74ddaccec49a6acacd4707e1038affafc598fa7b1dfe0"
+      "bytes": 273186,
+      "sha256": "6903fd13130269f98fe6c802484506d91bd68ac60b7f46a0f82d77d72bdf2e52"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-welcome-table-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "progression",
-      "bytes": 920557,
-      "sha256": "ac7b240fa03b89334a65d6b9db9bae6eb4964dcf363ef9d2391f03d97b1ce078"
+      "bytes": 965424,
+      "sha256": "fb0c2537bcda9649fc242af78608f23861ecaa195f75223e746425ab10d91f74"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-welcome-table-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "progression",
-      "bytes": 239706,
-      "sha256": "e8d965dfa60a6108139b9a9be1627fa982d71b22d7cf66f859618210b1936b81"
+      "bytes": 270545,
+      "sha256": "ac23a0ab6f58d6338358bafc740402019b024d66a1f83fa08dda823378106164"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-writtenInRock-table-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "progression",
-      "bytes": 1154465,
-      "sha256": "6f5fd53375359030f276afafc97d0d6dd03e9f83241d5b3db8eba8a7270376b1"
+      "bytes": 1130835,
+      "sha256": "f0068e8e752aab4131eb3d8cebf84a6f4fd4a8bc4a088831bd20e514bbb086a5"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-progression-writtenInRock-table-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "progression",
-      "bytes": 247679,
-      "sha256": "8670c498dfa10ee295585105cbb6f52b2cac86003a5e4770dde854296e0cb3f3"
+      "bytes": 278381,
+      "sha256": "a79769f04f88fb3e5f7632b105420f6dc0ec55fd836663b5a88fbbd23f2dcd97"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-reconnect-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "progression",
-      "bytes": 891390,
-      "sha256": "57477a31bc96805f9e690669fd363602604c9aea1b510344870168895f1af3a5"
+      "bytes": 954303,
+      "sha256": "2016b86691e76e07d8585f62f75c2ec86e94d97c77686ab22af456d2a5a1c711"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-reconnect-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "progression",
-      "bytes": 239090,
-      "sha256": "e8b1aaf6131cbed78b6973f9ae23c39ceb10b4e26ebb92cc4572a9d71b0d89c9"
+      "bytes": 271093,
+      "sha256": "43a1cd1c4fe5ddf4b5653f19e0b8f968fa5a9bf134902fa745a0d5c7ffcdd034"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-release-departure-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "release",
-      "bytes": 292019,
-      "sha256": "df47b12347ee01bfcb043a653260d8fb19e69b82fd9fcd8f41fd6377372b8d4d"
+      "bytes": 318090,
+      "sha256": "fa344d51299212bc572552bcdb1a16fce7637e0b0d5aa6fcd965fbd62b3e88cc"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-release-departure-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "release",
-      "bytes": 112486,
-      "sha256": "9848d87f0c37dcc1a522b859e3b2f10ba58b1ee325c406cc177c429471969f42"
+      "bytes": 106078,
+      "sha256": "7546b5fba658dfe572a769b31eee380600abe29e3d0a0ac098ee759ada12f503"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-release-hub-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "release",
-      "bytes": 867134,
-      "sha256": "733c50fe5ce14dc4e184a3a83a9fb832377a7a362f1af2083c97b54caa2e9771"
+      "bytes": 872251,
+      "sha256": "bde1aef89f16dffb1a949ae318bc47ab6b6a02d546056aca0244739a7abdcece"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-release-hub-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "release",
-      "bytes": 207912,
-      "sha256": "736e5ad1caf06ae3b33553de0dfe050eac25c35b3433ce370743b55dc8f208f9"
+      "bytes": 239994,
+      "sha256": "2a8c80cb4bb5d71b652f78ed18788a53b09cb8a3ec171b95e763a62c0275bc33"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-release-interlude-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "release",
-      "bytes": 648616,
-      "sha256": "ad34c6f05423889323503d0d93967c6084a334a67b093f28706d46fc4c695019"
+      "bytes": 647008,
+      "sha256": "5e2011b75d2a32bdc7d0452d9e03259a8bb85d62810f388416c45271aac8c8cc"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-release-interlude-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "release",
-      "bytes": 234485,
-      "sha256": "c7b869e644594ee5d6a714dade2160c08abce249bc32c092fe27037281844554"
+      "bytes": 234297,
+      "sha256": "e19fb843b1074e4393e294befc24de2c792ab01da746af5b26ec0b0107cf09cd"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-release-next-prep-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "release",
-      "bytes": 280531,
-      "sha256": "798fef2bafa05077dde4f0a4695d4520f76eae06a661f26e435959fff2952604"
+      "bytes": 309663,
+      "sha256": "1870dbbe53ed8761a108468a2d6178a8c37e88d991dcf7e37e07ccf50bfe7879"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-release-next-prep-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "release",
-      "bytes": 109524,
-      "sha256": "427980f80f1ead4c2196e66ee4da1b914d79522b66193956c3fd7e34cd4a6d37"
+      "bytes": 107258,
+      "sha256": "19bfae5dd5ed119d67b12d7e84ae5c9dd8f1fd5f36665502a512fc7bdea763d8"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-release-next-table-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "release",
-      "bytes": 1158699,
-      "sha256": "9c5908ecc8700457a8576fdda9f0287875a4e96b9eede5011973368661c5a751"
+      "bytes": 1114802,
+      "sha256": "eebe66cdc59c5734c78bae9914cc8579fef53f9f9b059edcb2ae62b7f8ea47e4"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-release-next-table-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "release",
-      "bytes": 254649,
-      "sha256": "0148b4eb128c830286d13d1f56c56442b913bb83d8a46fe8030638043168c7a0"
+      "bytes": 281486,
+      "sha256": "3f0ebab19f7be3a727091f6961d21ac65807ff351954f9c7e44a1f609f1407be"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-release-result-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "release",
-      "bytes": 617965,
-      "sha256": "1ec35558eaf38c863831df667913e70bd91dabf436a63209fc997ab973716ecc"
+      "bytes": 615143,
+      "sha256": "49a751f1d6f5ecd0efb3237aa9e311399a534c05569489089b1b0ad2613e35d2"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-release-result-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "release",
-      "bytes": 133200,
-      "sha256": "ba29f9858df30588d06f33243adb43a73842c57bb5cb20573afbeeacca4b274c"
+      "bytes": 132810,
+      "sha256": "fc52cf68c04973862fe1e0d7d1dc1ac578b283b44a752298e7abb5fb44b15159"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-release-table-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "release",
-      "bytes": 910387,
-      "sha256": "0382171dd523c96d576818c42421f6a00a21fa68e9fda4c3a4270ac330f9a2a7"
+      "bytes": 965903,
+      "sha256": "ace6522c99130db05003cf8a4a244f9b424a45f767b1d9f9d73d6a55d2b1b6a8"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-release-table-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "release",
-      "bytes": 240403,
-      "sha256": "74cc42c800655d63b67eb5d2fcc1cca4023658a02f74d1291e549d40fe1f00ca"
+      "bytes": 271123,
+      "sha256": "4accb88b39111c3e9fa0c7ddc669c8a22dc434dc5dc309e1c58faa6f8cf31274"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-reload-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "release",
-      "bytes": 589691,
-      "sha256": "70f50f3cf5be93975319fd800beb45d6332686e91a45b93f5aada8c8d3157bb6"
+      "bytes": 587161,
+      "sha256": "d48ce0f21978bcde7384475eb20986f8964575dfffb63e56c90eed613560d5ab"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-reload-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "release",
-      "bytes": 86234,
-      "sha256": "08a74562c6f1f1d80c22c7a324fbb2d2acd9b69770dbfdd9ee9a08ece27cb5d3"
+      "bytes": 85793,
+      "sha256": "7e81a66f8aaa60ed0f27c2835cbab753e6a15e20b4989303c74d216b7d5313bc"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-savelist-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
       "phase": "release",
-      "bytes": 896698,
-      "sha256": "00c8e3907ae3edd56562dd6b0526f6921fe9457afb1629127f1af632f16da01a"
+      "bytes": 853315,
+      "sha256": "99c7cc953089c8da509414bc30f5a24bee5600ec2f98cb0e795496b30e992e56"
     },
     {
       "path": "artifacts/migration/fhv/p8/screenshots/p8-savelist-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "phase": "release",
-      "bytes": 168069,
-      "sha256": "fe7f1743c8a0db070e4e61940357042c16756d22afef26b629afffa48714620a"
+      "bytes": 170737,
+      "sha256": "81cf30359cd2d41369f96a8e35d0cf4aab0725e3cc14c75193495b5a2cf01d42"
     }
   ],
   "screenshotsMissing": [],
@@ -1357,28 +1357,28 @@
     },
     {
       "path": "content/registered.js",
-      "sha256": "35b871f6a8441fd19201171da7bf2d1f19314cf7a7e0d7fea4a9d746f6510f34",
-      "bytes": 18466
+      "sha256": "95de3eb916f9ba0fdc1726da395182143e0fb7786e3ed2169be3a399fc1362d6",
+      "bytes": 25610
     },
     {
       "path": "src/engine/campaign-flow.js",
-      "sha256": "24b1e89ef8d615e0e91e19d5e7bdd3643332ef4fcba181ec3c8a3f90905d3a41",
-      "bytes": 25676
+      "sha256": "73464588e9e0f7c688ed64a11710c32340a2af1ea268bd652ff609f4a42de5bc",
+      "bytes": 33351
     },
     {
       "path": "src/engine/dispatch.js",
-      "sha256": "4a657c7001ad25b7862711aef4de8facc5229475ac62aee926ea3513c8a409d4",
-      "bytes": 62172
+      "sha256": "07b2692d5d1c63f4b83b52d1e45254f5379862acd47bbbd7f38131498d2107d2",
+      "bytes": 73857
     },
     {
       "path": "src/engine/hub.js",
-      "sha256": "684579ff29b7118c325e57c62514437e7968359f8e94ae77ef8bc88a96e49968",
-      "bytes": 35023
+      "sha256": "61f399c708fa6e233af7bebb03ca08f0f4c43730fcbe7efd70fe594672a429b4",
+      "bytes": 39630
     },
     {
       "path": "src/engine/mechanic-choices.js",
-      "sha256": "80865a0df19a4dc7a1d6bc54a416839c91e1e617ca24f1726d00f150449d5681",
-      "bytes": 11118
+      "sha256": "3da71d947bed6e1c91d12f8e2ea7608c616cb50cada927b1bbea687a5dc43d02",
+      "bytes": 11180
     },
     {
       "path": "src/engine/survey-preparation.js",
@@ -1387,18 +1387,18 @@
     },
     {
       "path": "src/integration/mechanic-view.js",
-      "sha256": "66ed6398ef8fc2f53bf098c331626b836ed98e2183830e5dc290a0f21ea24df5",
-      "bytes": 26785
+      "sha256": "10babd9156fcce53e432ca606a7104b66c58978559c62403979476542b2ea2da",
+      "bytes": 27134
     },
     {
       "path": "src/integration/observation.js",
-      "sha256": "b6e272dcda62b10368af2ddad56b19e3989d1b8ec11ef7439df347648f736de6",
-      "bytes": 32562
+      "sha256": "61a0b8dedc6f5faeba88b7335c36ac70d0c9cfd98ef110af4f5e6d5f7620a6e2",
+      "bytes": 35960
     },
     {
       "path": "tests/fhv-release.browser.mjs",
-      "sha256": "03b642eddcfd7b89bd06a5cfaf9825d38add516a4adfab9543a6616b41f52dc5",
-      "bytes": 112396
+      "sha256": "abd60a793dead40ee3bb0a1d7e915dc8ed642d882821a840c71d8d456ec02d92",
+      "bytes": 112150
     },
     {
       "path": "tests/playwright/playwright.fhv-release.config.mjs",
@@ -1412,28 +1412,28 @@
     },
     {
       "path": "tools/run-fhv-release-browser.mjs",
-      "sha256": "d199e53906c832840ebaa92e3f0beb90e7065ba19a189f568a8c3244f81d9d2d",
-      "bytes": 6276
+      "sha256": "a2353c7f7e485a33e6fbeb48655e8ec301e8d205aa0734a298c24297cf042fd1",
+      "bytes": 6809
     },
     {
       "path": "web/game-ui.js",
-      "sha256": "5bf39fc73031177fc55defedc6751380b8bd16311dface641bda86f4b58493af",
-      "bytes": 175880
+      "sha256": "bd45a1b0865e87d4e48dbb66039bc2798be9d2fb786775b0ffcf1964e0c50eba",
+      "bytes": 178456
     },
     {
       "path": "web/hub.js",
-      "sha256": "d6027b5d01ba8e9dfffd2a41e7f4e25419821fc83d62b8b94538e18dffdf3082",
-      "bytes": 167973
+      "sha256": "c31b2025b1845a17fd7dbf9fc41b3161a8fc35b6cc41772d8728279e80db3ecf",
+      "bytes": 184258
     },
     {
       "path": "web/mechanic-ui.js",
-      "sha256": "7e8d7c9461dfb7e363d70fff301044ddb86a0edcf605ac1c58e948af016c554c",
-      "bytes": 32739
+      "sha256": "553db01fcc388db9a15873c9e4fa40d229cb1dbda9719f33bcdb55dd2de28ad8",
+      "bytes": 33717
     },
     {
       "path": "web/scenario-setup-view.js",
-      "sha256": "74ab809456c604e471d6ff8ec323d314c9a575cdd2cad6eb27ad74580c2df051",
-      "bytes": 6359
+      "sha256": "edb93ca15a452191324aae249a7426a5e422292aca9491f7cf7d64c554e099be",
+      "bytes": 6742
     }
   ],
   "sourceFilesMissing": []

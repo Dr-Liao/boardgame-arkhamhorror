@@ -1,0 +1,313 @@
+{
+  "id": "returnToTheMidnightMasks",
+  "campaignId": "returnToNightOfTheZealot",
+  "sourceKind": "authored",
+  "officialChinese": false,
+  "note": "本关按重返剧本参考卡 50025 的设置差异布置；完整步骤见设置段落与特别规则。",
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "id": "intro-0",
+          "title": "Part II: 午夜假面",
+          "children": [
+            {
+              "id": "intro-0-0",
+              "text": "检查剧本日志，如果 丽塔不得不去找别的帮手： 阅读 引言 1.\n\n否则，跳转至 引言 2."
+            }
+          ]
+        },
+        {
+          "id": "intro-1",
+          "text": "引言 1: 突然有一个女人慌慌忙忙地向你们跑来，说什么在河岸城旁边的一座房子里，有一堆怪物不停地从地底下涌出。“我想要把它们都困住，”她解释道，“但是数量太多了。而且它们不只有这一个出口。”如果上周遇到她，你可能觉得她是疯子。但是现在看来，这可能与近期的事件有所关联，尽管这一切都难以想像。你决定让她把话说完。原来她名叫丽塔·钱德勒，她说了一些超越你想像的事实。“我提到的这些生物，”她说，“叫做食尸鬼，它们就在阿卡姆市地下的墓穴、洞窟以及隧道之中作乱……”\n\n继续 引言 3."
+        },
+        {
+          "id": "intro-2",
+          "text": "引言 2: 你家中的灾难总算是结束了。丽塔·钱德勒，那个在你客厅中的红发女子，叙述了一些真相。就算你在家中看到了那副光景，你也难以想像她说的都是真实的。“你家里的那些生物，”她说，“叫做食尸鬼，它们就在阿卡姆市地下的墓穴、洞窟以及隧道之中作乱……”\n\n继续 引言 3."
+        },
+        {
+          "id": "intro-3",
+          "text": "引言 3: “这些生物以吃人的尸体维生。在阿卡姆，有一个黑暗邪教组织，一直供奉著这些生物，他们崇信食尸鬼的远古之主。最近，教徒们杀了不少无辜的人，用来填满食尸鬼的无穷饥渴。以前，这些家伙只在暗处行动，避免被人发现。但是这段期间，”丽塔顿了顿，“一个用来囤放尸体的巢穴，被人破坏了。从那时起，食尸鬼就开始频繁地在地面活动。我跟踪过它们，也试著去阻止它们在市里到处乱跑。不过我想这件事不会这么单纯。教会的追求没有这么简单，他们想要的力量超过我的预料。今晚，他们就要完成计划了，时间就在午夜之后。不过具体会发生甚么，我也无法想像。”.\n\n“很多异教徒，”丽塔继续说道，“就隐藏在一般的民众之中，难以分辨。当教会召见时，他们就会戴上用动物头骨制成的面具，来隐藏其真实身分。这些面具象征著死亡和腐朽。我们必须揭开他们的假面，找出他们的计划。剩下的时间不太多了，午夜之前能找到的异教徒越多越好。”\n\n继续 设置."
+        }
+      ],
+      "setup": [
+        {
+          "id": "returnToSetup",
+          "title": "重返设置差异",
+          "text": "遵循狂热之夜的剧本手册进行冒险设置，但以下步骤例外：\n- 在找出遭遇组的卡牌时，还需要为重返午夜假面找出几个新遭遇组，如下所示：\n- 随机从2张密谋1a——“猎人还是猎物？”中选择1张来构建密谋牌库，不要查看另一面。将其他版本的密谋1a从游戏中移除。\n(继续阅读背面。)"
+        },
+        {
+          "id": "baseSetup-0",
+          "text": "将下列遭遇组中的所有遭遇卡找出: 午夜假面、寒冷刺骨、夜魇、黑暗异教徒、上锁的门。"
+        },
+        {
+          "id": "baseSetup-1",
+          "text": "将遭遇组乌默尔多斯的崇拜者放在一边，作为独立的“异教徒牌堆”，并混洗。"
+        },
+        {
+          "id": "baseSetup-2",
+          "text": "将2张商业区和2张南区中，各随机选择一张放置入场，将另一张同名卡牌移出游戏。然后。将北区、东城区、河岸城、圣玛丽医院、墓地、米斯卡塔尼克大学和你的房子放置入场。"
+        },
+        {
+          "id": "baseSetup-3",
+          "text": "根据场上的玩家人数"
+        },
+        {
+          "id": "baseSetup-4",
+          "text": "如果只有一名玩家，无事发生。"
+        },
+        {
+          "id": "baseSetup-5",
+          "text": "如果有两位玩家在场，查找遭遇组中1张祭司，并生成在南区。"
+        },
+        {
+          "id": "baseSetup-6",
+          "text": "如果有三位玩家，查找遭遇组中2张祭司，在南区和商业区中，各生成1张。"
+        },
+        {
+          "id": "baseSetup-7",
+          "text": "如果有四位玩家，查找遭遇组中3张祭司，在南区、商业区和墓地中，各生成1张。"
+        },
+        {
+          "id": "baseSetup-8",
+          "text": "检查冒险日志，如果房屋已烧毁: 将你的房子移出游戏。每位调查员从河岸城开始游戏。."
+        },
+        {
+          "id": "baseSetup-9",
+          "text": "检查冒险日志，如果房屋还在: 每位调查员从你的房子开始游戏。."
+        },
+        {
+          "id": "baseSetup-10",
+          "text": "检查冒险日志，如果 食尸鬼祭司还活着: 将食尸鬼祭司与遭遇牌堆混洗。"
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "card-50026a",
+          "title": "猎人还是猎物？",
+          "text": "[action]：撤退。你不愿冒险多做停留，带着收集的信息去往安全之处。"
+        },
+        {
+          "id": "card-50026b",
+          "title": "纳罗加斯",
+          "text": "生成 - 与猎物交战。\n猎物 - 距离另一个[[异教徒]]敌人最近的调查员。\n猎手。\n每有一位调查员，纳罗加斯得到+3生命。\n纳罗加斯处于重整状态时，其所在地点和连接地点的每位调查员不能与[[异教徒]]敌人谈判。"
+        },
+        {
+          "id": "card-50031",
+          "title": "假面惊骇",
+          "text": "显现 - 每位拥有2个或更多线索的调查员受到2点恐惧。如果未能造成任何恐惧，在当前密谋上放置1个毁灭标记。本效果可以导致当前密谋推进。"
+        },
+        {
+          "id": "card-50041",
+          "title": "噬魔信徒",
+          "text": "生成 - 最远的无人地点。\n强制 - 你生成噬魔信徒后：你必须在噬魔信徒上放置1个毁灭标记，或将你的1个线索放到其所在地点。如果当前密谋不是密谋1，改为两项都执行。"
+        },
+        {
+          "id": "card-50042",
+          "title": "掠尸者",
+          "text": "生成 - 最远的无人地点。\n强制 - 当神话阶段结束时：在掠尸者上放置1个毁灭标记。\n强制 - 当敌军阶段结束时，掠尸者向河岸城或主道路移动一次。如果掠尸者已经位于河岸城或主道路，改为将掠尸者上的所有毁灭标记移动到当前密谋上。"
+        },
+        {
+          "id": "card-50044",
+          "title": "耶利米·皮尔斯",
+          "text": "生成 - 你的房子。否则，河岸城。\n[action] ：谈判。将耶利米·皮尔斯加入胜利区。然后，检定[willpower](4)。你检定失败且每低于难度1点，在当前密谋上放置1个毁灭标记(本效果可以导致当前密谋推进)。"
+        },
+        {
+          "id": "card-50045",
+          "title": "比利·库伯",
+          "text": "生成 - 东城区。\n强制 - 比利·库伯所在地点有[[怪物]]敌人被击败后：将比利·库伯加入胜利区。"
+        },
+        {
+          "id": "card-50046",
+          "title": "阿尔玛·希尔",
+          "text": "生成 - 南区。\n[action]：谈判。抽取遭遇牌库顶3张卡牌。然后，将阿尔玛·希尔加入胜利区。"
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "未达成结局",
+          "children": [
+            {
+              "id": "noResolution-0",
+              "text": "如果未达成任何结局(所有调查员均已撤退或被击败): 阅读 结局 1."
+            }
+          ]
+        },
+        {
+          "id": "r1",
+          "title": "结局 1",
+          "children": [
+            {
+              "id": "r1-0",
+              "text": "结局 1: 你成功获取了一些关于邪教计划的信息。但愿这一些够用。\n\n• 在冒险日志中，“我们盘问过的异教徒”下，纪录下胜利牌区中，所有独特异教徒的名称。\n\n• 在冒险日志中，“逃跑的异教徒”下，纪录下异教徒牌堆或场上的，所有独特异教徒的名称。 如果当前处于密谋1，则将“假面猎手”也记录下。\n\n• 如果食尸鬼祭司在胜利牌区，在冒险日志中划去 “食尸鬼祭司还活着”。\n\n• 每位调查员获得等同于胜利牌区中胜利点数总值的经验。\n• 经验: （按上述说明计算）"
+            }
+          ]
+        },
+        {
+          "id": "r2",
+          "title": "结局 2",
+          "children": [
+            {
+              "id": "r2-0",
+              "text": "结局 2:钟声响起，标示著午夜的来临。你们已经没有时间了，异教徒的仪式马上就要开始。你们试著赶紧整理现在获得的信息，但愿能从中推理出异教徒们的计划。你成功获取了一些关于邪教计划的信息。但愿这一些够用。\n\n• 在冒险日志中，“我们盘问过的异教徒”下，纪录下胜利牌区中，所有独特异教徒的名称。\n\n• 在冒险日志中，“逃跑的异教徒”下，纪录下异教徒牌堆或场上的，所有独特异教徒的名称。.\n\n• 在剧本日志中记录，午夜已至。.\n\n• 如果食尸鬼祭司在胜利牌区，在冒险日志中划去 “食尸鬼祭司还活着”。\n\n• 每位调查员获得等同于胜利牌区中胜利点数总值的经验。\n• 经验: （按上述说明计算）"
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "id": "intro-0",
+          "title": "Part II: The Midnight Masks",
+          "children": [
+            {
+              "id": "intro-0-0",
+              "text": "Check Campaign Log. If Lita was forced to find others to help her cause: Read Intro 1.\n\nOtherwise, skip to Intro 2."
+            }
+          ]
+        },
+        {
+          "id": "intro-1",
+          "text": "Intro 1: The woman came to you in a panic, raving about monsters emerging from the ground in a home near Rivertown. “I managed to trap them,” she explains, “but there are others. Other pits. Other domains.” Only last week, you would have thought she was a lunatic. Recent events, however, have challenged your preconceptions of normality. You decide to hear her out. She introduces herself as Lita Chantler and lays out a tale that strains the limits of your belief. “The creatures I speak of ,” she claims, “are called ghouls—cruel beings who plague the crypts, caverns, and tunnels beneath the city of Arkham…”\n\nContinue to Intro 3."
+        },
+        {
+          "id": "intro-2",
+          "text": "Intro 2: In the wake of the disaster at your home, Lita Chantler, the red‑haired woman from your parlor, lays out a tale that—even in light of what you have just witnessed—strains the limits of your belief. “The creatures in your home,” she claims, “are called ghouls—cruel beings who plague the crypts, caverns, and tunnels beneath the city of Arkham…”\n\nContinue to Intro 3."
+        },
+        {
+          "id": "intro-3",
+          "text": "Intro 3: “These creatures feed on the corpses of humans, and they are served by a dark cult within Arkham whose members have inexplicably come to worship the ancient master of the ghouls. This cult has been killing innocent people and feeding them to the ghouls, satiating a monstrous hunger. A dark balance was maintained. Until now. Recently,” Lita continues, “one of their lairs, where the corpses were stored, was destroyed. Since then, the ghouls have been more active than usual. I have tracked their movements and tried my best to stop them from running amok throughout the city. But I think there is something worse going on. The cult has been planning something darker, and more ominous, than anything I have yet observed. Indications are that this plan shall come to fruition tonight, shortly after midnight. Beyond that, I cannot fathom what to expect.\n\n“Many of the cultists,” Lita continues, “will seem like everyday people, despite their foul intentions. Whenever the cult meets, its members don masks shaped like the skulls of various animals to protect their identities from one another. These masks are our mark. Symbols of death and decay. We must unmask the cultists to expose and derail their plans. We have but a few hours. The more cultists we find before midnight, the better.”\n\nContinue to Setup."
+        }
+      ],
+      "setup": [
+        {
+          "id": "returnToSetup",
+          "title": "Return to Setup Changes",
+          "text": "Perform the setup as indicated in the Night of the Zealot Campaign Guide, with the following exceptions:\n- When gathering encounter sets, also gather the new encounter sets for Return to the Midnight Masks shown here.\n- Construct the act deck using one of the two copies of Agenda 1a- \"Predator or Prey\" at random, without looking at their other sides. Remove the other version of Agenda 1a from the game.\n(Continued on reverse side.)"
+        },
+        {
+          "id": "baseSetup-0",
+          "text": "Gather all cards from the following encounter sets: The Midnight Masks, Chilling Cold, Nightgaunts, Dark Cult, and Locked Doors."
+        },
+        {
+          "id": "baseSetup-1",
+          "text": "Set the Cult of Umôrdhoth encounter set aside as a separate “Cultist deck,” and shuffle it. This set is indicated by the following icon:"
+        },
+        {
+          "id": "baseSetup-2",
+          "text": "Choose one of the two Downtown locations and one of the two Southside locations at random and put them into play. Remove the other versions of Downtown and Southside from the game. Then, put the Northside, Easttown, Rivertown, St. Mary’s Hospital, Graveyard, Miskatonic University, and Your House locations into play. (See next page for suggested placement.)"
+        },
+        {
+          "id": "baseSetup-3",
+          "text": "Based on the number of players in the game:"
+        },
+        {
+          "id": "baseSetup-4",
+          "text": "If there is exactly 1 player in the game, no changes are made."
+        },
+        {
+          "id": "baseSetup-5",
+          "text": "If there are exactly 2 players in the game, search the gathered encounter sets for 1 copy of Acolyte and spawn it at Southside."
+        },
+        {
+          "id": "baseSetup-6",
+          "text": "If there are exactly 3 players in the game, search the gathered encounter sets for 2 copies of Acolyte. Spawn 1 at Southside and 1 at Downtown."
+        },
+        {
+          "id": "baseSetup-7",
+          "text": "If there are exactly 4 players in the game, search the gathered encounter sets for 3 copies of Acolyte. Spawn 1 at Southside, 1 at Downtown, and 1 at the Graveyard."
+        },
+        {
+          "id": "baseSetup-8",
+          "text": "Check Campaign Log. If your house has burned to the ground: Remove Your House from the game. Each investigator begins play at Rivertown."
+        },
+        {
+          "id": "baseSetup-9",
+          "text": "Check Campaign Log. If your house is still standing: Each investigator begins play at Your House."
+        },
+        {
+          "id": "baseSetup-10",
+          "text": "Check Campaign Log. If the Ghoul Priest is still alive: Shuffle it into the encounter deck."
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "card-50026a",
+          "title": "Predator or Prey?",
+          "text": "[action]: Resign. You don't want to risk taking too long, so you head to safety with the information you've gathered."
+        },
+        {
+          "id": "card-50026b",
+          "title": "Narôgath",
+          "text": "Spawn - Engaged with Prey.\nPrey - Nearest to another [[Cultist]] enemy.\nHunter.\nNarôgath gets +3 health per investigator.\nWhile Narôgath is ready, each investigator at its location or a connecting location cannot Parley with [[Cultist]] enemies."
+        },
+        {
+          "id": "card-50031",
+          "title": "Masked Horrors",
+          "text": "Revelation - Each investigator with 2 or more clues takes 2 horror. If no horror is dealt by this effect, place 1 doom on the current agenda. This effect can cause the current agenda to advance."
+        },
+        {
+          "id": "card-50041",
+          "title": "Disciple of the Devourer",
+          "text": "Spawn - Farthest empty location.\nForced - After you spawn Disciple of the Devourer: You must either place 1 doom on it or place 1 of your clues on its location. If the current agenda is not agenda 1, do both instead."
+        },
+        {
+          "id": "card-50042",
+          "title": "Corpse-Taker",
+          "text": "Spawn - Farthest empty location.\nForced - At the end of the mythos phase: Place 1 doom on Corpse-Taker.\nForced - At the end of the enemy phase: Corpse-Taker moves once toward Rivertown or Main Path. If Corpse-Taker is already at Rivertown or Main Path, move all doom from Corpse-Taker to the current agenda, instead."
+        },
+        {
+          "id": "card-50044",
+          "title": "Jeremiah Pierce",
+          "text": "Spawn - Your House. Otherwise, Rivertown.\n[action]: Parley. Add Jeremiah Pierce to the victory display. Then, test [willpower] (4). Place 1 doom on the current agenda for each point you fail by (this can cause the current agenda to advance)."
+        },
+        {
+          "id": "card-50045",
+          "title": "Billy Cooper",
+          "text": "Spawn - Easttown.\nForced - After a [[Monster]] enemy is defeated at Billy Cooper's location: Add Billy Cooper to the victory display."
+        },
+        {
+          "id": "card-50046",
+          "title": "Alma Hill",
+          "text": "Spawn - Southside.\n[action]: Parley. Draw the top 3 cards of the encounter deck. Then, add Alma Hill to the victory display."
+        }
+      ],
+      "story": [],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "No Resolution",
+          "children": [
+            {
+              "id": "noResolution-0",
+              "text": "If no resolution was reached (each investigator resigned or was defeated): Read Resolution 1."
+            }
+          ]
+        },
+        {
+          "id": "r1",
+          "title": "Resolution 1",
+          "children": [
+            {
+              "id": "r1-0",
+              "text": "Resolution 1: You’ve managed to obtain some useful information about the cult and its plans. You can only hope it’s enough.\n\n• In your Campaign Log, under “Cultists We Interrogated,” record the names of each unique Cultist enemy in the victory display.\n\n• In your Campaign Log, under “Cultists Who Got Away,” record the name of each unique enemy still remaining in the Cultist deck or in play. If it is Agenda 1, record “The Masked Hunter” here as well.\n\n• If the Ghoul Priest is in the victory display, cross out “the Ghoul Priest is still alive” in your Campaign Log.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n• Experience: (calculate as instructed above)"
+            }
+          ]
+        },
+        {
+          "id": "r2",
+          "title": "Resolution 2",
+          "children": [
+            {
+              "id": "r2-0",
+              "text": "Resolution 2: Twelve bells ring out, signaling midnight. You’re out of time; the cult’s ritual will begin shortly. You’ve managed to obtain some useful information about the cult and its plans. You can only hope it’s enough.\n\n• In your Campaign Log, under “Cultists We Interrogated,” record the names of each unique Cultist enemy in the victory display.\n\n• In your Campaign Log, under “Cultists Who Got Away,” record the name of each unique enemy still remaining in the Cultist deck or in play.\n\n• In your Campaign Log, record that it is past midnight.\n\n• If the Ghoul Priest is in the victory display, cross out “the Ghoul Priest is still alive” in your Campaign Log.\n\n• Each investigator earns experience equal to the Victory X value of each card in the victory display.\n• Experience: (calculate as instructed above)"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

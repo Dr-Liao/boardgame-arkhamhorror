@@ -10,6 +10,7 @@ import { drawChaosToken, noteChaosTokenChange, revealSealedToken } from './chaos
 import { rankedBagTokens } from './chaos-token-pool.js'
 import { afterHandEmptied } from './hand-discard-window.js'
 import { currentRevelation } from './resolution-scope.js'
+import { canChangeChaosToken } from './chaos-reveal.js'
 
 export function createTestApi(state, events, deps) {
   const {
@@ -75,6 +76,26 @@ export function createTestApi(state, events, deps) {
       return true
     },
     addTestValue: amount => { if (state.skillTest) state.skillTest.value = (state.skillTest.value || 0) + amount },
+    revealChaosBeforeCommit: context => {
+      if (context?.when !== 'testInitiated' || !state.skillTest || context.revealBeforeCommit) return false
+      context.revealBeforeCommit = true
+      state.skillTest.revealBeforeCommit = true
+      return true
+    },
+    adjustFailedTestMargin: (context, delta) => {
+      if (context?.when !== 'failedTestMargin' || !Number.isSafeInteger(delta)) return false
+      context.failedBy = Math.max(0, context.failedBy + delta)
+      return true
+    },
+    configureWeaponFight: (context, { useAgility = false, enemyEvade = false } = {}) => {
+      if (context?.when !== 'activateFirearmFight' || !context.assetId) return false
+      const previous = context.fightConfiguration
+      context.fightConfiguration = {
+        useAgility: previous?.useAgility || useAgility === true,
+        enemyEvade: previous?.enemyEvade || enemyEvade === true,
+      }
+      return true
+    },
     sealTestToken: (seat, token, source) => {
       if (!deps.sealRevealedChaosToken(state, token, source, seat)) return false
       deps.abilityApi(state, events).notifyChaosTokenSealed(seat, token)
@@ -114,7 +135,8 @@ export function createTestApi(state, events, deps) {
     },
     cancelCurrentSymbol: (context, options = {}) => {
       if (!state.skillTest || context?.when !== 'symbolRevealed'
-        || state.skillTest.currentToken !== context.token) return false
+        || state.skillTest.currentToken !== context.token
+        || !canChangeChaosToken(state, options.actorSeat ?? state._resolvingSeat ?? context.seat, context.token)) return false
       state.skillTest.cancelledSymbol = context.token
       state.skillTest.cancelledSymbolSource = options.sourceCode || null
       noteChaosTokenChange(state, state._resolvingSeat ?? context.seat)
@@ -145,7 +167,8 @@ export function createTestApi(state, events, deps) {
     testStage: () => testStage(state.skillTest?.stage),
     canCommitCard: (seat, code, options) => {
       const inv = state.investigators[seat]
-      if (options?.from === 'discard' && (!inv?.discard.includes(code) || deps.discardLocked(state, inv))) return false
+      const owner = state.investigators[options?.ownerSeat ?? seat]
+      if (options?.from === 'discard' && (!owner?.discard.includes(code) || deps.discardLocked(state, owner))) return false
       return canCommitToTest(state, inv, code, deps, options)
     },
     revealAndCommitSkill: (seat, options = {}) => {
@@ -186,7 +209,8 @@ export function createTestApi(state, events, deps) {
       if (!owner || !state.skillTest) return 0
       let added = 0
       for (const code of codes) {
-        const index = owner.hand.indexOf(code)
+        const index = options.handIndex == null ? owner.hand.indexOf(code)
+          : owner.hand[options.handIndex] === code ? options.handIndex : -1
         if (index < 0) continue
         if (!canCommitToTest(state, owner, code, deps, options)) continue
         if (!options.ignoreAdditionalCosts && !payCommitResourceCost(state, owner, code, deps)) continue

@@ -32,15 +32,25 @@ export function createEnemyApi(state, events, deps) {
 
   return {
     protectFromEnemies: (seat, ids, options) => protectFromEnemies(state, seat, ids, options),
+    // 批次 3（60483）：该敌人本轮不能攻击指定调查员（读点与剧本 API 同一份 attackProtection）。
+    protectFromEnemyAttack: (enemy, seat = state.currentSeat) => {
+      const actual = state.enemies.find(candidate => candidate.id === (typeof enemy === 'string' ? enemy : enemy?.id))
+      if (!actual || !state.investigators[seat]) return false
+      actual.attackProtection ||= {}
+      actual.attackProtection[seat] = state.round
+      return true
+    },
     shuffleEnemyIntoEncounterDeck: (enemy, options) => shuffleEnemyIntoEncounterDeck(state, enemy, options, events),
+    moveEnemyToEncounterBottom: (enemy, options) => shuffleEnemyIntoEncounterDeck(state, enemy, { ...options, toBottom: true }, events),
     enemyTestModifier: (enemy, spec = {}) => {
       if (!enemy) return enemy
       return campaignState.setEnemyTestModifier(enemy, state, spec)
     },
     // Phase 5（5c）：「本阶段非精英敌人不攻击」（内讧）。
-    preventNonEliteAttacks: (seat = state.currentSeat) => {
+    preventNonEliteAttacks: (seat = state.currentSeat, { until = 'enemyPhase' } = {}) => {
       const owner = state.investigators[seat]
       if (!owner) return null
+      if (until === 'endOfRound') { owner.onTheLam = true; return true }
       owner.infighting = { round: state.round, phase: 'enemy' }
       return owner.infighting
     },

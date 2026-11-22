@@ -1,3 +1,4 @@
+import { selectCampaign } from './playwright/campaign-picker.mjs'
 import { test, expect } from '@playwright/test'
 import { mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -61,7 +62,7 @@ for (const [viewport, width, height] of [['desktop', 1440, 950], ['mobile', 390,
     await page.goto('/index.html')
     await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
     const setup = page.getByRole('dialog', { name: '调查准备设置' })
-    await setup.getByRole('combobox', { name: '战役' }).selectOption('theForgottenAge')
+    await selectCampaign(page, setup, 'theForgottenAge')
     await setup.getByRole('combobox', { name: '席位数量' }).selectOption('1')
     const responsePromise = page.waitForResponse(response => response.url().endsWith('/api/start')
       && response.request().method() === 'POST')

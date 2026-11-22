@@ -2,6 +2,11 @@ import { TDC_INVESTIGATOR_CODES } from '../../content/packs/tdcInvestigators/man
 import { TDC_PLAYER_BUILDABLE_CODES, TDC_PLAYER_RESEARCHED_CODES } from '../../content/packs/tdcPlayer/manifest.js'
 import { deckRules, matchesCardRule, matchesFixedDeckOption, deckCardLimit, validateDeckRules, optionExcluded } from './deck-rules.js'
 import { TSK_BONUS_XP } from '../../content/campaigns/theScarletKeys/investigator-data.js'
+import { starterPlayerCards } from './starter-packs.js'
+import { CORE2026_PLAYER_CARD_CODES } from './core2026-packs.js'
+
+import { returnBuildableCards, returnResearchUpgrades } from './return-packs.js'
+import { alternateBuildFor, alternateInvestigatorFamily, investigatorBackExperience, investigatorDeckDefinition } from './alternate-investigator-build.js'
 // 诡镇奇谈：卡牌版（Arkham Horror LCG）· 牌组构筑引擎
 //
 // Phase 2 · 完整构筑规则：
@@ -34,6 +39,7 @@ import {
   EOTE_PLAYER_BUILDABLE_CODES,
   TSK_PLAYER_BUILDABLE_CODES,
   FHV_PLAYER_BUILDABLE_CODES,
+  FHV_PLAYER_RESEARCHED_CODES,
   canSelectInvestigator, isCardAvailable,
 } from './availability.js'
 
@@ -80,11 +86,18 @@ const FHV_DECK_CARD_CODES = Object.freeze(FHV_PLAYER_BUILDABLE_CODES.filter(code
   const card = ALL_CARDS[code]
   return Boolean(card) && cardLimit(card) > 0
 }))
-export const EXPANDED_PLAYER_CARD_CODES = Object.freeze([...PLAYER_CARD_CODES, ...TFA_DECK_CARD_CODES, ...TCU_DECK_CARD_CODES, ...TDE_DECK_CARD_CODES, ...TIC_PLAYER_BUILDABLE_CODES, ...EOTE_DECK_CARD_CODES, ...TSK_DECK_CARD_CODES, ...FHV_DECK_CARD_CODES, ...TDC_PLAYER_BUILDABLE_CODES])
+export const EXPANDED_PLAYER_CARD_CODES = Object.freeze([
+  ...PLAYER_CARD_CODES, ...TFA_DECK_CARD_CODES, ...TCU_DECK_CARD_CODES, ...TDE_DECK_CARD_CODES,
+  ...TIC_PLAYER_BUILDABLE_CODES, ...EOTE_DECK_CARD_CODES, ...TSK_DECK_CARD_CODES, ...FHV_DECK_CARD_CODES,
+  ...TDC_PLAYER_BUILDABLE_CODES, ...starterPlayerCards, ...CORE2026_PLAYER_CARD_CODES, ...returnBuildableCards,
+])
 // 关间升级候选/普通卡判定 = 全部已开放玩家卡 + 核心包仅升级卡（`CORE_UPGRADE_CODES`）。
 // 与 `web/deck-rules.js` 的 `cardPoolScope` 口径一致：跨循环可见性由开局设置
 // （全部 / 渐进式）在 `filterCardCodes(context)` 一层统一收窄，不再按调查员所属循环硬编码。
-export const UPGRADE_PLAYER_CARD_CODES = Object.freeze([...new Set([...EXPANDED_PLAYER_CARD_CODES, ...CORE_UPGRADE_CODES, ...TDC_PLAYER_RESEARCHED_CODES])])
+export const UPGRADE_PLAYER_CARD_CODES = Object.freeze([...new Set([
+  ...EXPANDED_PLAYER_CARD_CODES, ...CORE_UPGRADE_CODES, ...FHV_PLAYER_RESEARCHED_CODES, ...TDC_PLAYER_RESEARCHED_CODES,
+  ...returnResearchUpgrades,
+])])
 export const DRAFT_PLAYER_CARD_CODES = UPGRADE_PLAYER_CARD_CODES
 const EXPANDED_PLAYER_CODE_SET = new Set(EXPANDED_PLAYER_CARD_CODES)
 // Phase 5 机械迁移的卡号：评分口径对这些卡改用能力层读点（其余卡保持旧口径）。
@@ -353,8 +366,11 @@ function classChoiceBlocked(invDef, card, plan) {
 }
 export function buildDeck(invDef, options = {}) {
   validateInvestigator(invDef)
+  const build = alternateBuildFor(invDef.code, options.investigatorBuild)
+  const backXp = investigatorBackExperience({ code: invDef.code, investigatorBuild: build })
+  invDef = investigatorDeckDefinition(invDef, build)
   const size = deckRules(invDef).size
-  const budget = xpBudget(options) + (Number(TSK_BONUS_XP[invDef?.code]) || 0)
+  const budget = xpBudget(options) + (Number(TSK_BONUS_XP[invDef?.code]) || 0) + backXp
   const rng = mulberry32(hashSeed((options.seed || 'deck') + ':' + invDef.code + ':' + (options.seat ?? 0)))
   const basePool = allowedPlayerPool(options).filter((c) => matchesDeckOptions(invDef, c))
   const classPlan = factionSelectPlan(invDef, basePool)
@@ -411,6 +427,7 @@ export function buildDeck(invDef, options = {}) {
     deck: shuffle(full, rng),
     playerCards: deck,
     ...(Object.keys(classPlan).length ? { classChoices: classPlan } : {}),
+    ...(backXp || options.xpBudget ? { startingExperienceSpent: spentXp } : {}),
     ...sig,
   }
 }
@@ -425,6 +442,8 @@ function signaturePrinting(invDef, primary) {
 export function signatureAndWeaknesses(invDef, rng, options = {}) {
   const signatureCards = []
   const signatureWeaknesses = []
+  const alternate = alternateBuildFor(invDef.code, options.investigatorBuild)
+  const family = alternateInvestigatorFamily(invDef.code)
   // 地球边缘 P5：陈丽丽的演武不是「印刷签名主卡」，而是构筑期选择的双面永久资产；
   // 每张演武强制配 1 张命运重担（08015 印刷 4 份，数量随已选演武数变化）。
   const eoteBuild = eoteInvestigatorBuildRules(invDef?.code)
@@ -448,14 +467,16 @@ export function signatureAndWeaknesses(invDef, rng, options = {}) {
     if (burdenDef.quantity != null && burdenCount > burdenDef.quantity) throw new Error('命运重担数量超过印刷份数')
     signatureWeaknesses.push(...Array(burdenCount).fill(burden))
   }
-  for (const primary of deckRules(invDef).signatureCards) {
-    const code = signaturePrinting(invDef, primary)
+  const normal = deckRules(invDef).signatureCards.map(primary => signaturePrinting(invDef, primary))
+  const printings = alternate?.signatures === 'advanced' ? family.advanced
+    : alternate?.signatures === 'both' ? [...normal, ...family.advanced] : normal
+  for (const code of [...printings, ...(alternate?.directives || [])]) {
     if (eoteBuild && code === eoteBuild.burdenCode) continue
     const def = ALL_CARDS[code]
     if (!def || def.code !== code
       || !implementation(code).implemented
       || !Array.isArray(def.signatureFor)
-      || !def.signatureFor.includes(invDef.code)) {
+      || !def.signatureFor.includes(family?.original || invDef.code)) {
       throw new Error('签名卡或专属弱点依赖缺失/不合法：' + code)
     }
     const quantity = Number.isSafeInteger(def.quantity) && def.quantity > 0 ? def.quantity : 1
@@ -499,10 +520,13 @@ export function drawBasicWeaknesses(invDef, rng, basicPool = BASIC_WEAKNESS_CODE
 // cardCodes：30 张玩家卡（不含签名卡/弱点，这些会自动加入）。
 export function buildDeckFromList(invDef, cardCodes, options = {}) {
   const errors = []
-  let pool, budget, licensed
+  let pool, budget, licensed, backXp
   try {
     validateInvestigator(invDef)
-    budget = xpBudget(options)
+    const build = alternateBuildFor(invDef.code, options.investigatorBuild)
+    backXp = investigatorBackExperience({ code: invDef.code, investigatorBuild: build })
+    invDef = investigatorDeckDefinition(invDef, build)
+    budget = xpBudget(options) + backXp
     pool = new Set(allowedPlayerPool(options).map((card) => card.code))
     licensed = allowedPlayerCodeSet(options)
   } catch (error) {
@@ -568,7 +592,8 @@ export function buildDeckFromList(invDef, cardCodes, options = {}) {
   if (errors.length) return emptyDeck(errors)
   const full = [...codes, ...sig.signatureCards, ...sig.signatureWeaknesses, ...sig.basicWeaknesses]
   return { deck: shuffle(full, rng), playerCards: codes, ...sig, errors,
-    ...(startingExperience ? { startingExperience, startingExperienceSpent: spentXp } : {}) }
+    ...(startingExperience ? { startingExperience } : {}),
+    ...(startingExperience || backXp || options.xpBudget ? { startingExperienceSpent: spentXp } : {}) }
 }
 
 // 固定的 Core 58 张简化模式玩家卡；缺少定义或效果时明确报错，不静默缩小。
@@ -588,6 +613,7 @@ export function deckBuilderData() {
     validateInvestigator(inv)
     signatureAndWeaknesses(inv, () => 0)
     const req = { ...inv.deckRequirements, ...deckRules(inv) }
+    const variant = alternateInvestigatorFamily(code)
     const sigs = req.signatureCards.map(primary => signaturePrinting(inv, primary)).map((c) => {
       const d = ALL_CARDS[c]
       return {
@@ -605,6 +631,17 @@ export function deckBuilderData() {
       subname: inv.subnameZh || inv.subname || '',
       traits: inv.traitsZh || inv.traits || [],
       pack: inv.pack || 'core', packName: inv.packName || '',
+      ...(variant ? { alternateBuild: {
+        original: variant.original, alternate: variant.alternate, startingXp: code === variant.alternate ? variant.startingXp || 0 : 0,
+        ...(code === variant.alternate && variant.startingXp ? {
+          startingCards: pool.filter(card => card.xp > 0 && card.xp * (card.exceptional ? 2 : 1) <= variant.startingXp
+            && matchesDeckOptions(inv, card)).map(card => card.code),
+        } : {}),
+        advanced: variant.advanced.map(id => ({ code: id, name: ALL_CARDS[id].nameZh || ALL_CARDS[id].name,
+          subtype: ALL_CARDS[id].subtype || null })),
+        directives: (code === variant.alternate ? variant.directives || [] : []).map(id =>
+          ({ code: id, name: ALL_CARDS[id].subnameZh || ALL_CARDS[id].subname || ALL_CARDS[id].name })),
+      } } : {}),
       abilityText: inv.textZh || inv.text || '',
       deckSize: deckRules(inv).size,
       rules: deckRules(inv),

@@ -23,6 +23,7 @@
 //     → 最终日黎明 → 跳过勘察 → 最终夜 → 终章。
 //
 // 证据账本：audit/fhv-scenarios-browser.json（tools/playwright-fhv-p7-reporter.mjs）。
+import { selectCampaign } from './playwright/campaign-picker.mjs'
 import { test, expect } from '@playwright/test'
 import { mkdirSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -416,14 +417,8 @@ const targetPath = chapterId => ROUTES[chapterId].path
 async function startCampaignThroughLobby(page, request, testInfo, viewport) {
   await gotoHall(page)
   const dialog = await openSetup(page)
-  const campaignSelect = dialog.locator('select').filter({ has: page.locator(`option[value="${CAMPAIGN_ID}"]`) }).first()
-  await expect(campaignSelect, '大厅战役选择器应包含《铁杉谷盛宴》').toBeVisible({ timeout: 30_000 })
-  const options = await campaignSelect.locator('option').evaluateAll(nodes =>
-    nodes.map(node => ({ value: node.value, label: node.textContent || '' })))
-  expect(options.map(option => option.value), '真实大厅战役下拉').toContain(CAMPAIGN_ID)
-  expect(options.find(option => option.value === CAMPAIGN_ID)?.label, '战役中文名').toContain(CAMPAIGN_NAME)
-  await campaignSelect.selectOption(CAMPAIGN_ID)
-  // 席位数量：1 名真人（单人战役；AI 队友不在本 spec 的验收范围）。
+  await selectCampaign(page, dialog, CAMPAIGN_ID)
+  await expect(dialog.locator('.ah-campaign-summary')).toContainText(CAMPAIGN_NAME)
   const seatSelect = dialog.getByRole('combobox', { name: '席位数量' })
   await expect(seatSelect, '大厅席位数量选择器').toBeVisible({ timeout: 30_000 })
   await seatSelect.selectOption('1')

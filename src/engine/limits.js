@@ -108,6 +108,9 @@ function ownerKey(owner, descriptor, source, inv, context) {
  * 上限键。descriptor.limit 已经是 normalizeLimit 的结果（对象）。
  * 兼容：旧数据里可能仍是字符串，这里再规范化一次。
  */
+import { registeredEntry } from './ability.js'
+import { assetTextBlanked, assetTextBlankedExceptForced } from './card-text.js'
+
 export function limitKey(state, inv, descriptor, context = null, windowId = null, source = null) {
   const limit = descriptor?.limit
   if (!limit) return null
@@ -141,7 +144,13 @@ function windowInstanceKey(state, context = null, windowId = null) {
     state?.moveCount ?? 0, subject].join('|')
 }
 
-export function limitUsed(state, inv, descriptor, context = null, windowId = null, source = null) {
+export function limitWaiverAsset(inv, descriptor) {
+  if (descriptor?.limit?.scope !== 'perRound') return null
+  return inv?.assets?.find(asset => !asset.exhausted && !assetTextBlanked(asset, inv) && !assetTextBlankedExceptForced(asset)
+    && registeredEntry(asset.code)?.assetRule?.waivesAbilityLimit === descriptor.id) || null
+}
+
+export function limitUsed(state, inv, descriptor, context = null, windowId = null, source = null, allowWaiver = true) {
   const key = limitKey(state, inv, descriptor, context, windowId, source)
   if (!key) return false
   // 「直到本轮结束，忽略这条能力的限制」（05005 丽塔·杨的旧印）：
@@ -154,7 +163,7 @@ export function limitUsed(state, inv, descriptor, context = null, windowId = nul
   }
   const limit = typeof descriptor.limit === 'string' ? normalizeLimit(descriptor.limit) : descriptor.limit
   if (limit?.scope === 'perWindow' && state.abilityLimits?.[key]?.windowInstance !== windowInstanceKey(state, context, windowId)) return false
-  return usedCount(state, key) >= (limit?.count ?? 1)
+  return usedCount(state, key) >= (limit?.count ?? 1) && !(allowWaiver && limitWaiverAsset(inv, descriptor))
 }
 
 export function markLimitUsed(state, inv, descriptor, context = null, windowId = null, source = null) {

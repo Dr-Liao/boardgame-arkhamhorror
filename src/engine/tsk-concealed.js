@@ -62,6 +62,12 @@ export function concealedMiniCards(state) {
   return [...(stateOf(state)?.miniCards || [])]
 }
 
+export function setAsideRemainingDecoys(state) {
+  const container = stateOf(state)
+  if (!container?.miniCards.length || container.miniCards.some(card => !card.decoy)) return
+  container.miniCards = []
+}
+
 /** 某地点（可选位置）上的迷你卡；不初始化容器。 */
 export function concealedAt(state, locationId, position = undefined) {
   locationAt(state, locationId)

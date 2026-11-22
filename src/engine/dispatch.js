@@ -1,7 +1,13 @@
 import { isDraftMode, startInitialDraft, applyDraftMove } from '../deck/draft-mode.js'
-import { applyStartingDeckExperience, campaignDeckLocked } from '../campaign/campaign.js'
+import { applyStartingDeckExperience, campaignDeckLocked, campaignOpeningExperience } from '../campaign/campaign.js'
 import { drawBasicWeaknesses } from '../deck/deckbuilding.js'
+import { alternateBuildFor } from '../deck/alternate-investigator-build.js'
+import { recordRegulatedAction } from './action-history.js'
 import { requestChoice } from './resolution.js'
+// 批次 2 支线插入：关间要读取支线战役的清单（记录表合并、关卡归属）。contentRegistry
+// 是 let 绑定、随 registerContentBundle 重新赋值，这里用 import 的 live binding；
+// 与 hub.js 读取内容注册表的方式一致，不构成引擎按战役名分支的例外。
+import { contentRegistry } from '../../content/registered.js'
 // 行动分派（applyMove / executeCommand / executeAction / executeHubMove / applyMoveUnchecked）
 // 从 engine.js 拆出的模块（Phase 6 · 6d-19）。
 //
@@ -68,7 +74,7 @@ import { preparePlayAttempt } from './play-attempt.js'
 //      节点并推进流程（不复制任何报告效果）。
 const MAP_WINDOW_STATES = Object.freeze(['interlude', 'scenarioSetup'])
 export const STARTING_DECK_RULE_ACTIONS = new Set([
-  'hubSelectInvestigator', 'hubAutoDeck', 'hubSetDeck', 'hubDraftPick', 'hubReopenSetup',
+  'hubSelectInvestigator', 'hubConfigureInvestigator', 'hubAutoDeck', 'hubSetDeck', 'hubDraftPick', 'hubReopenSetup',
   'hubCustomize', 'hubConfigureCustomization', 'hubPurchase', 'hubAutoUpgrade',
 ])
 
@@ -490,10 +496,11 @@ function executePaidAction(state, seat, move, events) {
     consumeRestrictedAction(inv, cost, restricted)
   }
   inv.exploreOnlyActions = Math.min(inv.exploreOnlyActions || 0, Math.max(0, inv.actionsLeft))
-  if (cost > 0) {
-    if (state.immediateAction?.seat !== seat) inv.actionsTakenThisTurn = (inv.actionsTakenThisTurn || 0) + 1
-    state.phaseActionCount = (state.phaseActionCount || 0) + 1
+  const inOwnTurn = state.phase === 'investigation' && state.currentSeat === seat && !inv.turnEnded
+  if ((cost > 0 && state.immediateAction?.seat !== seat) || (totalCost > 0 && inOwnTurn)) {
+    inv.actionsTakenThisTurn = (inv.actionsTakenThisTurn || 0) + 1
   }
+  if (cost > 0) state.phaseActionCount = (state.phaseActionCount || 0) + 1
   if (totalCost > cost || move.action === 'endTurn') inv.tomeActionUsed = true
   state.moveCount++
   const ability = move.action === 'ability' ? assetEffect(inv, controlledAbilityCard(inv, move.assetId))?.abilities?.[move.abilityIndex] : null
@@ -510,7 +517,7 @@ function executePaidAction(state, seat, move, events) {
     // Phase 5（5c）：资产把「打出时不引发借机攻击」写成条目级 noOpportunityAttack
     // （旧 DSL 的字段名是 noOpportunityAttackOnPlay），两边都在这里汇合。
     const playNoAoO = move.action === 'play'
-      && (playFlag(move.copyCode || move.cardId, 'noOpportunityAttack')
+      && (state._prePlayAttempt?.noOpportunityAttack || playFlag(move.copyCode || move.cardId, 'noOpportunityAttack')
         || cardKeyword(state, inv, move.copyCode || move.cardId, 'noOpportunityAttack'))
     // 行动/能力级豁免（01055 飞贼的 [action]）：只豁免这一次行动，不豁免打出资产本身。
     const usedAbility = ['ability', 'entityAbility'].includes(move.action) ? abilityOfMove(state, inv, move) : null
@@ -689,6 +696,7 @@ function executeHubMove(state, seat, move, events) {
           previous.deck = previous.deck.filter(code => ALL_CARDS[code]?.subtype === 'basicweakness')
           previous.startingDeckReady = false
           delete previous.startingDeckConfirmationPending
+          delete previous.investigatorBuild
         } else if (previous && previous.status !== 'active') {
           campaign.retired.push(structuredClone(previous))
           delete campaign.investigators[seat]
@@ -699,14 +707,34 @@ function executeHubMove(state, seat, move, events) {
             state.hubReplacementSeats = { ...(state.hubReplacementSeats || {}), [seat]: true }
           }
         }
+        const preserved = state.investigators[seat]?.code === move.code ? state.investigators[seat].investigatorBuild : null
         state.investigators[seat] = makeInvestigator(ALL_INVESTIGATORS[move.code], seat)
+        if (preserved) state.investigators[seat].investigatorBuild = preserved
         if (campaign.investigators[seat]) state.investigators[seat].campaignId = campaign.investigators[seat].id
         state.hubSeatSelected[seat] = true
-        if (isDraftMode(state)) startInitialDraft(state, seat)
+        if (isDraftMode(state)) startInitialDraft(state, seat, basicWeaknessPool(state, move.code, { automatic: true }))
       }
       const part = campaign.seatParts?.[state.laneRuntime?.roomSeats?.[seat] ?? seat]
       if ((!state._legacyStartingDeckRules || isDraftMode(state)) && part && part !== campaign.currentPart) inPart(state, part, select)
       else select()
+      break
+    }
+    case 'hubConfigureInvestigator': {
+      const inv = state.investigators[seat]
+      const build = alternateBuildFor(inv.code, move.build)
+      const applyBuild = () => {
+        inv.investigatorBuild = build
+        const record = campaign.investigators[seat]
+        if (record) {
+          record.startingDeckReady = false
+          delete record.startingDeckConfirmationPending
+          if (record.draftMode) delete record.draftMode
+        }
+        if (isDraftMode(state)) startInitialDraft(state, seat, basicWeaknessPool(state, inv.code, { automatic: true }))
+      }
+      const part = campaign.seatParts?.[state.laneRuntime?.roomSeats?.[seat] ?? seat]
+      if (part && part !== campaign.currentPart) inPart(state, part, applyBuild)
+      else applyBuild()
       break
     }
     case 'hubResumeDraft':
@@ -731,11 +759,14 @@ function executeHubMove(state, seat, move, events) {
       const inv = state.investigators[seat]
       const deferBasicWeakness = !state._legacyStartingDeckRules
       const seed = Math.floor(randomValue(state) * 4294967296)
+      const xpBudget = campaignOpeningExperience(campaign)
       const built = move.action === 'hubSetDeck'
         ? buildDeckFromList(ALL_INVESTIGATORS[inv.code], move.codes,
-          { seat, seed, deferBasicWeakness, playerPool: availablePlayerPool(state), basicWeaknessPool: basicWeaknessPool(state) })
+          { seat, seed, xpBudget, deferBasicWeakness, investigatorBuild: inv.investigatorBuild,
+            playerPool: availablePlayerPool(state), basicWeaknessPool: basicWeaknessPool(state, inv.code) })
         : buildDeck(ALL_INVESTIGATORS[inv.code], {
-          seat, seed, deferBasicWeakness, playerPool: corePlayerPool(state),
+          seat, seed, xpBudget, deferBasicWeakness, investigatorBuild: inv.investigatorBuild, playerPool: corePlayerPool(state, inv.code),
+          basicWeaknessPool: basicWeaknessPool(state, inv.code, { automatic: true }),
         })
       if (built.errors?.length) throw new Error(`牌组无效：${built.errors.join('；')}`)
       // P5 批次 2：非活动线座位的 campaign record 写进该线快照（parts[part]），
@@ -747,6 +778,8 @@ function executeHubMove(state, seat, move, events) {
           const retained = existing.deck.filter(code => ALL_CARDS[code]?.subtype === 'basicweakness')
           existing.code = inv.code
           existing.name = inv.name
+          if (inv.investigatorBuild) existing.investigatorBuild = structuredClone(inv.investigatorBuild)
+          else delete existing.investigatorBuild
           existing.deck = [...built.playerCards, ...built.signatureCards, ...built.signatureWeaknesses,
             ...(retained.length ? retained : built.basicWeaknesses)].sort()
         }
@@ -770,7 +803,7 @@ function executeHubMove(state, seat, move, events) {
       const confirm = () => {
         const record = campaign.investigators[seat]
         if (!record.deck.some(code => ALL_CARDS[code]?.subtype === 'basicweakness')) {
-          const pool = inv.autoBuilt || record.draftMode ? undefined : basicWeaknessPool(state)
+          const pool = basicWeaknessPool(state, inv.code, { automatic: Boolean(inv.autoBuilt || record.draftMode) })
           const weaknesses = drawBasicWeaknesses(ALL_INVESTIGATORS[inv.code], () => randomValue(state), pool)
           record.deck.push(...weaknesses)
           record.deck.sort()
@@ -786,7 +819,7 @@ function executeHubMove(state, seat, move, events) {
     }
     case 'hubPurchase': {
       const purchase = stagePurchase(campaign, seat, move.added, move.removed, {
-        ...cardPoolContext(state), choosePurchaseEffect: spec => requestChoice(state, spec),
+        ...cardPoolContext(state), keepLower: move.keepLower === true, choosePurchaseEffect: spec => requestChoice(state, spec),
       })
       info(state, events, `${state.investigators[seat].name} 暂存升级（${purchase.cost} XP），等待确认。`)
       break
@@ -929,6 +962,49 @@ function executeHubMove(state, seat, move, events) {
       // 新关间从零开始：替换席位标记只在换人的那一轮关间有效。
       delete state.hubReplacementSeats
       state.hubSelectedScenarioId = CAMPAIGN.scenarioOrder[campaign.scenarioIndex]
+      break
+    }
+    // 批次 2：关间插入独立支线。支线关卡在另一个战役内容包里注册，本局仍使用主战役的
+    // 记录、牌组与混乱袋；结算后回到插入前的关间节点，由席位确认推进到原定下一章。
+    case 'hubStartSideStory': {
+      if (state.phase !== 'interlude' || !['interlude', 'checkpoint'].includes(campaign.flowStage)) {
+        throw new Error('只能在关间插入支线')
+      }
+      if (campaign.failed || campaign.finished) throw new Error('战役已经结束')
+      const side = (CAMPAIGN.sideStories || []).find(entry => entry.campaignId === move.campaignId)
+      if (!side) throw new Error('本战役没有可插入的该支线')
+      if ((campaign.sideStoriesPlayed || []).includes(side.campaignId)) throw new Error('该支线已经游玩过')
+      const sideCampaign = contentRegistry.getCampaign(side.campaignId)
+      if (!sideCampaign) throw new Error('支线战役未注册')
+      const scenarioId = side.scenarioId || sideCampaign.scenarioIds[0]
+      if (!sideCampaign.scenarioIds.includes(scenarioId)) throw new Error('支线关卡未注册')
+      const active = Object.values(campaign.investigators || {}).filter(record => record?.status === 'active')
+      if (!active.length) throw new Error('没有可支付经验的现役调查员')
+      if (!active.every(record => Number.isSafeInteger(record.xp) && record.xp >= side.cost)) {
+        throw new Error(`每位现役调查员至少需要 ${side.cost} XP 才能游玩该支线`)
+      }
+      for (const record of active) {
+        record.xp -= side.cost
+        record.spentXp = (record.spentXp || 0) + side.cost
+        info(state, events, `⭐ ${record.name} 支付 ${side.cost} XP 插入支线。`)
+      }
+      campaign.xp = Object.values(campaign.investigators).reduce((sum, record) => sum + record.xp, 0)
+      // 支线的战役记录键并入本局有效记录表：沿用主战役记录，只增加支线自己的键。
+      for (const [key, type] of Object.entries(sideCampaign.recordSchema || {})) {
+        if (Object.hasOwn(campaign.recordSchema || {}, key)) continue
+        campaign.recordSchema[key] = type
+        campaign.records[key] = type === 'boolean' ? false : type === 'number' ? 0 : type === 'string[]' ? [] : ''
+      }
+      campaign.sideStoriesPlayed = [...(campaign.sideStoriesPlayed || []), side.campaignId]
+      campaign.sideStoryReturn = { scenarioId, campaignId: side.campaignId, nodeId: campaign.flow.nodeId }
+      state.hubReady = false
+      state.hubSeatDone = {}
+      state.hubUpgradedSeats = {}
+      state.currentSeat = 0
+      state.hubSelectedScenarioId = scenarioId
+      startScenario(state, campaign.scenarioIndex, events, scenarioId)
+      runMulligans(state, events)
+      info(state, events, `🃏 插入支线：${sideCampaign.name}。结算后回到当前关间继续下一章。`)
       break
     }
     case 'hubEmbark': {
@@ -1129,6 +1205,7 @@ function applyMoveUnchecked(state, seat, move, events) {
     case 'fightHidden':
     case 'evadeHidden': {
       if (!takeHiddenEnemyFromHand(inv, m.cardId)) break
+      if (m.action === 'fightHidden') recordRegulatedAction(state, inv, 'fight', registeredEntry)
       const card = cardDef(m.cardId) || { code: m.cardId, fight: 0, evade: 0 }
       const enemy = spawnHiddenEnemy(state, inv, card)
       const skill = m.action === 'evadeHidden' ? 'agility' : 'combat'
@@ -1162,6 +1239,7 @@ function applyMoveUnchecked(state, seat, move, events) {
       const mini = (state.scenarioFlags?.mechanics?.tsk?.concealed?.miniCards || [])
         .find(card => card.id === m.miniId)
       if (!mini || mini.locationId !== inv.location || mini.flipped) break
+      if (m.action === 'fightConcealed') recordRegulatedAction(state, inv, 'fight', registeredEntry)
       const loc = state.locations.find(location => location.id === inv.location)
       const bonus = Number(registeredEntry(loc?.originalCode || loc?.code)?.locationRule?.concealedFightEvadeBonus || 0)
       const miniDifficulty = Math.max(0, Number(loc?.shroud) || 0) + bonus

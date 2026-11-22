@@ -4,6 +4,7 @@ import { wrapInvestigatorEffects } from './effect-recipient.js'
 import { createInvestigatorApi } from './investigator-mechanics.js'
 import { createPlayerApi } from './player-mechanics.js'
 import { setTokenCostShroudReader } from './token-cost.js'
+import { setResourcesSpentHook } from './resource-bank.js'
 import { notePromiseEvent } from './turn-promises.js'
 import { setThreatEntryHooks } from './threat-entry.js'
 // 诡镇奇谈：卡牌版 · 规则引擎（Night of the Zealot 三关简化流程）
@@ -38,7 +39,7 @@ import { hasWindowListener } from './window-listeners.js'
 import { createTurnFlow } from './turn-flow.js'
 import { dispatchVehicleEvent } from './road-hazards.js'
 import { dreamGateEntryError } from './dream-gate.js'
-import { createHiddenRules } from './hidden-rules.js'
+import { createHiddenRules, isHiddenPlayerWeakness } from './hidden-rules.js'
 import { createCardDefs } from './card-defs.js'
 import { createCardOps } from './card-ops.js'
 import { createActAgenda } from './act-agenda.js'
@@ -103,6 +104,7 @@ import {
 } from './effect-state.js'
 import { playAccess, playConditionError } from './play-condition.js'
 import { canSearchPlayableAsset } from './asset-search-play.js'
+import { increaseEnemyDamage } from './enemy-damage.js'
 import { availableResources } from './resource-bank.js'
 import { availablePlayResources } from './play-payment.js'
 import { bondedPlayCostAvailable } from './play-attempt.js'
@@ -178,6 +180,7 @@ setTargetHooks({ enemyHealth: (...args) => enemyHealth(...args), enemyEvade: (st
   cardDef, entryOf: registeredEntry, enemyBlanked: enemyTextBlanked })
 setModifierHooks({
   maxSanity: getMaxSanity,
+  occupiedAssetSlots: (inv, spec) => inv ? slotUsage(inv, spec.traitsAny)[spec.slot] || 0 : 0,
   // 与 assetEffect 的空白判定保持一致：文本空白时被动与声明式修正都不生效（同一份判定见 card-text.js）。
   sourceBlanked: (state, inv, source) => assetTextBlankedExceptForced(source) || assetTextBlanked(source, inv),
   investigatorBlanked: (state, inv) => investigatorTextBlanked(state, inv),
@@ -419,7 +422,7 @@ import { createEnemies } from './enemies.js'
 import { enemyIgnoresInvestigator } from './trait-passives.js'
 import { createLocations } from './locations.js'
 import { createSkillEffects } from './skill-effects.js'
-import { createTurn, grantActionOnNextTurn, redirectMythosEncounterDraw } from './turn.js'
+import { createTurn, grantActionOnNextTurn, grantActionThisRound, redirectMythosEncounterDraw } from './turn.js'
 import { enemyProtectionBlocks } from './enemy-entry.js'
 import { createReveal } from './reveal.js'
 import { createDeckOps } from './deck-ops.js'
@@ -984,7 +987,7 @@ function spendAction(state, inv) {
 
 /** Seats allowed to submit now; per-seat hub preparation is simultaneous. */
 
-const HUB_SEAT_ACTIONS = new Set(['hubDraftRefill', 'hubResumeDraft', 'hubDraftPick', 'hubDraftBuy', 'hubDraftRefresh', 'hubDraftLock', 'hubSelectInvestigator', 'hubAutoDeck', 'hubSetDeck', 'hubConfirmDeck', 'hubPurchase', 'hubCustomize',
+const HUB_SEAT_ACTIONS = new Set(['hubDraftRefill', 'hubResumeDraft', 'hubDraftPick', 'hubDraftBuy', 'hubDraftRefresh', 'hubDraftLock', 'hubSelectInvestigator', 'hubConfigureInvestigator', 'hubAutoDeck', 'hubSetDeck', 'hubConfirmDeck', 'hubPurchase', 'hubCustomize',
   'hubConfigureCustomization', 'hubConfirmUpgrades', 'hubCancelUpgrades', 'hubAutoUpgrade', 'hubDoneSeat'])
 
 /** Seat preparation only touches the submitting seat, so it may follow a teammate's newer revision. */
@@ -1379,7 +1382,7 @@ const apiMiscDeps = { ...commonDeps,
   // P6（食梦者）：支援被击败判定（applyHarm 与「移动伤害」共用同一实现）。
   checkAssetDefeated: (state, owner, asset, events) => checkAssetDefeated(state, owner, asset, events, {
     cardDef, cardName, leaveAsset, info, reactionWindow, triggerReaction,
-    registeredEntry, defeatedAssetRetaliation,
+    registeredEntry, defeatedAssetRetaliation, exilePlayerCard,
     shuffleIntoDeck: (target, code) => { target.deck = replacePlayerZoneCards(state, target, shuffle([...target.deck, code], () => randomValue(state)), 'shuffle') },
   }),
   // 2026-10-25 第五轮：条目 API 里的通用读点（敌人运行期修正 / 地点帷幕 / 显现作用域）。
@@ -1434,6 +1437,7 @@ function abilityApi(state, events) {
       scenarioBehavior(state).redirectConcealedLocation?.(state, locationId) ?? locationId,
     keyShifted: (state, context) => reactionWindow(state, 'tskKeyShifted', { when: 'tskKeyShifted', ...context }, events, { allowNested: true }),
     sealedChanged: () => abilityApi(state, events).resolveEmptyUses(),
+    discardLocked: seat => discardLocked(state, state.investigators[seat]),
     directDamage: (seat, amount) => applyDamage(state, state.investigators[seat], amount, events, true),
     moveInvestigator: (seat, destination) => relocateInvestigator(state, seat, destination, events, null, { reason: 'vehicle' }),
     vehicleLeft: event => dispatchVehicleEvent(state, 'left', event, () => scenarioRuntime(state, events)),
@@ -1478,6 +1482,14 @@ function abilityApi(state, events) {
     emptyAssetSlots: (seat, slot) => createAssetsApi().emptyAssetSlots(state.investigators[seat], slot),
     redirectMythosEncounterDraw: (context, seat, options) => redirectMythosEncounterDraw(state, context, seat, options),
     grantActionOnNextTurn: (seat, amount) => grantActionOnNextTurn(state, seat, amount),
+    grantActionThisRound: (seat, amount) => grantActionThisRound(state, seat, amount),
+    // 批次 3（60480）：重复一次当前调查阶段（阶段回合结束时执行）。
+    repeatInvestigationPhase: options => createTurnFlowApi().repeatInvestigationPhase(state, events, options),
+    grantRestrictedTurnAction: (seat, kind) => {
+      const inv = state.investigators[seat]
+      if (state.phase !== 'investigation' || state.currentSeat !== seat || inv?.turnEnded || inv?.defeated || inv?.resigned) return 0
+      return grantRestrictedAction(state, inv, kind)
+    },
     repeatAssetAbility: (context, options) => abilityExec().repeatAssetAbility(state, context, options, events),
     hasImmediateAction: (seat, options) => hasImmediateAction(state, seat, options),
     performImmediateAction: (seat, source, options) => performImmediateAction(state, seat, events, source, options),
@@ -1525,7 +1537,50 @@ function abilityApi(state, events) {
       })
     },
     cardDef,
+    increaseEnemyDamage,
+    isWeaknessCode,
+    concealedDamageTargets: (seat, location) => createHarmThreatApi().concealedDamageTargets(state, seat, location),
+    exposeConcealedInsteadOfDamage: (seat, location, id) => createHarmThreatApi().exposeConcealedInsteadOfDamage(state, seat, location, id, events),
+    turnAssetFacedown: (seat, asset) => {
+      const inv = state.investigators[seat]
+      if (!inv?.assets.includes(asset) || asset.inactiveFaceDown) return false
+      asset.inactiveFaceDown = true
+      asset.facedown = true
+      const entry = registeredEntry(asset.code)
+      if (entry?.restrictedSlots || entry?.modifiers.some(rule => rule.target.startsWith('slot:') || rule.target === 'add:slot')) {
+        const assets = createAssetsApi()
+        for (const host of [...inv.assets]) {
+          if (assets.normalizedSlots(cardDef(host.code)).length) assets.enforceAssetSlotCapacity(state, inv, host, events)
+        }
+      }
+      checkDefeated(state, seat, events)
+      return true
+    },
+    ignoreAssetRegulation: (seat, asset) => {
+      if (!state.investigators[seat]?.assets.includes(asset) || asset.inactiveFaceDown) return false
+      asset.ignoreRegulationRound = state.round
+      return true
+    },
+    removeOwnedCopies: (seat, code) => deckOpsApi().removeOwnedCopies(state, seat, code, events),
+    placeHiddenWeakness: (seat, code) => {
+      const inv = state.investigators[seat]
+      const definition = cardDef(code)
+      if (!inv || !definition || !isHiddenPlayerWeakness(code)) return false
+      placeHiddenCard(state, inv, definition, events)
+      return true
+    },
+    discardHiddenWeakness: (seat, code) => isHiddenPlayerWeakness(code) && state.investigators[seat]
+      ? discardHiddenCard(state, state.investigators[seat], code, events) : false,
     canSearchPlayableAsset: (seat, options) => canPlayNamedAsset(state, state.investigators[seat], options),
+    canMakeRoomForAsset: (seat, code) => {
+      const inv = state.investigators[seat]
+      const definition = cardDef(code)
+      if (!inv || definition?.type !== 'asset') return false
+      if (definition.unique && state.investigators.some(owner =>
+        owner.assets.some(asset => cardDef(asset.code)?.name === definition.name))) return false
+      return canEquip(inv, definition) || assetReplacementPlans(inv, definition, state).length > 0
+    },
+    makeRoomForAsset: (seat, code) => replaceAssets(state, state.investigators[seat], cardDef(code), events),
     searchPlayableAsset: (seat, options) => {
       const inv = state.investigators[seat]
       return deckOpsApi().searchPlayableAsset(state, inv, {
@@ -1717,6 +1772,13 @@ const { doFight, doEvade } = createCombat({
   moveInvestigatorTo,
   payActionCost,
   sealRevealedChaosToken,
+})
+
+// 批次 3（12103）：「花费资源后」窗口的唯一派发点（队伍里没有监听者时不付窗口开销）。
+setResourcesSpentHook((state, inv, amount) => {
+  if (!hasWindowListener(state, 'resourcesSpent')) return
+  reactionWindow(state, 'resourcesSpent', { when: 'resourcesSpent', seat: inv.seat, amount,
+    location: inv.location }, state._resolution?.events || [])
 })
 
 // Phase 6（6d-4）：打牌 / 调查搬进 actions.js；依赖一次性注入。
@@ -2480,7 +2542,7 @@ export function executeAction(...args) {
     const inv = state.investigators?.[seat]
     if (!inv) return result
     const kind = actionKind(state, inv, move)
-    const actionKinds = performedActionKinds(move, kind)
+    const actionKinds = performedActionKinds(move, kind, registeredEntry)
     reactionWindow(state, 'actionTaken', {
       when: 'actionTaken', seat, location: inv.location, actionKind: kind, actionKinds,
       prompt: `${inv.name} 完成了一次行动（${actionKinds.join(' / ')}）`,
@@ -2510,6 +2572,7 @@ function encounterApi() {
   descriptorSources,
   descriptorUsable,
   descriptorsForWindow,
+  concealedDamageTargets: (...args) => createHarmThreatApi().concealedDamageTargets(...args),
   doAbility,
   doFreeDescriptor,
   doPlay: (...args) => doPlay(...args),
@@ -2723,6 +2786,7 @@ function turnApi() {
   turnImpl ||= createTurn({
   ...commonDeps,
   upkeepPhase,
+  eliminateInvestigator,
   PREY_RANK,
   applyThreatForced,
   checkAgenda,
@@ -3208,6 +3272,7 @@ function createAssetsApi() {
     releaseChaosTokens,
     removeEffectsFromSource,
     slotBonus,
+    triggerReaction,
     weaknessProfile,
     withEffectCode,
   })

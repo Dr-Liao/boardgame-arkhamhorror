@@ -1,4 +1,7 @@
 import { putInHand } from './hand-entry.js'
+import { exilePlayedEvent } from './event-play-disposal.js'
+import { consumeEffect } from './effect-state.js'
+import { canChangeChaosToken } from './chaos-reveal.js'
 import { sealChaosToken as payEntrySeal } from './chaos-bag.js'
 import { chooseEntrySeal } from './seal-entry.js'
 import { eventWindowContext } from './event-window.js'
@@ -220,6 +223,11 @@ export function createMiscApi(state, events, deps) {
       ;(owner.deferredEventReturns ||= []).push({ ...card })
       return true
     },
+    returnPlayedEventAtEndOfTurn: context => {
+      if (!context?.cardId) return false
+      context.returnAtEndOfTurn = true
+      return true
+    },
     availableUses: card => availableUseCost(state, card, registeredEntry),
     spendUses: (card, amount = 1, { allowSubstitution = false } = {}) => {
       const inv = state.investigators.find(owner => owner.assets.includes(card))
@@ -262,8 +270,11 @@ export function createMiscApi(state, events, deps) {
     },
     choice: options => requestChoice(state, options),
     replaceChaosToken: (context, token) => {
-      if (context?.when !== 'tokenReveal' || typeof token !== 'string') return false
+      const seat = state._resolvingSeat ?? context?.seat
+      if (context?.when !== 'tokenReveal' || typeof token !== 'string'
+        || !canChangeChaosToken(state, seat, context.token)) return false
       context.replacementToken = token
+      context.replacingSeat = seat
       return true
     },
     // 兼容别名（2026-10-28 收口）：遭遇侧内容历史上用 `choose`，玩家侧用 `choice`。
@@ -485,8 +496,8 @@ export function createMiscApi(state, events, deps) {
     playCardFromDiscard: (seat, code, options = {}) =>
       playCardFromDiscardForced(state, seat, code, events, options),
     // 第三个参数用于「发现任意地点的线索」（02224）：判定仍按目标地点走剧情的 canDiscoverClues。
-    discoverClue: (seat, amount = 1, locationId = null) =>
-      discoverClueAt(state, state.investigators[seat], amount, events, { locationId: locationId ?? undefined }),
+    discoverClue: (seat, amount = 1, locationId = null, { investigation = false } = {}) =>
+      discoverClueAt(state, state.investigators[seat], amount, events, { locationId: locationId ?? undefined, investigation }),
     canDiscoverClueAt: (seat, locationId) =>
       canDiscoverClueAt(state, state.investigators[seat], state.locations.find(loc => loc.id === locationId)),
     parleyForbidden: (seat, enemy) => parleyForbidden(state, state.investigators[seat], enemy),
@@ -720,6 +731,45 @@ export function createMiscApi(state, events, deps) {
     // 2026-10-25 第七轮修复 05320：把刚打出的事件「再次打出」（从实际落点取出、完整付费/窗口/目标）。
     replayEventAsHand: (seat, code) =>
       playCardFromDiscardForced(state, Number.isInteger(seat) ? seat : state.currentSeat, code, events, { exileAfter: false }),
+    // 批次 3（12052 / 60465）：事件把某张支援放进场后，标记它在轮末返回手牌/洗回牌库。
+    markAssetRoundEndReturn: (asset, mode = 'hand') => {
+      if (!asset) return false
+      if (mode === 'deck') asset.shuffleIntoDeckAtRoundEnd = true
+      else asset.returnToHandAtRoundEnd = true
+      return true
+    },
+    // 批次 3（60253）：威胁区卡上的数字恐惧标记（实例 counters 字段）。
+    addThreatFear: (card, amount = 1) => {
+      if (!card) return 0
+      const current = Number.isFinite(card.counters) ? Math.max(0, card.counters) : 0
+      card.counters = current + (Number(amount) || 0)
+      return card.counters
+    },
+    threatFear: card => Number(card?.counters) || 0,
+    // 批次 3（60472/60473）：把 enemyAttack 窗口的这次攻击重定向给另一名调查员。
+    redirectEnemyAttack: (context, seat) => {
+      if (!context || context.when !== 'enemyAttack' || context.redirectToSeat != null) return false
+      const target = state.investigators[seat]
+      if (!target || target.defeated || target.resigned || seat === context.seat) return false
+      context.redirectToSeat = seat
+      return true
+    },
+    // 批次 3（60552）：在 beforePlayCost 窗口把本次事件改为在连接地点结算。
+    playEventAsIfAtLocation: (context, locationId) => {
+      if (!context || context.when !== 'beforePlayCost' || context.cardType !== 'event') return false
+      const inv = state.investigators[context.seat]
+      const here = inv && state.locations.find(location => location.id === inv.location)
+      if (!here || !locationId || !here.connections?.includes(locationId)) return false
+      context.playAsIfLocation = locationId
+      return true
+    },
+    // 批次 3（60253）：把当前 discoverClue 窗口改为「替换本次发现」。
+    replaceClueDiscovery: () => {
+      state._clueDiscoveryReplaced = true
+      return true
+    },
+    // 批次 3（60567）：搜索遭遇牌库/弃牌堆，找出一张匹配的遭遇卡（可生成并与调查员交战）。
+    searchEncounterDeck: spec => scenarioRuntime(state, events).searchEncounterCard(spec || {}),
     // 2026-10-25 第七轮修复 05040：把「下一次行动期间生效」的持续效果排队（dispatch 在行动开始时挂上）。
     scheduleActionEffects: (records = []) => {
       if (!Array.isArray(records) || !records.length) return 0
@@ -746,6 +796,7 @@ export function createMiscApi(state, events, deps) {
       controllerSeat: record?.controllerSeat ?? ownerSeat ?? state.currentSeat,
     }),
     effects: () => activeEffects(state),
+    consumeEffect: id => consumeEffect(state, id),
     addChaosToken: token => { state.chaosBag.push(token) },
     removeChaosToken: token => {
       const index = state.chaosBag.indexOf(token)
@@ -762,7 +813,14 @@ export function createMiscApi(state, events, deps) {
       if (Number.isSafeInteger(drawOnSuccess) && drawOnSuccess > 0) config.drawOnSuccess += drawOnSuccess
       return true
     },
-    setShroudMod: (location, amount) => setLocationShroudMod(location, amount),    // 2026-10-28：地点特性原语（运行期授予/撤销；连接重算与投影 grantedTraits 由原语统一处理）。
+    setShroudMod: (location, amount) => setLocationShroudMod(location, amount),
+    // 批次 3（12088）：地点隐藏值修正直到本轮结束（actions.js 调查难度读取 roundShroudMod）。
+    locationShroudModUntilRoundEnd: (location, amount = 1) => {
+      const actual = typeof location === 'string' ? state.locations.find(loc => loc.id === location) : location
+      if (!actual) return false
+      actual.roundShroudMod = { round: state.round, amount: Number(amount) || 0 }
+      return true
+    },    // 2026-10-28：地点特性原语（运行期授予/撤销；连接重算与投影 grantedTraits 由原语统一处理）。
     addLocationTrait: (location, trait, options = {}) => locationTraits.add(state, location, trait, options),
     removeLocationTrait: (location, trait, options = {}) => locationTraits.remove(state, location, trait, options),
     grantedLocationTraits: location => locationTraits.granted(location),
@@ -818,6 +876,16 @@ export function createMiscApi(state, events, deps) {
     putEnemyInPlay: enemy => scenarioRuntime(state, events).putEnemyInPlay(enemy),
     setEnemyRoundFightEvadeBonus: (enemy, amount, options) => scenarioRuntime(state, events).setEnemyRoundFightEvadeBonus(enemy, amount, options),
     preventEnemyReady: (enemy, rounds) => scenarioRuntime(state, events).preventEnemyReady(enemy, rounds),
+    // 批次 3（60366/60377）：「下一个补给阶段不重整」。
+    preventEnemyReadyNextUpkeep: enemy => scenarioRuntime(state, events).preventEnemyReadyNextUpkeep(enemy),
+    // 批次 3（60365）：敌人获得冷漠直到本轮结束（turn-flow 的 aloof 重算读 aloofUntilRound）。
+    grantEnemyAloofUntilRoundEnd: enemy => {
+      const actual = state.enemies.find(candidate => candidate.id === (typeof enemy === 'string' ? enemy : enemy?.id))
+      if (!actual) return false
+      actual.aloofUntilRound = state.round
+      actual.aloof = true
+      return true
+    },
     disengageEnemy: enemy => scenarioRuntime(state, events).disengage(enemy),
     connectLocations: (aId, bId) => scenarioRuntime(state, events).connectLocations(aId, bId),
     locationAttachments: locationId => scenarioRuntime(state, events).locationAttachments(locationId),
@@ -830,6 +898,7 @@ export function createMiscApi(state, events, deps) {
       exilePlayerCard(state, owner, code, events)
       return true
     },
+    exilePlayedEvent,
     // 「本次检定再获得 1 个图标」：记录在 committed 条目上（引擎结算图标时读 extraIcons）。
     addCommittedExtraIcons: (icon, options = {}) => {
       const committed = (state.skillTest?.committed || [])
@@ -982,6 +1051,15 @@ export function createMiscApi(state, events, deps) {
         const seat = Number.isInteger(spec.seat) ? spec.seat : state.currentSeat
         const owner = state.investigators[seat]
         if (!owner) return null
+        // 批次 3（12061）：敌人实例可作伤害/恐惧来源（damageTaken / horrorTaken 映射为实例字段）。
+        if (spec.enemyId || spec.kind === 'enemy') {
+          const enemy = state.enemies.find(item => item.id === (spec.enemyId || spec.id))
+          if (!enemy) return null
+          const wrapper = { kind: 'enemy', owner: null, entity: enemy }
+          Object.defineProperty(wrapper, 'damage', { get: () => enemy.damageTaken || 0, set: value => { enemy.damageTaken = value } })
+          Object.defineProperty(wrapper, 'horror', { get: () => enemy.horrorTaken || 0, set: value => { enemy.horrorTaken = value } })
+          return wrapper
+        }
         if (!spec.assetId) return { kind: 'investigator', owner, entity: owner }
         const asset = (owner.assets || []).find(item => item.id === spec.assetId)
         return asset ? { kind: 'asset', owner, entity: asset } : null
@@ -1181,10 +1259,22 @@ export function createMiscApi(state, events, deps) {
       return true
     },
     // Phase 5（5c-12）：这名调查员**下一次**检定不揭示混乱标记（秘籍的主动能力）。
-    skipNextTestTokens: seat => {
+    skipNextTestTokens: (seat, { endOfTurn = false } = {}) => {
       const owner = state.investigators[seat]
       if (!owner) return false
-      owner.nextTestNoTokens = { round: state.round }
+      if (!endOfTurn) owner.nextTestNoTokens = { round: state.round }
+      else {
+        if (state.phase !== 'investigation' || state.currentSeat !== seat || owner.turnEnded) return false
+        const previous = owner.nextTestNoTokens
+        if (previous?.round !== state.round || previous.turnSerial != null) {
+          owner.nextTestNoTokens = { round: state.round, turnSerial: state.turnSerial }
+        }
+      }
+      return true
+    },
+    exileAssetInstead: context => {
+      if (context?.when !== 'assetDefeated' || !context.assetId) return false
+      context.exiledInstead = true
       return true
     },
     // Phase 5（5c-12）：本次检定不揭示混乱标记（秘籍 / 纳克特手稿）。
@@ -1293,9 +1383,15 @@ export function createMiscApi(state, events, deps) {
     },
     rerollCurrentTestToken: (context, seat = state._resolvingSeat) => {
       if (!state.skillTest || context?.when !== 'tokenEffectWouldResolve' || context.cannotCancel
-        || context.returnAndReroll || context.rerollToken
+        || context.returnAndReroll || context.rerollToken || !canChangeChaosToken(state, seat ?? state.skillTest.seat, context.token)
         || !state.chaos.revealed.slice(state.chaos.frames.at(-1)).includes(context.token)) return false
       context.returnAndReroll = { seat: seat ?? state.skillTest.seat }
+      return true
+    },
+    // 批次 3（60458）：在已揭示窗口里取消当前标记并补揭示到符号标记。
+    revealTokenUntilSymbol: context => {
+      if (!context || context.when !== 'chaosTokenRevealed' || context.revealUntilSymbol) return false
+      context.revealUntilSymbol = true
       return true
     },
     revealUntilSymbol: (context, seat = state._resolvingSeat) => {
@@ -1317,7 +1413,7 @@ export function createMiscApi(state, events, deps) {
     },
     afterCurrentTest: resolve => deferTestEffect(state, resolve),
     setCommitDestination: (source, destination) => {
-      if (!['hand', 'deckTop', 'deckBottom', 'removedFromGame'].includes(destination)
+      if (!['hand', 'deckTop', 'deckBottom', 'shuffleIntoDeck', 'removedFromGame'].includes(destination)
         || !state.skillTest?.committed.includes(source)) return false
       source.destination = destination
       return true
@@ -1375,7 +1471,8 @@ export function createMiscApi(state, events, deps) {
       info(state, events, `${owner.name} 让「${cardName(chosen.code)}」暂时入场。`)
       return true
     },
-    discardRandomFromHand: (seat, amount = 1) => discardRandomFromHand(state, state.investigators[seat], amount, events),
+    discardRandomFromHand: (seat, amount = 1, options) =>
+      discardRandomFromHand(state, state.investigators[seat], amount, events, options),
     // 「选择并弃掉 N 张手牌」（07088 深潜者巨怪这类强制弃牌）：场景运行时的 discardChosen 已经是
     // 唯一实现（逐张询问、走 canDiscardFromHand 与 afterHandDiscard 窗口），实体能力面只做委托，
     // 不再复制一套弃牌逻辑。此前单卡直接调 api.discardChosen 会拿到 undefined。
@@ -1473,6 +1570,23 @@ export function createMiscApi(state, events, deps) {
       enemy.bindMonster = { ownerSeat: seat, code }
       return true
     },
+    // 批次 3（60472/60473）：enemyAttack 窗口里取消正在结算的攻击。
+    cancelEnemyAttack: (contextOrAttack = null) => {
+      const isWindowContext = contextOrAttack && typeof contextOrAttack === 'object' && contextOrAttack.when === 'enemyAttack'
+      const context = isWindowContext ? contextOrAttack : (state._reaction?.context || null)
+      if (!context) return false
+      context.cancelled = true
+      const attack = isWindowContext ? contextOrAttack.attack : contextOrAttack?.attack
+      if (attack && typeof attack === 'object') attack.cancelled = true
+      return true
+    },
+    // 批次 3（12003）：威胁区卡上的伤害标记（实例 damage 字段，和支援生命伤害同字段）。
+    addCardDamage: (card, amount = 1) => {
+      if (!card) return 0
+      card.damage = (card.damage || 0) + Math.max(0, Number(amount) || 0)
+      return card.damage
+    },
+    cardDamage: card => card?.damage || 0,
     // 「窄路逃生」：取消正在结算的攻击，并让下一次躲避 +2。
     cancelCurrentAttack: (context = null) => {
       const current = context || state._reaction?.context || state._reaction
@@ -1546,7 +1660,7 @@ export function createMiscApi(state, events, deps) {
     // 第 121 轮（第 4 批）：反应窗口里的通用原语，取代 player-effects.js 中按卡分派的
     // cancelHarmGainResources / cancelHarm / redrawEncounter（卡面差异只剩 maximum 与文案）。
     cancelHarm: (seat, options = {}) => {
-      const context = state._reaction
+      const context = options.context ?? state._reaction
       const owner = state.investigators[seat]
       if (!context || !owner || context.when !== 'harmDealt') return null
       // 2026-11-11：「否定存在」口径 —— 卡面「造成以下一项（选择一项）……你忽略该效果的影响」，

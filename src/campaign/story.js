@@ -20,6 +20,34 @@ const TDE_FIRST_SCENARIOS = new Set(['beyondTheGatesOfSleep', 'wakingNightmare']
 // 2-A《寻觅卡达斯》「if Luke Robinson is in this group」按调查员卡号判断（06004）。
 const TDE_LUKE_ROBINSON = '06004'
 
+// 批次 2：重返章节复用基础章节的叙事正文（序章/章节导入/结局长文）；
+// 只把「读哪段故事」的 id 映射回基础章节，章节标题仍显示重返章节名。
+const RETURN_TO_BASE_IDS = Object.freeze({
+  returnToTheGathering: 'theGathering',
+  returnToTheMidnightMasks: 'theMidnightMasks',
+  returnToTheDevourerBelow: 'theDevourerBelow',
+  returnToExtracurricularActivities: 'extracurricularActivity',
+  returnToTheHouseAlwaysWins: 'theHouseAlwaysWins',
+  returnToTheMiskatonicMuseum: 'theMiskatonicMuseum',
+  returnToTheEssexCountyExpress: 'theEssexCountyExpress',
+  returnToBloodOnTheAltar: 'bloodOnTheAltar',
+  returnToUndimensionedAndUnseen: 'undimensionedAndUnseen',
+  returnToWhereDoomAwaits: 'whereDoomAwaits',
+  returnToLostInTimeAndSpace: 'lostInTimeAndSpace',
+  returnToCurtainCall: 'curtainCall',
+  returnToTheLastKing: 'theLastKing',
+  returnToEchoesOfThePast: 'echoesOfThePast',
+  returnToTheUnspeakableOath: 'theUnspeakableOath',
+  returnToAPhantomOfTruth: 'aPhantomOfTruth',
+  returnToThePallidMask: 'thePallidMask',
+  returnToBlackStarsRise: 'blackStarsRise',
+  returnToDimCarcosa: 'dimCarcosa',
+})
+const baseStoryScenario = sc => {
+  const baseId = RETURN_TO_BASE_IDS[sc?.id]
+  return baseId ? { ...sc, id: baseId } : sc
+}
+
 // 第 123 轮（第 8 批）：剧情角色 → 卡号由战役内容声明（story-roles.js），本文件不再写死卡号。
 const carcosaCode = role => CARCOSA_STORY_ROLES[role] || null
 const tfaCode = role => TFA_STORY_ROLES[role] || null
@@ -530,6 +558,9 @@ function eoteIntroduction(sc) {
 export function introduction(sc, records = {}, context = null) {
   const introductionProvider = contentRegistry.listScenarios().some(scenario => scenario.id === sc.id) && contentRegistry.getBehavior(sc.id).introduction
   if (typeof introductionProvider === 'function') return introductionProvider(sc, records, context)
+  // 批次 2：重返章节的导入正文回落基础章节正文（标题保留重返章节名）。
+  const returnName = sc.name
+  sc = baseStoryScenario(sc)
   const sections = []
   if (sc.id === 'theGathering') sections.push({ title: '战役序章 · ' + STORY_TEXT.prologue.title, paragraphs: [...STORY_TEXT.prologue.paragraphs] })
   const dunwich = dunwichIntroduction(sc, records)
@@ -565,7 +596,7 @@ export function introduction(sc, records = {}, context = null) {
     if (records.ghoulPriestAlive) paragraphs.push('食尸鬼祭司尚未被消灭，它的阴影仍笼罩着这次调查。')
   }
   if (paragraphs.length) sections.push({ title: '此前调查的影响', paragraphs })
-  return { version: 3, title: sc.name, sections, paragraphs: sections.flatMap(s => s.paragraphs), code: sc.acts?.[0]?.originalCode || sc.acts?.[0]?.code }
+  return { version: 3, title: returnName, sections, paragraphs: sections.flatMap(s => s.paragraphs), code: sc.acts?.[0]?.originalCode || sc.acts?.[0]?.code }
 }
 
 // Upgrade old summary-only journals using records from the time of that visit.
@@ -634,6 +665,8 @@ function defeatedPrelude(sc, key, context) {
 }
 
 export function resolutionStory(sc, key, snapshot = null, context = null) {
+  // 批次 2：重返章节复用基础章节的结局长文（记录/分支逻辑按基础章节 id 读取）。
+  sc = baseStoryScenario(sc)
   // Midnight Masks explicitly routes all-resigned/defeated to resolution 1.
   const routed = sc.id === 'theMidnightMasks' && key === 'noResolution' ? 'r1' : key
   let branch = reachedResolutionBranch(sc, routed, context)

@@ -188,7 +188,8 @@ export function createCardOps(deps) {
     const loc = state.locations.find(item => item.id === inv.location)
     if (!loc) return
     // Phase 5（5a-18）：附属卡号随效果数据走（effect.code）。
-    const attachment = { ownerSeat: seat, code: effect.code || null }
+    const attachment = { ownerSeat: seat, code: effect.code || null,
+      ...(effect.redirectSpawn ? { redirectSpawn: true } : {}) }
     loc.barricades ||= loc.barricade ? [loc.barricade] : []
     loc.barricades.push(attachment)
     loc.barricade = attachment

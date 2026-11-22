@@ -10,6 +10,7 @@ import os from 'node:os'
 import { randomUUID } from 'node:crypto'
 import { ALL_CARDS } from '../cards/cards-data.js'
 import { describeArkhamDbDeck, slotEntries } from './arkhamdb.js'
+import { alternateBuildFor } from '../deck/alternate-investigator-build.js'
 
 const SCHEMA = 1
 const MAX_DECKS = 500
@@ -60,6 +61,10 @@ function normalizeInput(body) {
     meta.arkhamdbId = String(body.arkhamdbId)
     if (body.arkhamdbKind === 'decklist' || body.arkhamdbKind === 'deck') meta.arkhamdbKind = body.arkhamdbKind
   }
+  if (body.investigatorBuild != null) {
+    try { meta.investigatorBuild = alternateBuildFor(investigator, body.investigatorBuild) }
+    catch (error) { throw new RangeError(error.message) }
+  }
   return { name, investigator_code: investigator, slots, ...meta }
 }
 
@@ -106,7 +111,11 @@ export function handleDeckLibrary({ method, path: route, body }) {
   const index = decks.findIndex(deck => deck.id === id)
   if (index < 0) return { status: 404, error: '卡组不存在或已被删除' }
   if (method === 'PUT') {
-    decks[index] = { ...decks[index], ...normalizeInput(body), updatedAt: new Date().toISOString() }
+    const updated = normalizeInput(body)
+    const previous = decks[index]
+    const sameInvestigator = updated.investigator_code === previous.investigator_code
+    decks[index] = { ...previous, ...updated, updatedAt: new Date().toISOString() }
+    if ((!sameInvestigator || body.investigatorBuild === null) && !updated.investigatorBuild) delete decks[index].investigatorBuild
     writeLibrary(decks)
     return { body: { deck: view(decks[index]) } }
   }

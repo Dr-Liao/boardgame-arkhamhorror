@@ -18,6 +18,7 @@
 // 证据命令（5 个 spec 必须一次跑齐，报告器一次写文件）：
 //   npx playwright test --config tests/playwright/playwright.tcu.config.mjs tcu-rules.browser.mjs tcu-interactions.browser.mjs \
 //     tcu-scenarios.browser.mjs tcu-release.browser.mjs tcu-media.browser.mjs
+import { openCampaignPicker } from './playwright/campaign-picker.mjs'
 import { test, expect } from '@playwright/test'
 import { mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -154,8 +155,12 @@ for (const [label, width, height] of [['desktop', 1440, 950], ['mobile', 390, 84
     const setup = page.locator('.ah-hub-setup')
     await expect(setup).toBeVisible()
     await expect(setup).toHaveAttribute('aria-label', '调查准备设置')
-    await expect(setup.getByRole('combobox', { name: '战役' }).locator('option[value="theCircleUndone"]')).not.toContainText('提前体验')
-    await setup.getByRole('combobox', { name: '战役' }).selectOption('theCircleUndone')
+    const picker = await openCampaignPicker(page, setup)
+    const campaign = picker.locator('[data-campaign-id="theCircleUndone"]')
+    await expect(campaign).toBeVisible()
+    await expect(campaign).not.toContainText('提前体验')
+    await campaign.click()
+    await picker.getByRole('button', { name: '确认选择', exact: true }).click()
     await setup.getByRole('combobox', { name: '席位数量' }).selectOption('1')
     const [startResponse] = await Promise.all([
       page.waitForResponse(response => response.url().endsWith('/api/start') && response.request().method() === 'POST', { timeout: START_TIMEOUT }),

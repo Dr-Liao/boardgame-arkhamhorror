@@ -22,7 +22,7 @@
       }
     ],
     "generatedFrom": "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
-    "resourceVersion": "344932528f269c88b6271defbdbddf4603de6390b78022b11cb31b4e8ea74cd9",
+    "resourceVersion": "8bf241a1af63b8b1ea3940cf01df14bacb55de3c1a8f2d3f15d6660e7ed333be",
     "cardDataSources": [
       {
         "path": "backend/arkham-api/data/cards.json",

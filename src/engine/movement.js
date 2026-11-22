@@ -9,7 +9,7 @@ import { enemyBody, enemyIsPart, setEnemyPosition } from './enemy-parts.js'
 
 import { eventWindowContext } from './event-window.js'
 import { hunterRouteCandidates } from './enemy-routes.js'
-import { registeredEntries } from './ability.js'
+import { quickEventView, registeredEntries } from './ability.js'
 import { vehicleOf } from './vehicles.js'
 import { checkAirAfterMove } from './flood.js'
 import { enemyIsImmobile } from './enemy-keyword-movement.js'
@@ -18,6 +18,8 @@ import { groupClueTotal, payGroupClueCost } from './group-cost.js'
 import { swarmGroup } from './swarm.js'
 import { applyLocationDefenses, blockKeywordMove } from './location-defenses.js'
 import { withEffectSource } from './effect-provenance.js'
+import { recordRegulatedAction } from './action-history.js'
+import { hasWindowListener } from './window-listeners.js'
 
 export function createMovement(deps) {
   const {
@@ -131,6 +133,20 @@ function locationBarrierEntry(counter) {
 
 function moveInvestigatorTo(state, seat, effect, events) {
   const inv = state.investigators[seat]
+  if (effect.optional || effect.maxDistance) {
+    for (let step = 0; step < (effect.maxDistance || 1) && !inv.defeated && !inv.resigned; step++) {
+      const from = inv.location
+      const destinations = investigatorMoveDestinations(state, seat, effect)
+      if (!destinations.length) break
+      const selected = requestChoice(state, { kind: 'move', source: effect.source || 'move', seat,
+        prompt: '选择下一处相连地点，或结束移动。',
+        options: [{ id: 'skip', label: '结束移动' }, ...destinations.map(id => ({ id, label: locName(state, id) }))] })
+      if (!destinations.includes(selected)) break
+      moveInvestigatorTo(state, seat, { ...effect, optional: false, maxDistance: null, destination: selected }, events)
+      if (inv.location === from) break
+    }
+    return
+  }
   // 卡面条件「如果你未与任何敌人交战」（02108 探路者）：由效果体的 requiresNoEnemies 声明。
   if (effect.requiresNoEnemies && state.enemies.some(enemy => enemy.engagedSeat === seat && !enemy.defeated)) {
     info(state, events, `${inv.name} 正与敌人交战，不能使用这项移动。`)
@@ -229,6 +245,7 @@ function relocateInvestigatorCore(state, seat, locationId, events, message = nul
     info(state, events, `🚧 「${prevLoc.name}」上的屏障因调查员离开而被弃掉。`)
   }
   inv.location = locationId
+  recordRegulatedAction(state, inv, 'move', registeredEntry)
   checkAirAfterMove(state, seat)
   const enteredLocation = state.locations.find(location => location.id === locationId)
   // 03250：手部槽位 -1 只在该地点调查时生效，不能常驻。
@@ -293,6 +310,13 @@ function relocateInvestigatorCore(state, seat, locationId, events, message = nul
         applyPenalty(state, inv, enterRule.fail || loc.onEnter?.fail, Math.max(0, enterRule.test.difficulty - r.value), events)
       } })
     }
+  }
+  // 批次 3（60562/60563/60565/60566/60578/60581）：调查员进入带玩家地点附属的地点后开同一窗口。
+  if (!inv.defeated && !inv.resigned && inv.location === locationId
+    && (state.playerLocationAttachments || []).some(item => item.location === locationId)
+    && hasWindowListener(state, 'entersAttachedLocation')) {
+    reactionWindow(state, 'entersAttachedLocation', { when: 'entersAttachedLocation', investigator: inv,
+      seat, location: locationId, from: prevLoc?.id || null }, events, { allowNested: true })
   }
   if (!inv.defeated && !inv.resigned && inv.location === locationId) {
     triggerReaction(state, seat, 'move', events, { when: 'move', seat, location: locationId, from: prevLoc?.id || null })
@@ -536,8 +560,12 @@ function relocateEnemy(state, enemy, destination, events, options = {}) {
   }
   processPlayerEnemyEntry(state, enemy, events)
   scenarioBehavior(state).enemyMoved?.(state, enemy, previous, scenarioRuntime(state, events))
+  const handEntryReaction = aliveInvestigators(state).some(inv => inv.location === destination && inv.hand.some(code =>
+    quickEventView(code)?.trigger.includes('enemyEnteredLocation')
+    || registeredEntry(code)?.abilities.some(ability => ability.fromHand && ability.trigger.includes('enemyEnteredLocation'))))
+  if (handEntryReaction) dispatchEnemyMovement(state, enemy, previous, destination, options, events)
   if(!options.skipAutoEngage)autoEngageAt(state, destination, events,{ignoreAloofFor:options.ignoreAloof?enemy.id:null})
-  if (state.scenario?.eventWindowInstances || ownerAttachmentListensToEnemyMove(state)) {
+  if (!handEntryReaction && (state.scenario?.eventWindowInstances || ownerAttachmentListensToEnemyMove(state))) {
     dispatchEnemyMovement(state, enemy, previous, destination, options, events)
   }
   return result

@@ -84,7 +84,7 @@ export function externalModifierTotal(state, inv, kind, context = {}) {
 
 export const MODIFIER_TARGETS = Object.freeze([
   'skill:willpower', 'skill:intellect', 'skill:combat', 'skill:agility', 'skill:wild', 'skill:*',
-  'testValue',
+  'testValue', 'testDifficulty',
   'maxHealth', 'maxSanity', 'handSize', 'actions',
   'slot:hand', 'slot:arcane', 'slot:accessory', 'slot:ally', 'slot:body',
   'playCost', 'enemyHealth',
@@ -168,6 +168,13 @@ export function modifierTargetKind(target) {
 }
 
 const BOOLEAN_KINDS = new Set(['capability', 'ignore', 'grant', 'entityRule'])
+const EFFECTIVE_SKILLS = new Set(['willpower', 'intellect', 'combat', 'agility'])
+
+export function isSkillModifierAmount(target, amount) {
+  if (typeof target !== 'string' || !target.startsWith('skill:') || !EFFECTIVE_SKILLS.has(target.slice(6))) return false
+  return amount != null && typeof amount === 'object' && Object.keys(amount).length === 1
+    && EFFECTIVE_SKILLS.has(amount.skill) && amount.skill !== target.slice(6)
+}
 
 export function normalizeModifier(raw, origin = 'modifier') {
   if (!raw || typeof raw !== 'object') throw new Error(`${origin}: 修正必须是对象`)
@@ -175,8 +182,8 @@ export function normalizeModifier(raw, origin = 'modifier') {
   const kind = modifierTargetKind(target)
   if (!kind) throw new Error(`${origin}: 未知修正目标 ${JSON.stringify(target)}`)
   const amount = raw.amount ?? (BOOLEAN_KINDS.has(kind) ? 1 : undefined)
-  if (typeof amount !== 'number' && typeof amount !== 'function') {
-    throw new Error(`${origin}: 修正 amount 必须是数字或函数`)
+  if (typeof amount !== 'number' && typeof amount !== 'function' && !isSkillModifierAmount(target, amount)) {
+    throw new Error(`${origin}: 非法修正 amount`)
   }
   if (kind === 'grant' && raw.value == null) throw new Error(`${origin}: ${target} 必须声明 value`)
   if (raw.value != null && kind !== 'grant') throw new Error(`${origin}: 只有 add:* 目标可以声明 value`)
@@ -206,6 +213,7 @@ const CONDITION_KEYS = new Set([
   'sourceDamageAtLeast', 'sourceHorrorAtLeast', 'sourceDoomAtLeast', 'sourceUsesAtLeast',
   'controllerHasThreat', 'controllerHasNoThreat', 'sealedWithSource', 'treacheryResolving',
   'sourceInHand', 'blankedThisRound', 'sourceTraitNotBlanked',
+  'occupiedAssetSlotsAtLeast',
 ])
 
 export function validateCondition(condition, origin = 'condition') {
@@ -213,6 +221,12 @@ export function validateCondition(condition, origin = 'condition') {
   if (typeof condition !== 'object') throw new Error(`${origin}: 条件必须是对象`)
   for (const key of Object.keys(condition)) {
     if (!CONDITION_KEYS.has(key)) throw new Error(`${origin}: 未知条件字段 ${key}`)
+  }
+  const occupancy = condition.occupiedAssetSlotsAtLeast
+  if (occupancy != null && (typeof occupancy.slot !== 'string' || !occupancy.slot
+    || !Number.isSafeInteger(occupancy.count) || occupancy.count < 1
+    || !Array.isArray(occupancy.traitsAny) || occupancy.traitsAny.some(trait => typeof trait !== 'string' || !trait))) {
+    throw new Error(`${origin}: 占用槽位条件需要槽位、正整数数量和特性数组`)
   }
   return condition
 }
@@ -225,6 +239,8 @@ function threatCodes(investigator) {
 export function evaluateCondition(condition, ctx) {
   if (condition == null) return true
   const { state, inv, controller, source } = ctx
+  const occupancy = condition.occupiedAssetSlotsAtLeast
+  if (occupancy && hooks.occupiedAssetSlots(controller, occupancy) < occupancy.count) return false
   if (typeof condition.when === 'function') {
     try { if (condition.when(ctx) !== true) return false } catch { return false }
   }
@@ -297,6 +313,7 @@ let hooks = {
   weaknessProfile: code => null,
   // 沉睡目标的修正行过滤要按「这一行自己的来源」分类，读法与引擎相同（卡面 type）。
   cardDef: () => null,
+  occupiedAssetSlots: () => 0,
 }
 
 export function setModifierHooks(next) {
@@ -315,6 +332,7 @@ function modifiersOf(code) {
 }
 
 function amountOf(modifier, ctx) {
+  if (modifier.amount?.skill) return ctx.readSkill?.(modifier.amount.skill) ?? 0
   const value = typeof modifier.amount === 'function' ? modifier.amount(ctx) : modifier.amount
   return Number.isFinite(value) ? value : 0
 }
@@ -343,11 +361,11 @@ function sumModifiers(list, ctx, target) {
   return total
 }
 
-export function modifierTotal(state, inv, target) {
+export function modifierTotal(state, inv, target, context = {}) {
   let total = 0
   // 'controller' 只算持有者；'here' 需要同地点的其他调查员，统一按 appliesTo 过滤。
   for (const row of modifierSourceRows(state)) {
-    total += sumModifiers(row.list, { state, inv, controller: row.controller, source: row.source, effect: row.effect }, target)
+    total += sumModifiers(row.list, { ...context, state, inv, controller: row.controller, source: row.source, effect: row.effect }, target)
   }
   return total
 }
@@ -469,8 +487,8 @@ const remainingSanity = inv => hooks.maxSanity(inv) - (inv?.horror || 0)
 // 读点
 // ---------------------------------------------------------------------------
 
-export function statPipeline(state, inv, skill) {
-  const delta = modifierTotal(state, inv, `skill:${skill}`) + legacyStatDelta(state, inv, skill)
+export function statPipeline(state, inv, skill, readSkill) {
+  const delta = modifierTotal(state, inv, `skill:${skill}`, { readSkill }) + legacyStatDelta(state, inv, skill)
     + externalModifierTotal(state, inv, 'skill', { skill })
   // 覆盖式「属性下限」：支援把某项属性视为至少 6（如 03018 的 statOverride）。
   const floor = (inv?.assets || []).some(asset => (asset.statOverride || []).includes(skill)) ? 6 : null

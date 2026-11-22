@@ -7,6 +7,9 @@ import { manifest as tdcInvestigators } from './tdcInvestigators/manifest.js'
 import { manifest as fhvPlayer } from './fhvPlayer/manifest.js'
 import { manifest as tdcPlayer } from './tdcPlayer/manifest.js'
 import { manifest as tdcCampaign } from './tdcCampaign/manifest.js'
+import { returnPlayerPacks } from './returnPlayer/manifests.js'
+import { returnCampaignPacks } from './returnCampaign/manifests.js'
+import { sideStoryPacks } from './sideStory/manifests.js'
 
 const encounterTypes = new Set(['enemy', 'treachery'])
 const playerTypes = new Set(['investigator', 'asset', 'event', 'skill'])
@@ -52,4 +55,7 @@ export const packs = Object.freeze([
       'arkham'], behaviorIds: [],
   },
   fhvCampaign, fhvInvestigators, fhvPlayer, tdcCampaign, tdcInvestigators, tdcPlayer,
+  ...returnPlayerPacks,
+  ...returnCampaignPacks,
+  ...sideStoryPacks,
 ])

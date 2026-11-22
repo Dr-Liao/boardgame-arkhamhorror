@@ -335,6 +335,12 @@ export const manifest = {
   minRulesVersion: MIN_RULES_VERSION,
   status: 'playable',
   requiredPackIds: ['core', 'tcuCampaign', 'tcuInvestigators', 'tcuPlayer'],
+  // 批次 2：关间可插入的独立支线（每人支付 cost 经验；结算后回到原定下一章）。
+  sideStories: [
+    { campaignId: 'curseOfTheRougarou', cost: 1 },
+    { campaignId: 'carnevaleOfHorrors', cost: 3 },
+    { campaignId: 'murderAtTheExcelsiorHotel', cost: 3 },
+  ],
   scenarioIds: chapters.map(chapter => chapter.id),
   // 线性解锁：9 章按流程顺序，前一章解锁后一章。战役未启动，所以只是数据。
   unlock: Object.fromEntries(chapters.map((chapter, index) =>

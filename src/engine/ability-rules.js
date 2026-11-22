@@ -203,6 +203,10 @@ export function createAbilityRules(deps) {
     // Phase 2（C1）：capability:triggerAbilities 只禁止"可选"的能力；
     // forced（强制）在规则上仍然结算，不能被"不能触发能力"挡住。
     if (descriptor.kind !== 'forced' && capabilityBlocked(state, inv, 'triggerAbilities')) return false
+    // 批次 3（12012）：控制中的某张支援可禁止触发其它支援上的能力（自身能力不受影响）。
+    if (descriptor.kind !== 'forced' && source
+      && [...(inv.assets || []), ...(inv.threat || [])].some(card => card !== source
+        && registeredEntry(card.code)?.cannotTriggerOtherAssetAbilities === true)) return false
     if (descriptor.kind !== 'forced' && traitTriggerBlocked(state, inv, source)) return false
     if (descriptor.kind !== 'forced' && assetTextBlankedExceptForced(source)) return false
     // 2026-11-06：04099 毒蛇灾厄 / 02088 等「文本框视为空白」的整类规则也压到描述子上。
@@ -219,7 +223,8 @@ export function createAbilityRules(deps) {
     if (descriptor.kind === 'action' && (descriptor.fromHand || source?.handAbilityIndex != null)) {
       if (!descriptor.fromHand || source?.handAbilityIndex == null
         || inv.hand[source.handAbilityIndex] !== source.code
-        || !discardableHandCards(inv).some(row => row.index === source.handAbilityIndex)) return false
+        || (!registeredEntry(source.code)?.hiddenRule?.playerWeakness
+          && !discardableHandCards(inv).some(row => row.index === source.handAbilityIndex))) return false
       if (!ignoreCosts && !canAffordAbility(state, inv, source, { cost: descriptorCost(descriptor, ignoreActionCost), descriptor })) return false
     } else if (descriptor.fromHand) {
       let channelDiscount = 0
@@ -234,7 +239,7 @@ export function createAbilityRules(deps) {
       if (!def) return false
       if (cannotPlayTypes(inv).has(def.type)) return false
       // 隐私弱点（03084d「你不能打出事件」）：fromHand 描述子与普通出牌同一读点。
-      if (playTypeBlocked(state, inv, def.type)) return false
+      if (playTypeBlocked(state, inv, def.type) || (!descriptor.noPlayCost && capabilityBlocked(state, inv, 'play'))) return false
       if (!descriptor.noPlayCost && availablePlayResources(state, inv, def) < playCost(state, inv, def) - channelDiscount) return false
     } else if (!ignoreCosts && !canAffordAbility(state, inv, source, { cost: descriptorCost(descriptor, ignoreActionCost), descriptor })) return false
     if (descriptor.criteria && !evaluateCriteria(descriptor.criteria, {
@@ -460,6 +465,13 @@ export function createAbilityRules(deps) {
       canDiscoverClueAt: (seat, id) => canDiscoverClueAt(state, state.investigators[seat],
         state.locations.find(location => location.id === id)),
       cardDef,
+      capabilityBlocked: (seat, kind) => capabilityBlocked(state, state.investigators[seat], kind),
+      entityRuleActive: (entity, target) => entityRuleActive(state, entity, target),
+      canGainResources: seat => {
+        const inv = state.investigators[seat]
+        return Boolean(inv) && !inv.defeated && !inv.resigned && !capabilityBlocked(state, inv, 'gainResources')
+          && scenarioBehavior(state).canGainResources?.(state, inv) !== false
+      },
       canSearchPlayableAsset: (inv, options) => deps.canPlayNamedAsset(state, inv, options),
       canPlayAsEffect: (seat, code, options) => deps.abilityApi(state, []).canPlayAsEffect(seat, code, options),
       playHandCardOptions: (seat, options) => deps.abilityApi(state, []).playHandCardOptions(seat, options),

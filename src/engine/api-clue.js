@@ -69,11 +69,12 @@ export function createClueApi(state, events, deps) {
       delete card.doom
       return removed
     },
-    removeThreat: card => {
-      const owner = state.investigators.find(item => (item.threat || []).includes(card))
+    removeThreat: (card, options = {}) => {
+      // 团队激活时 currentSeat 可能不是物理持卡者：先按实际所在的威胁区定位。
+      const owner = state.investigators.find(inv => (inv.threat || []).includes(card))
+        ?? state.investigators[card?.ownerSeat ?? state.currentSeat]
       if (!owner) return false
-      removeThreat(state, owner, card, events)
-      return true
+      return removeThreat(state, owner, card, events, options)
     },
     drawEncounter: seat => drawEncounter(state, state.investigators[seat], events),
     // 卡面「如果现在是你的回合，结束你的回合」。2026-11-13 起行动点用尽不再自动推进回合，

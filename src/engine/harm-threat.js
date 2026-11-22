@@ -9,9 +9,16 @@ import { mechanicState } from './mechanic-state.js'
 import { roadDistance } from './map-graph.js'
 import { routeDiscardToScenarioDeck } from './scenario-decks.js'
 import { chooseTdcArtifactRecipient, earnedTdcArtifacts, tdcInteractionSpec } from './tdc-interactions.js'
+import { hasWindowListener } from './window-listeners.js'
+import { hasTrait } from './matcher.js'
+import { hiddenScenarioExperience } from './hidden-rules.js'
+import { effectSourceIsPlayer } from './effect-provenance.js'
+import { assetRegulationEnabled, assetTextBlanked, assetTextBlankedExceptForced } from './card-text.js'
+import { concealedAt, exposeLimitPerInvestigator, exposuresThisRound, setAsideRemainingDecoys } from './tsk-concealed.js'
 
 export function createHarmThreat(deps) {
   const {
+    abilityApi,
     campaignState,
     ALL_TREACHERIES,
     EFFECTS,
@@ -103,8 +110,13 @@ export function createHarmThreat(deps) {
     return (inv.threat || []).some(card => card.noDrawAction === true || getThreatEffect(card)?.noDrawAction === true)
   }
 
-  function removeThreat(state, inv, threatCard, events, { seat = state._resolvingSeat, discard: shouldDiscard = true } = {}) {
+  function removeThreat(state, inv, threatCard, events, { seat = state._resolvingSeat, discard: shouldDiscard = true, force = false } = {}) {
     if (!inv.threat.includes(threatCard)) return false
+    // 批次 3（12012/12098）：条目声明「不能离场」时，除强制移除外的任何路径都拒绝。
+    if (!force && registeredEntry(threatCard.code)?.cannotLeavePlay === true) {
+      info(state, events, `⛔ 「${cardName(threatCard.code)}」不能离场。`)
+      return false
+    }
     // 「死灵之书上有恐惧时不能离场」（01009）：只要还有计数器，任何离场路径都不生效。
     if (registeredEntry(threatCard.code)?.threatCannotLeaveWhileCounters && (threatCard.counters || 0) > 0) {
       info(state, events, `⛔ 「${cardName(threatCard.code)}」上还有恐惧，不能离场。`)
@@ -125,7 +137,7 @@ export function createHarmThreat(deps) {
 
   const HARM_STRATEGIES = Object.freeze(['distribute', 'self', 'assetsFirst', 'soakFirst', 'assetsOnly', 'fillOne'])
 
-  function assignHarm(state, inv, amount, kind, events, direct, assetsFirst = false, strategy = null) {
+  function assignHarm(state, inv, amount, kind, events, direct, assetsFirst = false, strategy = null, priorAssignments = null) {
     if (strategy != null && !HARM_STRATEGIES.includes(strategy)) {
       throw new Error(`未知伤害分配策略 ${JSON.stringify(strategy)}（可选：${HARM_STRATEGIES.join(' / ')}）`)
     }
@@ -133,6 +145,24 @@ export function createHarmThreat(deps) {
     const preferAssets = assetsFirst || strategy === 'assetsFirst' || strategy === 'soakFirst' || strategy === 'assetsOnly'
     const assignments = new Map()
     const capacity = kind === 'damage' ? 'health' : 'sanity'
+    const playerEffect = effectSourceIsPlayer(state) && !state._enemyAttackResolving
+    const traitLimits = inv.assets.filter(asset => !assetTextBlanked(asset, inv))
+      .map(asset => registeredEntry(asset.code)?.assetRule?.harmAssignmentTraitLimit).filter(Boolean)
+    const voluntaryForbidden = inv.assets.filter(asset => assetRegulationEnabled(state, inv, asset))
+      .flatMap(asset => registeredEntry(asset.code)?.assetRule?.voluntaryHarmForbiddenForTraits || [])
+    const harmAssignable = (asset, forced = false) => (forced || !voluntaryForbidden.some(trait => hasTrait(cardDef(asset.code), trait)))
+      && (playerEffect || registeredEntry(asset.code)?.assetRule?.onlyPlayerEffectHarm !== true
+      || assetTextBlanked(asset, inv) || assetTextBlankedExceptForced(asset))
+      && traitLimits.every(({ trait, maximum }) => {
+        if (!hasTrait(cardDef(asset.code), trait)) return true
+        let used = 0
+        for (const assigned of [priorAssignments, assignments]) {
+          for (const [target, quantity] of assigned || []) {
+            if (!state.investigators.includes(target) && hasTrait(cardDef(target.code), trait)) used += quantity
+          }
+        }
+        return used < maximum
+      })
     // Allies such as Brother Xavier may soak harm dealt to other investigators at
     // their location (passive.assignHarmAtLocation).
     const soaks = direct ? [] : state.investigators
@@ -157,7 +187,7 @@ export function createHarmThreat(deps) {
       // 「先把一张卡填满再分配下一张」（03088 毕宿五的野兽）。
       if (strategy === 'fillOne' && locked) {
         const stillOpen = locked === inv
-          || assetCapacityValue(locked, capacity) > (locked[kind] || 0) + (assignments.get(locked) || 0)
+          || (harmAssignable(locked) && assetCapacityValue(locked, capacity) > (locked[kind] || 0) + (assignments.get(locked) || 0))
         if (stillOpen) {
           assignments.set(locked, (assignments.get(locked) || 0) + 1)
           continue
@@ -167,10 +197,12 @@ export function createHarmThreat(deps) {
       // 「时间尽头」允许把直接伤害/直接恐惧分配给自己，其余支援不能承接直接伤害。
       const directSoaks = direct
         ? inv.assets.filter(asset => assetPassiveData(asset.code)?.assignDirectHarm
+          && harmAssignable(asset)
           && assetCapacityValue(asset, capacity) > (asset[kind] || 0) + (assignments.get(asset) || 0))
         : []
       let assets = direct ? directSoaks
-        : inv.assets.filter(asset => assetCapacityValue(asset, capacity) > (asset[kind] || 0) + (assignments.get(asset) || 0))
+        : inv.assets.filter(asset => harmAssignable(asset)
+          && assetCapacityValue(asset, capacity) > (asset[kind] || 0) + (assignments.get(asset) || 0))
       // Phase 5（5b-7）：「沉静」与「redirectOneHorrorToSelf」也可以写在能力层条目上（读点走 assetEffect）。
       // P6（08056/08081）：「非直接伤害/恐惧都必须先分配给该支援」——沉静从「仅恐惧」扩展到伤害。
       // 声明放在条目 `flags.composureDamage: true`（flags 是注册表白名单里的通用透传字段，
@@ -179,7 +211,7 @@ export function createHarmThreat(deps) {
       // 2026-11-13 P1-6：09007「非直接伤害至少 1 点必须分配给受伤的旁观者」。第 1 点只提供
       // composureDamage 支援作为候选（不提供 self / 其它支援）；其余点数恢复正常分配。
       const forcedFirst = kind === 'damage' && !direct && !composureDamageSatisfied
-        ? inv.assets.filter(asset => composureDamage(asset)
+        ? inv.assets.filter(asset => composureDamage(asset) && harmAssignable(asset, true)
           && assetCapacityValue(asset, capacity) > (asset[kind] || 0) + (assignments.get(asset) || 0))
         : []
       if (forcedFirst.length) assets = forcedFirst
@@ -188,8 +220,8 @@ export function createHarmThreat(deps) {
         || (kind === 'damage' && composureDamage(asset)))
       // 2026-10-25 第七轮修复 05236：不再把候选收窄到「沉静」支援本身——其他己方支援也可先承接，
       // 只需保证在调查员卡之前（mandatory 存在时不提供「由调查员承受」选项）。
-        const availableSoaks = (forcedFirst.length ? [] : soaks).filter(({ asset }) => assetCapacityValue(asset, capacity)
-          > (asset[kind] || 0) + (assignments.get(asset) || 0))
+        const availableSoaks = (forcedFirst.length ? [] : soaks).filter(({ asset }) => harmAssignable(asset)
+          && assetCapacityValue(asset, capacity) > (asset[kind] || 0) + (assignments.get(asset) || 0))
         const availableInvestigators = forcedFirst.length ? [] : investigators.filter(other =>
           (kind === 'damage' ? getMaxHealth(other) : getMaxSanity(other)) > (other[kind] || 0) + (assignments.get(other) || 0))
         const candidates = assets.length || availableSoaks.length || availableInvestigators.length
@@ -298,6 +330,8 @@ export function createHarmThreat(deps) {
       triggerReaction(state, other.seat, 'defeatAtLocation', events,
         { when: 'defeatAtLocation', kind: 'investigator', seat: other.seat, location: inv.location, defeatedSeat: inv.seat })
     }
+    const hiddenExperience = hiddenScenarioExperience(inv)
+    if (hiddenExperience) inv.hiddenExperienceOnElimination = hiddenExperience
     for (const code of [...(inv.hiddenCards || [])]) discardHiddenCard(state, inv, code, events)
     // Phase 5（5a-19）：「被消除时离场」的支援由条目级 discardOnElimination 声明。
     for (const asset of inv.assets.filter(item => registeredEntry(item.code)?.discardOnElimination)) {
@@ -455,17 +489,53 @@ export function createHarmThreat(deps) {
         triggerReaction(state, seat, 'investigateSuccess', events, { location: loc.id, successBy: r.value - difficulty })
       } else {
         info(state, events, `${inv.name} 的调查失败，未获得资源。`)
-        reactionWindow(state, 'investigateFail', { when: 'investigateFail', seat, location: loc.id, failedBy: Math.max(0, difficulty-r.value), prompt: '调查检定失败后' }, events)
+        reactionWindow(state, 'investigateFail', { when: 'investigateFail', seat, location: loc.id,
+          failedBy: r.failedBy ?? Math.max(0, difficulty-r.value), prompt: '调查检定失败后' }, events)
       }
     } })
   }
 
+  function concealedDamageTargets(state, seat, locationId) {
+    const inv = state.investigators[seat]
+    if (!inv || capabilityBlocked(state, inv, 'dealEnemyDamage')) return []
+    if (!state.locations.some(location => location.id === locationId)) return []
+    const limit = exposeLimitPerInvestigator(state)
+    if (limit && exposuresThisRound(state, seat) >= limit) return []
+    const candidates = scenarioBehavior(state).concealedTargetsByEffect?.(state, inv, locationId) ?? concealedAt(state, locationId)
+    return candidates.filter(card => !card.flipped)
+  }
+
+  function exposeConcealedInsteadOfDamage(state, seat, locationId, id, events) {
+    const inv = state.investigators[seat]
+    if (inv?.defeated || inv?.resigned || !concealedDamageTargets(state, seat, locationId).some(card => card.id === id)) return false
+    const behavior = scenarioBehavior(state)
+    const runtime = scenarioRuntime(state, events)
+    if (behavior.exposeConcealedByEffect) {
+      const mechanics = runtime.mechanics
+      const concealed = mechanics.tsk.concealed
+      const tsk = { ...mechanics.tsk, concealed: { ...concealed,
+        expose: (id, options) => concealed.expose(id, { ...options, seat: options?.seat ?? seat }),
+      } }
+      const result = behavior.exposeConcealedByEffect(state, inv, id, { ...runtime, mechanics: { ...mechanics, tsk }, tsk }, locationId)
+      if (result && !result.decoy && (result.enemyCode || result.code || result.enemyId || result.enemy)) {
+        setAsideRemainingDecoys(state)
+      }
+      return Boolean(result) || !concealedAt(state, locationId).some(card => card.id === id && !card.flipped)
+    }
+    const revealed = abilityApi(state, events).tsk.concealed.expose(id, { seat })
+    behavior.concealedCombatResolved?.(state, revealed, seat, 'fightConcealed', runtime)
+    return !!revealed
+  }
+
   function dealDamageAll(state, seat, effect, events) {
     const inv = state.investigators[seat]
+    const canExpose = locationId => effect.exposeConcealed ? concealedDamageTargets(state, seat, locationId) : []
     let locId = inv.location
     if (effect.location === 'choice') {
       const options = [inv.location, ...((state.locations.find(item => item.id === inv.location)?.connections) || [])]
         .filter((id, index, arr) => arr.indexOf(id) === index && state.locations.some(item => item.id === id))
+        .filter(id => !effect.exposeConcealed || canExpose(id).length || state.enemies.some(enemy => enemy.location === id)
+          || (effect.investigators && aliveInvestigators(state).some(target => target.location === id)))
       locId = options.length === 1 ? options[0] : requestChoice(state, {
         kind: 'target', source: effect.source || 'deal-damage-all', seat, prompt: '选择要造成伤害的地点。',
         options: options.map(id => ({ id, label: locName(state, id) })),
@@ -476,8 +546,9 @@ export function createHarmThreat(deps) {
       name: locName(state, locId), damage: effect.amount || 3, enemyIds: enemies.map(enemy => enemy.id),
       seats: effect.investigators ? aliveInvestigators(state).filter(item => item.location === locId).map(item => item.seat) : [],
       tableState: captureTableState(state, getStat, getMaxSanity, { enemyHealth, enemyFightValue, enemyEvadeValue }) })
+    const packetSource = effect.exposeConcealed || hasWindowListener(state, 'enemyWouldTakeDamage') ? effect.code : null
     for (const enemy of enemies.slice()) {
-      if (!damageEnemy(state, enemy, effect.amount || 3, seat, events)) continue
+      if (!damageEnemy(state, enemy, effect.amount || 3, seat, events, packetSource, { suppressDirectCue: true })) continue
       info(state, events, `💥 「${enemy.name}」受到 ${effect.amount || 3} 点伤害（${enemy.damageTaken}/${enemy.health}）。`)
     }
     if (effect.investigators) {
@@ -486,6 +557,12 @@ export function createHarmThreat(deps) {
         applyDamage(state, target, effect.amount || 3, events)
       }
     }
+    const concealed = canExpose(locId)
+    if (!concealed.length || inv.defeated || inv.resigned) return
+    const selected = requestChoice(state, { kind: 'target', source: effect.code, seat, canSkip: true,
+      prompt: '可揭露目标地点的一张隐匿迷你卡。', options: [{ id: 'skip', label: '不揭露' },
+        ...concealed.map((card, index) => ({ id: card.id, label: `隐匿迷你卡 ${index + 1}` }))] })
+    if (selected !== 'skip') exposeConcealedInsteadOfDamage(state, seat, locId, selected, events)
   }
 
   function dealDamageExhausted(state, seat, effect, events) {
@@ -510,7 +587,12 @@ export function createHarmThreat(deps) {
       options: candidates.map(enemy => ({ id: enemy.id, label: enemy.name })),
     })
     const enemy = candidates.find(item => item.id === id)
-    enemy.textBlanked = { round: state.round, phase: state.phase }
+    const previous = enemy.textBlanked?.round === state.round && enemy.textBlanked?.phase === state.phase
+      ? enemy.textBlanked : null
+    const damagePenalty = (previous?.damagePenalty || 0) + (effect.damagePenalty || 0)
+    const horrorPenalty = (previous?.horrorPenalty || 0) + (effect.horrorPenalty || 0)
+    enemy.textBlanked = { round: state.round, phase: state.phase,
+      ...(damagePenalty ? { damagePenalty } : {}), ...(horrorPenalty ? { horrorPenalty } : {}) }
     if (enemyHealth(state, enemy) != null && enemy.damageTaken >= enemyHealth(state, enemy)) { enemy.defeatedBy = seat; defeatEnemy(state, enemy, events) }
     info(state, events, `📖 「${enemy.name}」的印刷文本被视为空白，直到本阶段结束。`)
   }
@@ -790,6 +872,9 @@ export function createHarmThreat(deps) {
     if (!target || !healedAmount) return 0
     const isInvestigator = target.seat != null && target.name != null
     if (isInvestigator && (target.formHealingProhibited || !playerEffectCanAffect(state, target.seat))) return 0
+    // 批次 3（60453）：「不能治疗伤害」由条目 / 其威胁区卡上的 flags.cannotHealDamage 声明。
+    if (isInvestigator && (registeredEntry(target.code)?.flags?.cannotHealDamage === true
+      || (target.threat || []).some(card => registeredEntry(card.code)?.flags?.cannotHealDamage === true))) return 0
     const owner = isInvestigator ? target : options.owner
     if (!owner) return 0
     const healerSeat = options.healerSeat ?? (Number.isInteger(state._resolvingSeat) ? state._resolvingSeat : owner.seat)
@@ -849,6 +934,6 @@ export function createHarmThreat(deps) {
     return doInvestigate(state, seat, { baseValue: 4 }, events, true)
   }
 
-  return { hasTomeAsset, getThreatEffect, availableThreatAbilities, assetsCannotReady, drawBlocked, removeThreat, HARM_STRATEGIES, assignHarm, triggerThreatForced, applyThreatForced, unpaidExtraActionThreats, payActionCost, defeatAll, eliminateInvestigator, checkDefeated, checkOutcome, disengageAll, canDisengage, targetedTest, investigateForResources, dealDamageAll, dealDamageExhausted, blankEnemy, ignoreChaos, returnAssetToHand, shuffleIntoEncounter, moveHorrorToInvestigator, damagedTargetsAtLocation, healDamageAtLocation, recordResearch, researchSolution, healHorrorNearby, healHorrorFrom, extendHealHorror, healDamageFrom, extendHealDamage, dukeInvestigate }
+  return { hasTomeAsset, getThreatEffect, availableThreatAbilities, assetsCannotReady, drawBlocked, removeThreat, HARM_STRATEGIES, assignHarm, triggerThreatForced, applyThreatForced, unpaidExtraActionThreats, payActionCost, defeatAll, eliminateInvestigator, checkDefeated, checkOutcome, disengageAll, canDisengage, targetedTest, investigateForResources, dealDamageAll, concealedDamageTargets, exposeConcealedInsteadOfDamage, dealDamageExhausted, blankEnemy, ignoreChaos, returnAssetToHand, shuffleIntoEncounter, moveHorrorToInvestigator, damagedTargetsAtLocation, healDamageAtLocation, recordResearch, researchSolution, healHorrorNearby, healHorrorFrom, extendHealHorror, healDamageFrom, extendHealDamage, dukeInvestigate }
 }
 import { investigatorsWhoCanAbsorbHarm } from './harm-assignment.js'

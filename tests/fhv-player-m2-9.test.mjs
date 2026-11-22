@@ -263,9 +263,13 @@ test('P6 10102 幽灵利刃：意志加入攻击，非精英 +2 伤害 / 精英 
   symbol.debugNextTokens = ['tablet', '0']
   move(symbol, { action: 'play', cardId: '10102' })
   settle(symbol)
-  assert.equal(symbol.investigators[0].hand.includes('10102'), true, '揭示符号 → 返回手牌')
-  assert.equal(symbol.investigators[0].discard.includes('10102'), false)
+  assert.equal(symbol.investigators[0].hand.includes('10102'), false)
+  assert.equal(symbol.investigators[0].discard.includes('10102'), true)
   assert.ok(symbol.enemies.find(item => item.id === tough.id), '敌人仍存活（检定失败/未击败都不影响去向）')
+  move(symbol, { action: 'endTurn' })
+  settle(symbol)
+  assert.equal(symbol.investigators[0].hand.includes('10102'), true, '在自己回合结束时返回')
+  assert.equal(symbol.investigators[0].discard.includes('10102'), false)
 })
 
 // ── 10103 超凡织造 ───────────────────────────────────────────────────────────
@@ -514,7 +518,7 @@ test('P6 M2-9 分片：10 张条目全部注册、code 与文件名一致，近�
     assert.equal(registered.code, entry.code)
     assert.ok(ALL_CARDS[entry.code], `${entry.code} 缺少卡面数据`)
   }
-  for (const code of ['10099', '10100', '10101', '10102', '10103', '10105', '10106', '10107']) {
+  for (const code of ['10099', '10100', '10101', '10103', '10105', '10106', '10107']) {
     assert.equal(registeredEntry(code).simplified, true, `${code} 应声明 simplified`)
     assert.ok(registeredEntry(code).note, `${code} 应带 note`)
   }

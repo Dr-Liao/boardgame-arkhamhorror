@@ -1,5 +1,6 @@
 import { availableResources } from './resource-bank.js'
 import { availablePlayResources } from './play-payment.js'
+import { damagePlayDiscount } from './play-attempt.js'
 import { enemyInEngagement, enemyIsBody, enemyIsPart } from './enemy-parts.js'
 import { playTimingCandidates, playTimingSource } from './play-timing.js'
 import { attachedAbilityCards } from './attachment-rules.js'
@@ -166,7 +167,7 @@ export function createMoves(deps) {
     const local = state.investigators.filter(owner => owner.location === inv.location).flatMap(owner => owner.assets)
       .filter(source => registeredEntry(source.code)?.assetRule?.costReductionAtLocation)
       .reduce((sum, source) => sum + (registeredEntry(source.code).playCostReductionProvider?.(state, inv, def, source) || 0), 0)
-    return local + (campaignPlayCostPreview(state, inv, code)?.discount || 0
+    return local + damagePlayDiscount(state, inv, def) + (campaignPlayCostPreview(state, inv, code)?.discount || 0
       || Math.max(0,
         Number(typeof registeredEntry(code)?.playCostReductionProvider === 'function'
           ? registeredEntry(code).playCostReductionProvider(state, inv, def)
@@ -670,8 +671,8 @@ export function createMoves(deps) {
     if (th && th.purgeAbility && (t.counters || 0) > 0) {
       moves.push({ action: 'purgeThreat', threatId: t.id, label: `📖 净化「${cardName(t.code)}」（移走 1 恐惧）` })
     }
-    if (th && th.debt && inv.threat.includes(t) && availableResources(inv) > 0 && (t.debtPaymentsThisRound || 0) < 2) {
-      moves.push({ action: 'payDebt', threatId: t.id, label: `💸 向医院债务支付 1 资源（每轮至多 2 次）` })
+    if (th && th.debt && inv.threat.includes(t) && availableResources(inv) > 0 && (t.debtPaymentsThisRound || 0) < (th.debtPaymentLimit ?? 2)) {
+      moves.push({ action: 'payDebt', threatId: t.id, label: `💸 向医院债务支付 1 资源（每轮至多 ${th.debtPaymentLimit ?? 2} 次）` })
     }
   }
 
@@ -939,7 +940,8 @@ export function createMoves(deps) {
       const t = inv.threat.find((x) => x.id === move.threatId)
       if (!t || !getThreatEffect(t)?.debt) return '没有该债务'
       if (availableResources(inv) <= 0) return '资源不足'
-      if ((t.debtPaymentsThisRound || 0) >= 2) return '本轮已支付两次'
+      const limit = getThreatEffect(t).debtPaymentLimit
+      if ((t.debtPaymentsThisRound || 0) >= (limit ?? 2)) return limit == null ? '本轮已支付两次' : `本轮已支付 ${limit} 次`
       return null
     }
     case 'locationAbility': {
@@ -1184,6 +1186,7 @@ export function createMoves(deps) {
     }
     case 'fightHidden':
     case 'evadeHidden': {
+      if (move.action === 'fightHidden' && capabilityBlocked(state, inv, 'fight')) return '当前不能攻击'
       if (!inv.hand?.includes(move.cardId)) return '手牌中没有这个敌人'
       if (registeredEntry(move.cardId)?.hiddenEnemyInHand !== true) return '这张牌不能在手牌中攻击或躲避'
       if (move.action === 'fightHidden' && scenarioBehavior(state).canFightHidden?.(state, inv, move.cardId) === false) {

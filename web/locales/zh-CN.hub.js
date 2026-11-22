@@ -5,6 +5,14 @@
 // 复用 core 里已有的 hub.tab.* / hub.stage.* / hub.difficulty.* / table.rulebook / common.*，不在此重复定义。
 // 值必须与抽取前的界面中文逐字一致；新增时同步补 en.hub.js。
 export default {
+  'hub.variant.back': '构筑背面',
+  'hub.variant.original': '原版',
+  'hub.variant.alternate': '平行版',
+  'hub.variant.signatures': '签名套件',
+  'hub.variant.standard': '标准签名',
+  'hub.variant.advanced': '进阶签名',
+  'hub.variant.both': '两个套件',
+  'hub.variant.directive': '准则 {number}',
   // 通用 / 分隔符 / 选项值
   'hub.list.separator': '、',
   'hub.list.semicolon': '；',
@@ -17,6 +25,9 @@ export default {
   'hub.feedback': '反馈',
   'hub.feedback.button': '💬 反馈',
   'hub.interlude.title': '幕间纪事',
+  'hub.sideStory.title': '关间支线',
+  'hub.sideStory.hint': '可以在本次关间插入独立支线：每位调查员支付标注的经验，结算后回到本关间继续下一章。',
+  'hub.sideStory.aria': '插入支线',
 
   // 职业 / 扩展包 / 结局名
   'hub.class.guardian': '守护者',
@@ -143,6 +154,17 @@ export default {
   'hub.setup.tabSaves': '存档管理',
   'hub.setup.starting': '创建中…',
   'hub.setup.start': '开始新游戏',
+  'hub.campaignPicker.title': '选择战役',
+  'hub.campaignPicker.categories': '战役分类',
+  'hub.campaignPicker.seasonOne': '第一季',
+  'hub.campaignPicker.returnTo': '重返系列',
+  'hub.campaignPicker.sideStories': '支线',
+  'hub.campaignPicker.mode': '战役模式',
+  'hub.campaignPicker.draft': '三选一模式',
+  'hub.campaignPicker.scenarios': '{count} 个场景',
+  'hub.campaignPicker.earlyAccess': '提前体验',
+  'hub.campaignPicker.empty': '此分类暂无可玩的战役。',
+  'hub.campaignPicker.confirm': '确认选择',
   'hub.saves.typeAria': '存档类型',
   'hub.saves.modeSolo': '单人',
   'hub.saves.modeOnline': '联机',
@@ -329,6 +351,7 @@ export default {
   'hub.upgrade.cannotReplace': '当前升级方案不能替换这张卡。',
   'hub.upgrade.replaceTitle': '替换「{name}」',
   'hub.upgrade.replaceAria': '替换 {name}',
+  'hub.upgrade.retainVersion': '保留低等级的 {name}',
   'hub.upgrade.blocked': '{name}：{reason}',
   'hub.upgrade.replacementNote': '牌组里的每张卡都列在这里；灰色的卡本次不能选中，悬停或点按可查看原因。',
   'hub.upgrade.extraAdd': '额外加入',

@@ -121,8 +121,8 @@
       "story": true,
       "guides": true,
       "images": true,
-      "presentation": true,
-      "docs": true,
+      "presentation": false,
+      "docs": false,
       "disclosure": false
     },
     "deferred": []
@@ -140,8 +140,8 @@
     "story": true,
     "guides": true,
     "images": true,
-    "presentation": true,
-    "docs": true,
+    "presentation": false,
+    "docs": false,
     "disclosure": false,
     "pass": false
   },
@@ -152,7 +152,16 @@
     "lobbyMarked": false,
     "pass": false
   },
-  "maintenance": [],
+  "maintenance": [
+    {
+      "id": "w5-07280-oath-shared-rules.json",
+      "kind": "shared-factory",
+      "status": "pending",
+      "file": "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json",
+      "cards": [],
+      "note": "同句模板共享工厂重构（code hygiene）；不改变卡牌行为，不阻塞 P8 发布。"
+    }
+  ],
   "verifiedScope": "M0 范围 361 条 07 记录（322 主卡 + 39 关联面；战役 252 / 调查员 16 / 玩家 93），18 遭遇组；M1 五位调查员；M2 93 张玩家卡；M3 八章逐章 12/12 检查与逐卡 252/252；M4 18 条关键词与 10 条规则书条目；M5 生产注册、真实大厅启动、P8 完整战役/失败路线/存档/多人 AI/真实联机/重放/浏览器发布验收。仍有余项以 earlyAccess 披露，见 remaining 与 releaseAcceptance.deferred。",
   "packs": [
     {
@@ -2137,11 +2146,13 @@
     "deferred": 0,
     "escape": 0,
     "requests": {
-      "files": 0,
-      "done": 0,
-      "pending": 0,
+      "files": 17,
+      "done": 16,
+      "pending": 1,
       "behaviorPending": [],
-      "refactorPending": [],
+      "refactorPending": [
+        "w5-07280-oath-shared-rules.json"
+      ],
       "rejected": [],
       "withdrawn": []
     },
@@ -2158,7 +2169,9 @@
     "pass": false,
     "outstanding": {
       "behaviorPending": [],
-      "refactorPending": [],
+      "refactorPending": [
+        "w5-07280-oath-shared-rules.json"
+      ],
       "rejected": [],
       "withdrawn": [],
       "deferred": 0,
@@ -2168,11 +2181,11 @@
   "sources": [
     {
       "path": "content/registered.js",
-      "sha256": "8c9204dc062e13af8bf40327a4bb4ebdfda18f2cacef9a01f5936338d0cb8e5d"
+      "sha256": "95de3eb916f9ba0fdc1726da395182143e0fb7786e3ed2169be3a399fc1362d6"
     },
     {
       "path": "content/registry.js",
-      "sha256": "de33c88a7da05ec0bc6e0ad3d19fe04b4148b359e8897b8cb924e692a4959455"
+      "sha256": "14c803f54ec7e8cb190362069aa879f342a0ff1b44176f735054dddc3a6fb642"
     },
     {
       "path": "content/mechanics.js",
@@ -2180,11 +2193,11 @@
     },
     {
       "path": "content/schema.js",
-      "sha256": "bba6487fba8a95a184da9029cddf0d93ad4bdecc82a87eb6569876ff4824be0c"
+      "sha256": "1a5511488d4e9585fa2234d707df2609163881d76ab8e35a71284015d5f307ab"
     },
     {
       "path": "content/scenario-manifest.js",
-      "sha256": "5b1d3c2d563ad825d7a2a785af01ed7e1ad2aebe0b6b9936a3fa2abc10baf3fe"
+      "sha256": "78bab26867744440b89d36784196f618b3c44f8f63375c4e682e1b4da0c2cefa"
     },
     {
       "path": "content/migration-confirmation.js",
@@ -2260,7 +2273,7 @@
     },
     {
       "path": "web/deck-rules.js",
-      "sha256": "ab77908ae47e7fada8a33f63238517f9b4a2345db30990089e686b724760db71"
+      "sha256": "8df48d4a2843823f7d3f201cb543cce1e51eaed9854fe66c1e79cbd6464a0c20"
     },
     {
       "path": "presentation/art-rules.js",
@@ -2280,7 +2293,7 @@
     },
     {
       "path": "src/deck/availability.js",
-      "sha256": "f69169bed68b4f29e6a4173cebeba448b505804c2a166718effe0826f5000fe7"
+      "sha256": "674b2b60c655b878bf5b5e02f7cf8d04134935f1eef4742c9751da07560aa9f5"
     },
     {
       "path": "tools/audit-tic.mjs",
@@ -2488,7 +2501,7 @@
     },
     {
       "path": "docs/arkham-content-migration.md",
-      "sha256": "f59ced6d960168c4532e911b0868888fa5fce1c5b775180623db3ae007087b9c"
+      "sha256": "67911a8c44578a0a510d228c1094b7ad6ba86c7162c3e9ff745a897a8b79058d"
     }
   ],
   "confirmations": {
@@ -3650,7 +3663,24 @@
   },
   "evidence": {
     "files": {
-      "audit/presentation-report.json": "860da5aacbd58c21226b80044324b020c9405895d44eb08261b0295cab1b81e5",
+      "artifacts/migration/tic/p7/primitive-requests/p7-a1-07105-spawn-most-clues.json": "6145871f0172f661fc34f35d52a80f17c5db99fabff0bb7dd07a20c687675c69",
+      "artifacts/migration/tic/p7/primitive-requests/p7-a1-07178-vehicle-location-sync.json": "2a2460f4ff4ae6e9b37aed2aa7c571007a425e7a54f8a873fec24047c9683ebf",
+      "artifacts/migration/tic/p7/primitive-requests/p7-a1-maelstrom-flood-on-enter.json": "08add86475e52156194ff05c4054476789ee01eee67bd1137342d89519fac930",
+      "artifacts/migration/tic/p7/primitive-requests/p7-a2-act-clue-objective-data.json": "1aea84b7d588de70954d16255b40bd80d8f1c4918a3a0676c77f9caaeda9b368",
+      "artifacts/migration/tic/p7/primitive-requests/p7-a2-all-resigned-hook.json": "67b39a4c2534d919ea8833aac6e8d45952e8ac0571c56cab71dd5658817899ee",
+      "artifacts/migration/tic/p7/primitive-requests/p7-a2-location-clue-discovery.json": "88412d00a78bb51b47545a2ea7e841619209dddd0c8c6e4fc5fe3aec3d4118e9",
+      "artifacts/migration/tic/p7/primitive-requests/p7-a2-location-victory-display.json": "f84ca2bc51837a04dce6d0c075c11a0abbc5fa8f9eaf4ef7a586e75b9766b2a7",
+      "artifacts/migration/tic/p7/primitive-requests/p7-a2-skip-agenda-advance.json": "89b02343936ff465494b10d58b185de527593336f30a0c2a4ef75fad96fade95",
+      "artifacts/migration/tic/p7/primitive-requests/p7-b-07168-story-asset-removal.json": "a66f5441a7c17fa6fecbc55a34a382ee0cdd7b3e75bce319571759a7b223bc63",
+      "artifacts/migration/tic/p7/primitive-requests/p7-b-07299-location-attachment-ability.json": "ab26b835b2370eda30b6b259e9011fb455e8a213126bff19ac7bad7abd12050f",
+      "artifacts/migration/tic/p7/primitive-requests/w5-07280-act1-back-layout.json": "548b95baffb2f76d35ae6238116961b5de175f2d3ad73befcfc22da95cf2421e",
+      "artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json": "3bd506de36f9d19d3fb48321924d759ef9e50880d3d30dd0d546e4241b6b8b48",
+      "artifacts/migration/tic/p7/primitive-requests/w6-act-agenda-deck-ops.json": "0423dbce29b25630b199d04d689891c493bea452b64d86f06ed1e2bf9656b4eb",
+      "artifacts/migration/tic/p7/primitive-requests/w6-capture-mechanism.json": "621cb9f6959b8fc52c6089a258e49e37bd6d928ed1aefa17daae522a3b17ca7e",
+      "artifacts/migration/tic/p7/primitive-requests/w6-harper-scenario-events.json": "04ab1f1f562fc670021c57557a88cc76d3148050bb42f8db343b2cc99614ab32",
+      "artifacts/migration/tic/p7/primitive-requests/w6-holding-cells-restrictions.json": "0b20fabad97bb160e4e2f3af36f4ae5c3d818d61456e0652e8078094aa7d1f76",
+      "artifacts/migration/tic/p7/primitive-requests/w6-parallel-acts.json": "cb5de0a415985b3bf16419d71c76c8dc3c7f1ba6a2a9a2a4b160b69054055f47",
+      "audit/presentation-report.json": "3a7476805b1fa34ba900fc274b2bbe517f959fed05cee3b1c434428f0618dc93",
       "audit/tic-all-card-acceptance.json": "f84ec3aa909b6b22e119e75721831ae300cb9242227a88990b02102b034ef140",
       "audit/tic-browser-acceptance.json": "bb399e3e6caa4be7be325f2fefaa6355fb2dbaef1d8c5ad06a259b8250fc8ebf",
       "audit/tic-control-regression.json": "9467ddf166a857cc89e2283cc59c2164fba3400c829c6882a41a72b323a09385",
@@ -4203,13 +4233,13 @@
     },
     "images": {
       "records": 361,
-      "enLocal": 492,
-      "zhLocal": 489,
+      "enLocal": 67,
+      "zhLocal": 95,
       "remoteFallbackAvailable": 361,
       "remoteFallbackMissing": 0,
-      "referenceSourceMentions": 198,
+      "referenceSourceMentions": 199,
       "referenceSourceBound": 0,
-      "runtimeFilesScanned": 4984
+      "runtimeFilesScanned": 5756
     },
     "guides": {
       "command": "node tools/import-scenario-guides.mjs",
@@ -4219,16 +4249,16 @@
     },
     "presentation": {
       "command": "node tools/build-presentation.mjs --check",
-      "exitCode": 0,
-      "presentationVersion": "1fb167e0e7d9783dea135762b49f8815e82d1b73eedf88254742a75b319a546c",
+      "exitCode": 1,
+      "presentationVersion": "59e1e77ef01454a6d8de882e8b18fc34a80df4e59c35803a81730ecf6cee850c",
       "ticDescriptorsResolved": 361
     },
     "docs": {
       "command": "node tools/check-doc-links.mjs --json",
-      "exitCode": 0,
-      "files": 82,
-      "links": 429,
-      "broken": 0
+      "exitCode": 1,
+      "files": 85,
+      "links": 483,
+      "broken": 7
     },
     "registry": {
       "command": "node tools/check-tic-registry.mjs",
@@ -4281,12 +4311,16 @@
     "Node 验收账本不 current/未通过（audit/tic-node-acceptance.json；缺失，P8 文件 0/3，请 node tools/verify-tic.mjs --node）",
     "P8 战役重放证据缺失或未通过（audit/tic-p8-replay.json：status=passed，fixture 覆盖 8 章；请 node tools/verify-tic.mjs --p8-replay）",
     "回归证据不 current/未通过（audit/tic-interaction-regression.json）",
+    "展示资源校验未通过（node tools/build-presentation.mjs --check；发布前需按产线重生成 audit/presentation-report.json）",
+    "文档链接体检未通过（7 条失效；node tools/check-doc-links.mjs --json）",
     "关键词未 verified：bless、curse、seal、vehicle、road、researched、covenant、exceptional、permanent、fast、hunter、aloof、massive、retaliate、surge、peril、victory、revelation",
     "规则书未 verified：scenarioMechanics、keywordEntries",
     "发布验收未通过：chapters",
     "发布验收未通过：node",
     "发布验收未通过：replay",
     "发布验收未通过：regression",
+    "发布验收未通过：presentation",
+    "发布验收未通过：docs",
     "audit/baseline.json 尚未记录 TIC 发布审计（milestone P10）：发布收尾需 node tools/audit-baseline.mjs --write（AUDITS 增加 node tools/scan-tic-scope.mjs --check 与 node tools/audit-tic.mjs --check）",
     "P8 门禁未通过：planLedger",
     "P8 门禁未通过：keywordsVerified",
@@ -4297,9 +4331,11 @@
     "P8 门禁未通过：investigatorsVerified",
     "P8 门禁未通过：scenariosVerified",
     "P8 门禁未通过：browserAcceptance",
+    "P8 门禁未通过：presentationVerified",
+    "P8 门禁未通过：docsVerified",
     "P8 门禁未通过：primitivesDone",
     "P8 门禁未通过：interactionVerified",
-    "发布门禁未通过：chapters、node、replay、regression、disclosure"
+    "发布门禁未通过：chapters、node、replay、regression、presentation、docs、disclosure"
   ],
   "gate": {
     "scopeLedger": {
@@ -4629,7 +4665,7 @@
       "chaptersCovered": 8,
       "sourceFiles": {
         "total": 2809,
-        "verified": 2399,
+        "verified": 2370,
         "fresh": false
       },
       "pass": false
@@ -4758,7 +4794,7 @@
       "sourceStableDuringRun": true,
       "sourceFiles": {
         "total": 2808,
-        "verified": 2357,
+        "verified": 2328,
         "fresh": false
       },
       "specs": [
@@ -4872,50 +4908,18 @@
         "en": {
           "dir": "web/img/cards",
           "dirExists": true,
-          "files": 492,
-          "covered": 361,
+          "files": 67,
+          "covered": 35,
           "records": 361,
           "outsideCycleCodes": [
-            "07001b",
-            "07002b",
-            "07003b",
-            "07004b",
-            "07005b",
-            "07041b",
-            "07042b",
-            "07043b",
-            "07044b",
-            "07045b",
-            "07046b",
-            "07047b",
             "07048b",
-            "07049b",
-            "07050b",
-            "07051b",
-            "07052b",
-            "07056b",
-            "07057b",
-            "07058b",
-            "07059b",
-            "07060b",
-            "07061b",
-            "07062",
             "07063b",
             "07064b",
-            "07065b",
             "07066b",
             "07067b",
             "07068b",
             "07069b",
             "07102b",
-            "07103b",
-            "07104b",
-            "07123b",
-            "07124b",
-            "07125b",
-            "07126b",
-            "07127b",
-            "07128b",
             "07129b",
             "07130b",
             "07131b",
@@ -4930,132 +4934,33 @@
             "07140b",
             "07141b",
             "07142b",
-            "07143b",
-            "07163b",
-            "07166b",
-            "07167b",
-            "07168b",
             "07169b",
-            "07170b",
-            "07171b",
-            "07172b",
-            "07173b",
-            "07198b",
-            "07200b",
-            "07201b",
-            "07202b",
             "07203b",
-            "07210b",
-            "07231b",
-            "07232b",
-            "07233b",
-            "07234b",
-            "07235b",
-            "07236b",
-            "07237b",
-            "07238b",
-            "07239b",
             "07240b",
             "07241b",
             "07242b",
             "07243b",
-            "07244b",
-            "07245b",
-            "07246b",
-            "07247b",
-            "07248b",
-            "07249b",
-            "07250b",
-            "07251b",
-            "07274b",
-            "07275b",
-            "07276b",
-            "07277b",
-            "07278b",
-            "07279b",
-            "07280b",
-            "07281b",
-            "07282b",
-            "07283b",
             "07284b",
-            "07285b",
             "07286b",
             "07287b",
-            "07288b",
-            "07289b",
-            "07290b",
-            "07291b",
-            "07292",
-            "07311b",
-            "07312b",
-            "07313b",
-            "07314b",
-            "07315b",
-            "07316b",
-            "07317b",
-            "07318b",
-            "07319b",
-            "07320b",
-            "07321b",
-            "07322b",
-            "07323b",
-            "07324b",
-            "07325b",
-            "07326b",
-            "07327b",
-            "07328b",
-            "07329b",
-            "07330",
-            "07331"
+            "07289b"
           ]
         },
         "zh": {
           "dir": "web/img/zh/cards",
           "dirExists": true,
-          "files": 489,
-          "covered": 361,
+          "files": 95,
+          "covered": 63,
           "records": 361,
           "outsideCycleCodes": [
-            "07041b",
-            "07042b",
-            "07043b",
-            "07044b",
-            "07045b",
-            "07046b",
-            "07047b",
             "07048b",
-            "07049b",
-            "07050b",
-            "07051b",
-            "07052b",
-            "07056b",
-            "07057b",
-            "07058b",
-            "07059b",
-            "07060b",
-            "07061b",
             "07063b",
             "07064b",
-            "07065b",
             "07066b",
             "07067b",
             "07068b",
             "07069b",
-            "07070b",
-            "07071b",
-            "07072b",
-            "07073b",
-            "07074b",
-            "07075b",
             "07102b",
-            "07103b",
-            "07104b",
-            "07123b",
-            "07124b",
-            "07125b",
-            "07126b",
-            "07127b",
-            "07128b",
             "07129b",
             "07130b",
             "07131b",
@@ -5070,80 +4975,16 @@
             "07140b",
             "07141b",
             "07142b",
-            "07143b",
-            "07163b",
-            "07166b",
-            "07167b",
-            "07168b",
             "07169b",
-            "07170b",
-            "07171b",
-            "07172b",
-            "07173b",
-            "07198b",
-            "07200b",
-            "07201b",
-            "07202b",
             "07203b",
-            "07210b",
-            "07231b",
-            "07232b",
-            "07233b",
-            "07234b",
-            "07235b",
-            "07236b",
-            "07237b",
-            "07238b",
-            "07239b",
             "07240b",
             "07241b",
             "07242b",
             "07243b",
-            "07244b",
-            "07245b",
-            "07246b",
-            "07247b",
-            "07248b",
-            "07249b",
-            "07250b",
-            "07251b",
-            "07274b",
-            "07275b",
-            "07276b",
-            "07277b",
-            "07278b",
-            "07279b",
-            "07280b",
-            "07281b",
-            "07282b",
-            "07283b",
             "07284b",
-            "07285b",
             "07286b",
             "07287b",
-            "07288b",
-            "07289b",
-            "07290b",
-            "07291b",
-            "07311b",
-            "07312b",
-            "07313b",
-            "07314b",
-            "07315b",
-            "07316b",
-            "07317b",
-            "07318b",
-            "07319b",
-            "07320b",
-            "07321b",
-            "07322b",
-            "07323b",
-            "07324b",
-            "07325b",
-            "07326b",
-            "07327b",
-            "07328b",
-            "07329b"
+            "07289b"
           ]
         }
       },
@@ -5165,8 +5006,8 @@
           "content/**",
           "web/**"
         ],
-        "filesScanned": 4984,
-        "mentionCount": 198,
+        "filesScanned": 5756,
+        "mentionCount": 199,
         "boundReferenceCount": 0,
         "boundReferences": []
       },
@@ -5174,13 +5015,13 @@
     },
     "presentationVerified": {
       "command": "node tools/build-presentation.mjs --check",
-      "exitCode": 0,
-      "ok": true,
+      "exitCode": 1,
+      "ok": false,
       "missing": false,
       "report": {
         "path": "audit/presentation-report.json",
         "present": true,
-        "presentationVersion": "1fb167e0e7d9783dea135762b49f8815e82d1b73eedf88254742a75b319a546c",
+        "presentationVersion": "59e1e77ef01454a6d8de882e8b18fc34a80df4e59c35803a81730ecf6cee850c",
         "catalogCards": 5930,
         "imageResolutionCards": 1
       },
@@ -5188,18 +5029,54 @@
         "resolved": 361,
         "records": 361
       },
-      "pass": true
+      "pass": false
     },
     "docsVerified": {
       "command": "node tools/check-doc-links.mjs --json",
-      "exitCode": 0,
-      "ok": true,
+      "exitCode": 1,
+      "ok": false,
       "missing": false,
-      "files": 82,
-      "links": 429,
-      "broken": 0,
-      "brokenLinks": [],
-      "pass": true
+      "files": 85,
+      "links": 483,
+      "broken": 7,
+      "brokenLinks": [
+        {
+          "file": "docs/campaign/theDrownedCity/README.md",
+          "line": 100,
+          "target": "../../../../../artifacts/migration/tdc/p7/literal/shared.json"
+        },
+        {
+          "file": "docs/campaign/theDrownedCity/README.md",
+          "line": 103,
+          "target": "../../../../../artifacts/migration/tdc/p7/workers/narrative-guides.md"
+        },
+        {
+          "file": "docs/campaign/theDrownedCity/README.md",
+          "line": 106,
+          "target": "../../../../../artifacts/migration/tdc/p7/literal/shared.json"
+        },
+        {
+          "file": "docs/campaign/theDrownedCity/README.md",
+          "line": 106,
+          "target": "../../../../../artifacts/migration/tdc/p7/literal/campaign.json"
+        },
+        {
+          "file": "docs/campaign/theDrownedCity/README.md",
+          "line": 109,
+          "target": "../../../../../artifacts/migration/tdc/p7/literal/shared.json"
+        },
+        {
+          "file": "docs/campaign/theDrownedCity/README.md",
+          "line": 109,
+          "target": "../../../../../artifacts/migration/tdc/p7/literal/campaign.json"
+        },
+        {
+          "file": "docs/campaign/theDrownedCity/README.md",
+          "line": 126,
+          "target": "../../../../../artifacts/migration/tdc/replay-before-recovered.json"
+        }
+      ],
+      "pass": false
     },
     "registryCheck": {
       "command": "node tools/check-tic-registry.mjs",
@@ -5231,11 +5108,13 @@
       "deferred": 0,
       "escape": 0,
       "requests": {
-        "files": 0,
-        "done": 0,
-        "pending": 0,
+        "files": 17,
+        "done": 16,
+        "pending": 1,
         "behaviorPending": [],
-        "refactorPending": [],
+        "refactorPending": [
+          "w5-07280-oath-shared-rules.json"
+        ],
         "rejected": [],
         "withdrawn": []
       },
@@ -5287,8 +5166,8 @@
       "story": true,
       "guides": true,
       "images": true,
-      "presentation": true,
-      "docs": true,
+      "presentation": false,
+      "docs": false,
       "disclosure": false,
       "pass": false
     },

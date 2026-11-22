@@ -1113,6 +1113,7 @@ export function checkActObjectives(state, api) {
 // 行为（引擎钩子）
 // ---------------------------------------------------------------------------
 export const behavior = {
+  exposeConcealedByEffect: exposeMini,
   id: CHAPTER_ID,
   implementedEncounterCodes: Object.freeze([...CHAPTER_ENTRY_CODES]),
   scenarioApproximations,

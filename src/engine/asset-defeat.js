@@ -10,7 +10,7 @@
 //   2. `checkAssetDefeated(...)`：达到上限时开 `assetDefeated` 窗口（反应可以把这张卡
 //      改为洗回牌库而不是进弃牌堆），再离场、记录、开既有的 `defeatAtLocation` 窗口、
 //      结算「被击败时反伤」；
-//   3. 被击败的支援去向（弃牌堆 / 洗回牌库）由窗口上下文 `shuffledIntoDeck` 决定。
+//   3. 被击败的支援去向由击败窗口决定，默认弃置。
 //
 // 引擎不认卡号：判定只读卡面 health/sanity 与实例上的 damage/horror，窗口只传实体与数值。
 
@@ -48,6 +48,7 @@ export function checkAssetDefeated(state, owner, asset, events, deps) {
     triggerReaction,
     registeredEntry,
     defeatedAssetRetaliation,
+    exilePlayerCard,
     // 可选：把这张支援洗回牌库（默认只 push 到牌库，不洗）——供应方注入可重放的洗牌。
     shuffleIntoDeck,
   } = deps
@@ -71,15 +72,19 @@ export function checkAssetDefeated(state, owner, asset, events, deps) {
     }, events) || {}
     : {}
   leaveAsset(state, owner, asset, events)
-  if (context.shuffledIntoDeck) {
+  if (context.exiledInstead) {
+    exilePlayerCard(state, owner, asset.code, events)
+  } else if (context.shuffledIntoDeck) {
     if (typeof shuffleIntoDeck === 'function') shuffleIntoDeck(owner, asset.code)
     else owner.deck.push(asset.code)
   } else if (!asset.removedFromGame && !asset.returnedToHand) {
     owner.discard.push(asset.code)
   }
-  info(state, events, context.shuffledIntoDeck
-    ? `${cardName(asset.code)} 被击败并洗回 ${owner.name} 的牌库。`
-    : `${cardName(asset.code)} 被击败并弃置。`)
+  if (!context.exiledInstead) {
+    info(state, events, context.shuffledIntoDeck
+      ? `${cardName(asset.code)} 被击败并洗回 ${owner.name} 的牌库。`
+      : `${cardName(asset.code)} 被击败并弃置。`)
+  }
   for (const inv of state.investigators.filter(item => !item.defeated && !item.resigned && item.location === owner.location)) {
     triggerReaction?.(state, inv.seat, 'defeatAtLocation', events,
       { when: 'defeatAtLocation', kind: 'ally', seat: inv.seat, location: owner.location, assetCode: asset.code })

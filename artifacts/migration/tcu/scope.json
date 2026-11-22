@@ -559,7 +559,7 @@
     },
     {
       "path": "artifacts/migration/tcu/mechanism-scan.json",
-      "sha256": "deaa41c8f9993c499877746ccb83b65eb30e91c44990dcd92b53fcd9e589281b"
+      "sha256": "9b9076fb6b92d721a6185c0eae56d966102f8b61c6038dc11e96e3d60b5ddfb0"
     },
     {
       "path": "content/packs/tcuCampaign/manifest.js",

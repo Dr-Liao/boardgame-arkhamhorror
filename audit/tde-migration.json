@@ -1381,11 +1381,11 @@
   "sources": [
     {
       "path": "content/registered.js",
-      "sha256": "8c9204dc062e13af8bf40327a4bb4ebdfda18f2cacef9a01f5936338d0cb8e5d"
+      "sha256": "95de3eb916f9ba0fdc1726da395182143e0fb7786e3ed2169be3a399fc1362d6"
     },
     {
       "path": "content/registry.js",
-      "sha256": "e7d924738ba416e9699af5aecd9e95b1be42c6e8cbbc6f1f3f8d7cb5ef75e557"
+      "sha256": "14c803f54ec7e8cb190362069aa879f342a0ff1b44176f735054dddc3a6fb642"
     },
     {
       "path": "content/mechanics.js",
@@ -1453,7 +1453,7 @@
     },
     {
       "path": "web/ui-cards.js",
-      "sha256": "41439d55f4f662801d690136cefe5eb53689d6d2688e8510768dd59d0d5ef97d"
+      "sha256": "f21fc7b4788e1002eaeca990fc9a213c7cc749d678daae79adbce0320ff79cf3"
     },
     {
       "path": "src/cards/cards-data.js",
@@ -1469,7 +1469,7 @@
     },
     {
       "path": "src/deck/availability.js",
-      "sha256": "f69169bed68b4f29e6a4173cebeba448b505804c2a166718effe0826f5000fe7"
+      "sha256": "674b2b60c655b878bf5b5e02f7cf8d04134935f1eef4742c9751da07560aa9f5"
     },
     {
       "path": "src/campaign/epilogue-matrix.js",
@@ -1489,7 +1489,7 @@
     },
     {
       "path": "docs/arkham-content-migration.md",
-      "sha256": "f59ced6d960168c4532e911b0868888fa5fce1c5b775180623db3ae007087b9c"
+      "sha256": "67911a8c44578a0a510d228c1094b7ad6ba86c7162c3e9ff745a897a8b79058d"
     },
     {
       "path": "audit/tde-parallel-acceptance.json",

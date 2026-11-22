@@ -1,0 +1,314 @@
+{
+  "id": "readOrDie",
+  "campaignId": "readOrDie",
+  "locales": {
+    "zh": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "挑战剧本：读书至死",
+          "children": [
+            {
+              "id": "body1",
+              "text": "你这一生都在读书。儿时那只是一种对无害故事的兴趣——当然，那些故事挺阴森，但终究无害。你对恐怖与死亡主题的着迷让你在朋友和同学中得了个「幽灵」的绰号。可随着你长大，这份着迷也在生长，直到近乎痴迷。你对恐怖的胃口从悬疑与虚构，变成了更真实的东西。"
+            },
+            {
+              "id": "body2",
+              "text": "当你发现约翰·迪伊译本的《死灵之书》时，你以为自己终于找到了秘密渴望的、真正的恐怖。要是你早知道读完那本可怕的书会发生什么就好了——你会把它锁回奥恩图书馆亨利·阿米蒂奇博士的禁书区，再也不打开。或者你愿意这样相信。但即便是你，也无法质疑《基塔布·阿尔-阿齐夫》的诱惑。《死者之书》。所以当阿米蒂奇博士把你召到奥恩图书馆时，你骨子里的恐惧已经预示了发生的一切。"
+            },
+            {
+              "id": "body3",
+              "text": "「我不明白这怎么会发生。」阿米蒂奇博士审视着狼藉的现场说道。整个禁书区一片碎片与撕碎的书页。《死灵之书》摊开在旁边的桌上，金属搭扣断裂。你用手指抚过那皮革般、如同皮肤的书页。你的目光以熟悉的舞步掠过字句：「他们在孤独之处无形而污秽地行走，言语已被说出，仪式已在其季节中嚎叫。」你的喉咙收紧，意识到发生了什么。有什么东西被释放了出来，而你是唯一能弄清如何阻止它的人。"
+            },
+            {
+              "id": "proceedToSetup",
+              "text": "前往「设置」。"
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "setup",
+          "title": "设置",
+          "children": [
+            {
+              "id": "gatherSets",
+              "text": "收集以下遭遇组的全部卡牌：读书至死、课外活动、巫术、彼界、主教之奴、夜鹰、远古邪恶、上锁的门、约格·索托斯之仆、阿米蒂奇的命运。除「读书至死」外均可从《敦威治遗产》豪华扩展找到。"
+            },
+            {
+              "id": "newCards",
+              "text": "将「课外活动」遭遇组原有的剧本提示卡、幕牌库与议程牌库移出游戏；改用「读书至死」扩展提供的新提示卡、议程与幕。"
+            },
+            {
+              "id": "removeCards",
+              "text": "将「教师办公室（时已晚）」地点、「炼金实验室」地点、「炼金药剂」故事资产、「实验体」敌人与「沃伦·赖斯教授」故事资产移出游戏。这些卡牌在本挑战剧本中不使用。"
+            },
+            {
+              "id": "placeLocations",
+              "text": "将其余每个地点放入场：大学广场、奥恩图书馆、人文学大楼、学生会、科学大楼、管理大楼、宿舍、教师办公室（夜仍年轻）。"
+            },
+            {
+              "id": "daisyWalker",
+              "text": "黛西·沃克从奥恩图书馆开始。"
+            },
+            {
+              "id": "otherInvestigators",
+              "text": "其他每位调查员从大学广场开始。"
+            },
+            {
+              "id": "ignoreForced",
+              "text": "由于宿舍与教师办公室已在场、炼金实验室已被移出游戏，忽略任何会把这些地点放入场的强制能力。"
+            },
+            {
+              "id": "placeTomes",
+              "text": "把先前从黛西·沃克牌组移出、已放到一边的[[书卷]]资产洗混，从离奥恩图书馆最远的地点开始，在每个地点（大学广场除外）下方各暗置 1 张。剩余书卷全部暗置在奥恩图书馆下方。"
+            },
+            {
+              "id": "jazzMulligan",
+              "text": "将「爵士」马利根故事资产放入科学大楼。"
+            },
+            {
+              "id": "namerOfTheDead",
+              "text": "将「死书之灵」敌人（由「读书至死」扩展提供）放入奥恩图书馆，未交战且横置。"
+            },
+            {
+              "id": "drHenryArmitage",
+              "text": "黛西·沃克获得「亨利·阿米蒂奇博士」故事资产的控制权。（若亨利·阿米蒂奇博士已在某位调查员的牌组中，从该调查员的牌组中找出并置于黛西·沃克控制下。）"
+            },
+            {
+              "id": "readyToBegin",
+              "text": "现在可以开始游戏了。"
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "challengeScenario",
+          "title": "挑战剧本",
+          "children": [
+            {
+              "id": "prerequisites",
+              "text": "挑战剧本是特殊的「打印即玩」剧本，利用《诡镇奇谈：卡牌版》收藏中已有的产品与额外的打印卡，创造新内容。「读书至死」挑战剧本围绕调查员黛西·沃克展开，因此有以下前置要求：黛西·沃克必须作为本剧本的调查员之一被选择；黛西·沃克的牌组必须包含至少 4 张非弱点[[书卷]]资产（弱点中的书卷不计入此数）。"
+            }
+          ]
+        },
+        {
+          "id": "ignoreLocationObjectives",
+          "title": "忽略地点目标",
+          "children": [
+            {
+              "id": "body",
+              "text": "幕 1 正面声明：忽略地点上的所有 Objective（目标）文本。因此宿舍与教师办公室等地点不会把本关带入其它结局。"
+            }
+          ]
+        },
+        {
+          "id": "namerOfTheDeadRule",
+          "title": "死书之灵",
+          "children": [
+            {
+              "id": "body",
+              "text": "「死书之灵」将被击败时改为：治愈它所有伤害、横置它，并把它移回奥恩图书馆。只有黛西·沃克在控制至少 4 张非弱点[[书卷]]资产时才能与它谈判；每张书卷使谈判检定难度 -2。"
+            }
+          ]
+        }
+      ],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "无结局",
+          "children": [
+            {
+              "id": "body",
+              "text": "若没有任何调查员达成结局（全员被击败）：按结局 2 结算。"
+            }
+          ]
+        },
+        {
+          "id": "resolution1",
+          "title": "结局 1",
+          "children": [
+            {
+              "id": "body",
+              "text": "你醒来时，图书馆的地板上散落着纸屑与被撕碎的书。《死灵之书》就在你面前，金属搭扣再次将它封住。但愿被释放的存在已被安全地封存其中。但你不能冒险把这本魔法书留在这里——它太危险了。你把它塞进手提包，知道只有你才能保护它……或者保护他人不受它伤害。"
+            },
+            {
+              "id": "rewards",
+              "text": "黛西·沃克获得的经验等于胜利区所有卡牌的胜利点数总和，或游戏结束时她场上[[书卷]]支援数量，二者取高。其他每位调查员只获得胜利区卡牌的胜利点数总和。黛西·沃克可以把黛西的手提包升级为进阶版，或把《死灵之书》（约翰·迪伊译本）进阶版降级为原本版本。"
+            }
+          ]
+        },
+        {
+          "id": "resolution2",
+          "title": "结局 2",
+          "children": [
+            {
+              "id": "body",
+              "text": "你把书塞回手提包。你只能希望被释放的实体不会再造成更多伤害……"
+            },
+            {
+              "id": "rewards",
+              "text": "黛西·沃克获得的经验等于胜利区所有卡牌的胜利点数总和，或游戏结束时她场上[[书卷]]支援数量，二者取高。其他每位调查员只获得胜利区卡牌的胜利点数总和。黛西·沃克必须把《死灵之书》（约翰·迪伊译本）升级为进阶版，或把黛西的手提包进阶版降级为原本版本。"
+            }
+          ]
+        }
+      ]
+    },
+    "en": {
+      "intro": [
+        {
+          "id": "intro",
+          "title": "Challenge Scenario: Read or Die",
+          "children": [
+            {
+              "id": "body1",
+              "text": "You've spent your entire life reading. As a child, it was but a simple interest in harmless stories. Grisly stories, to be sure, but harmless nonetheless. Your fascination with horror and the macabre earned you the nickname \"Spooks\" among your friends and classmates. But as you grew, so too did this fascination, until it bordered on obsession. Your appetite for horror evolved from mystery and make-believe to something more. Something real."
+            },
+            {
+              "id": "body2",
+              "text": "When you discovered John Dee's translation of The Necronomicon, you knew you'd finally found the true horror you had been secretly yearning for. If only you'd known what would be in store for you once you'd read that dreadful tome. You would have locked it back up in Henry Armitage's restricted collection in the Orne Library and never opened it again. Or so you like to think. But even you cannot doubt the allure of the Kitab al-Azif. The Book of the Dead. That is why, when Dr. Armitage summoned you to the Orne Library, the dread in your bones predicted precisely what had occurred."
+            },
+            {
+              "id": "body3",
+              "text": "\"I don't understand how this could have happened,\" Dr. Armitage says as he surveys the destruction. The entire restricted collection is in tattered disarray. The Necronomicon lies open on a nearby table, its metal clasps broken apart. You run your fingers along its leathery, skin-like pages. Your eyes flit along the words in a familiar dance: \"They walk unseen and foul in lonely places where the Words have been spoken and the Rites howled through at their Seasons. The wind gibbers with Their voices, and the earth mutters with Their consciousness.\" Your throat tightens as you realize what must have occurred. Something has been unleashed, and you are the only one who can figure out how to stop it."
+            },
+            {
+              "id": "proceedToSetup",
+              "text": "Proceed to Setup."
+            }
+          ]
+        }
+      ],
+      "setup": [
+        {
+          "id": "setup",
+          "title": "Setup",
+          "children": [
+            {
+              "id": "gatherSets",
+              "text": "Gather all cards from the following encounter sets: Read or Die, Extracurricular Activity, Sorcery, The Beyond, Bishop's Thralls, Whippoorwills, Ancient Evils, Locked Doors, Agents of Yog-Sothoth, and Armitage's Fate. Each of these sets except for Read or Die can be found in The Dunwich Legacy Deluxe Expansion."
+            },
+            {
+              "id": "newCards",
+              "text": "Remove the original scenario reference card, act deck, and agenda deck from the Extracurricular Activity encounter set from the game. Use the new scenario reference card, agenda card, and act card provided in the downloadable Read or Die encounter set."
+            },
+            {
+              "id": "removeCards",
+              "text": "Remove the Faculty Offices (The Hour is Late) location, the Alchemy Labs location, the Alchemical Concoction story asset, The Experiment enemy, and the Professor Warren Rice story asset from the game. These cards are not used in this challenge scenario."
+            },
+            {
+              "id": "placeLocations",
+              "text": "Put each of the remaining locations into play: Miskatonic Quad, Orne Library, Humanities Building, Student Union, Science Building, Administration Building, Dormitories, and Faculty Offices (The Night is Still Young)."
+            },
+            {
+              "id": "daisyWalker",
+              "text": "Daisy Walker begins play at the Orne Library."
+            },
+            {
+              "id": "otherInvestigators",
+              "text": "Each other investigator begins play at the Miskatonic Quad."
+            },
+            {
+              "id": "ignoreForced",
+              "text": "Since Dormitories and Faculty Offices start the game in play and Alchemy Labs is removed from the game, ignore any Forced abilities that would put these locations into play."
+            },
+            {
+              "id": "placeTomes",
+              "text": "Shuffle each of the set-aside Tome assets previously removed from Daisy Walker's deck and place 1 of them facedown beneath each location except for the Miskatonic Quad, starting with the locations farthest from the Orne Library. Place each remaining set-aside Tome asset facedown beneath the Orne Library."
+            },
+            {
+              "id": "jazzMulligan",
+              "text": "Put the \"Jazz\" Mulligan story asset into play at the Science Building."
+            },
+            {
+              "id": "namerOfTheDead",
+              "text": "Place the Namer of the Dead enemy (provided in the downloadable Read or Die encounter set) into play at the Orne Library, unengaged and exhausted."
+            },
+            {
+              "id": "drHenryArmitage",
+              "text": "Daisy Walker takes control of the Dr. Henry Armitage story asset. (If Dr. Henry Armitage is already part of an investigator's deck, search that investigator's deck for Dr. Henry Armitage and put him into play under Daisy Walker's control.)"
+            },
+            {
+              "id": "readyToBegin",
+              "text": "You are ready to begin."
+            }
+          ]
+        }
+      ],
+      "specialRules": [
+        {
+          "id": "challengeScenario",
+          "title": "Challenge Scenario",
+          "children": [
+            {
+              "id": "prerequisites",
+              "text": "Challenge scenarios are special print-and-play scenarios that utilize existing products in the Arkham Horror: The Card Game collection, along with additional print-and-play cards, to create new content. The Read or Die challenge scenario centers around the investigator Daisy Walker, and therefore has the following prerequisites: Daisy Walker must be chosen as one of the investigators when playing this scenario. Daisy Walker's deck must include at least 4 non-weakness Tome assets. Tome weaknesses do not count toward this total."
+            }
+          ]
+        },
+        {
+          "id": "ignoreLocationObjectives",
+          "title": "Ignore Location Objectives",
+          "children": [
+            {
+              "id": "body",
+              "text": "Act 1a reads: Ignore all Objectives on locations. Therefore locations such as the Dormitories and Faculty Offices cannot advance the scenario to other resolutions."
+            }
+          ]
+        },
+        {
+          "id": "namerOfTheDeadRule",
+          "title": "Namer of the Dead",
+          "children": [
+            {
+              "id": "body",
+              "text": "When the Namer of the Dead would be defeated: Instead, fully heal it, exhaust it, and move it to the Orne Library. Only Daisy Walker may parley with it, and only if she controls at least 4 non-weakness Tome assets; each Tome asset she controls reduces the parley test's difficulty by 2."
+            }
+          ]
+        }
+      ],
+      "resolutions": [
+        {
+          "id": "noResolution",
+          "title": "No Resolution",
+          "children": [
+            {
+              "id": "body",
+              "text": "If no resolution was reached because each investigator was defeated: Proceed to Resolution 2."
+            }
+          ]
+        },
+        {
+          "id": "resolution1",
+          "title": "Resolution 1",
+          "children": [
+            {
+              "id": "body",
+              "text": "When you wake, the floor of the library is a mess of scattered paper and torn books. The Necronomicon lies in front of you, its metal clasp sealing it shut once more. Hopefully, whatever presence had been unleashed is safely stored within. But you can't risk the grimoire staying here—it is far too dangerous to be left alone. You stuff the tome into your tote bag, knowing only you can keep it safe…or keep others safe from it."
+            },
+            {
+              "id": "rewards",
+              "text": "Daisy Walker earns experience equal to either the combined Victory X value of each card in the victory display, or equal to the number of Tome assets she had in play at the end of the game, whichever is higher. Each other investigator only earns experience equal to the combined Victory X value of each card in the victory display. Daisy Walker may either upgrade Daisy's Tote Bag to its advanced version, or downgrade the advanced version of The Necronomicon (John Dee Translation) to its original version."
+            }
+          ]
+        },
+        {
+          "id": "resolution2",
+          "title": "Resolution 2",
+          "children": [
+            {
+              "id": "body",
+              "text": "You stuff the tome back into your tote bag. You can only hope that the entity that was unleashed won't cause further harm…"
+            },
+            {
+              "id": "rewards",
+              "text": "Daisy Walker earns experience equal to either the combined Victory X value of each card in the victory display, or equal to the number of Tome assets she had in play at the end of the game, whichever is higher. Each other investigator only earns experience equal to the combined Victory X value of each card in the victory display. Daisy Walker must either upgrade The Necronomicon (John Dee Translation) to its advanced version, or downgrade the advanced version of Daisy's Tote Bag to its original version."
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

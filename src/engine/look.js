@@ -26,10 +26,10 @@
 
 export const LOOK_ZONES = Object.freeze(['deck', 'discard', 'encounterDeck', 'explorationDeck', 'investigatorDeck'])
 
-export const RETURN_STRATEGIES = Object.freeze(['shuffle', 'top', 'bottom', 'discard', 'keep'])
+export const RETURN_STRATEGIES = Object.freeze(['shuffle', 'top', 'bottom', 'topAndBottom', 'discard', 'keep'])
 
 const LOOK_KEYS = new Set(['zone', 'count', 'arrange', 'returnStrategy', 'choose', 'filter', 'prompt',
-  'shuffleAfter', 'source', 'targetSeat', 'label', 'optional', 'commitToTest'])
+  'shuffleAfter', 'source', 'targetSeat', 'label', 'optional', 'commitToTest', 'discardOne'])
 
 const SEARCH_KEYS = new Set(['trait', 'traitsAny', 'factionsAny', 'subtype', 'type', 'usesType', 'count', 'choose', 'shuffle', 'prompt', 'source',
   'targetSeat', 'label', 'optional', 'unlimited'])
@@ -57,6 +57,15 @@ export function normalizeLookOptions(raw = {}, origin = 'lookAt') {
   if (raw.filter != null && (typeof raw.filter !== 'object' || Array.isArray(raw.filter))) {
     throw new Error(`${origin}: filter 必须是对象`)
   }
+  // 批次 3（60279）：看 N 张后弃掉其中若干张（filter 支持 predicate 函数，仅活在调用栈里）。
+  if (raw.discardOne != null) {
+    const spec = raw.discardOne
+    if (!spec || typeof spec !== 'object' || Array.isArray(spec)) throw new Error(`${origin}: discardOne 必须是对象`)
+    if (!Number.isInteger(spec.count) || spec.count < 1) throw new Error(`${origin}: discardOne.count 必须是正整数`)
+    if (spec.filter != null && (typeof spec.filter !== 'object' || Array.isArray(spec.filter))) {
+      throw new Error(`${origin}: discardOne.filter 必须是对象`)
+    }
+  }
   return Object.freeze({
     zone,
     count,
@@ -66,6 +75,7 @@ export function normalizeLookOptions(raw = {}, origin = 'lookAt') {
     ...(raw.optional ? { optional: true } : {}),
     ...(raw.commitToTest ? { commitToTest: { ...raw.commitToTest } } : {}),
     filter: raw.filter ? Object.freeze({ ...raw.filter }) : null,
+    ...(raw.discardOne ? { discardOne: Object.freeze({ count: raw.discardOne.count, filter: raw.discardOne.filter || null }) } : {}),
     prompt: raw.prompt ? String(raw.prompt) : null,
     source: raw.source || null,
     targetSeat: Number.isInteger(raw.targetSeat) ? raw.targetSeat : null,

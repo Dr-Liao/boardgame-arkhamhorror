@@ -5,6 +5,7 @@
 // 最终仍由 hubSetDeck → buildDeckFromList 在服务端完整校验。
 
 import { ALL_CARDS } from '../cards/cards-data.js'
+import { alternateBuildFor } from '../deck/alternate-investigator-build.js'
 
 const ORIGIN = 'https://arkhamdb.com'
 const KINDS = Object.freeze(['decklist', 'deck'])
@@ -76,11 +77,17 @@ export function describeArkhamDbDeck(raw, source = {}) {
   const investigator = cardInfo(investigatorCode)
   const id = raw.id != null && ID.test(String(raw.id)) ? String(raw.id) : source.id || null
   const kind = source.kind || null
+  let build = null
+  if (raw.investigatorBuild != null) {
+    try { build = alternateBuildFor(investigatorCode, raw.investigatorBuild) }
+    catch (error) { throw new RangeError(error.message) }
+  }
   return {
     id, kind,
     url: id && kind ? `${ORIGIN}/${kind}/view/${id}` : null,
     name: String(raw.name ?? '').slice(0, 120) || '未命名牌组',
     investigatorCode, originalInvestigatorCode: originalInvestigator,
+    ...(build ? { investigatorBuild: build } : {}),
     investigatorName: investigator.known ? investigator.name : String(raw.investigator_name ?? investigatorCode).slice(0, 60),
     investigatorKnown: investigator.known && investigator.type === 'investigator',
     xp: Number.isSafeInteger(Number(raw.xp)) ? Number(raw.xp) : 0,
@@ -176,6 +183,11 @@ export function resolveArkhamDbDeck(searchParams) {
     taboo_id: single('taboo') || null,
   }
   const id = single('id')
+  const build = single('investigatorBuild')
+  if (build) {
+    try { raw.investigatorBuild = JSON.parse(build) }
+    catch { throw new RangeError('调查员构筑配置无效') }
+  }
   return { body: { deck: describeArkhamDbDeck(raw, ID.test(id) ? { id } : {}) } }
 }
 

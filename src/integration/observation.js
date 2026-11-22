@@ -83,7 +83,7 @@ const PUBLIC_INVESTIGATOR_FIELDS = [
   'location', 'engaged', 'defeated', 'resigned', 'defeatCause', 'testBonus',
   'handSlotsPenalty', 'handPenaltyActive',
   'phaseStatBonus', 'onTheLam', 'fearExtraPaid', 'usedReactions', 'autoBuilt', 'deckName',
-  'campaignId', 'tomeActionUsed',
+  'campaignId', 'tomeActionUsed', 'investigatorBuild',
   'role', 'lolaDiscount',
 ]
 

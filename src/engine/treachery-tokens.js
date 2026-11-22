@@ -150,7 +150,7 @@ export function createTreacheryTokens(deps) {
         if (r.success) {
           info(state, events, `✔️ ${inv.name} 通过「${t.name}」检定（${SKILL_NAMES[t.test.skill]} ${r.value} vs ${t.test.difficulty}）。`)
         } else {
-          const failedBy = Math.max(0, t.test.difficulty - r.value)
+          const failedBy = r.failedBy ?? Math.max(0, t.test.difficulty - r.value)
           info(state, events, `❌ ${inv.name} 未通过「${t.name}」检定（${SKILL_NAMES[t.test.skill]} ${r.value} vs ${t.test.difficulty}，低于 ${failedBy}）。`)
           const alias = registeredEntry(t.code)?.penaltyKind
           applyPenalty(state, inv, alias ? { ...t.fail, kind: alias } : t.fail, failedBy, events)
@@ -291,7 +291,7 @@ export function createTreacheryTokens(deps) {
     return TOKEN_LABEL[token] || token
   }
 
-  function applyFreeTriggers(state, inv, skill, events) {
+  function applyFreeTriggers(state, inv, skill, events, modifierSkills = []) {
     if (cannotTriggerFreeAbility(state, inv)) return 0
     let bonus = 0
     const spent = []
@@ -301,7 +301,7 @@ export function createTreacheryTokens(deps) {
       if (!lolaCanUseCard(inv, a.code)) continue
       if (eff.minimumHandForBoost && inv.hand.length < eff.minimumHandForBoost) continue
       for (const ft of eff.freeTriggers) {
-        if (ft.skill !== skill && ft.skill !== 'any') continue
+        if (ft.skill !== skill && ft.skill !== 'any' && !modifierSkills.includes(ft.skill)) continue
         if (ft.requireTestTrait && !(cardDef(state.skillTest.source?.code)?.traits || [])
           .some(trait => String(trait).toLowerCase() === String(ft.requireTestTrait).toLowerCase())) continue
         const resourceCost = (ft.cost && ft.cost.resources) || 0

@@ -304,7 +304,7 @@
     "allCards": {
       "pass": true,
       "path": "audit/fhv-all-card-acceptance.json",
-      "sha256": "f521960396360d4e3939ecc4db8c4f99696a4bcedc7d906be00ed442c554dcc4",
+      "sha256": "2b1ec70aff6046c4f8b537829bbabca9d833a38217697fc58fd4a70fa3dfd79e",
       "status": "verified",
       "summary": {
         "total": 441,
@@ -319,7 +319,7 @@
         "investigatorVerified": 20,
         "player": 120,
         "playerVerified": 120,
-        "playerSimplified": 54,
+        "playerSimplified": 53,
         "missing": [],
         "blocked": [],
         "gateComplete": true,
@@ -364,7 +364,7 @@
     "releaseBrowser": {
       "pass": true,
       "path": "audit/fhv-release-browser.json",
-      "sha256": "e27194277aeb90416d9684849ad5fd013d70674ddcb2048f7eb88019d03aba10",
+      "sha256": "602551da18fb961086245ebf7f1133fa7916668c825fd8191af31cc95dc2c0c1",
       "status": "passed",
       "complete": true,
       "sourceStable": true,
@@ -456,38 +456,38 @@
           "pass": true,
           "command": "node tools/build-card-index.mjs --check",
           "exitCode": 0,
-          "tail": "✔ entries/index.js 与目录一致（1315 张卡）\n"
+          "tail": "✔ entries/index.js 与目录一致（1723 张卡）\n"
         },
         "encounterIndex": {
           "pass": true,
           "command": "node tools/build-encounter-index.mjs --check",
           "exitCode": 0,
-          "tail": "✔ encounter-entries/index.js 与目录一致（2451 个条目）\n"
+          "tail": "✔ encounter-entries/index.js 与目录一致（2623 个条目）\n"
         },
         "compliance": {
           "pass": true,
           "command": "node tools/audit-card-entry-compliance.mjs --check",
           "exitCode": 0,
-          "tail": "卡条目合规审计通过（无基线外新增违规）\n{\n \"directStateWrite\": 112,\n \"singleCardField\": 21,\n \"reprintDuplicate\": 0,\n \"playConditionGap\": 0,\n \"testWrapper\": 25,\n \"revelationTestCards\": 123,\n \"selfCodeInstanceLookup\": 22\n}\n"
+          "tail": "卡条目合规审计通过（无基线外新增违规）\n{\n \"directStateWrite\": 112,\n \"singleCardField\": 21,\n \"reprintDuplicate\": 0,\n \"playConditionGap\": 0,\n \"testWrapper\": 25,\n \"revelationTestCards\": 136,\n \"selfCodeInstanceLookup\": 22\n}\n"
         },
         "presentation": {
           "pass": true,
           "command": "node tools/build-presentation.mjs --check",
           "exitCode": 0,
-          "tail": " \"resolvedDescriptors\": 5930,\n \"unresolved\": 0,\n \"localizedFrontCandidates\": 5211,\n \"cardsWithBackArt\": 2592,\n \"genericBacks\": {\n  \"encounter\": 1635,\n  \"player\": 1703\n },\n \"localizedArtEntries\": 6493,\n \"localImagesCopied\": 0,\n \"remoteManifestEntries\": 30895,\n \"referenceLocalMediaFiles\": 230,\n \"presentationVersion\": \"1fb167e0e7d9783dea135762b49f8815e82d1b73eedf88254742a75b319a546c\",\n \"drift\": []\n}\n"
+          "tail": " \"resolvedDescriptors\": 5930,\n \"unresolved\": 0,\n \"localizedFrontCandidates\": 5211,\n \"cardsWithBackArt\": 2592,\n \"genericBacks\": {\n  \"encounter\": 1635,\n  \"player\": 1703\n },\n \"localizedArtEntries\": 6493,\n \"localImagesCopied\": 0,\n \"remoteManifestEntries\": 30895,\n \"referenceLocalMediaFiles\": 230,\n \"presentationVersion\": \"fe0023c478d66c9aa59d48f7a99533e577d607cd0dbdb264dab9c6d97bf6d61c\",\n \"drift\": []\n}\n"
         },
         "docs": {
           "pass": true,
           "command": "node tools/check-doc-links.mjs",
           "exitCode": 0,
-          "tail": "文档链接体检：82 个文件、429 条本地链接全部可解析\n"
+          "tail": "文档链接体检：85 个文件、483 条本地链接全部可解析\n"
         }
       }
     },
     "assets": {
       "pass": true,
       "path": "audit/fhv-assets.json",
-      "sha256": "8fe11471754736d63bbadbfc4a31aa1b2c92cb1b4c93e15c1ae745426da7a95c",
+      "sha256": "94d65f5923686880de2bad414b033389d18327b25911451495a350a57f3cc9fe",
       "status": "verified",
       "images": {
         "total": 441,
@@ -1220,7 +1220,7 @@
   "evidence": {
     "node": {
       "path": "audit/fhv-node-acceptance.json",
-      "sha256": "5ba46baea25335004f44e104714a1f7278ea70a17aa3bcfd09769148d77ebcbe",
+      "sha256": "68dba64784b7c012f486b1434c34f14b85b9e9d55a61082edfa85e23e7aedfd7",
       "pass": true,
       "command": "node tools/verify-fhv.mjs --node --check",
       "exitCode": 0,
@@ -1240,7 +1240,7 @@
     },
     "rules": {
       "path": "audit/fhv-rules.json",
-      "sha256": "514ed12acbb86c0298e226457f89d1b1f3ba9d334a8227cadac7e295948b4bcc",
+      "sha256": "872be21961cba6d65c3334b25e1406846c123b9a4d4a00674c8e96f9fa1b218d",
       "pass": true,
       "command": "node tools/audit-fhv-rules.mjs --check",
       "exitCode": 0,
@@ -1263,7 +1263,7 @@
     },
     "interactions": {
       "path": "audit/fhv-interactions.json",
-      "sha256": "c28d7ea4c4eb41bae006f3d1faa60476c8db427691f512c04dbb11177f609810",
+      "sha256": "aaed73a5d4446e5fa2f71a4d130eaf824f4ceff690743f16a5c57ef4d1b92414",
       "pass": true,
       "command": "node tools/audit-fhv-interactions.mjs --check",
       "exitCode": 0,
@@ -1282,7 +1282,7 @@
     },
     "investigators": {
       "path": "audit/fhv-investigators.json",
-      "sha256": "869f75d82e8885507b7f407cd27314276cc95a773bac81762bd39c74496d68dc",
+      "sha256": "abac72b04e8636e7f26a17250c2741a514e09c01d10e9628cb54fad14d78c0c3",
       "pass": true,
       "command": "node tools/audit-fhv-investigators.mjs --check",
       "exitCode": 0,
@@ -1301,7 +1301,7 @@
     },
     "player": {
       "path": "audit/fhv-player-acceptance.json",
-      "sha256": "64a004506b6769b3ed11340cecbfa804aec9c9e6e453c146144accf518aee10e",
+      "sha256": "123e91d945ee2bb3a4cdb2bb46e0b05e9fc14aba7b7086d5cf7c20aa88d76c33",
       "pass": true,
       "command": "node tools/audit-fhv-player.mjs --check",
       "exitCode": 0,
@@ -1348,7 +1348,7 @@
     },
     "allCards": {
       "path": "audit/fhv-all-card-acceptance.json",
-      "sha256": "f521960396360d4e3939ecc4db8c4f99696a4bcedc7d906be00ed442c554dcc4",
+      "sha256": "2b1ec70aff6046c4f8b537829bbabca9d833a38217697fc58fd4a70fa3dfd79e",
       "summary": {
         "total": 441,
         "expectedTotal": 441,
@@ -1362,7 +1362,7 @@
         "investigatorVerified": 20,
         "player": 120,
         "playerVerified": 120,
-        "playerSimplified": 54,
+        "playerSimplified": 53,
         "missing": [],
         "blocked": [],
         "gateComplete": true,
@@ -1399,7 +1399,7 @@
     },
     "releaseBrowser": {
       "path": "audit/fhv-release-browser.json",
-      "sha256": "e27194277aeb90416d9684849ad5fd013d70674ddcb2048f7eb88019d03aba10",
+      "sha256": "602551da18fb961086245ebf7f1133fa7916668c825fd8191af31cc95dc2c0c1",
       "checks": {
         "release": {
           "desktop": true,
@@ -1474,31 +1474,31 @@
           "pass": true,
           "command": "node tools/build-card-index.mjs --check",
           "exitCode": 0,
-          "tail": "✔ entries/index.js 与目录一致（1315 张卡）\n"
+          "tail": "✔ entries/index.js 与目录一致（1723 张卡）\n"
         },
         "encounterIndex": {
           "pass": true,
           "command": "node tools/build-encounter-index.mjs --check",
           "exitCode": 0,
-          "tail": "✔ encounter-entries/index.js 与目录一致（2451 个条目）\n"
+          "tail": "✔ encounter-entries/index.js 与目录一致（2623 个条目）\n"
         },
         "compliance": {
           "pass": true,
           "command": "node tools/audit-card-entry-compliance.mjs --check",
           "exitCode": 0,
-          "tail": "卡条目合规审计通过（无基线外新增违规）\n{\n \"directStateWrite\": 112,\n \"singleCardField\": 21,\n \"reprintDuplicate\": 0,\n \"playConditionGap\": 0,\n \"testWrapper\": 25,\n \"revelationTestCards\": 123,\n \"selfCodeInstanceLookup\": 22\n}\n"
+          "tail": "卡条目合规审计通过（无基线外新增违规）\n{\n \"directStateWrite\": 112,\n \"singleCardField\": 21,\n \"reprintDuplicate\": 0,\n \"playConditionGap\": 0,\n \"testWrapper\": 25,\n \"revelationTestCards\": 136,\n \"selfCodeInstanceLookup\": 22\n}\n"
         },
         "presentation": {
           "pass": true,
           "command": "node tools/build-presentation.mjs --check",
           "exitCode": 0,
-          "tail": " \"resolvedDescriptors\": 5930,\n \"unresolved\": 0,\n \"localizedFrontCandidates\": 5211,\n \"cardsWithBackArt\": 2592,\n \"genericBacks\": {\n  \"encounter\": 1635,\n  \"player\": 1703\n },\n \"localizedArtEntries\": 6493,\n \"localImagesCopied\": 0,\n \"remoteManifestEntries\": 30895,\n \"referenceLocalMediaFiles\": 230,\n \"presentationVersion\": \"1fb167e0e7d9783dea135762b49f8815e82d1b73eedf88254742a75b319a546c\",\n \"drift\": []\n}\n"
+          "tail": " \"resolvedDescriptors\": 5930,\n \"unresolved\": 0,\n \"localizedFrontCandidates\": 5211,\n \"cardsWithBackArt\": 2592,\n \"genericBacks\": {\n  \"encounter\": 1635,\n  \"player\": 1703\n },\n \"localizedArtEntries\": 6493,\n \"localImagesCopied\": 0,\n \"remoteManifestEntries\": 30895,\n \"referenceLocalMediaFiles\": 230,\n \"presentationVersion\": \"fe0023c478d66c9aa59d48f7a99533e577d607cd0dbdb264dab9c6d97bf6d61c\",\n \"drift\": []\n}\n"
         },
         "docs": {
           "pass": true,
           "command": "node tools/check-doc-links.mjs",
           "exitCode": 0,
-          "tail": "文档链接体检：82 个文件、429 条本地链接全部可解析\n"
+          "tail": "文档链接体检：85 个文件、483 条本地链接全部可解析\n"
         }
       }
     }
@@ -1522,11 +1522,11 @@
     },
     {
       "path": "audit/fhv-primitive-catalog.json",
-      "sha256": "9fdd2cfb809162c432833c72730b110fa21dae7b49033ec764b7c0272eae39fe"
+      "sha256": "f0fc55a6693ca5a74b48bfd5016c98c39d614be69cb6d5ba4ec8b85ba17cdf3e"
     },
     {
       "path": "audit/fhv-rules.json",
-      "sha256": "514ed12acbb86c0298e226457f89d1b1f3ba9d334a8227cadac7e295948b4bcc"
+      "sha256": "872be21961cba6d65c3334b25e1406846c123b9a4d4a00674c8e96f9fa1b218d"
     },
     {
       "path": "audit/fhv-rules-browser.json",
@@ -1534,7 +1534,7 @@
     },
     {
       "path": "audit/fhv-interactions.json",
-      "sha256": "c28d7ea4c4eb41bae006f3d1faa60476c8db427691f512c04dbb11177f609810"
+      "sha256": "aaed73a5d4446e5fa2f71a4d130eaf824f4ceff690743f16a5c57ef4d1b92414"
     },
     {
       "path": "audit/fhv-interactions-browser.json",
@@ -1542,7 +1542,7 @@
     },
     {
       "path": "audit/fhv-investigators.json",
-      "sha256": "869f75d82e8885507b7f407cd27314276cc95a773bac81762bd39c74496d68dc"
+      "sha256": "abac72b04e8636e7f26a17250c2741a514e09c01d10e9628cb54fad14d78c0c3"
     },
     {
       "path": "audit/fhv-investigators-browser.json",
@@ -1550,7 +1550,7 @@
     },
     {
       "path": "audit/fhv-player-acceptance.json",
-      "sha256": "64a004506b6769b3ed11340cecbfa804aec9c9e6e453c146144accf518aee10e"
+      "sha256": "123e91d945ee2bb3a4cdb2bb46e0b05e9fc14aba7b7086d5cf7c20aa88d76c33"
     },
     {
       "path": "audit/fhv-player-browser.json",
@@ -1574,7 +1574,7 @@
     },
     {
       "path": "audit/fhv-node-acceptance.json",
-      "sha256": "5ba46baea25335004f44e104714a1f7278ea70a17aa3bcfd09769148d77ebcbe"
+      "sha256": "68dba64784b7c012f486b1434c34f14b85b9e9d55a61082edfa85e23e7aedfd7"
     },
     {
       "path": "audit/fhv-regression.json",
@@ -1582,15 +1582,15 @@
     },
     {
       "path": "audit/fhv-all-card-acceptance.json",
-      "sha256": "f521960396360d4e3939ecc4db8c4f99696a4bcedc7d906be00ed442c554dcc4"
+      "sha256": "2b1ec70aff6046c4f8b537829bbabca9d833a38217697fc58fd4a70fa3dfd79e"
     },
     {
       "path": "audit/fhv-release-browser.json",
-      "sha256": "e27194277aeb90416d9684849ad5fd013d70674ddcb2048f7eb88019d03aba10"
+      "sha256": "602551da18fb961086245ebf7f1133fa7916668c825fd8191af31cc95dc2c0c1"
     },
     {
       "path": "audit/fhv-assets.json",
-      "sha256": "8fe11471754736d63bbadbfc4a31aa1b2c92cb1b4c93e15c1ae745426da7a95c"
+      "sha256": "94d65f5923686880de2bad414b033389d18327b25911451495a350a57f3cc9fe"
     },
     {
       "path": "tests/fixtures/replay/golden-replays.json",
@@ -1614,14 +1614,14 @@
     },
     {
       "path": "content/registered.js",
-      "sha256": "8c9204dc062e13af8bf40327a4bb4ebdfda18f2cacef9a01f5936338d0cb8e5d"
+      "sha256": "95de3eb916f9ba0fdc1726da395182143e0fb7786e3ed2169be3a399fc1362d6"
     }
   ],
   "remaining": [
     {
       "kind": "disclosed-approximation",
-      "count": 108,
-      "playerSimplified": 54,
+      "count": 107,
+      "playerSimplified": 53,
       "campaignSimplified": 54,
       "note": "近似披露的行为卡（player 54 + campaign 54，逐条 note/章节 approximations 登记；只披露，不改写为 verified）；发布验收完成（M5/P8，14 项门禁全真）"
     },

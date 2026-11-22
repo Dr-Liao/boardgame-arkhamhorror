@@ -13,6 +13,7 @@ import { prepareSurvey } from './survey-preparation.js'
 import { changeChaosBag } from './chaos-bag.js'
 import { selectMechanic } from './mechanic-choices.js'
 import { investigatorRule } from '../cards/card-rules.js'
+import { hiddenScenarioExperience } from './hidden-rules.js'
 
 export function createCampaignFlow(deps) {
   const { scenarioRuntime } = deps
@@ -262,7 +263,12 @@ function finishScenario(state, resolutionKey, events) {
     delete state.scenarioFlags.yithianBody
     delete state.scenarioFlags.yithianBodyOriginals
   }
-  const visitId = `${campaign.flow?.nodeId || sc.id}:${campaign.flow?.visits?.[campaign.flow.nodeId] || 1}`
+  // 批次 2 支线插入：独立关卡不在主战役流程里，visitId 以支线关卡自身标识，避免与
+  // 关间节点上的多次支线插入冲突。
+  const sideStoryVisit = campaign.sideStoryReturn?.scenarioId === sc.id
+  const visitId = sideStoryVisit
+    ? `${campaign.flow?.nodeId || 'side'}:sideStory:${sc.id}`
+    : `${campaign.flow?.nodeId || sc.id}:${campaign.flow?.visits?.[campaign.flow.nodeId] || 1}`
   if (campaign.scenarioResults.some(result => result.visitId === visitId)) throw new Error('本关已经结算')
   const before = structuredClone(campaign.investigators)
   const recordsBefore = structuredClone(campaign.records)
@@ -324,7 +330,14 @@ function finishScenario(state, resolutionKey, events) {
       addTrauma(state, inv.seat, 'mental', 1, events)
     }
     for (const threat of inv.threat) {
-      const threshold = registeredEntry(threat.code)?.physicalTraumaIfUsesBelow
+      const entry = registeredEntry(threat.code)
+      // 批次 3（12003）：游戏结束时无条件承受 1 点肉体创伤（每张卡只结算一次）。
+      if (entry?.physicalTraumaAtGameEnd === true && !threat.physicalTraumaApplied) {
+        threat.physicalTraumaApplied = true
+        addTrauma(state, inv.seat, 'physical', 1, events)
+        continue
+      }
+      const threshold = entry?.physicalTraumaIfUsesBelow
       if (threshold == null || (threat.uses || 0) >= threshold || threat.traumaApplied) continue
       threat.traumaApplied = true
       addTrauma(state, inv.seat, 'physical', 1, events)
@@ -390,7 +403,14 @@ function finishScenario(state, resolutionKey, events) {
   const current = graph.nodes[campaign.flow?.nodeId]
   const node = current?.type === 'scenario' && current.scenarioId === sc.id ? current
     : Object.values(graph.nodes).find(item => item.type === 'scenario' && item.scenarioId === sc.id)
-  campaign.pendingNode = node?.next
+  // 批次 2 支线插入：独立关卡结算后不回主战役 flow，而是回到插入前的关间节点，
+  // 由 hubContinue 重新打开关间窗口，再由席位确认推进到原定下一章。
+  if (campaign.sideStoryReturn?.scenarioId === sc.id) {
+    campaign.pendingNode = campaign.sideStoryReturn.nodeId
+    delete campaign.sideStoryReturn
+  } else {
+    campaign.pendingNode = node?.next
+  }
   const next = graph.nodes[campaign.pendingNode]
   const campaignEnds = campaign.failed || !next || next.type === 'end'
   // 规则（P1）：本关全灭/全员撤退只结束本关，队伍带着创伤进入下一关；
@@ -458,10 +478,11 @@ function applyResolutionEffects(state, resolutionKey, events) {
       info(state, events, `${inv.name} 因「卡戎的银币」额外获得 2 XP。`)
     }
     const debt = inv.threat.find(item => getThreatEffect(item)?.debt)
-    if (debt && (debt.resources || 0) < 6) {
-      const penalty = getThreatEffect(debt)?.xpPenalty || 2
+    const debtTerms = debt && getThreatEffect(debt)
+    if (debtTerms && (debt.resources || 0) < (debtTerms.debtTarget ?? 6)) {
+      const penalty = debtTerms.xpPenalty || 2
       amount = Math.max(0, amount - penalty)
-      info(state, events, `${inv.name} 的医院债务少于 6 资源，本场冒险少获得 ${penalty} XP。`)
+      info(state, events, `${inv.name} 的医院债务少于 ${debtTerms.debtTarget ?? 6} 资源，本场冒险少获得 ${penalty} XP。`)
     }
     // 2026-10-25 本循环修复 05010：通用「本场冒险少取得 N 点经验」的威胁条目字段（scenarioXpModifier）。
     // 威胁区里每张声明该字段的卡都参与 XP 结算（如悬案在「改为加入威胁区域」后生效）。
@@ -471,6 +492,19 @@ function applyResolutionEffects(state, resolutionKey, events) {
       amount = Math.max(0, amount + modifier)
       const label = ALL_CARDS[threat.code]?.nameZh || ALL_CARDS[threat.code]?.name || threat.code
       info(state, events, `「${label}」：${inv.name} 本场冒险少取得 ${Math.abs(modifier)} 点经验值。`)
+    }
+    // 批次 3（12006）：游戏结束时仍在手牌中的卡可带 XP 惩罚。
+    for (const code of inv.hand || []) {
+      const penalty = Number(registeredEntry(code)?.xpPenaltyInHand || 0)
+      if (!penalty) continue
+      amount = Math.max(0, amount - penalty)
+      const label = ALL_CARDS[code]?.nameZh || ALL_CARDS[code]?.name || code
+      info(state, events, `「${label}」：${inv.name} 本场冒险少取得 ${penalty} 点经验值。`)
+    }
+    const hiddenExperience = hiddenScenarioExperience(inv)
+    if (hiddenExperience) {
+      amount = Math.max(0, amount + hiddenExperience)
+      info(state, events, `${inv.name} 因隐私弱点少获得 ${Math.abs(hiddenExperience)} XP。`)
     }
     amount = awardExperience(campaign, inv.seat, amount) ?? amount
     info(state, events, `${inv.name} 获得 ${amount} XP，未花费 ${campaign.investigators[inv.seat].xp} XP。`)

@@ -6,6 +6,7 @@ import { normalizeScenarioSpectralLocations } from '../src/engine/locations.js'
 import { normalizeStoryInvestigatorConfig } from '../src/engine/story-investigators.js'
 import { missingMechanics } from './mechanics.js'
 import { normalizeScenarioMechanics } from '../src/engine/mechanic-state.js'
+import { canSelectInvestigator } from '../src/deck/availability.js'
 
 // 发布展示元数据不进入权威战役清单，避免改变旧对局的重放指纹。
 // 状态与 audit/<cycle>-migration.json 的 earlyAccess 保持一致。
@@ -26,7 +27,12 @@ export function createContentRegistry({ packs, campaigns, scenarios }, rulesVers
   })
   const manifests = { packs, campaigns, scenarios: entries.map(entry => entry.manifest) }
   const checked = assertContentBundle(manifests, rulesVersion)
-  for (const campaign of campaigns) validateCampaignGraph(campaign)
+  for (const campaign of campaigns) {
+    validateCampaignGraph(campaign)
+    for (const code of campaign.opening?.investigators || []) {
+      if (!canSelectInvestigator(code)) throw new TypeError(`战役 ${campaign.id} 的调查员未开放：${code}`)
+    }
+  }
   for (const entry of entries) {
     const declaredPacks = new Set([
       ...checked.campaigns.get(entry.manifest.campaignId).requiredPackIds,

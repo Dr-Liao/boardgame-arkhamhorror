@@ -26,7 +26,11 @@ import { ENTRY_SCOPES, loadPlacementIndex, resolvePlacements } from '../tools/en
 const ROOT = fileURLToPath(new URL('..', import.meta.url))
 const ENTRY_DIR = path.join(ROOT, 'src/cards/encounter-entries')
 const SHARED_MODULES = new Set(['_shared.js', '_lookup.js'])
-const TOP_LEVEL = new Set(['shared', 'nightOfTheZealot', 'theDunwichLegacy', 'thePathToCarcosa', 'theForgottenAge', 'theCircleUndone', 'theDreamEaters', 'theInnsmouthConspiracy', 'edgeOfTheEarth', 'theScarletKeys', 'theFeastOfHemlockVale', 'theDrownedCity'])
+const TOP_LEVEL = new Set(['shared', 'nightOfTheZealot', 'theDunwichLegacy', 'thePathToCarcosa', 'theForgottenAge', 'theCircleUndone', 'theDreamEaters', 'theInnsmouthConspiracy', 'edgeOfTheEarth', 'theScarletKeys', 'theFeastOfHemlockVale', 'theDrownedCity',
+  // 批次 2：重返战役 / 独立支线 / 调查员挑战
+  'returnToNightOfTheZealot', 'returnToTheDunwichLegacy', 'returnToThePathToCarcosa',
+  'curseOfTheRougarou', 'carnevaleOfHorrors', 'murderAtTheExcelsiorHotel',
+  'readOrDie', 'allOrNothing', 'badBlood', 'byTheBook'])
 const SCOPED_DIRECTORIES = new Set(['enemies', 'treacheries', 'locations', 'acts', 'agendas', 'storyAssets', 'threats', 'all'])
 
 const relativeOf = file => path.relative(ENTRY_DIR, file).split(path.sep).join('/')

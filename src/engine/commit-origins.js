@@ -53,27 +53,31 @@ export function takeBeneath(state, seat, host, code, destination = 'hand') {
   return true
 }
 // The caller supplies the existing commit API so eligibility, costs, icons and windows have one reader.
-export function commitFromOrigin(state, seat, { host = null, code, from = 'beneath', retain = false, ignoreAdditionalCosts = false }, commit) {
+export function commitFromOrigin(state, seat, { host = null, code, from = 'beneath', retain = false,
+  ignoreAdditionalCosts = false, ownerSeat = seat, returnToOwnerDeckBottom = false }, commit) {
   const inv = investigatorAt(state, seat)
-  const origin = from === 'beneath' ? storage(state, seat, host) : from === 'discard' ? inv.discard : null
+  const owner = investigatorAt(state, ownerSeat)
+  if (ownerSeat !== seat && (from !== 'discard' || !returnToOwnerDeckBottom)) throw new Error('借用弃牌堆卡牌必须指定归还去向')
+  const origin = from === 'beneath' ? storage(state, seat, host) : from === 'discard' ? owner.discard : null
   if (!origin) throw new TypeError('无效投入来源')
   const index = origin.indexOf(code)
   if (index < 0 || !state.skillTest) return false
   if (typeof commit !== 'function') throw new TypeError('需要权威投入入口')
   // Borrow to hand only inside the resolution transaction. Failure restores the exact source index.
-  const deferred = from === 'discard' ? inv.deferredEventReturns?.filter(item => item.index === index) : null
+  const deferred = from === 'discard' ? owner.deferredEventReturns?.filter(item => item.index === index) : null
   const restore = () => {
     if (from === 'discard') {
-      splicePlayerDiscard(inv, index, 0, code)
-      if (deferred?.length) (inv.deferredEventReturns ||= []).push(...deferred)
+      splicePlayerDiscard(owner, index, 0, code)
+      if (deferred?.length) (owner.deferredEventReturns ||= []).push(...deferred)
     } else origin.splice(index, 0, code)
   }
-  if (from === 'discard') splicePlayerDiscard(inv, index, 1)
+  if (from === 'discard') splicePlayerDiscard(owner, index, 1)
   else origin.splice(index, 1)
   const handIndex = inv.hand.length
   inv.hand.push(code)
   try {
-    const item = commit(seat, code, { ignoreAdditionalCosts, syntheticHand: true })
+    const item = commit(seat, code, { ignoreAdditionalCosts, syntheticHand: true,
+      ...(returnToOwnerDeckBottom ? { handIndex } : {}) })
     if (!item) {
       inv.hand.splice(handIndex, 1)
       restore()
@@ -81,6 +85,7 @@ export function commitFromOrigin(state, seat, { host = null, code, from = 'benea
     }
     if (retain && from === 'beneath') { item.destination = 'origin'; item.origin = { seat, host } }
     if (retain && from === 'discard') item.destination = 'hand'
+    if (returnToOwnerDeckBottom) item.returnToOwnerDeckBottom = ownerSeat
     return item
   } catch (error) {
     if (inv.hand[handIndex] === code) inv.hand.splice(handIndex, 1)
@@ -89,6 +94,10 @@ export function commitFromOrigin(state, seat, { host = null, code, from = 'benea
   }
 }
 export function returnCommitment(state, item) {
+  if (Number.isSafeInteger(item.returnToOwnerDeckBottom)) {
+    investigatorAt(state, item.returnToOwnerDeckBottom).deck.unshift(item.code)
+    return true
+  }
   if (item.destination !== 'origin' || !item.origin) return false
   storage(state, item.origin.seat, item.origin.host, true).push(item.code)
   return true
@@ -104,6 +113,7 @@ export function withdrawCommitment(state, seat, index) {
   item.withdrawn = true
   test.committed.splice(index, 1)
   test.value = (test.value || 0) - (item.icons || 0)
-  inv.hand.push(item.code)
+  if (Number.isSafeInteger(item.returnToOwnerDeckBottom)) (test.borrowedReturns ||= []).push(item)
+  else inv.hand.push(item.code)
   return true
 }

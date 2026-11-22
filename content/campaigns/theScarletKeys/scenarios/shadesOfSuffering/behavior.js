@@ -1173,6 +1173,7 @@ export function shiftShadeReaper(state, seat, api = null, { by = 'investigator' 
 // ---------------------------------------------------------------------------
 const REFERENCE_ACT_CODE = RAW_CODES.act1
 export const behavior = {
+  exposeConcealedByEffect: exposeAt,
   id: CHAPTER_ID,
   implementedEncounterCodes: Object.freeze([
     ...GEIST_ENEMY_CODES, ...TZU_FACE_CODES, RAW_CODES.excruciate, RAW_CODES.spiritHarvest,

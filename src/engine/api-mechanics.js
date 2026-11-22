@@ -214,7 +214,9 @@ export function createMechanicsApi(state, deps = {}) {
     },
     commitOrigins: {
       beneath: (seat, host) => origins.beneathCards(state, seat, host), store: (seat, host, code, options) => origins.storeBeneath(state, seat, host, code, options),
-      take: (seat, host, code, to) => origins.takeBeneath(state, seat, host, code, to), commit: (seat, spec) => origins.commitFromOrigin(state, seat, spec, deps.commit),
+      take: (seat, host, code, to) => origins.takeBeneath(state, seat, host, code, to),
+      commit: (seat, spec) => spec.from === 'discard' && deps.discardLocked?.(spec.ownerSeat ?? seat)
+        ? false : origins.commitFromOrigin(state, seat, spec, deps.commit),
       swap: (seat, host, beneath, hand) => origins.swapBeneathWithHand(state, seat, host, beneath, hand),
       withdraw: (seat, index) => origins.withdrawCommitment(state, seat, index),
     },

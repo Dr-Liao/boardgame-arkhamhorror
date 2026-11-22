@@ -40,6 +40,7 @@ export default {
   simplified: true,
   note: 'approximation: encounterDrawn 条件里的「隐藏值」用地点 shroud + shroudMod 计算；地点附属/章节钩子给的有效隐藏值需在条件阶段读 api.locationShroud（当前没有 helper），见 primitive-requests/10059.json。',
   researchRequirement: 'classifiedNewSpecies',
+  researchUpgradeFrom: '10044',
   uses: 0,
   usesType: GROWTH,
   abilities: [

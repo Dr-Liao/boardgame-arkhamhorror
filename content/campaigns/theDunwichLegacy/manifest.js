@@ -14,6 +14,12 @@ export const manifest = {
   schemaVersion: CONTENT_SCHEMA_VERSION, id: 'theDunwichLegacy',
   name: '敦威治遗产', nameEn: 'The Dunwich Legacy', contentVersion: '1.0.0',
   minRulesVersion: 'n4.2', status: 'playable', requiredPackIds: ['core', 'dunwichCampaign'],
+  // 批次 2：关间可插入的独立支线（每人支付 cost 经验；结算后回到原定下一章）。
+  sideStories: [
+    { campaignId: 'curseOfTheRougarou', cost: 1 },
+    { campaignId: 'carnevaleOfHorrors', cost: 3 },
+    { campaignId: 'murderAtTheExcelsiorHotel', cost: 3 },
+  ],
   scenarioIds: chapters.map(chapter => chapter.id),
   unlock: Object.fromEntries(chapters.map((chapter, i) => [chapter.id,
     i < 2 ? [] : i === 2 ? chapters.slice(0, 2).map(c => c.id) : [chapters[i - 1].id]])),

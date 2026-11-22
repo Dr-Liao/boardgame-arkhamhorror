@@ -453,11 +453,12 @@ const exposeMini = (state, api, id, seat = null) => (typeof api?.mechanics?.tsk?
  *  · 残骸之城 L/M/R：把对应阴影位置的地点放入场（未揭示面朝上，落在迷你卡原来的空位），
  *    结算「揭露此地点」的强制，移除该位置的迷你卡，然后从异界牌库顶补上同一位置并结算「隐匿 1」。
  */
-export function exposeMiniInShadows(state, inv, miniCardId, api) {
+export function exposeMiniInShadows(state, inv, miniCardId, api, targetLocation = null) {
   const card = concealedMiniCards(state).find(item => item.id === miniCardId)
   if (!card) return null
-  if (!canExpose(state, inv, card)) return null
-  const spot = miniSpotOf(state, card) || cellOf(state, inv.location)
+  const observer = targetLocation == null ? inv : { ...inv, location: targetLocation }
+  if (!canExpose(state, observer, card)) return null
+  const spot = miniSpotOf(state, card) || cellOf(state, observer.location)
   const result = exposeMini(state, api, miniCardId, inv?.seat ?? null)
   if (!result) return null
   const flags = flagsOf(state)
@@ -771,6 +772,8 @@ export const scenarioGaps = Object.freeze([
 export const implementedEncounterCodes = Object.freeze([...CHAPTER_ENTRY_CODES])
 
 export const behavior = {
+  concealedTargetsByEffect: (state, inv, location) => exposableMiniCards(state, { ...inv, location }),
+  exposeConcealedByEffect: exposeMiniInShadows,
   id: CHAPTER_ID,
   implementedEncounterCodes,
   scenarioApproximations,

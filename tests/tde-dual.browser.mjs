@@ -27,6 +27,7 @@
 // 并按本线 part 袋重建；本 spec 因此正常断言「begin 响应 ok:true、无错误 toast、本线牌桌可行动」。
 //
 // 证据命令：node ../../node_modules/@playwright/test/cli.js test --config tests/playwright/playwright.tde.config.mjs
+import { selectCampaign } from './playwright/campaign-picker.mjs'
 import { test, expect } from '@playwright/test'
 import { mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -41,7 +42,7 @@ async function openDualDemo(page, playerCount) {
   await page.goto('/index.html')
   await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
   const setup = page.getByRole('dialog', { name: '调查准备设置' })
-  await setup.getByRole('combobox', { name: '战役', exact: true }).selectOption(DEMO_CAMPAIGN)
+  await selectCampaign(page, setup, DEMO_CAMPAIGN)
   await setup.getByRole('combobox', { name: '席位数量' }).selectOption(String(playerCount))
   const started = page.waitForResponse('**/api/start')
   await setup.getByRole('button', { name: '开始新游戏' }).click()
