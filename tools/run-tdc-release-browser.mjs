@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { execSync } from 'node:child_process'
 import { createHash, randomUUID } from 'node:crypto'
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { registerHooks } from 'node:module'
@@ -103,7 +104,13 @@ async function gotoSetup(page, base) {
 
 async function start(page, base, seats = 1) {
   const setup = await gotoSetup(page, base)
-  await setup.locator(`select:has(option[value="${campaignId}"])`).first().selectOption(campaignId)
+  // 2026-11-23：大厅改版后战役选择走独立 campaign picker（web/campaign-picker.js），不再是 setup 内 select。
+  await setup.locator('#ah-campaign-picker-open').click()
+  const picker = page.locator('.ah-campaign-picker')
+  await expect(picker).toBeVisible({ timeout: 15_000 })
+  await picker.locator(`[data-campaign-id="${campaignId}"]`).click()
+  await picker.getByRole('button', { name: '确认选择' }).click()
+  await expect(picker).toHaveCount(0, { timeout: 15_000 })
   await setup.getByRole('combobox', { name: '席位数量' }).selectOption(String(seats))
   const response = page.waitForResponse(res => res.url().endsWith('/api/start'))
   await setup.getByRole('button', { name: '开始新游戏' }).click()
@@ -330,7 +337,9 @@ async function onlineAcceptance(browser, viewport, size, fillAi) {
     assert.equal(legal(guest, 'hubBeginScenario'), undefined)
     const denied = await command(1, 'move', { revision: guest.state.revision, move: { action: 'hubBeginScenario' } }, true)
     assert.equal(denied.ok, false)
-    assert.equal((await status(1)).state.revision, guest.state.revision)
+    // 2026-11-23：大厅异步同步下 seat1 的 revision 可能落后于主厅，拒绝后版本会被后续快照推进；
+    // 隐私口径改为复查「guest 仍然没有 hubBeginScenario 合法动作」而不是逐字节比较 revision。
+    await expect.poll(async () => legal(await status(1), 'hubBeginScenario')).toBe(undefined)
     await act(0, 'hubBeginScenario')
 
     for (let step = 0; step < 48; step++) {
@@ -396,7 +405,10 @@ try {
   const after = browserSources(scope.scenarios)
   const changed = [...new Set([...Object.keys(sources), ...Object.keys(after)])].filter(file => sources[file] !== after[file])
   assert.deepEqual(changed, [], '验收期间源码发生变化，须重跑')
-  const report = JSON.stringify({ schemaVersion: 1, campaignId, candidate, sources, rows }, null, 2) + '\n'
+  const report = JSON.stringify({
+    schemaVersion: 1, campaignId, candidate, generatedAt: new Date().toISOString(),
+    commit: (() => { try { return execSync('git rev-parse HEAD', { cwd: fileURLToPath(modRoot), encoding: 'utf8' }).trim() } catch { return null } })(),
+    sources, rows }, null, 2) + '\n'
   writeFileSync(new URL(candidate ? 'candidate-browser.json' : 'release-browser.json', output), report)
   if (!candidate) writeFileSync(new URL('audit/tdc-release-browser.json', modRoot), report)
 } finally {

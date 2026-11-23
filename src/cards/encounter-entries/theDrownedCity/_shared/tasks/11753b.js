@@ -27,7 +27,7 @@ export default {
   name: '没有比家更好的地方',
   scope: 'storyAsset',
   implemented: true,
-  flags: { permanent: true, traits: ['Task', 'Completed'], controlBonus: { extraAction: 'move' }, task: TASK },
+  flags: { permanent: true, traits: ['Task', 'Completed'], task: TASK },
   modifiers: [{ target: 'actions', amount: 1 }],
   abilities: [],
   note: '近似：额外一次「仅可用于移动」的行动用 modifiers 的 actions +1 承载（stats 的 actions 读点，'

@@ -9,7 +9,7 @@ export default {
   code: '11505b',
   scope: 'location',
   implemented: true,
-  flags: { act2Location: true, connectedTo: 'downtown', bossCode: '11511' },
+  flags: { bossCode: '11511' },
   note: '数据型条目：数值/连接取卡表与 definition；入场与生成由 behavior.actReveal 触发。',
   abilities: [],
 }

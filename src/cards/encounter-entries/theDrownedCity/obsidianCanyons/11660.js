@@ -6,7 +6,7 @@ export default {
   code: '11660',
   scope: 'location',
   implemented: true,
-  flags: { summit: true, fastMoveToSummit: true, obsidianClawAction: true },
+  flags: { summit: true },
   
   note: "空中瀑布。[[峰顶]]；[fast] 花 1 线索移动到任意已揭示[[峰顶]]地点（behavior.aerialWaterfallFast）；[action] 团队花 1[per_investigator] 线索，把放一边的黑曜石之爪以（速度）面朝上放进场（behavior.takeObsidianClaw）。",
 }

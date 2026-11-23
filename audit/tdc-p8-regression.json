@@ -1,5 +1,7 @@
 {
   "schemaVersion": 1,
+  "generatedAt": "2026-11-23T12:29:15.285Z",
+  "commit": "200fed73f8e1451427b2b8a8cf97c104cb91c27d",
   "status": "passed",
   "before": {
     "tests": 9617,
@@ -27,19 +29,19 @@
     "playerIndex": {
       "command": "node tools/build-card-index.mjs --check",
       "exitCode": 0,
-      "sha256": "f712d7148fe120a85904358ed7e16e64b69916801f992e1a0ab33b224b5eda1b",
+      "sha256": "8ef3951436d804bf964a54700aa6be36744f7f4454b379c8df737f5d939fe090",
       "report": "artifacts/migration/tdc/p8/regression-playerIndex.log"
     },
     "encounterIndex": {
       "command": "node tools/build-encounter-index.mjs --check",
       "exitCode": 0,
-      "sha256": "496cbeb6d5f70e941851ae6e01107b7949e3094804aeeb5f836951cdf5021de0",
+      "sha256": "602f5f93d3feaf9945299161b80dd7be10faf3b1feffd8de4a86e2d3ebe6b412",
       "report": "artifacts/migration/tdc/p8/regression-encounterIndex.log"
     },
     "compliance": {
       "command": "node tools/audit-card-entry-compliance.mjs --check",
       "exitCode": 0,
-      "sha256": "18070e55534341541518f28631ee8699ae17d75e4dc24e26b119e79a862742d0",
+      "sha256": "6cf0ce0243ca53dd478e19ccbc9dbd5a4b2cedb66b66999d47fb4a98f5c29d77",
       "report": "artifacts/migration/tdc/p8/regression-compliance.log"
     },
     "story": {
@@ -57,19 +59,19 @@
     "guideCoverage": {
       "command": "node tools/import-scenario-guides.mjs --check",
       "exitCode": 0,
-      "sha256": "c75ecef801bd8fb15f6795bb99e99f24376980a65109d4dce85af689f65a159c",
+      "sha256": "c8bed54da46590bdb2698f4e116569decd6487e1e30cf98acb271218ad8b642d",
       "report": "artifacts/migration/tdc/p8/regression-guideCoverage.log"
     },
     "presentation": {
       "command": "node tools/build-presentation.mjs --check",
       "exitCode": 0,
-      "sha256": "e9b8f2ceedfd844f87c1a082a5a04e4f36d2099e6d3be2aeb0ca4b98b54ce196",
+      "sha256": "d05988c37bae06dbbafc90c78a0dc1645255475183b8dc45e126d8499ecfab49",
       "report": "artifacts/migration/tdc/p8/regression-presentation.log"
     },
     "docs": {
       "command": "node tools/check-doc-links.mjs",
       "exitCode": 0,
-      "sha256": "9413b1a0a8cd036fdce3f2fb861cf1c77c1e70e9b6246bc73edab6f24b2f2ee9",
+      "sha256": "246678c4741cf7c728acf1a0cfcf59abb16fe10137275e665cc7f92c688ac758",
       "report": "artifacts/migration/tdc/p8/regression-docs.log"
     },
     "replay": {
@@ -81,18 +83,18 @@
     "campaign": {
       "command": "node --test tests/tdc-p8-campaign.test.mjs",
       "exitCode": 0,
-      "sha256": "dec9eb0c803f52023389a6fdcdfd93c8a0b95a4f2b1708777ed3055a2b96d8d7",
+      "sha256": "d0a07012c23856d1e21a850ddb5785b9e0c7e164704c2fbca00369f3ed0da829",
       "report": "artifacts/migration/tdc/p8/regression-campaign.log"
     },
     "full": {
       "command": "node tools/run-tests.mjs all --test-concurrency=12",
       "exitCode": 1,
-      "sha256": "216fc1e076ac5e674ac78aa1941e6303df2c049cc1b8c9372258695d5e26208c",
+      "sha256": "286718b4e5b9f64e300e27c829bb207534c5826779966e3778f09d5537f38aae",
       "report": "artifacts/migration/tdc/p8/regression-full.log",
       "counts": {
-        "tests": 9624,
-        "pass": 9611,
-        "fail": 10,
+        "tests": 9860,
+        "pass": 9849,
+        "fail": 8,
         "cancelled": 0,
         "skipped": 3,
         "failures": [
@@ -102,9 +104,7 @@
           "P8 TSK 发布账本：逐字节复算一致",
           "P8 TSK 逐卡账本",
           "只读导入校验与未知 CLI 参数具有可靠退出状态",
-          "四循环九章每关三首，跨循环复用与循环内重复均不超过 30%",
           "服务端拒绝目录中未开放调查员和伪造牌组",
-          "绯红密钥十关各三首，旧曲复用不超过 40%，循环内无重复录音",
           "近似披露完整：simplified 必有 disclosures，战役 verified 不得带近似前缀"
         ]
       }
@@ -118,9 +118,7 @@
     "P8 TSK 发布账本：逐字节复算一致",
     "P8 TSK 逐卡账本",
     "只读导入校验与未知 CLI 参数具有可靠退出状态",
-    "四循环九章每关三首，跨循环复用与循环内重复均不超过 30%",
     "服务端拒绝目录中未开放调查员和伪造牌组",
-    "绯红密钥十关各三首，旧曲复用不超过 40%，循环内无重复录音",
     "近似披露完整：simplified 必有 disclosures，战役 verified 不得带近似前缀"
   ]
 }

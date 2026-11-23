@@ -54,7 +54,6 @@ export default {
     traits: ['Scheme'],
     quantity: 3,
     test: { skill: 'agility', difficulty: BASE_DIFFICULTY, plusCopiesInVictory: 1 },
-    failedAgainst: ENEMY,
   },
   encounterResolve(state, inv, card, api) {
     const difficulty = BASE_DIFFICULTY + copiesInVictory(state)

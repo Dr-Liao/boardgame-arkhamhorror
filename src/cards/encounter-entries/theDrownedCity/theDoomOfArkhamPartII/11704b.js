@@ -5,7 +5,7 @@
 // 读点：behavior.setupCthulhuBoard / linkCthulhuParts（多部位原语 linkEnemyParts）；
 //       behavior.enemyStatModifier（战斗/躲避/生命 = 狂怒值；flags.cthulhuFacet）；
 //       behavior.returnCthulhuFacetsToBoard（胜利区回面板 / 翻至狂怒面）。
-// approximation：「不能受到伤害/被击败/横置」以 definition 补丁 cannotBeDefeated + 高生命近似；
+// 非狂怒面的「不能受到伤害/被击败/横置」由 11702/11703/11704 条目的 enemyRule.cannotBeDamaged/cannotBeExhausted 与 definition cannotBeDefeated 实现。
 //                翻面后的强制效果在 behavior.resolveCthulhuCard 与 flip 后处理中结算。
 export default {
   code: '11704b',

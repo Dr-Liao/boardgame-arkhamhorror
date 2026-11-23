@@ -9,7 +9,7 @@ export default {
   code: '11529',
   scope: 'location',
   implemented: true,
-  flags: { shroudIsLevel: true, drawFriezeAction: true, friezeCode: '11531' },
+  flags: { drawFriezeAction: true },
   note: '数据型条目：抽海底壁画的行动由 behavior 实现；「洗回」由 api.drawEncounter 的正常遭遇管线处理。',
   abilities: [],
 }

@@ -31,7 +31,6 @@ export default {
   flags: {
     traits: ['Hazard'],
     quantity: 2,
-    surgeWhenUnflooded: true,
     choices: [{ skill: 'agility', difficulty: DIFFICULTY }, { skill: 'combat', difficulty: DIFFICULTY }],
   },
   encounterResolve(state, inv, card, api) {

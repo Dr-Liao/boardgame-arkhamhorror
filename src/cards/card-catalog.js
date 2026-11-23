@@ -3,8 +3,13 @@ import { ALL_CARDS, CARDS_BY_TYPE, META } from './cards-data.js'
 import { implementationSummary } from './card-implementation.js'
 import { SCENARIO_CARD_IDENTITIES } from './scenarios-data.js'
 import { imageDescriptor, imageResolution, LOCALIZED_ART_SOURCE } from '../../presentation/images.js'
-import { getAvailability } from '../deck/availability.js'
-import { filterCards } from '../../web/card-filters.js'
+import { getAvailability, SELECTABLE_INVESTIGATOR_CODES } from '../deck/availability.js'
+import { filterCards, minorInvestigatorPackSet, OTHER_INVESTIGATOR_PACK } from '../../web/card-filters.js'
+
+// 「其他调查员」分类：只提供 ≤2 位可选调查员的产品（调查员起始包、单调查员剧本包……）。
+// 目录筛选把这类包折叠成一项，与大厅选人页同一口径；清单由可选调查员表推导，不写死产品名。
+const MINOR_INVESTIGATOR_PACKS = minorInvestigatorPackSet(
+  SELECTABLE_INVESTIGATOR_CODES.map(code => ALL_CARDS[code]?.pack || 'core'))
 
 const sourceFiles = Object.freeze({ en: 'en', 'zh-cn': 'zh-cn', zh: 'zh', legacy: 'legacy' })
 const cache = new Map()
@@ -68,8 +73,9 @@ function filteredCards({ type, pack, packCode = pack, faction, klass = faction, 
   const codeNeedle = normalize(code)
   const nameNeedle = normalize(name)
   const source = type ? Object.hasOwn(CARDS_BY_TYPE, type) ? CARDS_BY_TYPE[type] : {} : ALL_CARDS
-  const cards = filterCards(Object.values(source),{type,pack:packCode,klass,cost,xp,campaign,sort,search:needle}).filter(card =>
-    (!packCode || card.pack === packCode) &&
+  const cards = filterCards(Object.values(source),{type,pack:packCode,klass,cost,xp,campaign,sort,search:needle},
+    { minorPacks: MINOR_INVESTIGATOR_PACKS }).filter(card =>
+    (!packCode || (packCode === OTHER_INVESTIGATOR_PACK ? MINOR_INVESTIGATOR_PACKS.has(card.pack) : card.pack === packCode)) &&
     (!klass || [card.klass, card.faction2, card.faction3].includes(klass)) &&
     (!availability || getAvailability(card.code).availability === availability) &&
     (!effectStatus || card.effectStatus === effectStatus) &&
@@ -191,6 +197,9 @@ export function getCatalogMeta() {
     add(groups.effectStatuses, card.effectStatus)
     add(groups.availabilityStatuses, getAvailability(card.code).availability)
   }
-  return { total: META.total, images: { localizedLanguage: 'zh', source: { ...LOCALIZED_ART_SOURCE }, verifiedRemoteImages: 0 }, ...Object.fromEntries(Object.entries(groups).map(([key, group]) =>
+  return { total: META.total, images: { localizedLanguage: 'zh', source: { ...LOCALIZED_ART_SOURCE }, verifiedRemoteImages: 0 },
+    // 供浏览器把「其他调查员」合并口径画进战役/扩展包下拉（与选人页一致）。
+    minorInvestigatorPacks: [...MINOR_INVESTIGATOR_PACKS].sort(),
+    ...Object.fromEntries(Object.entries(groups).map(([key, group]) =>
     [key, [...group.values()].sort((a, b) => a.code < b.code ? -1 : a.code > b.code ? 1 : 0)])) }
 }

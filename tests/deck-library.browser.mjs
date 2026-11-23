@@ -94,7 +94,7 @@ test('独立卡组库：卡包筛选、详情管理、批量删除与直接应�
   await setup.getByRole('button', { name: '开始新游戏' }).click()
   const hub = page.locator('.ah-hub')
   await hub.getByRole('button', { name: '选择调查员', exact: true }).click()
-  await hub.getByRole('button', { name: /选择调查员：罗兰/ }).click()
+  await hub.getByRole('button', { name: /选择调查员：罗兰/ }).first().click()
   await hub.getByRole('button', { name: '卡组构筑', exact: true }).click()
   await hub.getByRole('button', { name: /手动构筑/ }).click()
   const builder = page.getByRole('dialog', { name: /卡组构筑/ })

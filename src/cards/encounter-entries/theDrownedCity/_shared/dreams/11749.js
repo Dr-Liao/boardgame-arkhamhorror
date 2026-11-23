@@ -20,8 +20,6 @@ export default {
     traits: ['Terror'],
     quantity: 3,
     test: { skill: 'willpower', difficulty: BASE_DIFFICULTY, handAtMostPlus: { handAtMost: 3, plus: 2 } },
-    failDirectHorror: 1,
-    failDiscardRandom: 1,
   },
   encounterResolve(state, inv, card, api) {
     const handSize = (inv.hand || []).length

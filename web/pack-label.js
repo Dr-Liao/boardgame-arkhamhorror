@@ -4,15 +4,19 @@
 // 所以新增循环（失落的时代、万象无终……）不必在两张表里各写一遍中文名。
 // 调查员包与战役包分开编号时（eoep/eoec、tskp/tskc……），卡牌数据里只有英文产品名；
 // 署名按系列显示（与其余循环的分组标题一致），中文界面不会出现英文扩展包名。
+// 只提供 1–2 位可选调查员的小包统一署名「其他调查员」，与选人页的分组合并口径一致。
 // 表里只存 key，调用期再 t()（模块顶层不调用 t()，否则导入时就把语言固化了）。
 import { t } from './i18n.js'
 import { cardSource } from './card-filters.js'
 
 const PACK_KEYS = { core: 'hub.pack.core' }
 
-export function packLabel(pack, englishName = '') {
+export function packLabel(pack, englishName = '', minorPacks = null) {
   if (!pack) return t('hub.investigator.fallbackName')
   if (PACK_KEYS[pack]) return t(PACK_KEYS[pack])
+  if (minorPacks && (minorPacks instanceof Set ? minorPacks.has(pack) : minorPacks.includes?.(pack))) {
+    return t('filter.series.other')
+  }
   const source = cardSource({ pack, packName: englishName })
   return source.name && source.name !== pack ? source.name : englishName || pack
 }

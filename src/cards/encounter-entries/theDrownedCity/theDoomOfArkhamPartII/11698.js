@@ -9,7 +9,7 @@ export default {
   scope: 'location',
   implemented: true,
   locationRule: { floodBounds: { max: 2 } },
-  flags: { ruined: true, swapsLocation: 'southside' },
+  flags: { ruined: true },
   note: '数据型条目：数值由 definition.location() 读卡表；废墟交换在 behavior.agendaReveal → swapToRuined。',
   abilities: [],
 }

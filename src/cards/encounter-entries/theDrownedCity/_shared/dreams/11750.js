@@ -30,7 +30,6 @@ export default {
     quantity: 3,
     limitPerInvestigator: 1,
     handSizeModifier: -3,
-    discardAtTurnEndWhenEmptyHand: true,
   },
   encounterResolve(state, inv, card, api) {
     if ((inv.threat || []).some(item => (item.originalCode || item.code) === CODE)) {

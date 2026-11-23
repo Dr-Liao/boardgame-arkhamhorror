@@ -23,7 +23,6 @@ export default {
     traits: ['Terror'],
     quantity: 2,
     test: { skill: 'intellect', difficultyFromPrintedShroud: true },
-    discardByFailedBy: { max: MAX_DISCARD },
   },
   encounterResolve(state, inv, card, api) {
     const location = state.locations?.find(item => item.id === inv.location)

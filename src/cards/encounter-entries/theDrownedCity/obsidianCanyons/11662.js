@@ -18,7 +18,7 @@ export default {
     entryToll: { unlessControls: ['11672a', '11672b'], cost: { clues: 1 },
       test: { skill: 'agility', difficulty: 2 }, cancelOnFail: true },
   },
-  flags: { summit: true, glyph: 'rune_d', glyphWord: 'Wave', canFlipToStory: true },
+  flags: { summit: true, glyph: 'rune_d', glyphWord: 'Wave' },
 
   note: "符文星盘仪[rune_d]。[[峰顶]]/[[符文]]，胜利 1；将离场时放一边（无线索则进胜利区；leavesPlayTo:'setAside' + behavior.removeLocationToSummitTop 分流）；入场费由 locationRule.entryToll 接线（movement.js#relocateInvestigator）；[action] 团队花 1[per_investigator] 线索翻面（behavior.glyphOrreryFlip → 引擎 api.flipLocation → behavior.locationStory 记录 rune_d「波浪」、翻回地点面且不能再次翻面）。",
 }

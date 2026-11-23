@@ -9,7 +9,7 @@ export default {
   code: '11526',
   scope: 'location',
   implemented: true,
-  flags: { treacherousPath: true, cannotEnterFromClues: true, shroudIsLevel: true, revealUnderseaVault: true },
+  flags: { treacherousPath: true, cannotEnterFromClues: true, revealUnderseaVault: true },
   note: '数据型条目：揭示时放置水下秘库由 behavior.locationRevealed 实现（上/下由玩家选择空行）。',
   abilities: [],
 }

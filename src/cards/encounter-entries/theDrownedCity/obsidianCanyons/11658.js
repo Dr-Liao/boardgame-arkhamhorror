@@ -6,7 +6,7 @@ export default {
   code: '11658',
   scope: 'location',
   implemented: true,
-  flags: { summit: true, skyRelicAction: true },
+  flags: { summit: true },
   
-  note: "古代峡谷。[[峰顶]]；揭示后[敏捷](1)，失败找[[怪物]]敌人生成并交战（近似：未接线）；[action] 把放一边的天空遗物放进场由你控制（behavior.actions obsidianTakeSkyRelic）。",
+  note: "古代峡谷。[[峰顶]]；揭示后[敏捷](1)，失败找[[怪物]]敌人生成并交战（behavior.ancientCanyonsReveal）；[action] 把放一边的天空遗物放进场由你控制（behavior.actions obsidianTakeSkyRelic）。",
 }

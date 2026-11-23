@@ -37,7 +37,6 @@ export default {
     horror: 0,
     hunter: true,
     retaliate: true,
-    deepOneAura: { relentless: true },
   },
   abilities: [{
     kind: 'forced',

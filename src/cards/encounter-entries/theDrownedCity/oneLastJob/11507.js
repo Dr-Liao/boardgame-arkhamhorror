@@ -16,8 +16,6 @@ export default {
     bossCode: '11511',
     bossClueGoal: 3,
     parleyResourcesUpTo: 4,
-    parleyDifficulty: 5,
-    parleySkills: ['intellect', 'agility'],
     criminalCluesGainAloof: true,
   },
   note: '数据型条目：与 11506 同构（头目换成内奥米）；背面线索转移由 behavior.act2Back'

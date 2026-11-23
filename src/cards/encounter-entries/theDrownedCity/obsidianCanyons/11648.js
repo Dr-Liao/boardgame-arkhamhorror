@@ -9,5 +9,5 @@ export default {
   locationRule: { cannotLeavePlay: true, cannotBeMoved: true },
   flags: { start: true, central: true, immovable: true, cluesByResources: true },
   
-  note: "起始地点（拉莱耶街道）。不能移动或离场（locationRule: { cannotLeavePlay:true, cannotBeMoved:true }，引擎 swapLocation/removeLocationFromGame 读点）；[action] 花费 1-3 资源在任意已揭示地点放等量线索（每轮限一次）。behavior.actions 的 obsidianPlaceClues 按 1 资源 1 线索近似，轮限记在 location.cluesPlacedThisRound。",
+  note: "起始地点（拉莱耶街道）。不能移动或离场（locationRule: { cannotLeavePlay:true, cannotBeMoved:true }，引擎 swapLocation/removeLocationFromGame 读点）；[action] 花费 1-3 资源在任意已揭示地点放等量线索（每轮限一次）。behavior.actions 的 obsidianPlaceClues 由玩家选择 1-3 个资源，轮限记在 location.cluesPlacedThisRound。",
 }

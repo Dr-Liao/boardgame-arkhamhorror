@@ -305,6 +305,7 @@ export default {
   'filter.series.rttfa': 'Return to The Forgotten Age',
   'filter.series.rttcu': 'Return to The Circle Undone',
   'filter.series.starter': 'Investigator Starter Decks',
+  'filter.series.other': 'Other Investigators',
   'filter.pack.core': 'Core Set',
   'filter.pack.rcore': 'Revised Core Set',
   'filter.pack.core_2026': 'Core Set (2026)',

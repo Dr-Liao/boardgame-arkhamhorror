@@ -20,7 +20,9 @@ The Drowned City 的战役标识为 `theDrownedCity`，审计简称沿用卡牌�
 
 ### 计划产物
 
-下表路径相对 `games/arkhamhorror/`。运行资料另存于大厅根目录的 `artifacts/migration/tdc/`，包括分片、原语请求、worker 记录、replay 基线、日志与截图。按现有仓库规则签入干净检出复算所需的输入和验收账本。
+下表路径相对 `games/arkhamhorror/`。运行资料另存于大厅根目录的 `artifacts/migration/tdc/`，包括分片、原语请求、worker 记录、replay 基线、日志与截图。
+
+**门禁输入已入库**：大厅根 `.gitignore` 对 `artifacts/migration/tdc/` 开白名单，专门入库 `audit:tdc:check` 与 `audit:tdc:p7` 在 `--check` 路径上读取的证据——`p7/literal/*.json`（逐卡账本）、`p7/{targeted-parallel-final,replay-final-verified,fast-final-verified}.log`、`p8/screenshots/*.png`、`p8/{full-before,regression-*}.log`、`replay-before.json`、`replay-before-recovered.json`。其余运行产物（分片、worker 报告、primitive-requests、Playwright 临时输出）仍不入库。修改这些证据后必须与代码同一提交入库，否则干净检出无法复算发布门禁。
 
 | 产物 | 路径 |
 | --- | --- |

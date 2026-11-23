@@ -38,7 +38,7 @@ export default {
   code: CODE,
   scope: 'treachery',
   implemented: true,
-  flags: { attachToNearestCriminal: true },
+  flags: {  },
   treacheryRule: {
     attachmentAbilities: [{
       actionKind: 'activate',

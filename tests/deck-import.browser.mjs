@@ -29,7 +29,7 @@ test('从 ArkhamDB 导入：未实现整副拒绝、跨调查员切换后载入�
   await setup.getByRole('button', { name: '开始新游戏' }).click()
   const hub = page.locator('.ah-hub')
   await hub.getByRole('button', { name: '选择调查员', exact: true }).click()
-  await hub.getByRole('button', { name: /选择调查员：罗兰/ }).click()
+  await hub.getByRole('button', { name: /选择调查员：罗兰/ }).first().click()
   await hub.getByRole('button', { name: '卡组构筑', exact: true }).click()
   await hub.getByRole('button', { name: '从 ArkhamDB 导入' }).click()
   const modal = page.getByRole('dialog', { name: '卡组构筑' })

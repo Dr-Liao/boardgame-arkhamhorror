@@ -8,7 +8,7 @@ export default {
   implemented: true,
   // 印刷「你在此地时不能触发[[枪械]]支援的能力」：读点 ability-rules.js#traitTriggerBlocked（action/free/reaction；forced 不受影响）。
   locationRule: { cannotTriggerAbilityTraits: ['Firearm'] },
-  flags: { summit: true, magneticSpires: true, firearmAbilityLocked: true },
+  flags: { summit: true, magneticSpires: true },
   
-  note: "磁性尖塔（×2）。[[峰顶]]；位于此处不能触发[[枪械]]能力（近似：未接线，仅数据）；[action] 本地点每人花 1 线索，与至多 2 格外开阔天空交换位置（每场团队限一次；behavior.magneticSpiresSwap）。",
+  note: "磁性尖塔（×2）。[[峰顶]]；位于此处不能触发[[枪械]]能力（locationRule.cannotTriggerAbilityTraits，engine ability-rules.js 读点）；[action] 本地点每人花 1 线索，与至多 2 格外开阔天空交换位置（每场团队限一次；behavior.magneticSpiresSwap）。",
 }

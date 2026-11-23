@@ -15,7 +15,7 @@ export default {
   code: '11702',
   scope: 'enemy',
   implemented: true,
-  flags: { cthulhuFacet: true, nonEnraged: true },
+  flags: { cthulhuFacet: true },
   enemyRule: { cannotBeDamaged: true, cannotBeExhausted: true },
   note: "非[[狂怒]]面：不能受到伤害/被横置/被击败（enemyRule.cannotBeDamaged/cannotBeExhausted + cannotBeDefeated）；成功攻击或躲避后翻至[[狂怒]]面（enemyAttackedSuccessfully / enemyEvadedSuccessfully），翻面后的强制由 enemyFaceFlipped 结算。",
   abilities: [],

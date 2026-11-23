@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { getAvailability } from '../src/deck/availability.js'
@@ -239,6 +239,41 @@ const scenariosVerified = scenarioItems.every(item => item.status === 'verified'
 const remaining = ['shared', 'campaign'].flatMap(id => (p7Literal(id)?.entries || []).filter(row => row.approximation)
   .map(row => ({ id: row.code || row.id, scope: id, status: 'disclosed',
     detail: row.judgement || row.note, evidence: [row.file, `artifacts/migration/tdc/p7/literal/${id}.json`] })))
+
+// P1-2 门禁：条目里的「近似/未接线」自述必须与披露账本（remaining / literal approximation）一致。
+// 「未接线/未实现/仅数据/未映射」是硬口径，一律视为陈述未实现，不允许残留。
+const APPROX_WORDING = /近似|未接线|未实现|仅数据|未映射/
+const NEGATED_WORDING = /不是近似|无近似|非近似|不再近似/
+const HARD_GAP_WORDING = /未接线|未实现|仅数据|未映射/
+const disclosedEntryCodes = new Set([
+  ...remaining.map(row => row.id),
+  ...['shared', ...scope.scenarios.map(scenario => scenario.id)].flatMap(id =>
+    (p7Literal(id)?.entries || []).filter(row => row.approximation === true && row.code).map(row => row.code)),
+])
+const listEntryFiles = (dir, out = []) => {
+  for (const item of readdirSync(join(mod, dir), { withFileTypes: true })) {
+    const relative = `${dir}/${item.name}`
+    if (item.isDirectory()) listEntryFiles(relative, out)
+    else if (item.name.endsWith('.js') && !['index.js', '_shared.js', '_lookup.js'].includes(item.name)) out.push(relative)
+  }
+  return out
+}
+const tdcEntryFiles = [
+  ...listEntryFiles('src/cards/entries').filter(file => /\/11\d{3}[ab]?\.js$/.test(file)),
+  ...listEntryFiles('src/cards/encounter-entries/theDrownedCity'),
+]
+const approximationWording = []
+for (const file of tdcEntryFiles) {
+  const code = file.split('/').pop().replace(/\.js$/, '')
+  readFileSync(join(mod, file), 'utf8').split('\n').forEach((line, index) => {
+    if (!APPROX_WORDING.test(line) || NEGATED_WORDING.test(line)) return
+    if (HARD_GAP_WORDING.test(line) || !disclosedEntryCodes.has(code)) {
+      approximationWording.push(`${code}#${index + 1}: ${line.trim().slice(0, 120)}`)
+    }
+  })
+}
+assert.deepEqual(approximationWording, [],
+  `条目近似自述与披露账本不一致（应改注释或补 remaining）：\n${approximationWording.join('\n')}`)
 const required = {
   chapters: scenariosVerified,
   routes: browserPassed('route', 'desktop', row => row.direction === 'west' && row.outcome === 'victory')

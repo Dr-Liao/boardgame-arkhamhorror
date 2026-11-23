@@ -12,7 +12,7 @@
 //   · 「敌军阶段结束时」= enemyPhaseEnds 窗口（turn.js#resolveEnemyPhase 的唯一派发点）；
 //   · 放毁灭 = api.doomOn（唯一写点），弃掉自身 = api.discardEnemy（敌人离开场上但不进胜利区）。
 //
-// 近似：参考实现要求「另一名非精英敌人」存在能力才触发；引擎同样把这条要求写进 criteria，
+// 口径：参考实现要求「另一名非精英敌人」存在能力才触发；引擎同样把这条要求写进 criteria，
 //   没有合法目标时不触发、本卡留在场上（与参考一致）。
 const CODE = '11721'
 

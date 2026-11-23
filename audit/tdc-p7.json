@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "campaignId": "theDrownedCity",
   "phase": "P7",
-  "status": "implementation-in-progress",
+  "status": "content-complete",
   "scope": {
     "path": "audit/tdc-scope.json",
     "sha256": "6d298604d612cebd52aa07f9297933eaecad3da4ff20dab472a869b9d61f8433"

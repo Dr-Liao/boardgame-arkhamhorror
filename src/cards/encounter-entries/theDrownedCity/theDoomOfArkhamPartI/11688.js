@@ -13,7 +13,7 @@
 //     （moves.js#controlledAbilityCards）；`kind:'free'` + `cost:{exhaust:true}`；
 //     resolve 二选一：`api.scenario.blankStoryAssetText(asset,{untilRoundEnd:true})`（文本空白，
 //     card-text.js#assetTextBlanked / turn.js 轮末恢复）或 `api.scenario.moveEnemy(enemy, destination)`
-//     移动一名[[星之眷族]]敌人一次（只选直接相连地点，与「向任意方向移动一次」的近似见 note）。
+//     移动一名[[星之眷族]]敌人一次（移动到相连地点一次；与印刷口径一致，见 note）。
 // 读点：behavior.artifactsControlled（flag.artifact：控制它计入「控制 ≥1 张神器」与结局记录）。
 const CODE = '11688'
 const traitOf = (value, name) => (value?.traits || [])
@@ -27,7 +27,7 @@ export default {
   scope: 'storyAsset',
   controlledAsset: true,
   implemented: true,
-  flags: { artifact: true, artifactGoal: true, horrorInClay: true },
+  flags: { artifact: true, horrorInClay: true },
   storyAssetRule: {
     enemyOverride: { trait: 'Star Spawn', lose: ['patrol', 'prey'], gain: ['hunter'], prey: 'controller' },
   },

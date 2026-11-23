@@ -43,7 +43,6 @@ export default {
     hunter: true,
     relentless: true,
     prey: 'highestWillpower',
-    damagedGains: ['alert', 'retaliate'],
   },
   abilities: [{
     kind: 'forced',

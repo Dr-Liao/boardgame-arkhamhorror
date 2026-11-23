@@ -47,7 +47,7 @@ export default {
   implemented: true,
   uses: 3,
   usesType: 'supplies',
-  flags: { expedition: true, traits: ['Item', 'Supply'], slotless: true },
+  flags: { expedition: true, traits: ['Item', 'Supply'] },
   abilities: [{
     kind: 'action',
     actionKind: 'activate',

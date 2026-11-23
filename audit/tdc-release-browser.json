@@ -2,6 +2,8 @@
   "schemaVersion": 1,
   "campaignId": "theDrownedCity",
   "candidate": false,
+  "generatedAt": "2026-11-23T11:27:51.038Z",
+  "commit": "200fed73f8e1451427b2b8a8cf97c104cb91c27d",
   "sources": {
     "content/campaigns/theDrownedCity/campaign-rules.js": "d778f10dd426bcae85dd9ecaee097b7693110d52470ed8066e19a68e0b895516",
     "content/campaigns/theDrownedCity/card-data.js": "5c5cf9a840638215340e8b4cb8ad70309c4994ed9dc0f89353ebc88a8935d9f8",
@@ -86,8 +88,8 @@
     "content/campaigns/theDrownedCity/story-source/zh-CN/theWesternWall.json": "aaa3090561bcd38408de50b502b69f858d7654d2f7288d542f7ee2fab48b8cfb",
     "content/campaigns/theDrownedCity/story-text.js": "4c4cd316573d25fa1ebc59b1daa8c1463f6bc5313287156f10e1c34ecccd1473",
     "content/packs/tdcCampaign/manifest.js": "fd4961a41f5e289b2ff78fa1ffa3cc01d389a37f588c0bb0870198f55ee80a81",
-    "content/registered.js": "8c9204dc062e13af8bf40327a4bb4ebdfda18f2cacef9a01f5936338d0cb8e5d",
-    "content/registry.js": "e7d924738ba416e9699af5aecd9e95b1be42c6e8cbbc6f1f3f8d7cb5ef75e557",
+    "content/registered.js": "494cf961b677db1788e34b6f7b73061a0a28b69c131b8dfd4537abc4c7609c79",
+    "content/registry.js": "4431b71db983410842256c64e56930d62cabc029a3ab99abaf743e8399c7632e",
     "content/scenario-guide-sources/courtOfTheAncients.json": "1384dfb3d857b5540a5db283efc1d6737de26a459849f67391ddc28d58e22ee0",
     "content/scenario-guide-sources/obsidianCanyons.json": "14b3a26f7015ede9ce1227ba09c14a68ef0a3449725f6584d4f6719e3f35935e",
     "content/scenario-guide-sources/oneLastJob.json": "4fe425a7c8a9d817a51d8db7b59009074e61e1d00c2f17ef5d8c0b58768f440c",
@@ -98,34 +100,34 @@
     "content/scenario-guide-sources/theDrownedQuarter.json": "c909e2f47c81fabdff37b8e9231795b2c1f732350a840cae3ba7bcb1fd255241",
     "content/scenario-guide-sources/theGrandVault.json": "1c76198854500aaf5c1ef305ef5aa3cb9d68d2bccb08a51cb2f5ace8955571fc",
     "content/scenario-guide-sources/theWesternWall.json": "c5b63247fd072704f0671c20ee1d7944be2a5640dbc2e0971a52567b7ef3a336",
-    "index.js": "5141067160c5aaa218d6eaa9002f04fb09acba306cdefec45ed4713965644622",
-    "src/campaign/campaign-flow.js": "88e2f53d332ac80e4a8bd7c28b9eaa5645a84a81a8debaebf0ba146bb91a7890",
+    "index.js": "990f98f0a4f9478783433d819640dff9af0215e36dca4831b66b02d4f4027963",
+    "src/campaign/campaign-flow.js": "68427018234ba9ce512c2bcbc37fd0b3b76ebc1fcfab6de8e51c03117f56ab30",
     "src/cards/encounter-entries/theDrownedCity/_shared/alien_machinery/11751.js": "a6dd02d14f60cf602ad2759e2ea5e2e00c29e88bf2a38448da02b34cb9c28530",
     "src/cards/encounter-entries/theDrownedCity/_shared/alien_machinery/11752.js": "c70d488085f4366c888e73c276974263f7af700d417f312cbdc1dca0b39e2430",
-    "src/cards/encounter-entries/theDrownedCity/_shared/cosmic_legacy/11729.js": "c6e0023731a2e39dc9a70691d85909dac651d8ba55014091ebc5f28bf0e9f0e6",
+    "src/cards/encounter-entries/theDrownedCity/_shared/cosmic_legacy/11729.js": "84dcb48f4963c55eb045f3f9375607bc3a5f6d1e61f42e4b59462e50e92b6cf2",
     "src/cards/encounter-entries/theDrownedCity/_shared/cosmic_legacy/11730.js": "354f537142c289fae6c17045999a8bd2d857caba448bf511e4ceaa31a693ac04",
     "src/cards/encounter-entries/theDrownedCity/_shared/deep_ones/11746.js": "b6b6d88e94c7ccd23ebb14856ff507e3a6606ad8ba7a4691fbd1ee60781810ee",
-    "src/cards/encounter-entries/theDrownedCity/_shared/deep_ones/11747.js": "8bb0d66249e61ff32fe623db8d98295848cba45436583393c6f2d59bd41b8401",
-    "src/cards/encounter-entries/theDrownedCity/_shared/deep_ones/11748.js": "d1bb9301fa3aab82182e8ddd26ffe78efbf14ee50cd805f03b9392806ccd4e49",
+    "src/cards/encounter-entries/theDrownedCity/_shared/deep_ones/11747.js": "a4b98d03a6fcd5875718c099c2455df4f8732b1296b9f81c5f11f1b13374c476",
+    "src/cards/encounter-entries/theDrownedCity/_shared/deep_ones/11748.js": "cf848a671826a52a95a91d1a2e3393d55b8c57b63b019066f1b65fd032dad713",
     "src/cards/encounter-entries/theDrownedCity/_shared/domination/11741.js": "ddca2f2997fd1513e00e3a50d16151752e182330d68da8d305a310431aee10f4",
     "src/cards/encounter-entries/theDrownedCity/_shared/domination/11742.js": "41fd8992a9025814e2087a80abefc305a6ffaebcf2fc4cf5e62d7633ab83cdc6",
     "src/cards/encounter-entries/theDrownedCity/_shared/domination/11743.js": "9361d3dff2741e8c70ab284940bc89173440a3fcf7822ea59273352c7609e923",
-    "src/cards/encounter-entries/theDrownedCity/_shared/dreams/11749.js": "a9b66b3c4e634989815c3ec95fb1ee3c31deef1f97927cedf0b9bb8222dfc260",
-    "src/cards/encounter-entries/theDrownedCity/_shared/dreams/11750.js": "6e5a862e352e9fb0a6be17f9f4181d8ec063032f2f8c5de79551b0482a225e58",
-    "src/cards/encounter-entries/theDrownedCity/_shared/elder_mist/11731.js": "b7cdd9a2ecb304c2ba88687f7f8bcce837bce506e9fbf1d648441d7e3ca5ce98",
-    "src/cards/encounter-entries/theDrownedCity/_shared/elder_mist/11732.js": "8a0ec66e1ea04b5f889204fdcf2695873a15d105dbd7dbeddafb1c03e7649ac5",
+    "src/cards/encounter-entries/theDrownedCity/_shared/dreams/11749.js": "08bb9aab6ee9be9a49849fbb3c0454f45cd0ff4db10d699a2607d85da28e6b6a",
+    "src/cards/encounter-entries/theDrownedCity/_shared/dreams/11750.js": "a00cbe2b7bb33436d1fc480f83c8eb07979c5ba702251e67bbc23ed07ff14cd2",
+    "src/cards/encounter-entries/theDrownedCity/_shared/elder_mist/11731.js": "aa80285de9a59919515847811a3b0e8093ba7967bec7b55eca993194f8ae7cab",
+    "src/cards/encounter-entries/theDrownedCity/_shared/elder_mist/11732.js": "b4fac3da276373a4bd62a5eee2a6104162be6bf4b29fb8a77bf51ecac71b1fa1",
     "src/cards/encounter-entries/theDrownedCity/_shared/pilgrims/11723.js": "6c4873facef10e5df2a49ae876c6b32e3be98ebadf1d0f0bcb7e7693da6fd97c",
-    "src/cards/encounter-entries/theDrownedCity/_shared/pilgrims/11724.js": "19f9baebd428a557c3a5cc366b8f06f78ccb2d263f1af01b200e87c670345a43",
-    "src/cards/encounter-entries/theDrownedCity/_shared/rlyeh/11739.js": "c46803204dd69b925ea33d6ea29aa7ef764477a60214090ef8613e9232f77f99",
+    "src/cards/encounter-entries/theDrownedCity/_shared/pilgrims/11724.js": "95f26baca80998e0fdc17e575360feab3d6610fd681193b3f74fe2a7fafa0073",
+    "src/cards/encounter-entries/theDrownedCity/_shared/rlyeh/11739.js": "a37421d1abb6b1c84e85c317cafa47da3c2b2ea06fe011655f60353bd955921c",
     "src/cards/encounter-entries/theDrownedCity/_shared/rlyeh/11740.js": "482bfa40da64bda9c108b2000102552e70eeffe5b9695c83465827d8fa33b686",
     "src/cards/encounter-entries/theDrownedCity/_shared/star_spawn/11725.js": "c246cf139a489412fe2305222f356a7d4e6a3921759dd039134f510ee713de71",
     "src/cards/encounter-entries/theDrownedCity/_shared/star_spawn/11726.js": "1fcd9f51008220b2a53cfd44c2aabcafec417cdf0084bde4fd1cc78a59fef240",
-    "src/cards/encounter-entries/theDrownedCity/_shared/star_spawn/11727.js": "9d805263a05f17a00048dd941eb06eb2039ae98d91cbdd107871255200063110",
+    "src/cards/encounter-entries/theDrownedCity/_shared/star_spawn/11727.js": "69744d2716ff4252799819193e7e03e7251b41efb92c9e72b8c0adc61b4b38a1",
     "src/cards/encounter-entries/theDrownedCity/_shared/star_spawn/11728.js": "bd17fa56ad6f2fc6406305caed7de6c03d7f05f550f9706cf6fa0029570b6184",
-    "src/cards/encounter-entries/theDrownedCity/_shared/stowaways/11721.js": "8a8265cf2d034d061385ead5f6f37e3efaf081ab6f72b0c4c1c13c7df19411c3",
-    "src/cards/encounter-entries/theDrownedCity/_shared/stowaways/11722.js": "fde1c18ef55876d6cecc5e18477cd2fbfa6096415825aa5cfc221d5a2fb35802",
+    "src/cards/encounter-entries/theDrownedCity/_shared/stowaways/11721.js": "2529d07974dab1fd2032054543962544379ab5618d5d510a3164832dcf2be1a6",
+    "src/cards/encounter-entries/theDrownedCity/_shared/stowaways/11722.js": "fe492b0848ace897ae954285309ac832bcaee40bcae1800dd7599125180d3a60",
     "src/cards/encounter-entries/theDrownedCity/_shared/tasks/11753a.js": "a7f95bdad4da6ad81970fcf58f63d331e336f3471c2bb72bb3a5c2636d6d169e",
-    "src/cards/encounter-entries/theDrownedCity/_shared/tasks/11753b.js": "b28d33aa468c249604cffdb72a12032e32972d0ab6620084ea52946c56364a8c",
+    "src/cards/encounter-entries/theDrownedCity/_shared/tasks/11753b.js": "446f5a9034d5faa68b86b9072eac7bab01e9017de946a88d8fe4dc702781ce7f",
     "src/cards/encounter-entries/theDrownedCity/_shared/tasks/11754a.js": "077213df003bd455f61964e551fcade328ea01bad15cadcecc16254d97bcc49e",
     "src/cards/encounter-entries/theDrownedCity/_shared/tasks/11754b.js": "12569f22e17dbbd17393c4060be7f3c4f48e4f73f79a8206305fb9ef68dbffdd",
     "src/cards/encounter-entries/theDrownedCity/_shared/tasks/11755a.js": "cef752de1a5fdddb7fe5128e3028aa58b930a4bbfe155da620d63a9f85c85b79",
@@ -140,20 +142,20 @@
     "src/cards/encounter-entries/theDrownedCity/_shared/tasks/11759b.js": "b9e388d4097604ff6393fcab0baeeec3c2f4dc64bac242124aa1bc8c8486d0c6",
     "src/cards/encounter-entries/theDrownedCity/_shared/tasks/11760a.js": "cec215c6cbe7a48f9f27f8f5156fb2c2075e440c8cdfad97b178718b1f331e7b",
     "src/cards/encounter-entries/theDrownedCity/_shared/tasks/11760b.js": "7932e124760171c21140ad83e021d3cb8c44b78339a55c0ef1642015b099da77",
-    "src/cards/encounter-entries/theDrownedCity/_shared/tdc_expedition/11761.js": "ecfe2d911ad034286ab651f48cb2190c66100ff163ffb7ec1a96cd6ee93216ac",
-    "src/cards/encounter-entries/theDrownedCity/_shared/tdc_expedition/11762.js": "9cb685d7c5d54fe939c684e758073195e0b43b5f161d07c126564a9de44ff06d",
-    "src/cards/encounter-entries/theDrownedCity/_shared/tdc_expedition/11763.js": "80491cad05acca349a095a410c4b88f1dd1bdb31d66cdee93c5ff2ee7cbbe114",
-    "src/cards/encounter-entries/theDrownedCity/_shared/tdc_expedition/11764.js": "1d48fc6f1b0d38f48a263ff23cd735f254c809bdab72001268c54b785f6f7cdc",
+    "src/cards/encounter-entries/theDrownedCity/_shared/tdc_expedition/11761.js": "076423d33d514ad97e1585c619ec3c6491abd832ce56267602ce6655bee4e6cb",
+    "src/cards/encounter-entries/theDrownedCity/_shared/tdc_expedition/11762.js": "f619ebac22cf02d023ad44e24b75adc130bd325c7e3d0676d076d4fb79cd1e68",
+    "src/cards/encounter-entries/theDrownedCity/_shared/tdc_expedition/11763.js": "269b0bb1e1e22be26727ad83197092b7cc26162818ba36601ee8f06ed088aa2a",
+    "src/cards/encounter-entries/theDrownedCity/_shared/tdc_expedition/11764.js": "1934448a88ebdd85377a433b14630c2031ee4cbe6a39e10c847c423e826c44b6",
     "src/cards/encounter-entries/theDrownedCity/_shared/tdc_expedition/11765.js": "3e835271aafd9c1cf1afe6c9046c56d9d053a5d4377029a3de25f3c82b75656c",
     "src/cards/encounter-entries/theDrownedCity/_shared/tdc_expedition/11766.js": "c974ce5fb29f923961db7292c69291eb2cd70d395022b061dea91ae7cf704a93",
-    "src/cards/encounter-entries/theDrownedCity/_shared/tdc_flood/11736.js": "651b71176604e50f9b3a0bbf9409f96941e72bf41839a7fb8518cd00aeed86c4",
-    "src/cards/encounter-entries/theDrownedCity/_shared/tdc_flood/11737.js": "b1b484005c040ac9edd52e8c171bb0bef206e438469511ec01bcda186cbf3f0e",
-    "src/cards/encounter-entries/theDrownedCity/_shared/tdc_flood/11738.js": "0175977394e16ea851da2fec87f76440261416caab895f8ecad45c17229cc81f",
-    "src/cards/encounter-entries/theDrownedCity/_shared/the_inescapable/11744.js": "79fe3d40ea71dcee44c85d09a0c89efd8d70741e0f068576a74d3dd2684b9ebe",
-    "src/cards/encounter-entries/theDrownedCity/_shared/the_inescapable/11745.js": "7dafcd23df3f402d4fdba987b4401d877594bd3ed9f3ac27207b93d37799fdcd",
+    "src/cards/encounter-entries/theDrownedCity/_shared/tdc_flood/11736.js": "ff2a435e0eb279a8bef5cc2517a8e380436a53003869ef8997366e7cfb4d2cd3",
+    "src/cards/encounter-entries/theDrownedCity/_shared/tdc_flood/11737.js": "4fd2390d7be236e668199bb8b33262cf9c4964b017fba17e623629609ea08916",
+    "src/cards/encounter-entries/theDrownedCity/_shared/tdc_flood/11738.js": "0e2067231b9aaba5b15a47250c643907a34c14a297712783420799fe33b7a144",
+    "src/cards/encounter-entries/theDrownedCity/_shared/the_inescapable/11744.js": "b3b9cd5e6391cb5ac2baf3e6769506e6e8c743949a871a9929d0759097ac9593",
+    "src/cards/encounter-entries/theDrownedCity/_shared/the_inescapable/11745.js": "518033e3761b5e18a27eac559fe9f79fe26da02a3e5338bba38b0930a3941696",
     "src/cards/encounter-entries/theDrownedCity/_shared/undersea_creatures/11733.js": "83bcbcd042dbf295b592a9875d29e025f73a6781fd347790bad92c82b4cc20cf",
     "src/cards/encounter-entries/theDrownedCity/_shared/undersea_creatures/11734.js": "ce07ca32db3b436383e99f4d7bb65dc32e3d202546897816a09610a32eed8356",
-    "src/cards/encounter-entries/theDrownedCity/_shared/undersea_creatures/11735.js": "119bc88768970e51292acebf4a2a5234a639e779a441c6e1be407a9eaf1355fd",
+    "src/cards/encounter-entries/theDrownedCity/_shared/undersea_creatures/11735.js": "d274b5dfdd3d8f3a93e9188614ec4368a43e90720bf5155dec44a2489c68d004",
     "src/cards/encounter-entries/theDrownedCity/courtOfTheAncients/11613.js": "fc1f39332845ea25f122c9ca36aef39d9776e0f921304f111de99131dfa07cac",
     "src/cards/encounter-entries/theDrownedCity/courtOfTheAncients/11614.js": "0cd73641dcbb5b1030ac4352c8640312720c1b560a6de6abc0fefcc77a354688",
     "src/cards/encounter-entries/theDrownedCity/courtOfTheAncients/11615.js": "ef53770c808cd0b0e40781a3767d8751aa799bf0ef5f5dd81cfbee111b049668",
@@ -181,70 +183,70 @@
     "src/cards/encounter-entries/theDrownedCity/courtOfTheAncients/11636.js": "aec2f53f3746d2c756106afd2dadf580245eefd7e170714cdd40e133136e88e4",
     "src/cards/encounter-entries/theDrownedCity/courtOfTheAncients/11637.js": "d8f68271ff5789a9dc628d80830d7d87aaa1d6421784f429c39b2236b22fcd57",
     "src/cards/encounter-entries/theDrownedCity/courtOfTheAncients/11638.js": "63e208d341c7d9516b21b5be8ae5fc141eaeb0ef77a3798bebb5c45ba29a0db5",
-    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11640.js": "85d6e5878264bf5038a23991061f77233a116a7cca2076c14a355fa1b484b87d",
-    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11640b.js": "da61649cb762c2a20b38f5285e988476148e71aff5ae200f7461959bc754592d",
-    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11641.js": "a70a20f7a07645f59f0868b83967029e9ff3739ffce7fbdd0566a13e35389183",
-    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11642.js": "818a2b01fef36332e8a56f2f2094e47b92f669f616e9e04ae5900c41be838f22",
-    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11643.js": "6da792945e7b6a9759d9d9ef19fad87b0e6602691b64b9f397349252d9f4a9e1",
-    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11644.js": "e3b0e8068587466c204c39da8b85e4733e2d527c5751d0ecb86adf28e8f4aed6",
-    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11645.js": "afbf1b1d5fe74f5dfbc0d355fb0bb202beea16c612d252df252a2c5038a9161e",
-    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11646.js": "d99a215271db127dbc8db58b77603cb0c7d9a12e1f411232a1311d2f46379d4d",
-    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11647.js": "7d8b97c13f0e8121c3021919727027cac8fd6283d846f19da85220b2816f67f2",
-    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11648.js": "6337231173d0a575cb113754345520da00561267a04b5ef98ee244c35bebb371",
+    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11640.js": "c2600552069f69132b6435759496579f2a596c242ba23b371516441b3e94537a",
+    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11640b.js": "e2e3d14e813a8e84dfaae377fb16f97a8cf5a1ddd90dce4ce6be52bc2628cb64",
+    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11641.js": "af9354dd8e0679c6f7d3c6320c50666a51bb2b889d91c178ef90a39f8de0e217",
+    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11642.js": "c1eea3e1e8e2677e565b5e8a822cf96f808402ec7ee30573e045b0fb2d9fee62",
+    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11643.js": "ad40c28ca6b72cbc5aa5c1f17a6889da60c69d152bf32e08cf45bc8473dbaa7e",
+    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11644.js": "9339d3253659d7fe94dab74475675e70b531812b23fc52c58d7e61d6c67b8c46",
+    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11645.js": "24e7d3cf1647eba84c76830fa5f5a9f00c323e420e2694b7a81ec05786475cd3",
+    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11646.js": "ba6c5a09c16f261c139d52f83f7508a5557e1abd1972e7b8751e1a330fd6ff2d",
+    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11647.js": "1a3fa25f1d499785a69e01897d85503d48a15c4b67b509dac48363630d40293b",
+    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11648.js": "63b95030fe27e08ed2a39b9b5198828abc1fee222657a91c728c7dbe06a62318",
     "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11649.js": "b8a070696671aa7e07f319b46aca4c9dcaa9371cc66021aecce2d02bddd92a38",
     "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11650.js": "f241d7caa2566926b18748c95f74c17f321ab2c1b7bf29c207e285841ac69ff7",
     "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11651.js": "e501331a666523de261c1503539f90c9f749b4690859a8343347d353596ac6ac",
     "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11652.js": "910363b3058ffe85521e10e913a3f0081be74c75dd70c6bc175398c8fd590894",
     "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11653.js": "b30047bab9d621d5542599f5fc19772c323c3acd193c522402322775b73a29b6",
     "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11654.js": "d2434c1b9741e18241c78ba650d1d77f5dab06fae7bfb213c6a5e88f110cbe9b",
-    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11655.js": "04973647c07da8ccd4dd72f6ecd2eaa689bd75af568af9afb8170a2390911c4a",
-    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11656.js": "e5ace2753d3f86208582eb155e1417478f666fdd2262bdc310d7344c19121b56",
-    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11657.js": "1d0d77aa0c1c253efc68f0eea3186c6e10d7b74512b13ac1d120f8fc358707f6",
-    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11658.js": "df0fdb29ae9be41e0c713ccc5408923795cea9bf0777a6513fb5f33594e08968",
-    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11659.js": "8492381eebb0ad416bd0743e056bedf3078b71b1d1274fe7d6bf667d4fca6726",
-    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11660.js": "201cf6879fb76b3ca0186a556a1cf831334a8f3ffb954285539ede97c27c36aa",
-    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11661.js": "adf782128e586d0ad72f3ae8d9fba301b844c5a39dd13200bc5c7abbc369e033",
-    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11662.js": "04dcc92e35bd09547df31917857619bba9833f5e3ada68c019c9bf12aadb8aa8",
+    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11655.js": "545085eb31d1f26d0ae5fa22267b605f84fff4ec4544f544fb954991a30383d3",
+    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11656.js": "4dbe88c9b23977168dd1682202a02563fe6446aa9ea874dafb2ff8284206c3eb",
+    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11657.js": "3ad163b107dfb416be8b43dc3e50a095d8d449f9289fcbeab40d37d774ca75a0",
+    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11658.js": "07ab78a86af503a85ae53422a2903ae6c3fd8d62e818e89696acbc2933423f3b",
+    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11659.js": "7c6dd3aa778bbfce8eb5ebb478ca9fb90ffa4d6bab74ce4a5765e964edfcc321",
+    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11660.js": "dc70a09e81b0c3d7226a1e449c2588c9710ae9f30c4ef23f5fd08501def26392",
+    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11661.js": "a534aa28ad3b205aafe54f0c9ffc89ca2ae3badc9fd4b8654163f303e0b6acde",
+    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11662.js": "3190dae1e14dc05c4101289f032cae361786563aa7ef4e5a0c5b1c82ad5e9c4e",
     "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11662b.js": "a8f0b4c0f0b33218465671de0bff59f5855f7646392f1cdf7e0f87863d873a2c",
-    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11663.js": "de559fc1f770109dd9451c30a7fca246ba50d71b02369fdcc387078bedfbfeb9",
+    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11663.js": "c662be64c119efce4146b4d7159d8b9aa75c02c5aec627e59060406416440406",
     "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11663b.js": "da006f5d23fe09265080768152bb53d30df350dc2a244119ca1cda15c5860ff1",
     "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11664.js": "96184bea72857afa7a134922351d7d978fbdb7e49dc8fe26f7920606390788c3",
     "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11664b.js": "3776a9517e59b17b217feb6b3bb35dfff929d880d7c63f787133ebfa3c3662ab",
-    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11665.js": "0e04dc68cd10f18b2a1720d32e0909742df9ff19845423583abef29dfc234de2",
+    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11665.js": "5bd0e171f7acd3d4749fd7027e7082680953d8a160a245a1fefcabc079746254",
     "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11666.js": "5caed954e582b35d9bd307c5615b80b05853b3478cabc014aff7c170553d38cf",
-    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11667.js": "6d07ce643f50bf7660e6fe14b0bf00d53e9fef5b09a5f5022885c0d343bdf6ff",
+    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11667.js": "0ac574947d0aa457a6310be8a78206cc8759b04939f9a40ef2acb43ec69ff91f",
     "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11669.js": "4520dfa3be5ee7666fad5481c891202ddbdb7bb662b1cb5c853d42ed7c893ae6",
-    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11670.js": "4070455cbb727479aed229923a67fb3227008b4c8d5989364f1ae412be107d01",
-    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11671.js": "15b38951d80a530a3ab583f2d9cade85ed89e8b2a9460ca6d6d8023d2175bc9a",
-    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11672a.js": "1b1d8ac1a6e3628ef31caaef4efee2dc884c729fec54f75e894a1bbe2dc12adc",
+    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11670.js": "97201a3a83308ba515ee582dc21d28e2f485e8d5e39a37ce2d812336f12b0c65",
+    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11671.js": "c373d3633d130855b409905bb70882fbc034b7557d6c285e6e3b8ad4858cb3e4",
+    "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11672a.js": "1ebff456e6db231005384e057f36d232717daff17dc3c6ef086533d5cf41db01",
     "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/11672b.js": "7dfe9dd81276de4ebc2f4e2a8e6f46465ce69db9a398992809162e8e0b164696",
     "src/cards/encounter-entries/theDrownedCity/obsidianCanyons/xsky.js": "ca8c0080c5e218a0efb7561f8b8a04bb3cdb05a84e68ba2883922e8d39ab3dcc",
     "src/cards/encounter-entries/theDrownedCity/oneLastJob/11502.js": "954c9ac5de2b96aba907a99aeb750958607263fc9483c37e146c868582dd80d4",
     "src/cards/encounter-entries/theDrownedCity/oneLastJob/11503.js": "541ab46982ab99ede01af014dd334fff389cd6c01e66213677a1e02b4376d4ba",
     "src/cards/encounter-entries/theDrownedCity/oneLastJob/11504.js": "3b1717416a8e8f79ae656ce692b027200c13205fdf42166d90e737663c5f15ac",
-    "src/cards/encounter-entries/theDrownedCity/oneLastJob/11504b.js": "6fd327f38a6165f13b941948e7c7625b54ff5d2ac52e6f601df79e52641e8e86",
+    "src/cards/encounter-entries/theDrownedCity/oneLastJob/11504b.js": "e4712041c06e102a0934108619703b7c9714b963a8ad3b455c9b6750ab5191e2",
     "src/cards/encounter-entries/theDrownedCity/oneLastJob/11505.js": "ebeb5bc56906243cadefe0eb862d7af0ab960c716a0ab2212810c78079b34747",
-    "src/cards/encounter-entries/theDrownedCity/oneLastJob/11505b.js": "eda30a382bade4620efb38a30ab168974fa56e55c694a42bae488e17b8a81210",
-    "src/cards/encounter-entries/theDrownedCity/oneLastJob/11506.js": "ecbbd5e4e015ce175287178a70e6fefe30dd5887e62c612c5f7e52213062868f",
-    "src/cards/encounter-entries/theDrownedCity/oneLastJob/11507.js": "d79a95254eeb91238b7e6e2fdecfbc22e2c4ccc277fbae0f4f3f115edfb4ad18",
-    "src/cards/encounter-entries/theDrownedCity/oneLastJob/11508.js": "98a1dc5454b8241b77e5d6b2e55def08916d4048a8c9912c1fa9f18c2532625d",
-    "src/cards/encounter-entries/theDrownedCity/oneLastJob/11509.js": "807a7fea4132e672689b55f3b8abd5b71d36720ed3e17e97a3ecd5556cf2a556",
+    "src/cards/encounter-entries/theDrownedCity/oneLastJob/11505b.js": "d2daf418bd4a9e54ebd9fd8260659583ee232e765da2be8a6b04b42aac4175cf",
+    "src/cards/encounter-entries/theDrownedCity/oneLastJob/11506.js": "3d3d1fa049954eb54acd7ab0d92e7f08b7fe7722b28706890e09e7a589b0af31",
+    "src/cards/encounter-entries/theDrownedCity/oneLastJob/11507.js": "a0d101ac5f4ed622a3e8f224bab175e27bf643799a06d5de2d080ffebed73e56",
+    "src/cards/encounter-entries/theDrownedCity/oneLastJob/11508.js": "c132ea1a31724576577f6452453f51369a837a71cb3f88e840023eddeead1658",
+    "src/cards/encounter-entries/theDrownedCity/oneLastJob/11509.js": "5f722f67697b9f0fd1b517eca4f93dac5312458f0b3ae20eb16d16377a777efb",
     "src/cards/encounter-entries/theDrownedCity/oneLastJob/11510.js": "8ddccd05244a85a0f456ed66d20d69d6dfc3892a5fe4cfb9bb54602d79b3d1a2",
     "src/cards/encounter-entries/theDrownedCity/oneLastJob/11511.js": "8f93630197a5495466c8c13c53bcda584a7e5d030b30e5695cd8497b181d41dc",
     "src/cards/encounter-entries/theDrownedCity/oneLastJob/11512.js": "18ea3ef98cb768728356667281dc681120c4b61183e5d70137bc800c63b2bd9e",
     "src/cards/encounter-entries/theDrownedCity/oneLastJob/11513.js": "3f35f13bad97c149425b8053bd7fc77753577d76e5ef64006d7bd813ac3b687c",
     "src/cards/encounter-entries/theDrownedCity/oneLastJob/11514.js": "fec427d2a130874fa9a341bcbf935b4224e1129952b0910dcbe8ef23c12a478f",
     "src/cards/encounter-entries/theDrownedCity/oneLastJob/11515.js": "ed0ca9b609d144aacfb7970058c607d99ccca2d328eadcef6c342d7f0d0adaa8",
-    "src/cards/encounter-entries/theDrownedCity/oneLastJob/11516.js": "3525bcc1676467b66452b8a3050dca694be4a7f9d3cd0080237b4526eaa0128b",
-    "src/cards/encounter-entries/theDrownedCity/sepulchreOfTheSleeper/11674.js": "b39e217a4b9ffbe17de18cb9554f2a0178865f66b955a89e2441904936ac4e83",
-    "src/cards/encounter-entries/theDrownedCity/sepulchreOfTheSleeper/11674b.js": "892c8c82ac1cd47052b7787af29406c39b6a5702ed7f92996399f210a01bcb7e",
-    "src/cards/encounter-entries/theDrownedCity/sepulchreOfTheSleeper/11675.js": "9b1fe42957d023c4eb647adac17579b509e64c1040b2445828e441a434014624",
-    "src/cards/encounter-entries/theDrownedCity/sepulchreOfTheSleeper/11676.js": "5d246b7a8b525c80f97de646df59445709bfe312dee0e96c30e03097fa712e1a",
-    "src/cards/encounter-entries/theDrownedCity/sepulchreOfTheSleeper/11677.js": "cfd1334a194fca9cb7287f44903414e032f793d39c83405902199c49ad307636",
-    "src/cards/encounter-entries/theDrownedCity/sepulchreOfTheSleeper/11678.js": "ae10283d8032ab10fb09a41482b31be5a161e70253398be4fdb45721d2da9e89",
-    "src/cards/encounter-entries/theDrownedCity/sepulchreOfTheSleeper/11679.js": "af4586e55a507314bcab2a7f62a487c6c6fd37a4c39627e8b1b90774bc466e50",
-    "src/cards/encounter-entries/theDrownedCity/sepulchreOfTheSleeper/11680.js": "0fa73b16ec46497920e73f35ea4c31441c572c9a981a27b3eee6885bfa1f92a9",
-    "src/cards/encounter-entries/theDrownedCity/sepulchreOfTheSleeper/11681.js": "6d4d8fa9b2b35a3c780f18e9eead7bb270dac593c158d947d70b4557fa9378bb",
+    "src/cards/encounter-entries/theDrownedCity/oneLastJob/11516.js": "10c18ea8c01274b90d3c2132cc9d9aad4617a79456c358bd3fe843f6854a4ed5",
+    "src/cards/encounter-entries/theDrownedCity/sepulchreOfTheSleeper/11674.js": "156ee5fd67accb17bfaf4d1d7486ad42c8143ac2f6a42a318c361aa75c6138aa",
+    "src/cards/encounter-entries/theDrownedCity/sepulchreOfTheSleeper/11674b.js": "29d1842956b47f8eefce589a7995e23e1412771ea60a50f22002854a70a263fe",
+    "src/cards/encounter-entries/theDrownedCity/sepulchreOfTheSleeper/11675.js": "ff66f3dea8441e2a6624f01bb36d971b3985ac262b0376f57e70c16eac18fa64",
+    "src/cards/encounter-entries/theDrownedCity/sepulchreOfTheSleeper/11676.js": "320c1299d129253a7b62cc0e8757e341b83c6d0cc1ebaefa035d5631ceee3007",
+    "src/cards/encounter-entries/theDrownedCity/sepulchreOfTheSleeper/11677.js": "c51e53911664efe3cf361702194016e048d7e49d7517a63ecdbadc504d665ee4",
+    "src/cards/encounter-entries/theDrownedCity/sepulchreOfTheSleeper/11678.js": "860ec8c92a25edfe5c7156bb2e1aa02001898929abe62eed58d2ae3dc2309d57",
+    "src/cards/encounter-entries/theDrownedCity/sepulchreOfTheSleeper/11679.js": "dc038e6e4d984ac897677a02d7d4771bf0c64e8477974af9752a47a57692a77d",
+    "src/cards/encounter-entries/theDrownedCity/sepulchreOfTheSleeper/11680.js": "319fd37d8cb8f395f2fc956b7b85aef90d0a0371217e59eba6f78eb694da4fa8",
+    "src/cards/encounter-entries/theDrownedCity/sepulchreOfTheSleeper/11681.js": "f7d0dc548b1f490d9dc9218a83b2af575dd53a8f979d518f7740445be8da5cc4",
     "src/cards/encounter-entries/theDrownedCity/theApiary/11554.js": "f30c03b1a7cfe4b44ccc6f9ec1d8362ac6413a8aa6db19c0409c82795be29ef9",
     "src/cards/encounter-entries/theDrownedCity/theApiary/11555.js": "ee627e5419624341d465c766524dc5a77e4ea35e2f26679f41059e910049382d",
     "src/cards/encounter-entries/theDrownedCity/theApiary/11556.js": "d69ce2cd4b636350235090b778c06a00d0d2946a681855b69715d073ee833400",
@@ -275,47 +277,47 @@
     "src/cards/encounter-entries/theDrownedCity/theApiary/11579b.js": "00da060f2d16b9d01f08720f6a1f9367e7dd429165a8ad38f7b53c496da7381b",
     "src/cards/encounter-entries/theDrownedCity/theApiary/11580.js": "dbba413495e63f4d60681867ff44eb1dd63cdc19e6eec8795fde6606d6cadbde",
     "src/cards/encounter-entries/theDrownedCity/theApiary/11580b.js": "99dc08c5bee7bbef7d283558a326c02aadbb838a594238c1ed6ae4bea29ab430",
-    "src/cards/encounter-entries/theDrownedCity/theApiary/11581.js": "2a3544ab559b608880830b922f4c0be7c4f174aabb6a14fec858cb6c37db9d52",
+    "src/cards/encounter-entries/theDrownedCity/theApiary/11581.js": "bcce59b18cec5011cfecfa5e35006ea4ccf43f423b22020b4e9c34d7ed2b9a44",
     "src/cards/encounter-entries/theDrownedCity/theApiary/11581b.js": "9793a79c841f70e6a09a63c914a1e4ff30f6ca583ea2cb970624e2644dc1740b",
     "src/cards/encounter-entries/theDrownedCity/theApiary/11582.js": "0f2ecc242ea1e908a555ca52f1b504b22a3a99a3cf5569577168c5d8ebfe7e15",
     "src/cards/encounter-entries/theDrownedCity/theApiary/11583.js": "b0d0b63cd816682ff2262b2456cfe426030c7e8036792f97a716a6e854975ef6",
     "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartI/11683.js": "6a38a3e8df9bb7208ad5e8e9dc8e813af7340f0ac264637173c1c80971a98ba9",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartI/11684.js": "d7ecc873808c249a7b039e272756714c93e8a699e9e47199c0d7abd403054ddd",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartI/11684.js": "c6a45b6f41a6ae0f96daf490ebbfe9e65f0122948c8a3d7525956697971cd8e4",
     "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartI/11685.js": "6cdabdb6d239284f2beb12f9a2373fe551d811cd75938047e2a9da63ee299313",
     "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartI/11686.js": "326338993f5c22a1e2bc5637bb8cad68a0c87ea387657cd2b2cf124eb4e57ba4",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartI/11688.js": "9377f945b1f817067338cba84cffe11c869d7e6d1511d453ef458c5ab53d9997",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartI/11688.js": "cbd536c3bca4454a1707a0e651dd29bff30387114a7eb51ba5f6359cc61e128a",
     "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11687.js": "f1839bde02ce330bd213cea52b7edd8ca5116eca8b9ad34c595ccc8948035db9",
     "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11689.js": "a93c5cf8a2d4fe60a7143286c88a312e23a5b5dd31286d30f1d52318fe32662a",
     "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11690.js": "998b56faee9376a484896b419e078bb25c46a8da5f37a5ef2c4ed085c90aa67d",
     "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11691a.js": "e35a3166d4c6fe5146e4d2d77eba523b04d9ee34a8f534294048070901184c8d",
     "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11691b.js": "0a67a63c3ea1124b91c0d35bf0f4adc6e51152884101d6e871f4f6f526360dfe",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11692.js": "1d2a2526886c596491ab02f245e215a7b8be257153d7c816ae9f3d9584974a43",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11693.js": "2ed7b740d7348da12cf0dca9bc97d6077dface0fc28fc711378e8ed5815265b4",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11694.js": "b7e6593be1ac20659714fcb15975fd2c10f9df58630c23197ac79c5006a4f13a",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11695.js": "42e400c0b16e1efcaa0a553c89d8dd256851e3f595f8dd1793ed599f28c56d8f",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11696.js": "11cc142df1eb0b177f05cae53d4d6ae939f87d33747c5b38894c23245e273ff9",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11697.js": "e5985001d5d2289b682b6457ac02d20ef2af8eedb39f40b5b8b3026771f11ba6",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11698.js": "d9ea0d5b85dc5120050068e73c47f1e2d49779e9fbdeacd0cce8da1c106becfd",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11692.js": "36301f810cb7fa0b2708588adf0579dd9e05e158f1370e816e72c562f6abd3a9",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11693.js": "de3286a507999c5e84917d22b213a13a7e17acc794a8b0dd148a82438b01a73e",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11694.js": "5495d39db4463569225d1c6ab60f2f7fbb348b37945ab33510e1973b83b6de28",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11695.js": "526228ccee067576b8a5efe52f03deb78955e7a0ff602cb5822a050b251b7ffd",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11696.js": "61f1b412c2d3ae41092b24424ccc4014f1bf0334350b17134cd5e613888b8600",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11697.js": "60898fa153ab92292fbd6fa2c3868ef757cc46c09ea7aff90781fe1521b66bba",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11698.js": "7505f78d4d3670a4870b68d9e20002819299424ac57b671974ee51bb11e3d324",
     "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11699.js": "e4f27c24f7ca3b56caf66f4e0fa8a2d7b0f31840fea5b26ef9174d5409a3981a",
     "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11700.js": "3baa297746a719b01b7e5b6eaf19e2fe1bdfdeb8368d48dd7f08495bf7baf54d",
     "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11701.js": "ab0dea8e974674878a99bc29140f07ee300bbf00fe90bafff22a5aa664319c6c",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11702.js": "7a068aa5536ce9bb6818d6c17169724d1338ac07fa76d90a3a1b833fa3b36777",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11702b.js": "bdebd9971305eefde98ddca630cefd7eb7cdacfe7d8ed868e8c26d6a7a0e4d23",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11703.js": "dab766e47e8781ee3b3bee578677d599248f62d36180685c1610abceb82c4823",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11703b.js": "5293293deca3165d3973291e6c915d30585655a769c00d238a2bebfea07709f5",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11704.js": "1fea3c6167bfe2cfa9e5d1a3a253712ee8a6176c886098edb51dd10a8a03e659",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11704b.js": "1329b34f3d7c012286d2be8cec421153c0156fabe536caae518593b341f65e3f",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11705.js": "8426d5c39e1285b2419c1ff032b1db36fcb97cc9ab6e7d499130a7af9d82d018",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11706.js": "56a0bc5609987f98d169343700027ef5e7fa7d0ef47f400386c71380ac6a1284",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11707.js": "be05c3652f685d05022b3aeec3c9fae0d6b642aae0a6fdfc41c99bd30119242a",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11708.js": "10263f0fd0305e56ea207e3f5ff763890fa2506f80d389137d4ae773d4599380",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11709.js": "fe0adb06668c9f7f74f67bb743a292f393fd80cca05824f67dbbdbc82ebb1b4a",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11710.js": "2eca51f15af7bde274dc63fb59a3e7474163384f1fd46c2624ebf6c9d6ffb775",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11711.js": "12727eb7a6fcfbd93e3c1073e1e83d9c2f255ea0e4f396b7327a6fa7f3ce2f48",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11712.js": "582d7e8850e42162dba4cf0598d0f4a2dcae50ddbd17cc1063d0711b7ff39321",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11713.js": "70e306916c7dfd0837b30340b2e8ced3977484c557525b1ecca381126debcaee",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11714.js": "2fce3fdc7617d3510abc993cd501c8eccddc36c82913d5abcdc777547110875a",
-    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11715.js": "4ed7a1250fd62cf979ce9ce1a23fd2b0b900c156e1007631044b4d705bcad370",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11702.js": "3daea0c701bfa56d86627aa0bebcacc9beb7be4bf925658c65e7ee356a0152ba",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11702b.js": "3f75c0aae042f5879d52edb68470c9634b29410c3910fd182f22bdb0de014425",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11703.js": "50ea04bec7ae1c91e1a269aef90a1aa789d1305be593bcf836ccb1ee1677f766",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11703b.js": "04db097b30ede6cff14ac39582f1cc18f16f9dafbc3bb3e0d087197e357421ec",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11704.js": "a122b0e9ddf668717c37b545cac316f0d63ac497a6849200fc6751ead6b14db8",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11704b.js": "617686ab17a3fa8e3a4f37ad458ba385932998d3ddb80be8434648a0d3712bdc",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11705.js": "3d408dc934c4844e2bc943cea2723542b4ef5b1140226342ba56eedf3db7c148",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11706.js": "f74963a738e8ada09cb86df3c0bda929bbeb2afa43b459ccfd651a4b46fbda6e",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11707.js": "8787dd5c72f1729248a10efed53f8f39526301c48ebec8626eca1ec0bc8ee0c5",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11708.js": "19ad2ea04358dca7154175d17c688ba193ffc7e24bd1d22ca600178bfd684e19",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11709.js": "b3ab552685da4e2fc7bf4c7f8c8446ee4480573c9e3a260121002566e1c48d42",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11710.js": "b2c36d76a4fb152312762f767824fe37d190d3602aca6e37884e4d5f5ab619a1",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11711.js": "a5716bcd0580dfc9e75d22047907372bcd0b25c5ae3ef734cdc36ffb88d3096d",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11712.js": "b2c30bc0ebdd0a141c3ff518600bbc5fef6f0f33aef18e423bb02f2b0607da67",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11713.js": "1d7b8fedc5e4e4759177833a566738c837c50a5111eee3733664c2198788bde4",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11714.js": "e94087dccaa6c35581d929065159b14ccc2ab40a13262b3d548f02fa58661ac4",
+    "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11715.js": "a4215e668ce368916f63042e238bfc6fd8bc329e0a6d113c29a8fd03fbd7f98b",
     "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11716.js": "9b9f7f3dd32ea24a8acfa5322fb3cdcd8dcb97d352a00c3caee87054bf0b27e3",
     "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11717.js": "0b272caafbddc1dd3fd58a4f1668faec208b6148071c3cdc480322af5a3005c4",
     "src/cards/encounter-entries/theDrownedCity/theDoomOfArkhamPartII/11719.js": "a31b66a6e7c6c2feb38888bd39b625c6b08b8ba24df542baf9294c731c8554af",
@@ -369,34 +371,34 @@
     "src/cards/encounter-entries/theDrownedCity/theWesternWall/11518.js": "4fc856cf8aa2f5c0e0d06ab51f5b96470b46f512c87bec4d36b7cd359e0a239d",
     "src/cards/encounter-entries/theDrownedCity/theWesternWall/11519.js": "b35aacce4ee36e43229bfae88b08869359a3596f554b9c8a20f69ac7727d70a2",
     "src/cards/encounter-entries/theDrownedCity/theWesternWall/11520.js": "f88f317a8dd5252eeb2bae93144e56508a00edf81122d57d58befc80591b9158",
-    "src/cards/encounter-entries/theDrownedCity/theWesternWall/11521.js": "430b8a6bd44368dad82417558e2d01f3cb88bf724a6f96840130b30277ec0df8",
-    "src/cards/encounter-entries/theDrownedCity/theWesternWall/11522.js": "80d0fe66638193b0e7dd4fe07aff64a65efcef32c0ae37aa493f838e6e4ab32e",
-    "src/cards/encounter-entries/theDrownedCity/theWesternWall/11523.js": "d2998bece9d82d2d837b91b115dd5a7b027e96f02534451386fd04e8fcc329ec",
-    "src/cards/encounter-entries/theDrownedCity/theWesternWall/11524.js": "688957c0f564d58cc7e00aabfa9ecf131c9c599808c735aaca1f11407bb3d6b9",
-    "src/cards/encounter-entries/theDrownedCity/theWesternWall/11525.js": "dc73c09eb3f389061ba161637140c87c24c22785c9f537ddd897eba728341f2b",
-    "src/cards/encounter-entries/theDrownedCity/theWesternWall/11526.js": "3c15a5285a3076df1a29e1d8a77efd0b20bc1b67c0b373004a5064a3ee26d7be",
-    "src/cards/encounter-entries/theDrownedCity/theWesternWall/11527.js": "c3e709346e68d4142039e3b675e781405b0266d04b2c5fcd12596de6c50787ec",
-    "src/cards/encounter-entries/theDrownedCity/theWesternWall/11528.js": "6121dd1bd788c014aca01325df8a92c412d9ca2a5c5458e10e94e57dc688de86",
-    "src/cards/encounter-entries/theDrownedCity/theWesternWall/11529.js": "a054aa8be483437f34b1ae9c2e3aaebb48b3bffbcb31044923d065880d1d87c9",
-    "src/cards/encounter-entries/theDrownedCity/theWesternWall/11530.js": "9ddee23a8f3cad8135084a67e74730111b17108ba8849f43c48c1fe40996ca22",
-    "src/cards/encounter-entries/theDrownedCity/theWesternWall/11531.js": "7575cb2e01ee3e9c57a1725b7776c25ced37eb01fe438f3ce28ff24a13a88b89",
+    "src/cards/encounter-entries/theDrownedCity/theWesternWall/11521.js": "698d768287014e6a02c7e7cba13434ec704ab007d5637d524f090d08f66cffcd",
+    "src/cards/encounter-entries/theDrownedCity/theWesternWall/11522.js": "8aedebd5f4662bd6cd9921153173a6f89d9865550fb76ae9250dbc6fb22755d7",
+    "src/cards/encounter-entries/theDrownedCity/theWesternWall/11523.js": "d441d10d0e4514b3f1b75a1ded15c72d41baa8995228e925459a7f987725cd18",
+    "src/cards/encounter-entries/theDrownedCity/theWesternWall/11524.js": "dc4400e6ff67c18649e553290b9f91be7181b10028b742e946b2d8178efc8a8d",
+    "src/cards/encounter-entries/theDrownedCity/theWesternWall/11525.js": "26f6e842c8fe241b290f0f6e8c48d8e7797ebc223abf213d0a1f3ec1500805e4",
+    "src/cards/encounter-entries/theDrownedCity/theWesternWall/11526.js": "88485855dc2b910d91fd6941d4a4063f2873b136d568234d73146ab522a5cd4e",
+    "src/cards/encounter-entries/theDrownedCity/theWesternWall/11527.js": "ad5ccce864244f89d3d07871c25f2c77e37329d6044b06e11c6bfe9d8f66a81c",
+    "src/cards/encounter-entries/theDrownedCity/theWesternWall/11528.js": "6a18323321e6042873e2a287e23b6e2627b2e1a29819612ff97df799982dc0e4",
+    "src/cards/encounter-entries/theDrownedCity/theWesternWall/11529.js": "2f5d7bca25307b89b6cc6e9916fe7a53730e97812699a8da37a2f1c03dcf01ac",
+    "src/cards/encounter-entries/theDrownedCity/theWesternWall/11530.js": "fd82420d82ef5078971f6f002112c7fabddc426549bf88f8e85e669d31dbd8b8",
+    "src/cards/encounter-entries/theDrownedCity/theWesternWall/11531.js": "1565ad739c76e030f3b7e325de1fd29dbe6bd0cbf8833777642ea14b226f1f20",
     "src/cards/encounter-entries/theDrownedCity/theWesternWall/11531b.js": "49f05279deaedbe3451ad29ee909e2725df89ea4b977cbc1911820a1b6046319",
     "src/cards/encounter-entries/theDrownedCity/theWesternWall/11532.js": "47bf356dbaede037413eb6faaa4ab72f1eb1902045a3f4a9f53efba5a1a23396",
     "src/cards/encounter-entries/theDrownedCity/theWesternWall/11532b.js": "df97dc385300489b38da9dace6aa1fb50f321e5e57628bc55f95c6c0eff6dd27",
-    "src/cards/encounter-entries/theDrownedCity/theWesternWall/11533.js": "001096d876aa959d6194738d7e12d858871c61a030b4565e9f43ee719f2cba93",
+    "src/cards/encounter-entries/theDrownedCity/theWesternWall/11533.js": "51bb5e7b5589577319ff1d1c2da68d7601526dfb9124a270ce8c30fc689007b4",
     "src/cards/encounter-entries/theDrownedCity/theWesternWall/11534.js": "34f09e210058c33eb1c493f1a9b1dcf435066ace88531628e714e7bd2b7365cd",
     "src/cards/encounter-entries/theDrownedCity/theWesternWall/11535.js": "86d78e725c3a381152c68a514b3dffa18bcf3b9b35647a3174be94d1bf999bc5",
-    "src/engine/campaign-flow.js": "00dd275497a8c8431d02587268f722612a9ae4d8cdf9f29fd31eac7ac2cb3b28",
-    "src/engine/encounter.js": "db050d6b4e28ee2b888008a4b1f443391c6e70ab108fea8784235ad54dbd6bdd",
-    "src/engine/engine.js": "d42593172256561ded28cff78146ecc9d42943eb7e2f1f58b39fe94b32a4ce1b",
-    "src/engine/moves.js": "4e53c47425f8cbef3b6f5d17320adc2253e43ad0f1b6daa9ca28bc6fbdd7ff8f",
-    "src/engine/setup.js": "2569321ff3e68de2b4dfca2c2148954e71adda5f058bdbd07c97dc10205ca610",
+    "src/engine/campaign-flow.js": "73464588e9e0f7c688ed64a11710c32340a2af1ea268bd652ff609f4a42de5bc",
+    "src/engine/encounter.js": "a61a866ff2623d8a06e43b1a26993c1797bf227e0c4c16f0a244a3971c04c423",
+    "src/engine/engine.js": "2abc47a4aa87f9b3a5a49c8fc8ee2f4e5fdcbd33acdc869d05acd0732b70732e",
+    "src/engine/moves.js": "f69b0962c94830d6bab71f71bfca8b0d221c5da13f1484ff51cb42baff701e21",
+    "src/engine/setup.js": "7be0a4ba0d7918db6f76deb5177a11e29d5fe3bd64242d9fe91b5e84462f3eea",
     "src/integration/hall-integration.js": "c13af333233d1789d686dfca94f9dc58c33216541ed94421f460d106a0a69158",
-    "src/integration/observation.js": "e21820cf505e10d627e1e34fb4de40e4a49298e6907eb903d18be501ad388a79",
-    "tools/run-tdc-release-browser.mjs": "ef22b06c6b7adf29bbe06212dc13cdd98896e8593c4a7955f2649ae7c7143fc4",
+    "src/integration/observation.js": "61a0b8dedc6f5faeba88b7335c36ac70d0c9cfd98ef110af4f5e6d5f7620a6e2",
+    "tools/run-tdc-release-browser.mjs": "703bc8867e77efcb644ed20defc0eb64a9eb769e55a75c4ef0d4082ce68e8d65",
     "tools/tdc-p8-evidence.mjs": "143c805723e7198b4e380b4581ed2138e47cd4f4cc8c7d1636efe5b109117c5f",
-    "web/game-ui.js": "f666ba827532f912c51d6a3d149419710b979fa5c246fc551a80d542eaa51aed",
-    "web/hub.js": "aa4239cf5e439bb143af873149bc3ac85cac35760ac6e34e2d31f8c68d545b62",
+    "web/game-ui.js": "bd45a1b0865e87d4e48dbb66039bc2798be9d2fb786775b0ffcf1964e0c50eba",
+    "web/hub.js": "ee29f4d6fdb16235076f14a18343064fa43faeb7851fe078febd50f052a5febd",
     "web/scenario-guides/courtOfTheAncients.json": "13eaada24cdcbee21c0b96137770eee3af1c3aec0f575997148a9fd326ec3bac",
     "web/scenario-guides/obsidianCanyons.json": "b8d9ac96f4c8154a95190ba9164d295015a85e0637b04c3a3cc28a69f32307ff",
     "web/scenario-guides/oneLastJob.json": "66131ca1a5b49c1e11dbe9c03ee7bbb5f31b23a13719ad89cc4f1fdae9ffd88c",
@@ -418,7 +420,7 @@
       "entry": "campaign",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/desktop-oneLastJob.png",
-        "sha256": "f70d2ef18cd57a4c01be1c483ae8663ed8566b591712a458014b9234300fe46d"
+        "sha256": "2ca7d85dae6fb6125422f82af81e3a7a72accbc6b85d7264b6926b96037a4e28"
       }
     },
     {
@@ -426,7 +428,7 @@
       "viewport": "desktop",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/desktop-restored.png",
-        "sha256": "abe01941ee6239e9f13df46214fa9f1fed28d3616760912cf3042d6d4b9c7739"
+        "sha256": "b5f13b8653f4d145ac62c256cdee748430217545134abf4950721f0ab718920c"
       }
     },
     {
@@ -437,7 +439,7 @@
       "entry": "campaign",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/desktop-theWesternWall.png",
-        "sha256": "5de5bf97c0c3bcf0793d6bc42bdc457292ce676d7fa10ddd7ca7dda50081beb8"
+        "sha256": "b2635fc27c6f08fa7ce3fa7d12af71b5a5bc6cb2791c327787454b0ef218405f"
       }
     },
     {
@@ -448,7 +450,7 @@
       "entry": "campaign",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/desktop-theApiary.png",
-        "sha256": "edfe99766cf37643cb0024bfb7d99ffa679bb0f9f47f3c651affcb0e1e32e9f3"
+        "sha256": "e8c395a4b5ecee84927d5a192dd4ef94a96d6c4db72a17b86a5d46e20024ae65"
       }
     },
     {
@@ -459,7 +461,7 @@
       "entry": "campaign",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/desktop-theGrandVault.png",
-        "sha256": "9ca8830dd2c76baa401e3536af070c5a71c7a9645762b1e0f32a1d19cd524f54"
+        "sha256": "dd8c1d9f39e8a647da81436cf3bff8fbeb0fddb1d7d5711e34e789451172453c"
       }
     },
     {
@@ -470,7 +472,7 @@
       "entry": "campaign",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/desktop-courtOfTheAncients.png",
-        "sha256": "17dee032717fb3e69090968fabec39ae4926ad81a07676038657b807dbc7f58d"
+        "sha256": "bf71199dbeb839873e5e2913bf059550f3fd5bc915da25a26c65e70411d782e4"
       }
     },
     {
@@ -481,7 +483,7 @@
       "entry": "campaign",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/desktop-obsidianCanyons.png",
-        "sha256": "fbe5d9182f6eeafbd4ddee754dbedd53daec9924bda21d23890e6c2723c2f502"
+        "sha256": "5439d458b47565030941b5947de144935b516d5ab9edb05baa7581f2bb477d5c"
       }
     },
     {
@@ -492,7 +494,7 @@
       "entry": "campaign",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/desktop-theDoomOfArkhamPartI.png",
-        "sha256": "a3e1248619244d0a039899051ea09d64448fb33970591301d559d53955c5a14b"
+        "sha256": "a953242421f5ac081a4bb02cde9267bac5fabf21fed6352fcb31b76edb3033fb"
       }
     },
     {
@@ -503,7 +505,7 @@
       "entry": "campaign",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/desktop-theDoomOfArkhamPartII.png",
-        "sha256": "b43d78d618a744aa38a782dc3cfb80f86ae39564ebdeec6a1720e8ceee2503ee"
+        "sha256": "22c9b95ac95a7c7f53e257330187e54f68599749c674e87836f8a6f19ce69202"
       }
     },
     {
@@ -523,7 +525,7 @@
       "outcome": "victory",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/desktop-west-result.png",
-        "sha256": "30b1fc1a5a4d00731ed7b622783860bed2953563a00ec31e78d3a4363afb715a"
+        "sha256": "668377830a847ad458e84598fa6b4a6d3e165d376d9b9546a9095d971cb19eab"
       }
     },
     {
@@ -534,7 +536,7 @@
       "entry": "debug-scenario",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/desktop-theDrownedQuarter.png",
-        "sha256": "79adb22b6f7aedb0840a9b49df57cf57b7634c71057f06e62079eb1c8ff17a52"
+        "sha256": "7f46a78deda8dcb65d489dabe129094c78e863d04ef31ed26a7f8f289c79af62"
       }
     },
     {
@@ -545,7 +547,7 @@
       "entry": "debug-scenario",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/desktop-sepulchreOfTheSleeper.png",
-        "sha256": "2394704121ef6c17e59ef82801110c51331590026da82edafb4ff6faffca9a69"
+        "sha256": "d46e54658a3c2554b599ce8a39983c6d7d1551fea7977bd2a17ca8d769f7b00f"
       }
     },
     {
@@ -553,7 +555,7 @@
       "viewport": "desktop",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/desktop-online.png",
-        "sha256": "9188785386763d052c51d8a94d79bbc22bd68f8c45a463eb9e167b31c3056549"
+        "sha256": "eae5508e9c136c7c2d75612de99898282303262c758d6d94279c03722afb926d"
       }
     },
     {
@@ -561,7 +563,7 @@
       "viewport": "desktop",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/desktop-ai.png",
-        "sha256": "c83e52f93942e7feeabb7002cc6aaf69d0b2647e7ae907cf47bcc2dee5f7ea8f"
+        "sha256": "ccf5914f8ee1c07916680cbba74ea7dc04f507b9b35d9d8d8f5cfee2bd8a6c67"
       }
     },
     {
@@ -572,7 +574,7 @@
       "entry": "campaign",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/mobile-oneLastJob.png",
-        "sha256": "2a931e45673dc5104f831705a6b529c5af90049ae5516c727c7ef918b496977a"
+        "sha256": "fece49b087b49e7082864b2d9111a963ecb49cc18b613a1e9282b588094d5e15"
       }
     },
     {
@@ -580,7 +582,7 @@
       "viewport": "mobile",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/mobile-restored.png",
-        "sha256": "82ed3ae2e05a6ea17830bc759cde2fe4a2ef35b4cf9e302a28c1e72c619b7054"
+        "sha256": "1d01181c97c1005449f65a6d1c842ea7168b4394e4ffe51cfff08d416b523b11"
       }
     },
     {
@@ -591,7 +593,7 @@
       "entry": "campaign",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/mobile-obsidianCanyons.png",
-        "sha256": "6913acc9aba269575b9a31d5a2aa81d27876cbcf464cd2f48b571989f69b382b"
+        "sha256": "c72bf0fe451f9c0d9a3fe527a440458723c975fd6096e3b3cf43ef818cae7481"
       }
     },
     {
@@ -602,7 +604,7 @@
       "entry": "campaign",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/mobile-courtOfTheAncients.png",
-        "sha256": "fbd619f7fb3ac68e806561b0eab4b80c557e337d089a0659435236b05c91fcee"
+        "sha256": "9610bc1834289b24ca0e4b2e3505cf3702f18a57da269afa42573e9f09938466"
       }
     },
     {
@@ -613,7 +615,7 @@
       "entry": "campaign",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/mobile-theGrandVault.png",
-        "sha256": "531b834ba154aad9c0e4749a269c505bca15ffb500ca05a7097f01c3107afaaf"
+        "sha256": "c670902ae46b5724611c9a724670bbd106646783f9d11ae0a1892b2a0b93fe17"
       }
     },
     {
@@ -624,7 +626,7 @@
       "entry": "campaign",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/mobile-theApiary.png",
-        "sha256": "964615267a67d63148e4cb3a6f78cfd3ea977c8e7f209f4bee897b4f6d7ff192"
+        "sha256": "e8eddeb85c4393133e3e2be010e6676a40130e840aa956247bd44c69fd3d0d3c"
       }
     },
     {
@@ -635,7 +637,7 @@
       "entry": "campaign",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/mobile-theWesternWall.png",
-        "sha256": "c668b9fcb5d5a5ebceba62a9ae4978e828ed091c73b409643c939bb6898e156c"
+        "sha256": "0cdd8d76ea510bbce48267ad39ade0bbfb5637763e1091a71ee91867d256a442"
       }
     },
     {
@@ -646,7 +648,7 @@
       "entry": "campaign",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/mobile-theDoomOfArkhamPartI.png",
-        "sha256": "4ff045343e75343e0dae7dc7a71a2e283cefd937c9b4946d2856b038ccb0d75c"
+        "sha256": "e599cf744fac9b00b650dab8eb59f5fe7d356aee7a20511170805cd4574d22f8"
       }
     },
     {
@@ -657,7 +659,7 @@
       "entry": "campaign",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/mobile-theDoomOfArkhamPartII.png",
-        "sha256": "a846a9d041e55cb17ed756e45167bc47764b10ccbada15b1b90ef01eb990e884"
+        "sha256": "0981250d544a4cb8a34b19af3e926e505079eb60ffc4bfe783d7e55de37895a2"
       }
     },
     {
@@ -677,7 +679,7 @@
       "outcome": "defeat",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/mobile-east-result.png",
-        "sha256": "8160de92129733980385c3d1a0f0d98b658152b26839d5b605493b4a84fce4c6"
+        "sha256": "98f9fadcb1091e25eca238cd2539d45c7717036e0502ecdff1137af897989c9f"
       }
     },
     {
@@ -688,7 +690,7 @@
       "entry": "debug-scenario",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/mobile-theDrownedQuarter.png",
-        "sha256": "e206d67211170622b38b0de10a6e410366bd715564630417dd059f9284e1e14c"
+        "sha256": "dcae946e56a2e245186a35177fdf97b385547d59c612f9ed03c9edc5993c06b6"
       }
     },
     {
@@ -699,7 +701,7 @@
       "entry": "debug-scenario",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/mobile-sepulchreOfTheSleeper.png",
-        "sha256": "0cc3ef2bbbb25fc8e7bb3abd4f56ca8bbfaec1b1186660edaa1b5e66e7a299e7"
+        "sha256": "70c7ae728aaaa0b02690e1ef162c1201778ec6e0562bf082b2a1f3e138889825"
       }
     },
     {
@@ -707,7 +709,7 @@
       "viewport": "mobile",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/mobile-online.png",
-        "sha256": "08be8649e056eac4982e01f513abea0e744a24bd2db46c5e2994dc45c97d7919"
+        "sha256": "deafdea88b21fcc88cbd2779a07f91f37d1995d15a748c6531eef7ef943e7f00"
       }
     },
     {
@@ -715,7 +717,7 @@
       "viewport": "mobile",
       "screenshot": {
         "file": "artifacts/migration/tdc/p8/screenshots/mobile-ai.png",
-        "sha256": "2355eda6b6aeb8287470aeef1b3a20867e810397f8bcc77bb5828a7e7cfe3c79"
+        "sha256": "56bccdeabf3429b1940389aaf215e3816cd4d0c354dcdd011f0fb4f628b88039"
       }
     }
   ]

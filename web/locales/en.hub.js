@@ -296,6 +296,8 @@ export default {
   'hub.investigators.randomClass': 'Random class',
   'hub.investigators.count': '{count} investigators',
   'hub.investigators.candidateAria': '{move}; {class}; {pack}',
+  'hub.investigators.candidateVariantAria': '{move}; {class}; {pack}; {version}',
+  'hub.investigators.parallelVersion': 'Parallel',
   'hub.investigators.empty': 'No investigators available with the current filters',
   'hub.investigators.editDeck': 'View and edit deck',
   'hub.investigators.goDeck': 'Go to deckbuilding',

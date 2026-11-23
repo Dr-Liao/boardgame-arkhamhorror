@@ -223,7 +223,7 @@
     }
   ],
   "acceptance": {
-    "nodePassed": 18,
+    "nodePassed": 154,
     "browserCases": [
       "P3 desktop zh-CN rulebook",
       "P3 desktop en rulebook",
@@ -234,8 +234,8 @@
     ],
     "replayMatches": true,
     "fast": {
-      "tests": 8470,
-      "passed": 8467,
+      "tests": 9290,
+      "passed": 9287,
       "failed": 0,
       "cancelled": 0,
       "skipped": 3
@@ -248,23 +248,23 @@
       "web/tdc-rules.js": "65de6174d2438f4c50094a28cf7851b8cd5584a196e9a27d5e3608fd28d95f33",
       "web/rulebook-data.js": "eb358d0b381aae56282c48244a6a0548a7691ad66f6b5db60847268f6da26f62",
       "web/rulebook.js": "3e3327c81c44713c1870066912eac41501846391456a4ff6d370e58ddc55ee90",
-      "web/catalog.js": "e38e5ef0bbcef54159b6331ec8aa971592e7ee0b2afb74e347b12df32b934b89",
+      "web/catalog.js": "0daa262ecafb3221f0abf02408e28d0d6c14a1b18650389aebb71d7340c61c0a",
       "web/card-text.js": "0b1b4f9999d61abd15c3300f04231fb6d3f15100348a6aeced232df3242f6a97",
-      "src/engine/ability.js": "24198faa5db5d3f14e7f22cb2d956c70ed4c8b880ca7a3c01dff96a9c5ae315d",
-      "src/engine/actions.js": "f3b3c81e7273e8d042e41b6c0f25ef7bdabee880c45df6c8faa89a34d1a95548",
-      "src/engine/combat.js": "d5cc5839cd944f72aa73c41ffb63dfe95c947104b0f752d443836d954eb80648",
-      "src/engine/enemy-keyword-movement.js": "786bcaab05903ac055f104775de1d83f480410f73190e0f4b104edb006d62b56",
-      "src/engine/turn.js": "06f2a02a62e6bb08a73eda9473f8d10ba2c6c8b48661aed4512bb8e6ab7596d5",
-      "src/engine/enemies.js": "dd1c4e17d660a42a00c65488e4fd462be0c6aa758cae128c52d3ce3dd8ce75d0",
+      "src/engine/ability.js": "d4a52470f3e0011e77d218526c0a36a6ce35afa3435a701cf720ee27c688ec87",
+      "src/engine/actions.js": "373bb2fa07ac4424ba4dffc4776f465464ec69a7efc204824602d4c473c14377",
+      "src/engine/combat.js": "38fb09ec660fd3fe239f171af4dc24f77662f5718ed9beac40b65ea02f5d3c8a",
+      "src/engine/enemy-keyword-movement.js": "c0bdecd768f2bf475296bedca200aac1e2c17d7e98eec72d0a2936ea7e05d070",
+      "src/engine/turn.js": "e828a4f9d9de85f81239a554ca4c4f071a3ca9add052b5706126fef5c31f1533",
+      "src/engine/enemies.js": "10915d9b098abe46dbbfbe64b4755aecb0ade96d4817b2e2de51283bb3a07255",
       "src/engine/seal-entry.js": "1e4d4150c8e3a608d54a71d91ff82a37ba5108014ebe01138f3e403b3a160efc",
       "src/engine/play-condition.js": "2c6694ed78e3b701abfdbb0690e0f45c91409a066752366b261465abfb7dd2f4",
-      "src/engine/api-misc.js": "e0eb541596e93b5f03f7594ad60681dd277ad7366bc9110037ee8768b737b164"
+      "src/engine/api-misc.js": "f7186da281f1888e4783f6cc13167df838939d31b7c8e02eadb7b4c046b05c3b"
     },
     "artifacts": {
-      "artifacts/migration/tdc/reports/p3-node.log": "4c587da477425fb19b5cf1b58f99c7d4d67e60055f1a32bd6decfd55b549a690",
-      "artifacts/migration/tdc/reports/p3-browser.json": "25a0541ae0c3005e06723af02c3d978d35c3b50d81bb3709a3b3d9b5b7179c80",
+      "artifacts/migration/tdc/reports/p3-node.log": "ad8e9e2b2c9a98b090265fbc66534377eb10c3b329873494dcf4809cb45eb8ca",
+      "artifacts/migration/tdc/reports/p3-browser.json": "370e9b5af606d10249fc60259a9ebc2071e7c9ff5770843d3fc93743301d28a1",
       "artifacts/migration/tdc/reports/p3-replay.log": "38b3926ee993e94bb1c7bbbd5d751369d3512e5d36a0a65a9d7461a2098bb7b7",
-      "artifacts/migration/tdc/reports/p3-fast-accepted.log": "53fb811ac9ec2499756f5b0985ea38807ba3b6fcd17fe149e808d6a5fac83f55"
+      "artifacts/migration/tdc/reports/p3-fast-accepted.log": "413e5a451b0daa9b2e4383195573f7fb561346eb2894e9af8b52bd1b4f146255"
     }
   }
 }

@@ -15,28 +15,45 @@ const SERIES = [
   ['fhv','filter.series.fhv','fhvp fhvc'], ['tdc','filter.series.tdc','tdcp tdcc'],
   ['rtnotz','filter.series.rtnotz','rtnotz'], ['rtdwl','filter.series.rtdwl','rtdwl'],
   ['rtptc','filter.series.rtptc','rtptc'], ['rttfa','filter.series.rttfa','rttfa'], ['rttcu','filter.series.rttcu','rttcu'],
-  ['starter','filter.series.starter','nat har win jac ste tom car and mar mig'],
 ]
+// 「其他调查员」分类：只提供 1–2 位可选调查员的产品（调查员起始包、单调查员剧本包……）。
+// 这类包各占一行会让选人页与卡牌筛选出现一长列只含一名调查员的分组，因此合并成同一个分类。
+// 人数口径由服务端（目录元数据）与选人页（clientData.deckBuilder.investigators）在调用期传入，
+// 表里不写死扩展包清单：新增小扩展包时无需改这张表，也不会漏掉。
+export const OTHER_INVESTIGATOR_PACK = 'other'
+export const MINOR_INVESTIGATOR_PACK_SIZE = 2
+// packs 是「每个可选调查员所属扩展包」的数组（同一扩展包出现多次）。
+export function minorInvestigatorPackSet(packs = []) {
+  const counts = new Map()
+  for (const pack of packs) if (pack) counts.set(pack, (counts.get(pack) || 0) + 1)
+  return new Set([...counts].filter(([, count]) => count >= 1 && count <= MINOR_INVESTIGATOR_PACK_SIZE).map(([pack]) => pack))
+}
+const asPackSet = value => value instanceof Set ? value : Array.isArray(value) ? new Set(value) : null
 const packSeries = new Map(SERIES.flatMap(([id,key,packs])=>packs.split(' ').map(pack=>[pack,{id,key}])))
 const packNameKeys = {core:'filter.pack.core',rcore:'filter.pack.rcore',core_2026:'filter.pack.core_2026'}
-export function cardSource(card) {
+// minorPacks 是 Set/数组形态的「其他调查员」扩展包集合；缺省时不合并（保留原有逐包口径）。
+export function cardSource(card, minorPacks = null) {
   const rawPack = card.pack || card.packCode || ''
-  const series = packSeries.get(rawPack), seriesName = series ? t(series.key) : ''
+  const other = !!rawPack && !!asPackSet(minorPacks)?.has(rawPack)
+  const series = other ? { id: OTHER_INVESTIGATOR_PACK, key: 'filter.series.other' } : packSeries.get(rawPack)
+  const seriesName = series ? t(series.key) : ''
   // 缺来源的卡（例如只存在于升级候选、卡表里拿不到 pack 的卡）不要再返回空串：
   // 空串会与「所有战役 / 系列」「所有扩展包」的占位选项撞同一个 value，把占位文案顶成「未标注来源」。
   const unknown = !rawPack
-  const pack = rawPack || 'unknown'
+  const pack = other ? OTHER_INVESTIGATOR_PACK : (rawPack || 'unknown')
   const packFallback = unknown ? t('filter.source.unknown') : pack
   return { pack,
-    packName:(packNameKeys[pack] ? t(packNameKeys[pack]) : '') || (series?.id===pack ? seriesName : '') || card.packName || packFallback,
-    id:card.campaignCode || series?.id || pack,
-    name:card.campaignName || seriesName || card.packName || packFallback }
+    packName: other ? t('filter.series.other')
+      : (packNameKeys[pack] ? t(packNameKeys[pack]) : '') || (series?.id===pack ? seriesName : '') || card.packName || packFallback,
+    id: other ? OTHER_INVESTIGATOR_PACK : (card.campaignCode || series?.id || pack),
+    name: other ? t('filter.series.other') : (card.campaignName || seriesName || card.packName || packFallback) }
 }
 const factions = card=>card.factions || [card.klass,card.klass2,card.klass3,card.faction2,card.faction3].filter(Boolean)
-export function filterCards(cards, filters={}) {
+export function filterCards(cards, filters={}, { minorPacks = null } = {}) {
+  const otherPacks = asPackSet(minorPacks)
   const query=(filters.search || '').trim().toLowerCase()
   return cards.filter(card=>{
-    const source=cardSource(card)
+    const source=cardSource(card, otherPacks)
     return (!filters.type || card.type===filters.type)
       && (!filters.klass || factions(card).includes(filters.klass))
       && (!filters.cost || (filters.cost==='4+' ? typeof card.cost==='number' && card.cost>=4 : String(card.cost)===filters.cost))
@@ -51,7 +68,9 @@ export function filterCards(cards, filters={}) {
 export function renderCardFilters(h,{cards=[],filters,scope,onChange,count,options,searchLabel}) {
   const classes={guardian:t('filter.class.guardian'),seeker:t('filter.class.seeker'),rogue:t('filter.class.rogue'),mystic:t('filter.class.mystic'),survivor:t('filter.class.survivor'),neutral:t('filter.class.neutral'),mythos:t('filter.class.mythos')}
   const unique=values=>[...new Map(values).entries()]
-  const sources=options?.packs ? options.packs.map(pack=>cardSource({pack:pack.code,packName:pack.name})) : cards.map(cardSource)
+  // 小扩展包折叠成「其他调查员」后，战役/扩展包下拉里只留一行；筛选值统一走 OTHER_INVESTIGATOR_PACK。
+  const minorPacks = asPackSet(options?.minorPacks)
+  const sources=options?.packs ? options.packs.map(pack=>cardSource({pack:pack.code,packName:pack.name}, minorPacks)) : cards.map(card=>cardSource(card, minorPacks))
   const select=(key,label,choices)=>h('label',{},label+' ',h('select',{
     'aria-label':key==='sort'?t('filter.sortAria'):t('filter.selectAria',{label}),'data-focus-key':`${scope}:${key}`,
     onchange:event=>onChange({...filters,[key]:event.target.value,...(key==='campaign'?{pack:''}:{})}),

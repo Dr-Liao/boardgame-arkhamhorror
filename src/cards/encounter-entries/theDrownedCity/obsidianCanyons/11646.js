@@ -6,7 +6,7 @@ export default {
   code: '11646',
   scope: 'act',
   implemented: true,
-  flags: { actBack: 'deadlySkies', objective: { kind: 'allAt', location: 'floatingSpire' } },
+  flags: { objective: { kind: 'allAt', location: 'floatingSpire' } },
   
   note: "西征幕 2。目标：每位存活调查员位于漂浮尖塔。背面 behavior.deadlySkiesBack：移除中央尖塔、重排 4×5 天际线（漂浮尖塔为锚点）。",
 }

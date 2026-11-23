@@ -23,7 +23,6 @@ export default {
     traits: ['Scheme'],
     quantity: 2,
     test: { skill: 'agility', difficulty: BASE_DIFFICULTY, fullyFloodedPlus: 2 },
-    raiseNearestFlood: 1,
   },
   encounterResolve(state, inv, card, api) {
     const water = api.mechanics?.water

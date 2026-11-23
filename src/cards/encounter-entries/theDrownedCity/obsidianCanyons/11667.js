@@ -6,7 +6,7 @@ export default {
   code: '11667',
   scope: 'treachery',
   implemented: true,
-  flags: { threatArea: true, failTriggers: 'discardUntilEnemy' },
+  flags: { threatArea: true },
   encounterResolve(state, inv, card, api) {
     return api.resolveScenarioEvent('obsidianWingsOfTerror', { seat: inv.seat }) === true
   },

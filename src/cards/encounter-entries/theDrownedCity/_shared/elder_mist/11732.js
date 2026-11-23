@@ -32,7 +32,6 @@ export default {
     quantity: 2,
     test: { skills: ['intellect', 'combat'], difficulty: DIFFICULTY },
     failDamage: 1,
-    failBy3: { directDamage: 1, damageAssetsTraits: ['Ally', 'Item'] },
   },
   encounterResolve(state, inv, card, api) {
     const skill = String(api.choice({

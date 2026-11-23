@@ -11,7 +11,8 @@ export default {
   scope: 'location',
   implemented: true,
   flags: {
-    treacherousPath: true, cannotEnterFromClues: true, shroudIsLevel: true,
+    treacherousPath: true,
+    cannotEnterFromClues: true,
     enterTest: { skill: 'willpower', difficultyPerLevel: 1, increaseFlood: true, discardAllyIfNoFlood: true },
   },
   note: '数据型条目：进入检定与「淹没无法提高则弃盟友」由 behavior.locationEntered/runEnterTest 实现；'

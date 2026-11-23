@@ -138,7 +138,7 @@ for(const width of [1440,390]) test(`推荐卡组保存后载入手动编辑，�
   const hub=await start(page)
   await hub.getByRole('button',{name:'战役总览',exact:true}).click()
   await hub.getByRole('button',{name:'选择调查员',exact:true}).click()
-  await hub.getByRole('button',{name:/选择调查员：.*奥图尔/}).click()
+  await hub.getByRole('button',{name:/选择调查员：.*奥图尔/}).first().click()
   await hub.getByRole('button',{name:'卡组构筑',exact:true}).click()
   // Leave a draft before applying the recommendation: it must not replace the saved deck later.
   await hub.getByRole('button',{name:/手动构筑/}).click()
@@ -237,7 +237,7 @@ for(const width of [1440,390]) test(`故事、规则书和构筑详情连贯交�
   await page.keyboard.press('Escape');await expect(book).toHaveCount(0)
   await hub.getByRole('button',{name:'战役总览',exact:true}).click()
   await hub.getByRole('button',{name:'选择调查员',exact:true}).click()
-  await hub.getByRole('button',{name:/选择调查员：罗兰/}).click()
+  await hub.getByRole('button',{name:/选择调查员：罗兰/}).first().click()
   await hub.getByRole('button',{name:/使用推荐卡组/}).click()
   await hub.getByRole('button',{name:'卡组构筑',exact:true}).click()
   await hub.getByRole('button',{name:/手动构筑/}).click()

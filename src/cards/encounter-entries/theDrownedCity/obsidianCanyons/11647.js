@@ -6,7 +6,7 @@ export default {
   code: '11647',
   scope: 'act',
   implemented: true,
-  flags: { actBack: 'returnToTheShoreline', resolution: 'resolution1', objective: { kind: 'allResigned' } },
+  flags: { resolution: 'resolution1', objective: { kind: 'allResigned' } },
   
   note: "西征幕 3。目标：每位存活调查员均已撤退；背面（behavior.actReveal 11647）→ 结局 1（返回海岸线 → 沉睡者墓穴）。",
 }

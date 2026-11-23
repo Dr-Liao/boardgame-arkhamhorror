@@ -10,7 +10,7 @@ export default {
   code: '11684',
   scope: 'act',
   implemented: true,
-  flags: { phantomShop: true, shopAction: true, artifactThreshold: 5 },
+  flags: { phantomShop: true, shopAction: true },
   note: '数据型条目：目标/背面在 behavior.roundEnded 与 behavior.actReveal；行动在 behavior.performAction。',
   abilities: [],
 }

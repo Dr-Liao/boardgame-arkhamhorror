@@ -9,7 +9,7 @@ export default {
   code: '11530',
   scope: 'location',
   implemented: true,
-  flags: { shroudIsLevel: true, doubleActionDraw: 3, groupLimitPerGame: true },
+  flags: { doubleActionDraw: 3 },
   note: '数据型条目：「两个行动抽 3 张」由 behavior 的 actions（actions: 2）实现，每场游戏限一次。',
   abilities: [],
 }

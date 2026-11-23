@@ -29,7 +29,6 @@ export default {
     traits: ['Scheme'],
     quantity: 2,
     limitPerInvestigator: 1,
-    engageAttackTrait: 'Deep One',
   },
   encounterResolve(state, inv, card, api) {
     if ((inv.threat || []).some(item => (item.originalCode || item.code) === CODE)) {

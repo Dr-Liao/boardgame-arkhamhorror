@@ -23,7 +23,7 @@ export default {
   scope: 'storyAsset',
   implemented: true,
   assetRule: { redirectOneDamageToSelf: true, effectiveFloodLevelCap: 1 },
-  flags: { expedition: true, traits: ['Item', 'Armor'], health: 3, slotless: true },
+  flags: { expedition: true, traits: ['Item', 'Armor'], health: 3 },
   abilities: [],
   note: '两条款都走引擎声明读点：① 伤害改道 = assetRule.redirectOneDamageToSelf'
     + '（enemies.js#applyHarm，每次结算至多 1 点、直接伤害同样适用；条目不写 resolve，由引擎统一结算）；'

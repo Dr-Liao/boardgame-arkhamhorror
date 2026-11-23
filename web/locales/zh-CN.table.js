@@ -305,6 +305,7 @@ export default {
   'filter.series.rttfa': '重返失落的时代',
   'filter.series.rttcu': '重返万象无终',
   'filter.series.starter': '调查员起始包',
+  'filter.series.other': '其他调查员',
   'filter.pack.core': '基础包',
   'filter.pack.rcore': '修订基础包',
   'filter.pack.core_2026': '基础包（2026）',

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { spawn } from 'node:child_process'
+import { execSync, spawn } from 'node:child_process'
 import { closeSync, mkdirSync, openSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { artifactRoot, modRoot, sha256 } from './tdc-p8-evidence.mjs'
@@ -72,6 +72,8 @@ const passed = Object.entries(results).every(([id, { exitCode }]) => id === 'ful
   && results.full.counts.cancelled === 0 && newFailures.length === 0
   && (results.full.exitCode === 0 || (results.full.counts.fail > 0 && remainingFailures.length > 0))
 writeFileSync(reportFile, JSON.stringify({ schemaVersion: 1,
+  generatedAt: new Date().toISOString(),
+  commit: (() => { try { return execSync('git rev-parse HEAD', { cwd: modRoot, encoding: 'utf8' }).trim() } catch { return null } })(),
   status: passed ? 'passed' : 'failed', before: { ...before, sha256: sha256(baseline), report: 'artifacts/migration/tdc/p8/full-before.log' },
   results, newFailures, remainingFailures }, null, 2) + '\n')
 if (!passed) process.exitCode = 1

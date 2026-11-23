@@ -35,7 +35,6 @@ export default {
     victory: 0,
     hunter: true,
     relentless: true,
-    spawnConnectedEmpty: true,
   },
   abilities: [{
     kind: 'forced',

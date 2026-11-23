@@ -8,7 +8,7 @@ export default {
   implemented: true,
   // 印刷「巡逻（最近的空[[峰顶]]地点）」：引擎 enemy-keyword-movement.js 的 nearestEmptyTrait 读点。
   enemyRule: { patrolTarget: { kind: 'nearestEmptyTrait', trait: 'Summit' } },
-  flags: { patrol: 'nearestEmptySummit', noOpportunityAttack: true, openSkyWhileEngaged: true },
+  flags: { patrol: 'nearestEmptySummit', noOpportunityAttack: true },
   
-  note: "原初恐怖（×3）。巡逻（最近的空[[峰顶]]地点）由 enemyRule.patrolTarget {kind:'nearestEmptyTrait', trait:'Summit'} 接线（turn.js#patrolMove / enemy-keyword-movement.js#resolvePatrol）；不能进行趁乱攻击由 behavior.canOpportunityAttack（hidden-rules.js#enemyCanOpportunityAttack 读点）返回 false；与你交战时你可如地点般进入开阔天空（behavior.movementError）；在开阔天空被击败 → 交战调查员被击败 +1 肉体创伤（behavior.enemyDefeated）。「解除交战时」无引擎钩子（下轮补），近似保留。",
+  note: "原初恐怖（×3）。巡逻（最近的空[[峰顶]]地点）由 enemyRule.patrolTarget {kind:'nearestEmptyTrait', trait:'Summit'} 接线（turn.js#patrolMove / enemy-keyword-movement.js#resolvePatrol）；不能进行趁乱攻击由 behavior.canOpportunityAttack（hidden-rules.js#enemyCanOpportunityAttack 读点）返回 false；与你交战时你可如地点般进入开阔天空（behavior.movementError）；在开阔天空被击败 → 交战调查员被击败 +1 肉体创伤（behavior.enemyDefeated）。「解除交战」由 behavior.enemyDisengaged（src/engine/enemies.js 读点）结算。",
 }

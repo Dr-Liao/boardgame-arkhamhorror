@@ -32,7 +32,7 @@
           1440,
           900
         ],
-        "sha256": "c40574f79088433b5492dcc7350c6332ae7c0fed980bd60a7c409fd1b5ec16b3"
+        "sha256": "372b935faac8a80f8efe78763382c1a870d4d9738faf0c69483e0e42f4fbf279"
       },
       {
         "title": "P4 desktop routes, glyphs and map",
@@ -41,7 +41,7 @@
           1440,
           900
         ],
-        "sha256": "31a31e8019fbacb39acc0659299a3c9f8296267e0e20e20b604547409f45e03f"
+        "sha256": "d7581fe83c03e970ada40dc2195ee79236be410e957e493f943edc1fe5467396"
       },
       {
         "title": "P4 desktop artifact tie and multipart targets",
@@ -50,7 +50,7 @@
           1440,
           900
         ],
-        "sha256": "87550b95334fbeaee05541121bf4562578265865a024eb1aa857bde6649d967c"
+        "sha256": "c46e9ae0143f0bed6d311cf79058cdd8c239de6c8a2c296e8b821ec0954c7513"
       },
       {
         "title": "P4 desktop script ownership and guide recovery",
@@ -59,7 +59,7 @@
           1440,
           900
         ],
-        "sha256": "04aab5003eac008ba0d75b0601620c0f174cff8f57db20b690f341b1df0142f1"
+        "sha256": "b3706f66a98e05826c70d1d1eda4446b5e46ed402252bc894896310498fe67ae"
       },
       {
         "title": "P4 mobile task privacy, cancel and retry",
@@ -68,7 +68,7 @@
           390,
           844
         ],
-        "sha256": "355f4f712a378fd8c09244880668ef6b05ad9188e334d97cf412e6bcb8abb258"
+        "sha256": "b3288ae39550b0b619c081b765f3f62f1075ea54de92e0230832b2d2d0d601ff"
       },
       {
         "title": "P4 mobile routes, glyphs and map",
@@ -77,7 +77,7 @@
           390,
           844
         ],
-        "sha256": "e466c76d6729869b68cb4606b60910eedb12149b694379c97109bf362427986c"
+        "sha256": "c0f7ec27ce355ae205af939f29152cb3f829b3f7db2eff03eafc835a514e1640"
       },
       {
         "title": "P4 mobile artifact tie and multipart targets",
@@ -86,7 +86,7 @@
           390,
           844
         ],
-        "sha256": "4dee20a4c4c9504982f884f45e7132360f5ae84da33e06db5b1f19196c5e0c35"
+        "sha256": "05c2552914f9e9c5d653aba83163090f41af9e072ef46d95c2909e250a3ec7f1"
       },
       {
         "title": "P4 mobile script ownership and guide recovery",
@@ -95,7 +95,7 @@
           390,
           844
         ],
-        "sha256": "9a8298b43fc58ac21f7306233027bba9954c8bed25b7c8cfcce0d46bf1559a47"
+        "sha256": "f015faeb50964405d1d532510e23b54cda0e55d952b0b253b162a8f7eebf5197"
       }
     ],
     "implementationSha256": {
@@ -105,14 +105,14 @@
       "web/mechanic-ui.js": "553db01fcc388db9a15873c9e4fa40d229cb1dbda9719f33bcdb55dd2de28ad8",
       "web/mechanic-ui.css": "8b2b4bb1efa9a5bedca2e1dd82be22b6baecff9353639a8dcfa21370693ee1a2",
       "web/scenario-setup-view.js": "edb93ca15a452191324aae249a7426a5e422292aca9491f7cf7d64c554e099be",
-      "web/table-regions.js": "c13fb81cd7751fba20fdea09dba094bb5d7ea79bb886319e709f737ae490b265",
+      "web/table-regions.js": "ccef7b0bf95b368f9e0162fac0b7ef9ef6b118b6230074ab291aecd553d3a8d6",
       "tests/tdc-primitives.test.mjs": "c152d8c4f1e738adc1b1f75ac78ddfaa26012a91ed060d4a7132987df99e397b",
       "tests/tdc-interactions.browser.mjs": "8806f6a1b2c6f4a8b9533f86f987b70e623f7644f990309a62256eb7a47f139d",
       "tests/tdc-interaction-fixture.mjs": "c71691b8a71822d34222b79120a71a7cfe673420a66dd5b151538db0cdb4aac8"
     },
     "reports": {
-      "artifacts/migration/tdc/p4/browser.json": "582b7bb7f5ba35ab587cef980897c8b71b401cb9372bc7892744aa4664afbcf2",
-      "artifacts/migration/tdc/reports/p4-node.log": "cf5f8a7f1f297a02acf27201666d6f98c82bbfd89920d5d3b9216da7c8f62394",
+      "artifacts/migration/tdc/p4/browser.json": "c7b5b23de930348dafb05b3575a08a5366376d6d5e05047d1faef56635c16898",
+      "artifacts/migration/tdc/reports/p4-node.log": "36fe98365bf8bf03e75cfd6681381cc13230579dbc53f44073c6f996700e047d",
       "artifacts/migration/tdc/reports/p4-replay.log": "38b3926ee993e94bb1c7bbbd5d751369d3512e5d36a0a65a9d7461a2098bb7b7"
     }
   }

@@ -11,7 +11,7 @@ export default {
   code: '11533',
   scope: 'enemy',
   implemented: true,
-  flags: { spawnPreferLocation: 'drownedShanty', searchDeepOneOnEnter: true, hunter: true },
+  flags: { searchDeepOneOnEnter: true, hunter: true },
   note: '数据型条目：生成点偏好与进场搜深潜者由 behavior.spawnLocation/enemySpawned 实现'
     + '（搜牌库/弃牌堆走 api.takeEncounterDeckCard/takeEncounterDiscard，找不到时按普通敌人处理）。',
   abilities: [],

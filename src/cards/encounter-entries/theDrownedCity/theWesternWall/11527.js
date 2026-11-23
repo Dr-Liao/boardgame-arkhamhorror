@@ -9,7 +9,7 @@ export default {
   code: '11527',
   scope: 'location',
   implemented: true,
-  flags: { treacherousPath: true, cannotEnterFromClues: true, shroudIsLevel: true, deepOneMovingConnectsFlooded: true },
+  flags: { treacherousPath: true, cannotEnterFromClues: true, deepOneMovingConnectsFlooded: true },
   note: '「深潜者敌人移动时与完全淹没地点双向互连」由 behavior.enemyConnections（turn.js/movement.js 既有钩子）实现；'
     + '不再是场上有深潜者就持续并连（syncShantyConnections 只维护按行常规连接）。',
   abilities: [],

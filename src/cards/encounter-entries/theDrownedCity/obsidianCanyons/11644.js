@@ -6,7 +6,7 @@ export default {
   code: '11644',
   scope: 'act',
   implemented: true,
-  flags: { actBack: 'toTheAncientDome', resolution: 'resolution2', objective: { kind: 'allResigned' } },
+  flags: { resolution: 'resolution2', objective: { kind: 'allResigned' } },
   
   note: "东征幕 2。目标：每位存活调查员均已撤退；背面（behavior.actReveal 11644）→ 结局 2（前往古代圆顶 → 古代法庭）。",
 }

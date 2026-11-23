@@ -28,7 +28,6 @@ export default {
     threatArea: true,
     traits: ['Terror'],
     quantity: 2,
-    additionalPlayCost: { resourceOrHorror: 1 },
     test: { skill: 'agility', difficulty: DIFFICULTY, autoSuccessWhenUnflooded: true },
   },
   encounterResolve(state, inv, card, api) {

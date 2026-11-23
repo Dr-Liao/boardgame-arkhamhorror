@@ -92,11 +92,17 @@ if (counts.scenariosRegistered !== counts.scenarios || unscopedScenarioIds.lengt
 ownedContentInputsPending.push('encounterContent')
 if (!flowCoverage.terminalReachable || flowCoverage.missingChapters.length) ownedContentInputsPending.push('campaignFlowContent')
 if (counts.bilingualGuides !== counts.scenarios) ownedContentInputsPending.push('bilingualGuides')
+// P2-3：状态按检查项推导，不再硬编码（旧值长期停在 implementation-in-progress）。
+const contentComplete = Boolean(campaignPack)
+  && counts.scenariosRegistered === counts.scenarios
+  && counts.bilingualGuides === counts.scenarios
+  && flowCoverage.terminalReachable && flowCoverage.missingChapters.length === 0
+  && unscopedScenarioIds.length === 0
 writeOrCheck('audit/tdc-p7.json', {
   schemaVersion: 1,
   campaignId: scope.campaignId,
   phase: 'P7',
-  status: 'implementation-in-progress',
+  status: contentComplete ? 'content-complete' : 'implementation-in-progress',
   scope: { path: scopeSource, sha256: sha(input) },
   counts, shared, scenarios, unscopedScenarioIds,
   campaignPackStatus: campaignPack?.status ?? null,

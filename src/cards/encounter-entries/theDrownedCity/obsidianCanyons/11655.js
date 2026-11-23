@@ -6,7 +6,7 @@ export default {
   code: '11655',
   scope: 'location',
   implemented: true,
-  flags: { summit: true, placeGlyphOrrery: true },
+  flags: { summit: true },
   
   note: "黑曜石悬崖。[[峰顶]]，胜利 1；[action] 选相邻开阔天空，[智识](3) 成功把放一边的符文星盘仪放进该格（behavior.obsidianCliffsAction）。",
 }

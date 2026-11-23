@@ -12,7 +12,7 @@ export default {
   code: '11531',
   scope: 'treachery',
   implemented: true,
-  flags: { friezeAction: true, cannotBeCanceled: true, storyCode: '11531b' },
+  flags: { friezeAction: true, storyCode: '11531b' },
   cannotLeavePlay: true,
   cannotBeCanceledRevelation: true,
   encounterResolve(state, inv, card, api) {

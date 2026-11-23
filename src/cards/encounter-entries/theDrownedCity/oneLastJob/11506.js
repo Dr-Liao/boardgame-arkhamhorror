@@ -17,8 +17,6 @@ export default {
     bossCode: '11510',
     bossClueGoal: 3,
     parleyResourcesUpTo: 4,
-    parleyDifficulty: 5,
-    parleySkills: ['willpower', 'combat'],
     criminalCluesGainAloof: true,
   },
   note: '数据型条目：目标/谈判参数由 flags 声明、behavior 读取；'

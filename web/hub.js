@@ -8,7 +8,8 @@ import { tableIcon, classIcon } from './table-components.js'
 import { cardDisplayName, cardDisplayText, cardDisplayTraits } from './catalog.js'
 import { t } from './i18n.js'
 import { renderStoryReader } from './story-reader.js'
-import { filterCards, renderCardFilters } from './card-filters.js'
+import { filterCards, renderCardFilters, minorInvestigatorPackSet, OTHER_INVESTIGATOR_PACK } from './card-filters.js'
+import { reprintDuplicateCodes, parallelVariantCodes } from './investigator-versions.js'
 import { packLabel } from './pack-label.js'
 import { campaignPresentation, presentationAttributes } from './campaign-presentation.js'
 import { campaignChoices, renderCampaignPicker, renderCampaignSummary } from './campaign-picker.js'
@@ -71,6 +72,9 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   // 补给品是失落的时代的战役机制；标了 supplyLabels 的战役才会多出这一页。
   const supportsSupplies = campaign => Object.keys(campaign?.supplyLabels || {}).length > 0
   const game = () => state.catalog.find(item => item.id === 'arkhamhorror')
+  // 「其他调查员」口径：只提供 ≤2 位可选调查员的产品合并成一个分类（选人页与卡牌筛选共用）。
+  const minorInvestigatorPacks = () => minorInvestigatorPackSet(
+    (game()?.clientData?.deckBuilder?.investigators || []).map(inv => inv.pack || 'core'))
   const legal = (s, action) => (s.state.legalMoves || []).filter(move => move.action === action)
   // Seat preparation is simultaneous: the server lists every seat that may act now.
   const actingSeats = s => s.actingSeats ?? [s.state.pendingChoice?.seat ?? s.state.currentSeat]
@@ -176,6 +180,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     .map(key=>[key,state[`${scope}Filters`]?.[key] || '']))
   const filterControls = (scope, cards, shown) => renderCardFilters(h, {
     scope, cards, count: shown.length, filters: cardFilters(scope),
+    options: { minorPacks: minorInvestigatorPacks() },
     onChange: filters => { state[`${scope}Filters`] = filters; render() },
   })
   // The host replaces its tree on every state update. Keep passive media alive
@@ -1417,31 +1422,46 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const selectedClass = state.arkhamInvestigatorClass || 'all'
     const moves = legal(s, 'hubSelectInvestigator')
     const packOf = ({ investigator }) => investigator.pack || 'core'
+    // 「其他调查员」分类按产品口径（每位可选调查员属于哪个扩展包）判定，不受职业筛选影响：
+    // 只提供 ≤2 位可选调查员的小包合并成一个分组，避免一长列只含一名调查员的扩展包。
+    const minorPacks = minorInvestigatorPackSet(builderInvestigators.map(inv => inv.pack || 'core'))
+    const groupOf = item => minorPacks.has(packOf(item)) ? OTHER_INVESTIGATOR_PACK : packOf(item)
     const candidates = moves.map(move => ({ move, investigator: builderInvestigators.find(item => item.code === move.code)
       // 服务端 move.label 仍是中文「选择调查员：<name>」；名字兜底时只剥掉中文前缀，不翻译协议文本。
       || { code: move.code, name: move.label.replace(/^[\u4e00-\u9fff]+\uFF1A\s*/, ''), pack: 'core' } }))
-    // 候选调查员横跨四个循环，扩展包改用下拉框收束；下拉项跟随职业筛选，
+    // 同名复刻（规则/签名完全一致，仅卡号不同）只留一张，优先保留主循环版本；
+    // 同名但规则不同的平行版保留，稍后在合并分类里标注「平行版」。
+    const hiddenReprints = reprintDuplicateCodes(candidates.map(item => item.investigator), minorPacks)
+    const visibleCandidates = candidates.filter(item => !hiddenReprints.has(item.investigator.code))
+    const variantCodes = parallelVariantCodes(visibleCandidates.map(item => item.investigator))
+    // 候选调查员横跨多个循环，扩展包改用下拉框收束；下拉项跟随职业筛选，
     // 因此不会出现「职业 + 扩展包」组合下空名册的死路。
-    const classCandidates = selectedClass === 'all' ? candidates
-      : candidates.filter(({ investigator }) => investigator.klass === selectedClass)
-    const packs = [...new Set(classCandidates.map(packOf))]
+    const classCandidates = selectedClass === 'all' ? visibleCandidates
+      : visibleCandidates.filter(({ investigator }) => investigator.klass === selectedClass)
+    const packs = [...new Set(classCandidates.map(groupOf))]
     const counts = classCandidates.reduce((result, item) => {
-      const pack = packOf(item); result[pack] = (result[pack] || 0) + 1; return result
+      const group = groupOf(item); result[group] = (result[group] || 0) + 1; return result
     }, {})
     const selectedPack = packs.includes(state.arkhamInvestigatorPack) ? state.arkhamInvestigatorPack : 'all'
-    const packName = pack => packLabel(pack, candidates.find(item => packOf(item) === pack)?.investigator.packName)
-    const packOptions = [['all', t('hub.investigators.allPacks')], ...packs.map(pack => [pack, t('hub.investigators.packOption', { pack: packName(pack), count: counts[pack] })])]
+    const packName = group => group === OTHER_INVESTIGATOR_PACK
+      ? t('filter.series.other')
+      : packLabel(group, candidates.find(item => groupOf(item) === group)?.investigator.packName)
+    const packOptions = [['all', t('hub.investigators.allPacks')], ...packs.map(group => [group, t('hub.investigators.packOption', { pack: packName(group), count: counts[group] })])]
     const classes = Object.keys(CLASS_KEYS).filter(key => key !== 'neutral')
-    const availableClasses = classes.filter(key => candidates.some(item =>
-      item.investigator.klass === key && (selectedPack === 'all' || packOf(item) === selectedPack)))
+    const availableClasses = classes.filter(key => visibleCandidates.some(item =>
+      item.investigator.klass === key && (selectedPack === 'all' || groupOf(item) === selectedPack)))
     const selectClass = key => { state.arkhamInvestigatorClass = key; render() }
-    const groups = Object.entries(classCandidates
-      .filter(item => selectedPack === 'all' || packOf(item) === selectedPack)
+    // Object 键顺序沿用候选取数顺序，但「其他调查员」固定排在最后一行。
+    const grouped = classCandidates
+      .filter(item => selectedPack === 'all' || groupOf(item) === selectedPack)
       .reduce((result, item) => {
-        const pack = packOf(item)
-        ;(result[pack] ||= []).push(item)
+        const group = groupOf(item)
+        ;(result[group] ||= []).push(item)
         return result
-      }, {}))
+      }, {})
+    const groups = Object.keys(grouped)
+      .sort((a, b) => (a === OTHER_INVESTIGATOR_PACK ? 1 : 0) - (b === OTHER_INVESTIGATOR_PACK ? 1 : 0))
+      .map(group => [group, grouped[group]])
     const seatParts = Array.isArray(st.campaign.seatParts) ? st.campaign.seatParts : null
     const lanesAssigned = !!seatParts?.some(part => part === 'A' || part === 'B')
     const myLane = lanesAssigned ? seatParts[s.mySeat ?? 0] : null
@@ -1456,7 +1476,11 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
           'data-seat': String(inv.seat),
         },
           portrait(inv), h('div', { className: 'ah-office-investigator-copy' },
-          h('small', { className: 'ah-office-eyebrow' }, t('hub.investigators.eyebrow', { class: classLabel(inv.klass) || inv.klass || '', pack: packLabel(detail.pack, detail.packName), seat: inv.seat + 1 })),
+          h('small', { className: 'ah-office-eyebrow' }, t('hub.investigators.eyebrow', { class: classLabel(inv.klass) || inv.klass || '', pack: (() => {
+            const label = packLabel(detail.pack, detail.packName, minorPacks)
+            // 选中的是合并分类里的平行版时，一并标出来，避免与主循环同名角色混淆。
+            return minorPacks.has(detail.pack || 'core') && variantCodes.has(inv.code) ? [label, t('hub.investigators.parallelVersion')].join(' · ') : label
+          })(), seat: inv.seat + 1 })),
           playerBadge(s, inv.seat),
           h('h2', {}, inv.name), detail.subname ? h('p', { className: 'ah-investigator-subname' }, detail.subname) : null,
           h('div', { className: 'ah-office-metrics' }, metric('combat', inv.combat, t('hub.skill.combat')), metric('intellect', inv.intellect, t('hub.skill.intellect')), metric('willpower', inv.willpower, t('hub.skill.willpower')), metric('agility', inv.agility, t('hub.skill.agility'))),
@@ -1491,17 +1515,25 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
                 }, key === 'all' ? null : tableIcon(classIcon(key)), label)))),
             groups.length ? groups.map(([pack, entries]) => h('section', { className: 'ah-investigator-pack', 'data-pack': pack },
               h('header', {}, h('h4', {}, packName(pack)), h('small', {}, t('hub.investigators.count', { count: entries.length }))),
-              h('div', { className: 'ah-office-roster' }, entries.map(({ move, investigator: candidate }) =>
+              h('div', { className: 'ah-office-roster' }, entries.map(({ move, investigator: candidate }) => {
+                // 平行版（同名不同规则）在合并分类里加标注，避免被当成重复角色。
+                const parallel = pack === OTHER_INVESTIGATOR_PACK && variantCodes.has(candidate.code)
+                const classText = classLabel(candidate.klass) || candidate.klass || t('hub.investigator.generic')
+                const ariaLabel = t(parallel ? 'hub.investigators.candidateVariantAria' : 'hub.investigators.candidateAria',
+                  { move: move.label, class: classLabel(candidate.klass) || candidate.klass || '', pack: packName(pack),
+                    version: parallel ? t('hub.investigators.parallelVersion') : '' })
                 // 候选人卡 = 选择按钮 + 独立的档案按钮（不能把 button 嵌进 button）。
                 // 点卡直接选定（原有行为），点右上角 ⓘ 只看完整人物档案、不提交选择。
-                h('div', { className: 'ah-office-candidate-shell', 'data-code': candidate.code },
+                return h('div', { className: 'ah-office-candidate-shell', 'data-code': candidate.code },
                   h('button', { className: `ah-office-candidate is-${candidate.klass || 'neutral'}`, 'data-class': candidate.klass || 'neutral',
-                    'aria-label': t('hub.investigators.candidateAria', { move: move.label, class: classLabel(candidate.klass) || candidate.klass || '', pack: packName(pack) }),
+                    'aria-label': ariaLabel,
                     'aria-pressed': String(selected && inv.code === move.code), disabled: locked(s), onclick: () => submitMove(move, s) },
-                  portrait(candidate, { unloadOffscreen: true }), h('span', {}, candidate.name), h('small', {}, classLabel(candidate.klass) || candidate.klass || t('hub.investigator.generic'))),
+                  portrait(candidate, { unloadOffscreen: true }), h('span', {}, candidate.name),
+                  h('small', {}, parallel ? [classText, t('hub.investigators.parallelVersion')].join(' · ') : classText)),
                   h('button', { type: 'button', className: 'ah-office-candidate-info', 'data-candidate-info': candidate.code,
                     'aria-label': t('hub.investigator.inspectDossier', { name: candidate.name }), title: t('hub.investigator.dossierTitle', { name: candidate.name }),
-                    onclick: () => inspectCard(candidate.code) }, tableIcon('book')))))))
+                    onclick: () => inspectCard(candidate.code) }, tableIcon('book')))
+              }))))
               : h('p', { className: 'ah-office-empty' }, t('hub.investigators.empty'))) : null,
           active && inv.seat === (s.mySeat ?? 0) ? h('div', { className: 'ah-hub-actions' },
             investigatorBuildControls(s, inv, detail),
@@ -1615,7 +1647,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const purchases = legal(s, 'hubPurchase')
     const additions = [...new Set(purchases.map(move => move.added))]
     const pool = additions.map(code => ({...g.clientData?.deckBuilder?.cardPool.find(card=>card.code===code),...st.cards?.[code],code,name:name(code)}))
-    const shown = filterCards(pool, cardFilters('upgrade'))
+    const shown = filterCards(pool, cardFilters('upgrade'), { minorPacks: minorInvestigatorPacks() })
     if (shown.length && !shown.some(card=>card.code===state.arkhamUpgradeSelected)) state.arkhamUpgradeSelected = shown[0].code
     const options = shown.length ? purchases.filter(move => move.added === state.arkhamUpgradeSelected) : []
     const selectReplacement = move => {
@@ -2476,7 +2508,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       && (inv?.allowedCards?.includes(card.code) || draft.includes(card.code)
         || (!card.upgradeOnly && experienceCost(card) <= startingExperience
           && rules?.options.some(rule => rule.not !== true && matchesCardRule(card, rule, inv)))))
-    const shown = filterCards(pool, cardFilters('deck'))
+    const shown = filterCards(pool, cardFilters('deck'), { minorPacks: minorInvestigatorPacks() })
     const counts = Object.fromEntries([...new Set(draft)].map(code => [code, draft.filter(item => item === code).length]))
     // P7（食梦者 M2）：多重（Myriad）按「同名跨卡号共享 3 张」显示 n/3；
     // 单卡张数上限仍由 validateDeckRules 的逐卡检查约束（例：三张「增强自我」各限 1）。

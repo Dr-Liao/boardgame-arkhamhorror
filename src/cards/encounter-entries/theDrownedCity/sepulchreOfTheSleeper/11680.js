@@ -6,7 +6,7 @@ export default {
   code: '11680',
   scope: 'location',
   implemented: true,
-  flags: { artifactRecord: 'grislyMask', skill: 'agility', groupClueExtra: 1, cthulhuEntry: 'loseResources2' },
+  flags: { artifactRecord: 'grislyMask', skill: 'agility' },
   
   note: "刻印壁龛（反抗的故事）。[action][敏捷](5) → 在「骇人面具」上放 1 毁灭（+团队线索追加 1）。克苏鲁进入时每位调查员失去 2 个资源。",
 }

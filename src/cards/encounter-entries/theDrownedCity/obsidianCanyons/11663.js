@@ -32,7 +32,7 @@ export default {
       return true
     },
   }],
-  flags: { skyRelic: true, glyph: 'rune_f', glyphWord: 'Stars', flipsToStory: true },
+  flags: { glyph: 'rune_f', glyphWord: 'Stars' },
   
-  note: "天空遗物[rune_f]（放一边）。[action][敏捷](8)，投入卡牌的技能图标翻倍；成功翻面结算故事面（近似：behavior.events.obsidianErodedFrieze 未覆盖本卡，翻面/检定未接线，仅数据）。",
+  note: "天空遗物[rune_f]（放一边）。[action][敏捷](8)，投入卡牌的技能图标翻倍；成功翻面结算故事面（条目 abilities：api.test + api.flipAsset 翻面并记录 rune_f，见本文件 abilities 与 tests）。",
 }

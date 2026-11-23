@@ -10,7 +10,7 @@ export default {
   scope: 'location',
   implemented: true,
   locationRule: { floodBounds: { max: 1 } },
-  flags: { ruined: true, swapsLocation: 'stMarysHospital' },
+  flags: { ruined: true },
   note: '数据型条目：数值由 definition.location() 读卡表；废墟交换在 behavior.agendaReveal → swapToRuined。',
   abilities: [],
 }

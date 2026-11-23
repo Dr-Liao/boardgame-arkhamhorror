@@ -30,7 +30,6 @@ export default {
     quantity: 3,
     limitPerInvestigator: 1,
     test: { skill: 'willpower', difficulty: DIFFICULTY },
-    turnEndDoom: 1,
   },
   encounterResolve(state, inv, card, api) {
     if ((inv.threat || []).some(item => (item.originalCode || item.code) === CODE)) {

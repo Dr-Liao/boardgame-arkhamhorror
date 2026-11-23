@@ -11,7 +11,8 @@ export default {
   scope: 'location',
   implemented: true,
   flags: {
-    treacherousPath: true, cannotEnterFromClues: true, shroudIsLevel: true,
+    treacherousPath: true,
+    cannotEnterFromClues: true,
     glyphAction: { letter: 'V', meaning: '陌生人', requiresNotFlooded: true },
   },
   note: '数据型条目：未淹没时的符文行动由 behavior 实现。',

@@ -537,7 +537,7 @@ export function createCatalogUI({ h, onChange, openCard }) {
         h('section', { className: 'bg-modal ah-catalog-modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('catalog.title'), onclick: event => event.stopPropagation(), onkeydown: event => { if (event.key === 'Escape') close() } },
           h('header', { className: 'ah-catalog-head' }, h('div', null, h('h2', null, t('catalog.title')), h('p', { className: 'ah-resource-note' }, t('catalog.note'))), h('button', { className: 'bg-btn secondary', onclick: close, 'aria-label': t('catalog.close') }, t('catalog.closeAction'))),
           renderCardFilters(h,{scope:'catalog',filters:state.filters,count:result?.total||0,searchLabel:t('catalog.searchLabel'),
-            options:{...metadata,typeLabels:localizedLabels(TYPE_LABELS)},onChange:filters=>{state.filters=filters;state.offset=0;load()}}),
+            options:{...metadata, minorPacks: metadata?.minorInvestigatorPacks, typeLabels:localizedLabels(TYPE_LABELS)},onChange:filters=>{state.filters=filters;state.offset=0;load()}}),
           h('div', { className: 'ah-catalog-filters' }, h('button',{className:'bg-btn',onclick:()=>{state.offset=0;load()}},t('catalog.search')),choose('effectStatus', t('catalog.effectStatus'), metadata?.effectStatuses, localizedLabels(EFFECT_LABELS)), choose('availability', t('catalog.availability'), metadata?.availabilityStatuses, localizedLabels(AVAILABILITY_LABELS))),
           renderPresentationSettings(h, onChange),
           h('div', { className: 'ah-catalog-summary', role: 'status' }, state.loading ? t('catalog.loading') : state.error || t('catalog.summary', { total: result?.total || 0, limit: state.limit })),

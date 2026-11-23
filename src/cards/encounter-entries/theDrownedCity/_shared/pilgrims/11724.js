@@ -36,7 +36,6 @@ export default {
     horror: 1,
     aloof: true,
     spawnAnyEmpty: true,
-    cultistAura: { fight: 2, relentless: true, hunter: true },
   },
   modifiers: [{
     target: 'enemyFight',

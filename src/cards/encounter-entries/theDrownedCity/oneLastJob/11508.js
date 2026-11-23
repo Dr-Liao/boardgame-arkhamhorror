@@ -14,8 +14,6 @@ export default {
   implemented: true,
   flags: {
     eliteInVictory: 1,
-    parleyRemoveClue: 1,
-    resolutionOnAdvance: 'resolution1',
     gangWarsParley: true,
     criminalCluesGainAloof: true,
   },

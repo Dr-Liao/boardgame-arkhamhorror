@@ -6,7 +6,7 @@ export default {
   code: '11640b',
   scope: 'storyAsset',
   implemented: true,
-  flags: { winds: 'eastern', direction: 'left', windRows: [1, 3] },
+  flags: { winds: 'eastern', direction: 'left' },
   
   note: "双面风故事卡（背面 11640 西风）。强制效果在 behavior.roundEnded：按风暴强度揭示标记，出现非[elder_sign]符号标记时按东风向左吹第 1/3 行并翻面。西征（v.I）Setup 用本卡面。",
 }

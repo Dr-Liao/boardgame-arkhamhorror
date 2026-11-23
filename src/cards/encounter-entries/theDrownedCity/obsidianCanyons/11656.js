@@ -8,5 +8,5 @@ export default {
   implemented: true,
   flags: { summit: true, suspendedReef: true },
   
-  note: "悬浮礁石（×3）。[[峰顶]]；回合结束：随机弃 1 手牌或受 1 伤害（behavior.turnEnded）；[fast] 花 1 线索与至多 3 连接内[[峰顶]]地点的敌人交换位置（近似：本条目只实现回合结束强制，交换未接线）。",
+  note: "悬浮礁石（×3）。[[峰顶]]；回合结束：随机弃 1 手牌或受 1 伤害（behavior.turnEnded）；[fast] 花 1 线索与至多 3 连接内[[峰顶]]地点的敌人交换位置。",
 }

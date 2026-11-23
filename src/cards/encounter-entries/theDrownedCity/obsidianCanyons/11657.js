@@ -6,7 +6,7 @@ export default {
   code: '11657',
   scope: 'location',
   implemented: true,
-  flags: { summit: true, hangingShip: true, slideAction: true },
+  flags: { summit: true, hangingShip: true },
   
   note: "悬挂船只（×2）。[[峰顶]]；回合结束：[敏捷](X)（X=本地点调查员数），失败弃掉悬挂船只（放峰顶牌库顶，behavior.turnEnded）；[action] 本地点每人花 1 线索，向相邻开阔天空滑动一次（behavior.actions obsidianHangingShipSlide）。",
 }

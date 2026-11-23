@@ -17,7 +17,7 @@ export default {
   name: '水中之物',
   scope: 'treachery',
   implemented: true,
-  flags: { traits: ['Hazard'], quantity: 2, surge: true, raiseNearestFlood: 1 },
+  flags: { traits: ['Hazard'], quantity: 2, surge: true },
   encounterResolve(state, inv, card, api) {
     const targets = api.mechanics?.water?.nearestTargets?.(inv.location, 1) || []
     if (!targets.length) {

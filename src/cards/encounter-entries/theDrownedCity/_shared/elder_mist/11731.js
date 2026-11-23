@@ -12,10 +12,9 @@
 //     context 带 seat/result；非玩家实体来源同样派出）+ 位置比对 + result.successBy ≥ 2；
 //   · 弃掉 = api.scenario.detachLocationAttachment（地点附属的唯一移除写入口）。
 //
-// 近似：技能 -1 没有「地点附属给同地点调查员技能修正」的引擎读点（modifiers 只枚举调查员
-//   自己的支援/威胁区与敌人/地点实体数值），因此 -1 部分只落 flags 数据，已在
-//   artifacts/migration/tdc/p7/primitive-requests/shared-2.json 登记 pending 原语请求；
-//   附属与「成功 2 点后弃掉」两条照常生效。
+// 第二轮：地点附属给同地点调查员技能修正已接（src/engine/modifiers.js#modifierSourceRows
+//   的 locationAttachment 行，audience:'here'）；本条目 modifiers 声明四条 -1，
+//   附属与「成功 2 点后弃掉」由 api.attachToLocation / testEnds 窗口实现。
 const CODE = '11731'
 
 const attachedLocation = state => (state?.locations || []).find(location =>
@@ -30,8 +29,6 @@ export default {
     traits: ['Hazard'],
     quantity: 2,
     locationAttachment: true,
-    attachedSkillModifiers: { willpower: -1, intellect: -1, combat: -1, agility: -1 },
-    discardOnSuccessBy: 2,
   },
   // 第二轮：Lead 落地「地点附属 modifiers 对同地点调查员生效」读点
   // （src/engine/modifiers.js#modifierSourceRows 的 locationAttachment 行）。

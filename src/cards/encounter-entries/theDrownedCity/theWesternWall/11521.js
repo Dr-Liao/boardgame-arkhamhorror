@@ -12,8 +12,10 @@ export default {
   scope: 'location',
   implemented: true,
   flags: {
-    treacherousPath: true, cannotEnterFromClues: true, shroudIsLevel: true,
-    enterFromAbove: { damage: 1 }, enterFromBelow: { horror: 1 },
+    treacherousPath: true,
+    cannotEnterFromClues: true,
+    enterFromAbove: { damage: 1 },
+    enterFromBelow: { horror: 1 },
   },
   note: '数据型条目：shroud=层级与进出方向效果由 behavior.locationPlaced/locationEntered 实现。',
   abilities: [],

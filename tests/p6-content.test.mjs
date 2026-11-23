@@ -15,6 +15,12 @@ import * as gathering from '../content/campaigns/nightOfTheZealot/scenarios/theG
 import * as masks from '../content/campaigns/nightOfTheZealot/scenarios/theMidnightMasks/index.js'
 import * as devourer from '../content/campaigns/nightOfTheZealot/scenarios/theDevourerBelow/index.js'
 import { playthrough, settings } from '../tools/p6-playthrough.mjs'
+import { manifest as curseOfTheRougarouManifest } from '../content/campaigns/curseOfTheRougarou/manifest.js'
+import * as curseOfTheRougarouChapter from '../content/campaigns/curseOfTheRougarou/scenarios/curseOfTheRougarou/index.js'
+import { manifest as carnevaleOfHorrorsManifest } from '../content/campaigns/carnevaleOfHorrors/manifest.js'
+import * as carnevaleOfHorrorsChapter from '../content/campaigns/carnevaleOfHorrors/scenarios/carnevaleOfHorrors/index.js'
+import { manifest as murderAtTheExcelsiorHotelManifest } from '../content/campaigns/murderAtTheExcelsiorHotel/manifest.js'
+import * as murderAtTheExcelsiorHotelChapter from '../content/campaigns/murderAtTheExcelsiorHotel/scenarios/murderAtTheExcelsiorHotel/index.js'
 
 function move(s, m) { assert.equal(validateMove(s, decisionSeat(s), m), null); applyMove(s, decisionSeat(s), m) }
 function answer(s, id) { move(s, { action: 'choose', choiceId: s.pendingChoice.id, optionId: id }) }
@@ -117,7 +123,7 @@ test('P6 02030 澄明心智消耗充能治疗队友，空充能留场但不可�
 test('D10 support pack exposes researched solution base card while unknown mechanics remain gated', () => {
   const shown = campaignListForUi(contentRegistry)[0].contentPacks.find(p => p.id === manifest.id)
   assert.equal(shown.status, 'playable'); assert.equal(shown.cards.find(c => c.code === '02021').blockedReason, null)
-  const registry = createContentRegistry({ packs: contentRegistry.listPacks().filter(p => p.id !== manifest.id), campaigns: [contentRegistry.getCampaign('nightOfTheZealot')], scenarios: [gathering, masks, devourer] })
+  const registry = createContentRegistry({ packs: contentRegistry.listPacks().filter(p => p.id !== manifest.id), campaigns: [contentRegistry.getCampaign('nightOfTheZealot'), curseOfTheRougarouManifest, carnevaleOfHorrorsManifest, murderAtTheExcelsiorHotelManifest], scenarios: [gathering, masks, devourer, curseOfTheRougarouChapter, carnevaleOfHorrorsChapter, murderAtTheExcelsiorHotelChapter] })
   assert.equal(registry.assertLaunchable('nightOfTheZealot').id, 'nightOfTheZealot')
   assert.equal(getAvailability('02021').deckbuilding, true)
   const unimplemented = { ...manifest.cards.find(c => c.code === '02021'), requiredMechanicIds: ['missingMechanism'] }
@@ -125,7 +131,7 @@ test('D10 support pack exposes researched solution base card while unknown mecha
   const deck = buildDeck(INVESTIGATORS['01002'], { seed: 1 }).playerCards
   assert.deepEqual(buildDeckFromList(INVESTIGATORS['01002'], ['02021', ...deck.slice(1)]).errors, [])
   const unknown = { ...gathering, manifest: { ...gathering.manifest, requiredMechanicIds: ['missingMechanism'] } }
-  const blocked = createContentRegistry({ packs: contentRegistry.listPacks(), campaigns: [contentRegistry.getCampaign('nightOfTheZealot')], scenarios: [unknown, masks, devourer] })
+  const blocked = createContentRegistry({ packs: contentRegistry.listPacks(), campaigns: [contentRegistry.getCampaign('nightOfTheZealot'), curseOfTheRougarouManifest, carnevaleOfHorrorsManifest, murderAtTheExcelsiorHotelManifest], scenarios: [unknown, masks, devourer, curseOfTheRougarouChapter, carnevaleOfHorrorsChapter, murderAtTheExcelsiorHotelChapter] })
   assert.throws(() => blocked.assertLaunchable('nightOfTheZealot'), /缺少机制/)
 })
 for (const branch of ['r1', 'r2']) test(`P6 纯合法动作从局外完成集结胜利 ${branch}，逐步JSON恢复一致`, () => {

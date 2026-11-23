@@ -34,7 +34,7 @@ export default {
   implemented: true,
   uses: 4,
   usesType: 'secrets',
-  flags: { expedition: true, traits: ['Item', 'Relic', "R'lyeh"], slotless: true },
+  flags: { expedition: true, traits: ['Item', 'Relic', "R'lyeh"] },
   abilities: [{
     kind: 'reaction',
     trigger: 'test.beforeCommit',

@@ -6,7 +6,7 @@ export default {
   code: '11665',
   scope: 'treachery',
   implemented: true,
-  flags: { attachToNearestLocation: true, roundEndDamage: 1 },
+  flags: {  },
   encounterResolve(state, inv, card, api) {
     return api.resolveScenarioEvent('obsidianStElmosFire', { seat: inv.seat }) === true
   },

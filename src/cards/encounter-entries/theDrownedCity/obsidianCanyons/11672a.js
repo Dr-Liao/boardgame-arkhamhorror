@@ -10,7 +10,7 @@ export default {
   implemented: true,
   controlledAsset: true,
   cannotLeavePlay: true,
-  flags: { obsidianClaw: true, face: 'speed', moveThroughSkyline: true },
+  flags: { obsidianClaw: true, face: 'speed' },
   abilities: [{
     kind: 'free',
     actionKind: 'activate',

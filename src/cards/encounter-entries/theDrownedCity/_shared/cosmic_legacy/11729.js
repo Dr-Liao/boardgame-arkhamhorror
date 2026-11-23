@@ -29,7 +29,6 @@ export default {
     quantity: 2,
     limitPerInvestigator: 1,
     test: { skill: 'willpower', difficulty: DIFFICULTY },
-    tokenConversion: { from: ['cultist', 'tablet'], to: 'elderthing' },
   },
   encounterResolve(state, inv, card, api) {
     if ((inv.threat || []).some(item => (item.originalCode || item.code) === CODE)) {

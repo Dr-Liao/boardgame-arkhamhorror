@@ -10,7 +10,7 @@ export default {
   code: '11509',
   scope: 'location',
   implemented: true,
-  flags: { alienLanguageAction: true, clueCostPerInvestigator: 1, groupLimitPerGame: true },
+  flags: { alienLanguageAction: true, clueCostPerInvestigator: 1 },
   note: '数据型条目：连接在 definition（与 Miskatonic University 互通）；行动在 behavior。',
   abilities: [],
 }

@@ -13,8 +13,9 @@ export default {
   scope: 'location',
   implemented: true,
   flags: {
-    treacherousPath: true, cannotEnterFromClues: true, shroudIsLevel: true,
-    spawnCoralStarSpawnOnReveal: true, coralStarSpawnCode: '11727',
+    treacherousPath: true,
+    cannotEnterFromClues: true,
+    spawnCoralStarSpawnOnReveal: true,
   },
   note: '数据型条目：揭示时生成横置的珊瑚星之眷族由 behavior.locationRevealed 实现；'
     + '「下个补给阶段不能重整」走 P7 已落地原语 api.preventEnemyReadyNextUpkeep（引擎既有读点）。',

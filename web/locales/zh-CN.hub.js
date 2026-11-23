@@ -296,6 +296,8 @@ export default {
   'hub.investigators.randomClass': '随机职业',
   'hub.investigators.count': '{count} 位调查员',
   'hub.investigators.candidateAria': '{move}；{class}；{pack}',
+  'hub.investigators.candidateVariantAria': '{move}；{class}；{pack}；{version}',
+  'hub.investigators.parallelVersion': '平行版',
   'hub.investigators.empty': '当前筛选下没有可选调查员',
   'hub.investigators.editDeck': '查看与编辑卡组',
   'hub.investigators.goDeck': '前往卡组构筑',

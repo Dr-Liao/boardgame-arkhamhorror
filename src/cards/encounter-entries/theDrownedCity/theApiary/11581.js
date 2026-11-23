@@ -7,7 +7,7 @@
 //   · 「将要离场时放一边，位于场外」由章节 behavior.assetLeftPlay（引擎既有 assetLeftPlay 读点）接线；
 //   · 强制「你受到 1 点或更多伤害后：对古代遗物造成 1 点伤害」用条目 forced 描述子
 //     trigger 'harmDealt'（引擎既有伤害分配窗口，context { damage, horror }）+ api.damageControlledAsset(self, 1)；
-//   · 「控制它结束游戏时翻面」仍无既有读点（结束游戏反应窗口），保持如实近似。
+//   · 「控制它结束游戏时翻面」由章节 behavior 的结局结算（gameEnds 前）翻面，见 note。
 export default {
   code: '11581',
   scope: 'storyAsset',
