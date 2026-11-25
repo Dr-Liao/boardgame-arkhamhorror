@@ -1457,7 +1457,7 @@
     },
     {
       "path": "src/cards/cards-data.js",
-      "sha256": "f140b283c4f5155d8b5fc9658be2050f11754801785583a899c6e2017727e6d8"
+      "sha256": "bde2a4a7050a01a6967e4a6332e255c23f6bfe26cded772f4f984766069dbe20"
     },
     {
       "path": "src/cards/tde-player-acceptance.js",

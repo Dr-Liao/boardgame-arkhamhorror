@@ -8,7 +8,7 @@ export const META = {
     "playerCards": 1683,
     "weaknesses": 147
   },
-  "resourceVersion": "5b5f869cedfb3885263bee804ca0d3c51606ef1706525a01aa5e1d063aa5f0e4",
+  "resourceVersion": "06ce91a3709e098b2b69086749b684261f79bd12fe0823d3a5d3e5eaebdef8d0",
   "schemaVersion": 2,
   "source": "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
   "sources": [
@@ -136687,6 +136687,7 @@ export const ALL_CARDS = {
     "willpower": 5
   },
   "98020": {
+    "acceptanceProfile": "book-signatures-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -136701,7 +136702,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
