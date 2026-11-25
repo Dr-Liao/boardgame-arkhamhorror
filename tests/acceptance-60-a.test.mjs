@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { registeredEntry } from '../src/engine/ability.js'
-import { getStat } from '../src/engine/engine.js'
+import { getStat, placeLocation } from '../src/engine/engine.js'
 import { createEffect, expireEffects } from '../src/engine/effect-state.js'
 import { canonicalCode } from '../src/integration/arkhamdb.js'
 import { enemy, fixture, move, play, settle, validateMove } from './core-fixture.mjs'
@@ -88,6 +88,47 @@ test('60118 只向选中的同地另一位调查员和自己各发两资源', ()
 function assertAlias(code, canonical) {
   assert.equal(canonicalCode(code), canonical)
   assert.equal(registeredEntry(code)?.reprintOf, canonical)
+}
+
+for (const code of ['60227', '01685']) {
+  test(`${code} 寻找答案按调查结果在本地及相连地点分配两条线索，额外调查线索留在本地`, () => {
+    for (const { token, local, adjacent, picks, deduction, restricted, expected } of [
+      { token: '0', local: 3, adjacent: 3, picks: ['attic', 'hallway'], expected: [2, 2] },
+      { token: '0', local: 3, adjacent: 3, picks: ['hallway', 'hallway'], deduction: true, expected: [2, 1] },
+      { token: '0', local: 0, adjacent: 1, picks: [], expected: [0, 0] },
+      { token: '0', local: 3, adjacent: 3, restricted: true, picks: [], expected: [1, 3] },
+      { token: 'autofail', local: 3, adjacent: 3, picks: [], expected: [3, 3] },
+    ]) {
+      const state = fixture('01002', 2)
+      for (const id of ['attic', 'hallway', 'cellar']) placeLocation(state, id, [])
+      const location = id => state.locations.find(item => item.id === id)
+      Object.assign(location('attic'), { revealed: true, clues: local, shroud: 2 })
+      Object.assign(location('hallway'), { revealed: true, clues: adjacent })
+      if (restricted) location('hallway').originalCode = '07247' // 海德拉祭坛只允许通过调查发现线索
+      Object.assign(location('cellar'), { revealed: true, clues: 4 })
+      Object.assign(investigator(state), { location: 'attic', clues: 0, hand: deduction ? ['01039'] : [] })
+      state.chaosBag = [token]
+      play(state, code)
+      let chosenCount = 0
+      settle(state, choice => {
+        if (choice.kind === 'commit' && deduction && choice.seat === 0)
+          return choice.options.find(option => option.cardCode === '01039' || option.id === '0')?.id
+        if (choice.kind !== 'location') return undefined
+        assert.equal(choice.seat, 0)
+        assert.deepEqual(choice.options.map(option => option.id).sort(), ['attic', 'hallway'])
+        assert.ok(chosenCount < picks.length, '只有多个合法地点时才需选择')
+        return picks[chosenCount++]
+      })
+      assert.equal(state.lastTestResult.success, token !== 'autofail')
+      assert.equal(chosenCount, picks.length)
+      assert.deepEqual(['attic', 'hallway'].map(id => location(id).clues), expected)
+      assert.equal(location('cellar').clues, 4)
+      assert.equal(investigator(state).clues, local + adjacent - expected[0] - expected[1])
+      assert.equal(investigator(state).resources, 30 - ALL_CARDS[code].cost)
+      assert.equal(investigator(state).actionsLeft, 19)
+      assert.ok(investigator(state).discard.includes(code))
+    }
+  })
 }
 
 test('60206 打出后按五、十、十五张手牌三个阈值叠加智识和意志', () => {

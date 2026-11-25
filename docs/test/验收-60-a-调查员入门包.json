@@ -1,6 +1,6 @@
 {
   "unit": "60-a",
-  "generatedAt": "2026-11-25",
+  "generatedAt": "2026-11-26",
   "scope": {
     "cards": 324,
     "selector": "^60[1-5][0-9]{2}$",
@@ -27,6 +27,7 @@
     "60218",
     "60219",
     "60226",
+    "60227",
     "60263",
     "60267",
     "60275",
@@ -606,13 +607,6 @@
       "dimension": "evidence",
       "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fight. This attack uses [intellect] instead of [combat]. You get +2 [intellect] for this test. You deal +1 damage for this attack for each clue you have (max +3",
       "evidence": "src/cards/entries/60225.js",
-      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
-    },
-    {
-      "code": "60227",
-      "dimension": "evidence",
-      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Investigate. If you succeed, instead of discovering a clue at your location, discover 2 total clues from among your location and connecting locations.",
-      "evidence": "src/cards/entries/60227.js",
       "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
     },
     {
@@ -2408,6 +2402,27 @@
         "60219",
         "60267",
         "60275"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.test.mjs",
+      "test": "60227 寻找答案按调查结果在本地及相连地点分配两条线索，额外调查线索留在本地",
+      "codes": [
+        "60227"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.browser.mjs",
+      "test": "60227 寻找答案在牌桌选择本地与相连地点各一条线索 (1440)",
+      "codes": [
+        "60227"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.browser.mjs",
+      "test": "60227 寻找答案在牌桌选择本地与相连地点各一条线索 (390)",
+      "codes": [
+        "60227"
       ]
     }
   ],

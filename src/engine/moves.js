@@ -1,4 +1,6 @@
 import { availableResources } from './resource-bank.js'
+import { abilityLocationResourceCost, locationActionResourceCost } from './location-action-cost.js'
+import { normalizeCostValues } from './cost.js'
 import { availablePlayResources } from './play-payment.js'
 import { damagePlayDiscount } from './play-attempt.js'
 import { enemyInEngagement, enemyIsBody, enemyIsPart } from './enemy-parts.js'
@@ -408,6 +410,7 @@ export function createMoves(deps) {
   // 「探索」通常印在当前幕/密谋卡上（04044/04057/04207/04285…），由关卡数据的
   // scriptCards 补 scriptCard，牌桌才会把它放在对应剧本卡旁。
   if ((state.explorationDeck || []).length && !investigatorTextBlanked(state, inv)
+    && availableResources(inv) >= locationActionResourceCost(state, inv, 'explore')
     && scenarioBehavior(state).canExplore?.(state, inv) !== false) {
     moves.push(ownedMove(state, { action: 'explore', label: `🧭 探索（剩余 ${state.explorationDeck.length} 张）` }))
   }
@@ -462,7 +465,8 @@ export function createMoves(deps) {
         label: `💨 躲避隐匿迷你卡（敏捷 vs ${miniDifficulty}）` })
     }
   }
-  if (loc && !loc.locked && !scenarioBehavior(state).investigationError?.(state, inv, loc)) {
+  if (loc && !loc.locked && !scenarioBehavior(state).investigationError?.(state, inv, loc)
+    && availableResources(inv) >= locationActionResourceCost(state, inv, 'investigate')) {
     const skill = scenarioBehavior(state).investigateSkill?.(state, inv, loc) || loc.investigateSkill || 'intellect'
     const scenarioShroud = (scenarioBehavior(state).locationShroudModifier?.(state, loc, inv) || 0)
       + entityModifierTotal(state, loc, 'locationShroud')
@@ -777,6 +781,7 @@ export function createMoves(deps) {
     case 'play': {
       const def = cardDef(move.cardId)
       if (!def) return '未知卡牌'
+      const playLocation = move.asIfLocation || inv.location
       if (playAccess(move.cardId).onlyFromDiscard && !move.fromDiscard) return '只能从弃牌堆打出该卡牌'
       if (!lolaCanUseCard(inv, move.cardId)) return '罗拉只能使用中立或当前角色阵营的卡牌'
       if (scenarioBehavior(state).canPlayCard?.(state, inv, def) === false) return '当前效果禁止你打出卡牌'
@@ -811,8 +816,9 @@ export function createMoves(deps) {
         if (!inv.beneath?.includes(move.copyCode) || !copied || copied.type !== 'event' || copied.exceptional
           || (!copiedPlayed && !copiedDescriptor?.resolve) || playAccess(move.copyCode).reactionOnly) return '彩绘世界没有合法的复制事件'
         if (!inv.hand.includes(move.cardId)) return '手牌中没有彩绘世界'
-        if (availableResources(inv) < playCost(state, inv, copied)) return '资源不足'
-        return copiedPlayed ? effectError(state, inv, copiedPlayed) : null
+        const locationCost = abilityLocationResourceCost(state, inv, copiedDescriptor, copiedPlayed, playLocation)
+        if (availableResources(inv) < playCost(state, inv, copied) + locationCost) return '资源不足'
+        return copiedPlayed ? effectError(state, inv, copiedPlayed, playLocation) : null
       }
       if (def.type === 'skill' || (isWeaknessCard(def) && !playAccess(move.cardId).playableWeakness)) return '该牌不能作为行动打出'
       const fastSource = move.fastSourceId ? playTimingSource(state, inv, def, move.fastSourceId) : null
@@ -829,7 +835,10 @@ export function createMoves(deps) {
       const extraActionBase = move.fastSourceId ? 0 : 1
       if (extraActionCost && actionsAvailable(inv) < extraActionCost + extraActionBase) return '行动不足'
       const otherPayer = channelCandidate?.channel === 'otherHand' ? state.investigators[channelCandidate.move.ownerSeat] : null
-      if (availablePlayResources(state, inv, def, otherPayer) < playCost(state, inv, def) - channelDiscount - potentialPlayReduction(state, inv, move.cardId, def) - (fastSource?.spec.discount || 0)
+      const locationCost = abilityLocationResourceCost(state, inv, descriptorOfKind(move.cardId, 'played'), undefined, playLocation)
+      if (locationCost > availableResources(inv)) return '资源不足以支付地点的额外费用'
+      const cost = Math.max(0, playCost(state, inv, def) - channelDiscount - potentialPlayReduction(state, inv, move.cardId, def) - (fastSource?.spec.discount || 0))
+      if (availablePlayResources(state, inv, def, otherPayer) < cost + locationCost
         && !charlesPayCandidate(state, inv, playCost(state, inv, def), def)) return '资源不足'
       if (def.unique && state.investigators.some(item => item.assets.some(asset => cardDef(asset.code)?.name === def.name))) return '唯一资产已经在场'
       if (def.type === 'asset' && !assetReplacementPlans(inv, def, state).length) return '没有合法的支援放置方案'
@@ -845,7 +854,7 @@ export function createMoves(deps) {
         const here = state.locations.find(location => location.id === inv.location)
         if (!here?.connections?.includes(move.asIfLocation)) return '那个地点与你不相连'
       }
-      return effectError(state, inv, playedEffect(move.cardId))
+      return effectError(state, inv, playedEffect(move.cardId), playLocation)
     }
     case 'draw': return drawBlocked(state, inv) ? '「残酷拷问」：你不能进行抽取行动' : null
     case 'resource': return scenarioBehavior(state).canGainResources?.(state, inv) === false ? '此地点不能获得资源' : null
@@ -1003,6 +1012,7 @@ export function createMoves(deps) {
       return null
     }
     case 'investigate': {
+      if (availableResources(inv) < locationActionResourceCost(state, inv, 'investigate')) return '资源不足以支付地点的额外费用'
       if (capabilityBlocked(state, inv, 'investigate')) return '当前效果禁止你调查'
       const loc = state.locations.find((l) => l.id === inv.location)
       if (!loc) return '这里没有地点可调查'
@@ -1013,6 +1023,7 @@ export function createMoves(deps) {
       return null
     }
     case 'explore': {
+      if (availableResources(inv) < locationActionResourceCost(state, inv, 'explore')) return '资源不足以支付地点的额外费用'
       if (!(state.explorationDeck || []).length) return '探索牌库已经空了'
       if (scenarioBehavior(state).canExplore?.(state, inv) === false) return '当前不能探索'
       return null
@@ -1117,6 +1128,12 @@ export function createMoves(deps) {
       if (ability.cost?.action === false && cannotTriggerFreeAbility(state, inv)) return '隐私牌禁止你触发免费能力'
       if (ability.cost?.action !== false && actionAbilityBlocked(state, inv)) return '当前效果禁止你触发 [action] 能力'
       if (!canAffordAbility(state, inv, asset, ability)) return '能力成本不足'
+      const effect = ability.effect?.options?.[move.optionIndex]?.effect || ability.effect
+      const locationCost = abilityLocationResourceCost(state, inv, ability.descriptor, effect)
+      if (locationCost) {
+        const cost = normalizeCostValues(ability.cost || {}, { state, inv, source: asset, descriptor: ability.descriptor })
+        if (availableResources(inv) < (cost.resources || 0) + locationCost) return '资源不足以支付地点的额外费用'
+      }
       if (ability.duringOwnSkillTest && state.skillTest?.seat !== inv.seat) return '只能在自己的技能检定期间使用'
       if (ability.oncePerTest && state.skillTest?.usedAbilities?.[`${asset.id}:${move.abilityIndex}`]) return '每次检定仅限一次'
       if (ability.oncePerPhase

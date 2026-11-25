@@ -18,7 +18,7 @@ export default {
   verifiedFn: 'tfaShard1CardVerified',
   profile: {
     id: 'tfa-deluxe-threads-of-fate-2026-11',
-    scope: '失落时代 04 段 The Forgotten Age 豪华包（tfa，60 条）+ Threads of Fate（tof，46 条）共 106 条目录记录，锁定审计时未验收清单。83 条通过五维验收；23 条因真实行为缺陷、声明未接线或存量 R1 直写暂不切换。',
+    scope: '失落时代 04 段 The Forgotten Age 豪华包（tfa，60 条）+ Threads of Fate（tof，46 条）共 106 条目录记录，锁定审计时未验收清单。逐卡结论与剩余问题见本分片报告。',
     basis: '独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互（真实 legalMoves/applyMove/pendingChoice）→ 真实执行测试逐卡核对；证据为 tests/acceptance-04-a-shard1.test.mjs 与 tfa-*.test.mjs 的真实用例标题。缺陷与缺口逐条披露，未声称等价。',
     houseRules: [
       '保留项目既有的自动奖励反应与协作请求规则',

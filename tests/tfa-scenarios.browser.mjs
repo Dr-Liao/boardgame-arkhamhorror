@@ -3,6 +3,7 @@ import { mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { contentRegistry, registerContentBundle } from '../content/registered.js'
 import { chapters } from '../content/campaigns/theForgottenAge/shared.js'
+import { fixture, legalMoves, move } from './core-fixture.mjs'
 
 const output = fileURLToPath(new URL('../../../artifacts/tfa-migration/', import.meta.url))
 mkdirSync(output, { recursive: true })
@@ -34,8 +35,8 @@ for (const chapter of chapters) {
   })
 }
 
-const { createGameState, applyMove } = await import('../src/engine/engine.js')
-const { viewState } = await import('../src/integration/observation.js')
+const { createGameState, applyMove, placeLocation, spawnEnemy } = await import('../src/engine/engine.js')
+const { viewState, viewEvents } = await import('../src/integration/observation.js')
 
 function chapterView(shell) {
   const state = createGameState({
@@ -68,7 +69,7 @@ function chapterView(shell) {
     locations: state.locations.length }
 }
 
-async function openView(page, view) {
+async function openView(page, view, engine = null) {
   let session
   await page.route('**/api/start', async route => {
     const body = route.request().postDataJSON()
@@ -85,10 +86,52 @@ async function openView(page, view) {
     await route.fulfill({ response, json: payload })
   }, { times: 1 })
   await page.route('**/api/session?*', route => route.fulfill({ json: { ok: true, session } }))
+  if (engine) {
+    await page.route('**/api/move', async route => {
+      const events = viewEvents(move(engine, route.request().postDataJSON().move), 0)
+      const first = Math.max(-1, ...(session.events || []).map(event => event.seq ?? -1)) + 1
+      session.events = [...(session.events || []), ...events.map((event, index) => ({ ...event, seq: first + index }))]
+      session.state = viewState(engine, 0, { includeStatic: true })
+      await route.fulfill({ json: { ok: true, session } })
+    })
+  }
   await page.goto('/index.html')
   await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
   await page.getByRole('button', { name: '开始新游戏' }).click()
   await expect(page.locator('.ah-table')).toHaveAttribute('data-revision', '1', { timeout: 30_000 })
+}
+
+for (const width of [1440, 390]) {
+  test(`04052 伊塔卡谈判、04073 曲折小道的调查与探索费用（${width}）`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 })
+    const state = fixture('01001', 1, { campaignId: 'theForgottenAge' })
+    placeLocation(state, 'circuitousTrail', [])
+    const trail = state.locations.find(location => location.id === 'circuitousTrail')
+    Object.assign(trail, { revealed: true, clues: 1 })
+    Object.assign(state.investigators[0], { location: trail.id, intellect: 5, resources: 6 })
+    state.campaign.supplies = { 0: [] }
+    state.explorationDeck = ['riverCanyon']
+    const enemy = spawnEnemy(state, '04052', trail.id)
+    enemy.exhausted = true
+    state.legalMoves = legalMoves(state, 0)
+    await page.route('**/mods/arkhamhorror/img/thumbs/**', route => route.fulfill({ status: 404 }))
+    await page.addLocatorHandler(page.getByRole('button', { name: '跳过演出' }), button => button.click())
+    await openView(page, viewState(state, 0, { includeStatic: true }), state)
+    if (width === 1440) await page.locator(`[data-interaction="enemy:${enemy.id}"]`).first().click()
+    const parley = page.getByRole('button', { name: /谈判.*说服伊塔卡/ }).first()
+    await parley.click()
+    const startTest = page.getByRole('button', { name: /开始检定/ }).first()
+    await startTest.click()
+    await expect.poll(() => state.enemies.find(card => card.id === enemy.id).clues).toBe(1)
+    await page.getByRole('button', { name: /调查.*曲折小道|^调查$/ }).first().click()
+    await startTest.click()
+    await expect.poll(() => state.investigators[0].clues).toBe(1)
+    expect(state.investigators[0].resources).toBe(3)
+    await page.screenshot({ path: `${output}04052-04073-${width}.png`, animations: 'disabled' })
+    await page.getByRole('button', { name: /^密谋：探索/ }).click()
+    await expect.poll(() => state.investigators[0].location).toBe('riverCanyon')
+    expect(state.investigators[0].resources).toBe(0)
+  })
 }
 
 for (const shell of shells) {

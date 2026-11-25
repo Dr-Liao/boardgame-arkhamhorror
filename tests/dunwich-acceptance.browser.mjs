@@ -12,9 +12,9 @@ test('敦威治333张逐卡验收状态在 API 与真实图鉴一致', async ({ 
   expect(dunwich).toHaveLength(333)
   expect(dunwich.every(card => card.effectStatus === 'verified')).toBe(true)
 
+  await page.route('**/mods/arkhamhorror/img/thumbs/**', route => route.fulfill({ status: 404 }))
   await page.goto('/index.html')
   await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
-  await page.getByRole('combobox', { name: '席位数量', exact: true }).selectOption('1')
   await page.getByRole('button', { name: '开始新游戏' }).click()
   await page.getByRole('button', { name: '全卡图鉴', exact: true }).click()
   const modal = page.getByRole('dialog', { name: '诡镇全卡图鉴' })
@@ -22,6 +22,7 @@ test('敦威治333张逐卡验收状态在 API 与真实图鉴一致', async ({ 
     await modal.getByLabel('卡号或名称').fill(code)
     await modal.getByRole('button', { name: '检索', exact: true }).click()
     await expect(modal.locator('.ah-catalog-card')).toHaveCount(1)
-    await expect(modal.locator('.ah-catalog-card')).toContainText('已校验')
+    await expect(modal.locator('.ah-catalog-card')).toContainText(code)
+    await expect(modal.locator('.ah-catalog-card')).not.toContainText(/已验收|已校验/)
   }
 })

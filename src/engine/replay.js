@@ -106,6 +106,7 @@ export function captureReplayLog(state) {
       schemaVersion: state.schemaVersion ?? null,
       rulesVersion: state.rulesVersion ?? null,
       moveCount: moves.length,
+      ...(setup.encounterRulesVersion != null ? { encounterRulesVersion: setup.encounterRulesVersion } : {}),
       ...(setup._sharedFreeWindows === true ? { sharedFreeWindowsAtSetup: true } : {}),
     },
     settings: {
@@ -171,7 +172,10 @@ export function replayLog(log, { until = null, observe = null } = {}) {
     throw new Error(`重放日志完整性校验失败：meta.moveCount=${log.meta.moveCount}，实际 moves=${moves.length}`)
   }
   const count = until == null ? moves.length : Math.max(0, Math.min(moves.length, Math.floor(Number(until) || 0)))
-  const state = createGameState(settings, players, { sharedFreeWindows: log.meta?.sharedFreeWindowsAtSetup === true })
+  const state = createGameState(settings, players, {
+    sharedFreeWindows: log.meta?.sharedFreeWindowsAtSetup === true,
+    encounterRulesVersion: log.meta?.encounterRulesVersion ?? 1,
+  })
   // 建局状态本身没有动作日志；补一个空数组，让 `until: 0` 的结果形状和真实对局一致。
   if (!Array.isArray(state.actionLog)) state.actionLog = []
   if (observe) observe(state, 0)

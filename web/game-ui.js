@@ -1088,7 +1088,12 @@ async function cardMove(move, displayedSession, options = {}) {
   const table = session.localActionStamp && !pending && ['draw', 'resource'].includes(move.action)
     ? document.querySelector('.ah-table') : null
   const status = table?.querySelector('.bg-game-status')
-  if (status && table.dataset.sessionId === session.sessionId) {
+  const picker = options.investigatorPicker
+  if (picker?.isConnected) {
+    // Keep the roster and its scroll position while the selection is in flight.
+    picker.setAttribute('aria-busy', 'true')
+    for (const button of picker.querySelectorAll('.ah-office-candidate:enabled')) button.disabled = true
+  } else if (status && table.dataset.sessionId === session.sessionId) {
     // The accepted revision rebuilds the table. Until then update the controls in place.
     table.setAttribute('aria-busy', 'true')
     status.textContent = status.title = t('game.status.submittingYours')
@@ -1131,10 +1136,13 @@ async function cardMove(move, displayedSession, options = {}) {
       state.arkhamSelection = null
       if (state.arkhamMapView) state.arkhamMapView.selectedId = null
       clearCardDrag()
-      const revision = Number.isSafeInteger(r.revision) ? r.revision : r.session?.state?.revision ?? st.revision
-      const feedback = { sessionId: session.sessionId, revision, label: skillText(move.label || t('game.move.confirmed'), { symbols: false }) }
-      state.arkhamAcceptedFx = feedback
-      setTimeout(() => { if (state.arkhamAcceptedFx === feedback) { state.arkhamAcceptedFx = null; render() } }, 900)
+      // Only the table displays this feedback, including moves entering or leaving it.
+      if (!st.hubFlow || st.uiState === 'inScenario' || state.session.state.uiState === 'inScenario') {
+        const revision = Number.isSafeInteger(r.revision) ? r.revision : r.session?.state?.revision ?? st.revision
+        const feedback = { sessionId: session.sessionId, revision, label: skillText(move.label || t('game.move.confirmed'), { symbols: false }) }
+        state.arkhamAcceptedFx = feedback
+        setTimeout(() => { if (state.arkhamAcceptedFx === feedback) { state.arkhamAcceptedFx = null; render() } }, 900)
+      }
     }
   } catch (e) {
     if (options.reactionPass) options.reactionPass.failed = true

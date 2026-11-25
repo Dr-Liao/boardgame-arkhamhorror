@@ -1,6 +1,6 @@
 {
   "unit": "50-a",
-  "generatedAt": "2026-11-25",
+  "generatedAt": "2026-11-26",
   "scope": {
     "cards": 368,
     "selector": "^5[0-4][0-9]{3}[a-z]?$",
@@ -17,7 +17,8 @@
     "50006",
     "50022",
     "50023",
-    "51003"
+    "51003",
+    "51007"
   ],
   "failedCodes": [
     {
@@ -368,13 +369,6 @@
       "dimension": "evidence",
       "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Fast. Play when an enemy enters your location. Immediately move to a connecting location. (The enemy still enters your previous loca",
       "evidence": "src/cards/entries/51006.js",
-      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
-    },
-    {
-      "code": "51007",
-      "dimension": "evidence",
-      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Uses (3 charges). [action] Spend 1 charge: Investigate. Investigate using [willpower] instead of [intellect]. You get +2 [willpower]",
-      "evidence": "src/cards/entries/51007.js",
       "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
     },
     {
@@ -2620,6 +2614,34 @@
       "codes": [
         "50006",
         "51003"
+      ]
+    },
+    {
+      "file": "tests/acceptance-50-a.test.mjs",
+      "test": "51007 礼寻术支付四资源入场，三次充能以意志加二调查并在本地发现额外线索",
+      "codes": [
+        "51007"
+      ]
+    },
+    {
+      "file": "tests/acceptance-50-a.test.mjs",
+      "test": "51007 礼寻术的五种指定符号都在调查结算后结束回合，包括自动失败",
+      "codes": [
+        "51007"
+      ]
+    },
+    {
+      "file": "tests/acceptance-50-a.browser.mjs",
+      "test": "51007 礼寻术从手牌打出并由牌桌启动意志调查 (1440)",
+      "codes": [
+        "51007"
+      ]
+    },
+    {
+      "file": "tests/acceptance-50-a.browser.mjs",
+      "test": "51007 礼寻术从手牌打出并由牌桌启动意志调查 (390)",
+      "codes": [
+        "51007"
       ]
     }
   ],

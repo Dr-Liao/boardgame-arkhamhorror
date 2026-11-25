@@ -169215,9 +169215,9 @@
       "sha256": "7dd705cb51bb935bf3652c3e002721c701fe265e0aac84969c651f2c234e5fee"
     },
     {
-      "bytes": 20923,
+      "bytes": 21650,
       "path": "games/arkhamhorror/content/campaigns/theForgottenAge/encounter-rules.js",
-      "sha256": "6e64c67e1cd6848e3060227db18a3d1875e5fcbbf2224c3149fa3b9f6503f13e"
+      "sha256": "b6f64bf2ac869d470176af01c3fcdd504e550e51cf209cc88fd5270b8edbc14a"
     },
     {
       "bytes": 8669,
@@ -169230,9 +169230,9 @@
       "sha256": "1f995dad353d6c9998ccbbd402f0a28edb94fc84df1ac0ac673ba41d934a81b8"
     },
     {
-      "bytes": 7141,
+      "bytes": 7169,
       "path": "games/arkhamhorror/content/campaigns/theForgottenAge/manifest.js",
-      "sha256": "782d71b1f793a3d4f386a980123dbe6bea5f4cf8cc746c714070796137e4cbb7"
+      "sha256": "7cc54262928392517de65948a82e69d1dfe0a00b9897c604eb7050d3f825b7bd"
     },
     {
       "bytes": 3505,
@@ -169305,9 +169305,9 @@
       "sha256": "88fbaf32048395d4a8a59022447ff59b149b95c76c4895436e0defa226b74ff9"
     },
     {
-      "bytes": 52899,
+      "bytes": 52920,
       "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theBoundaryBeyond/behavior.js",
-      "sha256": "934c14b972ba58b69ee1cd8a5abab11dadc5d5d22bb14bc657ee91e67029aada"
+      "sha256": "f1820412ff7fb1cf07127205248f52665a9606cea7b270eca0e8d069f8d9b9de"
     },
     {
       "bytes": 8708,
@@ -169395,9 +169395,9 @@
       "sha256": "0601569a7e8cd4cf334dbf2d20523ac8969892f0b5c3a347d132ff6ca8869106"
     },
     {
-      "bytes": 10486,
+      "bytes": 10217,
       "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theUntamedWilds/behavior.js",
-      "sha256": "cf911788caa92cf771c81c6945db5d427982c31819a86067c96b8e2e8d164504"
+      "sha256": "675c31102bc96dcc5f224f3a8d8f4645f8511c9d195767bf7c1ae8e843cf88c7"
     },
     {
       "bytes": 4994,
@@ -170445,9 +170445,9 @@
       "sha256": "98e24c4773eb70c44f88b9b6a7d7fb4a904321622ac2990a01d17d51606d35ba"
     },
     {
-      "bytes": 4545,
+      "bytes": 4476,
       "path": "games/arkhamhorror/content/packs/tdeInvestigators/manifest.js",
-      "sha256": "a4bbe66ef7f3c7480c5a55dc70946f18f6516887e06fec8076efa9bb2480d97b"
+      "sha256": "9f7ea86f3b64fa50d4078577dabb63c345b91520d764c337a7efcd0dae71f1dc"
     },
     {
       "bytes": 3410,
@@ -170655,9 +170655,9 @@
       "sha256": "5c34cb5b8b1ef92e116fee4345eabdf738afcce1905844c0600324f0fbd2cbbf"
     },
     {
-      "bytes": 40228,
+      "bytes": 39842,
       "path": "games/arkhamhorror/index.js",
-      "sha256": "f4d6858abd5ba8f55530e852a8687051ab5d1e097813a39509e9f2daefc5b37c"
+      "sha256": "61404913e879e400b9c38cb0c6557915bc4162afd165cfb7a861b71b0e0c9ea2"
     },
     {
       "bytes": 3244,
@@ -171135,14 +171135,14 @@
       "sha256": "15d3223672f41267dd9aa2c1a6b9faeb70ca7a99f4bf862152df4ea24d841952"
     },
     {
-      "bytes": 1060,
+      "bytes": 1068,
       "path": "games/arkhamhorror/src/cards/50-a-acceptance.js",
-      "sha256": "90142dad53baa3d0c60b442c704761889adbb2f303510e1174c7c75d3cf6a0b5"
+      "sha256": "736f75bdbf6bf5467114ca7bb1db2faf157a4303b1051eca512ce2c7c72bac71"
     },
     {
-      "bytes": 1039,
+      "bytes": 1047,
       "path": "games/arkhamhorror/src/cards/60-a-acceptance.js",
-      "sha256": "6d12aecdbee22670d767d6f75afce2d8cb70bad19c0a3bd5e2316958ee6d23ec"
+      "sha256": "edcfde900e3f0f0456480fb284c6f9a5f2605bdf35a0e780502ff66205b80a24"
     },
     {
       "bytes": 870,
@@ -171170,9 +171170,9 @@
       "sha256": "9e69887890dda320270d6d64379a8bb2c2aa2cab2728c9b5c22aad87f7706967"
     },
     {
-      "bytes": 31832,
+      "bytes": 31914,
       "path": "games/arkhamhorror/src/cards/campaign-plugin.js",
-      "sha256": "240e836a4c22822ca7cf23240b03d05a4621150c28199c96094b90afcd083666"
+      "sha256": "fcb2753854483e5a7ec998a3bd2228d78f3314bd6e03239ac4c095f08f25097f"
     },
     {
       "bytes": 5551,
@@ -180685,14 +180685,14 @@
       "sha256": "53e57e1848a7e4837584136e27c3f9e205c7bee1e733fc4de6d0efc61344beb8"
     },
     {
-      "bytes": 1262,
+      "bytes": 1081,
       "path": "games/arkhamhorror/src/cards/encounter-entries/theForgottenAge/_shared/agents_of_yig/04085.js",
-      "sha256": "7c9fd63e9ff294dec1f3df7c762057e6f1ed2b8cef4e03a72753399b641eb2ab"
+      "sha256": "08b0218c4328cbbd5b8a968d7fba7cc047c614aa3e62aab9f15d0890f87824f2"
     },
     {
-      "bytes": 1345,
+      "bytes": 1588,
       "path": "games/arkhamhorror/src/cards/encounter-entries/theForgottenAge/_shared/expedition/04081.js",
-      "sha256": "c1640afb8edc93c7b40a0fa9465983fc65fa0fc1ee881aa86e309f1edfde1567"
+      "sha256": "7e67eda0052eb8cee75585dba3dd066015d6a6f53df83f4eb1b413a581dc2130"
     },
     {
       "bytes": 2113,
@@ -180775,9 +180775,9 @@
       "sha256": "b98f00e7471eba9cbd7b345f5ad28470d442fb8188859f3c739eeb947bd99910"
     },
     {
-      "bytes": 1114,
+      "bytes": 1134,
       "path": "games/arkhamhorror/src/cards/encounter-entries/theForgottenAge/_shared/pnakotic_brotherhood/04097.js",
-      "sha256": "addc6e32a4333d7da6640b921f6e837230019e893735ffd891a5ea4b55655e80"
+      "sha256": "ebdc7be7b268c2a3c55cd77f2b1edfcf9585d17efbb70398046b601c1c3f3e07"
     },
     {
       "bytes": 756,
@@ -180810,9 +180810,9 @@
       "sha256": "2b45e654b4ae3bc9aca33939761668c587e317faaaf8143db2592a11373cc98f"
     },
     {
-      "bytes": 1402,
+      "bytes": 574,
       "path": "games/arkhamhorror/src/cards/encounter-entries/theForgottenAge/_shared/rainforest/04073.js",
-      "sha256": "2ef3857b83bac438ed1aeb2421b971acb9a1761acc6d66c3e5be0db0a68a94d6"
+      "sha256": "71c6f820500dae824916f9bbdeb8d1891f21e9b7450e3f888b720c14805f90b4"
     },
     {
       "bytes": 775,
@@ -180830,9 +180830,9 @@
       "sha256": "343057813c6f194442cd3ae7374607138a35710a953214066191dd2b45ff5c01"
     },
     {
-      "bytes": 1060,
+      "bytes": 898,
       "path": "games/arkhamhorror/src/cards/encounter-entries/theForgottenAge/_shared/rainforest/04077.js",
-      "sha256": "fa886f2ec62c4ecdf418e06f949823aa81661a64ef53d1f6e9e72bbe8afe2401"
+      "sha256": "45cd3b287496ef28949a3fcebbd2335a92c0b5e8651077a49e015515835e3a17"
     },
     {
       "bytes": 1564,
@@ -180875,9 +180875,9 @@
       "sha256": "99b54b9fd5ef0fd9fea687779045db9b9675eab8a77b924b6a0d9c221cbdd105"
     },
     {
-      "bytes": 1235,
+      "bytes": 1061,
       "path": "games/arkhamhorror/src/cards/encounter-entries/theForgottenAge/_shared/traps/04089.js",
-      "sha256": "721f10e3af65f749006f9d3f6e2e72fe5d13ccf2f852ea800d62b8a71b380986"
+      "sha256": "9733d45dfab3bd74b3302bc2db48613914630320ce17ff839e150ed79d6aec8e"
     },
     {
       "bytes": 523,
@@ -180885,9 +180885,9 @@
       "sha256": "6acf74f7c39d45eb0bac3dab91beff5d4ffd9ab9f55bbc1865c6bc7361d9f538"
     },
     {
-      "bytes": 1102,
+      "bytes": 858,
       "path": "games/arkhamhorror/src/cards/encounter-entries/theForgottenAge/_shared/venom/04099.js",
-      "sha256": "eb26a5e00353b11f28b1ee611e7e971580dae9a37205a54db4da3b68836e682b"
+      "sha256": "c258c3d9e0841db315e56db3c692ca75e25d8223b53f0d886ab699013d6a5106"
     },
     {
       "bytes": 1121,
@@ -194075,9 +194075,9 @@
       "sha256": "e71955c7bef375880f4b4819cfae073c5cd0a2df3c07e298bb16a9d8e96148bf"
     },
     {
-      "bytes": 2402,
+      "bytes": 2081,
       "path": "games/arkhamhorror/src/cards/rcore-acceptance.js",
-      "sha256": "d9e2ad38dd9b8e512d78f941655ffa38cdd38d064c19ce1a715a47bfc87dc9c2"
+      "sha256": "b85811f624f36ad078887369019770a643c7fb6720850d5da8a903f5cb316c1e"
     },
     {
       "bytes": 2991,
@@ -194105,9 +194105,9 @@
       "sha256": "4b6256a29a409049ed7d95781d080ac342dd174a0cbfeb93dc18f75441dc248f"
     },
     {
-      "bytes": 2170,
+      "bytes": 2176,
       "path": "games/arkhamhorror/src/cards/tfa-shard1-acceptance.js",
-      "sha256": "d64d0921736401173435f5383b161cac1e58fc1078c985eab4deb8e0b9dc4723"
+      "sha256": "7dd28890a34a7d1d86fe108ff37ad811b787c4ce65cbd847e013638e806f8f24"
     },
     {
       "bytes": 2161,
@@ -194190,9 +194190,9 @@
       "sha256": "757358912d86d695f4c579ba97779419976b16c1d19cddf5bb26749c49e97d76"
     },
     {
-      "bytes": 39101,
+      "bytes": 39225,
       "path": "games/arkhamhorror/src/engine/ability-exec.js",
-      "sha256": "7c81686b3db6e36d9b3b0ad04bf2ea9c991ac0758cbfc0c1421556003ef34e99"
+      "sha256": "9ae58bb769c69bb7cb11bd15390ecc595b2a8bc0911a5dc7cd41869b4918f8b8"
     },
     {
       "bytes": 33449,
@@ -194220,9 +194220,9 @@
       "sha256": "e9d5a021667b2e26da8d8dfa69e414eddde8769083585fcb0987145e93a88702"
     },
     {
-      "bytes": 54408,
+      "bytes": 54995,
       "path": "games/arkhamhorror/src/engine/actions.js",
-      "sha256": "373bb2fa07ac4424ba4dffc4776f465464ec69a7efc204824602d4c473c14377"
+      "sha256": "662f60571bbf2152b88d7ffb8b3fefa1f0051b24349fc0c856404e99b67d3363"
     },
     {
       "bytes": 657,
@@ -194255,9 +194255,9 @@
       "sha256": "f09be563940ba1aabbbe759ab4db5824a460d5c79b9122db8890b68f500f288a"
     },
     {
-      "bytes": 117100,
+      "bytes": 117112,
       "path": "games/arkhamhorror/src/engine/api-misc.js",
-      "sha256": "f7186da281f1888e4783f6cc13167df838939d31b7c8e02eadb7b4c046b05c3b"
+      "sha256": "64b0ef968f92d157c7cb942abe5e8559e0ca5a2a8ed42a2dded9fc72047e859f"
     },
     {
       "bytes": 16489,
@@ -194415,9 +194415,9 @@
       "sha256": "9fca9a1b8ba90587e9f48a21e1bf7f8b9d76f61c90c1f006fd612465183d1034"
     },
     {
-      "bytes": 23413,
+      "bytes": 22974,
       "path": "games/arkhamhorror/src/engine/describe.js",
-      "sha256": "06f4f60cea6f3009a68766f685742cfedbe1b1a79b0506ec76e8754f4418c412"
+      "sha256": "f677a69e40f62d8e7930b6ddb0d712f44f7d522cb4a3d69c92a9d0b54b9cb854"
     },
     {
       "bytes": 5155,
@@ -194425,9 +194425,9 @@
       "sha256": "75b14ebcbd6d62ebfb590ea38675d85caf2542917aacaf1b1f24998e1984c263"
     },
     {
-      "bytes": 74588,
+      "bytes": 71483,
       "path": "games/arkhamhorror/src/engine/dispatch.js",
-      "sha256": "995c4811f3ccc10f13d56ddab87649f545d52ba7e2f6c7d6e0a01188d7ca062c"
+      "sha256": "edac983a6cf84b6d4dfe5c0536192abe21a131a3c18a27bc3ed39c432d20d732"
     },
     {
       "bytes": 6556,
@@ -194540,9 +194540,9 @@
       "sha256": "9e3dd6c306db63a6c58c379a9dd431e99545428104a6810640910abf5806f135"
     },
     {
-      "bytes": 181171,
+      "bytes": 181227,
       "path": "games/arkhamhorror/src/engine/engine.js",
-      "sha256": "2abc47a4aa87f9b3a5a49c8fc8ee2f4e5fdcbd33acdc869d05acd0732b70732e"
+      "sha256": "392d4b4e43a2834b426fa3658b0eb7e57b57dd4c2828af876c5d305a656f3281"
     },
     {
       "bytes": 6159,
@@ -194665,9 +194665,9 @@
       "sha256": "c03411577dc3ee280fcc39eaa9723761c4c5fcfb32331e6740d9cdd13c667e77"
     },
     {
-      "bytes": 54025,
+      "bytes": 54159,
       "path": "games/arkhamhorror/src/engine/harm-threat.js",
-      "sha256": "4eb970c3a936a53c143221e0a5cf1f7b380d6ecc46011e6f1f90ca37cd212c02"
+      "sha256": "3d29f40f69e38254c2a4f04d12568611a0f01bd55b56709194cc22d319e99d11"
     },
     {
       "bytes": 2761,
@@ -194735,6 +194735,11 @@
       "sha256": "acaad7ba200dc00d2dfc2ce82a840d44d2964e540fd7f60edf45c0ff82a46ec7"
     },
     {
+      "bytes": 1718,
+      "path": "games/arkhamhorror/src/engine/location-action-cost.js",
+      "sha256": "c7b49dc35f984080ad59cda3eca713443b42d6e80667d4faa08af24b048d2cd5"
+    },
+    {
       "bytes": 3614,
       "path": "games/arkhamhorror/src/engine/location-attachments.js",
       "sha256": "c0b21e68d9ab5ce73faaf266cd3e4ca2a84da1094ef33aeff5fdb47bf24638fe"
@@ -194795,9 +194800,9 @@
       "sha256": "4059ffe2b9b34e030f987c22a90a5de65b0f7ded1c8b53dc02ccda201aba6d73"
     },
     {
-      "bytes": 30005,
+      "bytes": 29999,
       "path": "games/arkhamhorror/src/engine/locations.js",
-      "sha256": "f88209bc88b7f511c6a138ce1dbd8069b945f9c4e00d4d268c856538089d3405"
+      "sha256": "cbfed75abcecc8a43fdb66e974fa364ede2d650b0a5c8483c33542308c60dd06"
     },
     {
       "bytes": 7250,
@@ -194840,9 +194845,9 @@
       "sha256": "05f7cf2409668efe2e68278f6167a0ed235efd8f73e5789998745a49ab454086"
     },
     {
-      "bytes": 78301,
+      "bytes": 79881,
       "path": "games/arkhamhorror/src/engine/moves.js",
-      "sha256": "f69b0962c94830d6bab71f71bfca8b0d221c5da13f1484ff51cb42baff701e21"
+      "sha256": "6635d2517bc9f2c1057a7f115ed7792065ab5f51f0c2662821164c5eddd33596"
     },
     {
       "bytes": 3783,
@@ -194935,9 +194940,9 @@
       "sha256": "24d5fac423445cbd4bc299b332c9063123a662311898d3fc9bfbeb4f1070b9e0"
     },
     {
-      "bytes": 16009,
+      "bytes": 16191,
       "path": "games/arkhamhorror/src/engine/replay.js",
-      "sha256": "c178e394abf2172fa7916e078c9c71ad8e63b34678f19f9d999d75ad3d1f1f1d"
+      "sha256": "6f17effc8f2aa0643ba47c77b62b5632a41dd19908236603668542dfab251720"
     },
     {
       "bytes": 3446,
@@ -195010,9 +195015,9 @@
       "sha256": "0c8e1117ca237fcbeddde18d55d6820049c6c9fbf0760b0bded8a93023621914"
     },
     {
-      "bytes": 139357,
+      "bytes": 139369,
       "path": "games/arkhamhorror/src/engine/scenario-runtime.js",
-      "sha256": "4a3706feb0f32a76e4ed306ed1536da66f92293cd525f4d5eb07088b43bdc11b"
+      "sha256": "cec8e3d2357cbb97380c0f333fe02c0cee97a9983992873529db57bc2f2060c1"
     },
     {
       "bytes": 3045,
@@ -195025,9 +195030,9 @@
       "sha256": "1e4d4150c8e3a608d54a71d91ff82a37ba5108014ebe01138f3e403b3a160efc"
     },
     {
-      "bytes": 54265,
+      "bytes": 54663,
       "path": "games/arkhamhorror/src/engine/setup.js",
-      "sha256": "7be0a4ba0d7918db6f76deb5177a11e29d5fe3bd64242d9fe91b5e84462f3eea"
+      "sha256": "911052ccee265b8835ebb0ad3d29a3ace3a1a2a23c0464395bb145f9b7caf2bf"
     },
     {
       "bytes": 21190,
@@ -195075,9 +195080,9 @@
       "sha256": "76b1a7156961a613e9f7910827b82a746e5bb898e3eb182bcfaa407ab7f10b9f"
     },
     {
-      "bytes": 31058,
+      "bytes": 32838,
       "path": "games/arkhamhorror/src/engine/table-decisions.js",
-      "sha256": "12ddee03f39ffb25517b77f91ef2cfd6ab9cc105b708a08efd96aa583719d829"
+      "sha256": "5d92814e810d165902fc266a1eaea6123937b5a49a33313521c6d9326e8672f9"
     },
     {
       "bytes": 8828,
@@ -195405,7 +195410,7 @@
     "raw": "catalog/sources 按来源保存完整原始记录，包括 linked_card 与构筑限制；provenance 按原始字段路径定位。"
   },
   "quarantined": [],
-  "resourceVersion": "160c7d135ac1d598576185fa513518b5b9bb55e1920a20e3e7624d26868de439",
+  "resourceVersion": "a6720acba81a81cae4b13f73a5eb1615ebd2e5c9d429442a1197264c322dbe21",
   "schemaVersion": 1,
   "sourceManifest": [
     {

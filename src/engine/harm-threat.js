@@ -4,6 +4,7 @@ import { putInHand } from './hand-entry.js'
 // 读点：combat 与 api 的伤害接口、威胁区的强制效果、弱点与淘汰判定。
 import { playerEffectCanAffect } from './effect-recipient.js'
 import { keysOnExit } from './scenario-keys.js'
+import { payLocationActionCost } from './location-action-cost.js'
 import { vehicleOf, leaveVehicle } from './vehicles.js'
 import { mechanicState } from './mechanic-state.js'
 import { roadDistance } from './map-graph.js'
@@ -474,7 +475,7 @@ export function createHarmThreat(deps) {
   function investigateForResources(state, seat, effect, events) {
     const inv = state.investigators[seat]
     const loc = state.locations.find(item => item.id === inv.location)
-    if (!loc) return
+    if (!loc || !payLocationActionCost(state, inv, 'investigate', requestChoice)) return
     const skill = loc.investigateSkill || 'intellect'
     const difficulty = loc.shroud + (loc.shroudMod || 0) + (state.fogMod || 0)
     return performTest(state, seat, skill, difficulty, { source: { label: '调查以获取资源', name: loc.name, code: loc.originalCode || loc.code }, skillBonus: skill === 'intellect' ? investigateBonus(inv) : 0, resolve: r => {

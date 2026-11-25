@@ -7,16 +7,10 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
-import { originalOf } from '../../../_shared.js'
-
 export default {
   code: '04089', implemented: true, scope: 'treachery', treacheryRule: {"threatArea":true},
-  threatAction: { rule: 'escapeEntombed', label: '逃出墓穴', skills: ['agility', 'combat'], difficulty: 4, target: 'threat', skillLabels: { agility: '检定敏捷(4)逃出墓穴', combat: '检定战斗(4)逃出墓穴' } },
+  threatAction: { rule: 'escapeEntombed', label: '逃出墓穴', skills: ['agility', 'combat'], difficulty: 4, target: 'threat', sameLocation: true, skillLabels: { agility: '用敏捷逃出墓穴', combat: '用战斗挣脱束缚' } },
   encounterResolve(state, inv, card, api) {
-    if ((inv.threat || []).some(item => originalOf(item) === '04089')) {
-      api.drawEncounter(inv.seat)
-      return false
-    }
     api.threat(inv.seat, '04089', { noMove: true, noDisengage: true })
     return true
   },

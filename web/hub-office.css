@@ -53,12 +53,12 @@
 .ah-hub-preparing strong { font-size: 14px; font-weight: 500; }
 .ah-hub-preparing small { color: #bbc5aa; font-size: 12px; }
 .ah-workflow-guide { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px 24px; align-items: center; width: calc(100% - 64px); max-width: 1280px; margin: 18px auto 0; padding: 16px 20px; border: 1px solid #a9925d55; background: #0b1914e8; }
-.ah-workflow-guide ol { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; padding: 0; margin: 0; list-style: none; }
-.ah-workflow-guide li { display: flex; align-items: center; gap: 8px; min-width: 0; color: #7f8e80; font-size: 11px; }
-.ah-workflow-guide li::after { content: ''; flex: 1; min-width: 8px; height: 1px; background: #8c805144; }
+.ah-workflow-guide ol { grid-column: 1 / -1; display: flex; justify-content: safe center; gap: 8px; min-width: 0; overflow-x: auto; padding: 5px 0; margin: -5px 0; list-style: none; }
+.ah-workflow-guide li { display: flex; flex: none; align-items: center; gap: 8px; color: #7f8e80; font-size: 11px; }
+.ah-workflow-guide li::after { content: ''; flex: 0 0 clamp(8px, 2vw, 24px); height: 1px; background: #8c805144; }
 .ah-workflow-guide li:last-child::after { display: none; }
 .ah-workflow-guide li > span { display: grid; place-items: center; flex: 0 0 24px; width: 24px; height: 24px; border: 1px solid #756d4d; border-radius: 50%; }
-.ah-workflow-guide li b { overflow: hidden; color: inherit; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
+.ah-workflow-guide li b { color: inherit; font-weight: 500; white-space: nowrap; }
 .ah-workflow-guide li.is-done { color: #aeca90; }.ah-workflow-guide li.is-done > span { border-color: #88a66b; background: #4d693c42; }
 .ah-workflow-guide li.is-current { color: #f0d493; }.ah-workflow-guide li.is-current > span { border-color: #e0bd6c; background: #6b562d66; box-shadow: 0 0 16px #d2a84b33; }
 .ah-workflow-next { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
@@ -72,8 +72,6 @@
   .ah-departure-team { grid-template-columns: 1fr; }
   .ah-departure-member { padding: 16px; }
   .ah-workflow-guide { width: calc(100% - 24px); padding: 13px; }
-  .ah-workflow-guide ol { display: flex; overflow-x: auto; padding-bottom: 5px; }
-  .ah-workflow-guide li { flex: 0 0 auto; }.ah-workflow-guide li::after { width: 16px; }
   .ah-workflow-next { align-items: stretch; flex-direction: column; }.ah-workflow-next > .bg-btn { width: 100%; }
 }
 .ah-office .ah-hub-pane { width: calc(100% - 64px); max-width: 1280px; margin: 30px auto 50px; border: 0; padding: 24px; background: #11251eb0; border-radius: 3px; box-shadow: none; }

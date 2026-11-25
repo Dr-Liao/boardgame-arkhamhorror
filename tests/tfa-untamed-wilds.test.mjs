@@ -8,6 +8,7 @@ import { scenario as definition } from '../content/campaigns/theForgottenAge/sce
 import { EXPLORATION_LOCATIONS, EXPLORATION_TREACHERIES } from '../content/campaigns/theForgottenAge/scenarios/theUntamedWilds/definition.js'
 // Phase 3（D1）：敌人/地点的常驻修正已迁到能力层，验收改为断言引擎的统一读点。
 import { entityModifierTotal } from '../src/engine/modifiers.js'
+import { payLocationActionCost } from '../src/engine/location-action-cost.js'
 
 const clone = value => structuredClone(value)
 
@@ -193,24 +194,16 @@ test('索桥要求探索前检定敏捷，失败则取消探索、受伤并结�
   assert.equal(JSON.stringify(first.state), JSON.stringify(second.state), '同一路线结果一致')
 })
 
-test('曲折小道没有指南针时必须额外花费 3 资源', () => {
-  const make = () => {
-    const state = placed(stateFor(1))
-    wilds.behavior.setupLocations(state, [], setupApi(13))
-    const inv = state.investigators[0]
-    inv.location = 'circuitousTrail'
-    inv.resources = 3
-    const api = { checkSupplies: () => false, info: () => {} }
-    const allowed = wilds.behavior.beforeExplore(state, inv, api)
-    return { state, inv, allowed }
-  }
-  const first = make()
-  assert.equal(first.allowed, true)
-  assert.equal(first.inv.resources, 0)
-  const broke = make()
-  broke.state.investigators[0].resources = 2
-  const rerun = wilds.behavior.beforeExplore(broke.state, broke.inv, { checkSupplies: () => false, info: () => {} })
-  assert.equal(rerun, false)
+test('04073 曲折小道没有指南针时必须额外花费 3 资源', () => {
+  const state = placed(stateFor(1))
+  const inv = state.investigators[0]
+  inv.location = 'circuitousTrail'
+  inv.resources = 3
+  assert.equal(payLocationActionCost(state, inv, 'explore'), true)
+  assert.equal(inv.resources, 0)
+  inv.resources = 2
+  assert.equal(payLocationActionCost(state, inv, 'explore'), false)
+  assert.equal(inv.resources, 2)
 })
 
 test('探索丛林：非营地调查员在轮末共同支付 3×人数线索后推进并放置伊塔卡', () => {

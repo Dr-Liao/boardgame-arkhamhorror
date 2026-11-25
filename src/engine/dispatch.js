@@ -18,11 +18,8 @@ import { contentRegistry } from '../../content/registered.js'
 //
 // 依赖注入同前；被依赖表引用的 do* 与本模块函数都用函数声明 + 惰性装配。
 
-import { investigatorRule } from '../cards/card-rules.js'
 import { cardPoolContext } from '../deck/card-pool.js'
 
-import { isParleyDescriptor } from './parley.js'
-import { attachmentIgnoresOpportunityAttack } from './attachment-rules.js'
 // P8：世界地图启程 / 状况报告（《绯红密钥》）的局外动作。
 // 引擎不 import 内容模块：地图图结构、目的地→流程节点、节点 id 与强制终点都从战役清单读；
 // 记录同步通过重演 `map` 节点声明的 embark 效果完成（内容层 syncMapRecords + 排队状况报告）。
@@ -53,7 +50,7 @@ import { flipVeiledLocation } from './veiled.js'
 import { cardDef, cardName } from './card-lookup.js'
 import { beginAsIf, endAsIf } from './as-if-location.js'
 import { discardSpawnedEnemy, spawnHiddenEnemy, takeHiddenEnemyFromHand } from './hidden-enemy.js'
-import { firstActionExemptsOpportunityAttack, recordPerformedAction, recordRoundAction } from './action-history.js'
+import { recordPerformedAction, recordRoundAction } from './action-history.js'
 import { hasWindowListener } from './window-listeners.js'
 import { preparePlayAttempt } from './play-attempt.js'
 // ---------------------------------------------------------------------------
@@ -224,7 +221,6 @@ export function createDispatch(deps) {
     EFFECTS,
     ScenarioEnded,
     ScenarioRestarted,
-    abilityOfMove,
     actionCost,
     actionKind,
     isSpellAction,
@@ -239,7 +235,6 @@ export function createDispatch(deps) {
     campaignDiscardOnYourOwn,
     campaignFor,
     captureTableState,
-    cardKeyword,
     checkAct,
     checkDefeated,
     checkOutcome,
@@ -281,9 +276,7 @@ export function createDispatch(deps) {
     doShortcutMove,
     doDetachLocationAttachment,
     endCampaign,
-    enemiesEngagedWith,
     enemyAttack,
-    enemyCanOpportunityAttack,
     // 2026-11-01：演出快照里的敌人派生数值（有效生命/战斗/躲避）要与实时观察同口径，
     // 否则演出播放期间牌桌按快照重绘会退回印刷值（01175 等卡面修正看不到）。
     enemyEvadeValue,
@@ -302,12 +295,11 @@ export function createDispatch(deps) {
     info,
     performTest,
     initialHubPreparation,
-    jakeSkipsOpportunityAttack,
     legalMoves,
     makeInvestigator,
     normalActionsLeft,
     payAndAdvanceAct,
-    playFlag,
+    opportunityAttackEnemies,
     playCost,
     // 2026-10-27：如同手牌通道统一取牌（宿主附属 / 直觉牌库 / 银暮匕首下方 / 其余通道片段）。
     playChannels,
@@ -323,7 +315,6 @@ export function createDispatch(deps) {
     // 2026-10-25 第六轮修复 05040：行动结束统一清 endOfAction 时长的效果。
     expireEffects,
     resolveTransaction,
-    ruleIgnored,
     runInterlude,
     runMulligans,
     scenarioBehavior,
@@ -512,57 +503,24 @@ function executePaidAction(state, seat, move, events) {
   state._actionPaid = true
   try {
     if (move.action === 'scenarioAction') scenarioBehavior(state).payScenarioActionCost?.(state, inv, move, scenarioRuntime(state, events))
-    const noOpportunityAttack = move.action === 'freeAction' && investigatorRule(inv.code)?.freeAction?.noOpportunityAttack
-    // Phase 2（C2）：noOpportunityAttack 也可以由描述子的 add:keyword 授予。
-    // Phase 5（5c）：资产把「打出时不引发借机攻击」写成条目级 noOpportunityAttack
-    // （旧 DSL 的字段名是 noOpportunityAttackOnPlay），两边都在这里汇合。
-    const playNoAoO = move.action === 'play'
-      && (state._prePlayAttempt?.noOpportunityAttack || playFlag(move.copyCode || move.cardId, 'noOpportunityAttack')
-        || cardKeyword(state, inv, move.copyCode || move.cardId, 'noOpportunityAttack'))
-    // 行动/能力级豁免（01055 飞贼的 [action]）：只豁免这一次行动，不豁免打出资产本身。
-    const usedAbility = ['ability', 'entityAbility'].includes(move.action) ? abilityOfMove(state, inv, move) : null
-    const abilityNoAoO = usedAbility?.descriptor?.noOpportunityAttack === true
-      || usedAbility?.noOpportunityAttack === true
-      || attachmentIgnoresOpportunityAttack(state, inv, move)
-      // 第 2 步 P2.7：谈判行动按规则不引发借机攻击；非玩家实体的通用行动同理。
-      || isParleyDescriptor(usedAbility?.descriptor)
-    // 03147 双刃短刀：控制者的「交战」行动不引发借机攻击。
-    const engageNoAoO = kind === 'engage'
-      && inv.assets.some(item => registeredEntry(item.code)?.engageNoOpportunityAttack === true)
-    // 2026-10-25 本循环修复 05228：剧本行动（behavior.actions）可以声明不引发借机攻击，
-    // 支持全豁免（noOpportunityAttack: true）与按敌人卡号豁免（noOpportunityAttackFrom: [卡号…]）。
-    const scenarioNoAoOAll = move.action === 'scenarioAction' && move.noOpportunityAttack === true
-    const exemptions = move.action === 'ability' ? usedAbility?.descriptor?.noOpportunityAttackFrom : move.noOpportunityAttackFrom
-    const scenarioNoAoOFrom = Array.isArray(exemptions)
-      ? exemptions.map(String)
-      : []
-    if (totalCost && !noOpportunityAttack && !playNoAoO && !abilityNoAoO && !engageNoAoO && !scenarioNoAoOAll
-      && !ruleIgnored(state, inv, 'opportunityAttack')
-      && !firstActionExemptsOpportunityAttack(state, inv, kind, registeredEntry)
-      && !jakeSkipsOpportunityAttack(state, inv, kind)
-      && !['fight', 'evade', 'resign', 'parley', 'parleyCultist', 'parleyLita'].includes(kind) && !['fightConcealed', 'evadeConcealed'].includes(move.action)) {
-      const scenarioExempt = enemy => scenarioNoAoOFrom.includes(String(enemy.originalCode || enemy.code))
-        || scenarioNoAoOFrom.includes(String(enemy.code))
-      const pending = enemiesEngagedWith(state, inv).filter(enemy => !enemy.exhausted
-        && enemyCanOpportunityAttack(state, enemy) && !scenarioExempt(enemy)).map(e => e.id)
-      while (pending.length) {
-        const candidates = pending.map(id => state.enemies.find(e => e.id === id)).filter(e => e && !e.exhausted)
-        if (!candidates.length) break
-        const enemy = chooseAttack(state, inv, candidates, 'opportunity')
-        pending.splice(pending.indexOf(enemy.id), 1)
-        if (inv.onTheLam && !enemy.elite) continue
-        const firstThisRound = inv.roundActionHistory?.round !== state.round || !inv.roundActionHistory.opportunityAttacks
-        recordRoundAction(state, inv, 'opportunityAttacks', null, registeredEntry)
-        const opportunity = reactionWindow(state, 'opportunityAttack', {
-          when: 'opportunityAttack', seat, location: inv.location, enemy, firstThisRound, prompt: `「${enemy.name}」对 ${inv.name} 发动借机攻击`,
-        }, events)
-        if (opportunity.cancelled) {
-          info(state, events, `${inv.name} 取消了「${enemy.name}」的借机攻击。`)
-          continue
-        }
-        enemyAttack(state, enemy, inv, events, enemy.name + ' 发动借机攻击。', { kind: 'opportunity' })
-        if (inv.defeated || state.status !== 'playing') break
+    const pending = opportunityAttackEnemies(state, inv, move, kind, totalCost, { consumeExemption: true }).map(enemy => enemy.id)
+    while (pending.length) {
+      const candidates = pending.map(id => state.enemies.find(e => e.id === id)).filter(e => e && !e.exhausted)
+      if (!candidates.length) break
+      const enemy = chooseAttack(state, inv, candidates, 'opportunity')
+      pending.splice(pending.indexOf(enemy.id), 1)
+      if (inv.onTheLam && !enemy.elite) continue
+      const firstThisRound = inv.roundActionHistory?.round !== state.round || !inv.roundActionHistory.opportunityAttacks
+      recordRoundAction(state, inv, 'opportunityAttacks', null, registeredEntry)
+      const opportunity = reactionWindow(state, 'opportunityAttack', {
+        when: 'opportunityAttack', seat, location: inv.location, enemy, firstThisRound, prompt: `「${enemy.name}」对 ${inv.name} 发动借机攻击`,
+      }, events)
+      if (opportunity.cancelled) {
+        info(state, events, `${inv.name} 取消了「${enemy.name}」的借机攻击。`)
+        continue
       }
+      enemyAttack(state, enemy, inv, events, enemy.name + ' 发动借机攻击。', { kind: 'opportunity' })
+      if (inv.defeated || state.status !== 'playing') break
     }
     if (!inv.defeated && !inv.resigned && state.status === 'playing') {
       state.lastActionSnapshot = actionSnapshot

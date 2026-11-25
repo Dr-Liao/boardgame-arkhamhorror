@@ -128,8 +128,26 @@ test('普通动效下局外选择保留已加载图片、面板可见性与构�
   expect(await stable()).toBe(true)
   await hub.getByRole('button', { name: '选择调查员', exact: true }).click()
   await expect(hub.locator('.bg-game-status')).toHaveText('调查准备')
-  await hub.getByRole('button', { name: /选择调查员：罗兰/ }).first().click()
-  await expect(hub.getByRole('button', { name: /选择调查员：罗兰/ }).first()).toBeEnabled()
+  const picker = hub.locator('.ah-investigator-browser')
+  const roland = picker.getByRole('button', { name: /选择调查员：罗兰/ }).first()
+  await picker.evaluate(el => { window.pendingInvestigatorPicker = el })
+  let acceptSelection
+  await page.route('**/api/move', async route => {
+    await new Promise(resolve => { acceptSelection = resolve })
+    await route.continue()
+  }, { times: 1 })
+  await roland.click()
+  try {
+    await expect.poll(() => typeof acceptSelection).toBe('function')
+    await expect(picker).toHaveAttribute('aria-busy', 'true')
+    await expect(roland).toBeDisabled()
+    await expect(roland).toHaveAttribute('aria-pressed', 'false')
+    expect(await page.evaluate(() => window.pendingInvestigatorPicker.isConnected)).toBe(true)
+  } finally {
+    acceptSelection?.()
+  }
+  await expect(roland).toHaveAttribute('aria-pressed', 'true')
+  await expect(roland).toBeEnabled()
   await hub.getByRole('button', { name: '卡组构筑', exact: true }).click()
   await hub.getByRole('button', { name: /手动构筑/ }).click()
   const modal = page.locator('.ah-db-modal')

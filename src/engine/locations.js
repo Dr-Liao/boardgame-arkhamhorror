@@ -372,8 +372,9 @@ function notifyCluesRemoved(state, loc, amount, events) {
 // 不是调查员所在地点——例如「发现任意地点的 1 个线索」这类远程发现（02224）。
 // 地点条目声明「淹没时不能发现线索」（07250 沉没档案库：部分/完全淹没都算「淹没」）：
 // 只限制发现，不阻止线索本身存在或调查行动以外的目标枚举。
-function locationClueDiscoveryBlocked(state, loc) {
+function locationClueDiscoveryBlocked(state, loc, investigation = false) {
   const rule = registeredEntry(loc?.originalCode || loc?.code)?.locationRule
+  if (rule?.cluesOnlyByInvestigation && !investigation) return true
   if (!rule?.cannotDiscoverWhileFlooded) return false
   return floodLevel(state, loc.id) >= 1
 }
@@ -400,16 +401,16 @@ function clueDiscoveryClaims(state) {
   return (state.scenarioFlags.clueDiscoveryClaims ||= {})
 }
 
-function canDiscoverClueAt(state, inv, loc) {
+function canDiscoverClueAt(state, inv, loc, opts = {}) {
   if (!loc || loc.clues <= 0) return false
-  if (locationClueDiscoveryBlocked(state, loc)) return false
+  if (locationClueDiscoveryBlocked(state, loc, opts.investigation === true)) return false
   for (const [code, limit] of asideClueDiscoveryLimits(state)) {
     const claimed = Number(state.scenarioFlags?.clueDiscoveryClaims?.[clueDiscoveryClaimKey(state, code, inv, loc.id)] || 0)
     if (claimed >= limit) return false
   }
   if (scenarioBehavior(state).canDiscoverClues?.(state, inv, loc) === false) return false
   // 交战中的「不能发现线索」敌人（影子特工）跟着调查员走，与目标地点无关。
-  if (state.enemies.some(enemy => enemy.engagedSeat === inv.seat && !enemyTextBlanked(state, enemy)
+  if (!opts.investigation && state.enemies.some(enemy => enemy.engagedSeat === inv.seat && !enemyTextBlanked(state, enemy)
     && registeredEntry(enemy.code)?.enemyRule?.cluesOnlyByInvestigating)) return false
   return !engagedWithClueBlocker(state, inv)
 }
@@ -423,11 +424,7 @@ function discoverClueAt(state, inv, amount, events, opts = {}) {
   if (scenarioBehavior(state).canDiscoverClues?.(state, inv, loc) === false) return false
   // 地点条目级限制（07247 只能靠调查发现 / 07250 淹没时不能发现）。
   // 只限制发现端，不改变调查行动本身能否获得线索。
-  if (loc) {
-    const locationRule = registeredEntry(loc.originalCode || loc.code)?.locationRule
-    if (locationRule?.cluesOnlyByInvestigation && opts.investigation !== true) return false
-    if (locationClueDiscoveryBlocked(state, loc)) return false
-  }
+  if (loc && locationClueDiscoveryBlocked(state, loc, opts.investigation === true)) return false
   // Revelation can put the hunter into play after an event was paid for.
   // Recheck at resolution, including discoveries that bypass investigation.
   const clueBlocker = engagedWithClueBlocker(state, inv)

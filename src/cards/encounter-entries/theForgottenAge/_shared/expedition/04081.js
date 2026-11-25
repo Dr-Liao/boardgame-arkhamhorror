@@ -18,11 +18,15 @@ export default {
     api.test(inv.seat, 'willpower', 3, result => {
       if (result.success) return
       const amount = failedBy(result, 3)
-      for (let index = 0; index < amount; index++) api.horror(inv.seat, 1)
-      if (!(inv.threat || []).some(item => originalOf(item) === '04081')) {
-        api.threat(inv.seat, '04081', { forcedEndTurnDiscard: true })
-        placed = true
+      // 历史存档的逐点分配可能已暂停在其中一个选择，每一步及其原答案都须保留。
+      if (!state.setup || state.setup.encounterRulesVersion >= 2) {
+        if (amount) api.horror(inv.seat, amount)
+      } else {
+        for (let point = 0; point < amount; point++) api.horror(inv.seat, 1)
+        if (inv.threat.some(item => originalOf(item) === '04081')) return
       }
+      api.threat(inv.seat, '04081', { forcedEndTurnDiscard: true })
+      placed = true
     })
     return placed
   },

@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { fixture, play, move, settle, validateMove } from './core-fixture.mjs'
+import { fixture, play, use, move, settle, validateMove } from './core-fixture.mjs'
 import { drawEncounter, performTest } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 
@@ -29,6 +29,72 @@ test('51003 无线索时不能打出，有线索时抽三张且不发现线索',
   assert.equal(state.investigators[0].deck.length, 27)
   assert.equal(state.locations.find(item => item.id === location.id).clues, 1)
 })
+
+for (const code of ['51007', '01689']) {
+  test(`${code} 礼寻术支付四资源入场，三次充能以意志加二调查并在本地发现额外线索`, () => {
+    const state = fixture('01001', 2)
+    const inv = state.investigators[0]
+    const locationId = inv.location
+    const location = () => state.locations.find(item => item.id === locationId)
+    location().clues = 8
+    location().shroud = 6
+    inv.intellect = 1
+    inv.willpower = 4
+    play(state, code)
+    settle(state)
+    const caster = () => state.investigators[0]
+    const spell = () => caster().assets.find(item => item.code === code)
+    assert.equal(caster().resources, 26)
+    assert.equal(caster().actionsLeft, 19)
+    assert.equal(spell().uses, 3)
+    assert.equal(spell().usesType, 'charges')
+
+    for (const [index, token] of ['0', '-1', '0'].entries()) {
+      state.chaosBag = [token]
+      use(state, spell())
+      settle(state)
+      const success = token === '0'
+      const clues = [2, 2, 4][index]
+      assert.equal(state.lastTestResult.skill, 'willpower')
+      assert.equal(state.lastTestResult.value, success ? 6 : 5)
+      assert.equal(state.lastTestResult.success, success)
+      assert.equal(caster().clues, clues)
+      assert.equal(location().clues, 8 - clues)
+      assert.equal(caster().actionsLeft, 18 - index)
+      assert.equal(spell().uses, 2 - index)
+      assert.equal(state.currentSeat, 0)
+    }
+    assert.match(validateMove(state, 0, { action: 'ability', assetId: spell().id, abilityIndex: 0 }), /成本不足/)
+  })
+
+  test(`${code} 礼寻术的五种指定符号都在调查结算后结束回合，包括自动失败`, () => {
+    for (const token of ['skull', 'cultist', 'tablet', 'elderthing', 'autofail']) {
+      const state = fixture('01001', 2)
+      const inv = state.investigators[0]
+      const location = state.locations.find(item => item.id === inv.location)
+      location.shroud = 0
+      location.clues = 5
+      play(state, code)
+      settle(state)
+      state.chaosBag = [token]
+      use(state, state.investigators[0].assets.find(item => item.code === code))
+      settle(state)
+      const actor = state.investigators[0]
+      const expectedClues = token === 'autofail' ? 0 : 2
+      assert.deepEqual(state.lastTestResult.drawn, [token])
+      assert.equal(state.lastTestResult.success, token !== 'autofail')
+      assert.equal(actor.clues, expectedClues, token)
+      assert.equal(state.locations.find(item => item.id === location.id).clues, 5 - expectedClues)
+      assert.equal(actor.assets.find(item => item.code === code).uses, 2)
+      assert.equal(actor.actionsLeft, 0)
+      assert.equal(actor.turnEnded, true)
+      assert.equal(state.currentSeat, 1)
+      const resultLine = state.log.findIndex(line => expectedClues ? /获得 2 个线索/.test(line) : /调查失败/.test(line))
+      const endLine = state.log.findIndex(line => line.includes('失去所有剩余行动并结束本回合'))
+      assert.ok(resultLine >= 0 && resultLine < endLine, `${token} 应先结算调查再结束回合`)
+    }
+  })
+}
 
 test('51010 只能投入自己的较难检定且万能图标最多三个', () => {
   for (const [difficulty, expected] of [[2, null], [4, 2], [7, 3]]) {

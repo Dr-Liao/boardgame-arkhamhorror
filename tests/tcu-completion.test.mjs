@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, asset, enemy, move, settle } from './core-fixture.mjs'
-import { executeDescriptor, performTest, playerWindow, legalMoves, eliminateInvestigator, scenarioRuntime, endCampaign, enemyFightValue } from '../src/engine/engine.js'
+import { actionPreview, executeDescriptor, performTest, playerWindow, legalMoves, eliminateInvestigator, scenarioRuntime, endCampaign, enemyFightValue } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { availableResources } from '../src/engine/resource-bank.js'
 import { createTreacheryTokens } from '../src/engine/treachery-tokens.js'
@@ -220,8 +220,10 @@ test('TCU 05228 机关盒能力只豁免幽灵看守人的借机攻击', () => {
   const state = fixture('01001')
   const box = asset(state, '05228')
   const watcher = enemy(state, { code: '05086', originalCode: '05086', damage: 2 })
-  enemy(state, { code: 'ghoulMinion', damage: 1 })
-  move(state, legalMoves(state).find(m => m.action === 'ability' && m.assetId === box.id)); settle(state)
+  const ghoul = enemy(state, { code: 'ghoulMinion', damage: 1 })
+  const useBox = legalMoves(state).find(m => m.action === 'ability' && m.assetId === box.id)
+  assert.deepEqual(actionPreview(state, 0, useBox).opportunityAttacks.map(e => e.id), [ghoul.id])
+  move(state, useBox); settle(state)
   assert.equal(state.investigators[0].damage, 1, '其他敌人仍进行借机攻击')
   assert.equal(state.enemies.find(e => e.id === watcher.id).exhausted, true)
 })

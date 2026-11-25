@@ -13,6 +13,6 @@ export const STARTER_INVESTIGATORS_ACCEPTANCE_PROFILE = {
     "docs/test/验收-60-a-调查员入门包.json"
   ]
 }
-export const STARTER_INVESTIGATORS_ACCEPTANCE_SHA256 = 'eceae24e5da6a595eb1565fdc5a81230a9c2e14b987e3c4cec6d2b51785858c1'
-const verified = new Set(["60118","60119","60176","60206","60216","60218","60219","60226","60263","60267","60275","60416","60457"])
+export const STARTER_INVESTIGATORS_ACCEPTANCE_SHA256 = 'efe3e39527083dd9ae995d293819010133461ecc41822cacb4d995218f82bcb5'
+const verified = new Set(["60118","60119","60176","60206","60216","60218","60219","60226","60227","60263","60267","60275","60416","60457"])
 export const starterInvestigatorPackCardVerified = code => verified.has(code)

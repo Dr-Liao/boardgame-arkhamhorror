@@ -55,7 +55,7 @@ export const manifest = {
   minRulesVersion: 'n6.0',
   status: 'playable',
   dependencies: ['core'],
-  description: 'M1（P6）产物：5 位正式调查员 + 11 张专属主卡 + 2 张关联面；逐人能力、旧印与构筑已验收；06015a/b 是绑定地点（由门之匣/脱离现实放进场，不进牌组）。',
+  description: '包含 5 位调查员、11 张专属主卡和 2 张关联面。梦境之门是由门之匣或脱离现实放置入场的绑定地点。',
   cardRanges: [{ from: '06001', to: '06017' }],
   faceCodes: Object.keys(UNOWNED_FACE_OVERRIDES).filter(code => UNOWNED_FACE_OVERRIDES[code].pack === 'tdeInvestigators'),
   cards: investigatorCards.map(card => ({

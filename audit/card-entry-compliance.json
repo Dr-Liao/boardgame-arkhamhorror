@@ -41,19 +41,19 @@
   }
  ],
  "scope": {
-  "entries": 2916,
-  "player": 1042,
-  "encounter": 1874,
+  "entries": 4556,
+  "player": 1778,
+  "encounter": 2778,
   "cycles01to05": 1341
  },
  "counts": {
-  "directStateWrite": 112,
+  "directStateWrite": 111,
   "singleCardField": 21,
   "reprintDuplicate": 0,
   "playConditionGap": 0,
-  "testWrapper": 24,
-  "revelationTestCards": 87,
-  "selfCodeInstanceLookup": 23
+  "testWrapper": 25,
+  "revelationTestCards": 146,
+  "selfCodeInstanceLookup": 22
  },
  "baseline": {
   "directStateWrite": [
@@ -144,7 +144,6 @@
    "04057",
    "04070",
    "04071",
-   "04073",
    "04092",
    "04093",
    "04096",
@@ -284,7 +283,8 @@
    "08698",
    "08713",
    "09719",
-   "09736"
+   "09736",
+   "11741"
   ],
   "revelationTestWrappers": [
    "01167",
@@ -339,7 +339,31 @@
    "08713",
    "09608",
    "09719",
-   "09736"
+   "09736",
+   "10008",
+   "10545",
+   "10676",
+   "10678",
+   "10680",
+   "10725",
+   "10726",
+   "10728",
+   "10730",
+   "10737",
+   "11534",
+   "11577",
+   "11732",
+   "11735",
+   "11739",
+   "11740",
+   "11741",
+   "11742",
+   "11745",
+   "11749",
+   "50040",
+   "51066",
+   "60254",
+   "81026"
   ],
   "revelationTestStubs": [
    "01162",
@@ -375,7 +399,42 @@
    "08645",
    "09543",
    "09561",
-   "09633"
+   "09633",
+   "10521",
+   "10561",
+   "10562",
+   "10586",
+   "10603",
+   "10622",
+   "10623",
+   "10650",
+   "10672",
+   "10673",
+   "10674",
+   "11607",
+   "11636",
+   "11666",
+   "11716",
+   "11717",
+   "52066",
+   "70055",
+   "70056",
+   "70058",
+   "70060",
+   "81024",
+   "81027",
+   "82033",
+   "82034",
+   "82036",
+   "84025",
+   "84039",
+   "84042",
+   "85045",
+   "85046",
+   "85047",
+   "85048",
+   "87048",
+   "87052"
   ],
   "selfCodeInstanceLookup": [
    {
@@ -715,52 +774,30 @@
     ]
    },
    {
-    "code": "09007",
-    "file": "src/cards/entries/09007.js",
-    "hits": [
-     {
-      "line": 32,
-      "text": "if (!(Number(context?.damage) > 0) || context?.direct === true) return false"
-     },
-     {
-      "line": 33,
-      "text": "const asset = (inv.assets || []).find(item => item.code === '09007')"
-     },
-     {
-      "line": 37,
-      "text": "resolve: ({ inv, context, api }) => {"
-     },
-     {
-      "line": 38,
-      "text": "const asset = (inv.assets || []).find(item => item.code === '09007')"
-     }
-    ]
-   },
-   {
-    "code": "09016",
-    "file": "src/cards/entries/09016.js",
-    "hits": [
-     {
-      "line": 37,
-      "text": "resolve: ({ state, inv, context, api }) => {"
-     },
-     {
-      "line": 38,
-      "text": "const kodak = (inv.assets || []).find(asset => asset.code === '09016')"
-     }
-    ]
-   },
-   {
     "code": "09019",
     "file": "src/cards/entries/09019.js",
     "hits": [
      {
-      "line": 15,
+      "line": 32,
       "text": "resolve: ({ inv, api }) => {"
      },
      {
-      "line": 16,
+      "line": 33,
       "text": "const allies = (inv.assets || []).filter(asset => asset.code !== '09019' && asset.exhausted"
+     }
+    ]
+   },
+   {
+    "code": "11120",
+    "file": "src/cards/entries/11120.js",
+    "hits": [
+     {
+      "line": 13,
+      "text": "playCondition: [{"
+     },
+     {
+      "line": 14,
+      "text": "when: ({ inv }) => !inv.assets.some(asset => asset.code === '11120'),"
      }
     ]
    }
@@ -905,8 +942,7 @@
    "02098",
    "02326",
    "03054",
-   "03255",
-   "04073"
+   "03255"
   ],
   "location.attachments": [
    "03091",

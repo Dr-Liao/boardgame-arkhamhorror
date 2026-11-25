@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test'
 import { mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
+import { placeLocation } from '../src/engine/engine.js'
 import { starterInvestigators } from '../src/deck/starter-packs.js'
 import { enemy, fixture, legalMoves, move } from './core-fixture.mjs'
 import { viewEvents, viewState } from '../src/integration/observation.js'
@@ -42,6 +43,37 @@ async function openTable(page, engine) {
 }
 
 for (const width of [1440, 390]) {
+  test(`60227 寻找答案在牌桌选择本地与相连地点各一条线索 (${width})`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 })
+    const engine = fixture('01002')
+    for (const id of ['attic', 'hallway']) {
+      placeLocation(engine, id, [])
+      Object.assign(engine.locations.find(location => location.id === id), { revealed: true, clues: 2, shroud: 1 })
+    }
+    Object.assign(engine.investigators[0], { hand: ['60227'], location: 'attic', clues: 0 })
+    engine.legalMoves = legalMoves(engine, 0)
+    await openTable(page, engine)
+    await page.locator('[data-interaction="hand:0:0"]').first().click()
+    await page.locator('[data-interaction="zone:play"].ah-drop-valid').click()
+    await page.getByRole('button', { name: /开始检定/ }).first().click()
+    const choice = page.locator('.ah-choice')
+    await expect(choice).toContainText('选择要发现一个线索的地点')
+    const map = page.getByRole('region', { name: '地点地图' })
+    const attic = map.getByRole('button', { name: '阁楼', exact: true })
+    const hallway = map.getByRole('button', { name: '走廊', exact: true })
+    await expect(attic).toBeVisible()
+    await expect(hallway).toBeVisible()
+    await page.screenshot({ path: `${output}/60227-${width}.png`, animations: 'disabled' })
+    const firstChoice = engine.pendingChoice.id
+    await hallway.click()
+    await expect.poll(() => engine.pendingChoice?.id).not.toBe(firstChoice)
+    await expect(choice).toHaveAttribute('data-choice-id', engine.pendingChoice.id)
+    await expect(choice.locator('[data-option-id="attic"]')).toBeEnabled()
+    await attic.click()
+    await expect.poll(() => engine.investigators[0].clues).toBe(2)
+    expect(['attic', 'hallway'].map(id => engine.locations.find(location => location.id === id).clues)).toEqual([1, 1])
+  })
+
   test(`十位入门包调查员可在真实大厅选择 (${width})`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 })
     await openHall(page)

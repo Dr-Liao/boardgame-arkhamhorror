@@ -710,3 +710,5 @@ P7 的逐章验收与生产注册仍以路线图为准；下列接口通过专�
 - `hiddenRule.playerWeakness` 声明玩家隐私弱点。`placeHiddenWeakness` 仅向持有者展示卡面，`discardHiddenWeakness` 使用玩家弃牌堆。`hiddenRule.scenarioXpModifier` 计入当关经验，淘汰时保存该修正供结算使用。
 - `api.removeOwnedCopies` 按同编号和所有者移除玩家牌，涵盖受另一位调查员控制的支援。`occupiedAssetSlotsAtLeast` 查询满足特性的实际占用槽位。
 - `canMakeRoomForAsset` 检查唯一性和可腾出的槽位。直接放置用 `makeRoomForAsset` 处理腾槽，再由 `putIntoPlay` 入场。
+
+地点的 `locationRule.supplyActionCost` 用 `actions` 指定需额外支付的行动，`unlessSupply` 指定同地点未淘汰调查员可提供的补给，`resources` 指定资源数。允许发起行动时检查可支付金额，实际执行时才扣费。同一探索续算只支付一次。

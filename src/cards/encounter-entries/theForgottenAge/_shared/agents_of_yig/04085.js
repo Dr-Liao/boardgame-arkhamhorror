@@ -7,21 +7,13 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
-import { originalOf } from '../../../_shared.js'
-
 export default {
-  code: '04085', implemented: true, scope: 'treachery', treacheryRule: {"threatArea":true},
-  threatAction: { rule: 'endCurseOfYig', label: '检定意志(2+复仇)摆脱伊格的诅咒', skills: ['willpower'], difficulty: 2, target: 'threat', vengeance: true },
+  code: '04085', implemented: true, scope: 'treachery',
+  treacheryRule: { threatArea: true },
+  modifiers: [{ target: 'add:investigatorTrait', value: 'Serpent' }],
+  threatAction: { rule: 'endCurseOfYig', label: '检定意志(2+复仇)摆脱伊格的诅咒', skills: ['willpower'], difficulty: 2, target: 'threat', vengeance: true, sameLocation: true },
   encounterResolve(state, inv, card, api) {
-    if ((inv.threat || []).some(item => originalOf(item) === '04085')) {
-      api.drawEncounter(inv.seat)
-      return false
-    }
-    api.threat(inv.seat, '04085', {
-      threatEffect: { statModifiers: { combat: -1 }, healthModifier: -1 },
-      grantedTrait: 'Serpent',
-    })
-    api.addInvestigatorTrait(inv.seat, 'Serpent')
+    api.threat(inv.seat, '04085', { threatEffect: { statModifiers: { combat: -1 }, healthModifier: -1 } })
     return true
   },
 }

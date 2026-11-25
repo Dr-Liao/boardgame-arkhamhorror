@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 // 引擎是唯一装配点：import 它之前不会注册能力条目、注入修正读点
 // （setModifierRegistry / setModifierHooks），下面的 entityModifierTotal / entityRuleActive 会恒为 0/false。
 import '../src/engine/engine.js'
+import { payLocationActionCost } from '../src/engine/location-action-cost.js'
 import { tokenLabel } from '../src/engine/engine.js'
 import * as chapter from '../content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart1/index.js'
 import {
@@ -410,7 +411,8 @@ test('曲折小道：没有指南针必须支付 3 资源，否则不能探索',
     inv.location = 'circuitousTrail'
     inv.resources = resources
     const api = makeApi(state)
-    return { allowed: behavior.beforeExplore(state, inv, api), inv, state }
+    const allowed = payLocationActionCost(state, inv, 'explore') && behavior.beforeExplore(state, inv, api)
+    return { allowed, inv, state }
   }
   const rich = run(3)
   assert.equal(rich.allowed, true)
@@ -903,11 +905,12 @@ test('04073 曲折小道：调查也要检查指南针并收 3 资源', () => {
   const state = placed(stateFor(1))
   const inv = state.investigators[0]
   inv.resources = 5
-  const api = { checkSupplies: () => false, info: () => {} }
-  assert.equal(behavior.beforeInvestigate(state, inv, { originalCode: '04073', code: '04073' }, api), true)
+  state.locations = [{ id: inv.location, originalCode: '04073' }]
+  assert.equal(payLocationActionCost(state, inv, 'investigate'), true)
   assert.equal(inv.resources, 2)
-  inv.resources = 2
-  assert.equal(behavior.beforeInvestigate(state, inv, { originalCode: '04073', code: '04073' }, api), false)
-  assert.equal(inv.resources, 2, '付不起就不扣资源')
-  assert.equal(behavior.beforeInvestigate(state, inv, { originalCode: '04069', code: '04069' }, api), true)
+  assert.equal(payLocationActionCost(state, inv, 'investigate'), false)
+  assert.equal(inv.resources, 2)
+  state.locations[0].originalCode = '04069'
+  assert.equal(payLocationActionCost(state, inv, 'investigate'), true)
+  assert.equal(inv.resources, 2)
 })

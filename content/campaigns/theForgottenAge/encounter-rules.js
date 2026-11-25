@@ -257,11 +257,11 @@ export const encounterRules = {
     return !threatHasFlag(inv, 'noDisengage') && !threatWithCode(inv, '04089')
   },
 
-  canDiscoverClues(state, inv) {
+  canDiscoverClues(state, inv, location = here(state, inv)) {
     // 「力量真言」（04097）：与带毁灭的敌人同地点时不能发现线索。
     // 04094 一片漆黑「每位调查员每轮从单个地点最多发现 1 个线索」由条目声明
     // `treacheryRule.clueDiscoveryLimit`，引擎 locations.js 统一记账（旁置卡读点）。
-    if (threatHasFlag(inv, 'blockCluesHere')
+    if (location?.id === inv.location && threatHasFlag(inv, 'blockCluesHere')
       && state.enemies.some(enemy => (enemy.doom || 0) > 0 && enemy.location === inv.location)) return false
     return true
   },
@@ -301,12 +301,14 @@ export const encounterRules = {
   // 威胁区域的「行动：检定 X 弃掉本卡」。用于共享遭遇组。
   encounterActions(state, inv) {
     const moves = []
-    for (const threat of inv.threat) {
-      const code = original(threat)
-      const spec = threatActionFor(code)
-      if (spec) moves.push(...threatMoves({
-        action: 'encounterAction', rule: spec.rule, threatId: threat.id, actions: spec.actions ?? 1,
-      }, spec))
+    for (const owner of active(state).filter(player => player.location === inv.location)) {
+      for (const threat of owner.threat) {
+        const spec = threatActionFor(original(threat))
+        if (!spec || (owner !== inv && !spec.sameLocation)) continue
+        moves.push(...threatMoves({
+          action: 'encounterAction', rule: spec.rule, threatId: threat.id, actions: spec.actions ?? 1,
+        }, spec))
+      }
     }
     const location = here(state, inv)
     for (const attachment of location?.attachments || []) {
@@ -322,19 +324,18 @@ export const encounterRules = {
   performEncounterAction(state, inv, move, api) {
     const spec = threatActionByRule(move.rule)
     if (!spec) return false
-    if (spec.noTest) {
-      if (move.threatId) {
-        const threat = inv.threat.find(card => card.id === move.threatId)
-        if (threat) discardThreat(state, inv, threat)
-      }
-      return true
-    }
-    const threat = move.threatId ? inv.threat.find(card => card.id === move.threatId) : null
+    const owner = spec.sameLocation ? active(state).find(player => player.location === inv.location
+      && player.threat.some(card => card.id === move.threatId && threatActionFor(original(card))?.rule === move.rule)) : inv
+    const threat = owner?.threat.find(card => card.id === move.threatId)
     const location = here(state, inv)
     const attachment = move.attachmentId
       ? (location?.attachments || []).find(item => item.id === move.attachmentId)
       : null
     if (!threat && !attachment) return false
+    if (spec.noTest) {
+      discardThreat(state, owner, threat)
+      return true
+    }
     const vengeance = spec.vengeance ? inPlayVengeance(state) : 0
     const skill = move.skill || spec.skills[0]
     // 04089 半身入土：失败后本次检定难度降低 1 点，直到一轮结束。
@@ -351,7 +352,11 @@ export const encounterRules = {
         }
         return
       }
-      if (threat) discardThreat(state, inv, threat)
+      if (threat) {
+        discardThreat(state, owner, threat)
+        // Older saves stored the granted trait on the investigator as well as on the threat.
+        if (threat.grantedTrait && owner.traits) owner.traits = owner.traits.filter(trait => trait !== threat.grantedTrait)
+      }
       if (attachment) discardAttachment(state, location, attachment)
     }, 0, { type: 'scenario', name: sourceName, code: sourceCode, ability: true })
     return true
@@ -359,20 +364,23 @@ export const encounterRules = {
 
   // 回合 / 轮末的强制效果。
   turnEnded(state, inv, api) {
-    const lost = threatWithCode(inv, '04081')
-    if (lost) discardThreat(state, inv, lost)
-    const voice = threatWithCode(inv, '04077')
-    if (voice && !inv.tfaExploredThisTurn) api.horror(inv.seat, voice.forcedEndTurnHorror ?? 1)
-    const entombed = threatWithCode(inv, '04089')
-    if (entombed) delete entombed.difficultyReduction
+    for (const threat of inv.threat.filter(card => card.forcedEndTurnDiscard)) discardThreat(state, inv, threat)
+    if (!inv.tfaExploredThisTurn) {
+      for (const voice of inv.threat.filter(card => original(card) === '04077')) {
+        if (inv.defeated || inv.resigned) break
+        api.horror(inv.seat, voice.forcedEndTurnHorror ?? 1)
+      }
+    }
+    // Old campaign logs reset this marker at round end.
+    if (!state.setup || state.setup.encounterRulesVersion >= 2) delete inv.tfaExploredThisTurn
   },
 
   roundEnded(state, api) {
     for (const inv of active(state)) {
-      const scourge = threatWithCode(inv, '04099')
-      if (scourge) discardThreat(state, inv, scourge)
-      const entombed = threatWithCode(inv, '04089')
-      if (entombed) delete entombed.difficultyReduction
+      for (const threat of inv.threat.slice()) {
+        if (threat.forcedRoundEndDiscard || original(threat) === '04099') discardThreat(state, inv, threat)
+        if (original(threat) === '04089') delete threat.difficultyReduction
+      }
       delete inv.tfaExploredThisTurn
     }
     // 04094 一片漆黑「强制 - 轮末从场上弃掉 1 张」由条目声明

@@ -11,8 +11,8 @@
     "abilityKinds": 12,
     "windows": 144,
     "effectPrimitives": 56,
-    "nonPlayerCards": 444,
-    "behaviorLines": 99408,
+    "nonPlayerCards": 445,
+    "behaviorLines": 99400,
     "declaredScenarios": 3
   },
   "channels": {
@@ -23,8 +23,8 @@
     "byScope": {
       "enemy": 150,
       "location": 117,
+      "treachery": 36,
       "storyAsset": 110,
-      "treachery": 35,
       "act": 11,
       "scenario": 8,
       "agenda": 13
@@ -43,6 +43,7 @@
       "03258",
       "04072",
       "04074",
+      "04085",
       "04086",
       "04095",
       "04209b",
@@ -476,7 +477,7 @@
       "wolfManDrew"
     ],
     "abilities": 498,
-    "modifiers": 140
+    "modifiers": 141
   },
   "declaration": {
     "abilityScopes": [
@@ -610,7 +611,7 @@
       "content/campaigns/theScarletKeys/scenarios/withoutATrace/behavior.js",
       "content/campaigns/warOfTheOuterGods/scenarios/warOfTheOuterGods/behavior.js"
     ],
-    "behaviorLines": 99408,
+    "behaviorLines": 99400,
     "declaredScenarios": 3
   },
   "cards": [

@@ -513,12 +513,14 @@ test('帕德玛与兄弟会之手：重整时封锁古代地点的线索与所�
   const padma = makeApi(state).spawn('04186', 'coyoacan')
   inv.location = 'coyoacan'
   assert.equal(behavior.canDiscoverClues(state, inv), false)
+  assert.equal(behavior.canDiscoverClues(state, inv, locationOf(state, 'zocalo')), true)
   padma.exhausted = true
   assert.equal(behavior.canDiscoverClues(state, inv), true)
   // 不是古代地点时不受帕德玛限制。
   inv.location = 'zocalo'
   padma.exhausted = false
   assert.equal(behavior.canDiscoverClues(state, inv), true)
+  assert.equal(behavior.canDiscoverClues(state, inv, locationOf(state, 'coyoacan')), false)
   // 兄弟会之手：所在地点与连接地点的行动能力不能触发。
   const hand = makeApi(state).spawn('04188', 'zocalo')
   inv.location = 'zocalo'

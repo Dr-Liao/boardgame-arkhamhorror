@@ -1,9 +1,10 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { createGameState, applyMove, legalMoves, getStat, getMaxHealth, actionPreview, assetEffect, descriptorUsable, playerWindow, scenarioRuntime } from '../src/engine/engine.js'
+import { createGameState, applyMove, legalMoves, getStat, getMaxHealth, investigatorHasTrait, actionPreview, assetEffect, descriptorUsable, playerWindow, scenarioRuntime } from '../src/engine/engine.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
 import { registeredEntry } from '../src/engine/ability.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
+import { captureReplayLog, replayLog } from '../src/engine/replay.js'
 import { encounterRules } from '../content/campaigns/theForgottenAge/encounter-rules.js'
 import { addLocationShroud } from '../src/engine/location-attachments.js'
 
@@ -11,8 +12,8 @@ import { addLocationShroud } from '../src/engine/location-attachments.js'
 // 与 tfa-player-p1 分开：这些是剧本/威胁层的规则，不是玩家卡。
 const me = state => state.investigators[0]
 
-function launchTfa(seed = 'tfa-encounter-p1') {
-  const state = createGameState({ campaignId: 'theForgottenAge', campaignHub: true, seed }, [{ seat: 0, role: 'human' }])
+function launchTfa(seed = 'tfa-encounter-p1', options) {
+  const state = createGameState({ campaignId: 'theForgottenAge', campaignHub: true, seed }, [{ seat: 0, role: 'human' }], options)
   const step = move => applyMove(state, 0, move)
   step({ action: 'hubGoSetup' })
   step({ action: 'hubSelectInvestigator', code: '04001' })
@@ -28,6 +29,32 @@ function launchTfa(seed = 'tfa-encounter-p1') {
   state.chaosBag = ['0']
   return state
 }
+
+test('04081 迷失荒野：旧存档逐点分配恐惧，新局一次分配；读档及重放保留同一版本', () => {
+  for (const legacy of [true, false]) {
+    const state = launchTfa('tfa-lost-replay', legacy ? { encounterRulesVersion: 1 } : {})
+    const log = captureReplayLog(state)
+    assert.equal(log.meta.encounterRulesVersion, legacy ? undefined : 2)
+    assert.equal(replayLog(log, { until: 0 }).setup.encounterRulesVersion, legacy ? undefined : 2)
+    me(state).hand = []
+    me(state).assets = []
+    state.chaosBag = ['autofail']
+    state.explorationDeck = ['04081']
+    const explore = legalMoves(state, 0).find(move => move.action === 'explore')
+    assert.ok(explore)
+    applyMove(state, 0, explore)
+    assert.ok(state.pendingChoice)
+    const restored = JSON.parse(JSON.stringify(state))
+    while (restored.pendingChoice) {
+      const choice = restored.pendingChoice
+      const pick = choice.options.find(option => ['done', 'skip', 'self'].includes(option.id)) || choice.options[0]
+      applyMove(restored, choice.seat, { action: 'choose', choiceId: choice.id, optionId: pick.id })
+    }
+    assert.equal(me(restored).horror, 3)
+    assert.equal(restored.lastHarmContext.horror, legacy ? 1 : 3)
+    assert.ok(me(restored).threat.some(card => card.code === '04081'))
+  }
+})
 
 test('补给短缺探索：旧回放保留原选项，新对局过滤不可支付的弃置选项', () => {
   for (const filterDiscardChoices of [false, true]) {
@@ -357,12 +384,14 @@ test('伊格的诅咒（04085）：-1 战斗、-1 生命、获得蛇族特性', 
   encounterRules.resolveEncounter(state, inv, { code: '04085', originalCode: '04085' }, api)
   assert.equal(getStat(state, me(state), 'combat'), combat - 1, '-1 战斗')
   assert.equal(getMaxHealth(me(state)), health - 1, '-1 生命')
-  assert.ok((me(state).traits || []).includes('Serpent'), '获得蛇族特性')
-  // 同一张卡再显现时改为抽 1 张遭遇牌。
+  assert.ok(investigatorHasTrait(state, me(state), 'Serpent'), '获得蛇族特性')
+  // 第二份威胁独立入场并叠加数值修正。
   const second = coreHarness(state)
   const again = encounterRules.resolveEncounter(state, me(state), { code: '04085', originalCode: '04085' }, second.api)
-  assert.equal(again, false)
-  assert.equal(second.record.draws, 1)
+  assert.equal(again, true)
+  assert.equal(second.record.draws, 0)
+  assert.equal(getStat(state, inv, 'combat'), combat - 2)
+  assert.equal(getMaxHealth(inv), health - 2)
 })
 
 test('04259 的猎物是手牌最多者，引擎有对应的排序键', async () => {

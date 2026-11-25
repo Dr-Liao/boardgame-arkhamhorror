@@ -528,8 +528,11 @@ function unknownCardCodes(state) {
   return [...missing].sort()
 }
 
-function createGameState(settings, players, { sharedFreeWindows = true } = {}) {
+function createGameState(settings, players, { sharedFreeWindows = true, encounterRulesVersion } = {}) {
   const manifest = contentRegistry.assertLaunchable(settings.campaignId || contentRegistry.listCampaigns()[0].id)
+  const latestEncounterRules = manifest.encounterRulesVersion ?? 1
+  const encounterRules = encounterRulesVersion ?? latestEncounterRules
+  if (!Number.isInteger(encounterRules) || encounterRules < 1 || encounterRules > latestEncounterRules) throw new Error('未知的战役遭遇规则版本')
   const CAMPAIGN = { ...manifest, scenarioOrder: manifest.scenarioIds }
   registerCampaignContent(manifest.id)
   const rulesMode = settings.rulesMode || 'simplified'
@@ -634,6 +637,7 @@ function createGameState(settings, players, { sharedFreeWindows = true } = {}) {
       rulesMode,
       playerDeck: Array.isArray(settings.playerDeck) ? [...settings.playerDeck] : null,
       seatInvestigators: investigators.map(inv => inv.code),
+      ...(encounterRules > 1 ? { encounterRulesVersion: encounterRules } : {}),
       ...(sharedFreeWindows ? { _sharedFreeWindows: true } : {}),
     },
     rngState: randomState.rngState,

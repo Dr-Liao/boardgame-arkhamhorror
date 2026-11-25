@@ -38,6 +38,31 @@ async function openTable(page, settings, engine) {
 }
 
 for (const width of [1440, 390]) {
+  test(`51007 礼寻术从手牌打出并由牌桌启动意志调查 (${width})`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 })
+    const engine = fixture('01001')
+    const actor = () => engine.investigators[0]
+    const location = () => engine.locations.find(item => item.id === actor().location)
+    actor().hand = ['51007']
+    location().shroud = actor().willpower + 2
+    location().clues = 4
+    engine.legalMoves = legalMoves(engine, 0)
+    await openTable(page, { playerInvestigator: '01001' }, engine)
+    await page.locator('[data-interaction="hand:0:0"]').first().click()
+    await page.locator('[data-interaction="zone:play"].ah-drop-valid').click()
+    const spell = () => actor().assets.find(item => item.code === '51007')
+    await expect.poll(() => spell()?.uses).toBe(3)
+    await page.locator(`[data-interaction="asset:${spell().id}"]`).first().click()
+    await page.getByRole('button', { name: /意志.*调查/ }).click()
+    await page.getByRole('button', { name: '开始检定', exact: true }).click()
+    await expect.poll(() => actor().clues).toBe(2)
+    expect(location().clues).toBe(2)
+    expect(spell().uses).toBe(2)
+    expect(engine.lastTestResult.skill).toBe('willpower')
+    await expect(page.locator('.ah-table')).toHaveAttribute('data-revision', String(engine.revision))
+    await page.screenshot({ path: `${output}/51007-${width}.png`, animations: 'disabled' })
+  })
+
   test(`50006 / 51003 可从手牌区打出并结算 (${width})`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 })
     const engine = fixture('01002')

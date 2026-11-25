@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, enemy, move, settle, legalMoves, validateMove } from './core-fixture.mjs'
-import { createGameState, performTest, getStat } from '../src/engine/engine.js'
+import { actionPreview, createGameState, performTest, getStat } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { EFFECTS, INVESTIGATOR_ABILITIES } from '../src/cards/card-effects.js'
 import { registeredEntry } from '../src/engine/ability.js'
@@ -374,10 +374,16 @@ test('M1 Jake Williams blocks the first opportunity attack of each round', () =>
   me(state).assets.push({ id: 'jake', code: '04008', exhausted: false, damage: 0, horror: 0 })
   const stalker = enemy(state, { id: 'stalker', fight: 1, evade: 1, health: 5, damage: 1, horror: 0 })
   assert.equal(stalker.engagedSeat, 0)
-  move(state, { action: 'move', locationId: 'beta' })
+  const firstMove = { action: 'move', locationId: 'beta' }
+  const nextMove = { action: 'move', locationId: 'alpha' }
+  const before = structuredClone(me(state).jakeFree)
+  assert.deepEqual(actionPreview(state, 0, firstMove).opportunityAttacks, [])
+  assert.deepEqual(me(state).jakeFree, before, '预览不能消耗免借机攻击额度')
+  move(state, firstMove)
   settle(state)
   assert.equal(me(state).damage, 0, '每回合第一个移动不引发借机攻击')
-  move(state, { action: 'move', locationId: 'alpha' })
+  assert.deepEqual(actionPreview(state, 0, nextMove).opportunityAttacks.map(e => e.id), [stalker.id])
+  move(state, nextMove)
   settle(state)
   assert.equal(me(state).damage, 1, '第二次移动照常引发借机攻击')
 })

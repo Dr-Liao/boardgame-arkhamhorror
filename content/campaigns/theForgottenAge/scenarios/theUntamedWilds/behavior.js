@@ -2,7 +2,7 @@ import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
 import { syncSymbolConnections } from '../../card-data.js'
-import { actRuleFor, agendaRuleFor, locationRuleFor } from '../../../../../src/cards/card-rules.js'
+import { actRuleFor, agendaRuleFor, enemyRuleFor, locationRuleFor } from '../../../../../src/cards/card-rules.js'
 import { EXPLORATION_LOCATIONS, EXPLORATION_TREACHERIES, scenario } from './definition.js'
 
 const active = state => state.investigators.filter(inv => !inv.defeated && !inv.resigned)
@@ -75,23 +75,11 @@ export const behavior = {
     return encounterRules.canExplore(state, inv)
   },
 
-  // 第 115 轮：索桥（04071）与曲折小道（04073）的探索前规则在地点条目的 locationRule.beforeExplore。
+  // 索桥等地点在翻探索牌前结算自身的能力。
   beforeExplore(state, inv, api) {
     const location = here(state, inv)
     const rule = locationRuleFor(original(location))
     if (typeof rule?.beforeExplore === 'function') return rule.beforeExplore(state, inv, api, location) !== false
-    return true
-  },
-
-  // 04073 曲折小道：调查前检查补给，无指南针必须花费 3 资源。引擎在调查前只读
-  // scenarioBehavior.beforeInvestigate（src/engine/actions.js 的 doInvestigate），
-  // 因此本章与 beforeExplore 一样把地点条目的 locationRule.beforeInvestigate 转发出去。
-  beforeInvestigate(state, inv, location, api) {
-    const loc = location || here(state, inv)
-    const rule = locationRuleFor(original(loc))
-    if (typeof rule?.beforeInvestigate === 'function') {
-      return rule.beforeInvestigate(state, inv, loc, api) !== false
-    }
     return true
   },
 
@@ -160,11 +148,16 @@ export const behavior = {
     // 第 115 轮：04050 探险营地 / 04070 河流峡谷的行动在地点条目的 locationRule.actions。
     locationRuleFor(original(location))?.actions?.({ state, inv, location, moves })
     const ichtaca = state.enemies.find(enemy => original(enemy) === '04052' && enemy.location === inv.location)
-    if (ichtaca) moves.push({
-      action: 'scenarioAction', rule: 'parleyIchtaca', enemyId: ichtaca.id,
-      label: '🗣️ 谈判：检定智识(4)说服伊塔卡',
+    const parley = enemyRuleFor(original(ichtaca))?.parley
+    if (parley) moves.push({
+      action: 'scenarioAction', rule: 'parleyIchtaca', enemyId: ichtaca.id, actionKind: 'parley',
+      label: `🗣️ 谈判：检定智识(${parley.difficulty})说服伊塔卡`,
     })
     return moves
+  },
+
+  actionKind(state, inv, move) {
+    if (move.rule === 'parleyIchtaca') return 'parley'
   },
 
   performAction(state, inv, move, api) {
@@ -172,15 +165,13 @@ export const behavior = {
     // 第 115 轮：地点条目先接管自己的场景行动。
     if (locationRuleFor(original(location))?.performAction?.(state, inv, move, api, location)) return
     if (move.rule === 'parleyIchtaca') {
-      const enemy = state.enemies.find(entry => entry.id === move.enemyId)
-      if (!enemy) return
-      api.test(inv.seat, 'intellect', 4, result => {
-        if (result.success) {
-          enemy.clues = (enemy.clues || 0) + 1
-          return
-        }
-        if (!enemy.exhausted) api.attack(enemy, inv)
-      })
+      const enemy = state.enemies.find(entry => entry.id === move.enemyId && entry.location === inv.location && original(entry) === '04052')
+      const parley = enemyRuleFor(original(enemy))?.parley
+      if (!parley) return
+      api.test(inv.seat, parley.skill, parley.difficulty, result => {
+        if (result.success) api.addCluesToEnemy(enemy, 1)
+        else if (!enemy.exhausted) api.attack(enemy, inv)
+      }, 0, { actionKind: 'parley', code: original(enemy), name: enemy.name, enemyId: enemy.id })
       return
     }
     if (encounterRules.performAction?.(state, inv, move, api)) return

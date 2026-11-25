@@ -263,10 +263,8 @@ export function createDescribeState(deps) {
     const totals = opportunityTotals(opportunityAttackersNow)
     const names = opportunityAttackersNow.map(e => `${e.name}（伤害 ${e.damage ?? 0}／恐惧 ${e.horror ?? 0}）`).join('、')
     tail.push('')
-    tail.push(`【借机攻击】你正与「${names}」交战：每次非攻击行动结算前，会先被每个未横置的敌人各攻击一次（合计 ${totals.damage} 伤害／${totals.horror} 恐惧）。`)
-    tail.push('会引发：抽牌、获得资源、移动、调查、打出卡牌、使用普通资产能力等花费行动点的行动。不会引发：攻击、躲避、谈判、撤退、结束回合、免费行动，以及卡面写明「不引发借机攻击」的效果。行动列表中标 ⚠ 的选项都会先受到上述攻击。')
-    // 「装备」在引擎里同样算「打出卡牌」，同样先挨借机攻击；模型常把它当成安全动作。
-    tail.push('装备/打出资产与事件也属于「打出卡牌」，同样会在结算前先受到借机攻击。')
+    tail.push(`【借机攻击】你正与「${names}」交战。引发借机攻击时，符合条件的敌人会在行动效果之前各攻击一次（全数攻击时合计 ${totals.damage} 伤害／${totals.horror} 恐惧）。`)
+    tail.push('普通抽牌、拿资源、移动、调查和装备武器通常会引发借机攻击；攻击、躲避、谈判、撤退与快速行动通常可以避开。具体以每项行动的标记为准。')
     const remainingHealth = getMaxHealth(me) - (me.damage || 0)
     const remainingSanity = getMaxSanity(me) - (me.horror || 0)
     // 恐惧是否足以致死由剧本钩子裁决：某些剧本声明调查员不会因恐惧被击败
@@ -276,7 +274,7 @@ export function createDescribeState(deps) {
     const horrorLethal = totals.horror >= remainingSanity
       && scenarioBehavior(state).investigatorCanBeDefeated?.(state, me, 'horror') !== false
     if (damageLethal || horrorLethal) {
-      tail.push(`按基础值计算，这次借机攻击足以击败你（剩余生命 ${remainingHealth}／理智 ${remainingSanity}）。除非能取消或转移这次攻击，否则不要执行标 ⚠ 的行动。`)
+      tail.push(`按基础值计算，若这些敌人全数攻击，伤害或恐惧足以击败你（剩余生命 ${remainingHealth}／理智 ${remainingSanity}）。请按每项行动的 ⚠ 数值核对实际风险。`)
     }
   } else if (me && !me.defeated && !me.resigned
     && (me.engaged?.length || state.enemies.some(e => e.massive && e.location === me.location))) {
@@ -301,26 +299,29 @@ export function createDescribeState(deps) {
         : '本回合行动点已用尽（不会自动结束回合：先用手牌快速卡/[free] 能力，再提交 endTurn）；'
       : ''
     tail.push(`【可执行行动】（${actionsLeftNote}从下列选择一项，用其 JSON 表示；⚠ = 结算前会先被借机攻击，✅ = 该行动不引发借机攻击，[N行动] = 消耗行动点）`)
-    legal.forEach((m, i) => {
-      // 风险直接贴在行动旁，避免 AI 只在末尾 actionCosts 里自己推算。
-      // actionPreview 只读，且与 dispatch 共用 actionKind/actionCost 的判定。
-      const preview = actionPreview ? actionPreview(state, observerSeat, m) : null
+    const safeMoves = []
+    const riskyMoves = []
+    for (const m of legal) {
+      const preview = actionPreview(state, observerSeat, m)
       const attacks = preview?.opportunityAttacks || []
+      const totals = opportunityTotals(attacks)
       const risk = attacks.length
-        ? `  ⚠借机 ${attacks.reduce((n, a) => n + (a.damage || 0), 0)}/${attacks.reduce((n, a) => n + (a.horror || 0), 0)}`
+        ? `  ⚠借机 ${totals.damage}/${totals.horror}`
         : ''
-      // 行动点成本与「不引发借机攻击」的安全标记也贴在行动旁：与敌人交战时，模型要先比较
-      // 「花几点行动、会不会挨打」再决定行动顺序。安全标记刻意不写「借机」二字——攻击行
-      // 不引发借机攻击，既有测试按「攻击行不含借机」断言。
       const cost = preview?.actions > 0 ? ` [${preview.actions}行动]` : ''
-      const safe = opportunityAttackersNow.length && preview?.actions > 0 && m.action !== 'endTurn' && !attacks.length
+      const safe = opportunityAttackersNow.length && !state.pendingChoice && m.action !== 'endTurn' && !attacks.length
         ? ' ✅安全' : ''
       // 结束回合会吞掉剩余行动点：明写浪费几个，免得 AI 在还能行动时提前收手。
       // 行动点用尽时反过来标出「必须提交」：回合不会自动结束。
       const wasted = m.action === 'endTurn' && me?.actionsLeft > 0 ? ` [结束会浪费 ${me.actionsLeft} 个行动点]` : ''
       const mustEnd = m.action === 'endTurn' && me?.actionsLeft <= 0 ? ' [行动点已用尽：提交以结束本回合]' : ''
-      tail.push(`${i + 1}. ${m.label}${risk}${cost}${safe}${wasted}${mustEnd}  →  ${JSON.stringify(stripLabel(m))}`)
-    })
+      const list = attacks.length ? riskyMoves : safeMoves
+      list.push(`${m.label}${risk}${cost}${safe}${wasted}${mustEnd}  →  ${JSON.stringify(stripLabel(m))}`)
+    }
+    if (riskyMoves.length) {
+      tail.push('先选能处理交战敌人或有效推进目标的 ✅安全行动。默认跳过 ⚠；只有眼前收益紧迫、没有安全替代且扛得住行动前的全部伤害／恐惧时才考虑。没有值得冒险的行动时，可以结束回合。')
+    }
+    tail.push(...[...safeMoves, ...riskyMoves].map((line, i) => `${i + 1}. ${line}`))
   }
 
   // 卡面赋予却暂时走不通的行动：只讲清缺哪个条件，让 AI 能反过来做准备。

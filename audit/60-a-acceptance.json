@@ -16,15 +16,15 @@
   },
   "summary": {
     "total": 324,
-    "verified": 13,
-    "unverified": 311,
+    "verified": 14,
+    "unverified": 310,
     "unimplemented": 0,
-    "testsPassed": 13
+    "testsPassed": 15
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-60-a.test.mjs",
-      "sha256": "411d9acaf34f9081d7d18e150744fbe952d702870828ef07df9c7ebc442a3097"
+      "sha256": "6e0e53c095d550439689b71b05a7a5bcd92c8a41f8f01f04f2e330642670eea5"
     }
   ],
   "entries": [
@@ -784,9 +784,13 @@
       "code": "60227",
       "name": "寻找答案",
       "type": "event",
-      "status": "pending",
-      "dimension": "evidence",
-      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Investigate. If you succeed, instead of discovering a clue at your location, discover 2 total clues from among your location and connecting locations."
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-60-a.test.mjs",
+          "test": "60227 寻找答案按调查结果在本地及相连地点分配两条线索，额外调查线索留在本地"
+        }
+      ]
     },
     {
       "code": "60228",

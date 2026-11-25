@@ -1494,7 +1494,9 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
           // After the first scenario a living campaign investigator is locked in.
           active && inv.seat === (s.mySeat ?? 0) && !moves.length && record?.status === 'active' && (st.uiState === 'interlude' || st.campaign.scenarioResults?.length)
             ? h('p', { className: 'ah-office-empty ah-investigator-locked', role: 'status' }, tableIcon('lock'), t('hub.investigators.lockedNote')) : null,
-          active && inv.seat === (s.mySeat ?? 0) && moves.length ? h('div', { className: 'ah-investigator-browser' },
+          active && inv.seat === (s.mySeat ?? 0) && moves.length ? h('div', { className: 'ah-investigator-browser',
+            'aria-busy': state.movePending?.action === 'hubSelectInvestigator' && state.movePending.sessionId === s.sessionId ? 'true' : null,
+          },
             h('div', { className: 'ah-investigator-browser-head' }, h('div', {},
               h('h3', {}, record && record.status !== 'active' ? t('hub.investigators.replacementTitle', { status: record.status === 'insane' ? t('hub.investigators.statusInsane') : t('hub.investigators.statusDead') }) : t('hub.task.selectInvestigator')),
               h('p', {}, record && record.status !== 'active' ? t('hub.investigators.replacementNote') : t('hub.investigators.selectNote'))),
@@ -1527,7 +1529,9 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
                 return h('div', { className: 'ah-office-candidate-shell', 'data-code': candidate.code },
                   h('button', { className: `ah-office-candidate is-${candidate.klass || 'neutral'}`, 'data-class': candidate.klass || 'neutral',
                     'aria-label': ariaLabel,
-                    'aria-pressed': String(selected && inv.code === move.code), disabled: locked(s), onclick: () => submitMove(move, s) },
+                    'aria-pressed': String(selected && inv.code === move.code), disabled: locked(s),
+                    onclick: event => submitMove(move, s, { investigatorPicker: event.currentTarget.closest('.ah-investigator-browser') }),
+                  },
                   portrait(candidate, { unloadOffscreen: true }), h('span', {}, candidate.name),
                   h('small', {}, parallel ? [classText, t('hub.investigators.parallelVersion')].join(' · ') : classText)),
                   h('button', { type: 'button', className: 'ah-office-candidate-info', 'data-candidate-info': candidate.code,

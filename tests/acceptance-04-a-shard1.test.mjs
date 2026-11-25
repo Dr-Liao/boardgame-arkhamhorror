@@ -18,7 +18,7 @@ import { encounterRules } from '../content/campaigns/theForgottenAge/encounter-r
 import { tfaChaosToken, tfaChaosAfterTest } from '../content/campaigns/theForgottenAge/tfa-chaos.js'
 import {
   createGameState, applyMove, legalMoves, validateMove, placeLocation, spawnEnemy, getStat,
-  getMaxHealth, enemyFightValue, enemyEvadeValue, scenarioRuntime, canDiscoverClueAt,
+  getMaxHealth, investigatorHasTrait, enemyFightValue, enemyEvadeValue, scenarioRuntime, canDiscoverClueAt,
   discoverClueAt, poisonInvestigator,
 } from '../src/engine/engine.js'
 import { locationAttachmentTotal } from '../src/engine/location-attachments.js'
@@ -279,18 +279,136 @@ test('TFA 04072 万蛇据点：此处蛇族 +1 战斗；已中毒调查/探索�
   assert.equal(inv.damage, 2, '已中毒：探索后也受 1 点伤害')
 })
 
-test('TFA 04073 曲折小道：没有指南针时调查/探索额外花费 3 资源（单人）', () => {
+for (const action of ['investigate', 'explore']) {
+  test(`TFA 04073 曲折小道：${action} 仅在同地无人有指南针时支付一次费用`, () => {
+    for (const setup of ['teammate', 'elsewhere', 'resigned', 'unaffordable']) {
+      const state = boot('theUntamedWilds', 2)
+      const [inv, teammate] = state.investigators
+      const trail = place(state, 'circuitousTrail')
+      trail.clues = 1
+      trail.revealed = true
+      inv.location = trail.id
+      inv.intellect = 10
+      inv.resources = setup === 'unaffordable' ? 2 : 3
+      teammate.location = setup === 'elsewhere' ? 'expeditionCamp' : trail.id
+      teammate.resigned = setup === 'resigned'
+      state.campaign.supplies = { 0: [], 1: setup === 'unaffordable' ? [] : ['compass'] }
+      state.explorationDeck = ['riverCanyon']
+      const move = legalMoves(state, 0).find(candidate => candidate.action === action)
+      if (setup === 'unaffordable') {
+        assert.equal(move, undefined, '无法支付时不提供行动')
+        assert.ok(validateMove(state, 0, { action }), '服务端也拒绝无法支付的行动')
+        continue
+      }
+      assert.ok(move, setup)
+      assert.equal(validateMove(state, 0, move), null)
+      applyMove(state, 0, move)
+      settle(state)
+      const after = state.investigators[0]
+      assert.equal(after.resources, setup === 'teammate' ? 3 : 0, setup)
+      assert.equal(after.actionsLeft, 3)
+      if (action === 'investigate') assert.equal(after.clues, 1)
+      else assert.equal(after.location, 'riverCanyon')
+    }
+  })
+}
+
+function trailInvestigation(resources) {
   const state = boot('theUntamedWilds')
   const inv = state.investigators[0]
   const trail = place(state, 'circuitousTrail')
+  trail.revealed = true
+  trail.clues = 4
   inv.location = trail.id
-  inv.resources = 5
+  inv.intellect = 10
+  inv.clues = 0
+  inv.resources = resources
+  inv.hand = ['60227']
+  inv.assets = []
   state.campaign.supplies = { 0: [] }
-  const rule = locationRuleFor('04073')
-  assert.equal(rule.beforeInvestigate(state, inv, trail, testApi(state, { checkSupplies: () => false })), true)
-  assert.equal(inv.resources, 2, '没有指南针：调查额外花费 3 资源')
-  assert.equal(rule.beforeInvestigate(state, inv, trail, testApi(state, { checkSupplies: () => true })), true)
-  assert.equal(inv.resources, 2, '有指南针不再收费')
+  return state
+}
+
+test('TFA 04073 曲折小道：调查事件须同时付得起印刷费用与地点费用', () => {
+  for (const resources of [3, 4]) {
+    const state = trailInvestigation(resources)
+    const command = { action: 'play', cardId: '60227' }
+    const offered = legalMoves(state, 0).some(move => move.action === 'play' && move.cardId === command.cardId)
+    assert.equal(offered, resources === 4)
+    if (!offered) {
+      assert.match(validateMove(state, 0, command), /资源不足/)
+      continue
+    }
+    applyMove(state, 0, command)
+    settle(state)
+    const inv = state.investigators[0]
+    assert.equal(inv.resources, 0)
+    assert.equal(inv.clues, 2)
+    assert.deepEqual(inv.discard.slice(-1), ['60227'])
+  }
+})
+
+test('TFA 04073 曲折小道：事件代付可保留地点费用，放弃代付会撤销打出', () => {
+  for (const pay of [true, false]) {
+    const state = trailInvestigation(3)
+    state.investigators[0].assets.push({ id: 'payment', code: '60561', uses: 2, usesType: 'supplies' })
+    const command = legalMoves(state, 0).find(move => move.action === 'play' && move.cardId === '60227')
+    assert.ok(command)
+    applyMove(state, 0, command)
+    let prompted = false
+    settle(state, choice => {
+      if (choice.source !== 'payment') return
+      prompted = true
+      return pay ? '1' : 'skip'
+    })
+    const inv = state.investigators[0]
+    assert.ok(prompted)
+    assert.equal(inv.hand.includes('60227'), !pay)
+    assert.equal(inv.resources, pay ? 0 : 3)
+    assert.equal(inv.actionsLeft, pay ? 3 : 4)
+    assert.equal(inv.assets[0].uses, pay ? 1 : 2)
+    assert.equal(inv.clues, pay ? 2 : 0)
+  }
+})
+
+test('TFA 04073 曲折小道：如同位于另一个地点打出调查事件时按所在地点及其补给结算', () => {
+  const state = trailInvestigation(1)
+  const inv = state.investigators[0]
+  const trail = state.locations.find(item => item.id === inv.location)
+  const camp = state.locations.find(item => item.id === 'expeditionCamp')
+  inv.code = '06004'
+  inv.location = camp.id
+  camp.connections = [trail.id]
+  const move = { action: 'play', cardId: '60227', asIfLocation: trail.id }
+  assert.ok(validateMove(state, 0, move))
+  state.campaign.supplies[0] = ['compass']
+  assert.equal(validateMove(state, 0, move), null)
+  applyMove(state, 0, move)
+  settle(state, choice => choice.kind === 'location' ? trail.id : null)
+  assert.equal(state.investigators[0].resources, 0)
+  assert.equal(state.investigators[0].clues, 2)
+  assert.equal(state.investigators[0].location, camp.id)
+})
+
+test('TFA 04073 曲折小道：夜盗调查也须先付费，成功改为获得三个资源', () => {
+  for (const resources of [2, 3]) {
+    const state = trailInvestigation(resources)
+    state.investigators[0].assets.push({ id: 'burglar', code: '01045', exhausted: false })
+    const command = { action: 'ability', assetId: 'burglar', abilityIndex: 0 }
+    const offered = legalMoves(state, 0).some(move => move.action === 'ability' && move.assetId === 'burglar')
+    assert.equal(offered, resources === 3)
+    if (!offered) {
+      assert.match(validateMove(state, 0, command), /资源不足/)
+      continue
+    }
+    applyMove(state, 0, command)
+    settle(state)
+    const inv = state.investigators[0]
+    assert.equal(inv.resources, 3)
+    assert.equal(inv.assets[0].exhausted, true)
+    assert.equal(inv.clues, 0)
+    assert.equal(state.lastTestResult.success, true)
+  }
 })
 
 test('TFA 04074 毒牙神庙：胜利区每点复仇使此处帷幕 +1', () => {
@@ -351,6 +469,49 @@ test('TFA 04077 丛林之声：威胁区；回合末未成功探索受 1 恐惧�
   assert.equal(state.investigators[0].threat.some(card => (card.originalCode || card.code) === '04077'), false)
 })
 
+for (const [code, chapter, rule, skill, cost] of [
+  ['04077', 'theUntamedWilds', 'endVoiceOfTheJungle', 'willpower', 1],
+  ['04089', 'theDoomOfEztli', 'escapeEntombed', 'combat', 1],
+  ['04097', 'threadsOfFate', 'discardWordsOfPower', null, 2],
+]) {
+  test(`TFA ${code} 重复显现保留独立副本，同地点队友支付行动仅弃掉选择的那一份`, () => {
+    const state = boot(chapter, 2)
+    assert.equal(state.scenario.treacheries[code].threatArea, true)
+    state.encounterDeck = ['01167', code, code]
+    for (let draw = 0; draw < 2; draw++) {
+      applyMove(state, 0, legalMoves(state, 0).find(move => move.rule === 'acceptanceEncounter'))
+      settle(state)
+    }
+    assert.deepEqual(state.encounterDeck, ['01167'])
+    const [owner, helper] = state.investigators
+    const copies = owner.threat.filter(card => card.code === code)
+    assert.equal(copies.length, 2)
+    if (code === '04077') {
+      const horror = owner.horror
+      encounterRules.turnEnded(state, owner, testApi(state))
+      assert.equal(owner.horror, horror + 2)
+      owner.tfaExploredThisTurn = true
+      encounterRules.turnEnded(state, owner, testApi(state))
+      assert.equal(owner.horror, horror + 2)
+      assert.ok(!owner.tfaExploredThisTurn)
+    }
+    state.currentSeat = helper.seat
+    helper.location = Object.keys(state.scenario.locations).find(id => id !== owner.location)
+    assert.ok(!legalMoves(state, helper.seat).some(move => move.rule === rule))
+    helper.location = owner.location
+    if (skill) helper[skill] = 8
+    const actions = legalMoves(state, helper.seat).filter(move => move.rule === rule)
+    const selected = actions.find(move => move.threatId === copies[1].id && (!move.skill || move.skill === skill))
+    assert.ok(selected)
+    const before = helper.actionsLeft
+    applyMove(state, helper.seat, selected)
+    settle(state)
+    assert.deepEqual(state.investigators[0].threat.filter(card => card.code === code).map(card => card.id), [copies[0].id])
+    assert.equal(state.investigators[1].actionsLeft, before - cost)
+    assert.equal(state.encounterDiscard.filter(id => id === code).length, 1)
+  })
+}
+
 test('TFA 04078 蝮蛇：攻击造成伤害后未中毒者获得中毒弱点', () => {
   const state = boot('theUntamedWilds')
   const inv = state.investigators[0]
@@ -397,6 +558,11 @@ test('TFA 04080 毒蛇噬咬：敏捷(3)失败后二选一（盟友 5 伤害 / �
 
 test('TFA 04081 迷失荒野：失败按差值受恐惧、入威胁区，不能移动/探索，回合末弃掉', () => {
   const state = boot('theUntamedWilds')
+  state.investigators[0].willpower = 5
+  state.investigators[0].maxSanity = 12
+  drawEncounterCard(state, '04081')
+  assert.equal(state.investigators[0].threat.some(card => card.code === '04081'), false)
+  assert.ok(state.encounterDiscard.includes('04081'))
   state.chaosBag = ['autofail']
   drawEncounterCard(state, '04081')
   let inv = state.investigators[0]
@@ -404,7 +570,12 @@ test('TFA 04081 迷失荒野：失败按差值受恐惧、入威胁区，不能�
   assert.equal(inv.horror, 3, '意志(3)失败 3 点：受到 3 点恐惧')
   assert.match(encounterRules.movementError(state, inv), /迷失荒野/)
   assert.equal(encounterRules.canExplore(state, inv), false)
+  drawEncounterCard(state, '04081')
+  inv = state.investigators[0]
+  assert.equal(inv.threat.filter(card => card.code === '04081').length, 2)
+  assert.equal(inv.horror, 6)
   wilds.behavior.turnEnded(state, inv, testApi(state))
+  assert.equal(state.encounterDiscard.filter(code => code === '04081').length, 2)
   assert.equal(state.investigators[0].threat.some(card => (card.originalCode || card.code) === '04081'), false)
 })
 
@@ -446,20 +617,27 @@ test('TFA 04084 幽嘶蛇人：复仇 1/2/3 点分别获得反击/猎手/减伤'
 })
 
 test('TFA 04085 伊格的诅咒：威胁区 -1 战斗 / -1 生命，获得蛇族特性，行动摆脱', () => {
-  const state = boot('theDoomOfEztli')
-  const baseCombat = getStat(state, state.investigators[0], 'combat')
-  const baseHealth = getMaxHealth(state.investigators[0])
+  const state = boot('theDoomOfEztli', 2)
   drawEncounterCard(state, '04085')
-  const inv = state.investigators[0]
-  assert.ok(inv.threat.some(card => (card.originalCode || card.code) === '04085'))
-  assert.equal(getStat(state, inv, 'combat'), baseCombat - 1)
-  assert.equal(getMaxHealth(inv), baseHealth - 1)
-  assert.ok((inv.traits || []).includes('Serpent'), '获得[[蛇族]]特性')
-  const action = legalMoves(state, 0).find(move => move.action === 'encounterAction' && move.rule === 'endCurseOfYig')
+  const [owner, helper] = state.investigators
+  assert.equal(investigatorHasTrait(state, owner, 'Serpent'), true)
+  assert.equal(investigatorHasTrait(state, helper, 'Serpent'), false)
+  const combat = getStat(state, owner, 'combat'), health = getMaxHealth(owner)
+  helper.location = owner.location
+  state.currentSeat = helper.seat
+  state.victoryDisplay.push({ code: '04071', vengeance: 2 })
+  const action = legalMoves(state, helper.seat).find(move => move.rule === 'endCurseOfYig')
   assert.ok(action)
-  encounterRules.performEncounterAction(state, inv, { rule: 'endCurseOfYig', threatId: action.threatId, skill: 'willpower' },
-    { test: (seat, skill, difficulty, resolve) => resolve({ success: true, value: difficulty, difficulty, skill, drawn: [] }) })
-  assert.equal(state.investigators[0].threat.some(card => (card.originalCode || card.code) === '04085'), false)
+  helper.willpower = 6
+  applyMove(state, helper.seat, action)
+  settle(state)
+  assert.equal(state.lastTestResult.skill, 'willpower')
+  assert.equal(state.lastTestResult.difficulty, 4)
+  assert.ok(state.encounterDiscard.includes('04085'))
+  const restored = state.investigators[owner.seat]
+  assert.equal(investigatorHasTrait(state, restored, 'Serpent'), false)
+  assert.equal(getStat(state, restored, 'combat'), combat + 1)
+  assert.equal(getMaxHealth(restored), health + 1)
 })
 
 test('TFA 04086 埃兹特里的守卫者：生成在[[古代]]地点；敌人阶段攻击连接地点的调查员', () => {
@@ -521,6 +699,8 @@ test('TFA 04089 半身入土：不能解除交战/移动；两项行动检定成
   encounterRules.performEncounterAction(state, inv, { rule: 'escapeEntombed', threatId: threat.id, skill: 'agility' },
     { test: (seat, skill, difficulty, resolve) => resolve({ success: false, value: 0, difficulty, skill, drawn: [] }) })
   assert.equal(inv.threat.find(card => (card.originalCode || card.code) === '04089').difficultyReduction, 1, '失败后难度 -1 直到轮末')
+  encounterRules.turnEnded(state, inv, testApi(state))
+  assert.equal(threat.difficultyReduction, 1, '其他调查员之后的回合仍可享受降难')
   inv = state.investigators[0]
   encounterRules.performEncounterAction(state, inv, { rule: 'escapeEntombed', threatId: threat.id, skill: 'agility' },
     { test: (seat, skill, difficulty, resolve) => resolve({ success: true, value: difficulty, difficulty, skill, drawn: [] }) })
@@ -644,6 +824,12 @@ test('TFA 04097 力量真言：带毁灭敌人同地点时不能伤它/发现线
   enemy.doom = 1
   assert.equal(encounterRules.enemyDamageAllowed(state, enemy, 'attack', 0), false)
   assert.equal(encounterRules.canDiscoverClues(state, state.investigators[0]), false)
+  const elsewhere = state.locations.find(location => location.id !== inv.location)
+  elsewhere.clues = 2
+  assert.equal(canDiscoverClueAt(state, inv, elsewhere), true)
+  const clues = inv.clues
+  discoverClueAt(state, inv, 1, [], { locationId: elsewhere.id })
+  assert.equal(inv.clues, clues + 1)
   const action = legalMoves(state, 0).find(move => move.action === 'encounterAction' && move.rule === 'discardWordsOfPower')
   assert.ok(action)
   assert.equal(action.actions, 2, '需要 2 个行动')
@@ -668,17 +854,25 @@ test('TFA 04099 毒蛇灾厄：非弱点[[道具]]文本空白；已中毒时涌
   const state = boot('theDoomOfEztli')
   state.investigators[0].assets.push({ id: 'rosary', code: '01059', originalCode: '01059', exhausted: false })
   const before = getStat(state, state.investigators[0], 'willpower')
-  poisonInvestigator(state, 0)
-  const api = testApi(state)
-  const surged = []
-  api.drawEncounter = seat => surged.push(seat)
-  registeredEntry('04099').encounterResolve(state, state.investigators[0], { code: '04099' }, api)
+  assert.equal(state.scenario.treacheries['04099'].threatArea, true)
+  state.encounterDeck = ['01168', '04089', '04099', '04099']
+  const draw = () => {
+    applyMove(state, 0, legalMoves(state, 0).find(move => move.rule === 'acceptanceEncounter'))
+    settle(state)
+  }
+  draw()
+  draw()
+  assert.deepEqual(state.encounterDeck, ['01168', '04089'], '未中毒时两份均入场，无额外抽取')
   assert.equal(getStat(state, state.investigators[0], 'willpower'), before - 1, '道具上的 +1 意志被空白化')
-  assert.deepEqual(surged, [0], '已中毒时获得涌动：再抽 1 张遭遇牌')
-  assert.equal(registeredEntry('04099').treacheryRule.threatArea, true)
-  const inv = state.investigators[0]
+  poisonInvestigator(state, 0)
+  state.encounterDeck.push('04099')
+  draw()
+  assert.deepEqual(state.encounterDeck, ['01168'], '已中毒才涌动一次')
+  assert.equal(state.investigators[0].threat.filter(card => card.code === '04099').length, 3)
   encounterRules.roundEnded(state, testApi(state))
   assert.equal(state.investigators[0].threat.some(card => (card.originalCode || card.code) === '04099'), false)
+  assert.equal(state.encounterDiscard.filter(code => code === '04099').length, 3)
+  assert.equal(getStat(state, state.investigators[0], 'willpower'), before)
 })
 
 test('TFA 04100 毒蛇召来：二选一（把放在一边的中毒放入威胁区 / 抽 2 张遭遇）', () => {
@@ -1148,26 +1342,33 @@ test('TFA 04051 亚历山卓·维拉：[[古代]]地点调查 +1 技能，横置
   }), false, '只对调查检定生效')
 })
 
-test('TFA 04052 伊塔卡：警戒/反击关键词；谈判成功放线索、失败且重整时攻击', () => {
-  const state = boot('theUntamedWilds')
-  const inv = state.investigators[0]
+test('TFA 04052 伊塔卡：同地可谈判，成功放线索，失败时只有重整的伊塔卡攻击', () => {
   const definition = wilds.scenario.enemies['04052']
   assert.equal(definition.alert, true)
   assert.equal(definition.retaliate, true)
-  const ichtaca = spawnTestEnemy(state, '04052', inv.location)
-  const move = wilds.behavior.actions(state, inv).find(entry => entry.rule === 'parleyIchtaca')
-  assert.ok(move, '同地点的伊塔卡提供谈判行动')
-  wilds.behavior.performAction(state, inv, move, testApi(state, {
-    test: (seat, skill, difficulty, resolve) => resolve({ success: true, value: difficulty, difficulty, skill, drawn: [] }),
-  }))
-  assert.equal(ichtaca.clues, 1, '判定智识(4)成功后在伊塔卡上放 1 个线索')
-  ichtaca.exhausted = false
-  const attacks = []
-  wilds.behavior.performAction(state, inv, move, testApi(state, {
-    test: (seat, skill, difficulty, resolve) => resolve({ success: false, value: 0, difficulty, skill, drawn: [] }),
-    attack: (enemy, target) => attacks.push(enemy.id),
-  }))
-  assert.deepEqual(attacks, [ichtaca.id], '失败且伊塔卡重整时她攻击你')
+  for (const outcome of ['success', 'readyFailure', 'exhaustedFailure']) {
+    const state = boot('theUntamedWilds')
+    const inv = state.investigators[0]
+    const enemy = spawnTestEnemy(state, '04052', 'riverCanyon')
+    assert.ok(!legalMoves(state, 0).some(move => move.rule === 'parleyIchtaca'))
+    enemy.location = inv.location
+    enemy.engagedSeat = inv.seat
+    enemy.exhausted = outcome === 'exhaustedFailure'
+    inv.intellect = outcome === 'success' ? 4 : 3
+    inv.assets = []
+    inv.hand = []
+    const move = legalMoves(state, 0).find(entry => entry.rule === 'parleyIchtaca')
+    assert.ok(move)
+    const command = { action: move.action, rule: move.rule, enemyId: enemy.id }
+    assert.equal(validateMove(state, 0, command), null)
+    applyMove(state, 0, command)
+    settle(state)
+    const after = state.investigators[0]
+    assert.equal(after.actionsLeft, 3)
+    assert.equal(state.enemies.find(entry => entry.id === enemy.id).clues || 0, Number(outcome === 'success'))
+    assert.equal(after.damage, outcome === 'readyFailure' ? definition.damage : 0)
+    assert.equal(after.horror, outcome === 'readyFailure' ? definition.horror : 0)
+  }
 })
 
 test('TFA 04053 埃兹特里的遗迹：调查失败后抽 1 张遭遇牌', () => {

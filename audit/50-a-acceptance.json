@@ -17,15 +17,15 @@
   },
   "summary": {
     "total": 368,
-    "verified": 4,
-    "unverified": 364,
+    "verified": 5,
+    "unverified": 363,
     "unimplemented": 0,
-    "testsPassed": 9
+    "testsPassed": 13
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-50-a.test.mjs",
-      "sha256": "da58d99627a1b8e860e19bf0a1118e621d8e55b57c4b0abbe302867b0810fbbe"
+      "sha256": "46cbfeefcad989ff65670d3515390aa33d56668fdcd042946c34dd79b5ed4083"
     }
   ],
   "entries": [
@@ -481,9 +481,17 @@
       "code": "51007",
       "name": "礼寻术",
       "type": "asset",
-      "status": "pending",
-      "dimension": "evidence",
-      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Uses (3 charges). [action] Spend 1 charge: Investigate. Investigate using [willpower] instead of [intellect]. You get +2 [willpower]"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-50-a.test.mjs",
+          "test": "51007 礼寻术支付四资源入场，三次充能以意志加二调查并在本地发现额外线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-50-a.test.mjs",
+          "test": "51007 礼寻术的五种指定符号都在调查结算后结束回合，包括自动失败"
+        }
+      ]
     },
     {
       "code": "51008",

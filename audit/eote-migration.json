@@ -3720,7 +3720,7 @@
     },
     {
       "path": "src/cards/cards-data.js",
-      "sha256": "5b5d648109c7d4fc50a911e36ba1cb160316e03b96e69deda7c4a04ab4bfcd3e"
+      "sha256": "57eaf609fdf73493ecf2a655d030adaf9d505ad898dcbf26c995a6b0a7da0fb6"
     },
     {
       "path": "tools/audit-eote.mjs",

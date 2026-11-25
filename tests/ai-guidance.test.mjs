@@ -15,6 +15,7 @@ import {
 } from '../src/engine/engine.js'
 import { aiDecisionContext } from '../src/ai/ai-context.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
+import { buildSystemPrompt } from '../../../lib/agent/prompt.js'
 
 function settle(state) {
   for (let i = 0; state.pendingChoice; i++) {
@@ -131,6 +132,8 @@ test('AI observation: engaged action list marks cost, safe actions and wasted ac
   state.currentSeat = 0
   const inv = state.investigators[0]
   inv.actionsLeft = 3
+  inv.hand = ['01020', '01030']
+  inv.resources = 5
   spawnEnemy(state, '01161', inv.location, 0, true)
 
   const text = arkham.describeState(state, 0)
@@ -139,6 +142,14 @@ test('AI observation: engaged action list marks cost, safe actions and wasted ac
 
   const moveLines = text.split('\n').filter(line => /^\d+\. /.test(line))
   assert.ok(moveLines.length > 0, '应有可执行行动列表')
+  const riskyAt = moveLines.findIndex(line => line.includes('⚠借机'))
+  assert.ok(riskyAt > 0)
+  assert.ok(moveLines.slice(riskyAt).every(line => line.includes('⚠借机')), '风险行动应全部排在无借机攻击的行动之后')
+  assert.match(text, /先选能处理交战敌人或有效推进目标的 ✅安全行动。默认跳过 ⚠/)
+  const weaponLine = moveLines.find(line => line.includes('"cardId":"01020"'))
+  assert.match(weaponLine, /⚠借机/, '支付行动打出武器会先挨打')
+  const fastLine = moveLines.find(line => line.includes('"cardId":"01030"'))
+  assert.match(fastLine, /✅安全/, '快速打出的资产也有安全标记')
 
   const fight = moveLines.find(line => line.includes('攻击「'))
   assert.ok(fight, '交战时应列出攻击行动')
@@ -150,6 +161,7 @@ test('AI observation: engaged action list marks cost, safe actions and wasted ac
   assert.ok(endTurn, '应列出结束回合')
   assert.match(endTurn, /浪费 3 个行动点/, '有剩余行动点时结束回合必须提示浪费')
   assert.match(text, /本回合剩余 3 个行动点/, '行动列表段首要直接给出剩余行动点')
+  assert.equal(moveLines.length, arkham.legalMoves(state, 0).length, '重排仍展示全部合法选项')
 })
 
 test('AI observation: commit-window hints stay private to the answering seat', () => {
@@ -182,11 +194,14 @@ test('AI observation: endTurn waste marker and safe marker only appear when they
   assert.ok(!endTurn.includes('浪费'), '没有剩余行动点时不提示浪费')
 })
 
-test('AI system prompt states commit-discard, action-point and self-check rules', () => {
-  assert.match(arkham.agentHint, /投入的卡牌在检定结算后进入弃牌堆/)
-  assert.match(arkham.agentHint, /输出前自检/)
-  assert.match(arkham.agentHint, /行动点/)
-  assert.match(arkham.agentHint, /技能检定投入/)
-  assert.match(arkham.moveFormat, /投入手牌就是弃牌/)
-  assert.match(arkham.moveFormat, /endTurn/)
+test('AI system prompt states commit-discard, opportunity attack, action-point and self-check rules', () => {
+  const prompt = buildSystemPrompt(arkham, {}, { notes: [] }, 0)
+  assert.match(prompt, /投入的卡牌在检定结算后进入弃牌堆/)
+  assert.match(prompt, /输出前自检/)
+  assert.match(prompt, /行动点/)
+  assert.match(prompt, /技能检定投入/)
+  assert.match(prompt, /投入手牌就是弃牌/)
+  assert.match(prompt, /默认跳过标 ⚠ 的选项/)
+  assert.match(prompt, /没有安全替代方案、能承受行动前的全部攻击/)
+  assert.match(prompt, /剩余行动都不值得承受借机攻击时，可以提前提交 endTurn/)
 })

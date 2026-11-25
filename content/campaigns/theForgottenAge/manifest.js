@@ -17,6 +17,7 @@ const interlude = (id, next) => ({
 export const manifest = {
   schemaVersion: CONTENT_SCHEMA_VERSION,
   id: 'theForgottenAge',
+  encounterRulesVersion: 2,
   // Phase 6（战役插件化：agentHints）：给 AI 的公开决策提示（不含隐藏信息）。
   agentHints: [
     '补给由全队共同持有：判断「检查补给」时看同地点任一调查员是否持有。',

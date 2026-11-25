@@ -498,8 +498,8 @@ export function createMiscApi(state, events, deps) {
     // 第三个参数用于「发现任意地点的线索」（02224）：判定仍按目标地点走剧情的 canDiscoverClues。
     discoverClue: (seat, amount = 1, locationId = null, { investigation = false } = {}) =>
       discoverClueAt(state, state.investigators[seat], amount, events, { locationId: locationId ?? undefined, investigation }),
-    canDiscoverClueAt: (seat, locationId) =>
-      canDiscoverClueAt(state, state.investigators[seat], state.locations.find(loc => loc.id === locationId)),
+    canDiscoverClueAt: (seat, locationId, opts) =>
+      canDiscoverClueAt(state, state.investigators[seat], state.locations.find(loc => loc.id === locationId), opts),
     parleyForbidden: (seat, enemy) => parleyForbidden(state, state.investigators[seat], enemy),
     capabilityBlocked: (seat, kind) => capabilityBlocked(state, state.investigators[seat], kind),
     entityRuleActive: (entity, target) => entityRuleActive(state, entity, target),

@@ -8,7 +8,7 @@ export const META = {
     "playerCards": 1683,
     "weaknesses": 147
   },
-  "resourceVersion": "160c7d135ac1d598576185fa513518b5b9bb55e1920a20e3e7624d26868de439",
+  "resourceVersion": "a6720acba81a81cae4b13f73a5eb1615ebd2e5c9d429442a1197264c322dbe21",
   "schemaVersion": 2,
   "source": "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
   "sources": [
@@ -58870,6 +58870,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "51007": {
+    "acceptanceProfile": "return-series-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -58887,7 +58888,7 @@ export const ALL_CARDS = {
     "duplicatedBy": [
       "01689"
     ],
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -81221,6 +81222,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "60227": {
+    "acceptanceProfile": "starter-investigators-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -81238,7 +81240,7 @@ export const ALL_CARDS = {
     "duplicatedBy": [
       "01685"
     ],
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -155951,6 +155953,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "01685": {
+    "acceptanceProfile": "revised-core-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -155966,7 +155969,7 @@ export const ALL_CARDS = {
     "deckLimit": 2,
     "doubleSided": false,
     "duplicateOfCode": "60227",
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -156206,6 +156209,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "01689": {
+    "acceptanceProfile": "revised-core-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -156221,7 +156225,7 @@ export const ALL_CARDS = {
     "deckLimit": 2,
     "doubleSided": false,
     "duplicateOfCode": "51007",
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -202255,6 +202259,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04051"
   },
   "04052": {
+    "acceptanceProfile": "tfa-deluxe-threads-of-fate-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -202268,7 +202273,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "wilds",
     "encounterName": "The Untamed Wilds",
     "encounterPosition": 10,
@@ -203479,6 +203484,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "04073": {
+    "acceptanceProfile": "tfa-deluxe-threads-of-fate-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -203492,7 +203498,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "rainforest",
     "encounterName": "Rainforest",
     "encounterPosition": 5,
@@ -203710,6 +203716,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04076"
   },
   "04077": {
+    "acceptanceProfile": "tfa-deluxe-threads-of-fate-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -203722,7 +203729,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "rainforest",
     "encounterName": "Rainforest",
     "encounterPosition": 10,
@@ -203945,6 +203952,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04080"
   },
   "04081": {
+    "acceptanceProfile": "tfa-deluxe-threads-of-fate-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -203957,7 +203965,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "expedition",
     "encounterName": "Expedition",
     "encounterPosition": 1,
@@ -204180,6 +204188,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "04085": {
+    "acceptanceProfile": "tfa-deluxe-threads-of-fate-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -204192,7 +204201,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "agents_of_yig",
     "encounterName": "Agents of Yig",
     "encounterPosition": 5,
@@ -204405,6 +204414,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04088"
   },
   "04089": {
+    "acceptanceProfile": "tfa-deluxe-threads-of-fate-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -204417,7 +204427,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "traps",
     "encounterName": "Deadly Traps",
     "encounterPosition": 4,
@@ -204845,6 +204855,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04096"
   },
   "04097": {
+    "acceptanceProfile": "tfa-deluxe-threads-of-fate-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -204857,7 +204868,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "pnakotic_brotherhood",
     "encounterName": "Pnakotic Brotherhood",
     "encounterPosition": 5,
@@ -204961,6 +204972,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04098"
   },
   "04099": {
+    "acceptanceProfile": "tfa-deluxe-threads-of-fate-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -204973,7 +204985,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "venom",
     "encounterName": "Yig's Venom",
     "encounterPosition": 3,

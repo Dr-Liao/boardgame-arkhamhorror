@@ -14,6 +14,6 @@ export const RETURN_SERIES_ACCEPTANCE_PROFILE = {
     "docs/test/验收-50-a-重返系列.json"
   ]
 }
-export const RETURN_SERIES_ACCEPTANCE_SHA256 = 'efa290bac22ad82f48c8692636afb33b09c4e37098d71aeaa58d5e00e0ccb1bc'
-const verified = new Set(["50006","50022","50023","51003"])
+export const RETURN_SERIES_ACCEPTANCE_SHA256 = '10e81f2a671e65968f2122c2bc07aaade01d4509b3c9354899724ff6fa5f679d'
+const verified = new Set(["50006","50022","50023","51003","51007"])
 export const returnSeriesCardVerified = code => verified.has(code)

@@ -3,7 +3,7 @@
   "unit": "04-a-1",
   "profile": {
     "id": "tfa-deluxe-threads-of-fate-2026-11",
-    "scope": "失落时代 04 段 The Forgotten Age 豪华包（tfa，60 条）+ Threads of Fate（tof，46 条）共 106 条目录记录，锁定审计时未验收清单。83 条通过五维验收；23 条因真实行为缺陷、声明未接线或存量 R1 直写暂不切换。",
+    "scope": "失落时代 04 段 The Forgotten Age 豪华包（tfa，60 条）+ Threads of Fate（tof，46 条）共 106 条目录记录，锁定审计时未验收清单。逐卡结论与剩余问题见本分片报告。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互（真实 legalMoves/applyMove/pendingChoice）→ 真实执行测试逐卡核对；证据为 tests/acceptance-04-a-shard1.test.mjs 与 tfa-*.test.mjs 的真实用例标题。缺陷与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,19 +17,19 @@
   },
   "summary": {
     "total": 106,
-    "verified": 83,
-    "unverified": 23,
+    "verified": 91,
+    "unverified": 15,
     "unimplemented": 0,
-    "testsPassed": 276
+    "testsPassed": 285
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
-      "sha256": "0d5503c726ea9ec43902436f0cb3dcb51f83a17a964be183d49198c2720ec543"
+      "sha256": "72f6aed7252b528b4b15cd4a3ae77b4ce48c6e658865f93c520ef6c4886fe326"
     },
     {
       "file": "games/arkhamhorror/tests/tfa-untamed-wilds.test.mjs",
-      "sha256": "a46374410732fd8353e16a671b215d42ed05063cc1ad8263880b1d64931086a6"
+      "sha256": "8221ad307ce5f7101f932eda4bb74ccd9d10f4ca8514d1d11eea437eba2cac8b"
     },
     {
       "file": "games/arkhamhorror/tests/tfa-doom-of-eztli.test.mjs",
@@ -41,7 +41,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tfa-encounter-p1.test.mjs",
-      "sha256": "e086a73075bcb309cce8dbf2eee71e875042f547dcceb6dac4bd680af618ec93"
+      "sha256": "e2ee9f05f9a99a1b533fedcfae6c90c2c31bf990377243af9bdbeee73756a81c"
     },
     {
       "file": "games/arkhamhorror/tests/tfa-p2-hooks.test.mjs",
@@ -165,9 +165,13 @@
       "code": "04052",
       "name": "伊塔卡",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "条目声明 `enemyRule: { parley: { skill, difficulty } }`，但该数据没有有效行为读点：引擎通用 parleyCultist 通道要求 `cost`（moves.js:529 → canParleyCultist 对无 cost 返回 false）且 dispatch 要求 `uniqueCultist`，伊塔卡两者都不满足；实际谈判规则由 `content/.../theUntamedWilds/behavior.js` 的 scenarioAction `parleyIchtaca` 另行实现。属同一句规则双份声明 + 死字段，违反「声明即接线」。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04052 伊塔卡：同地可谈判，成功放线索，失败时只有重整的伊塔卡攻击"
+        }
+      ]
     },
     {
       "code": "04053",
@@ -429,9 +433,37 @@
       "code": "04073",
       "name": "曲折小道",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面「如果在你所在地点没有调查员带有指南针，你必须花费 3 资源」是地点级群体检查；实现两条路径（beforeExplore / beforeInvestigate）都只检查 `api.checkSupplies(inv.seat, ...)`（当前调查员本人）。多人局同地点另一名调查员带指南针时仍会被强制收 3 资源，与卡面不符；另该条目 `inv.resources -= 3` 属存量 R1 直写（audit 基线 directStateWrite）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-untamed-wilds.test.mjs",
+          "test": "04073 曲折小道没有指南针时必须额外花费 3 资源"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04073 曲折小道：explore 仅在同地无人有指南针时支付一次费用"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04073 曲折小道：investigate 仅在同地无人有指南针时支付一次费用"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04073 曲折小道：事件代付可保留地点费用，放弃代付会撤销打出"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04073 曲折小道：夜盗调查也须先付费，成功改为获得三个资源"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04073 曲折小道：如同位于另一个地点打出调查事件时按所在地点及其补给结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04073 曲折小道：调查事件须同时付得起印刷费用与地点费用"
+        }
+      ]
     },
     {
       "code": "04074",
@@ -477,9 +509,17 @@
       "code": "04077",
       "name": "丛林之声",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "`treacheryRule: { threatArea: true }` 在失落时代内容层与引擎中都没有读点（全仓唯一读取方是 thePathToCarcosa/card-data.js:107）。威胁区入位由条目自身 `encounterResolve` 内 `api.threat` + 返回 true 完成，该字段是「声明了没人读」的冗余声明。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04077 丛林之声：威胁区；回合末未成功探索受 1 恐惧；行动弃掉"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04077 重复显现保留独立副本，同地点队友支付行动仅弃掉选择的那一份"
+        }
+      ]
     },
     {
       "code": "04078",
@@ -525,9 +565,17 @@
       "code": "04081",
       "name": "迷失荒野",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "威胁实例声明 `forcedEndTurnDiscard: true`，但全仓没有该字段的引擎读点；实际「回合结束弃掉迷失荒野」由 `content/campaigns/theForgottenAge/encounter-rules.js` 的 `turnEnded` 按卡号分支实现。属「声明了没人读」的冗余字段。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-encounter-p1.test.mjs",
+          "test": "04081 迷失荒野：旧存档逐点分配恐惧，新局一次分配；读档及重放保留同一版本"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04081 迷失荒野：失败按差值受恐惧、入威胁区，不能移动/探索，回合末弃掉"
+        }
+      ]
     },
     {
       "code": "04082",
@@ -573,9 +621,17 @@
       "code": "04085",
       "name": "伊格的诅咒",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面「你获得[[蛇族]]特性」是仅在卡位于威胁区时生效的持续效果；实现用 `api.addInvestigatorTrait(inv.seat, \"Serpent\")` 单向写入 `inv.traits`，引擎没有移除特性的原语（全仓无 removeInvestigatorTrait），卡离场后特性永久残留。威胁实例上的 `grantedTrait: \"Serpent\"` 字段也没有任何引擎读点（按「声明了没人读」计未实现）。-1 战斗 / -1 生命随威胁实例离场正常消失。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04085 伊格的诅咒：威胁区 -1 战斗 / -1 生命，获得蛇族特性，行动摆脱"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-encounter-p1.test.mjs",
+          "test": "伊格的诅咒（04085）：-1 战斗、-1 生命、获得蛇族特性"
+        }
+      ]
     },
     {
       "code": "04086",
@@ -617,9 +673,25 @@
       "code": "04089",
       "name": "半身入土",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "同 04077：`treacheryRule.threatArea` 在失落时代无读点；威胁区入位由 encounterResolve 的 api.threat 完成。死声明。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-encounter-p1.test.mjs",
+          "test": "04089 半身入土：失败后难度 -1 直到轮末"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04089 半身入土：不能解除交战/移动；两项行动检定成功弃掉、失败难度 -1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04089 重复显现保留独立副本，同地点队友支付行动仅弃掉选择的那一份"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-encounter-p1.test.mjs",
+          "test": "半身入土（04089）：不能解除交战，躲避成功也不再解除"
+        }
+      ]
     },
     {
       "code": "04090",
@@ -701,9 +773,21 @@
       "code": "04097",
       "name": "力量真言",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "同 04077：`treacheryRule.threatArea` 无失落时代读点，死声明；威胁区入位走 encounterResolve → api.threat。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04097 力量真言：带毁灭敌人同地点时不能伤它/发现线索；花 2 行动弃掉"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04097 重复显现保留独立副本，同地点队友支付行动仅弃掉选择的那一份"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-encounter-p1.test.mjs",
+          "test": "力量真言（04097）：与带毁灭的敌人同地点时不能伤害也不能发现线索"
+        }
+      ]
     },
     {
       "code": "04098",
@@ -725,9 +809,21 @@
       "code": "04099",
       "name": "毒蛇灾厄",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "同 04077：`treacheryRule.threatArea` 无失落时代读点，死声明；威胁区入位走 encounterResolve → api.threat。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04099 毒蛇灾厄：非弱点[[道具]]文本空白；已中毒时涌动；轮末弃掉"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-encounter-p1.test.mjs",
+          "test": "毒蛇灾厄（04099）也空白化描述子能力：门之匣的免费能力不再进入玩家窗口"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-encounter-p1.test.mjs",
+          "test": "毒蛇灾厄（04099）：非弱点道具的文字视为空白"
+        }
+      ]
     },
     {
       "code": "04100",

@@ -15,7 +15,7 @@ import { flowCondition } from '../campaign/campaign-flow.js'
 import { campaignAllowsInvestigator, campaignOpeningExperience } from '../campaign/campaign.js'
 import { takeStartingAdjustments } from '../campaign/starting-adjustments.js'
 import { mulliganCandidates } from './tarot-slot.js'
-import { actionEntityById, entityActionDescriptors } from './parley.js'
+import { actionEntityById, entityActionDescriptors, isParleyDescriptor } from './parley.js'
 import { attachmentIgnoresOpportunityAttack } from './attachment-rules.js'
 import { teamCanActivate } from './team-abilities.js'
 import { firstActionExemptsOpportunityAttack, performedActionKinds } from './action-history.js'
@@ -41,6 +41,7 @@ export function createTableDecisions(deps) {
     campaignManifestFor,
     capabilityBlocked,
     cardDef,
+    cardKeyword,
     cardName,
     cardPlayFlag,
     choiceSeats,
@@ -70,6 +71,7 @@ export function createTableDecisions(deps) {
     registeredEntry,
     removeOne,
     requestChoice,
+    ruleIgnored,
     scenarioBehavior,
     shuffle,
     turnBeginningWindow,
@@ -242,11 +244,14 @@ export function createTableDecisions(deps) {
     return null
   }
 
-  function jakeSkipsOpportunityAttack(state, inv, kind) {  if (!inv.assets.some(asset => assetPassiveData(asset.code)?.noOpportunityFirstAction)) return false
+  function jakeSkipsOpportunityAttack(state, inv, kind, consume = true) {
+    if (!inv.assets.some(asset => assetPassiveData(asset.code)?.noOpportunityFirstAction)) return false
     if (!['move', 'investigate'].includes(kind)) return false
-    if (inv.jakeFree?.round !== state.round) inv.jakeFree = { round: state.round, used: false }
-    if (inv.jakeFree.used) return false
-    inv.jakeFree.used = true
+    if (inv.jakeFree?.round === state.round && inv.jakeFree.used) return false
+    if (consume) {
+      if (inv.jakeFree?.round !== state.round) inv.jakeFree = { round: state.round, used: false }
+      inv.jakeFree.used = true
+    }
     return true
   }
 
@@ -361,17 +366,38 @@ export function createTableDecisions(deps) {
     return cardCounterOf(enemy, 'bounty') > 0 ? 'bounty' : null
   }
 
+  // 预览与结算共享借机攻击豁免。只有结算会消耗当轮的免攻击额度。
+  function opportunityAttackEnemies(state, inv, move, kind, totalCost, { consumeExemption = false } = {}) {
+    if (!totalCost) return []
+    if (move.action === 'freeAction' && investigatorRule(inv.code)?.freeAction?.noOpportunityAttack) return []
+    if (move.action === 'play') {
+      const code = move.copyCode || move.cardId
+      if (state._prePlayAttempt?.noOpportunityAttack || cardPlayFlag(code, 'noOpportunityAttack')
+        || cardKeyword(state, inv, code, 'noOpportunityAttack')) return []
+    }
+    const ability = abilityOfMove(state, inv, move)
+    if (ability?.descriptor?.noOpportunityAttack === true || ability?.noOpportunityAttack === true
+      || attachmentIgnoresOpportunityAttack(state, inv, move) || isParleyDescriptor(ability?.descriptor)) return []
+    if (kind === 'engage' && inv.assets.some(item => registeredEntry(item.code)?.engageNoOpportunityAttack === true)) return []
+    if (move.action === 'scenarioAction' && move.noOpportunityAttack === true) return []
+    if (ruleIgnored(state, inv, 'opportunityAttack') || firstActionExemptsOpportunityAttack(state, inv, kind, registeredEntry)
+      || jakeSkipsOpportunityAttack(state, inv, kind, consumeExemption)) return []
+    if (['fight', 'evade', 'resign', 'parley', 'parleyCultist', 'parleyLita'].includes(kind)
+      || ['fightConcealed', 'evadeConcealed'].includes(move.action)) return []
+
+    const exemptions = move.action === 'ability' ? ability?.descriptor?.noOpportunityAttackFrom : move.noOpportunityAttackFrom
+    const exemptCodes = Array.isArray(exemptions) ? exemptions.map(String) : []
+    return enemiesEngagedWith(state, inv).filter(enemy => !enemy.exhausted && enemyCanOpportunityAttack(state, enemy)
+      && !exemptCodes.includes(String(enemy.originalCode || enemy.code)) && !exemptCodes.includes(String(enemy.code)))
+  }
+
   function actionPreview(state, seat, move) {
     const inv = state.investigators[seat]
     if (!inv || state.pendingChoice || inHub(state)) return { actions: 0 }
     const ability = abilityOfMove(state, inv, move)
     const kind = actionKind(state, inv, move)
-    const provoking = actionCost(state, inv, move, false) > 0
-      && !firstActionExemptsOpportunityAttack(state, inv, kind, registeredEntry)
-      && !attachmentIgnoresOpportunityAttack(state, inv, move)
-      && !['fight', 'evade', 'resign', 'parley', 'parleyCultist', 'parleyLita'].includes(kind)
-    const attacks = provoking ? enemiesEngagedWith(state, inv).filter(e => !e.exhausted && !(inv.onTheLam && !e.elite)
-      && enemyCanOpportunityAttack(state, e)) : []
+    const attacks = opportunityAttackEnemies(state, inv, move, kind, actionCost(state, inv, move, false))
+      .filter(enemy => !(inv.onTheLam && !enemy.elite))
     const enemy = state.enemies.find(e => e.id === move.enemyId)
     // 进入地点的强制效果是移动的真实代价之一；只在已揭示时给出，未揭示的背面不进预览。
     const destination = move.action === 'move' ? state.locations.find(l => l.id === move.locationId) : null
@@ -518,5 +544,5 @@ export function createTableDecisions(deps) {
     }
   }
 
-  return { decisionSeat, actingSeats, seatLocalMove, hubActingSeats, initialHubScenarioMoves, hubInvestigatorChoices, initialHubPreparation, hubStartingDeckReady, validateHubMove, autoHubMove, decisionSeed, moveCost, cardPlayBlockedReason, jakeSkipsOpportunityAttack, canUseExtraEvade, abilityOfMove, actionKind, isSpellAction, restrictedKindOfMove, actionPreview, consumeStartingAdjustments, consumeMulliganBlock, runMulligans, useGoldPocketWatch, resolveCallOfTheUnknown }
+  return { decisionSeat, actingSeats, seatLocalMove, hubActingSeats, initialHubScenarioMoves, hubInvestigatorChoices, initialHubPreparation, hubStartingDeckReady, validateHubMove, autoHubMove, decisionSeed, moveCost, cardPlayBlockedReason, jakeSkipsOpportunityAttack, canUseExtraEvade, abilityOfMove, actionKind, isSpellAction, restrictedKindOfMove, opportunityAttackEnemies, actionPreview, consumeStartingAdjustments, consumeMulliganBlock, runMulligans, useGoldPocketWatch, resolveCallOfTheUnknown }
 }

@@ -3,8 +3,8 @@
   "unit": "01-a",
   "profile": {
     "id": "revised-core-2026-11",
-    "scope": "2021 修订核心（Revised Core）116 条目录记录（01501–01616）。这些卡是原核心 01xxx 卡片的再版印刷号，行为由 canonical 条目经 _reprint-aliases.js 提供，不单独实现。",
-    "basis": "逐卡核对：duplicateOfCode → canonical 已验收、别名映射覆盖、文本一致、无第二份行为实现；证据为 tests/acceptance-01-a-rcore.test.mjs 的真实断言。114/116 通过；01685/01689 的 canonical（60227/51007）所属入门包/重返单元尚未逐卡验收，暂不计入 verified。未声称穷举所有卡牌组合。",
+    "scope": "修订核心 116 张再版印刷号（01501–01603、01683–01695），行为由原版提供。",
+    "basis": "逐卡核对原版账本、印刷文本、图鉴和运行时别名。60227 与 51007 及其重印均通过实际对局测试。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
       "重印号只保留 canonical 实现，015xx 不进入构筑池（availability 保持 catalog-only）",
@@ -17,15 +17,15 @@
   },
   "summary": {
     "total": 116,
-    "verified": 114,
-    "unverified": 2,
+    "verified": 116,
+    "unverified": 0,
     "unimplemented": 0,
     "testsPassed": 126
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
-      "sha256": "0b29c4ead3d96a31a1aa5ae5f4ee84b8e32958a0a389a1b298637cca4d9f4036"
+      "sha256": "af87410fa4e4479cd94e566f6f33e6864e7d8e252ed1b27377d969463c3cc788"
     }
   ],
   "entries": [
@@ -1293,9 +1293,13 @@
       "code": "01685",
       "name": "寻找答案",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "canonical 60227（Seeking Answers）尚无逐卡验收结论（入门包账本只到批次 open 层），本卡行为依赖该 canonical，不能先于它声明 verified。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01685 Seeking Answers：修订核心重印号指向已验收 canonical 60227"
+        }
+      ]
     },
     {
       "code": "01686",
@@ -1337,9 +1341,13 @@
       "code": "01689",
       "name": "礼寻术",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "canonical 51007（Rite of Seeking）尚无逐卡验收结论（重返敦威治批次账本只到 open 层），本卡行为依赖该 canonical，不能先于它声明 verified。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01689 Rite of Seeking：修订核心重印号指向已验收 canonical 51007"
+        }
+      ]
     },
     {
       "code": "01690",

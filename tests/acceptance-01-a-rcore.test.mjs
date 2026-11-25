@@ -9,8 +9,6 @@
 // 口径说明（详见 docs/test/验收-01-a-修订核心.md）：
 //   · canonical 验收 = coreCardVerified(canonical) 或逐卡验收账本（core / dunwich / carcosa / tcu / tde）
 //     中存在 status === 'verified' 的条目，并可在仓库中回溯到证据文件与测试标题；
-//   · 01685 / 01689 的 canonical（60227 / 51007）只有入门包 / 重返包批次账本的 open 列表，
-//     没有逐卡验收结论（其所属 50-a / 60-a 单元待验收），故本单元判为未通过（已知缺口 G2）；
 //   · 109 张卡号未登记到 entries/_reprint-aliases.js 白名单（已知缺口 G1）：它们是 catalog-only、
 //     没有任何运行时（构筑/选人/牌桌）入口，行为由 canonical 唯一实现；白名单只服务运行时可达的重印号。
 //     若后续需要任何 015xx/016xx 运行时可达，必须先扩白名单，本文件相应断言会一并收紧。
@@ -54,20 +52,6 @@ const RCODES = Object.freeze([
   '01690', '01691', '01692', '01693', '01694', '01695',
 ])
 
-// 已知缺口 G2：canonical 所属单元（50-a 重返玩家卡 / 60-a 调查员入门包）尚未做逐卡验收。
-const KNOWN_CANONICAL_GAPS = Object.freeze({
-  '01685': Object.freeze({
-    canonical: '60227', batch: 'audit/starter-batch-1.json',
-    batchPath: ['resolvedIntegrations', 'revisedCoreImport', '01685'], expected: '60227',
-    reason: 'canonical 60227（哈维·沃尔特斯入门包 寻找答案）只有 starter-batch-1 批次 open 列表，没有逐卡验收账本条目',
-  }),
-  '01689': Object.freeze({
-    canonical: '51007', batch: 'audit/return-player-batch-2.json',
-    batchPath: ['revisedCoreImports', '01689'], expected: '51007',
-    reason: 'canonical 51007（重返敦威治 礼寻术）只有 return-player-batch-2 批次 open 列表，没有逐卡验收账本条目',
-  }),
-})
-
 // 再版本地化差异（仅中文文本 / 风味文本；英文印刷文本 116 张全一致）。
 const L10N_REVISIONS = Object.freeze({
   '01520': ['textZh'], '01525': ['textZh', 'flavorZh'], '01539': ['textZh', 'flavorZh'],
@@ -98,6 +82,8 @@ const LEDGER_FILES = Object.freeze([
   ['audit/carcosa-all-card-acceptance.json', 'carcosa-all'],
   ['audit/tcu-player-acceptance.json', 'tcu-player'],
   ['audit/tde-player-acceptance.json', 'tde-player'],
+  ['audit/50-a-acceptance.json', '50-a'],
+  ['audit/60-a-acceptance.json', '60-a'],
 ])
 
 function loadVerifiedLedger() {
@@ -118,7 +104,7 @@ const VERIFIED_LEDGER = loadVerifiedLedger()
 
 /** canonical 是否已验收：core 逐卡账本，或其它逐卡验收账本里的 verified 条目。 */
 function canonicalAccepted(code) {
-  return coreCardVerified(code) || VERIFIED_LEDGER.has(code) || ALL_CARDS[code]?.effectStatus === 'verified'
+  return coreCardVerified(code) || VERIFIED_LEDGER.has(code)
 }
 
 function canonicalEvidence(code) {
@@ -198,20 +184,8 @@ test('01-a 范围：pack=rcore 恰好 116 张，卡号集合与验收范围一�
   }
 })
 
-test('01-a 通过/失败基线：114 张通过，01685/01689 因 canonical 无逐卡验收而失败（G2）', () => {
-  const failed = RCODES.filter(code => !canonicalAccepted(ALL_CARDS[code].duplicateOfCode))
-  assert.deepEqual(failed, ['01685', '01689'], '失败集必须恰好是 G2 记录的两张重印号')
-  assert.equal(RCODES.length - failed.length, 114)
-  for (const code of failed) {
-    const gap = KNOWN_CANONICAL_GAPS[code]
-    assert.ok(gap, `${code} 必须在 G2 缺口中登记`)
-    assert.equal(ALL_CARDS[code].duplicateOfCode, gap.canonical)
-    // 批次账本仍可回溯到 canonical 归并关系（但批次 open ≠ 逐卡验收）。
-    const batch = readJson(gap.batch)
-    const actual = gap.batchPath.reduce((value, key) => value?.[key], batch)
-    assert.equal(actual, gap.expected, `${code} 的批次归并关系必须可在 ${gap.batch} 回溯`)
-    assert.equal(canonicalEvidence(gap.canonical).length, 0, `${gap.canonical} 不应有逐卡验收证据`)
-  }
+test('01-a 全部重印号均可回溯到原版的逐卡验收账本', () => {
+  assert.deepEqual(RCODES.filter(code => !canonicalAccepted(ALL_CARDS[code].duplicateOfCode)), [])
 })
 
 test('01-a 重印别名白名单：7 张运行时别名与 canonical 行为完全一致（G1 其余 109 张仅图鉴）', () => {
@@ -243,9 +217,8 @@ for (const code of RCODES) {
   const card = ALL_CARDS[code]
   const canonicalCodeValue = card.duplicateOfCode
   const canonical = ALL_CARDS[canonicalCodeValue]
-  const gap = KNOWN_CANONICAL_GAPS[code] || null
 
-  test(`RCore ${code} ${card.name}：修订核心重印号指向已验收 canonical ${canonicalCodeValue}${gap ? '（G2：canonical 验收待补）' : ''}`, () => {
+  test(`RCore ${code} ${card.name}：修订核心重印号指向已验收 canonical ${canonicalCodeValue}`, () => {
     // 1. 身份：duplicateOfCode 双向映射 + 生产解析路径（arkhamdb 导入沿重印关系回到 canonical）。
     assert.equal(card.pack, 'rcore')
     assert.ok(canonical, `${code} 的 duplicateOfCode 指向的 ${canonicalCodeValue} 必须存在`)
@@ -256,14 +229,7 @@ for (const code of RCODES) {
     // 2. canonical 实现与验收。
     const canonicalImpl = implementation(canonicalCodeValue)
     assert.equal(canonicalImpl.implemented, true, `canonical ${canonicalCodeValue} 必须有实现（描述子或数据即实现）`)
-    if (gap) {
-      // G2：canonical 只有批次 open 列表，没有逐卡验收；本卡计入失败集，不伪造通过。
-      assert.equal(canonicalAccepted(canonicalCodeValue), false, `${code} 的 canonical 尚无逐卡验收证据`)
-      assert.equal(card.effectStatus, 'unverified', `${code} 在补齐 G2 之前必须保持 unverified`)
-    } else {
-      assert.equal(canonicalAccepted(canonicalCodeValue), true,
-        `canonical ${canonicalCodeValue} 必须在逐卡验收账本中 status=verified（或 coreCardVerified）`)
-    }
+    assert.ok(canonicalAccepted(canonicalCodeValue), `canonical ${canonicalCodeValue} 必须有逐卡验收结论`)
 
     // 3. 印刷文本一致：只允许印刷信息差异 + 已登记的再版中文重译；英文 text 必须逐字一致。
     const diffFields = new Set([...new Set([...Object.keys(card), ...Object.keys(canonical)])]
@@ -316,10 +282,9 @@ for (const code of RCODES) {
 // 证据：canonical 逐卡证据可回溯 + 本文件逐卡覆盖
 // ---------------------------------------------------------------------------
 
-test('01-a 证据可回溯：114 张通过卡的 canonical 账本条目、证据文件与测试标题均可定位', () => {
+test('01-a 证据可回溯：116 张通过卡的 canonical 账本条目、证据文件与测试标题均可定位', () => {
   const checked = []
   for (const code of RCODES) {
-    if (KNOWN_CANONICAL_GAPS[code]) continue
     const canonical = ALL_CARDS[code].duplicateOfCode
     const evidence = canonicalEvidence(canonical)
     assert.ok(evidence.length > 0, `canonical ${canonical} 必须至少有 1 条逐卡验收证据`)
@@ -333,7 +298,7 @@ test('01-a 证据可回溯：114 张通过卡的 canonical 账本条目、证据
     checked.push(canonical)
   }
   assert.equal(new Set(checked).size, checked.length, 'canonical 证据不应被重复计数')
-  assert.equal(checked.length, 114, `证据覆盖的 canonical 数必须覆盖 114 张通过卡（实际 ${checked.length}）`)
+  assert.equal(checked.length, RCODES.length)
 })
 
 test('01-a 证据：本文件按卡号逐条覆盖 116 张（标题含卡号，等价于 §3 维度 4）', () => {

@@ -774,9 +774,10 @@ export const behavior = {
   },
 
   // 帕德玛处于重整状态时，古代地点的线索不能被探查。
-  canDiscoverClues(state, inv) {    if (encounterRules.canDiscoverClues?.(state, inv) === false) return false
+  canDiscoverClues(state, inv, location = here(state, inv)) {
+    if (!encounterRules.canDiscoverClues(state, inv, location)) return false
     const padma = state.enemies.some(enemy => original(enemy) === PADMA && !enemy.exhausted)
-    return !(padma && isAncient(here(state, inv)))
+    return !(padma && isAncient(location))
   },
 
   // 引擎调查路径拿掉最后一个线索时也要通知（04188）。

@@ -4,6 +4,8 @@
 // 分组：A 战役规则原语（补给 / 复仇 / 中毒 / 伊格之怒 / 领队 / 古代遗物 / 探索牌库）；
 // B 数据体表达不了的玩家卡效果调度（按 effect.type / action 分派）。
 // 依赖注入同前几批；读点仍是引擎里的薄包装（engine.js 只留同名 export 转发）。
+import { hasLocalSupply, payLocationActionCost } from '../engine/location-action-cost.js'
+
 export function createCampaignPlugin(deps) {
   const {
     CLASS_NAMES,
@@ -86,8 +88,7 @@ export function createCampaignPlugin(deps) {
   }
 
   function checkSupplies(state, inv, name) {
-    return aliveInvestigators(state).filter(owner => owner.location === inv.location)
-      .some(owner => hasSupply(state, owner.seat, name))
+    return hasLocalSupply(state, inv, name, hasSupply)
   }
 
   function suppliesAtLocation(state, location) {
@@ -203,6 +204,7 @@ export function createCampaignPlugin(deps) {
       return
     }
     if (!options.resumed) {
+      if (!payLocationActionCost(state, inv, 'explore', requestChoice)) return
       payActionCost(state, inv, 'explore', events)
       // 剧本可以在探索开始前拦截（如「索桥」要求先检定，失败则取消本次探索）。
       const blocked = scenarioBehavior(state).beforeExplore?.(state, inv, scenarioRuntime(state, events))

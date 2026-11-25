@@ -2453,7 +2453,6 @@ function dispatchApi() {
   },
   ALL_INVESTIGATORS,
   ScenarioRestarted,
-  abilityOfMove,
   actionCost,
   actionKind,
   isSpellAction,
@@ -2462,7 +2461,6 @@ function dispatchApi() {
   buildDeck,
   buildDeckFromList,
   captureTableState,
-  cardKeyword,
   campaignDiscardOnYourOwn,
   chooseAttack,
   corePlayerPool,
@@ -2498,19 +2496,17 @@ function dispatchApi() {
   doShortcutMove,
   doDetachLocationAttachment,
   endCampaign,
-  enemyCanOpportunityAttack,
   // 2026-10-28 调试控制台（CONTRACT §3）：executeCommand 在 inHub 之前分发到它。
   executeDebugMove: (...args) => debugApi().executeDebugMove(...args),
   finishUpgradeDraft,
   hubActingSeats,
   hubPendingSeats,
   initialHubPreparation,
-  jakeSkipsOpportunityAttack,
   legalMoves,
   makeInvestigator,
   normalActionsLeft,
   payAndAdvanceAct,
-  playFlag,
+  opportunityAttackEnemies,
   playCost,
   progressCampaign,
   recommendUpgrade,
@@ -3059,6 +3055,7 @@ function createTableDecisionsApi() {
     buildDeckFromList,
     campaignGraph,
     campaignManifestFor,
+    cardKeyword,
     cardPlayFlag,
     choiceSeats,
     chooseLolaRole,
@@ -3079,6 +3076,7 @@ function createTableDecisionsApi() {
 export function validateHubMove(...args) { return createTableDecisionsApi().validateHubMove(...args) } export function autoHubMove(...args) { return createTableDecisionsApi().autoHubMove(...args) } export function decisionSeed(...args) { return createTableDecisionsApi().decisionSeed(...args) }
 export function moveCost(...args) { return createTableDecisionsApi().moveCost(...args) } export function cardPlayBlockedReason(...args) { return createTableDecisionsApi().cardPlayBlockedReason(...args) } export function actionKind(...args) { return createTableDecisionsApi().actionKind(...args) } export function isSpellAction(...args) { return createTableDecisionsApi().isSpellAction(...args) } export function restrictedKindOfMove(...args) { return createTableDecisionsApi().restrictedKindOfMove(...args) }
 export function actionPreview(...args) { return createTableDecisionsApi().actionPreview(...args) } export function consumeStartingAdjustments(...args) { return createTableDecisionsApi().consumeStartingAdjustments(...args) } export function consumeMulliganBlock(...args) { return createTableDecisionsApi().consumeMulliganBlock(...args) }
+function opportunityAttackEnemies(...args) { return createTableDecisionsApi().opportunityAttackEnemies(...args) }
 export function runMulligans(...args) { return createTableDecisionsApi().runMulligans(...args) } export function useGoldPocketWatch(...args) { return createTableDecisionsApi().useGoldPocketWatch(...args) } export function resolveCallOfTheUnknown(...args) { return createTableDecisionsApi().resolveCallOfTheUnknown(...args) }
 export function hubStartingDeckReady(...args) { return createTableDecisionsApi().hubStartingDeckReady(...args) } export function initialHubScenarioMoves(...args) { return createTableDecisionsApi().initialHubScenarioMoves(...args) } export function hubInvestigatorChoices(...args) { return createTableDecisionsApi().hubInvestigatorChoices(...args) }
 export function initialHubPreparation(...args) { return createTableDecisionsApi().initialHubPreparation(...args) } export function hubActingSeats(...args) { return createTableDecisionsApi().hubActingSeats(...args) } export function decisionSeat(...args) { return createTableDecisionsApi().decisionSeat(...args) }

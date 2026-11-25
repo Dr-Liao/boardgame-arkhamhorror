@@ -86,7 +86,8 @@ test('07247 海德拉祭坛：揭示放红钥匙；绿钥匙使帷幕 -3；线�
   s.investigators[0].location = shrine.id
   assert.equal(mechanics.keys.transfer('green', 'setAside', 'investigator:0', { reveal: true }), true)
   assert.equal(scenarioRuntime(s, []).locationShroud(shrine.id, 0), 2, '绿钥匙控制者在本地点 → -3 帷幕')
-  assert.equal(scenarioRuntime(s, []).canDiscoverClueAt(0, shrine.id), true, '调查仍可发现')
+  assert.equal(scenarioRuntime(s, []).canDiscoverClueAt(0, shrine.id), false, '非调查效果不能选择该地点')
+  assert.equal(scenarioRuntime(s, []).canDiscoverClueAt(0, shrine.id, { investigation: true }), true, '调查仍可发现')
   let discovered
   transaction(s, draft => { discovered = scenarioRuntime(draft, []).discoverClue(0, 1, shrine.id) })
   assert.equal(discovered, false, '非调查来源的发现被拒绝')

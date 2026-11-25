@@ -1734,8 +1734,8 @@ function scenarioRuntime(state, events, testSource = null) {
     // 02224「发现任意地点的 1 个线索」：按目标地点走 canDiscoverClues（02213 学校只能靠调查）。
     discoverClue: (seat, amount = 1, locationId = null) =>
       discoverClueAt(state, state.investigators[seat], amount, events, { locationId: locationId ?? undefined }),
-    canDiscoverClueAt: (seat, locationId) =>
-      canDiscoverClueAt(state, state.investigators[seat], state.locations.find(loc => loc.id === locationId)),
+    canDiscoverClueAt: (seat, locationId, opts) =>
+      canDiscoverClueAt(state, state.investigators[seat], state.locations.find(loc => loc.id === locationId), opts),
     damageEnemy: (enemyId, amount, seat, source = null) => {
       const enemy = state.enemies.find(item => item.id === enemyId)
       return damageEnemy(state, enemy, amount, seat, events, source)

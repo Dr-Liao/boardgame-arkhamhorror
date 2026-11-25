@@ -26,7 +26,7 @@ export function typeLabel(value) {
   return TYPE_LABELS[value] || value
 }
 export function effectLabel(value) {
-  return EFFECT_LABELS[value] || value
+  return value === 'verified' ? '' : (EFFECT_LABELS[value] || value)
 }
 export function availabilityLabel(card) {
   return card.availability === 'strict' && card.effectStatus === 'verified'
@@ -549,7 +549,7 @@ export function createCatalogUI({ h, onChange, openCard }) {
               renderImage(h, card.images, 'front', { compact: true }),
               h('span', { className: 'ah-catalog-card-name' }, name),
               h('span', { className: 'ah-catalog-card-meta' }, card.code + ' · ' + typeLabel(card.type)),
-              h('span', { className: 'ah-catalog-card-meta' }, effectLabel(card.effectStatus) + ' · ' + availabilityLabel(card)))
+              h('span', { className: 'ah-catalog-card-meta' }, [effectLabel(card.effectStatus), availabilityLabel(card)].filter(Boolean).join(' · ')))
           }) : null),
           !state.loading && !state.error && result?.total === 0 ? h('p', { className: 'bg-empty' }, t('catalog.empty')) : null,
           h('footer', { className: 'ah-catalog-pagination' },

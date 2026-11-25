@@ -8,6 +8,7 @@ import { afterHandEmptied } from './hand-discard-window.js'
 import { eventWindowContext } from './event-window.js'
 import { replacePlayerZoneCards, splicePlayerDiscard } from './player-zones.js'
 import { availableResources } from './resource-bank.js'
+import { abilityLocationResourceCost, payLocationActionCost } from './location-action-cost.js'
 import { availablePlayResources, choosePlayUses, spendPlayUses } from './play-payment.js'
 import { actionTestSkill } from './skill-substitution.js'
 // 打牌与调查（doPlay / doInvestigate）从 engine.js 拆出的第四个模块（Phase 6 · 6d-4）。
@@ -289,8 +290,11 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     campaignState.clearPlayDiscount(inv)
     delete inv.playDiscount
     const { remaining, payments, offered } = choosePlayUses(state, inv, playedDef, cost, deps)
+    // 调查事件须在支付卡费后仍能支付地点费用；实际调查时统一扣除。
+    const locationCost = abilityLocationResourceCost(state, inv, descriptorOfKind(playedDef.code, 'played'), undefined, playCostWindow?.playAsIfLocation ?? inv.location)
+    const spendable = availableResources(inv) - locationCost
     const cancelUnpaidPlay = message => {
-      if (options.cancelUnpaidPlay && (offered || playAttempt.optionalReduction)) {
+      if (options.cancelUnpaidPlay && (offered || playAttempt.optionalReduction || locationCost)) {
         // 行动及借机攻击由 dispatch 先结算，拒绝代付后须恢复整次打出的状态。
         cancelResolution(state, (restored, emitted) => info(restored, emitted, message))
       }
@@ -307,11 +311,11 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
         ownerAmount = Math.min(remaining, Math.max(0, split.owner))
         selfAmount = remaining - ownerAmount
       } else {
-        selfAmount = Math.min(remaining, availableResources(inv))
+        selfAmount = Math.min(remaining, Math.max(0, spendable))
         ownerAmount = remaining - selfAmount
       }
       if ((explicitSplit && Math.max(0, split.self) + Math.max(0, split.owner) !== cost)
-        || availableResources(inv) < selfAmount || availableResources(otherHandOwner) < ownerAmount) {
+        || spendable < selfAmount || availableResources(otherHandOwner) < ownerAmount) {
         cancelUnpaidPlay(`${inv.name} 与 ${otherHandOwner.name} 的资源不足以支付「${cardName(cardId)}」。`)
         if (fromDiscard) inv.discard.push(cardId)
         else restoreOtherHandCard()
@@ -320,7 +324,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       crossPay = { selfAmount, ownerAmount, owner: otherHandOwner }
     }
     let payer = inv
-    if (!crossPay && availableResources(inv) < remaining) {
+    if (!crossPay && spendable < remaining) {
       const charles = charlesPayCandidate(state, inv, remaining, playedDef)
       if (charles && requestChoice(state, {
         kind: 'resource', source: cardId, seat: charles.seat, canSkip: true,
@@ -328,7 +332,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
         options: [{ id: 'skip', label: '不代付' }, { id: 'pay', label: '让查尔斯支付' }],
       }) === 'pay') payer = charles
     }
-    if (!crossPay && availableResources(payer) < remaining) {
+    if (!crossPay && (payer === inv ? spendable : availableResources(payer)) < remaining) {
       cancelUnpaidPlay(`${inv.name} 资源不足，无法打出「${cardName(cardId)}」。`)
       // 2026-10-25 第五轮：支付失败时把已离手的牌放回原处（否则「合法性靠潜在减费放行、
       // 但玩家放弃/减不够」会让牌凭空消失）。
@@ -665,6 +669,10 @@ function doInvestigate(state, seat, opts, events, noSpend) {
   return runInvestigate(state, seat, opts, events, noSpend)
 }
 
+function revealedTurnLossSymbol(result) {
+  return result?.drawn?.some(token => ['skull', 'cultist', 'tablet', 'elderthing', 'autofail'].includes(token))
+}
+
 function runInvestigate(state, seat, opts, events, noSpend) {
   const inv = state.investigators[seat]
   // Phase 2（C1）：capability:investigate。
@@ -677,7 +685,7 @@ function runInvestigate(state, seat, opts, events, noSpend) {
   const beforeHook = scenarioBehavior(state).beforeInvestigate
   const before = beforeHook && !ignoreLocationTrigger(state, loc?.id, requestChoice, '调查前的地点效果')
     ? beforeHook.call(scenarioBehavior(state), state, inv, loc, scenarioRuntime(state, events)) : undefined
-  if (before === false) return
+  if (before === false || !payLocationActionCost(state, inv, 'investigate', requestChoice)) return
   if (!noSpend) spendAction(state, inv)
   // 2026-11-06 规则修正：调查行动不要求地点还有线索。零线索地点照样过检定，成功后只是
   // 没有线索可发现；「成功调查后」类窗口（06015b 梦境之门翻转、调查成功反应等）必须保留。
@@ -744,12 +752,7 @@ function runInvestigate(state, seat, opts, events, noSpend) {
       testTarget: { kind: 'location', id: loc.id, actionKind: 'investigate' },
     skillBonus: (noIntellectBoost ? 0 : skill === 'intellect' ? investigateBonus(inv) : 0) + (opts.bonus || 0)
       + (opts.addSkill ? getStat(state, inv, opts.addSkill) : 0) + trustedFreshBonus, resolve: r => {
-    const negativeSymbol = r.drawn.some(token => ['skull', 'cultist', 'tablet', 'elderthing', 'autofail'].includes(token))
-    if (negativeSymbol && opts.symbolEndsTurn) {
-      inv.actionsLeft = 0
-      if (state.currentSeat === seat) inv.turnEnded = true
-      info(state, events, `${inv.name} 揭示负面符号，失去所有剩余行动并结束本回合。`)
-    } else if (negativeSymbol && opts.symbolActionLoss) {
+    if (opts.symbolActionLoss && !opts.symbolEndsTurn && revealedTurnLossSymbol(r)) {
       inv.actionsLeft = Math.max(0, inv.actionsLeft - opts.symbolActionLoss)
       info(state, events, `${inv.name} 揭示负面符号，失去 ${opts.symbolActionLoss} 个行动。`)
     }
@@ -870,6 +873,11 @@ function runInvestigate(state, seat, opts, events, noSpend) {
     if (locationRule?.afterInvestigate && !ignoreLocationTrigger(state, loc.id, requestChoice, '调查后的地点能力')) locationRule.afterInvestigate(state, inv, loc, r, scenarioRuntime(state, events))
   } })
   endInvestigationFrame()
+  if (opts.symbolEndsTurn && revealedTurnLossSymbol(testResult)) {
+    inv.actionsLeft = 0
+    if (state.currentSeat === seat) inv.turnEnded = true
+    info(state, events, `${inv.name} 揭示负面符号，失去所有剩余行动并结束本回合。`)
+  }
   return testResult
 }
 

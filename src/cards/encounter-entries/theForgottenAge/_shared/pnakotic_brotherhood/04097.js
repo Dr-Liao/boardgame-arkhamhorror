@@ -9,7 +9,7 @@
 
 export default {
   code: '04097', implemented: true, scope: 'treachery', treacheryRule: {"threatArea":true},
-  threatAction: { rule: 'discardWordsOfPower', label: '花 2 个行动弃掉力量真言', actions: 2, target: 'threat', noTest: true },
+  threatAction: { rule: 'discardWordsOfPower', label: '花 2 个行动弃掉力量真言', actions: 2, target: 'threat', sameLocation: true, noTest: true },
   encounterResolve(state, inv, card, api) {
     // 卡面允许同时有多份副本在威胁区（每份各自要花 2 个行动弃掉）；
     // 旧实现把重复副本近似成「再抽 1 张遭遇」，卡面没有这个涌动/额外抽牌。

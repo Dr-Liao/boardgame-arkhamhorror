@@ -1,4 +1,5 @@
 import { availableResources } from './resource-bank.js'
+import { locationActionResourceCost } from './location-action-cost.js'
 import { availablePlayResources } from './play-payment.js'
 // 能力执行（doAbility / openAbilityWindow / effectError）从 engine.js 拆出的模块
 // （Phase 6 · 6d-16）。
@@ -478,7 +479,7 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
   return context
 }
 
-function effectError(state, inv, effect) {
+function effectError(state, inv, effect, locationId = inv.location) {
   const definition = effectDefinitionError(effect)
   if (definition || !effect) return definition
   if (effect.type === 'readyAsset' && !inv.assets.some(a => a.exhausted)) return '没有需要重整的支援'
@@ -487,10 +488,11 @@ function effectError(state, inv, effect) {
   if (effect.type === 'evade' && effect.allAtLocation) {
     if (!state.enemies.some(enemy => enemy.location === inv.location)) return '这里没有可躲避的敌人'
   } else if (['fight', 'evade', 'dealDamage'].includes(effect.type) && !abilityTargets(state, inv, effect).length) return '没有合法敌人目标'
-  if (effect.type === 'chooseOne' && effect.options.every(option => effectError(state, inv, option.effect))) return '没有可执行的效果选项'
-  if (effect.type === 'investigate') {
+  if (effect.type === 'chooseOne' && effect.options.every(option => effectError(state, inv, option.effect, locationId))) return '没有可执行的效果选项'
+  if (effect.type === 'investigate' || effect.type === 'investigateForResources') {
+    if (availableResources(inv) < locationActionResourceCost(state, inv, 'investigate', locationId)) return '资源不足以支付地点的额外费用'
     // 2026-11-06 规则修正：调查类效果不要求地点还有线索（成功只是不发现线索）。
-    const loc = state.locations.find(item => item.id === inv.location)
+    const loc = state.locations.find(item => item.id === locationId)
     if (!loc || loc.locked) return '这里不能调查'
   }
   if (effect.type === 'discoverClue') {
@@ -518,10 +520,6 @@ function effectError(state, inv, effect) {
   }
   if (effect.type === 'search' && !inv.deck.length) return '牌库中没有可搜索的牌'
   if (effect.type === 'searchTop' && !inv.deck.length) return '牌库中没有可搜索的牌'
-  if (effect.type === 'investigateForResources') {
-    const loc = state.locations.find(item => item.id === inv.location)
-    if (!loc || loc.locked) return '这里不能调查'
-  }
   if (effect.type === 'moveTo') {
     if (!investigatorMoveDestinations(state, inv.seat, effect).length) return '没有可移动的地点'
   }

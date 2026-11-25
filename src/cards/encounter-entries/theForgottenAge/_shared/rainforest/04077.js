@@ -7,16 +7,10 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
-import { originalOf } from '../../../_shared.js'
-
 export default {
   code: '04077', implemented: true, scope: 'treachery', treacheryRule: {"threatArea":true},
-  threatAction: { rule: 'endVoiceOfTheJungle', label: '检定意志(3)驱散丛林之声', skills: ['willpower'], difficulty: 3, target: 'threat' },
+  threatAction: { rule: 'endVoiceOfTheJungle', label: '检定意志(3)驱散丛林之声', skills: ['willpower'], difficulty: 3, target: 'threat', sameLocation: true },
   encounterResolve(state, inv, card, api) {
-    if ((inv.threat || []).some(item => originalOf(item) === '04077')) {
-      api.drawEncounter(inv.seat)
-      return false
-    }
     api.threat(inv.seat, '04077', { forcedEndTurnHorror: 1 })
     return true
   },
