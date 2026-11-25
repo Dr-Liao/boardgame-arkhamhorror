@@ -8,7 +8,7 @@ export const META = {
     "playerCards": 1683,
     "weaknesses": 147
   },
-  "resourceVersion": "3947d63a871ec2c993b985fe9fd92b33bdad1e28e0d7881843bb1501a73f10d5",
+  "resourceVersion": "e567066a8df11e47681f67835e4c845885b3befbb3d79f16eca5b3515e186567",
   "schemaVersion": 2,
   "source": "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
   "sources": [
@@ -97057,6 +97057,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/70031"
   },
   "70032": {
+    "acceptanceProfile": "side-stories-2026-11",
     "availability": "catalog-only",
     "backFlavor": "There is no way out.",
     "backFlavorZh": "无路可逃。",
@@ -97072,7 +97073,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "in_the_labyrinths_of_lunacy",
     "encounterName": "The Labyrinths of Lunacy",
     "encounterPosition": 20,
