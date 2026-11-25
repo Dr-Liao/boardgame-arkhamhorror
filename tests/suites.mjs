@@ -606,6 +606,7 @@ export const FAST_TESTS = Object.freeze([
   'acceptance-50-a.test.mjs',
   'acceptance-60-a.test.mjs',
   'acceptance-70-a.test.mjs',
+  'acceptance-90-a.test.mjs',
 ])
 
 export const SLOW_TESTS = Object.freeze([

@@ -171150,9 +171150,14 @@
       "sha256": "db6da0ae1cb64520063780e4453df7c6a763975e15c932cf53ef2263b2251216"
     },
     {
-      "bytes": 17438,
+      "bytes": 860,
+      "path": "games/arkhamhorror/src/cards/90-a-acceptance.js",
+      "sha256": "cf36732f95fa7f52a5339440dee7cc6cc9ef58412b5f94cb57c08f8afae8a47a"
+    },
+    {
+      "bytes": 17697,
       "path": "games/arkhamhorror/src/cards/acceptance-registry.js",
-      "sha256": "dc1a40608227e78922d5eec390e2daac060411cc0e45d1d33afb449fe76cd3fb"
+      "sha256": "766e26d8f883cec0ca541885a9cef56fe34e389ef01ddb9a90714ef838081cf5"
     },
     {
       "bytes": 31832,
@@ -195390,7 +195395,7 @@
     "raw": "catalog/sources 按来源保存完整原始记录，包括 linked_card 与构筑限制；provenance 按原始字段路径定位。"
   },
   "quarantined": [],
-  "resourceVersion": "e567066a8df11e47681f67835e4c845885b3befbb3d79f16eca5b3515e186567",
+  "resourceVersion": "5b5f869cedfb3885263bee804ca0d3c51606ef1706525a01aa5e1d063aa5f0e4",
   "schemaVersion": 1,
   "sourceManifest": [
     {

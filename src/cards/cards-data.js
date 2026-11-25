@@ -8,7 +8,7 @@ export const META = {
     "playerCards": 1683,
     "weaknesses": 147
   },
-  "resourceVersion": "e567066a8df11e47681f67835e4c845885b3befbb3d79f16eca5b3515e186567",
+  "resourceVersion": "5b5f869cedfb3885263bee804ca0d3c51606ef1706525a01aa5e1d063aa5f0e4",
   "schemaVersion": 2,
   "source": "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
   "sources": [
@@ -129717,6 +129717,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/90018"
   },
   "90019": {
+    "acceptanceProfile": "investigator-challenges-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -129731,7 +129732,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -130405,6 +130406,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/90029"
   },
   "90030": {
+    "acceptanceProfile": "investigator-challenges-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -130419,7 +130421,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
