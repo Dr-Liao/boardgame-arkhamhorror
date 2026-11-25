@@ -8,7 +8,7 @@ export const META = {
     "playerCards": 1683,
     "weaknesses": 147
   },
-  "resourceVersion": "827977434bc55fdf5094a6cb18056b0bb006b61a44c0d170db89e0c8f907b43c",
+  "resourceVersion": "af80e91d7bbf56086c9627474e5dbf9ce1c8dc0492d48e45808105f70890766b",
   "schemaVersion": 2,
   "source": "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
   "sources": [
@@ -56267,6 +56267,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "50006": {
+    "acceptanceProfile": "return-series-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -56281,7 +56282,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -57149,6 +57150,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "50022": {
+    "acceptanceProfile": "return-series-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -57162,7 +57164,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "return_to_the_gathering",
     "encounterName": "Return to the Gathering",
     "encounterPosition": 12,
@@ -57213,6 +57215,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "50023": {
+    "acceptanceProfile": "return-series-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -57226,7 +57229,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "return_to_the_gathering",
     "encounterName": "Return to the Gathering",
     "encounterPosition": 13,
@@ -58637,6 +58640,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "51003": {
+    "acceptanceProfile": "return-series-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -58651,7 +58655,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",

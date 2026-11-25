@@ -1,0 +1,2627 @@
+{
+  "unit": "50-a",
+  "generatedAt": "2026-11-25",
+  "scope": {
+    "cards": 368,
+    "selector": "^5[0-4][0-9]{3}[a-z]?$",
+    "packs": [
+      "rtnotz",
+      "rtdwl",
+      "rtptc",
+      "rttfa",
+      "rttcu"
+    ]
+  },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "50006",
+    "50022",
+    "50023",
+    "51003"
+  ],
+  "failedCodes": [
+    {
+      "code": "50001",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[fast] Spend 1 resource: You get +1 [willpower] for this skill test. [fast] Spend 1 resource: You get +1 [combat] for this skill tes",
+      "evidence": "src/cards/entries/50001.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "50002",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Choose either your location or a connecting location. Deal 3 damage to each enemy and to each investigator at the chosen location. T",
+      "evidence": "src/cards/entries/50002.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "50003",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[fast] Spend 1 resource: You get +1 [intellect] for this skill test. [fast] Spend 1 resource: You get +1 [agility] for this skill te",
+      "evidence": "src/cards/entries/50003.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "50004",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Attach to your location. Non-[[Elite]] enemies cannot move into or spawn at attached location. Each time a non-[[Elite]] enemy would",
+      "evidence": "src/cards/entries/50004.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "50005",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[fast] Spend 1 resource: You get +1 [combat] for this skill test. [fast] Spend 1 resource: You get +1 [agility] for this skill test.",
+      "evidence": "src/cards/entries/50005.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "50007",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[fast] Spend 1 resource: You get +1 [willpower] for this skill test. [fast] Spend 1 resource: You get +1 [intellect] for this skill ",
+      "evidence": "src/cards/entries/50007.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "50008",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Fast. Play after a phase begins. Choose a non-[[Elite]] enemy in your location. Until the end of the phase, reduce the chosen enemy'",
+      "evidence": "src/cards/entries/50008.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "50009",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[fast] Spend 1 resource: You get +1 [willpower] for this skill test. [fast] Spend 1 resource: You get +1 [agility] for this skill te",
+      "evidence": "src/cards/entries/50009.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "50010",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[reaction] After you fail a skill test, exhaust Rabbit's Foot: Search the top X cards of your deck for a card, draw it, and shuffle ",
+      "evidence": "src/cards/entries/50010.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "50011",
+      "dimension": "implementation",
+      "reason": "开局只把选中的阁楼和地窖写进放一边区，未入选版本未按卡背记入移出游戏区。",
+      "evidence": "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheGathering/behavior.js",
+      "reproduce": "开局后对照 retGatheringVariants、scenarioZones.setAside 和 removedFromGame。"
+    },
+    {
+      "code": "50012",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Objective - Only investigators in the Guest Hall may spend the requisite number of clues, as a group, to advance.",
+      "evidence": "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheGathering/definition.js:29",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50013",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[action] [action]: Draw 3 cards. Only the lead investigator can activate this ability. Forced - When an enemy attempts to spawn at a",
+      "evidence": "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheGathering/definition.js:85",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50014",
+      "dimension": "implementation",
+      "reason": "会客厅没有「不能进行抽牌行动」的地点规则读点。",
+      "evidence": "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheGathering/behavior.js",
+      "reproduce": "进入会客厅后检查 legalMoves 并执行 draw。"
+    },
+    {
+      "code": "50015",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After you fail a skill test while investigating the Bedroom: Discard 1 card at random from your hand.",
+      "evidence": "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheGathering/definition.js:87",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50016",
+      "dimension": "implementation",
+      "reason": "浴室在检定结束后按结果近似结束回合，缺印刷要求的逐枚标记触发。",
+      "evidence": "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheGathering/behavior.js",
+      "reproduce": "浴室调查时安排额外标记且首枚为指定符号，核对逐标记窗口和剩余行动。"
+    },
+    {
+      "code": "50017",
+      "dimension": "implementation",
+      "reason": "走廊揭示后正确放置阁楼、地窖和客厅，但这些牌仍留在公开的「放在一边」区。",
+      "evidence": "src/cards/encounter-entries/returnToNightOfTheZealot/returnToTheGathering/50017.js",
+      "reproduce": "运行逐卡 Node 用例至走廊揭示。对比 locations、scenarioZones.setAside 与 viewState().setAsideCards。"
+    },
+    {
+      "code": "50018",
+      "dimension": "implementation",
+      "reason": "正面能放置关联地点，放上地图后关联牌仍留在「放在一边」区。",
+      "evidence": "src/engine/locations.js#placeLocation",
+      "reproduce": "按对应逐卡用例进新版阁楼或地窖，比较新地点的代码在 locations 与 scenarioZones.setAside 的交集。"
+    },
+    {
+      "code": "50019",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After you reveal Field of Graves: Test [willpower] (4). For each point you fail by, discard 1 card at random from each play",
+      "evidence": "src/cards/encounter-entries/returnToNightOfTheZealot/returnToTheGathering/50019.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50020",
+      "dimension": "implementation",
+      "reason": "正面能放置关联地点，放上地图后关联牌仍留在「放在一边」区。",
+      "evidence": "src/engine/locations.js#placeLocation",
+      "reproduce": "按对应逐卡用例进新版阁楼或地窖，比较新地点的代码在 locations 与 scenarioZones.setAside 的交集。"
+    },
+    {
+      "code": "50021",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After you reveal Ghoul Pits: Test [agility] (3). For each point you fail by, search the encounter deck and discard pile for",
+      "evidence": "src/cards/encounter-entries/returnToNightOfTheZealot/returnToTheGathering/50021.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50024",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Revelation - Each investigator with 3 or fewer cards in hand must take 1 damage and 1 horror. Each investigator with 4 or more cards",
+      "evidence": "src/cards/encounter-entries/returnToNightOfTheZealot/returnToTheGathering/50024.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50025",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in the Night of the Zealot Campaign Guide, with the following exceptions: - When gathering encounter ",
+      "evidence": "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheMidnightMasks/definition.js:20",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50026a",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[action]: Resign. You don't want to risk taking too long, so you head to safety with the information you've gathered.",
+      "evidence": "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheMidnightMasks/behavior.js:409",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50026b",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Spawn - Engaged with Prey. Prey - Nearest to another [[Cultist]] enemy. Hunter. Narôgath gets +3 health per investigator. While Narô",
+      "evidence": "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheMidnightMasks/definition.js:31",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50027",
+      "dimension": "implementation",
+      "reason": "东城区入场后，没有每场一次为受控支援添加两个弹药或补给的行动。",
+      "evidence": "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheMidnightMasks/behavior.js",
+      "reproduce": "让 50027 作为东城区入场，调查员停在此处并持有有弹药的支援，检查行动菜单。"
+    },
+    {
+      "code": "50028",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[action]: Move to any [[Arkham]] location. (Limit once per game.)",
+      "evidence": "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheMidnightMasks/behavior.js:308",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50029",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[action] Take 2 horror: Gain 1 clue from the token pool. (Limit once per game.)",
+      "evidence": "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheMidnightMasks/behavior.js:315",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50030",
+      "dimension": "implementation",
+      "reason": "河岸城没有弃意志图标牌并移除异教徒毁灭的组限行动。",
+      "evidence": "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheMidnightMasks/behavior.js",
+      "reproduce": "在 50030 准备有意志图标的手牌和带毁灭的异教徒，检查行动菜单。"
+    },
+    {
+      "code": "50031",
+      "dimension": "implementation",
+      "reason": "毁灭分支按有资格的调查员人数判断。只要有人持有至少两个线索就跳过毁灭，无论恐惧是否实际放置。",
+      "evidence": "src/cards/encounter-entries/returnToNightOfTheZealot/returnToTheMidnightMasks/50031.js",
+      "reproduce": "让持有两线索的调查员防止全部恐惧后抽本卡，检查当前密谋没有添加毁灭。"
+    },
+    {
+      "code": "50032a",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in the Night of the Zealot Campaign Guide, with the following exceptions: - When gathering encounter ",
+      "evidence": "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheDevourerBelow/definition.js:58",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50032b",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Vault of Earthly Demise cannot leave play. Umôrdhoth gets +X health per investigator and gets +X fight, where X is the number of res",
+      "evidence": "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheDevourerBelow/definition.js:59",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50033",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After an investigator at this location succeeds at a skill test on a treachery: That treachery gains surge. (Group limit on",
+      "evidence": "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheDevourerBelow/behavior.js:46",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50034",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After you reveal a chaos token from the chaos bag while investigating this location: Reveal and resolve an additional chaos",
+      "evidence": "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheDevourerBelow/behavior.js:47",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50035",
+      "dimension": "implementation",
+      "reason": "地点把所有传入 enemyDamageAmount 的伤害钳到 1，卡面只限制每次攻击伤害。",
+      "evidence": "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheDevourerBelow/behavior.js",
+      "reproduce": "使用伤害型非攻击效果，对 50035 上的敌人造成 2 点以上伤害。"
+    },
+    {
+      "code": "50036",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After you reveal a chaos token from the chaos bag during an evasion attempt at this location: Reveal and resolve an additio",
+      "evidence": "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheDevourerBelow/behavior.js:49",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50037",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Revelation - Each investigator must discard 1 card at random from his or her hand. Each investigator who has no cards in his or her ",
+      "evidence": "src/cards/encounter-entries/returnToNightOfTheZealot/returnToTheDevourerBelow/50037.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50038",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After Grave-Eater attacks you: Discard 1 card at random from your hand.",
+      "evidence": "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheDevourerBelow/behavior.js:44",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50039",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Prey - Fewest cards in hand. While engaged with an investigator with no cards in his or her hand, Acolyte of Umôrdhoth cannot be eva",
+      "evidence": "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheDevourerBelow/behavior.js:45",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50040",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Revelation - Test [willpower] (3). For each point you fail by, you must discard 1 card at random from your hand. For each card you c",
+      "evidence": "src/cards/encounter-entries/returnToNightOfTheZealot/_shared/ghouls_of_umôrdhoth/50040.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50041",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Spawn - Farthest empty location. Forced - After you spawn Disciple of the Devourer: You must either place 1 doom on it or place 1 of",
+      "evidence": "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheDevourerBelow/behavior.js:42",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50042",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Spawn - Farthest empty location. Forced - At the end of the mythos phase: Place 1 doom on Corpse-Taker. Forced - At the end of the e",
+      "evidence": "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheDevourerBelow/behavior.js:43",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50043",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Revelation - Attach to the farthest [[Cultist]] enemy and place 1 doom on that enemy. If there are no [[Cultist]] enemies in play, s",
+      "evidence": "content/campaigns/returnToNightOfTheZealot/scenarios/returnToTheDevourerBelow/behavior.js:51",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50044",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Spawn - Your House. Otherwise, Rivertown. [action]: Parley. Add Jeremiah Pierce to the victory display. Then, test [willpower] (4). ",
+      "evidence": "src/cards/encounter-entries/returnToNightOfTheZealot/returnToTheMidnightMasks/50044.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50045",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Spawn - Easttown. Forced - After a [[Monster]] enemy is defeated at Billy Cooper's location: Add Billy Cooper to the victory display",
+      "evidence": "src/cards/encounter-entries/returnToNightOfTheZealot/returnToTheMidnightMasks/50045.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "50046",
+      "dimension": "implementation",
+      "reason": "谈判用 discardEncounterTop(3) 替代逐张抽取并结算三张遭遇卡。",
+      "evidence": "src/cards/encounter-entries/returnToNightOfTheZealot/returnToTheMidnightMasks/50046.js",
+      "reproduce": "与 50046 谈判，牌库顶安排三张可辨识的显现卡，核对只有弃牌记录。"
+    },
+    {
+      "code": "51001",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：You have two additional hand slots, which can only be used to hold [[Weapon]] assets. While you have [[Weapon]] assets held in 2 or ",
+      "evidence": "src/cards/entries/51001.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "51002",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[action]: Fight. You get +2 [combat] for this attack. If you perform this attack against an enemy engaged with another investigator,",
+      "evidence": "src/cards/entries/51002.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "51004",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Researched. Uses (3 supplies). [action] Spend 1 supply and exhaust Strange Solution: Choose an investigator at your location to gain",
+      "evidence": "src/cards/entries/51004.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "51005",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Choose an asset controlled by an investigator at your location. Either (choose one): - Place 2 ammo or supply tokens on that asset a",
+      "evidence": "src/cards/entries/51005.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "51006",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Fast. Play when an enemy enters your location. Immediately move to a connecting location. (The enemy still enters your previous loca",
+      "evidence": "src/cards/entries/51006.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "51007",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Uses (3 charges). [action] Spend 1 charge: Investigate. Investigate using [willpower] instead of [intellect]. You get +2 [willpower]",
+      "evidence": "src/cards/entries/51007.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "51008",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Uses (4 charges). [action] Spend 1 charge: Heal 2 horror from among investigators at your location.",
+      "evidence": "src/cards/entries/51008.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "51009",
+      "dimension": "interaction",
+      "reason": "已有真实引擎行为用例，缺本卡相关界面在 1440 与 390 下的完整操作证据。",
+      "evidence": "tests/return-player.test.mjs",
+      "reproduce": "执行对应卡号的 Node 用例，再在桌面和移动端复现这张卡的手牌操作或待决选项。"
+    },
+    {
+      "code": "51010",
+      "dimension": "interaction",
+      "reason": "已有真实引擎行为用例，缺本卡相关界面在 1440 与 390 下的完整操作证据。",
+      "evidence": "tests/acceptance-50-a.test.mjs",
+      "reproduce": "执行对应卡号的 Node 用例，再在桌面和移动端复现这张卡的手牌操作或待决选项。"
+    },
+    {
+      "code": "51011",
+      "dimension": "implementation",
+      "reason": "牌库顶是普通牌时直接批量移除副本，跳过印刷要求的抽取及 cardDrawn 窗口。弱点分支走正常抽取。",
+      "evidence": "src/cards/entries/51011.js",
+      "reproduce": "以普通牌为牌库顶结算本卡，比较 drawCards 的 cardDrawn 钩子与直接 removeOwnedCopies 的调用链。"
+    },
+    {
+      "code": "51012",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Dunwich Legacy Campaign Guide, with the following exceptions: - When gathering encounter sets,",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToExtracurricularActivities/definition.js:31",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51013",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After you discover 1 or more clues at Warren Observatory: Discard 3 cards from the top of your deck for each clue just disc",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToExtracurricularActivities/behavior.js:8",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51014",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Hunter. Retaliate. Forced - After Enthralled Security Guard attacks you: Discard the top 2 cards of your deck. Forced - After Enthra",
+      "evidence": "src/cards/encounter-entries/returnToTheDunwichLegacy/returnToExtracurricularActivities/51014.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51015",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Dunwich Legacy Campaign Guide, with the following exceptions: - When gathering encounter sets,",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToTheHouseAlwaysWins/definition.js:31",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51016",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After Clover Club Lounge is revealed: Put the set-aside Clover Club Stage into play. While it is Act 1, Clover Club Lounge ",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToTheHouseAlwaysWins/behavior.js:7",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51017",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Clover Club Bar is connected to Clover Club Stage. While it is Act 1, Clover Club Stage gains: \"[action] Spend 1 resource: Place tha",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToTheHouseAlwaysWins/behavior.js:12",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51018",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Surge. Revelation - Each player who has \"cheated\" must lose 2 resources and take 1 damage.",
+      "evidence": "content/packs/returnCampaign/manifests.js",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "51019",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Revelation - You must (choose one): - Remember that you have \"cheated.\" - Lose 5 resources. - Put Raise the Stakes into play in your",
+      "evidence": "content/packs/returnCampaign/manifests.js",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "51020",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Dunwich Legacy Campaign Guide, with the following exceptions: - When gathering encounter sets,",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToTheMiskatonicMuseum/definition.js:28",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51021",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After you fail a skill test while investigating this location: Take 1 damage.",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToTheMiskatonicMuseum/definition.js:32",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51022",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[action] [action]: Gain 2 clues (from the token bank). Then, if Hunting Horror is in play, place 1 resource on Shadow-spawned. Other",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToTheMiskatonicMuseum/definition.js:33",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51023",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Revelation - Attach Dark Bidding to Hunting Horror, even if it is out of play. Dark Bidding remains attached to Hunting Horror if it",
+      "evidence": "content/packs/returnCampaign/manifests.js",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "51024",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Revelation - Place 1 resource on Shadow-spawned, even if it is out of play.",
+      "evidence": "content/packs/returnCampaign/manifests.js",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "51025",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Dunwich Legacy Campaign Guide, with the following exceptions: - When gathering encounter sets,",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToTheEssexCountyExpress/definition.js:40",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51026",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToTheEssexCountyExpress/behavior.js:43",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51026b",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Spawn - Leftmost location. Hunter. Massive. Forced - When The Conductor is defeated: Attach it to the current agenda. After you adva",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToTheEssexCountyExpress/behavior.js:46",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51027",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Remove the leftmost location from the game (or place it in the victory display if it has Victory X and no clues on it). Each investi",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToTheEssexCountyExpress/definition.js:31",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51028",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Engine Car is connected to the location to the left of it. Engine Car cannot be investigated. Forced - After you reveal Engine Car: ",
+      "evidence": "src/cards/encounter-entries/returnToTheDunwichLegacy/returnToTheEssexCountyExpress/51028.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51029",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Freight Car is connected to the locations to the left and right of it. Forced - At the end of the round: Each investigator on the Fr",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToTheEssexCountyExpress/definition.js:45",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51030",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Baggage Car is connected to the locations to the left and right of it. Baggage Car cannot be investigated. [action] Choose and disca",
+      "evidence": "src/cards/encounter-entries/returnToTheDunwichLegacy/returnToTheEssexCountyExpress/51030.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51031",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[action] If Engineer is ready: Parley. Test [willpower] or [intellect] (4). If you succeed, take control of Engineer. If you already",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToTheEssexCountyExpress/behavior.js:28",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51032",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Dunwich Legacy Campaign Guide, with the following exceptions: - When gathering encounter sets,",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToBloodOnTheAltar/behavior.js:47",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51033",
+      "dimension": "implementation",
+      "reason": "新版公共空地登记为起始地点，未登记禁止抽牌与资源行动的地点规则。",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToBloodOnTheAltar/definition.js",
+      "reproduce": "在起始地点检查 draw 和 resource。"
+    },
+    {
+      "code": "51034",
+      "dimension": "implementation",
+      "reason": "新版村庄地点只有变体定义，未接上卡面的专属规则及共用「无线索时抽取压在地点下的遭遇牌」行动。",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToBloodOnTheAltar/definition.js",
+      "reproduce": "让该变体入场并移空线索，核对行动菜单及卡面专属揭示或调查效果。"
+    },
+    {
+      "code": "51035",
+      "dimension": "implementation",
+      "reason": "新版村庄地点只有变体定义，未接上卡面的专属规则及共用「无线索时抽取压在地点下的遭遇牌」行动。",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToBloodOnTheAltar/definition.js",
+      "reproduce": "让该变体入场并移空线索，核对行动菜单及卡面专属揭示或调查效果。"
+    },
+    {
+      "code": "51036",
+      "dimension": "implementation",
+      "reason": "新版村庄地点只有变体定义，未接上卡面的专属规则及共用「无线索时抽取压在地点下的遭遇牌」行动。",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToBloodOnTheAltar/definition.js",
+      "reproduce": "让该变体入场并移空线索，核对行动菜单及卡面专属揭示或调查效果。"
+    },
+    {
+      "code": "51037",
+      "dimension": "implementation",
+      "reason": "新版村庄地点只有变体定义，未接上卡面的专属规则及共用「无线索时抽取压在地点下的遭遇牌」行动。",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToBloodOnTheAltar/definition.js",
+      "reproduce": "让该变体入场并移空线索，核对行动菜单及卡面专属揭示或调查效果。"
+    },
+    {
+      "code": "51038",
+      "dimension": "implementation",
+      "reason": "新版村庄地点只有变体定义，未接上卡面的专属规则及共用「无线索时抽取压在地点下的遭遇牌」行动。",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToBloodOnTheAltar/definition.js",
+      "reproduce": "让该变体入场并移空线索，核对行动菜单及卡面专属揭示或调查效果。"
+    },
+    {
+      "code": "51039",
+      "dimension": "implementation",
+      "reason": "新版村庄地点只有变体定义，未接上卡面的专属规则及共用「无线索时抽取压在地点下的遭遇牌」行动。",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToBloodOnTheAltar/definition.js",
+      "reproduce": "让该变体入场并移空线索，核对行动菜单及卡面专属揭示或调查效果。"
+    },
+    {
+      "code": "51040",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Each [[Criminal]] enemy (including Hired Gun) gains: \"Hunter. Prey - Most resources.\" Each copy of Hunted Down gains peril and surge",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToBloodOnTheAltar/definition.js:18",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51041",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Dunwich Legacy Campaign Guide, with the following exceptions: - When gathering encounter sets,",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToUndimensionedAndUnseen/definition.js:28",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51042",
+      "dimension": "evidence",
+      "reason": "有子嗣池和数值数据，尚无用例证实本变体专属的额外移动或进出地点引发的意志检定。",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToUndimensionedAndUnseen/behavior.js",
+      "reproduce": "在对应变体入场时走首次移动或进入同地点的路径；现有子嗣池测试只断言开局数量。"
+    },
+    {
+      "code": "51043",
+      "dimension": "implementation",
+      "reason": "生命按人数的表把 +2/人和相邻变体的 +1/人对调。",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToUndimensionedAndUnseen/definition.js",
+      "reproduce": "将该变体置于开局子嗣池并用两席开局，核对其印刷生命和运行时生命。"
+    },
+    {
+      "code": "51044",
+      "dimension": "implementation",
+      "reason": "生命按人数的表把 +2/人和相邻变体的 +1/人对调。",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToUndimensionedAndUnseen/definition.js",
+      "reproduce": "将该变体置于开局子嗣池并用两席开局，核对其印刷生命和运行时生命。"
+    },
+    {
+      "code": "51045",
+      "dimension": "evidence",
+      "reason": "有子嗣池和数值数据，尚无用例证实本变体专属的额外移动或进出地点引发的意志检定。",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToUndimensionedAndUnseen/behavior.js",
+      "reproduce": "在对应变体入场时走首次移动或进入同地点的路径；现有子嗣池测试只断言开局数量。"
+    },
+    {
+      "code": "51046",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Surge. Revelation - Attach to a Brood of Yog-Sothoth enemy in play without a copy of Imperceptible Creature attached. Remove 1 clue ",
+      "evidence": "content/packs/returnCampaign/manifests.js",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "51047",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Dunwich Legacy Campaign Guide, with the following exceptions: - When gathering encounter sets,",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToWhereDoomAwaits/definition.js:29",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51048",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Base of the Hill is connected to each copy of Diverging Path. Forced - After you discover 1 or more clues from Base of the Hill: Spe",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToWhereDoomAwaits/definition.js:26",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51049",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Ascending Path is connected to each copy of Altered Path. Forced - After you discover 1 or more clues from Ascending Path: Spend tho",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToWhereDoomAwaits/definition.js:26",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51050",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After you reveal Abandoned Camp: Lose 2 resources for each action you have performed this round (including this one, if app",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToWhereDoomAwaits/behavior.js:21",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51051",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After you reveal Fathomless Lake: If you have 2 or more actions remaining, place 1 doom on the current agenda.",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToWhereDoomAwaits/behavior.js:21",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51052",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：You get +1 [intellect] and +1 [combat]. [reaction] When an investigator at your location reveals a non-[auto_fail] chaos token durin",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToWhereDoomAwaits/definition.js:17",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51053",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Dunwich Legacy Campaign Guide, with the following exceptions: - When gathering encounter sets,",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToLostInTimeAndSpace/definition.js:46",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51054",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After you are moved to a location by an encounter card effect: Take 1 horror.",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToLostInTimeAndSpace/definition.js:33",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51055",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[action]: Discard the top 3 cards of the encounter deck. Choose a location discarded by this effect and resolve its 'revelation' abi",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToLostInTimeAndSpace/definition.js:32",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51056",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Retaliate. Forced - When Seth Bishop attacks you during the enemy phase: Either move to Another Dimension after this attack, or Seth",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToLostInTimeAndSpace/behavior.js:14",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51057",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Yog-Sothoth is immune to player card effects, cannot take damage, and cannot leave Realms Beyond. As an additional cost for you to l",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToLostInTimeAndSpace/definition.js:43",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51058",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Revelation - Put Indecipherable Stairs into play and discard the top 3 cards of your deck. Forced - After you leave Indecipherable S",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToLostInTimeAndSpace/definition.js:37",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51059",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Revelation - Put Towering Luminosity into play and either place 1 doom on it or take 2 damage. Forced - After you fail a test while ",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToLostInTimeAndSpace/definition.js:37",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51060",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Revelation - Put Unstable Vortex into play and discard 1 copy of Tear Through Space, if able. Forced - At the end of your turn, if y",
+      "evidence": "content/campaigns/returnToTheDunwichLegacy/scenarios/returnToLostInTimeAndSpace/definition.js:37",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51061",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Revelation - For each card in your hand, if there is a copy of that card in your discard pile, take 1 horror (to a maximum of 3 horr",
+      "evidence": "src/cards/encounter-entries/returnToTheDunwichLegacy/_shared/beyond_the_threshold/51061.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51062",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Peril. Revelation - Choose two of the following actions (investigate, fight, evade, move, or play). For the remainder of the round, ",
+      "evidence": "content/packs/returnCampaign/manifests.js",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "51063",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Revelation - Attach to your location. As an additional cost to move into or out of attached location, discard the top card of your d",
+      "evidence": "content/packs/returnCampaign/manifests.js",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "51064",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Peril. Revelation - You must either (choose one): - Draw the top 2 cards of the encounter deck. - Place 1 doom on the current agenda",
+      "evidence": "src/cards/encounter-entries/returnToTheDunwichLegacy/_shared/resurgent_evils/51064.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51065",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Revelation - Attach to the location with the most investigators, and without a Secret Door attached. Investigators cannot leave this",
+      "evidence": "content/packs/returnCampaign/manifests.js",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "51066",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Revelation - Test [agility] (4). For each point you fail by, you must either choose and discard 1 card from your play area or from y",
+      "evidence": "src/cards/encounter-entries/returnToTheDunwichLegacy/_shared/creeping_cold/51066.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51067",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Revelation - Attach to your location. Limit 1 per location. Forced - After an investigator at this location draws 1 or more cards, t",
+      "evidence": "content/packs/returnCampaign/manifests.js",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "51068",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Revelation - Put Violent Commands into play in your threat area. [action]: Deal 2 damage to an investigator at your location and dis",
+      "evidence": "src/cards/encounter-entries/returnToTheDunwichLegacy/_shared/erratic_fear/51068.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51069",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Revelation - Put Idle Hands into play in your threat area. [fast] If Idle Hands is in your threat area, during your turn, take 2 dam",
+      "evidence": "content/packs/returnCampaign/manifests.js",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "51070",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Revelation - If you have no clues, Need for Knowledge gains surge. Otherwise, test [intellect] (X), where X equals the number of clu",
+      "evidence": "content/packs/returnCampaign/manifests.js",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "51071",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Hunter. Forced - At the end of the enemy phase: Each investigator at Vassal of the Lurker's location discards 1 card from the top of",
+      "evidence": "src/cards/encounter-entries/returnToTheDunwichLegacy/_shared/yog_sothoths_emissaries/51071.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "51072",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Peril. Revelation - You may draw 1 card. You may choose and discard up to 2 cards from your hand. Test [willpower] (X). If you fail,",
+      "evidence": "content/packs/returnCampaign/manifests.js",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "52001",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Uses (6 ammo). [action] Spend 1 ammo: Fight. You deal +1 damage for this attack. [fast] Spend 1 resource: Return .32 Colt to your ha",
+      "evidence": "src/cards/entries/52001.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "52002",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Fast. Play when you activate the Fight ability on a [[Firearm]] asset. Spend 1 additional ammo token from that asset. When you revea",
+      "evidence": "src/cards/entries/52002.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "52003",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：For each clue you have (to a maximum of 3), either heal 2 horror from an investigator at your location or discard a [[Terror]] card ",
+      "evidence": "src/cards/entries/52003.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "52004",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Researched. Uses (3 charges). [action] Spend 1 charge: Investigate. If you succeed, you may put an asset with printed cost of X or l",
+      "evidence": "src/cards/entries/52004.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "52005",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[fast] During your turn, exhaust Stealth: Evade. The chosen enemy gets -2 evade for this evasion attempt. If you successfully evade ",
+      "evidence": "src/cards/entries/52005.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "52006",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Uses (3 charges). If Suggestion has no charges, discard it. [action] Exhaust Suggestion: Evade. Add your [willpower] value to your s",
+      "evidence": "src/cards/entries/52006.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "52007",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Uses (4 charges). [action] Exhaust Alchemical Transmutation, spend 1 charge: Test [willpower] (0). For each point you succeed by, ga",
+      "evidence": "src/cards/entries/52007.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "52008",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Fight. This attack uses [willpower] instead of [combat]. You get +2 [willpower] for this attack. If you succeed, instead of its stan",
+      "evidence": "src/cards/entries/52008.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "52009",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[action]: Investigate. Your location gets -1 shroud for this investigation. [action] Discard Lantern: Deal 1 damage to an enemy at y",
+      "evidence": "src/cards/entries/52009.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "52010",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[action]: Fight. You get +2 [combat] for this attack. [action] Discard Gravedigger's Shovel: Discover 1 clue at your location (or re",
+      "evidence": "src/cards/entries/52010.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "52011",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Campaign Mode only. Peril. Hidden. Revelation - Secretly add this card to your hand. Forced - When the game ends or you are eliminat",
+      "evidence": "src/cards/entries/52011.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "52012",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Campaign Mode only. Peril. Hidden. Revelation - Secretly add this card to your hand. Forced - When the game ends or you are eliminat",
+      "evidence": "src/cards/entries/52012.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "52013",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Campaign Mode only. Peril. Hidden. Revelation - Secretly add this card to your hand. Forced - When the game ends or you are eliminat",
+      "evidence": "src/cards/entries/52013.js",
+      "reproduce": "按卡面打出、触发或投入本卡，校验费用、时机、结果及边界。"
+    },
+    {
+      "code": "52014",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Path to Carcosa Campaign Guide, with the following exceptions: - When gathering encounter sets",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToCurtainCall/definition.js:21",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52015",
+      "dimension": "implementation",
+      "reason": "幕背面已移动敌人并挂环境提示，未结算各变体的印刷迷雾、尖啸或蔓生检定。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToCurtainCall/behavior.js",
+      "reproduce": "推进对应 5201x 幕，进入带恐惧的地点然后触发幕背面的环境条件。"
+    },
+    {
+      "code": "52016",
+      "dimension": "implementation",
+      "reason": "幕背面已移动敌人并挂环境提示，未结算各变体的印刷迷雾、尖啸或蔓生检定。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToCurtainCall/behavior.js",
+      "reproduce": "推进对应 5201x 幕，进入带恐惧的地点然后触发幕背面的环境条件。"
+    },
+    {
+      "code": "52017",
+      "dimension": "implementation",
+      "reason": "幕背面已移动敌人并挂环境提示，未结算各变体的印刷迷雾、尖啸或蔓生检定。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToCurtainCall/behavior.js",
+      "reproduce": "推进对应 5201x 幕，进入带恐惧的地点然后触发幕背面的环境条件。"
+    },
+    {
+      "code": "52018",
+      "dimension": "implementation",
+      "reason": "存在剧院地点数据，揭示后对应的隐私卡检索或按恐惧降帷幕未接入。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToCurtainCall/definition.js",
+      "reproduce": "分别揭示两处房间，再检查检索区或当地帷幕值。"
+    },
+    {
+      "code": "52019",
+      "dimension": "implementation",
+      "reason": "存在剧院地点数据，揭示后对应的隐私卡检索或按恐惧降帷幕未接入。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToCurtainCall/definition.js",
+      "reproduce": "分别揭示两处房间，再检查检索区或当地帷幕值。"
+    },
+    {
+      "code": "52020",
+      "dimension": "implementation",
+      "reason": "敌人可生成，击败后进入手牌成为隐私牌、限制手牌上限与补给期弃牌恐惧缺读点。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToCurtainCall/definition.js",
+      "reproduce": "击败楼座里的 52020，观察隐私手牌及下一补给阶段。"
+    },
+    {
+      "code": "52021",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Path to Carcosa Campaign Guide, with the following exceptions: - When gathering encounter sets",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToTheLastKing/definition.js:20",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52022",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Find the [[Bystander]] asset with the fewest clues on it (among [[Bystander]] assets with at least one clue). Spawn the set-aside Di",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToTheLastKing/behavior.js:83",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52023",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Prey - Most clues. Hunter. Dianne Devine gets +3 [per_investigator] health. Forced - After any investigator performs a parley action",
+      "evidence": "src/cards/encounter-entries/returnToThePathToCarcosa/returnToTheLastKing/52023.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52023b",
+      "dimension": "implementation",
+      "reason": "新增剧情面已放入指定牌堆，现有推进未覆盖这些新增牌面的印刷翻面衔接。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToTheLastKing/behavior.js",
+      "reproduce": "用此牌作为待翻的最上方剧情牌推进密谋，检查对应人物和转换区域。"
+    },
+    {
+      "code": "52024",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Hunter. [action]: Parley. Test [intellect] (4). If you succeed, you manage to get through to them for just a moment; automatically e",
+      "evidence": "src/cards/encounter-entries/returnToThePathToCarcosa/returnToTheLastKing/52024.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52024b",
+      "dimension": "implementation",
+      "reason": "新增剧情面已放入指定牌堆，现有推进未覆盖这些新增牌面的印刷翻面衔接。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToTheLastKing/behavior.js",
+      "reproduce": "用此牌作为待翻的最上方剧情牌推进密谋，检查对应人物和转换区域。"
+    },
+    {
+      "code": "52025",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Each investigator at Dianne Devine's location cannot discover or take control of clues. Forced - At the beginning of the enemy phase",
+      "evidence": "src/cards/encounter-entries/returnToThePathToCarcosa/returnToTheLastKing/52025.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52026",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Revelation - Find the [[Bystander]] asset with the most clues on it, and put Party Guest into play at that asset's location. Investi",
+      "evidence": "src/cards/encounter-entries/returnToThePathToCarcosa/returnToTheLastKing/52026.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52027",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Revelation - Randomly resolve one of the Sickening Reality cards underneath the scenario reference card. Cannot be canceled.",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToTheLastKing/behavior.js:26",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52028",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Path to Carcosa Campaign Guide, with the following exceptions: - When gathering encounter sets",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToEchoesOfThePast/definition.js:20",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52029",
+      "dimension": "implementation",
+      "reason": "地图入场逻辑存在，地点正面对应的取线索、降帷幕与移动线索、抽遭遇或隐私卡限制未接入。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToEchoesOfThePast/definition.js",
+      "reproduce": "使地点入场并揭示，逐项触发对应行动、调查成功或限制。"
+    },
+    {
+      "code": "52030",
+      "dimension": "implementation",
+      "reason": "地图入场逻辑存在，地点正面对应的取线索、降帷幕与移动线索、抽遭遇或隐私卡限制未接入。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToEchoesOfThePast/definition.js",
+      "reproduce": "使地点入场并揭示，逐项触发对应行动、调查成功或限制。"
+    },
+    {
+      "code": "52031",
+      "dimension": "implementation",
+      "reason": "地图入场逻辑存在，地点正面对应的取线索、降帷幕与移动线索、抽遭遇或隐私卡限制未接入。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToEchoesOfThePast/definition.js",
+      "reproduce": "使地点入场并揭示，逐项触发对应行动、调查成功或限制。"
+    },
+    {
+      "code": "52032",
+      "dimension": "implementation",
+      "reason": "地图入场逻辑存在，地点正面对应的取线索、降帷幕与移动线索、抽遭遇或隐私卡限制未接入。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToEchoesOfThePast/definition.js",
+      "reproduce": "使地点入场并揭示，逐项触发对应行动、调查成功或限制。"
+    },
+    {
+      "code": "52033",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：While the number of the current act is greater than the number of the current agenda, Keeper of the Oath gains hunter. Forced - At t",
+      "evidence": "src/cards/encounter-entries/returnToThePathToCarcosa/returnToEchoesOfThePast/52033.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52034",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Path to Carcosa Campaign Guide, with the following exceptions: - When gathering encounter sets",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToTheUnspeakableOath/definition.js:18",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52035",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Ignore the text on the unrevealed side of [[Arkham Asylum]] locations. Objective - Find the Patient Confinement location with Daniel",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToTheUnspeakableOath/definition.js:34",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52036",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Ignore the text on the unrevealed side of [[Arkham Asylum]] locations. Objective - Find the Patient Confinement location with Daniel",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToTheUnspeakableOath/definition.js:34",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52037",
+      "dimension": "implementation",
+      "reason": "背面流程可生成敌人或以标记记账，缺现场按轮末造成恐惧和医务室摆脱检定的完整处理。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToTheUnspeakableOath/behavior.js",
+      "reproduce": "推进对应场景版本，轮末检查宿主恐惧；在医务室查看移除附属的检定。"
+    },
+    {
+      "code": "52038",
+      "dimension": "implementation",
+      "reason": "背面流程可生成敌人或以标记记账，缺现场按轮末造成恐惧和医务室摆脱检定的完整处理。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToTheUnspeakableOath/behavior.js",
+      "reproduce": "推进对应场景版本，轮末检查宿主恐惧；在医务室查看移除附属的检定。"
+    },
+    {
+      "code": "52039",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Peril. Revelation - You must either (choose one): - Forget something an investigator has \"remembered\" from an ability on a location.",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToTheUnspeakableOath/definition.js:40",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "52040",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Path to Carcosa Campaign Guide, with the following exceptions: - When gathering encounter sets",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToAPhantomOfTruth/definition.js:19",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52041",
+      "dimension": "implementation",
+      "reason": "可按地点变体布置，但印刷的对应正面效果（进入、弃牌、花费或敌人属性修正）未接入。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToAPhantomOfTruth/definition.js",
+      "reproduce": "运行该地点变体并揭示，按本卡正面核对进入触发、花费或敌人属性。"
+    },
+    {
+      "code": "52042",
+      "dimension": "implementation",
+      "reason": "可按地点变体布置，但印刷的对应正面效果（进入、弃牌、花费或敌人属性修正）未接入。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToAPhantomOfTruth/definition.js",
+      "reproduce": "运行该地点变体并揭示，按本卡正面核对进入触发、花费或敌人属性。"
+    },
+    {
+      "code": "52043",
+      "dimension": "implementation",
+      "reason": "可按地点变体布置，但印刷的对应正面效果（进入、弃牌、花费或敌人属性修正）未接入。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToAPhantomOfTruth/definition.js",
+      "reproduce": "运行该地点变体并揭示，按本卡正面核对进入触发、花费或敌人属性。"
+    },
+    {
+      "code": "52044",
+      "dimension": "implementation",
+      "reason": "可按地点变体布置，但印刷的对应正面效果（进入、弃牌、花费或敌人属性修正）未接入。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToAPhantomOfTruth/definition.js",
+      "reproduce": "运行该地点变体并揭示，按本卡正面核对进入触发、花费或敌人属性。"
+    },
+    {
+      "code": "52045",
+      "dimension": "implementation",
+      "reason": "可按地点变体布置，但印刷的对应正面效果（进入、弃牌、花费或敌人属性修正）未接入。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToAPhantomOfTruth/definition.js",
+      "reproduce": "运行该地点变体并揭示，按本卡正面核对进入触发、花费或敌人属性。"
+    },
+    {
+      "code": "52046",
+      "dimension": "implementation",
+      "reason": "可按地点变体布置，但印刷的对应正面效果（进入、弃牌、花费或敌人属性修正）未接入。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToAPhantomOfTruth/definition.js",
+      "reproduce": "运行该地点变体并揭示，按本卡正面核对进入触发、花费或敌人属性。"
+    },
+    {
+      "code": "52047",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Revelation - Check Campaign Log. - If you have more (or equal) Doubt than Conviction, move The Organist 1 location away from the nea",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToAPhantomOfTruth/definition.js:27",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "52048",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Path to Carcosa Campaign Guide, with the following exceptions: - When gathering encounter sets",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToThePallidMask/definition.js:18",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52049",
+      "dimension": "implementation",
+      "reason": "地下墓穴候选已加入牌库，缺揭示后的地块摆放和位置／连接联动。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToThePallidMask/behavior.js",
+      "reproduce": "把本卡置于墓穴牌库顶并按章揭示，观察地图位置、连接和配套地点的移动。"
+    },
+    {
+      "code": "52050",
+      "dimension": "implementation",
+      "reason": "地下墓穴候选已加入牌库，缺揭示后的地块摆放和位置／连接联动。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToThePallidMask/behavior.js",
+      "reproduce": "把本卡置于墓穴牌库顶并按章揭示，观察地图位置、连接和配套地点的移动。"
+    },
+    {
+      "code": "52051",
+      "dimension": "implementation",
+      "reason": "地下墓穴候选已加入牌库，缺揭示后的地块摆放和位置／连接联动。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToThePallidMask/behavior.js",
+      "reproduce": "把本卡置于墓穴牌库顶并按章揭示，观察地图位置、连接和配套地点的移动。"
+    },
+    {
+      "code": "52052",
+      "dimension": "implementation",
+      "reason": "地下墓穴候选已加入牌库，缺揭示后的地块摆放和位置／连接联动。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToThePallidMask/behavior.js",
+      "reproduce": "把本卡置于墓穴牌库顶并按章揭示，观察地图位置、连接和配套地点的移动。"
+    },
+    {
+      "code": "52053",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Hunter. Forced - When Malformed Skeleton would resolve its hunter keyword: If there are no investigators within 2 locations of Malfo",
+      "evidence": "src/cards/encounter-entries/returnToThePathToCarcosa/returnToThePallidMask/52053.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52054",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Path to Carcosa Campaign Guide, with the following exceptions: - When gathering encounter sets",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToBlackStarsRise/definition.js:17",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52055",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[action] If there are no clues on Cloister: Parley. Test [willpower] or [intellect] (4). If you succeed, remember that you have \"fou",
+      "evidence": "src/cards/encounter-entries/returnToThePathToCarcosa/returnToBlackStarsRise/52055.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52056",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[action] If there are no clues on Knight's Hall: Test [combat] or [agility] (3). If you succeed, remember that you have \"found a gui",
+      "evidence": "src/cards/encounter-entries/returnToThePathToCarcosa/returnToBlackStarsRise/52056.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52057",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Peril. Hidden. Revelation - Secretly add Hastur's Gaze to your hand. Forced - After 1 or more doom is placed on the \"c\" agenda: Take",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToBlackStarsRise/definition.js:30",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "52058",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Peril. Hidden. Revelation - Secretly add Hastur's Grasp to your hand. Forced - After 1 or more doom is placed on the \"a\" agenda: Tak",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToBlackStarsRise/definition.js:30",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "52059",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Path to Carcosa Campaign Guide, with the following exceptions: - When gathering encounter sets",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToDimCarcosa/definition.js:19",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52060",
+      "dimension": "implementation",
+      "reason": "伤害下限钩子覆盖哈斯塔生命，但缺哈斯塔生命高于 2/人时禁止宫殿翻面的判定。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToDimCarcosa/behavior.js",
+      "reproduce": "将敌人保持在较高剩余生命时尝试翻面。"
+    },
+    {
+      "code": "52060b",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Check Campaign Log: - If Hastur (The King in Yellow) is the version of Hastur that is in play: Put the set-aside Recesses of Your Ow",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToDimCarcosa/definition.js:49",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52061",
+      "dimension": "implementation",
+      "reason": "可随宫殿背面入场，印刷的意志归零、哈斯塔不能离开或不能被攻击的持续限制未完整接入。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToDimCarcosa/behavior.js",
+      "reproduce": "令对应哈斯塔版本触发并翻面，再验证检定、移动或攻击限制。"
+    },
+    {
+      "code": "52061b",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Remember that you \"know the secret.\" Flip this card back over. For the remainder of the game, it cannot be flipped over again.",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToDimCarcosa/definition.js:49",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52062",
+      "dimension": "implementation",
+      "reason": "可随宫殿背面入场，印刷的意志归零、哈斯塔不能离开或不能被攻击的持续限制未完整接入。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToDimCarcosa/behavior.js",
+      "reproduce": "令对应哈斯塔版本触发并翻面，再验证检定、移动或攻击限制。"
+    },
+    {
+      "code": "52062b",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Remember that you \"know the secret.\" Flip this card back over. For the remainder of the game, it cannot be flipped over again.",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToDimCarcosa/definition.js:49",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52063",
+      "dimension": "implementation",
+      "reason": "可随宫殿背面入场，印刷的意志归零、哈斯塔不能离开或不能被攻击的持续限制未完整接入。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToDimCarcosa/behavior.js",
+      "reproduce": "令对应哈斯塔版本触发并翻面，再验证检定、移动或攻击限制。"
+    },
+    {
+      "code": "52063b",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Remember that you \"know the secret.\" Flip this card back over. For the remainder of the game, it cannot be flipped over again.",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToDimCarcosa/definition.js:49",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52064",
+      "dimension": "implementation",
+      "reason": "高阶祭司可进遭遇牌库，缺其攻击时的恶灵附身揭示及被击败发疯分支。",
+      "evidence": "content/campaigns/returnToThePathToCarcosa/scenarios/returnToDimCarcosa/definition.js",
+      "reproduce": "强制让高阶祭司攻击并准备指定卡在应揭示的牌库顶。"
+    },
+    {
+      "code": "52065",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Peril. Hidden. Revelation - You must either secretly add Delusory Evils to your hand, or place 1 doom on the current agenda and disc",
+      "evidence": "content/packs/returnCampaign/manifests.js",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "52066",
+      "dimension": "implementation",
+      "reason": "显现以帷幕为难度发起意志检定，失败只施加 1 恐惧，缺失去 1 个行动。",
+      "evidence": "src/cards/encounter-entries/returnToThePathToCarcosa/_shared/decaying_reality/52066.js",
+      "reproduce": "抽到本卡后令意志检定失败，比较结算前后的恐惧和行动数。"
+    },
+    {
+      "code": "52067",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Revelation - Discard events from your hand with a total printed resource cost of at least X, where X is the shroud value of your loc",
+      "evidence": "content/packs/returnCampaign/manifests.js",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "52068",
+      "dimension": "evidence",
+      "reason": "已定位所属战役包，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Maggot Swarm's location gets +2 shroud. While Maggot Swarm is at a location with no clues, it gains hunter.",
+      "evidence": "content/packs/returnCampaign/manifests.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52069",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Prey - Lowest remaining sanity only. Hunter. While engaged with an investigator with remaining sanity 4 or fewer, swap Preying Byakh",
+      "evidence": "src/cards/encounter-entries/returnToThePathToCarcosa/_shared/hasturs_envoys/52069.js",
+      "reproduce": "开启所属重返章节，让该卡实际入场或推进到其所在阶段，依卡面逐条核对。"
+    },
+    {
+      "code": "52070",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Peril. Revelation - Attach The Sign of Hastur to either the current agenda or the current act. Limit 1 per agenda/act. Forced - Each",
+      "evidence": "content/packs/returnCampaign/manifests.js",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "52071",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Peril. Hidden. Revelation - Secretly add this card to your hand. Forced - When your turn ends, if you did not perform at least 1 pla",
+      "evidence": "content/packs/returnCampaign/manifests.js",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "52072",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Peril. Hidden. Revelation - Secretly add this card to your hand. Forced - When your turn ends, if you did not perform at least 1 res",
+      "evidence": "content/packs/returnCampaign/manifests.js",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "52073",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Peril. Hidden. Revelation - Secretly add this card to your hand. Forced - When your turn ends, if you did not perform at least 1 mov",
+      "evidence": "content/packs/returnCampaign/manifests.js",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "52074",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Peril. Hidden. Revelation - Secretly add this card to your hand. Forced - When your turn ends, if you did not perform at least 1 dra",
+      "evidence": "content/packs/returnCampaign/manifests.js",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "52075",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Surge. Revelation - If you have 1 or more hidden cards in your hand, take 1 horror.",
+      "evidence": "content/packs/returnCampaign/manifests.js",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "52076",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Peril. Revelation - Test [willpower] (3). For each point you fail by, you must choose a different option: - Lose 2 resources. - Take",
+      "evidence": "content/packs/returnCampaign/manifests.js",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "52077",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Revelation - Put Melancholy into play in your threat area. Increase the resource cost of each card in your hand by 1. Forced - At th",
+      "evidence": "content/packs/returnCampaign/manifests.js",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "52078",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Revelation - Put Painful Reflection into play in your threat area. Forced - When you play an event: Reveal a random token from the c",
+      "evidence": "content/packs/returnCampaign/manifests.js",
+      "reproduce": "把本卡置于该章遭遇牌库顶并抽取，核对卡面显现、区域变更和待决选择。"
+    },
+    {
+      "code": "53001",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53002",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53003",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53004",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53005",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53006",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53007",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53008",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53009",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53010",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53011",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53012",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53013",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53014",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53015",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53016",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53017",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53018",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53019",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53020",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53021",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53022",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53023",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53024",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53025",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53026",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53027",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53028",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53029",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53029b",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53030",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53030b",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53031",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53032",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53032b",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53033",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53034",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53034b",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53035",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53036",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53037",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53038",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53039",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53040",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53041",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53042",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53043",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53044",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53045",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53046",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53046b",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53047",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53048",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53049",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53050",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53051",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53052",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53053",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53054",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53055",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53056",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53057",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53058",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53059",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53060",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53061",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53062",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53063",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53064",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53065",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53066",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53067",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53068",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53069",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53070",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53071",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53072",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53073",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53074",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53075",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53076",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53077",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53078",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53079",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "53080",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54001",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54002",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54003",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54004",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54005",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54006",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54007",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54008",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54009",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54010",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54011",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54012",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54013",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54014",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54015",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54016",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54017",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54018",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54019",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54020",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54021",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54022",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54023",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54024",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54025",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54026",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54027",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54028",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54029",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54030",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54031",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54032",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54033",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54034",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54035",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54036",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54037",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54037b",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54038",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54038b",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54039",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54039b",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54040",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54041",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54042",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54043",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54044",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54045",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54046",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54047",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54048",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54049",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54050",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54051",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54052",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54053",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54054",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54055",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54056",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54057",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54058",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54059",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54060",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54061",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54062",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54063",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54064",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54065",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54066",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54067",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54068",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54069",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54070",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54071",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54072",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54073",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54074",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    },
+    {
+      "code": "54075",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。",
+      "evidence": "src/cards/cards-data.js; src/cards/entries/_reprint-aliases.js; content/registered.js",
+      "reproduce": "在目录按卡号检查 availability，查询玩家／遭遇条目索引、重印别名及战役组合根。"
+    }
+  ],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "fail",
+    "primitives": "pass",
+    "interaction": "fail",
+    "evidence": "fail",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/acceptance-50-a.test.mjs",
+      "test": "50006 打出后支付费用、消耗一次行动并获得十个资源",
+      "codes": [
+        "50006"
+      ]
+    },
+    {
+      "file": "tests/acceptance-50-a.test.mjs",
+      "test": "50022 从遭遇牌库抽取后在印刷指定地点生成并携带关键词",
+      "codes": [
+        "50022"
+      ]
+    },
+    {
+      "file": "tests/acceptance-50-a.test.mjs",
+      "test": "50023 从遭遇牌库抽取后在印刷指定地点生成并携带关键词",
+      "codes": [
+        "50023"
+      ]
+    },
+    {
+      "file": "tests/acceptance-50-a.test.mjs",
+      "test": "51003 无线索时不能打出，有线索时抽三张且不发现线索",
+      "codes": [
+        "51003"
+      ]
+    },
+    {
+      "file": "tests/acceptance-50-a.browser.mjs",
+      "test": "50006 / 51003 可从手牌区打出并结算 (1440)",
+      "codes": [
+        "50006",
+        "51003"
+      ]
+    },
+    {
+      "file": "tests/acceptance-50-a.browser.mjs",
+      "test": "50006 / 51003 可从手牌区打出并结算 (390)",
+      "codes": [
+        "50006",
+        "51003"
+      ]
+    }
+  ],
+  "notes": "入审时 368 张均为 unverified。53–54 无注册的重返战役和玩家包；50–52 的开局或条目存在只作为定位线索。证据缺口保留未验收。"
+}

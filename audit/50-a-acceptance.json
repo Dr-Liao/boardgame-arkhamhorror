@@ -1,0 +1,2993 @@
+{
+  "schemaVersion": 1,
+  "unit": "50-a",
+  "profile": {
+    "id": "return-series-2026-11",
+    "scope": "重返系列 50–54 段（rtnotz、rtdwl、rtptc、rttfa、rttcu）的 368 条目录记录，含独立关联面。",
+    "basis": "按印刷卡面核对本地引擎读点、原语、交互和可执行证据。未通过项保留未验收并记录在 50-a 报告。",
+    "houseRules": [
+      "结构卡按真实开局、区域入场和运行时行为判定。",
+      "关联面分别核对，复用同一实体行为。"
+    ],
+    "sources": [
+      "src/cards/cards-data.js",
+      "content/registered.js",
+      "docs/test/验收-50-a-重返系列.json"
+    ]
+  },
+  "summary": {
+    "total": 368,
+    "verified": 4,
+    "unverified": 364,
+    "unimplemented": 0,
+    "testsPassed": 9
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-50-a.test.mjs",
+      "sha256": "da58d99627a1b8e860e19bf0a1118e621d8e55b57c4b0abbe302867b0810fbbe"
+    }
+  ],
+  "entries": [
+    {
+      "code": "50001",
+      "name": "体能训练",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[fast] Spend 1 resource: You get +1 [willpower] for this skill test. [fast] Spend 1 resource: You get +1 [combat] for this skill tes"
+    },
+    {
+      "code": "50002",
+      "name": "炸药爆破",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Choose either your location or a connecting location. Deal 3 damage to each enemy and to each investigator at the chosen location. T"
+    },
+    {
+      "code": "50003",
+      "name": "超感知",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[fast] Spend 1 resource: You get +1 [intellect] for this skill test. [fast] Spend 1 resource: You get +1 [agility] for this skill te"
+    },
+    {
+      "code": "50004",
+      "name": "屏障",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Attach to your location. Non-[[Elite]] enemies cannot move into or spawn at attached location. Each time a non-[[Elite]] enemy would"
+    },
+    {
+      "code": "50005",
+      "name": "沉重打击",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[fast] Spend 1 resource: You get +1 [combat] for this skill test. [fast] Spend 1 resource: You get +1 [agility] for this skill test."
+    },
+    {
+      "code": "50006",
+      "name": "百战百胜",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-50-a.test.mjs",
+          "test": "50006 打出后支付费用、消耗一次行动并获得十个资源"
+        }
+      ]
+    },
+    {
+      "code": "50007",
+      "name": "神秘研究",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[fast] Spend 1 resource: You get +1 [willpower] for this skill test. [fast] Spend 1 resource: You get +1 [intellect] for this skill "
+    },
+    {
+      "code": "50008",
+      "name": "记忆抹消",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Fast. Play after a phase begins. Choose a non-[[Elite]] enemy in your location. Until the end of the phase, reduce the chosen enemy'"
+    },
+    {
+      "code": "50009",
+      "name": "深挖",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[fast] Spend 1 resource: You get +1 [willpower] for this skill test. [fast] Spend 1 resource: You get +1 [agility] for this skill te"
+    },
+    {
+      "code": "50010",
+      "name": "幸运兔脚",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[reaction] After you fail a skill test, exhaust Rabbit's Foot: Search the top X cards of your deck for a card, draw it, and shuffle "
+    },
+    {
+      "code": "50011",
+      "name": "重返聚集于此",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "开局只把选中的阁楼和地窖写进放一边区，未入选版本未按卡背记入移出游戏区。"
+    },
+    {
+      "code": "50012",
+      "name": "神秘通道",
+      "type": "act",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Objective - Only investigators in the Guest Hall may spend the requisite number of clues, as a group, to advance."
+    },
+    {
+      "code": "50013",
+      "name": "书房",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[action] [action]: Draw 3 cards. Only the lead investigator can activate this ability. Forced - When an enemy attempts to spawn at a"
+    },
+    {
+      "code": "50014",
+      "name": "会客厅",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "会客厅没有「不能进行抽牌行动」的地点规则读点。"
+    },
+    {
+      "code": "50015",
+      "name": "卧室",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After you fail a skill test while investigating the Bedroom: Discard 1 card at random from your hand."
+    },
+    {
+      "code": "50016",
+      "name": "浴室",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "浴室在检定结束后按结果近似结束回合，缺印刷要求的逐枚标记触发。"
+    },
+    {
+      "code": "50017",
+      "name": "走廊",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "走廊揭示后正确放置阁楼、地窖和客厅，但这些牌仍留在公开的「放在一边」区。"
+    },
+    {
+      "code": "50018",
+      "name": "阁楼",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "正面能放置关联地点，放上地图后关联牌仍留在「放在一边」区。"
+    },
+    {
+      "code": "50019",
+      "name": "开阔坟场",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After you reveal Field of Graves: Test [willpower] (4). For each point you fail by, discard 1 card at random from each play"
+    },
+    {
+      "code": "50020",
+      "name": "地窖",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "正面能放置关联地点，放上地图后关联牌仍留在「放在一边」区。"
+    },
+    {
+      "code": "50021",
+      "name": "食尸鬼洞穴",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After you reveal Ghoul Pits: Test [agility] (3). For each point you fail by, search the encounter deck and discard pile for"
+    },
+    {
+      "code": "50022",
+      "name": "嗜尸鬼",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-50-a.test.mjs",
+          "test": "50022 从遭遇牌库抽取后在印刷指定地点生成并携带关键词"
+        }
+      ]
+    },
+    {
+      "code": "50023",
+      "name": "深渊食尸鬼",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-50-a.test.mjs",
+          "test": "50023 从遭遇牌库抽取后在印刷指定地点生成并携带关键词"
+        }
+      ]
+    },
+    {
+      "code": "50024",
+      "name": "狂信徒之印",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Revelation - Each investigator with 3 or fewer cards in hand must take 1 damage and 1 horror. Each investigator with 4 or more cards"
+    },
+    {
+      "code": "50025",
+      "name": "重返午夜假面",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in the Night of the Zealot Campaign Guide, with the following exceptions: - When gathering encounter "
+    },
+    {
+      "code": "50026a",
+      "name": "猎人还是猎物？",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[action]: Resign. You don't want to risk taking too long, so you head to safety with the information you've gathered."
+    },
+    {
+      "code": "50026b",
+      "name": "纳罗加斯",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Spawn - Engaged with Prey. Prey - Nearest to another [[Cultist]] enemy. Hunter. Narôgath gets +3 health per investigator. While Narô"
+    },
+    {
+      "code": "50027",
+      "name": "东城区",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "东城区入场后，没有每场一次为受控支援添加两个弹药或补给的行动。"
+    },
+    {
+      "code": "50028",
+      "name": "北区",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[action]: Move to any [[Arkham]] location. (Limit once per game.)"
+    },
+    {
+      "code": "50029",
+      "name": "米斯卡塔尼克大学",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[action] Take 2 horror: Gain 1 clue from the token pool. (Limit once per game.)"
+    },
+    {
+      "code": "50030",
+      "name": "河岸城",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "河岸城没有弃意志图标牌并移除异教徒毁灭的组限行动。"
+    },
+    {
+      "code": "50031",
+      "name": "假面惊骇",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "毁灭分支按有资格的调查员人数判断。只要有人持有至少两个线索就跳过毁灭，无论恐惧是否实际放置。"
+    },
+    {
+      "code": "50032a",
+      "name": "重返地底噬魔",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in the Night of the Zealot Campaign Guide, with the following exceptions: - When gathering encounter "
+    },
+    {
+      "code": "50032b",
+      "name": "凡尘终陨之墟",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Vault of Earthly Demise cannot leave play. Umôrdhoth gets +X health per investigator and gets +X fight, where X is the number of res"
+    },
+    {
+      "code": "50033",
+      "name": "阿卡姆密林",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After an investigator at this location succeeds at a skill test on a treachery: That treachery gains surge. (Group limit on"
+    },
+    {
+      "code": "50034",
+      "name": "阿卡姆密林",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After you reveal a chaos token from the chaos bag while investigating this location: Reveal and resolve an additional chaos"
+    },
+    {
+      "code": "50035",
+      "name": "阿卡姆密林",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "地点把所有传入 enemyDamageAmount 的伤害钳到 1，卡面只限制每次攻击伤害。"
+    },
+    {
+      "code": "50036",
+      "name": "阿卡姆密林",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After you reveal a chaos token from the chaos bag during an evasion attempt at this location: Reveal and resolve an additio"
+    },
+    {
+      "code": "50037",
+      "name": "乌默尔多斯的饥饿",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Revelation - Each investigator must discard 1 card at random from his or her hand. Each investigator who has no cards in his or her "
+    },
+    {
+      "code": "50038",
+      "name": "食墓鬼",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After Grave-Eater attacks you: Discard 1 card at random from your hand."
+    },
+    {
+      "code": "50039",
+      "name": "乌默尔多斯的祭司",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Prey - Fewest cards in hand. While engaged with an investigator with no cards in his or her hand, Acolyte of Umôrdhoth cannot be eva"
+    },
+    {
+      "code": "50040",
+      "name": "地底深寒",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Revelation - Test [willpower] (3). For each point you fail by, you must discard 1 card at random from your hand. For each card you c"
+    },
+    {
+      "code": "50041",
+      "name": "噬魔信徒",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Spawn - Farthest empty location. Forced - After you spawn Disciple of the Devourer: You must either place 1 doom on it or place 1 of"
+    },
+    {
+      "code": "50042",
+      "name": "掠尸者",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Spawn - Farthest empty location. Forced - At the end of the mythos phase: Place 1 doom on Corpse-Taker. Forced - At the end of the e"
+    },
+    {
+      "code": "50043",
+      "name": "乌默尔多斯的面具",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Revelation - Attach to the farthest [[Cultist]] enemy and place 1 doom on that enemy. If there are no [[Cultist]] enemies in play, s"
+    },
+    {
+      "code": "50044",
+      "name": "耶利米·皮尔斯",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Spawn - Your House. Otherwise, Rivertown. [action]: Parley. Add Jeremiah Pierce to the victory display. Then, test [willpower] (4). "
+    },
+    {
+      "code": "50045",
+      "name": "比利·库伯",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Spawn - Easttown. Forced - After a [[Monster]] enemy is defeated at Billy Cooper's location: Add Billy Cooper to the victory display"
+    },
+    {
+      "code": "50046",
+      "name": "阿尔玛·希尔",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "谈判用 discardEncounterTop(3) 替代逐张抽取并结算三张遭遇卡。"
+    },
+    {
+      "code": "51001",
+      "name": "子弹袋",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：You have two additional hand slots, which can only be used to hold [[Weapon]] assets. While you have [[Weapon]] assets held in 2 or "
+    },
+    {
+      "code": "51002",
+      "name": "金属棍棒",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[action]: Fight. You get +2 [combat] for this attack. If you perform this attack against an enemy engaged with another investigator,"
+    },
+    {
+      "code": "51003",
+      "name": "荒唐的素描像",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-50-a.test.mjs",
+          "test": "51003 无线索时不能打出，有线索时抽三张且不发现线索"
+        }
+      ]
+    },
+    {
+      "code": "51004",
+      "name": "奇怪的溶液",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Researched. Uses (3 supplies). [action] Spend 1 supply and exhaust Strange Solution: Choose an investigator at your location to gain"
+    },
+    {
+      "code": "51005",
+      "name": "走私品",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Choose an asset controlled by an investigator at your location. Either (choose one): - Place 2 ammo or supply tokens on that asset a"
+    },
+    {
+      "code": "51006",
+      "name": "逃跑本能",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Fast. Play when an enemy enters your location. Immediately move to a connecting location. (The enemy still enters your previous loca"
+    },
+    {
+      "code": "51007",
+      "name": "礼寻术",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Uses (3 charges). [action] Spend 1 charge: Investigate. Investigate using [willpower] instead of [intellect]. You get +2 [willpower]"
+    },
+    {
+      "code": "51008",
+      "name": "净心术",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Uses (4 charges). [action] Spend 1 charge: Heal 2 horror from among investigators at your location."
+    },
+    {
+      "code": "51009",
+      "name": "哎呀！",
+      "type": "event",
+      "status": "pending",
+      "dimension": "interaction",
+      "reason": "已有真实引擎行为用例，缺本卡相关界面在 1440 与 390 下的完整操作证据。"
+    },
+    {
+      "code": "51010",
+      "name": "随机应变",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "interaction",
+      "reason": "已有真实引擎行为用例，缺本卡相关界面在 1440 与 390 下的完整操作证据。"
+    },
+    {
+      "code": "51011",
+      "name": "穿越门扉",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "牌库顶是普通牌时直接批量移除副本，跳过印刷要求的抽取及 cardDrawn 窗口。弱点分支走正常抽取。"
+    },
+    {
+      "code": "51012",
+      "name": "重返课外活动",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Dunwich Legacy Campaign Guide, with the following exceptions: - When gathering encounter sets,"
+    },
+    {
+      "code": "51013",
+      "name": "沃伦天文台",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After you discover 1 or more clues at Warren Observatory: Discard 3 cards from the top of your deck for each clue just disc"
+    },
+    {
+      "code": "51014",
+      "name": "被奴役的保安",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Hunter. Retaliate. Forced - After Enthralled Security Guard attacks you: Discard the top 2 cards of your deck. Forced - After Enthra"
+    },
+    {
+      "code": "51015",
+      "name": "重返百赌百胜",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Dunwich Legacy Campaign Guide, with the following exceptions: - When gathering encounter sets,"
+    },
+    {
+      "code": "51016",
+      "name": "俱乐部大厅",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After Clover Club Lounge is revealed: Put the set-aside Clover Club Stage into play. While it is Act 1, Clover Club Lounge "
+    },
+    {
+      "code": "51017",
+      "name": "俱乐部舞台",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Clover Club Bar is connected to Clover Club Stage. While it is Act 1, Clover Club Stage gains: \"[action] Spend 1 resource: Place tha"
+    },
+    {
+      "code": "51018",
+      "name": "骗术穿帮",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Surge. Revelation - Each player who has \"cheated\" must lose 2 resources and take 1 damage."
+    },
+    {
+      "code": "51019",
+      "name": "提高赌注",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Revelation - You must (choose one): - Remember that you have \"cheated.\" - Lose 5 resources. - Put Raise the Stakes into play in your"
+    },
+    {
+      "code": "51020",
+      "name": "重返博物馆之夜",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Dunwich Legacy Campaign Guide, with the following exceptions: - When gathering encounter sets,"
+    },
+    {
+      "code": "51021",
+      "name": "展厅",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After you fail a skill test while investigating this location: Take 1 damage."
+    },
+    {
+      "code": "51022",
+      "name": "展厅",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[action] [action]: Gain 2 clues (from the token bank). Then, if Hunting Horror is in play, place 1 resource on Shadow-spawned. Other"
+    },
+    {
+      "code": "51023",
+      "name": "黑暗指令",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Revelation - Attach Dark Bidding to Hunting Horror, even if it is out of play. Dark Bidding remains attached to Hunting Horror if it"
+    },
+    {
+      "code": "51024",
+      "name": "混沌夜色",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Revelation - Place 1 resource on Shadow-spawned, even if it is out of play."
+    },
+    {
+      "code": "51025",
+      "name": "重返疯狂列车",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Dunwich Legacy Campaign Guide, with the following exceptions: - When gathering encounter sets,"
+    },
+    {
+      "code": "51026",
+      "name": "烟雾缭绕",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。"
+    },
+    {
+      "code": "51026b",
+      "name": "列车主宰",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Spawn - Leftmost location. Hunter. Massive. Forced - When The Conductor is defeated: Attach it to the current agenda. After you adva"
+    },
+    {
+      "code": "51027",
+      "name": "现实的裂口(版本二)",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Remove the leftmost location from the game (or place it in the victory display if it has Victory X and no clues on it). Each investi"
+    },
+    {
+      "code": "51028",
+      "name": "车头",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Engine Car is connected to the location to the left of it. Engine Car cannot be investigated. Forced - After you reveal Engine Car: "
+    },
+    {
+      "code": "51029",
+      "name": "货车",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Freight Car is connected to the locations to the left and right of it. Forced - At the end of the round: Each investigator on the Fr"
+    },
+    {
+      "code": "51030",
+      "name": "行李车厢",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Baggage Car is connected to the locations to the left and right of it. Baggage Car cannot be investigated. [action] Choose and disca"
+    },
+    {
+      "code": "51031",
+      "name": "火车机修工",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[action] If Engineer is ready: Parley. Test [willpower] or [intellect] (4). If you succeed, take control of Engineer. If you already"
+    },
+    {
+      "code": "51032",
+      "name": "重返血色祭坛",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Dunwich Legacy Campaign Guide, with the following exceptions: - When gathering encounter sets,"
+    },
+    {
+      "code": "51033",
+      "name": "公共空地",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "新版公共空地登记为起始地点，未登记禁止抽牌与资源行动的地点规则。"
+    },
+    {
+      "code": "51034",
+      "name": "毕晓普河",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "新版村庄地点只有变体定义，未接上卡面的专属规则及共用「无线索时抽取压在地点下的遭遇牌」行动。"
+    },
+    {
+      "code": "51035",
+      "name": "火灾废墟",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "新版村庄地点只有变体定义，未接上卡面的专属规则及共用「无线索时抽取压在地点下的遭遇牌」行动。"
+    },
+    {
+      "code": "51036",
+      "name": "奥斯本杂货店",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "新版村庄地点只有变体定义，未接上卡面的专属规则及共用「无线索时抽取压在地点下的遭遇牌」行动。"
+    },
+    {
+      "code": "51037",
+      "name": "自治教堂",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "新版村庄地点只有变体定义，未接上卡面的专属规则及共用「无线索时抽取压在地点下的遭遇牌」行动。"
+    },
+    {
+      "code": "51038",
+      "name": "芦苇屋",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "新版村庄地点只有变体定义，未接上卡面的专属规则及共用「无线索时抽取压在地点下的遭遇牌」行动。"
+    },
+    {
+      "code": "51039",
+      "name": "学校",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "新版村庄地点只有变体定义，未接上卡面的专属规则及共用「无线索时抽取压在地点下的遭遇牌」行动。"
+    },
+    {
+      "code": "51040",
+      "name": "受雇枪手",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Each [[Criminal]] enemy (including Hired Gun) gains: \"Hunter. Prey - Most resources.\" Each copy of Hunted Down gains peril and surge"
+    },
+    {
+      "code": "51041",
+      "name": "重返无人知晓",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Dunwich Legacy Campaign Guide, with the following exceptions: - When gathering encounter sets,"
+    },
+    {
+      "code": "51042",
+      "name": "犹格·索托斯之子",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "有子嗣池和数值数据，尚无用例证实本变体专属的额外移动或进出地点引发的意志检定。"
+    },
+    {
+      "code": "51043",
+      "name": "犹格·索托斯之子",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "生命按人数的表把 +2/人和相邻变体的 +1/人对调。"
+    },
+    {
+      "code": "51044",
+      "name": "犹格·索托斯之子",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "生命按人数的表把 +2/人和相邻变体的 +1/人对调。"
+    },
+    {
+      "code": "51045",
+      "name": "犹格·索托斯之子",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "有子嗣池和数值数据，尚无用例证实本变体专属的额外移动或进出地点引发的意志检定。"
+    },
+    {
+      "code": "51046",
+      "name": "不可察觉的生物",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Surge. Revelation - Attach to a Brood of Yog-Sothoth enemy in play without a copy of Imperceptible Creature attached. Remove 1 clue "
+    },
+    {
+      "code": "51047",
+      "name": "重返毁灭之地",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Dunwich Legacy Campaign Guide, with the following exceptions: - When gathering encounter sets,"
+    },
+    {
+      "code": "51048",
+      "name": "山脚",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Base of the Hill is connected to each copy of Diverging Path. Forced - After you discover 1 or more clues from Base of the Hill: Spe"
+    },
+    {
+      "code": "51049",
+      "name": "上山道路",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Ascending Path is connected to each copy of Altered Path. Forced - After you discover 1 or more clues from Ascending Path: Spend tho"
+    },
+    {
+      "code": "51050",
+      "name": "废弃营地",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After you reveal Abandoned Camp: Lose 2 resources for each action you have performed this round (including this one, if app"
+    },
+    {
+      "code": "51051",
+      "name": "无底湖泊",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After you reveal Fathomless Lake: If you have 2 or more actions remaining, place 1 doom on the current agenda."
+    },
+    {
+      "code": "51052",
+      "name": "内奥米·欧巴尼恩",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：You get +1 [intellect] and +1 [combat]. [reaction] When an investigator at your location reveals a non-[auto_fail] chaos token durin"
+    },
+    {
+      "code": "51053",
+      "name": "重返迷失时空",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Dunwich Legacy Campaign Guide, with the following exceptions: - When gathering encounter sets,"
+    },
+    {
+      "code": "51054",
+      "name": "突破(版本二)",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Forced - After you are moved to a location by an encounter card effect: Take 1 horror."
+    },
+    {
+      "code": "51055",
+      "name": "超越领域(版本二)",
+      "type": "act",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[action]: Discard the top 3 cards of the encounter deck. Choose a location discarded by this effect and resolve its 'revelation' abi"
+    },
+    {
+      "code": "51056",
+      "name": "赛斯·毕晓普",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Retaliate. Forced - When Seth Bishop attacks you during the enemy phase: Either move to Another Dimension after this attack, or Seth"
+    },
+    {
+      "code": "51057",
+      "name": "彼端领域",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Yog-Sothoth is immune to player card effects, cannot take damage, and cannot leave Realms Beyond. As an additional cost for you to l"
+    },
+    {
+      "code": "51058",
+      "name": "难以理解的阶梯",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Revelation - Put Indecipherable Stairs into play and discard the top 3 cards of your deck. Forced - After you leave Indecipherable S"
+    },
+    {
+      "code": "51059",
+      "name": "高耸辉地",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Revelation - Put Towering Luminosity into play and either place 1 doom on it or take 2 damage. Forced - After you fail a test while "
+    },
+    {
+      "code": "51060",
+      "name": "不稳定的漩涡",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Revelation - Put Unstable Vortex into play and discard 1 copy of Tear Through Space, if able. Forced - At the end of your turn, if y"
+    },
+    {
+      "code": "51061",
+      "name": "萦绕的回忆",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Revelation - For each card in your hand, if there is a copy of that card in your discard pile, take 1 horror (to a maximum of 3 horr"
+    },
+    {
+      "code": "51062",
+      "name": "恶意欢迎",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Peril. Revelation - Choose two of the following actions (investigate, fight, evade, move, or play). For the remainder of the round, "
+    },
+    {
+      "code": "51063",
+      "name": "无限门廊",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Revelation - Attach to your location. As an additional cost to move into or out of attached location, discard the top card of your d"
+    },
+    {
+      "code": "51064",
+      "name": "复苏之邪",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Peril. Revelation - You must either (choose one): - Draw the top 2 cards of the encounter deck. - Place 1 doom on the current agenda"
+    },
+    {
+      "code": "51065",
+      "name": "暗门",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Revelation - Attach to the location with the most investigators, and without a Secret Door attached. Investigators cannot leave this"
+    },
+    {
+      "code": "51066",
+      "name": "莫测寒冷",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Revelation - Test [agility] (4). For each point you fail by, you must either choose and discard 1 card from your play area or from y"
+    },
+    {
+      "code": "51067",
+      "name": "压抑浓雾",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Revelation - Attach to your location. Limit 1 per location. Forced - After an investigator at this location draws 1 or more cards, t"
+    },
+    {
+      "code": "51068",
+      "name": "暴力命令",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Revelation - Put Violent Commands into play in your threat area. [action]: Deal 2 damage to an investigator at your location and dis"
+    },
+    {
+      "code": "51069",
+      "name": "魔掌",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Revelation - Put Idle Hands into play in your threat area. [fast] If Idle Hands is in your threat area, during your turn, take 2 dam"
+    },
+    {
+      "code": "51070",
+      "name": "知识渴求",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Revelation - If you have no clues, Need for Knowledge gains surge. Otherwise, test [intellect] (X), where X equals the number of clu"
+    },
+    {
+      "code": "51071",
+      "name": "潜伏者之仆",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Hunter. Forced - At the end of the enemy phase: Each investigator at Vassal of the Lurker's location discards 1 card from the top of"
+    },
+    {
+      "code": "51072",
+      "name": "惊悚协议",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Peril. Revelation - You may draw 1 card. You may choose and discard up to 2 cards from your hand. Test [willpower] (X). If you fail,"
+    },
+    {
+      "code": "52001",
+      "name": ".32柯尔特手枪",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Uses (6 ammo). [action] Spend 1 ammo: Fight. You deal +1 damage for this attack. [fast] Spend 1 resource: Return .32 Colt to your ha"
+    },
+    {
+      "code": "52002",
+      "name": "“吃枪子吧！”",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Fast. Play when you activate the Fight ability on a [[Firearm]] asset. Spend 1 additional ammo token from that asset. When you revea"
+    },
+    {
+      "code": "52003",
+      "name": "逻辑推理",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：For each clue you have (to a maximum of 3), either heal 2 horror from an investigator at your location or discard a [[Terror]] card "
+    },
+    {
+      "code": "52004",
+      "name": "古代雕文",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Researched. Uses (3 charges). [action] Spend 1 charge: Investigate. If you succeed, you may put an asset with printed cost of X or l"
+    },
+    {
+      "code": "52005",
+      "name": "潜行",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[fast] During your turn, exhaust Stealth: Evade. The chosen enemy gets -2 evade for this evasion attempt. If you successfully evade "
+    },
+    {
+      "code": "52006",
+      "name": "建议",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Uses (3 charges). If Suggestion has no charges, discard it. [action] Exhaust Suggestion: Evade. Add your [willpower] value to your s"
+    },
+    {
+      "code": "52007",
+      "name": "炼金转化",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Uses (4 charges). [action] Exhaust Alchemical Transmutation, spend 1 charge: Test [willpower] (0). For each point you succeed by, ga"
+    },
+    {
+      "code": "52008",
+      "name": "灵力风暴",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Fight. This attack uses [willpower] instead of [combat]. You get +2 [willpower] for this attack. If you succeed, instead of its stan"
+    },
+    {
+      "code": "52009",
+      "name": "提灯",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[action]: Investigate. Your location gets -1 shroud for this investigation. [action] Discard Lantern: Deal 1 damage to an enemy at y"
+    },
+    {
+      "code": "52010",
+      "name": "挖墓人的铲子",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[action]: Fight. You get +2 [combat] for this attack. [action] Discard Gravedigger's Shovel: Discover 1 clue at your location (or re"
+    },
+    {
+      "code": "52011",
+      "name": "邪秽誓约(嗜血)",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Campaign Mode only. Peril. Hidden. Revelation - Secretly add this card to your hand. Forced - When the game ends or you are eliminat"
+    },
+    {
+      "code": "52012",
+      "name": "邪秽誓约(好奇)",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Campaign Mode only. Peril. Hidden. Revelation - Secretly add this card to your hand. Forced - When the game ends or you are eliminat"
+    },
+    {
+      "code": "52013",
+      "name": "邪秽誓约(胆怯)",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Campaign Mode only. Peril. Hidden. Revelation - Secretly add this card to your hand. Forced - When the game ends or you are eliminat"
+    },
+    {
+      "code": "52014",
+      "name": "重返谢幕",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Path to Carcosa Campaign Guide, with the following exceptions: - When gathering encounter sets"
+    },
+    {
+      "code": "52015",
+      "name": "陌生人",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "幕背面已移动敌人并挂环境提示，未结算各变体的印刷迷雾、尖啸或蔓生检定。"
+    },
+    {
+      "code": "52016",
+      "name": "陌生人",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "幕背面已移动敌人并挂环境提示，未结算各变体的印刷迷雾、尖啸或蔓生检定。"
+    },
+    {
+      "code": "52017",
+      "name": "陌生人",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "幕背面已移动敌人并挂环境提示，未结算各变体的印刷迷雾、尖啸或蔓生检定。"
+    },
+    {
+      "code": "52018",
+      "name": "剧院休息室",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "存在剧院地点数据，揭示后对应的隐私卡检索或按恐惧降帷幕未接入。"
+    },
+    {
+      "code": "52019",
+      "name": "道具间",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "存在剧院地点数据，揭示后对应的隐私卡检索或按恐惧降帷幕未接入。"
+    },
+    {
+      "code": "52020",
+      "name": "伯爵夫人",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "敌人可生成，击败后进入手牌成为隐私牌、限制手牌上限与补给期弃牌恐惧缺读点。"
+    },
+    {
+      "code": "52021",
+      "name": "重返最后的王者",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Path to Carcosa Campaign Guide, with the following exceptions: - When gathering encounter sets"
+    },
+    {
+      "code": "52022",
+      "name": "宁缺毋迟",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Find the [[Bystander]] asset with the fewest clues on it (among [[Bystander]] assets with at least one clue). Spawn the set-aside Di"
+    },
+    {
+      "code": "52023",
+      "name": "令人作呕的现实",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Prey - Most clues. Hunter. Dianne Devine gets +3 [per_investigator] health. Forced - After any investigator performs a parley action"
+    },
+    {
+      "code": "52023b",
+      "name": "黛安娜·迪瓦恩",
+      "type": "story",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "新增剧情面已放入指定牌堆，现有推进未覆盖这些新增牌面的印刷翻面衔接。"
+    },
+    {
+      "code": "52024",
+      "name": "令人作呕的现实",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Hunter. [action]: Parley. Test [intellect] (4). If you succeed, you manage to get through to them for just a moment; automatically e"
+    },
+    {
+      "code": "52024b",
+      "name": "疯狂的宾客",
+      "type": "story",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "新增剧情面已放入指定牌堆，现有推进未覆盖这些新增牌面的印刷翻面衔接。"
+    },
+    {
+      "code": "52025",
+      "name": "黛安娜·迪瓦恩",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Each investigator at Dianne Devine's location cannot discover or take control of clues. Forced - At the beginning of the enemy phase"
+    },
+    {
+      "code": "52026",
+      "name": "宴会宾客",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Revelation - Find the [[Bystander]] asset with the most clues on it, and put Party Guest into play at that asset's location. Investi"
+    },
+    {
+      "code": "52027",
+      "name": "令人震惊的一幕",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Revelation - Randomly resolve one of the Sickening Reality cards underneath the scenario reference card. Cannot be canceled."
+    },
+    {
+      "code": "52028",
+      "name": "重返往事回声",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Path to Carcosa Campaign Guide, with the following exceptions: - When gathering encounter sets"
+    },
+    {
+      "code": "52029",
+      "name": "宁静的走廊",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "地图入场逻辑存在，地点正面对应的取线索、降帷幕与移动线索、抽遭遇或隐私卡限制未接入。"
+    },
+    {
+      "code": "52030",
+      "name": "历史协会",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "地图入场逻辑存在，地点正面对应的取线索、降帷幕与移动线索、抽遭遇或隐私卡限制未接入。"
+    },
+    {
+      "code": "52031",
+      "name": "历史协会",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "地图入场逻辑存在，地点正面对应的取线索、降帷幕与移动线索、抽遭遇或隐私卡限制未接入。"
+    },
+    {
+      "code": "52032",
+      "name": "历史协会",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "地图入场逻辑存在，地点正面对应的取线索、降帷幕与移动线索、抽遭遇或隐私卡限制未接入。"
+    },
+    {
+      "code": "52033",
+      "name": "誓约看守人",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：While the number of the current act is greater than the number of the current agenda, Keeper of the Oath gains hunter. Forced - At t"
+    },
+    {
+      "code": "52034",
+      "name": "重返邪秽誓约",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Path to Carcosa Campaign Guide, with the following exceptions: - When gathering encounter sets"
+    },
+    {
+      "code": "52035",
+      "name": "真正可怕的人(版本三)",
+      "type": "act",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Ignore the text on the unrevealed side of [[Arkham Asylum]] locations. Objective - Find the Patient Confinement location with Daniel"
+    },
+    {
+      "code": "52036",
+      "name": "真正可怕的人(版本四)",
+      "type": "act",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Ignore the text on the unrevealed side of [[Arkham Asylum]] locations. Objective - Find the Patient Confinement location with Daniel"
+    },
+    {
+      "code": "52037",
+      "name": "疯狂之主",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "背面流程可生成敌人或以标记记账，缺现场按轮末造成恐惧和医务室摆脱检定的完整处理。"
+    },
+    {
+      "code": "52038",
+      "name": "根除疗法",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "背面流程可生成敌人或以标记记账，缺现场按轮末造成恐惧和医务室摆脱检定的完整处理。"
+    },
+    {
+      "code": "52039",
+      "name": "朦胧记忆",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Peril. Revelation - You must either (choose one): - Forget something an investigator has \"remembered\" from an ability on a location."
+    },
+    {
+      "code": "52040",
+      "name": "重返真相幻影",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Path to Carcosa Campaign Guide, with the following exceptions: - When gathering encounter sets"
+    },
+    {
+      "code": "52041",
+      "name": "蒙巴纳斯",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "可按地点变体布置，但印刷的对应正面效果（进入、弃牌、花费或敌人属性修正）未接入。"
+    },
+    {
+      "code": "52042",
+      "name": "大木偶剧场",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "可按地点变体布置，但印刷的对应正面效果（进入、弃牌、花费或敌人属性修正）未接入。"
+    },
+    {
+      "code": "52043",
+      "name": "拉雪兹神父公墓",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "可按地点变体布置，但印刷的对应正面效果（进入、弃牌、花费或敌人属性修正）未接入。"
+    },
+    {
+      "code": "52044",
+      "name": "圣马丁运河",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "可按地点变体布置，但印刷的对应正面效果（进入、弃牌、花费或敌人属性修正）未接入。"
+    },
+    {
+      "code": "52045",
+      "name": "巴黎圣母院",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "可按地点变体布置，但印刷的对应正面效果（进入、弃牌、花费或敌人属性修正）未接入。"
+    },
+    {
+      "code": "52046",
+      "name": "卢森堡公园",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "可按地点变体布置，但印刷的对应正面效果（进入、弃牌、花费或敌人属性修正）未接入。"
+    },
+    {
+      "code": "52047",
+      "name": "影中身形",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Revelation - Check Campaign Log. - If you have more (or equal) Doubt than Conviction, move The Organist 1 location away from the nea"
+    },
+    {
+      "code": "52048",
+      "name": "重返苍白面具",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Path to Carcosa Campaign Guide, with the following exceptions: - When gathering encounter sets"
+    },
+    {
+      "code": "52049",
+      "name": "秘密通道",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "地下墓穴候选已加入牌库，缺揭示后的地块摆放和位置／连接联动。"
+    },
+    {
+      "code": "52050",
+      "name": "骸骨堆",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "地下墓穴候选已加入牌库，缺揭示后的地块摆放和位置／连接联动。"
+    },
+    {
+      "code": "52051",
+      "name": "研究站点",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "地下墓穴候选已加入牌库，缺揭示后的地块摆放和位置／连接联动。"
+    },
+    {
+      "code": "52052",
+      "name": "颅骨之海",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "地下墓穴候选已加入牌库，缺揭示后的地块摆放和位置／连接联动。"
+    },
+    {
+      "code": "52053",
+      "name": "畸形骸骨",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Hunter. Forced - When Malformed Skeleton would resolve its hunter keyword: If there are no investigators within 2 locations of Malfo"
+    },
+    {
+      "code": "52054",
+      "name": "重返黑星升起",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Path to Carcosa Campaign Guide, with the following exceptions: - When gathering encounter sets"
+    },
+    {
+      "code": "52055",
+      "name": "回廊",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[action] If there are no clues on Cloister: Parley. Test [willpower] or [intellect] (4). If you succeed, remember that you have \"fou"
+    },
+    {
+      "code": "52056",
+      "name": "骑士大厅",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：[action] If there are no clues on Knight's Hall: Test [combat] or [agility] (3). If you succeed, remember that you have \"found a gui"
+    },
+    {
+      "code": "52057",
+      "name": "哈斯塔的凝视",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Peril. Hidden. Revelation - Secretly add Hastur's Gaze to your hand. Forced - After 1 or more doom is placed on the \"c\" agenda: Take"
+    },
+    {
+      "code": "52058",
+      "name": "哈斯塔的抓攫",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Peril. Hidden. Revelation - Secretly add Hastur's Grasp to your hand. Forced - After 1 or more doom is placed on the \"a\" agenda: Tak"
+    },
+    {
+      "code": "52059",
+      "name": "重返卡城幽影",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Perform the setup as indicated in The Path to Carcosa Campaign Guide, with the following exceptions: - When gathering encounter sets"
+    },
+    {
+      "code": "52060",
+      "name": "王之宫殿",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "伤害下限钩子覆盖哈斯塔生命，但缺哈斯塔生命高于 2/人时禁止宫殿翻面的判定。"
+    },
+    {
+      "code": "52060b",
+      "name": "哈斯塔的终局",
+      "type": "story",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Check Campaign Log: - If Hastur (The King in Yellow) is the version of Hastur that is in play: Put the set-aside Recesses of Your Ow"
+    },
+    {
+      "code": "52061",
+      "name": "你的内心深处",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "可随宫殿背面入场，印刷的意志归零、哈斯塔不能离开或不能被攻击的持续限制未完整接入。"
+    },
+    {
+      "code": "52061b",
+      "name": "作者",
+      "type": "story",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Remember that you \"know the secret.\" Flip this card back over. For the remainder of the game, it cannot be flipped over again."
+    },
+    {
+      "code": "52062",
+      "name": "王座之间",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "可随宫殿背面入场，印刷的意志归零、哈斯塔不能离开或不能被攻击的持续限制未完整接入。"
+    },
+    {
+      "code": "52062b",
+      "name": "实体",
+      "type": "story",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Remember that you \"know the secret.\" Flip this card back over. For the remainder of the game, it cannot be flipped over again."
+    },
+    {
+      "code": "52063",
+      "name": "沃德剧院舞台",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "可随宫殿背面入场，印刷的意志归零、哈斯塔不能离开或不能被攻击的持续限制未完整接入。"
+    },
+    {
+      "code": "52063b",
+      "name": "妄想",
+      "type": "story",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位章节引用，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Remember that you \"know the secret.\" Flip this card back over. For the remainder of the game, it cannot be flipped over again."
+    },
+    {
+      "code": "52064",
+      "name": "哈斯塔的高阶祭司",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "高阶祭司可进遭遇牌库，缺其攻击时的恶灵附身揭示及被击败发疯分支。"
+    },
+    {
+      "code": "52065",
+      "name": "虚妄之邪",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Peril. Hidden. Revelation - You must either secretly add Delusory Evils to your hand, or place 1 doom on the current agenda and disc"
+    },
+    {
+      "code": "52066",
+      "name": "渗血墙壁",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "显现以帷幕为难度发起意志检定，失败只施加 1 恐惧，缺失去 1 个行动。"
+    },
+    {
+      "code": "52067",
+      "name": "脆弱思绪",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Revelation - Discard events from your hand with a total printed resource cost of at least X, where X is the shroud value of your loc"
+    },
+    {
+      "code": "52068",
+      "name": "蛆群",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位所属战役包，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Maggot Swarm's location gets +2 shroud. While Maggot Swarm is at a location with no clues, it gains hunter."
+    },
+    {
+      "code": "52069",
+      "name": "猎食的拜亚基",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位单卡条目，现有实跑证据未覆盖本卡的全部印刷子句。卡面起句：Prey - Lowest remaining sanity only. Hunter. While engaged with an investigator with remaining sanity 4 or fewer, swap Preying Byakh"
+    },
+    {
+      "code": "52070",
+      "name": "哈斯塔的印记",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Peril. Revelation - Attach The Sign of Hastur to either the current agenda or the current act. Limit 1 per agenda/act. Forced - Each"
+    },
+    {
+      "code": "52071",
+      "name": "脑中幻象",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Peril. Hidden. Revelation - Secretly add this card to your hand. Forced - When your turn ends, if you did not perform at least 1 pla"
+    },
+    {
+      "code": "52072",
+      "name": "脑中幻象",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Peril. Hidden. Revelation - Secretly add this card to your hand. Forced - When your turn ends, if you did not perform at least 1 res"
+    },
+    {
+      "code": "52073",
+      "name": "脑中幻象",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Peril. Hidden. Revelation - Secretly add this card to your hand. Forced - When your turn ends, if you did not perform at least 1 mov"
+    },
+    {
+      "code": "52074",
+      "name": "脑中幻象",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Peril. Hidden. Revelation - Secretly add this card to your hand. Forced - When your turn ends, if you did not perform at least 1 dra"
+    },
+    {
+      "code": "52075",
+      "name": "发狂妄想",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Surge. Revelation - If you have 1 or more hidden cards in your hand, take 1 horror."
+    },
+    {
+      "code": "52076",
+      "name": "特鲁恩布拉之音",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Peril. Revelation - Test [willpower] (3). For each point you fail by, you must choose a different option: - Lose 2 resources. - Take"
+    },
+    {
+      "code": "52077",
+      "name": "忧郁",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Revelation - Put Melancholy into play in your threat area. Increase the resource cost of each card in your hand by 1. Forced - At th"
+    },
+    {
+      "code": "52078",
+      "name": "苦痛回响",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "遭遇组收录了这张卡，未找到该印刷显现的单卡处理器或章节读点。卡面起句：Revelation - Put Painful Reflection into play in your threat area. Forced - When you play an event: Reveal a random token from the c"
+    },
+    {
+      "code": "53001",
+      "name": "鲜血失色",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53002",
+      "name": "求生匕首",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53003",
+      "name": "去伪存真",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53004",
+      "name": "古代巨石",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53005",
+      "name": "彩饰骷髅",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53006",
+      "name": "柯尔特袖珍手枪",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53007",
+      "name": "拉莱耶迷雾",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53008",
+      "name": "钻地魔虫之石",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53009",
+      "name": "改变命运",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53010",
+      "name": "自食其力",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53011",
+      "name": "背包",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53012",
+      "name": "植形异变",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53013",
+      "name": "无法拒绝的提议",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53014",
+      "name": "附加条款",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53015",
+      "name": "出卖灵魂",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53016",
+      "name": "重返荒莽密林",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53017",
+      "name": "重返埃兹特里的覆灭",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53018",
+      "name": "瓦卢西亚的预示者",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53019",
+      "name": "遗迹入口",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53020",
+      "name": "封印通道",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53021",
+      "name": "彩砖石室",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53022",
+      "name": "古代墓穴",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53023",
+      "name": "王座大厅",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53024",
+      "name": "蛇洞",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53025",
+      "name": "古代石厅",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53026",
+      "name": "华美石室",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53027",
+      "name": "时间石室",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53028",
+      "name": "重返命运之线",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53029",
+      "name": "寻找意义",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53029b",
+      "name": "黑斯廷斯庄园",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53030",
+      "name": "寻找来源",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53030b",
+      "name": "默尔·加文",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53031",
+      "name": "蔓生庄园",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53032",
+      "name": "蔓生庄园",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53032b",
+      "name": "克林顿·弗里曼",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53033",
+      "name": "自找麻烦",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53034",
+      "name": "寻找麻烦",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53034b",
+      "name": "装货码头",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53035",
+      "name": "探寻真相",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53036",
+      "name": "不可能的追猎",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53037",
+      "name": "薇达·惠茨利",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53038",
+      "name": "重返界限彼端",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53039",
+      "name": "神庙遗迹",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53040",
+      "name": "大都会教堂",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53041",
+      "name": "查普尔特佩克公园",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53042",
+      "name": "索卡洛广场",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53043",
+      "name": "霍奇米尔科",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53044",
+      "name": "科约阿坎区",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53045",
+      "name": "重返久远腹地，第一部分",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53046",
+      "name": "熟悉的图案",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53046b",
+      "name": "羽翼蛇族",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53047",
+      "name": "鲜翎蛇族",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53048",
+      "name": "重返久远腹地，第二部分",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53049",
+      "name": "昆扬遗迹",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53050",
+      "name": "地下沼泽",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53051",
+      "name": "钻地魔虫深渊",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53052",
+      "name": "险恶坡道",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53053",
+      "name": "重返天机之城",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53054",
+      "name": "自由通行",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53055",
+      "name": "纳克特廊道",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53056",
+      "name": "巨石密库",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53057",
+      "name": "异星培育所",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53058",
+      "name": "被奴役的实验体",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53059",
+      "name": "重返幽嘶深渊",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53060",
+      "name": "幽嘶险境",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53061",
+      "name": "重返破碎永世",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53062",
+      "name": "塞拉伊诺大图书馆",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53063",
+      "name": "布宜诺斯艾利斯",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53064",
+      "name": "极北之地",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53065",
+      "name": "不可知的过去",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53066",
+      "name": "重返时间倒流",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53067",
+      "name": "河畔神庙",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53068",
+      "name": "瀑布",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53069",
+      "name": "亡者之径",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53070",
+      "name": "云雾林",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53071",
+      "name": "兄弟会侍僧",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53072",
+      "name": "被窃取的思维",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53073",
+      "name": "来自另一个时代",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53074",
+      "name": "怨愤荒野",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53075",
+      "name": "最精心的计划",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53076",
+      "name": "时间线合并",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53077",
+      "name": "廷达洛斯头犬",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53078",
+      "name": "复仇蛇人",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53079",
+      "name": "蛇族守卫",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "53080",
+      "name": "伊格的怒火",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttfa 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54001",
+      "name": "星星·XVII",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54002",
+      "name": "圣化之镜",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54003",
+      "name": "世界·XXI",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54004",
+      "name": "密教词典",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54005",
+      "name": "宝剑骑士",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54006",
+      "name": "良好人脉",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54007",
+      "name": "教皇·V",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54008",
+      "name": "魔法手势",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54009",
+      "name": "权杖九",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54010",
+      "name": "勇闯火线",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54011",
+      "name": "愚者·0",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54012",
+      "name": "月之吊坠",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54013",
+      "name": "赐福注目",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54014",
+      "name": "诅咒缠身",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54015",
+      "name": "恶魔·XV",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 玩家侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54016",
+      "name": "重返暮色庄园失踪事件",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54017",
+      "name": "重返巫异时刻",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54018",
+      "name": "未毁之环",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54019",
+      "name": "女巫作祟之林",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54020",
+      "name": "女巫作祟之林",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54021",
+      "name": "阿卡姆密林",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54022",
+      "name": "阿卡姆密林",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54023",
+      "name": "阿卡姆密林",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54024",
+      "name": "重返死亡门前",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54025",
+      "name": "纳撒尼尔·罗兹参议员",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54026",
+      "name": "德米特里·康斯坦丁诺夫",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54027",
+      "name": "酒窖",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54028",
+      "name": "酒窖",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54029",
+      "name": "重返隐秘之名",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54030",
+      "name": "拉莱耶神庙",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54031",
+      "name": "普莱斯庄园",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54032",
+      "name": "第九区",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54033",
+      "name": "埃勃拉图书馆",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54034",
+      "name": "重返恶罪报应",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54035",
+      "name": "追寻答案",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54036",
+      "name": "追寻彼岸",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54037",
+      "name": "绞刑者溪",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54037b",
+      "name": "绞刑者河",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54038",
+      "name": "异端者",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54038b",
+      "name": "未了之事",
+      "type": "story",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54039",
+      "name": "异端者",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54039b",
+      "name": "未了之事",
+      "type": "story",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54040",
+      "name": "独脚金",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54041",
+      "name": "伊琳·麦考伊",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54042",
+      "name": "重返崇高利益",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54043",
+      "name": "休息室",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54044",
+      "name": "遗物储藏室",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54045",
+      "name": "隐秘档案室",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54046",
+      "name": "重返聚合幻灭",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54047",
+      "name": "迷雾彼端(版本五)",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54048",
+      "name": "火盆附魔",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54049",
+      "name": "重返混沌魔掌",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54050",
+      "name": "法兰西山",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54051",
+      "name": "河岸城",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54052",
+      "name": "南区",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54053",
+      "name": "住宅区",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54054",
+      "name": "南区教堂",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54055",
+      "name": "商人区",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54056",
+      "name": "重返黑色王座",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54057",
+      "name": "必竟之事(版本二)",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54058",
+      "name": "梦魇裂口",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54059",
+      "name": "星际深渊",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54060",
+      "name": "曲折深壑",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54061",
+      "name": "夜魇坐骑",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54062",
+      "name": "闯入者！",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54063",
+      "name": "玷污",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54064",
+      "name": "恶语中伤",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54065",
+      "name": "迫近之邪",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54066",
+      "name": "在劫难逃",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54067",
+      "name": "愚人的命运",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54068",
+      "name": "不稳定能量",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54069",
+      "name": "来自彼端",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54070",
+      "name": "堕落恶行",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54071",
+      "name": "不洁之地",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54072",
+      "name": "超自然风暴",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54073",
+      "name": "彼端迷雾",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54074",
+      "name": "尖啸女妖",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    },
+    {
+      "code": "54075",
+      "name": "嗜血魂灵",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "rttcu 战役侧仅目录收录，缺对应运行入口或可解析的行为别名。"
+    }
+  ]
+}
