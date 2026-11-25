@@ -93,7 +93,7 @@ export default {
   'card.effect.partial': '部分实现',
   'card.effect.simplified': '简化实现',
   'card.effect.implemented': '已实现，未验收',
-  'card.effect.verified': '已验收',
+  'card.effect.verified': '已校验',
   'card.effect.notApplicable': '不适用',
   'card.availability.catalogOnly': '仅图鉴',
   'card.availability.simplified': '当前可玩',

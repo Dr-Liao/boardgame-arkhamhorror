@@ -1,0 +1,621 @@
+{
+  "schemaVersion": 1,
+  "unit": "10-a-10",
+  "profile": {
+    "id": "fhv-campaign-f2-2026-11",
+    "scope": "铁杉谷盛宴 10 段 fhvc 战役卡（10677–10706b）43 条目录记录。39 条通过五维验收；4 条声明无读点/参考卡结构缺口暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 43,
+    "verified": 39,
+    "unverified": 4,
+    "unimplemented": 0,
+    "testsPassed": 178
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+      "sha256": "c62c1c4753524a550e463747197365b456ec8db148b2ce7373f8c9c61532a3f1"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-scenario-dawnOfTheFinalDay.test.mjs",
+      "sha256": "3d603d9f0f26264017e0ba02dd881561d4671043fb63be4821df3cde03626898"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-scenario-fateOfTheVale.test.mjs",
+      "sha256": "03bca59b7f85cb0b67e527de78aab8731f7eb8e6ff99d6fc459aa775bd9da195"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-rules.test.mjs",
+      "sha256": "0923adf4ff0b6d5b8e50ddf8bae63071dcae1f05ad9421ff0760e02715e615b7"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-primitives.test.mjs",
+      "sha256": "da22963c70f087153a13118a390afdd9f784d0bba5df3ab4dd603a806579639b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-interactions.test.mjs",
+      "sha256": "ec0fbb583bc1bb4240c8f184d861ed9761e33ec930a985c4e902e465041d693a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-campaign-flow.test.mjs",
+      "sha256": "50cf5665e2323b0c038355ad4caaeeb59ca588ec53561b38fb9d704d79874780"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-campaign-engine.test.mjs",
+      "sha256": "de69a978fccc696624d8505c2a94009120201233633bac958f1616da6f8498c3"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-campaign-records.test.mjs",
+      "sha256": "5228e2dca842a993f7278244c415b995019f850e5af32a792e08ab7f0a4b672c"
+    }
+  ],
+  "entries": [
+    {
+      "code": "10677",
+      "name": "第二日",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10677 故事日卡：日历标志（第 2 日）与章节日历读点"
+        }
+      ]
+    },
+    {
+      "code": "10678",
+      "name": "大雨倾盆",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10678 序曲诡计：显现检定与失败逐点二选一由条目 encounterResolve 结算"
+        }
+      ]
+    },
+    {
+      "code": "10679",
+      "name": "第三日",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10679 故事日卡：日历标志（第 3 日）与章节日历读点"
+        }
+      ]
+    },
+    {
+      "code": "10680",
+      "name": "异界幻象",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10680 序曲诡计：显现检定与失败逐点二选一由条目 encounterResolve 结算"
+        }
+      ]
+    },
+    {
+      "code": "10681",
+      "name": "欢迎来到毒堇谷！",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10681 序曲议程：抽到弱点时取消显现（条目 forced 挂 cardWouldBeDrawn，引擎弱点子窗口）"
+        }
+      ]
+    },
+    {
+      "code": "10682",
+      "name": "第一日黎明",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10682 序曲幕：调查员不能受伤/恐惧/被击败（章节 definition mechanics.protectInvestigators 读点）"
+        }
+      ]
+    },
+    {
+      "code": "10683",
+      "name": "乌云",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10683 序曲议程：抽到弱点时取消显现（条目 forced 挂 cardWouldBeDrawn，引擎弱点子窗口）"
+        }
+      ]
+    },
+    {
+      "code": "10684",
+      "name": "第二个黎明",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10684 序曲幕：调查员不能受伤/恐惧/被击败（章节 definition mechanics.protectInvestigators 读点）"
+        }
+      ]
+    },
+    {
+      "code": "10685",
+      "name": "毒堇诅咒",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10685 毒堇诅咒：图标改为减去 / 失败弃整手 / 回合末在手中随机弃 1（条目自足读点）"
+        }
+      ]
+    },
+    {
+      "code": "10686",
+      "name": "爱意满满",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10686 序曲议程：抽到弱点时取消显现（条目 forced 挂 cardWouldBeDrawn，引擎弱点子窗口）"
+        }
+      ]
+    },
+    {
+      "code": "10687",
+      "name": "最后一个黎明",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10687 最后一个黎明：目标与背面「精神创伤或基础疯狂弱点 + 2 奖励经验」由章节 behavior 承接"
+        }
+      ]
+    },
+    {
+      "code": "10688",
+      "name": "围坐桌边",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10688 终夜议程：目标/背面及特殊规则由 preludeTheFinalEvening behavior 承接"
+        }
+      ]
+    },
+    {
+      "code": "10689",
+      "name": "待宰羔羊",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10689 终夜议程：目标/背面及特殊规则由 preludeTheFinalEvening behavior 承接"
+        }
+      ]
+    },
+    {
+      "code": "10690a",
+      "name": "十字路口",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10690a 山谷地点：印刷面数据 + 章节地点行动读点（actionCodex）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10690b 山谷地点：印刷面数据 + 章节地点行动读点（parley）"
+        }
+      ]
+    },
+    {
+      "code": "10690b",
+      "name": "十字路口",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10690b 山谷地点：印刷面数据 + 章节地点行动读点（parley）"
+        }
+      ]
+    },
+    {
+      "code": "10691a",
+      "name": "老磨坊",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "老磨坊 [action][action]：发现 1 线索：条目 flags.actionDiscoverClue{amount:1,actions:2} 无章节 behavior/引擎读点（grep 全 content 与 engine 均为 0；章节 definition 仅有 theOldMill 地点名而无该双行动能力），玩家无法执行该行动。"
+    },
+    {
+      "code": "10691b",
+      "name": "老磨坊",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10691b 山谷地点：印刷面数据 + 章节地点行动读点（actionCodex）"
+        }
+      ]
+    },
+    {
+      "code": "10692",
+      "name": "狂乱的赴宴者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10692 狂乱的赴宴者：被击败放 1 毁灭 + [action] 谈判敏捷(4)移出游戏（条目能力）"
+        }
+      ]
+    },
+    {
+      "code": "10693",
+      "name": "蕾切尔嬷嬷",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10693 居民资产：控制加成/法典谈判/被击败关系等级（数据型条目 + 章节读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10693b 居民敌人：关键词/谈判放一边/特殊强制（引擎 setEnemyAside 与条目能力）"
+        }
+      ]
+    },
+    {
+      "code": "10693b",
+      "name": "蕾切尔嬷嬷",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10693b 居民敌人：关键词/谈判放一边/特殊强制（引擎 setEnemyAside 与条目能力）"
+        }
+      ]
+    },
+    {
+      "code": "10694",
+      "name": "莉亚·阿特伍德",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10694 居民资产：控制加成/法典谈判/被击败关系等级（数据型条目 + 章节读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10694b 居民敌人：关键词/谈判放一边/特殊强制（引擎 setEnemyAside 与条目能力）"
+        }
+      ]
+    },
+    {
+      "code": "10694b",
+      "name": "莉亚·阿特伍德",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10694b 居民敌人：关键词/谈判放一边/特殊强制（引擎 setEnemyAside 与条目能力）"
+        }
+      ]
+    },
+    {
+      "code": "10695",
+      "name": "席米恩·阿特伍德",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10695 居民资产：控制加成/法典谈判/被击败关系等级（数据型条目 + 章节读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10695b 居民敌人：关键词/谈判放一边/特殊强制（引擎 setEnemyAside 与条目能力）"
+        }
+      ]
+    },
+    {
+      "code": "10695b",
+      "name": "席米恩·阿特伍德",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10695b 居民敌人：关键词/谈判放一边/特殊强制（引擎 setEnemyAside 与条目能力）"
+        }
+      ]
+    },
+    {
+      "code": "10696",
+      "name": "威廉·汉洛克",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10696 居民资产：控制加成/法典谈判/被击败关系等级（数据型条目 + 章节读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10696b 居民敌人：关键词/谈判放一边/特殊强制（引擎 setEnemyAside 与条目能力）"
+        }
+      ]
+    },
+    {
+      "code": "10696b",
+      "name": "威廉·汉洛克",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10696b 居民敌人：关键词/谈判放一边/特殊强制（引擎 setEnemyAside 与条目能力）"
+        }
+      ]
+    },
+    {
+      "code": "10697",
+      "name": "瑞玟·霍桑",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10697 居民资产：控制加成/法典谈判/被击败关系等级（数据型条目 + 章节读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10697b 居民敌人：关键词/谈判放一边/特殊强制（引擎 setEnemyAside 与条目能力）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10697b 瑞玟·霍桑：关键词与谈判已接线，但「每轮此地第一张诡计涌动」无引擎/behavior 读点"
+        }
+      ]
+    },
+    {
+      "code": "10697b",
+      "name": "瑞玟·霍桑",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "瑞玟·霍桑「每轮在此地点的调查员抽取的第一张诡计获得涌动」：flags.firstTreacherySurge 无 behavior/引擎读点（全仓 0 命中）；关键词/谈判放一边已接线。"
+    },
+    {
+      "code": "10698",
+      "name": "基甸·米兹拉克",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10698 居民资产：控制加成/法典谈判/被击败关系等级（数据型条目 + 章节读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10698b 居民敌人：关键词/谈判放一边/特殊强制（引擎 setEnemyAside 与条目能力）"
+        }
+      ]
+    },
+    {
+      "code": "10698b",
+      "name": "基甸·米兹拉克",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10698b 居民敌人：关键词/谈判放一边/特殊强制（引擎 setEnemyAside 与条目能力）"
+        }
+      ]
+    },
+    {
+      "code": "10699",
+      "name": "朱迪斯·帕克",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10699 居民资产：控制加成/法典谈判/被击败关系等级（数据型条目 + 章节读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10699b 居民敌人：关键词/谈判放一边/特殊强制（引擎 setEnemyAside 与条目能力）"
+        }
+      ]
+    },
+    {
+      "code": "10699b",
+      "name": "朱迪斯·帕克",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10699b 居民敌人：关键词/谈判放一边/特殊强制（引擎 setEnemyAside 与条目能力）"
+        }
+      ]
+    },
+    {
+      "code": "10700",
+      "name": "希奥·彼得斯",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10700 居民资产：控制加成/法典谈判/被击败关系等级（数据型条目 + 章节读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10700b 居民敌人：关键词/谈判放一边/特殊强制（引擎 setEnemyAside 与条目能力）"
+        }
+      ]
+    },
+    {
+      "code": "10700b",
+      "name": "希奥·彼得斯",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10700b 居民敌人：关键词/谈判放一边/特殊强制（引擎 setEnemyAside 与条目能力）"
+        }
+      ]
+    },
+    {
+      "code": "10701",
+      "name": "伯蒂·马斯格雷夫",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10701 伯蒂·马斯格雷夫：+1 生命/神智、[fast] 二选一伤害/恐惧抽牌（费用二选一移入 resolve 已披露）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10701b 伯蒂·马斯格雷夫：关键词/巡逻/法典已接线，但「伤害改派给他」无引擎原语"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10701b 居民敌人：关键词/谈判放一边/特殊强制（引擎 setEnemyAside 与条目能力）"
+        }
+      ]
+    },
+    {
+      "code": "10701b",
+      "name": "伯蒂·马斯格雷夫",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "伯蒂·马斯格雷夫「每当[[居民]]敌人将对你造成伤害/恐惧时，改由伯蒂承担」：flags.damageRedirectToSelf 无引擎原语与 behavior 读点（enemyRule 无 damageRedirect 字段）；关键词/巡逻/被击败读法典已接线。"
+    },
+    {
+      "code": "10702",
+      "name": "罗莎·马奎兹博士",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10702 罗莎·马奎兹博士：+1 智力/敏捷、发现最后线索后读法典 Θ、可加入牌组"
+        }
+      ]
+    },
+    {
+      "code": "10703",
+      "name": "海伦·彼得斯",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10703 海伦·彼得斯：昼/夜技能加成 + 进入地点后自动躲避（scenario-calendar 读点）"
+        }
+      ]
+    },
+    {
+      "code": "10704",
+      "name": "山谷",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "剧本参考卡没有单卡条目文件（同战役 fateOfTheVale 的 10651/10661 建了 scenario 条目）；标记表与谈判分支只写在内容层 dawnOfTheFinalDay/chaos.js，无 scenarioRule 条目读点，违反一卡一文件/声明即接线，无法逐卡入账。"
+    },
+    {
+      "code": "10705a",
+      "name": "旅舍",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10705a 山谷地点：印刷面数据 + 章节地点行动读点（healDamageOrHorrorOncePerGame）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10705b 旅舍（夜面）：首个遭遇涌动/三项检定/记住汽油（章节 definition/behavior 读点）"
+        }
+      ]
+    },
+    {
+      "code": "10705b",
+      "name": "旅舍",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10705b 旅舍（夜面）：首个遭遇涌动/三项检定/记住汽油（章节 definition/behavior 读点）"
+        }
+      ]
+    },
+    {
+      "code": "10706a",
+      "name": "十字路口",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10706a 山谷地点：印刷面数据 + 章节地点行动读点（actionCodex）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10706b 十字路口（夜面）：破碎敌失去冷漠 + 躲避 3+ 记住前路已通（fateOfTheVale 读点）"
+        }
+      ]
+    },
+    {
+      "code": "10706b",
+      "name": "十字路口",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10706b 十字路口（夜面）：破碎敌失去冷漠 + 躲避 3+ 记住前路已通（fateOfTheVale 读点）"
+        }
+      ]
+    }
+  ]
+}

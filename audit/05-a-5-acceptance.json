@@ -1,0 +1,669 @@
+{
+  "schemaVersion": 1,
+  "unit": "05-a-5",
+  "profile": {
+    "id": "tcu-greater-good-2026-11",
+    "scope": "万象无终 05 段 For the Greater Good（fgg，05186–05228）44 条目录记录。38 条通过五维验收；5 条因 R1 别名直写、1 条实现缺口（05223）暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 44,
+    "verified": 38,
+    "unverified": 6,
+    "unimplemented": 0,
+    "testsPassed": 133
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-05-a-shard5.test.mjs",
+      "sha256": "c26e3afc5d708301f61f86884bf4c6333e6f6c2ec01e31305741acfd4ff8af51"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+      "sha256": "96600f3e7e76725560f719638d8003ae11edea57a56ac0245cad3478c168b1f6"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+      "sha256": "dc9e8191a1a0dda58cf9c72f3a1c45f599ff98baf17bdcb6646b5a5aee319886"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-p0-regressions.test.mjs",
+      "sha256": "032a3ef79e495e8fa5dbef2f10ce18ab76473a1fe056ff23ca65aa864d86978a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-p1-regressions.test.mjs",
+      "sha256": "1003ff31f4f3c4f908e7b508f18d212435ccdb3021411ebf93d7b9e608a28455"
+    }
+  ],
+  "entries": [
+    {
+      "code": "05186",
+      "name": ".45汤姆逊冲锋枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05186 .45汤姆逊冲锋枪 花 1 子弹攻击 +2 战斗 +1 伤害，子弹换成资源"
+        }
+      ]
+    },
+    {
+      "code": "05187",
+      "name": ".45汤姆逊冲锋枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05187 .45汤姆逊冲锋枪 命中超出另一敌人攻击值时可花 1 子弹转伤"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05187 .45汤姆逊冲锋枪 转伤等于本次攻击的实际伤害（投入致命打击使伤害 +1 后转 3 点）"
+        }
+      ]
+    },
+    {
+      "code": "05188",
+      "name": "秘密卷轴",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态（别名写入，审计基线未检出）：把 state 的牌库数组取为 `zone.pile` 后直接 `splice/unshift/push`（调查员牌库 / 遭遇牌库）；同文件其它去向已走 api.putInHand/putInDiscard/discardEncounterCards，说明区域原语存在却未统一使用。行为正确（tcu-player-m2-3 用例通过）。"
+    },
+    {
+      "code": "05189",
+      "name": "秘密卷轴",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态（别名写入，审计基线未检出）：`zone.pile.splice`、`discardPileOf(...).push`、`state.investigators[zone.seat].hand.push`、牌库 unshift/push 均直接改区域数组；应使用 putOnTopOfDeck/putOnDeckBottom/takeDeckBottom/putInDiscard/putInHand。行为正确（tcu-player-m2-3 用例通过）。"
+    },
+    {
+      "code": "05190",
+      "name": "田纳西酸麦芽威士忌",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05190 田纳西酸麦芽威士忌 弃掉：攻击 +3 战斗 +1 伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05190 田纳西酸麦芽威士忌 诡计卡牌检定 +3 意志（横置并花 1 补给）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05190 田纳西酸麦芽威士忌 非意志的诡计检定不提供能力（不白扣补给）"
+        }
+      ]
+    },
+    {
+      "code": "05191",
+      "name": "田纳西酸麦芽威士忌",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05191 田纳西酸麦芽威士忌 弃掉：攻击 +3 战斗，命中非精英敌人后自动躲避"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05191 田纳西酸麦芽威士忌 诡计卡牌意志检定 +2 意志（横置并花 1 补给）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05191 田纳西酸麦芽威士忌 非意志的诡计检定不提供能力（不白扣补给）"
+        }
+      ]
+    },
+    {
+      "code": "05192",
+      "name": "附魔剑",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05192 附魔剑 成功花 1 充能附魔 +1 伤害，附魔击杀后抽 1 治愈 1 恐惧"
+        }
+      ]
+    },
+    {
+      "code": "05193",
+      "name": "附魔剑",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05193 附魔剑 额外花 2 充能：+2 战斗 +2 伤害"
+        }
+      ]
+    },
+    {
+      "code": "05194",
+      "name": "恐怖图腾",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态 + 单卡新造字段：对 state.skillTest.committed 的条目直接 `committed.extraIcons = [...]`（未走 ctx.api，`extraIcons` 为单卡私有字段）；「额外图标」以 +1 检定加值近似，已在条目注释披露（近似本身可接受），写入方式违规。"
+    },
+    {
+      "code": "05195",
+      "name": "恐怖图腾",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态 + 单卡新造字段：在支援实例上直接写/删 `source.grislyReturn` 传递「本次投入卡」，并在失败窗口直接 `committed.splice` 改 state.skillTest.committed；应走提交区/窗口原语。行为正确（tcu-player-m2-3 用例通过）。"
+    },
+    {
+      "code": "05196",
+      "name": "委员会的保险箱",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写资产字段：entersPlay resolve 直接 `source.uses = ...` / `source.usesType = ...`（同卡行动分支已用 api.setAssetUses，存在正确原语却未统一）。其余子句（1×人数锁头、双行动任意技能(5)、锁头清零后全队免费打出并放逐、同地点队友可激活）有真实读点与用例。"
+    },
+    {
+      "code": "05197",
+      "name": "崇高利益",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05197 普通面 ElderThing：最近的异教徒敌人没有毁灭时不改选更远目标"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard5.test.mjs",
+          "test": "TCU 05197 崇高利益：困难面骷髅取异教徒毁灭总和，无目标时改再揭示"
+        }
+      ]
+    },
+    {
+      "code": "05198",
+      "name": "教皇•V",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05198 正面：被弃置的银暮秘社敌人不移动毁灭（只认「击败」）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05198 背面：异教徒敌人按玩家顺序（从队长起）抽取"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05198 背面：抽到带「生成 - 任意圣堂地点」规则的异教徒敌人时按印刷生成规则生成"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05198 背面：抽到的异教徒敌人生成在抽牌者地点并交战，且不重复进弃牌堆"
+        }
+      ]
+    },
+    {
+      "code": "05199",
+      "name": "目的与手段",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05199 正面：圣堂地点的银暮秘社敌人失去冷漠；离开圣堂/议程翻面后还原"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05199 正面：议程翻到 05199 当刻立即同步圣堂银暮秘社敌人的冷漠"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05199 背面：响应召唤的怪兽生成在机关盒所在地点（附在敌人身上时取敌人地点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05199：银暮秘社敌人移入圣堂地点后失去冷漠，移出后恢复"
+        }
+      ]
+    },
+    {
+      "code": "05200",
+      "name": "热烈欢迎",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard5.test.mjs",
+          "test": "TCU 05200 热烈欢迎：背面放入藏书室、生成南森（引导大师）并附属机关盒"
+        }
+      ]
+    },
+    {
+      "code": "05201",
+      "name": "渗透秘社",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05201 渗透秘社：跨幕持续的反应，且可选择不发动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-p0-regressions.test.mjs",
+          "test": "P0-4 05201《渗透秘社》1a 正面反应从开局起生效"
+        }
+      ]
+    },
+    {
+      "code": "05202",
+      "name": "取得仪器",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard5.test.mjs",
+          "test": "TCU 05202 取得仪器：南森进胜利区后由一位调查员取得机关盒并推进"
+        }
+      ]
+    },
+    {
+      "code": "05203",
+      "name": "四把钥匙",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-p1-regressions.test.mjs",
+          "test": "P1 05284 幕上裂口 / 05203 四把钥匙 / 密谋牌库旁：真实 viewState 可观察"
+        }
+      ]
+    },
+    {
+      "code": "05204",
+      "name": "秘社大门",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05204/05205：秘社大门禁止生成敌人（引擎 spawnForbiddenAt 读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard5.test.mjs",
+          "test": "TCU 05204/05205 秘社大门：两版都提供撤退且禁止敌人生成"
+        }
+      ]
+    },
+    {
+      "code": "05205",
+      "name": "秘社大门",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05204/05205：秘社大门禁止生成敌人（引擎 spawnForbiddenAt 读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard5.test.mjs",
+          "test": "TCU 05204/05205 秘社大门：两版都提供撤退且禁止敌人生成"
+        }
+      ]
+    },
+    {
+      "code": "05206",
+      "name": "前厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard5.test.mjs",
+          "test": "TCU 05206 前厅：未揭示前不能进入，秘社大门谈判后揭示"
+        }
+      ]
+    },
+    {
+      "code": "05207",
+      "name": "前厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard5.test.mjs",
+          "test": "TCU 05207 前厅：揭示后放置 1 把随机放一边的钥匙"
+        }
+      ]
+    },
+    {
+      "code": "05208",
+      "name": "秘社地窖",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05208 秘社地窖（我们一直在等你）：背面无进入限制，进入/揭示后放 1 把随机钥匙"
+        }
+      ]
+    },
+    {
+      "code": "05209",
+      "name": "秘社地窖",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard5.test.mjs",
+          "test": "TCU 05209 秘社地窖：不能进入；秘社大门共同支付每人 1 线索后揭示"
+        }
+      ]
+    },
+    {
+      "code": "05210",
+      "name": "休息室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05210 休息室揭示：钥匙挂在奥古斯特支援（assetId），地点上没有钥匙"
+        }
+      ]
+    },
+    {
+      "code": "05211",
+      "name": "机密室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard5.test.mjs",
+          "test": "TCU 05211 机密室：未控制古神钥匙不能进入；揭示后放 1 把随机钥匙"
+        }
+      ]
+    },
+    {
+      "code": "05212",
+      "name": "藏书室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard5.test.mjs",
+          "test": "TCU 05212 藏书室：调查时控制石板钥匙则帷幕 -3"
+        }
+      ]
+    },
+    {
+      "code": "05213",
+      "name": "秘社地下墓穴",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05213 地下墓穴：控制至少 1 把任意钥匙即可进入，揭示时放入圣堂内室与门廊"
+        }
+      ]
+    },
+    {
+      "code": "05214",
+      "name": "典礼室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard5.test.mjs",
+          "test": "TCU 05214 典礼室：轮末调查员与盟友各受 1 直接恐惧，骷髅钥匙可取消"
+        }
+      ]
+    },
+    {
+      "code": "05215",
+      "name": "拘禁室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05215 拘禁室：搜索候选由玩家选择（牌库/弃牌堆）"
+        }
+      ]
+    },
+    {
+      "code": "05216",
+      "name": "圣堂内室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard5.test.mjs",
+          "test": "TCU 05216 圣堂内室：未控制异教徒钥匙不能进入；揭示后放 1 把随机钥匙"
+        }
+      ]
+    },
+    {
+      "code": "05217",
+      "name": "南森·威克",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05218/05227（以及 05217/05222）谈判行动声明 actionKind=parley（不引发借机攻击）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard5.test.mjs",
+          "test": "TCU 05217b 南森·威克（教化大师）：躲避超过 3 点偷走机关盒并加入胜利区"
+        }
+      ]
+    },
+    {
+      "code": "05217b",
+      "name": "南森·威克",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard5.test.mjs",
+          "test": "TCU 05217b 南森·威克（教化大师）：躲避超过 3 点偷走机关盒并加入胜利区"
+        }
+      ]
+    },
+    {
+      "code": "05218",
+      "name": "秘社狱卒",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05218/05219：生成 - 任意圣堂地点，由玩家选择"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05218/05227（以及 05217/05222）谈判行动声明 actionKind=parley（不引发借机攻击）"
+        }
+      ]
+    },
+    {
+      "code": "05219",
+      "name": "牢房看门人",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05218/05219：生成 - 任意圣堂地点，由玩家选择"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05219 牢房看门人：躲过 2 点或更多才拿走钥匙"
+        }
+      ]
+    },
+    {
+      "code": "05220",
+      "name": "响应召唤的怪兽",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05220 响应召唤的怪兽：敌军阶段开始击败同地点类人敌人并吸收其毁灭（走引擎击败结算）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05220 结局 3 campaign-flow：击败陷阱守卫者后胜利区重算并发放 2 XP"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05220 陷阱守卫者被击败：入胜利区后才结算结局 3（胜利点入账）"
+        }
+      ]
+    },
+    {
+      "code": "05221",
+      "name": "核心圈骑士",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05221 核心圈骑士：骑士进入你所在地点后检定 agility(4)，失败则交战"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05221 猎物 - 控制最多钥匙：猎人移动并列时由引擎 hunterStep 按 preyRank 裁决"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05221 猎物 - 控制最多钥匙：自动命中钥匙最多的调查员"
+        }
+      ]
+    },
+    {
+      "code": "05222",
+      "name": "边缘虚空骑士",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05218/05227（以及 05217/05222）谈判行动声明 actionKind=parley（不引发借机攻击）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05222 边缘虚空骑士谈判成功：移除 1 个毁灭并获得 1 个线索"
+        }
+      ]
+    },
+    {
+      "code": "05223",
+      "name": "发号施令",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面「spawn them in the **empty** location with the most remaining clues」与「If no Cultist enemies are spawned by this effect, Call to Order gains surge」两处未忠实实现：behavior.js:1344 在没有任何空地点时回退到 `state.locations`（含被调查员/敌人占据的地点），实测会在调查员所在位置生成；且生成被拒绝（秘社大门禁生成）时不会获得涌动。正常有空地点路径由 tcu-greater-good 用例覆盖且正确。"
+    },
+    {
+      "code": "05224",
+      "name": "除籍",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05224 除籍：沿最短路径逐步移动（每步 1 个地点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05224 除籍：移动走引擎 moveEnemy 并派发 enemyMoved（圣堂银暮秘社敌人即时失去冷漠）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "诡计 05224 除籍：最近的异教徒敌人移动、交战、攻击并把钥匙放到它身上"
+        }
+      ]
+    },
+    {
+      "code": "05225",
+      "name": "秘社地底",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "诡计 05225/05226：秘社地底失败按点数扣线索，修道会符号按钥匙结算"
+        }
+      ]
+    },
+    {
+      "code": "05226",
+      "name": "修道会符号",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "诡计 05225/05226：秘社地底失败按点数扣线索，修道会符号按钥匙结算"
+        }
+      ]
+    },
+    {
+      "code": "05227",
+      "name": "奥古斯特·林奎斯特",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05218/05227（以及 05217/05222）谈判行动声明 actionKind=parley（不引发借机攻击）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard5.test.mjs",
+          "test": "TCU 05227 奥古斯特·林奎斯特：共同支付 2×人数线索，付费者受伤/恐惧，取得钥匙并移出游戏"
+        }
+      ]
+    },
+    {
+      "code": "05228",
+      "name": "机关盒",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05228 控制权转移后同步本章机关盒归属"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05228 机关盒 [action]：熄灭火盆 / 横置看守人 / 对已横置看守人造成 5 伤害，团队每场限一次"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05228 机关盒行动声明只豁免幽灵看守人的借机攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard5.test.mjs",
+          "test": "TCU 05228 机关盒：team limit / 幽灵看守人借机攻击豁免 / 被击败转交均有引擎读点"
+        }
+      ]
+    }
+  ]
+}

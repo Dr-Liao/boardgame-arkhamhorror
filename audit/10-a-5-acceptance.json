@@ -1,0 +1,573 @@
+{
+  "schemaVersion": 1,
+  "unit": "10-a-5",
+  "profile": {
+    "id": "fhv-campaign-a-2026-11",
+    "scope": "铁杉谷盛宴 10 段 fhvc 战役卡（10501–10536）43 条目录记录。35 条通过五维验收；8 条声明未接线/敌人地点每人生命未实现暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 43,
+    "verified": 35,
+    "unverified": 8,
+    "unimplemented": 0,
+    "testsPassed": 200
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+      "sha256": "7f118e61e550726ceadac20aef44d8a3d7a680641a59b9a7ee6cf7fc9287006e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-scenario-writtenInRock.test.mjs",
+      "sha256": "afedff90bb726b383b01690e8b899e55a0057356c2df96a2d37b62558c2d6631"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-scenario-hemlockHouse.test.mjs",
+      "sha256": "9658af1ad930a9ecc19af2988e442b88157a0045b0efa84cce4f9135da579960"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-scenario-theSilentHeath.test.mjs",
+      "sha256": "780327d96674b6d0559b14797f013c5d848f0eef0d11e862632e3d2323ea8cb3"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-rules.test.mjs",
+      "sha256": "0923adf4ff0b6d5b8e50ddf8bae63071dcae1f05ad9421ff0760e02715e615b7"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-primitives.test.mjs",
+      "sha256": "da22963c70f087153a13118a390afdd9f784d0bba5df3ab4dd603a806579639b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-interactions.test.mjs",
+      "sha256": "ec0fbb583bc1bb4240c8f184d861ed9761e33ec930a985c4e902e465041d693a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-campaign-flow.test.mjs",
+      "sha256": "50cf5665e2323b0c038355ad4caaeeb59ca588ec53561b38fb9d704d79874780"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-campaign-engine.test.mjs",
+      "sha256": "de69a978fccc696624d8505c2a94009120201233633bac958f1616da6f8498c3"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-scenario-blockers.test.mjs",
+      "sha256": "65287e9f6d6460090afbb9798c8263fa7f86cf0aa261c6243282f0b77661792a"
+    }
+  ],
+  "entries": [
+    {
+      "code": "10501",
+      "name": "岩间密语",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10501 岩间密语（场景1）：骷髅 -列号、cultist 放废料、tablet 失败移废料"
+        }
+      ]
+    },
+    {
+      "code": "10502",
+      "name": "岩间密语",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10502 岩间密语（场景2）：困难面标记数值与场景1不同"
+        }
+      ]
+    },
+    {
+      "code": "10503",
+      "name": "地下勘察",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "条目只声明 `flags.movesDoomOnAdvance`；引擎读点是 `agendaRule.doomToNextAgenda`（`src/engine/act-agenda.js:386`），条目无 `agendaRule`，章节 behavior 也无推进移毁灭分支 → 印刷强制子句不生效。"
+    },
+    {
+      "code": "10504",
+      "name": "危险之旅",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「每个敌人额外结算一次猎手」；引擎无双猎手读点，条目 note 披露「只能授予 hunter」→ 子句未实现。"
+    },
+    {
+      "code": "10505",
+      "name": "深入矿井",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10505 深入矿井：目标 = 轮末全员在控制站，背面塌方"
+        }
+      ]
+    },
+    {
+      "code": "10506",
+      "name": "地下迷宫",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10506 地下迷宫：滑动/交换/取棱柱碎片与矿车抵达轨道出口目标"
+        }
+      ]
+    },
+    {
+      "code": "10507",
+      "name": "矿车",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10507 矿车：敌军阶段末强制移动、脱轨全员失败、道岔反应（每阶段 2 次）"
+        }
+      ]
+    },
+    {
+      "code": "10508",
+      "name": "控制站",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷背面「作为进入控制站的额外费用，相邻地点的调查员必须共同花费 2[每人] 线索」；`enterCostCluesPerInvestigator` 只在条目/definition 声明，引擎无读点、writtenInRock behavior 无 enterCost 分支。"
+    },
+    {
+      "code": "10509",
+      "name": "轨道出口",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10509 轨道出口：不可滑动/交换、胜利 1"
+        }
+      ]
+    },
+    {
+      "code": "10510a",
+      "name": "左转弯",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10510a 转弯地点：交换相邻轨道地点（每局一次）"
+        }
+      ]
+    },
+    {
+      "code": "10510b",
+      "name": "左转弯",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10510b 转弯地点：花 2 资源滑动地点（每局一次）"
+        }
+      ]
+    },
+    {
+      "code": "10511a",
+      "name": "右转弯",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10511a 转弯地点：交换相邻轨道地点（每局一次）"
+        }
+      ]
+    },
+    {
+      "code": "10511b",
+      "name": "右转弯",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10511b 转弯地点：花 2 资源滑动地点（每局一次）"
+        }
+      ]
+    },
+    {
+      "code": "10512",
+      "name": "碱性轨道",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10512 碱性轨道：轮末每位调查员与居民支援各 1 恐惧"
+        }
+      ]
+    },
+    {
+      "code": "10513",
+      "name": "扭曲隧道",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10513 扭曲隧道：矿车进入后再移动一次"
+        }
+      ]
+    },
+    {
+      "code": "10514",
+      "name": "沉没隧道",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10514 沉没隧道：揭示后弃遭遇直到敌人、队长抽取"
+        }
+      ]
+    },
+    {
+      "code": "10515",
+      "name": "轨道岔路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10515 轨道岔路：轮末矿车在此则弃 1 道岔"
+        }
+      ]
+    },
+    {
+      "code": "10516",
+      "name": "轨道桥梁",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10516 轨道桥梁：X=列号帷幕 + 花资源放道岔行动"
+        }
+      ]
+    },
+    {
+      "code": "10517",
+      "name": "地下野兽",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10517 地下野兽：猎手/群体、+3[每人]生命、阻挡矿车、横置行动"
+        }
+      ]
+    },
+    {
+      "code": "10518",
+      "name": "深掘混种",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10518 深掘混种：入场后把矿车朝向地点滑动（否则交换）"
+        }
+      ]
+    },
+    {
+      "code": "10519",
+      "name": "发狂矿工",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10519 发狂矿工：战斗/躲避 X=列号，攻击后溅射 1 伤"
+        }
+      ]
+    },
+    {
+      "code": "10520",
+      "name": "塌方",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10520 塌方：附属矿车朝向地点 + 取消移动伤害"
+        }
+      ]
+    },
+    {
+      "code": "10521",
+      "name": "急速狂飙",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10521 急速狂飙：敏捷 5 失败入威胁区 + 矿车移动强制"
+        }
+      ]
+    },
+    {
+      "code": "10522",
+      "name": "棱柱碎片",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷 [reaction]「忽略剧本/弱点弃手效果并改抽等量卡」；`flags.ignoreHandDiscardReaction` 无引擎/内容读点（note 披露要求手牌弃置窗口）。"
+    },
+    {
+      "code": "10523",
+      "name": "汉洛克庄园",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10523 汉洛克庄园：骷髅=当前层数（最少 1），tablet 治愈最近敌人-地点"
+        }
+      ]
+    },
+    {
+      "code": "10524",
+      "name": "猎杀之屋",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10524 猎杀之屋：建立掠食袋（基础 3 标记 + 按日加 cultist），翻面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10524b 猎杀检定：cultist 放一边、tablet 敌人-地点攻击并放回、elder_thing 翻最近沉寂地点"
+        }
+      ]
+    },
+    {
+      "code": "10524b",
+      "name": "猎杀检定",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10524b 猎杀检定：cultist 放一边、tablet 敌人-地点攻击并放回、elder_thing 翻最近沉寂地点"
+        }
+      ]
+    },
+    {
+      "code": "10525",
+      "name": "吊诡的静默",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10525 议程 base：背面翻最近沉寂地点/洗回放一边诡计"
+        }
+      ]
+    },
+    {
+      "code": "10526",
+      "name": "庄园动了(版本一)",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10526 议程 v1：背面翻最近沉寂地点/洗回放一边诡计"
+        }
+      ]
+    },
+    {
+      "code": "10527",
+      "name": "庄园动了(版本二)",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10527 议程 v2：背面翻最近沉寂地点/洗回放一边诡计"
+        }
+      ]
+    },
+    {
+      "code": "10528",
+      "name": "墙壁活了",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10528 议程 base：墙壁活了背面全员失败+1精神创伤"
+        }
+      ]
+    },
+    {
+      "code": "10529",
+      "name": "诡异住户",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10529 诡异住户：轮末 7 处封印/胜利即推进，无调查员地点不能发现线索"
+        }
+      ]
+    },
+    {
+      "code": "10530",
+      "name": "对抗庄园",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10530 对抗庄园：场上无地点立即推进（结局1）"
+        }
+      ]
+    },
+    {
+      "code": "10531",
+      "name": "庄园之心",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10531 庄园之心：失形地窖进入胜利区推进，敌人-地点攻击后移动至地窖"
+        }
+      ]
+    },
+    {
+      "code": "10532",
+      "name": "卧室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10532 卧室：X=楼层+1 帷幕 + 放封印后抽 1 或得 2 资源"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10532b 活的卧室：庞大/不能趁乱/揭示效果 + 声明 +2[每人]生命"
+        }
+      ]
+    },
+    {
+      "code": "10532b",
+      "name": "活的卧室",
+      "type": "enemy_location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「活的卧室得到 +2[每人] 生命」；条目 flags 声明 2，但翻面数据只有 `health: 3`（`hemlockHouse/definition.js:215`），引擎仅支持 `healthPerInvestigator` 字段，`behavior.enemyStatModifier` 也只处理紧锢孽种 → 2 人局生命 3 而非 7。"
+    },
+    {
+      "code": "10533",
+      "name": "卧室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10533 卧室：X=楼层+1 帷幕 + 放封印后抽 1 或得 2 资源"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10533b 活的卧室：庞大/不能趁乱/揭示效果 + 声明 +2[每人]生命"
+        }
+      ]
+    },
+    {
+      "code": "10533b",
+      "name": "活的卧室",
+      "type": "enemy_location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 10532b（+2[每人] 生命未接读点）。"
+    },
+    {
+      "code": "10534",
+      "name": "卧室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10534 卧室：X=楼层+1 帷幕 + 放封印后抽 1 或得 2 资源"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10534b 活的卧室：庞大/不能趁乱/揭示效果 + 声明 +2[每人]生命"
+        }
+      ]
+    },
+    {
+      "code": "10534b",
+      "name": "活的卧室",
+      "type": "enemy_location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 10532b（+2[每人] 生命未接读点）。"
+    },
+    {
+      "code": "10535",
+      "name": "卧室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10535 卧室：X=楼层+1 帷幕 + 放封印后抽 1 或得 2 资源"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10535b 活的卧室：庞大/不能趁乱/揭示效果 + 声明 +2[每人]生命"
+        }
+      ]
+    },
+    {
+      "code": "10535b",
+      "name": "活的卧室",
+      "type": "enemy_location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 10532b（+2[每人] 生命未接读点）。"
+    },
+    {
+      "code": "10536",
+      "name": "盥洗室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard5.test.mjs",
+          "test": "10-a5 10536 盥洗室：快速把本地点 1 线索移到正下方地点（每回合一次）"
+        }
+      ]
+    }
+  ]
+}

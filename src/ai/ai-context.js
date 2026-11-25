@@ -3,7 +3,6 @@ import { INVESTIGATOR_ABILITIES } from '../cards/card-effects.js'
 import { implementationSummary } from '../cards/card-implementation.js'
 import { registeredEntry } from '../engine/ability.js'
 import { commitProfile } from '../engine/lifecycle.js'
-import { playablePool, matchesDeckOptions } from '../deck/deckbuilding.js'
 import { deckRules } from '../deck/deck-rules.js'
 import { upgradeRecord } from '../campaign/campaign.js'
 import { legalMoves, actionPreview, combatOdds, commitIcons, getStat, actingSeats, actObjectiveContext, investigatorEntryError, locationAbilityStatus, locationInvestigateStatus, abilityUsage } from '../engine/engine.js'
@@ -12,8 +11,29 @@ import { investigatorAssigned, investigatorParticipation } from './ai-participat
 import { CLASS_NAMES, SKILL_NAMES } from '../engine/presentation-constants.js'
 import { storyDecisionContext } from './ai-story.js'
 import { campaignAgentHints } from '../cards/campaign-view.js'
+import recommendedDeckGuides from './recommended-deck-guides.json' with { type: 'json' }
 
 const counts = codes => Object.fromEntries([...new Set(codes)].sort().map(code => [code, codes.filter(c => c === code).length]))
+const startingDeckActions = [
+  [/\bFight\./i, '战斗'],
+  [/\bInvestigate\./i, '调查'],
+  [/\bEvade\./i, '闪避'],
+]
+
+function recommendedDeckStrategy(record, investigatorCode) {
+  if (!record?.arkhamDbDecklistId || record.code !== investigatorCode) return null
+  const guide = recommendedDeckGuides[record.arkhamDbDecklistId]
+  if (guide?.investigatorCode === investigatorCode) return guide.strategy
+  // Online lists without an authored summary can still surface their repeatable actions.
+  const assets = [...new Set(record.deck)].map(code => ALL_CARDS[code])
+    .filter(card => card?.type === 'asset' && !card.subtype && !card.permanent)
+  const options = startingDeckActions.flatMap(([action, role]) => {
+    const asset = assets.find(card => action.test(card.text || ''))
+    return asset ? [`用「${asset.nameZh || asset.name}」${role}`] : []
+  })
+  return options.length ? `起手按队伍需要保留能持续行动的支援，${options.join('、')}，并把对应的事件或技能留给关键检定。` : null
+}
+
 const locationSubname = loc => loc.revealed === false ? ''
   : String(loc.subname || ALL_CARDS[loc.code]?.subnameZh || ALL_CARDS[loc.originalCode]?.subnameZh || '').trim()
 const card = code => {
@@ -140,7 +160,11 @@ function hubTeamSummary(state) {
 export function aiDecisionContext(state, seat) {
   const inv = state.investigators.find(i => i.seat === seat)
   if (!inv) return ''
-  const record = state.campaign.investigators[seat]
+  const roomSeat = state.laneRuntime?.roomSeats?.[seat] ?? seat
+  const part = state.campaign.seatParts?.[roomSeat]
+  const record = part && part !== state.campaign.currentPart
+    ? state.campaign.parts?.[part]?.investigators?.[roomSeat]
+    : state.campaign.investigators[seat]
   const moves = actingSeats(state).includes(seat) ? legalMoves(state, seat) : []
   // 局外准备阶段：建局给每个座位预分配的调查员只是占位（见 setup.js 的
   // pickAiInvestigator），没真正选人的座位不展示，避免模型误判队伍构成。
@@ -160,6 +184,8 @@ export function aiDecisionContext(state, seat) {
         ...(hubPhase ? { picked: true } : {}) }
     }) }
   if (hubPhase) data.teamSummary = hubTeamSummary(state)
+  const strategy = recommendedDeckStrategy(record, inv.code)
+  if (strategy) data.deckStrategy = strategy
   // Phase 6（战役插件化：agentHints）：战役作者提供的公开提示；旧战役为空、提示词不变。
   const campaignHints = campaignAgentHints(state)
   if (campaignHints.length) data.campaignHints = campaignHints
@@ -172,12 +198,6 @@ export function aiDecisionContext(state, seat) {
       return { code: i.code, name: i.nameZh || i.name, stats: { willpower: i.willpower, intellect: i.intellect, combat: i.combat, agility: i.agility },
         rules: deckRules(i), ability: INVESTIGATOR_ABILITIES[i.code] }
     })
-    if (moves.some(m => m.action === 'hubSetDeck')) {
-      data.deckRules = deckRules(INVESTIGATORS[inv.code])
-      data.buildPool = playablePool().filter(c => (c.xp || 0) === 0 && matchesDeckOptions(INVESTIGATORS[inv.code], c)).map(c => c.code)
-      data.buildPool.forEach(code => known.add(code))
-      data.deckInstruction = '提交 hubSetDeck，codes 是普通玩家卡卡号数组，可重复以表示数量；必须凑足 deckRules.size，签名由引擎添加。根据队友职责、经济、槽位和组合构筑，不得调用自动构筑代替思考。'
-    }
     if (moves.some(m => m.action === 'hubConfirmDeck')) {
       data.deckInstruction = '完整牌组已保存。提交 hubConfirmDeck 抽取基础弱点并锁定牌组，随后用 hubDoneSeat 确认准备。'
     }

@@ -1,0 +1,605 @@
+{
+  "schemaVersion": 1,
+  "unit": "05-a-3",
+  "profile": {
+    "id": "tcu-secret-name-2026-11",
+    "scope": "万象无终 05 段 The Secret Name（tsn，05109–05150）42 条目录记录。39 条通过五维验收；3 条因同句检索规则重复手写暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 42,
+    "verified": 39,
+    "unverified": 3,
+    "unimplemented": 0,
+    "testsPassed": 115
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-05-a-shard3.test.mjs",
+      "sha256": "6cc3e3d716e3a97f942331f63f55f55095470d7a4f2b84c897f4b35682be9bb6"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+      "sha256": "734ee9169d2e99b3d5a00ee2e6f80e40e960ece700c8df9c5d46057b4b76f5b7"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+      "sha256": "d01c5b909f1070a23c8a5918b134418718270e921d8644441225baff8673d2fd"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-p0-regressions.test.mjs",
+      "sha256": "032a3ef79e495e8fa5dbef2f10ce18ab76473a1fe056ff23ca65aa864d86978a"
+    }
+  ],
+  "entries": [
+    {
+      "code": "05109",
+      "name": "赴汤蹈火",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05109 赴汤蹈火 不同地点的其他调查员不能把恐惧分配给它"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05109 赴汤蹈火 只接恐惧：同地点其他调查员受到的伤害不能分配给它"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05109 赴汤蹈火 同地点其他调查员的恐惧可以分配给它"
+        }
+      ]
+    },
+    {
+      "code": "05110",
+      "name": "水落石出",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05110 水落石出 最后线索被发现后，该地点调查员获得 X=隐藏值的资源"
+        }
+      ]
+    },
+    {
+      "code": "05111",
+      "name": "情报报告",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05111 情报报告 提升费用 2 点：发现 2 个线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05111 情报报告 提升费用 2 点：改为发现 2 个连接内的地点"
+        }
+      ]
+    },
+    {
+      "code": "05112",
+      "name": "魔法手势",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05112 魔法手势 受限额外法术槽：只有 Spell/Ritual 可用且只有 1 个"
+        }
+      ]
+    },
+    {
+      "code": "05113",
+      "name": "驱除",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05113 驱除 只能用于非精英敌人：只有精英敌人时打不出"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05113 驱除 意志躲避成功后把敌人移动到任意地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05113 驱除 揭示符号后敌人在下一个补给阶段不重整"
+        }
+      ]
+    },
+    {
+      "code": "05114",
+      "name": "切肉刀",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05114 切肉刀 剩余神智不超过 3 时改为 +2 战斗"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05114 切肉刀 剩余神智充足时 +1 战斗；可受 1 恐惧换 +1 伤害并在击败后治愈"
+        }
+      ]
+    },
+    {
+      "code": "05115",
+      "name": ".45汤姆逊冲锋枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05115 .45汤姆逊冲锋枪 花 1 子弹攻击：战斗 +2、伤害 +1"
+        }
+      ]
+    },
+    {
+      "code": "05116",
+      "name": "秘密卷轴",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05116 秘密卷轴 查看任意调查员牌库底并加入手牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05116 秘密卷轴 查看遭遇牌库底并弃掉"
+        }
+      ]
+    },
+    {
+      "code": "05117",
+      "name": "田纳西酸麦芽威士忌",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05117 田纳西酸麦芽威士忌 弃掉自身攻击：战斗 +3"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05117 田纳西酸麦芽威士忌 投入后窗口同样可用（不再只在检定开始）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05117 田纳西酸麦芽威士忌 诡计意志检定 +2 意志（投入前窗口，横置 + 1 补给）"
+        }
+      ]
+    },
+    {
+      "code": "05118",
+      "name": "附魔剑",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05118 附魔剑 +1 战斗；花 1 充能附魔再 +1 战斗/+1 伤害"
+        }
+      ]
+    },
+    {
+      "code": "05119",
+      "name": "恐怖图腾",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05119 恐怖图腾 投入后横置：该卡额外获得一个技能图标（检定 +1）"
+        }
+      ]
+    },
+    {
+      "code": "05120",
+      "name": "隐秘之名",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "05120 混乱标记与猎手结算：异次元按印刷英文特性判定；交战/横置/immobile 的敌人不结算猎手"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "05120 章节清单：playable、地点 16 实例 / 3 幕 / 4 议程 / 3 结局"
+        }
+      ]
+    },
+    {
+      "code": "05121",
+      "name": "隐士•IX",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "条目内 findInEncounter（遭遇弃牌堆→遭遇牌库顶逐张匹配后经 take* 原语取出）与 05122 的同名函数逐字重复，「查找遭遇牌库+弃牌堆」同句已第 3+ 次手写；引擎已登记 api.takeEncounterCard 可覆盖该句（05126/05143/05144 即使用它）。行为本身正确（新补证测试通过）。"
+    },
+    {
+      "code": "05122",
+      "name": "魔宠",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "findInEncounter / findAnywhere 本地实现与 05121 重复（同句「search the encounter deck and discard pile for X」第 3+ 次手写），应复用 api.takeEncounterCard 或抽共享原语。行为本身正确（新补证测试通过）。"
+    },
+    {
+      "code": "05123",
+      "name": "巫异光芒",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard3.test.mjs",
+          "test": "验收 05123 巫异光芒：非幕 3 把那赫卜放回场外并给密谋 4a 预留 4 毁灭；幕 3 放 1 毁灭"
+        }
+      ]
+    },
+    {
+      "code": "05124",
+      "name": "献祭标志",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard3.test.mjs",
+          "test": "验收 05124 献祭标志：背面结束剧本走结局 1"
+        }
+      ]
+    },
+    {
+      "code": "05125",
+      "name": "探访巫宅",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard3.test.mjs",
+          "test": "验收 05125 探访巫宅：背面换入凯夏的房间、移除其他地点、交黑书、洗入 2 张古怪图形"
+        }
+      ]
+    },
+    {
+      "code": "05126",
+      "name": "巫宅之外",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard3.test.mjs",
+          "test": "验收 05126 巫宅之外：目标只允许巫宅遗址团队付线索；背面放置献祭场所与那赫卜/詹金"
+        }
+      ]
+    },
+    {
+      "code": "05127",
+      "name": "阻止仪式",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard3.test.mjs",
+          "test": "验收 05127 阻止仪式：背面结局 2；幕 3 那赫卜被击败不弃掉并本轮不重整；无毁灭推进"
+        }
+      ]
+    },
+    {
+      "code": "05128",
+      "name": "发霉的走道",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard3.test.mjs",
+          "test": "验收 05128 发霉的走道：闹鬼「失去 3 资源」是引擎 haunted 加载器可结算的闭集子句"
+        }
+      ]
+    },
+    {
+      "code": "05129",
+      "name": "屋主的住处",
+      "type": "location",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "①条目 findInEncounter 与 05121/05122 同句重复手写（本卡为「先牌库后弃牌堆」变体，语义相同）；②本卡印刷的强制与闹鬼是同一句（查找鼠群生成在发霉的走道并混洗遭遇牌库），却分别实现在条目 locationRule.onReveal 与 behavior.hauntedScript('landlordsQuartersRats') 两处。行为本身正确（既有章节测试通过）。"
+    },
+    {
+      "code": "05130",
+      "name": "乔·马祖尔维奇的房间",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "05130 乔的房间：每场一次检索祝福/道具支援加入手牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "05130/05131 闹鬼 choice 按选项可结算性过滤：无支援只剩恐惧、0 线索只剩放毁灭"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-p0-regressions.test.mjs",
+          "test": "P0-1 05130 乔的房间：牌组含同名卡两张时场景行动不崩溃且正确检索"
+        }
+      ]
+    },
+    {
+      "code": "05131",
+      "name": "弗兰克·埃尔伍德的房间",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "05130/05131 闹鬼 choice 按选项可结算性过滤：无支援只剩恐惧、0 线索只剩放毁灭"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard3.test.mjs",
+          "test": "验收 05131 弗兰克·埃尔伍德的房间：闹鬼「放线索或密谋放毁灭」是合法的 choice 子句"
+        }
+      ]
+    },
+    {
+      "code": "05132",
+      "name": "沃尔特·吉尔曼的房间",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard3.test.mjs",
+          "test": "验收 05132 沃尔特·吉尔曼的房间：锁门收费、进入付费、每名调查员每场一次抽 3 受 1 恐惧"
+        }
+      ]
+    },
+    {
+      "code": "05133",
+      "name": "凯夏的房间",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "第四轮接线：05133 investigateWithoutClues / 05140 actionBlocked / 05150 beforePlayCost 条目"
+        }
+      ]
+    },
+    {
+      "code": "05134",
+      "name": "发霉的走道",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "05134 今晚早些时候：向过去的自己求助把弃牌返回手牌并把「沉湎过去」写进战役记录"
+        }
+      ]
+    },
+    {
+      "code": "05135",
+      "name": "暮光深渊",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard3.test.mjs",
+          "test": "验收 05135 暮光深渊：进入后检定战斗或敏捷(3)，失败每差 1 点受 1 伤害"
+        }
+      ]
+    },
+    {
+      "code": "05136",
+      "name": "古老者之城",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "05136 古老者之城：放置未知地点并建立本场冒险持续连接（不被后续揭示重算覆盖）"
+        }
+      ]
+    },
+    {
+      "code": "05137",
+      "name": "巫宅遗址",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "05137/05138/05141/05142 的行动：治愈/移动/移除毁灭/离开古怪图形"
+        }
+      ]
+    },
+    {
+      "code": "05138",
+      "name": "1692年的塞勒姆监狱",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "05137/05138/05141/05142 的行动：治愈/移动/移除毁灭/离开古怪图形"
+        }
+      ]
+    },
+    {
+      "code": "05139",
+      "name": "物理教室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "05139 物理教室：成功超难度 ≥2 时在另一地点发现 1 线索（每轮一次）"
+        }
+      ]
+    },
+    {
+      "code": "05140",
+      "name": "旧日支配者皇廷",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "第四轮接线：05133 investigateWithoutClues / 05140 actionBlocked / 05150 beforePlayCost 条目"
+        }
+      ]
+    },
+    {
+      "code": "05141",
+      "name": "献祭场所",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "05137/05138/05141/05142 的行动：治愈/移动/移除毁灭/离开古怪图形"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "05141 献祭场所：实际行动支付团队线索并移除那赫卜的毁灭，移除最后一个后推进"
+        }
+      ]
+    },
+    {
+      "code": "05142",
+      "name": "古怪图形",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "05137/05138/05141/05142 的行动：治愈/移动/移除毁灭/离开古怪图形"
+        }
+      ]
+    },
+    {
+      "code": "05143",
+      "name": "好事魔宠",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "05143 好事魔宠：布朗·詹金不在场时从遭遇牌库找出他并造成 1 伤；找不到时只造成 1 伤"
+        }
+      ]
+    },
+    {
+      "code": "05144",
+      "name": "鬼影骤现",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "05144 鬼影骤现：那赫卜只从遭遇牌库/弃牌堆找出；在场时重整、结算猎手并攻击同地点调查员"
+        }
+      ]
+    },
+    {
+      "code": "05145",
+      "name": "异次元幻象",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "05145 异次元幻象：难度 = 2 + 遭遇弃牌堆每 10 张 +1，失败弃支援"
+        }
+      ]
+    },
+    {
+      "code": "05146",
+      "name": "群星牵引",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "05146 群星牵引：进入威胁区；本回合未移动则回合结束受 2 恐惧（只算自己回合内的移动）"
+        }
+      ]
+    },
+    {
+      "code": "05147",
+      "name": "不安的梦",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "05147 不安的梦：意志(5)失败放入威胁区；回合结束弃遭遇牌库顶；牌库耗尽时弃本卡并揭示牌堆顶 10 张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "第四轮：沃尔特房间弃顶 2 张把遭遇牌库弃空 → 触发 05147 的「遭遇牌库耗尽」强制"
+        }
+      ]
+    },
+    {
+      "code": "05148",
+      "name": "布朗·詹金",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard3.test.mjs",
+          "test": "验收 05148 布朗·詹金：重整生物敌人 +2 攻击；敌军阶段结束弃手牌再抽等量"
+        }
+      ]
+    },
+    {
+      "code": "05149",
+      "name": "那赫卜",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard3.test.mjs",
+          "test": "验收 05149 那赫卜：攻击 + 当前密谋编号；重整时敌军阶段开始放毁灭；密谋推进不移除毁灭（真实引擎）"
+        }
+      ]
+    },
+    {
+      "code": "05150",
+      "name": "黑书",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "05150 黑书：已横置时不提供潜在减费 → 资源不足仍不能打出"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "05150 黑书：资源不足但减费后够 → 可打出（引擎合法性 + beforePlayCost 反应）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "第四轮接线：05133 investigateWithoutClues / 05140 actionBlocked / 05150 beforePlayCost 条目"
+        }
+      ]
+    }
+  ]
+}

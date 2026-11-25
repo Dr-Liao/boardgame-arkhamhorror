@@ -1,0 +1,645 @@
+{
+  "schemaVersion": 1,
+  "unit": "06-a-5",
+  "profile": {
+    "id": "tde-thousand-shapes-2026-11",
+    "scope": "食梦者 06 段 A Thousand Shapes of Horror（tsh，06155–06194）41 条目录记录。35 条通过五维验收；6 条因整条子句未实现或死声明暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 41,
+    "verified": 35,
+    "unverified": 6,
+    "unimplemented": 0,
+    "testsPassed": 520
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+      "sha256": "54ef732cad6cc55f7b7a1d3db952bef17137b1e7a779806c13053ea591426618"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-scenario-aThousandShapesOfHorror.test.mjs",
+      "sha256": "8eb8c20b7ddd6891118485f9ba5d6a64a4161829a870be489366ecb2b9a54e61"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-investigators.test.mjs",
+      "sha256": "73689b48713e20c315ff6f622345ecf8e61597e7d81edda4db7c5c6ba15eef99"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+      "sha256": "d2dbd12452d984a7e5cb870a065413e670d9fe7b63e1192af45f70757d958e89"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+      "sha256": "6512f95034b0c9d9655bd3186f5902ae7237c86040a8a08e710bbeaa44597233"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+      "sha256": "2b4836e2e09230101f83d9ef9730aa8c57baf0a36b62b23ff6aecaa79a2b20fb"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+      "sha256": "2cb1f7184ce967e6761df0d7122862fd96d744f5740a005bfbf8766b4383ce45"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+      "sha256": "39bda187c894162c57ab8fc2684e578bdac1dbc1f11e3decfc65782095308400"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-rules.test.mjs",
+      "sha256": "682a74a0627dd5ea36463d3923dd20a4f1fb07c57740ad61d6100fdaba65c797"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-dual-flow.test.mjs",
+      "sha256": "34e910f39303b62453b9d844200a82cfb085410d727616f4066318f95b76db8a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-campaign-layer.test.mjs",
+      "sha256": "062f28ba999e74b33e7e5eee0e42c3e431001b7cb04dc4715bf722b45c5f0f60"
+    }
+  ],
+  "entries": [
+    {
+      "code": "06155",
+      "name": "森哲夫",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "test": "TDE 06155 森哲夫 被击败时也能从牌库顶 9 张找[[道具]]支援并混洗牌库"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "test": "TDE 06155 森哲夫 被击败时：目标调查员从弃牌堆找一张[[道具]]支援加入手牌"
+        }
+      ]
+    },
+    {
+      "code": "06156",
+      "name": "“吃一堑……”",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "test": "TDE 06156 “吃一堑……” 附属已结算诡计，并取消下次同名显现"
+        }
+      ]
+    },
+    {
+      "code": "06157",
+      "name": "自我牺牲",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "test": "TDE 06157 自我牺牲 协助队友检定：检定失败时执行者抽 2 张（失败效果重定向为显式简化）"
+        }
+      ]
+    },
+    {
+      "code": "06158",
+      "name": "异界手稿",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "test": "TDE 06158 异界手稿 花 1 秘密横置：查找遭遇牌库顶 9 张，弃掉场上一张同名非[[精英]]卡并洗回"
+        }
+      ]
+    },
+    {
+      "code": "06159",
+      "name": "强梦血清",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "test": "TDE 06159 强梦血清 抽到与手牌同名的牌后横置血清抽 1 张"
+        }
+      ]
+    },
+    {
+      "code": "06160",
+      "name": "“让上帝分辨去吧……”",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "test": "TDE 06160 “让上帝分辨去吧……” 只能在你的回合打出；加入胜利区并立即结束回合"
+        }
+      ]
+    },
+    {
+      "code": "06161",
+      "name": "快速装填",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "test": "TDE 06161 快速装填 快速：把[[枪械]]支援的子弹补到使用(X)值"
+        }
+      ]
+    },
+    {
+      "code": "06162",
+      "name": "格雷戈里·葛利",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "test": "TDE 06162 格雷戈里·葛利 使用(9资源)；检定开始时押注，成功后返还等量资源"
+        }
+      ]
+    },
+    {
+      "code": "06163",
+      "name": "治愈真言",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "test": "TDE 06163 治愈真言 使用(3充能)；花 1 充能治愈同地点调查员 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "06164",
+      "name": "飘渺灵体",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "test": "TDE 06164 飘渺灵体 意志躲避：成功后解除所有交战，本轮不能攻击"
+        }
+      ]
+    },
+    {
+      "code": "06165",
+      "name": "搜刮补给",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "test": "TDE 06165 搜刮补给 从弃牌堆选择一张等级 0 卡牌加入手牌"
+        }
+      ]
+    },
+    {
+      "code": "06166",
+      "name": "蛮力",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "test": "TDE 06166 蛮力 每次检定最多投入 1 张；成功超出难度 ≥2 时本次攻击 +2 伤害"
+        }
+      ]
+    },
+    {
+      "code": "06167",
+      "name": "多才多艺",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "test": "TDE 06167 多才多艺 永久卡：+5 牌库张数与构筑选项属构筑层（数据通道）"
+        }
+      ]
+    },
+    {
+      "code": "06168",
+      "name": "万千骇形",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06168 万千骇形：混乱标记数值与 [skull]/[elder_thing]/[tablet] 后果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06168 已验收 · scenario 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06169a",
+      "name": "无名之屋",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06169a 无名之屋：议程 I 背面生成不可名状之物（阁楼不在场→楼上的走廊）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06169b 不可名状之物：不能被击败 + 记住事实各 -1 攻击/躲避 + 生成指示"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06169a 已验收 · agenda 关联面 06169b"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06169b 已验收 · enemy 关联面 06169a"
+        }
+      ]
+    },
+    {
+      "code": "06169b",
+      "name": "不可名状之物",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06169b 不可名状之物：不能被击败 + 记住事实各 -1 攻击/躲避 + 生成指示"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06169a 已验收 · agenda 关联面 06169b"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06169b 已验收 · enemy 关联面 06169a"
+        }
+      ]
+    },
+    {
+      "code": "06170",
+      "name": "无名之物",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06170 无名之物：鼠群获得蜂拥 1、轮首意志(2)失败被攻击、背面洗回遭遇牌库"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06170 已验收 · agenda 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06171",
+      "name": "无名之死",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06171 无名之死：鼠群蜂拥 2、失去冷漠获得庞大、背面 → 结局 2"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06171 已验收 · agenda 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06172",
+      "name": "搜寻不可名状之物",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "actRule.objectiveRule='unnamableObjective' 全仓无读点（dead declaration）；目标实际由 06182 无名坟墓轮末强制结算。"
+    },
+    {
+      "code": "06173",
+      "name": "无尽阶梯",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06173 无尽阶梯：最下方阶梯获得撤退行动，全员撤退推进，背面 → 结局 1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06173 已验收 · act 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06174",
+      "name": "坟地",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「抽取到的每个[[食尸鬼]]敌人改为生成在坟地」未实现：locationRule.spawnRedirectTrait 全仓无读点，behavior.spawnLocation 不读它。"
+    },
+    {
+      "code": "06175",
+      "name": "入口",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06175 入口：团队花费线索揭示楼上的走廊；伤害足够时放置无名坟墓"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06175 已验收 · location 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06176",
+      "name": "休息间",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06176 休息间：调查成功后弃手牌换额外线索；团队线索记住亵渎肖像画"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06176 已验收 · location 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06177",
+      "name": "客厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06177 客厅：每位在场调查员 +1 隐藏值；伤害 2[每调查员] 后记住奇怪的钥匙"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06177 已验收 · location 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06178",
+      "name": "楼上的走廊",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06178 楼上的走廊：未揭示不能进入；团队线索放置阁楼"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06178 已验收 · location 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06179",
+      "name": "藏书室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06179 藏书室：调查额外费用二选一；团队线索放置无名坟墓"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06179 已验收 · location 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06180",
+      "name": "卧室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06180 卧室：2 行动清威胁区非弱点诡计；团队线索记住破碎镜子"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06180 已验收 · location 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06181",
+      "name": "阁楼",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06181 阁楼：团队线索记住「发现了一把奇怪的钥匙」"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06181 已验收 · location 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06182",
+      "name": "无名坟墓",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06182 无名坟墓：轮末全员在此且发现钥匙才推进幕 I"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06182 已验收 · location 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06183",
+      "name": "神秘阶梯",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06183 神秘阶梯：进入后失去 1 个行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06183 已验收 · location 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06184",
+      "name": "神秘阶梯",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06184 神秘阶梯：有线索时不能移动也不能撤退"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06184 已验收 · location 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06185",
+      "name": "神秘阶梯",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06185 神秘阶梯：有重整敌人封锁；揭示时找出[[食尸鬼]]敌人生成"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06185 已验收 · location 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06186",
+      "name": "神秘阶梯",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06186 神秘阶梯：揭示放资源、最低技能检定弃资源、有资源时封锁"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06186 已验收 · location 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06187",
+      "name": "神秘阶梯",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06187 神秘阶梯：揭示时移动不可名状之物，伤害不足时封锁移动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06187 已验收 · location 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06188",
+      "name": "神秘阶梯",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "locationRule.moveOrResignCost 全仓无读点（dead declaration）；费用由相邻 moveError/beforeMove/beforeResign 实现。"
+    },
+    {
+      "code": "06189",
+      "name": "银钥匙",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06189 银钥匙：横置取消即将受到的 1 点恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06189 已验收 · asset 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06190",
+      "name": "无尽深入",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06190 已验收 · treachery 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-aThousandShapesOfHorror.test.mjs",
+          "test": "万千骇形：无尽深入（06190）重排阶梯并把本卡加入胜利区"
+        }
+      ]
+    },
+    {
+      "code": "06191",
+      "name": "难以描述的鬼魅",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「不可名状之物位于你所在地点时每项技能 -1」未实现：treacheryRule.skillModifierWhileEnemyAtYourLocation 全仓无读点；另 treacheryRule.threatArea 无读点。"
+    },
+    {
+      "code": "06192",
+      "name": "发光的眼睛",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「轮末威胁区每张卡 1 恐惧（最多 3）并弃掉本卡」未实现：treacheryRule.roundEndHorrorPerThreatCard 全仓无读点；另 treacheryRule.threatArea 无读点。"
+    },
+    {
+      "code": "06193",
+      "name": "欺骗性记忆",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "treacheryRule.threatArea 为无读点冗余声明（威胁区入位由 encounterResolve→api.threat + threatEntered 窗口完成）。"
+    },
+    {
+      "code": "06194",
+      "name": "阁楼的秘密",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06194 阁楼的秘密：失败放密谋牌库旁、封锁地点[fast]、轮末弃 1 张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06194 已验收 · treachery 卡文与关卡定义"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "unit": "10-a-7",
+  "generatedAt": "2026-11-25",
+  "scope": {
+    "cards": 43,
+    "selector": "pack=fhvc && effectStatus=unverified && 10572<=code<=10605",
+    "codeRange": "10572-10605"
+  },
+  "verdict": "partial",
+  "verifiedCodes": ["10572", "10573", "10574", "10576", "10579", "10582", "10583a", "10584a", "10584b", "10588", "10589", "10590", "10591", "10593a", "10593b", "10594a", "10594b", "10595a", "10595b", "10596a", "10596b", "10597a", "10597b", "10598a", "10598b", "10599a", "10599b", "10601", "10602", "10603", "10604", "10605"],
+  "failedCodes": [
+    { "code": "10575", "name": "Akwan", "dimension": "implementation", "reason": "谈判「看过之后按任意顺序放回」实现为按原顺序放回（重排面板留给 P8）。", "evidence": ["src/cards/encounter-entries/theFeastOfHemlockVale/theLostSister/10575.js note", "tests/acceptance-10-a-shard7.test.mjs"] },
+    { "code": "10577", "name": "Hidden Cove", "dimension": "implementation", "reason": "「攻击失败后受 1 伤害」只落旗标，失败窗口未接 skillTestResult。", "evidence": ["10577.js note", "tests/acceptance-10-a-shard7.test.mjs"] },
+    { "code": "10578", "name": "Weed-Choked Beach", "dimension": "implementation", "reason": "「躲避失败失去 1 行动」旗标未接；且强制调用不存在的 api.revealChaosToken/drawChaosToken → 整段静默跳过。", "evidence": ["10578.js note", "content/campaigns/theFeastOfHemlockVale/scenarios/theLostSister/behavior.js:846", "src/engine/scenario-runtime.js"] },
+    { "code": "10580", "name": "Underground Pools", "dimension": "implementation", "reason": "「调查失败后受 1 恐惧」旗标未接。", "evidence": ["10580.js note", "tests/acceptance-10-a-shard7.test.mjs"] },
+    { "code": "10581", "name": "Open Cave", "dimension": "implementation", "reason": "印刷 [fast] 被实现为普通剧本行动（时机/费用不等价）。", "evidence": ["10581.js note", "tests/acceptance-10-a-shard7.test.mjs"] },
+    { "code": "10583b", "name": "Limulus Hybrid [night]", "dimension": "implementation", "reason": "「近战攻击成功后自伤」只落旗标（P8 接 skillTestResult）。", "evidence": ["10583b.js note", "tests/acceptance-10-a-shard7.test.mjs"] },
+    { "code": "10585", "name": "Cavern Moss", "dimension": "implementation", "reason": "「附属到[[道具]]支援/文本空白」仅声明 flags，章节 behavior 未复写、引擎无敌人附属通道。", "evidence": ["10585.js note", "全仓无 attachToItemOnSuccess 读点"] },
+    { "code": "10586", "name": "Reclaimed by Nature", "dimension": "implementation", "reason": "昼夜判定依赖不存在的 api.isDarkLocationHere（scenarioRuntime 缺该方法）→ 永远走白日面。", "evidence": ["10586.js:24-27", "src/engine/scenario-runtime.js（仅 revealToken）"] },
+    { "code": "10587", "name": "Luminous Growth", "dimension": "implementation", "reason": "条目只有 flags，无 encounterResolve；显现附属目标选择与 [action] 弃卡留给 P8。", "evidence": ["10587.js", "全仓无 onRevealSpawn 读点"] },
+    { "code": "10592", "name": "Discovery of a Lifetime", "dimension": "implementation", "reason": "「[fast] 改巡逻」用「敌军阶段后走一步」近似（非快速行动）。", "evidence": ["10592.js note + behavior"] },
+    { "code": "10600", "name": "Thing in the Depths", "dimension": "implementation", "reason": "「攻击后在其地点为沼地时治愈 2 点」未接线（引擎无该强制窗口）。", "evidence": ["10600.js note + ledger disclosure"] }
+  ],
+  "excludedCodes": [],
+  "dimensions": { "implementation": "fail", "primitives": "pass", "interaction": "pass", "evidence": "pass", "compliance": "pass" },
+  "evidence": [
+    { "file": "tests/acceptance-10-a-shard7.test.mjs", "test": "5 例：10572/73/74/88/89/90/91 幕与场景参考；10575-10582 岩穴地点；10583a-10587/10600-10602 双面敌人/诡计；10593a-10599b/10603-10605 沉没地点与恐怖谷；11 张失败卡缺陷复现", "codes": ["10572", "10573", "10574", "10575", "10576", "10577", "10578", "10579", "10580", "10581", "10582", "10583a", "10583b", "10584a", "10584b", "10585", "10586", "10587", "10588", "10589", "10590", "10591", "10592", "10593a", "10593b", "10594a", "10594b", "10595a", "10595b", "10596a", "10596b", "10597a", "10597b", "10598a", "10598b", "10599a", "10599b", "10600", "10601", "10602", "10603", "10604", "10605"], "command": "node --test tests/acceptance-10-a-shard7.test.mjs", "result": "5/5 pass" },
+    { "file": "tests/fhv-scenario-theLostSister.test.mjs + theThingInTheDepths + theTwistedHollow 等", "test": "既有章节测试（不采信为逐卡结论）", "codes": ["*"], "result": "本轮抽跑通过" }
+  ],
+  "notes": "32 通过 / 11 未通过（partial）。失败两类：①失败窗口只落旗标未接 skillTestResult（10577/10578/10580/10583b 及 10585 附属通道）→ P8 待接；②判定/入口错误或近似不等价（10586 isDarkLocationHere 运行时不存在→恒白日、10578 revealChaosToken 不存在→强制静默跳过、10587 无 encounterResolve、10575 谈判不能重排、10581 [fast] 降为普通行动、10592 改巡逻近似、10600 攻击后治愈未接线）。HEAD 复核确认 full-scan P0-2（无 seat choose）与 P0-5（寂静荒野裁决）已修，P1-4 的 10586/10578/10587/10585 项仍未修。证据：43/43 张有标题含卡号测试（新增 5/5 全绿）。合规：未改运行期文件、无新增 R1/R2/R3。账本不可采信：fhv-all-card-acceptance 对本 43 张记 simplified 13/scenarioData 30/scenarioReference 2，未区分「数据型已由 behavior 承接」与「子句未生效」；建议主报告登记「FHV 账本去假绿 + 声明键/失败窗口读点检测」，本轮不重签账本。"
+}

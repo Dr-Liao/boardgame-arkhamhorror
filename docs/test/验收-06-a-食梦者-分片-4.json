@@ -1,0 +1,172 @@
+{
+  "unit": "06-a-4",
+  "generatedAt": "2026-11-24",
+  "scope": {
+    "cards": 33,
+    "selector": "06000 段卡号 06133-06154（pack=sfk, The Search for Kadath 后半）&& effectStatus=unverified",
+    "baseline": "cards-data 复算：06133..06154 共 33 张，全部 unverified；unimplemented 0；33 张均有单卡条目"
+  },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "06133", "06134", "06135", "06136", "06137", "06138", "06139", "06140", "06141", "06142", "06143",
+    "06146", "06147", "06151", "06152"
+  ],
+  "failedCodes": [
+    {
+      "code": "06145",
+      "dimension": "implementation",
+      "reason": "两条印刷子句未实现（条目注释已披露为简化，但引用的 primitive-requests/w-p8-b-evade-extra-token.json 在仓库中不存在）：①「在你尝试躲避本敌人、揭示混乱标记时，额外揭示一个混乱标记（每次检定限一次）」——全仓无 evade 额外标记读点（引擎只有 07185 的 floodedAttackExtraToken 专用读点）；②「击败乌撒之猫或击败其 1 张蜂拥卡牌时」的蜂拥卡分支未接入（蜂拥卡被击败走 returnSwarmCard，不触发头领 enemyScript.onDefeated）。现有用例只覆盖头领首次被击败分支。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/theSearchForKadath/06145.js:5-11,12-28; tests/tde-scenario-theSearchForKadath.test.mjs「06145 乌撒之猫：首次被击败改为加 3 张蜂拥卡并记录打破乌撒的法则」; tests/acceptance-06-a-shard4.test.mjs"
+    },
+    {
+      "code": "06148",
+      "dimension": "implementation",
+      "reason": "印刷「猎物 - 仅限位于[[遗迹]]地点的调查员」未实现：定义把猎物解析为原始卡文串（printedPrey），引擎 PREY_RANK 只认枚举键（mostClues/lowestCombat…），behavior 也无 06148 的 prey 处理，因此猎物选择退化为任意调查员，猎手移动目标不再受「遗迹地点」限制。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/theSearchForKadath/06148.js:8-10; content/campaigns/theDreamEaters/card-data.js printedPrey/PREY_RANK; src/engine/card-ops.js:100-132; tests/acceptance-06-a-shard4.test.mjs「06148 伊伯生物…」"
+    },
+    {
+      "code": "06149",
+      "dimension": "implementation",
+      "reason": "「……6 个或更多的神迹时，千面祭司得到伤害值+1，并获得反击」中的「获得反击」未实现：behavior 只读 signsOfTheGodsBonuses 的 fight/evade/health/damage，没有动态 retaliate 读点（引擎只从 definition 解析印刷关键词）；条目注释引用 primitive-requests/w-p8-b-dynamic-retaliate.json，该文件在仓库中不存在。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/theSearchForKadath/06149.js:11-22; content/.../theSearchForKadath/behavior.js:585-603; tests/acceptance-06-a-shard4.test.mjs「06149 千面祭司…」（只覆盖已实现的数值项）"
+    },
+    {
+      "code": "06135b",
+      "dimension": "implementation",
+      "reason": "「将夜色怪群加入胜利牌区」用 api.banish，但引擎 banishEnemyToVictory 只移除头领本体，不清理头领已附属的蜂拥卡（swarm 卡是 state.enemies 里的独立敌人实体）；夜色怪群在本章区域设置时以 Swarming 1/人 生成，实战中翻面结算 06135b 会留下 hostId 指向已移除头领的孤儿蜂拥敌人。已用真实引擎函数复现：placeSwarmCards(host,2) 后 banish(host)，state.enemies 仍剩 2 张 swarm 卡。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/theSearchForKadath/06135b.js; src/engine/enemy-faces.js:110-138（banish 无 swarm 清理）; src/engine/swarm.js:51-90; artifacts/acceptance/06-a-4/check-banish-swarm.mjs（复现输出）; tests/acceptance-06-a-shard4.test.mjs「06135b …」"
+    },
+    {
+      "code": "06144",
+      "dimension": "implementation",
+      "reason": "①印刷为 [reaction]（可选反应）：「发现至少 1 个神迹后」的触发在 behavior.resolveStoryCard 里被无条件自动结算（triggerSignsGained 直接调 afterSignsUncovered，选项里没有「不触发」），玩家无法放弃；控制权也自动交给第一位其他调查员而非由玩家选择。②条目 assetRule.removeFromGameOnLeave 无任何读点：behavior.assetLeftPlay 直接按卡号常量 VIRGIL_GRAY 处理；引擎 assets.js 只读顶层 entry.removeFromGameOnLeave，读不到嵌套在 assetRule 里的这份声明（「声明即接线」不成立）。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/theSearchForKadath/06144.js:8-38; content/.../theSearchForKadath/behavior.js:59-67,686-693; src/engine/assets.js:418; tests/acceptance-06-a-shard4.test.mjs「06144 维吉尔·格雷…」"
+    },
+    {
+      "code": "06133b",
+      "dimension": "implementation",
+      "reason": "[pending] 卡面行为由 assetRule.resolve 完整实现并有真实用例，但条目声明 `story: true` 字段无任何读点（全仓无 assetRule.story 读取）。属「声明未接线」债务，按规程不得 verified；是否以「纯元数据」豁免需主进程裁决。建议删除该字段或在通用 story 管线补读点。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/theSearchForKadath/06133b.js:8; content/.../behavior.js:85-102（只读 resolve）; tests/acceptance-06-a-shard4.test.mjs「06133b …」"
+    },
+    {
+      "code": "06134b",
+      "dimension": "implementation",
+      "reason": "[pending] 行为完整（神迹+1、洗入黑暗夜魇），但 `story: true` 与 `signs: 1` 两个字段无读点（全仓无 `.signs` / `assetRule.story` 读取；神迹由 resolve 内 api.markers.add 完成）。同 06133b 的元数据声明问题。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/theSearchForKadath/06134b.js:9-11; tests/tde-scenario-theSearchForKadath.test.mjs「06130b / 06134b…」"
+    },
+    {
+      "code": "06136b",
+      "dimension": "implementation",
+      "reason": "[pending] 行为完整（道具/供给回手 + 记录补给港口），但 `story: true`/`signs` 声明无读点。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/theSearchForKadath/06136b.js:14-15; tests/acceptance-06-a-shard4.test.mjs「06136b …」"
+    },
+    {
+      "code": "06137b",
+      "dimension": "implementation",
+      "reason": "[pending] 行为完整（神迹+1、洗入黑暗夜魇），但 `story: true`/`signs: 1` 声明无读点。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/theSearchForKadath/06137b.js:9-10; tests/acceptance-06-a-shard4.test.mjs「06137b …」"
+    },
+    {
+      "code": "06138b",
+      "dimension": "implementation",
+      "reason": "[pending] 行为完整（神迹+1），但 `story: true`/`signs: 1` 声明无读点。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/theSearchForKadath/06138b.js:8-9; tests/acceptance-06-a-shard4.test.mjs「06138b …」"
+    },
+    {
+      "code": "06139b",
+      "dimension": "implementation",
+      "reason": "[pending] 行为完整（记录向王祈求帮助、洗入黑暗夜魇），但 `story: true` 声明无读点。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/theSearchForKadath/06139b.js:9; tests/acceptance-06-a-shard4.test.mjs「06139b …」"
+    },
+    {
+      "code": "06140b",
+      "dimension": "implementation",
+      "reason": "[pending] 行为完整（治愈 2 伤害、+2 资源、神迹+1），但 `story: true`/`signs: 1` 声明无读点。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/theSearchForKadath/06140b.js:9-10; tests/acceptance-06-a-shard4.test.mjs「06140b …」"
+    },
+    {
+      "code": "06141b",
+      "dimension": "implementation",
+      "reason": "[pending] 行为完整（放入无以达愿之庙），但 `story: true` 声明无读点。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/theSearchForKadath/06141b.js:8; tests/acceptance-06-a-shard4.test.mjs「06141b …」"
+    },
+    {
+      "code": "06142b",
+      "dimension": "implementation",
+      "reason": "[pending] 行为完整（放入地图未见之城），但 `story: true` 声明无读点。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/theSearchForKadath/06142b.js:8; tests/acceptance-06-a-shard4.test.mjs「06142b …」"
+    },
+    {
+      "code": "06143b",
+      "dimension": "implementation",
+      "reason": "[pending] 行为完整（两神迹、弃本地敌人、移动调查员、地点进胜利区），但 `story: true`/`signs: 2` 声明无读点。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/theSearchForKadath/06143b.js:12-13; tests/acceptance-06-a-shard4.test.mjs「06143b …」"
+    },
+    {
+      "code": "06150",
+      "dimension": "primitives",
+      "reason": "[pending] 条目 `enemyRule.setAsideDuringActSetup: true` 无任何读点（全仓唯一出现处即该条目）；实际规则由 behavior.setNightgauntsAside/restoreNightgaunts 用卡号常量 TENEBROUS_NIGHTGAUNT 实现。功能可用（新用例覆盖「区域设置放一边→放回城市」），但「声明即接线」不成立，且单卡规则以卡号常量写在内容层（card-model §6 回迁债务）。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/theSearchForKadath/06150.js:10; content/.../behavior.js:126-159,184,210; tests/acceptance-06-a-shard4.test.mjs「06150 黑暗夜魇…」"
+    },
+    {
+      "code": "06153",
+      "dimension": "primitives",
+      "reason": "[pending] 条目 `treacheryRule.attachedToLocation: true` 无任何读点（引擎/内容层均不读该键）；其余子句（显现附属、离开后 1 恐惧+1 毁灭+弃卡、意志/战斗(4) 关闭行动）均有 behavior 读点与用例。属声明未接线债务。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/theSearchForKadath/06153.js:12; tests/tde-scenario-theSearchForKadath.test.mjs「06153 麦格鸟之歌…」"
+    },
+    {
+      "code": "06154",
+      "dimension": "primitives",
+      "reason": "[pending] `treacheryRule.attachedToLocation` 无读点；`treacheryRule.shroudModifier: -2` 也无读点——behavior.locationShroudModifier 直接按卡号常量 RAW.c06154 判断并 -2（单卡规则以卡号常量写在内容层）。显现/成功调查后的强制均有读点与用例。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/theSearchForKadath/06154.js:11-14; content/.../behavior.js:555-568; tests/tde-scenario-theSearchForKadath.test.mjs「06154 奇妙平原…」"
+    }
+  ],
+  "pendingCodes": ["06133b", "06134b", "06136b", "06137b", "06138b", "06139b", "06140b", "06141b", "06142b", "06143b", "06150", "06153", "06154"],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "fail",
+    "primitives": "fail",
+    "interaction": "fail",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/acceptance-06-a-shard4.test.mjs",
+      "test": "25 个逐卡用例（标题含卡号，本轮新增，node --test 全绿）",
+      "codes": [
+        "06133", "06133b", "06134", "06135", "06135b", "06136", "06136b", "06137b", "06138b", "06139",
+        "06139b", "06140", "06140b", "06141", "06141b", "06142b", "06143", "06143b", "06144", "06146",
+        "06148", "06149", "06150", "06151", "06152"
+      ]
+    },
+    {
+      "file": "tests/tde-scenario-theSearchForKadath.test.mjs",
+      "test": "章节测试：veiledFlipped 故事卡、060/06134b 神迹、06137/06138 地点强制、06142 进入门槛、06145 首次击败、06147 头领横置、06153/06154 诡计",
+      "codes": ["06134", "06134b", "06137", "06138", "06142", "06145", "06147", "06153", "06154"]
+    }
+  ],
+  "commands": [
+    {
+      "command": "node --test tests/acceptance-06-a-shard4.test.mjs",
+      "result": "tests 25 / pass 25 / fail 0"
+    },
+    {
+      "command": "node --test tests/tde-scenario-theSearchForKadath.test.mjs tests/tde-campaign-card-acceptance.test.mjs tests/tde-rules.test.mjs",
+      "result": "tests 334 / pass 334 / fail 0"
+    },
+    {
+      "command": "npm run cards:check",
+      "result": "tests 10 / pass 10；条目合规审计通过（无基线外新增违规）"
+    },
+    {
+      "command": "npm run cards:encounter-check",
+      "result": "tests 7 / pass 7；条目合规审计通过（无基线外新增违规）"
+    },
+    {
+      "command": "npm run audit:entries",
+      "result": "通过；directStateWrite 112（存量基线）/ reprintDuplicate 0 / playConditionGap 0"
+    }
+  ],
+  "notes": "1) 33 张：通过 15 / 失败 5（06144、06145、06148、06149、06135b）/ pending 13（06133b 等 10 张背面故事卡的 story/signs 元数据声明未接线 + 06150/06153/06154 的规则键声明未接线），pending 按未通过计。2) 新增测试 tests/acceptance-06-a-shard4.test.mjs 未登记进 tests/suites.mjs（本分片边界不允许改既有 tests/），主进程合并时必须登记到 fast tier，否则 suite-manifest 守卫会让 test:fast 变红。3) 全 33 张均有标题含卡号的真实测试并重跑通过。4) 关键专项：①06145/06149 条目注释引用的 primitive-requests/w-p8-b-*.json 在仓库中不存在（简化证据缺失）；②TDE 11 张背面故事卡统一声明 story:true/signs:N 但全仓无读点（含范围外 06127b-06132b，共 17 张）；③api.banish 不清理蜂拥卡，06135b 会留孤儿蜂拥敌人（已复现）；④06144 [reaction] 被自动强制触发、无「不触发」选项。5) 未改 src/content/audit/web/tools/既有 tests/package.json，未重签 TDE 账本，未碰 web/campaign-presentation.js。6) 既有 audit/tde-migration.json 宣称 equivalenceCertified:true / gaps:0，README 自述 full-scan 未执行；本轮结论说明该口径不能替代逐卡五维验收。"
+}

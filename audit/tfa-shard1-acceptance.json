@@ -1,0 +1,1385 @@
+{
+  "schemaVersion": 1,
+  "unit": "04-a-1",
+  "profile": {
+    "id": "tfa-deluxe-threads-of-fate-2026-11",
+    "scope": "失落时代 04 段 The Forgotten Age 豪华包（tfa，60 条）+ Threads of Fate（tof，46 条）共 106 条目录记录，锁定审计时未验收清单。83 条通过五维验收；23 条因真实行为缺陷、声明未接线或存量 R1 直写暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互（真实 legalMoves/applyMove/pendingChoice）→ 真实执行测试逐卡核对；证据为 tests/acceptance-04-a-shard1.test.mjs 与 tfa-*.test.mjs 的真实用例标题。缺陷与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 106,
+    "verified": 83,
+    "unverified": 23,
+    "unimplemented": 0,
+    "testsPassed": 276
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+      "sha256": "0d5503c726ea9ec43902436f0cb3dcb51f83a17a964be183d49198c2720ec543"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tfa-untamed-wilds.test.mjs",
+      "sha256": "a46374410732fd8353e16a671b215d42ed05063cc1ad8263880b1d64931086a6"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tfa-doom-of-eztli.test.mjs",
+      "sha256": "618a14fc9528ab9d758ce59bb05c723be0efd22e4608cccc433872f2c4555afd"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tfa-threads-of-fate.test.mjs",
+      "sha256": "3267ad7e515e65a56879927eabb4282598edacf76c20e37030ca3977d66d49d1"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tfa-encounter-p1.test.mjs",
+      "sha256": "e086a73075bcb309cce8dbf2eee71e875042f547dcceb6dac4bd680af618ec93"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tfa-p2-hooks.test.mjs",
+      "sha256": "284edaa0f228dd292fd65e4c1cacef667bf30ae9f93f3c30f3a68070a5bde775"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tfa-mechanics.test.mjs",
+      "sha256": "f5a85bb3d04bc65fa5776e1a38ca1209ec982846e4dd53f331fc0ad6f52ed2e6"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tfa-visibility.test.mjs",
+      "sha256": "e3436fbc49bc6a83319cf284cd80efc4396949c83e676eddc4752f766c2f0dc3"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tfa-scenario-acceptance.test.mjs",
+      "sha256": "47cf8284995d584d9dc4a48d44bc1531110029a723acd539abc244cfb6853b3c"
+    }
+  ],
+  "entries": [
+    {
+      "code": "04043",
+      "name": "荒莽密林",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04043 荒莽密林剧本卡：混乱标记按卡面（复仇/地点数/探索牌库/中毒）结算"
+        }
+      ]
+    },
+    {
+      "code": "04044",
+      "name": "荒野探险",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：state.scenarioZones.setAside.splice / state.encounterDeck.push。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+    },
+    {
+      "code": "04045",
+      "name": "入侵者",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：通过 tainted 局部引用 entry.deck.push / entry.removedCards 直写战役牌组。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+    },
+    {
+      "code": "04046",
+      "name": "探索丛林",
+      "type": "act",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：state.scenarioFlags.ichtacaSpawned / state.encounterDeck / state.clues / inv.clues。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+    },
+    {
+      "code": "04047",
+      "name": "埃兹特里的女猎手",
+      "type": "act",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：state.enemies.splice / state.victoryDisplay.push / state.acts 重写 / state.explorationDeck。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+    },
+    {
+      "code": "04048",
+      "name": "搜索遗迹",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-p2-hooks.test.mjs",
+          "test": "04048 守卫者不能攻击：敌人阶段不再对连接地点的调查员出手"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-p2-hooks.test.mjs",
+          "test": "04048 搜索遗迹：守卫者不能攻击也不能被攻击；04049 守备森严 +1 战斗/躲避"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04048 搜索遗迹：守卫者不能攻击/被攻击、忽略林中暗箭、幕后完成 r1"
+        }
+      ]
+    },
+    {
+      "code": "04049",
+      "name": "守备森严的遗迹",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-p2-hooks.test.mjs",
+          "test": "04048 搜索遗迹：守卫者不能攻击也不能被攻击；04049 守备森严 +1 战斗/躲避"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04049 守备森严的遗迹：守卫者 +1 战斗/躲避、林中暗箭涌动、幕后完成 r2"
+        }
+      ]
+    },
+    {
+      "code": "04050",
+      "name": "探险营地",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "条目声明 `flags: { expeditionCamp: true }`，但引擎只按具体 flag 键（partner/captureLocation/brazier…）读取，`expeditionCamp` 全仓无读点，按「声明了没人读」计未实现；另有存量 R1 直写（state.explorationDeck，audit 基线 directStateWrite）。"
+    },
+    {
+      "code": "04051",
+      "name": "亚历山卓·维拉",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04051 亚历山卓·维拉：[[古代]]地点调查 +1 技能，横置抽 2"
+        }
+      ]
+    },
+    {
+      "code": "04052",
+      "name": "伊塔卡",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "条目声明 `enemyRule: { parley: { skill, difficulty } }`，但该数据没有有效行为读点：引擎通用 parleyCultist 通道要求 `cost`（moves.js:529 → canParleyCultist 对无 cost 返回 false）且 dispatch 要求 `uniqueCultist`，伊塔卡两者都不满足；实际谈判规则由 `content/.../theUntamedWilds/behavior.js` 的 scenarioAction `parleyIchtaca` 另行实现。属同一句规则双份声明 + 死字段，违反「声明即接线」。"
+    },
+    {
+      "code": "04053",
+      "name": "埃兹特里的遗迹",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-untamed-wilds.test.mjs",
+          "test": "04072/04053/04074 的地点与调查修正（P2）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04053 埃兹特里的遗迹：调查失败后抽 1 张遭遇牌"
+        }
+      ]
+    },
+    {
+      "code": "04054",
+      "name": "埃兹特里的覆灭",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04054 埃兹特里的覆灭剧本卡：骷髅看所在地毁灭，旧神标记追加揭示/放毁灭"
+        }
+      ]
+    },
+    {
+      "code": "04055",
+      "name": "暗起波澜",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：enemy.damageTaken（经 helper 外溢的直写）。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+    },
+    {
+      "code": "04056",
+      "name": "神庙看守者",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-doom-of-eztli.test.mjs",
+          "test": "04056 神庙看守者：被击败的调查员会按卡面留下创伤（cause=both）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04056 神庙看守者：所有未撤退的调查员被击败"
+        }
+      ]
+    },
+    {
+      "code": "04057",
+      "name": "进入遗迹",
+      "type": "act",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：state.explorationDeck 赋值 / state.victoryDisplay.push。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+    },
+    {
+      "code": "04058",
+      "name": "科学与魔法",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-doom-of-eztli.test.mjs",
+          "test": "04058 科学与魔法：地点排成一条线并给出线性 layout"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04058 科学与魔法：时间石室的调查员取得古代遗物，地点排成一条线"
+        }
+      ]
+    },
+    {
+      "code": "04059",
+      "name": "逃出遗迹",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04059 逃出遗迹：复仇 3 点蛇族 +1 躲避；撤退分支 r1、其余 r3"
+        }
+      ]
+    },
+    {
+      "code": "04060",
+      "name": "遗迹入口",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-doom-of-eztli.test.mjs",
+          "test": "04060 遗迹入口：没有火把不显示行动；查看顶 2 张时两张都可见"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04060 遗迹入口：撤退与火把查看行动；只有火把能弃掉查看到的诡计"
+        }
+      ]
+    },
+    {
+      "code": "04061",
+      "name": "古代遗物",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04061 古代遗物：剧情资产身份由条目声明并被引擎战役状态复用"
+        }
+      ]
+    },
+    {
+      "code": "04062",
+      "name": "瓦卢西亚的预示者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04062 瓦卢西亚的预示者：横置也反击；2×人数资源后遁去身影并保留伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-p2-hooks.test.mjs",
+          "test": "横置也能反击：04062 登记 retaliateWhileExhausted，横置后攻击落空仍然反击"
+        }
+      ]
+    },
+    {
+      "code": "04063",
+      "name": "古代石厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04063 古代石厅：轮末翻 1 个线索为毁灭，可花 3 资源取消"
+        }
+      ]
+    },
+    {
+      "code": "04064",
+      "name": "华美石室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-doom-of-eztli.test.mjs",
+          "test": "04064 华美石室：调查未超过难度 2 点时先把线索翻成毁灭"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04064 华美石室：调查未超过难度 2 点先翻线索为毁灭"
+        }
+      ]
+    },
+    {
+      "code": "04065",
+      "name": "坑葬墓室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04065 坑葬墓室：探索成功后两次二选一（抽遭遇或放毁灭）"
+        }
+      ]
+    },
+    {
+      "code": "04066",
+      "name": "地下遗迹",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04066 地下遗迹：有敌人时计入胜利区复仇，敌人离场放 1 毁灭"
+        }
+      ]
+    },
+    {
+      "code": "04067",
+      "name": "秘密通道",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-doom-of-eztli.test.mjs",
+          "test": "04067 秘密通道：任何一位在此的调查员带绳索都忽略强制"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04067 秘密通道：进入时受伤或放毁灭；任一在场调查员带绳索可忽略"
+        }
+      ]
+    },
+    {
+      "code": "04068",
+      "name": "时间石室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04068 时间石室：入场附属古代遗物并放 1 毁灭"
+        }
+      ]
+    },
+    {
+      "code": "04069",
+      "name": "荆棘之路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04069 荆棘之路：调查失败与探索失败各受 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "04070",
+      "name": "河流峡谷",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "条目声明 `flags: { riverCanyon: true }`，该 flag 键无引擎读点；另有存量 R1 直写（state.scenarioFlags.riverCanyonHealed，audit 基线 directStateWrite）。"
+    },
+    {
+      "code": "04071",
+      "name": "索桥",
+      "type": "location",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：state.explorationDeck.splice / api.place 前的直写。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+    },
+    {
+      "code": "04072",
+      "name": "万蛇据点",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-untamed-wilds.test.mjs",
+          "test": "04072/04053/04074 的地点与调查修正（P2）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04072 万蛇据点：此处蛇族 +1 战斗；已中毒调查/探索后受 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "04073",
+      "name": "曲折小道",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面「如果在你所在地点没有调查员带有指南针，你必须花费 3 资源」是地点级群体检查；实现两条路径（beforeExplore / beforeInvestigate）都只检查 `api.checkSupplies(inv.seat, ...)`（当前调查员本人）。多人局同地点另一名调查员带指南针时仍会被强制收 3 资源，与卡面不符；另该条目 `inv.resources -= 3` 属存量 R1 直写（audit 基线 directStateWrite）。"
+    },
+    {
+      "code": "04074",
+      "name": "毒牙神庙",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-untamed-wilds.test.mjs",
+          "test": "04072/04053/04074 的地点与调查修正（P2）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04074 毒牙神庙：胜利区每点复仇使此处帷幕 +1"
+        }
+      ]
+    },
+    {
+      "code": "04075",
+      "name": "杂草丛生的遗迹",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04075 杂草丛生的遗迹：中毒者进入后失去所有行动并结束回合"
+        }
+      ]
+    },
+    {
+      "code": "04076",
+      "name": "疯狂生长",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04076 疯狂生长：附属地点后不能探索，行动检定战斗/智识成功弃掉"
+        }
+      ]
+    },
+    {
+      "code": "04077",
+      "name": "丛林之声",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "`treacheryRule: { threatArea: true }` 在失落时代内容层与引擎中都没有读点（全仓唯一读取方是 thePathToCarcosa/card-data.js:107）。威胁区入位由条目自身 `encounterResolve` 内 `api.threat` + 返回 true 完成，该字段是「声明了没人读」的冗余声明。"
+    },
+    {
+      "code": "04078",
+      "name": "蝮蛇",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04078 蝮蛇：攻击造成伤害后未中毒者获得中毒弱点"
+        }
+      ]
+    },
+    {
+      "code": "04079",
+      "name": "蟒蛇",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04079 蟒蛇：猎手；攻击后下个补给阶段不能重整"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-encounter-p1.test.mjs",
+          "test": "蟒蛇（04079）：下个补给阶段不能重整，之后恢复"
+        }
+      ]
+    },
+    {
+      "code": "04080",
+      "name": "毒蛇噬咬",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04080 毒蛇噬咬：敏捷(3)失败后二选一（盟友 5 伤害 / 直接伤害+中毒）"
+        }
+      ]
+    },
+    {
+      "code": "04081",
+      "name": "迷失荒野",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "威胁实例声明 `forcedEndTurnDiscard: true`，但全仓没有该字段的引擎读点；实际「回合结束弃掉迷失荒野」由 `content/campaigns/theForgottenAge/encounter-rules.js` 的 `turnEnded` 按卡号分支实现。属「声明了没人读」的冗余字段。"
+    },
+    {
+      "code": "04082",
+      "name": "补给短缺",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-encounter-p1.test.mjs",
+          "test": "04082 补给短缺：只有永久支援时不能选择全队弃支援"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04082 补给短缺：险境；全队三选一，选择则每位调查员受伤"
+        }
+      ]
+    },
+    {
+      "code": "04083",
+      "name": "伊格之子",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04083 伊格之子：猎手；胜利区复仇让战斗值上升"
+        }
+      ]
+    },
+    {
+      "code": "04084",
+      "name": "幽嘶蛇人",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04084 幽嘶蛇人：复仇 1/2/3 点分别获得反击/猎手/减伤"
+        }
+      ]
+    },
+    {
+      "code": "04085",
+      "name": "伊格的诅咒",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面「你获得[[蛇族]]特性」是仅在卡位于威胁区时生效的持续效果；实现用 `api.addInvestigatorTrait(inv.seat, \"Serpent\")` 单向写入 `inv.traits`，引擎没有移除特性的原语（全仓无 removeInvestigatorTrait），卡离场后特性永久残留。威胁实例上的 `grantedTrait: \"Serpent\"` 字段也没有任何引擎读点（按「声明了没人读」计未实现）。-1 战斗 / -1 生命随威胁实例离场正常消失。"
+    },
+    {
+      "code": "04086",
+      "name": "埃兹特里的守卫者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04086 埃兹特里的守卫者：生成在[[古代]]地点；敌人阶段攻击连接地点的调查员"
+        }
+      ]
+    },
+    {
+      "code": "04087",
+      "name": "林中暗箭",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04087 林中暗箭：基础 1 伤害 + 每个盟友 1 点，古代地点的其他调查员同样结算"
+        }
+      ]
+    },
+    {
+      "code": "04088",
+      "name": "致命错误",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04088 致命错误：敏捷(2+所在地毁灭)失败受 2 伤害"
+        }
+      ]
+    },
+    {
+      "code": "04089",
+      "name": "半身入土",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 04077：`treacheryRule.threatArea` 在失落时代无读点；威胁区入位由 encounterResolve 的 api.threat 完成。死声明。"
+    },
+    {
+      "code": "04090",
+      "name": "时间裂缝",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-encounter-p1.test.mjs",
+          "test": "04090 时间裂缝：0 行动时仍可选择失去行动（无效果）或受恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04090 时间裂缝：每低于难度 1 点选择失去 1 行动或受 1 恐惧"
+        }
+      ]
+    },
+    {
+      "code": "04091",
+      "name": "困于时间",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04091 困于时间：非剧情支援洗回牌库并转移伤害/恐惧；无支援则弃 3 张手牌"
+        }
+      ]
+    },
+    {
+      "code": "04092",
+      "name": "不祥之兆",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：state.doom 直写。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+    },
+    {
+      "code": "04093",
+      "name": "先祖恐惧",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：state.victoryDisplay.push / location.doom / state.doom。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+    },
+    {
+      "code": "04094",
+      "name": "一片漆黑",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04094 一片漆黑：放在密谋牌库旁；每位调查员每轮从单个地点最多发现 1 线索"
+        }
+      ]
+    },
+    {
+      "code": "04095",
+      "name": "兄弟会异教徒",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04095 兄弟会教徒：猎手；毁灭越多战斗/躲避越高，攻击宣言时放毁灭"
+        }
+      ]
+    },
+    {
+      "code": "04096",
+      "name": "阴影笼罩",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：target.doom 直写。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+    },
+    {
+      "code": "04097",
+      "name": "力量真言",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 04077：`treacheryRule.threatArea` 无失落时代读点，死声明；威胁区入位走 encounterResolve → api.threat。"
+    },
+    {
+      "code": "04098",
+      "name": "伊格的獠牙",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04098 伊格的獠牙：猎物-中毒调查员；交战时不能打牌/投入卡牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-encounter-p1.test.mjs",
+          "test": "伊格的獠牙（04098）：与中毒调查员交战时不能打牌也不能投入卡牌"
+        }
+      ]
+    },
+    {
+      "code": "04099",
+      "name": "毒蛇灾厄",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 04077：`treacheryRule.threatArea` 无失落时代读点，死声明；威胁区入位走 encounterResolve → api.threat。"
+    },
+    {
+      "code": "04100",
+      "name": "毒蛇召来",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04100 毒蛇召来：二选一（把放在一边的中毒放入威胁区 / 抽 2 张遭遇）"
+        }
+      ]
+    },
+    {
+      "code": "04101",
+      "name": "毒性蔓延",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04101 毒性蔓延：涌动；中毒的每位调查员受到 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "04102",
+      "name": "中毒",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04102 中毒：永久弱点（每名调查员 1 张），是中毒判定的唯一读点"
+        }
+      ]
+    },
+    {
+      "code": "04113",
+      "name": "命运之线",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-threads-of-fate.test.mjs",
+          "test": "04113 困难面：skull 用场上毁灭总数，cultist 不足 2 点受直接伤害，elder_thing 真正失去线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04113 命运之线剧本卡：普通面骷髅看异教徒毁灭，困难面看场上毁灭总数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-threads-of-fate.test.mjs",
+          "test": "混乱标记表照 04113 卡面：骷髅看异教徒身上的毁灭标记"
+        }
+      ]
+    },
+    {
+      "code": "04114",
+      "name": "三种命运",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04114 三种命运：洗回遭遇弃牌堆；只剩 2 本幕牌库时在下一密谋放 1 毁灭"
+        }
+      ]
+    },
+    {
+      "code": "04115",
+      "name": "幕后",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04115 幕后：只剩 2/1 本幕牌库时分别放 1/2 毁灭"
+        }
+      ]
+    },
+    {
+      "code": "04116",
+      "name": "暗藏纠葛",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04116 暗藏纠葛：每位存活调查员被击败并受到 1 点精神创伤"
+        }
+      ]
+    },
+    {
+      "code": "04117a",
+      "name": "遗物不见了！",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04117a 遗物不见了！：揭示后放置埃兹特里展品；目标限米斯卡塔尼克大学"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04117b 埃兹特里展品：调查到符号标记受 1 恐惧；与米斯卡塔尼克大学相连、胜利 1"
+        }
+      ]
+    },
+    {
+      "code": "04117b",
+      "name": "埃兹特里展厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04117b 埃兹特里展品：调查到符号标记受 1 恐惧；与米斯卡塔尼克大学相连、胜利 1"
+        }
+      ]
+    },
+    {
+      "code": "04118a",
+      "name": "哈伦遇险！",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04118a 哈伦有危险！：揭示后在东城区放置哈伦·恩斯通（旁人）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04118b 哈伦·恩斯通：同地点谈判行动弃牌库顶 3 张，成功放线索"
+        }
+      ]
+    },
+    {
+      "code": "04118b",
+      "name": "哈伦·恩斯通",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04118b 哈伦·恩斯通：同地点谈判行动弃牌库顶 3 张，成功放线索"
+        }
+      ]
+    },
+    {
+      "code": "04119",
+      "name": "来到展厅",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04119 来到展厅：放置市政厅并把古代遗物附属到市政厅"
+        }
+      ]
+    },
+    {
+      "code": "04120",
+      "name": "来到展厅",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04120 来到展厅（另一面）：生成兄弟会教徒、治疗全部伤害并让遗物附在其上"
+        }
+      ]
+    },
+    {
+      "code": "04121",
+      "name": "哈伦的诅咒",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04121 哈伦的诅咒：古代遗物附属到珍品店；2 本幕牌库时在店中生成侍僧"
+        }
+      ]
+    },
+    {
+      "code": "04122",
+      "name": "哈伦的诅咒",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04122 哈伦的诅咒（切换面）：把旁人换成敌人并把遗物附到敌人上"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04122b 哈伦·恩斯通（敌人）：生成时接管古代遗物；躲避超过 3 点进胜利区"
+        }
+      ]
+    },
+    {
+      "code": "04122b",
+      "name": "哈伦·恩斯通",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：state.relicOfAges 赋值。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+    },
+    {
+      "code": "04123",
+      "name": "寻找遗物",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04123 寻找遗物：遗迹若附在地点则帷幕 +2；无线索时推进并取得遗物"
+        }
+      ]
+    },
+    {
+      "code": "04124",
+      "name": "夺回遗物",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04124 夺回遗物：遗物附在敌人上时其生命 +2×人数；敌人离场时推进并取得遗物"
+        }
+      ]
+    },
+    {
+      "code": "04125a",
+      "name": "寻找亚历山卓",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04125a 寻找亚历山卓：揭示后在维尔玛小餐馆放置亨利·德沃（旁人）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04125b 亨利·德沃：同地点谈判弃 1 张手牌，智识(3)成功放线索"
+        }
+      ]
+    },
+    {
+      "code": "04125b",
+      "name": "亨利·德沃",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04125b 亨利·德沃：同地点谈判弃 1 张手牌，智识(3)成功放线索"
+        }
+      ]
+    },
+    {
+      "code": "04126a",
+      "name": "失踪人口",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-threads-of-fate.test.mjs",
+          "test": "04126b 警局：多张武器由玩家选，且只拿走一张同名副本"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04126a 失踪人口：揭示后放置阿卡姆警察局并与东城区相连"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04126b 阿卡姆警察局：行动从牌库顶 6 张找武器加入手牌"
+        }
+      ]
+    },
+    {
+      "code": "04126b",
+      "name": "阿卡姆警察局",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-threads-of-fate.test.mjs",
+          "test": "04126b 警局：多张武器由玩家选，且只拿走一张同名副本"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04126b 阿卡姆警察局：行动从牌库顶 6 张找武器加入手牌"
+        }
+      ]
+    },
+    {
+      "code": "04127",
+      "name": "来到警局",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-threads-of-fate.test.mjs",
+          "test": "04127 背面没有毁灭；04139 在目的地每轮第一张诡计获得涌动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04127 车站：生成狩猎中的夜魇于最远地点并把亚历山卓附属其上（不加毁灭）"
+        }
+      ]
+    },
+    {
+      "code": "04128a",
+      "name": "来到警局",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04128a 车站（另一面）：放置火车轨道并把亚历山卓附属到轨道"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04128b 火车轨道：花费 1 个线索抽 4 张（每场游戏一次）；与北区相连"
+        }
+      ]
+    },
+    {
+      "code": "04128b",
+      "name": "火车轨道",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04128b 火车轨道：花费 1 个线索抽 4 张（每场游戏一次）；与北区相连"
+        }
+      ]
+    },
+    {
+      "code": "04129",
+      "name": "上头有人",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04129 位高权重：放置市政厅并把亚历山卓附属到市政厅"
+        }
+      ]
+    },
+    {
+      "code": "04130a",
+      "name": "上头有人",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04130a 位高权重（切换面）：把亨利换成敌人并把亚历山卓附属到敌人"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04130b 亨利·德沃（敌人）：生成时接管亚历山卓；反击关键词"
+        }
+      ]
+    },
+    {
+      "code": "04130b",
+      "name": "亨利·德沃",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：state.scenarioFlags 赋值。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+    },
+    {
+      "code": "04131",
+      "name": "亚历山卓被关押",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04131 亚历山卓的监狱：亚历山卓附在地点上时帷幕 +2；无线索时推进并救人"
+        }
+      ]
+    },
+    {
+      "code": "04132",
+      "name": "亚历山卓遇险",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04132 亚历山卓遇险：亚历山卓附在敌人上时其生命 +2×人数；离场时推进并救人"
+        }
+      ]
+    },
+    {
+      "code": "04133a",
+      "name": "女猎手的苦旅",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04133a 女猎手的苦旅：揭示后放置漆黑洞穴"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04133b 漆黑洞穴：回合末二选一（1 恐惧 / 弃 2 张手牌）；与河岸城相连"
+        }
+      ]
+    },
+    {
+      "code": "04133b",
+      "name": "幽暗洞穴",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04133b 漆黑洞穴：回合末二选一（1 恐惧 / 弃 2 张手牌）；与河岸城相连"
+        }
+      ]
+    },
+    {
+      "code": "04134a",
+      "name": "守卫者追根究底",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04134a 守卫者的追根究底：揭示后在珍品店放置玛利亚·德西瓦（旁人）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04134b 玛利亚·德西瓦：同地点谈判花费 1 资源，智识(3)成功放线索"
+        }
+      ]
+    },
+    {
+      "code": "04134b",
+      "name": "玛利亚·德西瓦",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04134b 玛利亚·德西瓦：同地点谈判花费 1 资源，智识(3)成功放线索"
+        }
+      ]
+    },
+    {
+      "code": "04135",
+      "name": "漆黑的洞穴",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04135 漆黑的洞穴：弃遭遇直到弃出异教徒并在洞穴生成，记为伊塔卡的猎物"
+        }
+      ]
+    },
+    {
+      "code": "04136",
+      "name": "漆黑的洞穴",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04136 漆黑的洞穴（另一面）：放置市政厅、连接两地点、逐人弃遭遇牌"
+        }
+      ]
+    },
+    {
+      "code": "04137a",
+      "name": "古怪遗物",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04137a 古怪遗物：把玛利亚换成敌人并记为伊塔卡的猎物"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04137b 玛利亚·德西瓦（敌人）：生成时成为伊塔卡的猎物；胜利 1"
+        }
+      ]
+    },
+    {
+      "code": "04137b",
+      "name": "玛利亚·德西瓦",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：state.scenarioFlags.ichtacasPrey 直写。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+    },
+    {
+      "code": "04138",
+      "name": "古怪遗物",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04138 古怪遗物（另一面）：记住两个目的地并逐人弃遭遇牌"
+        }
+      ]
+    },
+    {
+      "code": "04139",
+      "name": "怪事丛生",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-threads-of-fate.test.mjs",
+          "test": "04127 背面没有毁灭；04139 在目的地每轮第一张诡计获得涌动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04139 怪事丛生：目的地每轮第一张遭遇诡计获得涌动；推进时让最近调查员获得伊塔卡"
+        }
+      ]
+    },
+    {
+      "code": "04140",
+      "name": "兄弟会暴露",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04140 兄弟会暴露：猎物在无线索地点 +1 战斗/躲避/生命；全部离场后推进并获得伊塔卡"
+        }
+      ]
+    },
+    {
+      "code": "04141",
+      "name": "维尔玛小餐馆",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04141 维尔玛小餐馆：与东城区相连；3 行动听闲聊获得 2 个线索（每场游戏一次）"
+        }
+      ]
+    },
+    {
+      "code": "04142",
+      "name": "珍品店",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04142 珍品店：与北区相连；位于此处打出[[遗物]]支援费用 -2"
+        }
+      ]
+    },
+    {
+      "code": "04143",
+      "name": "市政厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04143 市政厅：进入时手牌 4+ 弃到只剩 3 张"
+        }
+      ]
+    },
+    {
+      "code": "04144",
+      "name": "密不可泄",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04144 密不可泄：检定难度与失败伤害随已完成幕牌库数增加"
+        }
+      ]
+    },
+    {
+      "code": "04145",
+      "name": "屋中无人",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-threads-of-fate.test.mjs",
+          "test": "04145 屋中无人：调查 +1 行动（附属数据读点），地点无线索时轮末弃掉"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04145 屋中无人：附属地点调查 +1 行动；地点无线索时涌动、轮末弃掉"
+        }
+      ]
+    },
+    {
+      "code": "04146",
+      "name": "鲜血阴谋",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04146 鲜血阴谋：附属密谋使毁灭阈值 -1；异教徒谈判成功弃掉并回复阈值"
+        }
+      ]
+    },
+    {
+      "code": "04147",
+      "name": "伊塔卡",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-p2-hooks.test.mjs",
+          "test": "04147 伊塔卡：+1 战斗 / +1 敏捷，并在击败敌人后可横置治愈恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04147 伊塔卡：+1 战斗/敏捷（对胜利/复仇敌人 +2）；击败敌人后横置治愈恐惧"
+        }
+      ]
+    },
+    {
+      "code": "04148",
+      "name": "探险日志",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-p2-hooks.test.mjs",
+          "test": "04148 探险日志：每回合额外一次只能探索的行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04148 探险日志：每回合额外一次只能用于探索的行动"
+        }
+      ]
+    }
+  ]
+}

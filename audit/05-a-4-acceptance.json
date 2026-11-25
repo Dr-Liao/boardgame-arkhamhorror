@@ -1,0 +1,969 @@
+{
+  "schemaVersion": 1,
+  "unit": "05-a-4",
+  "profile": {
+    "id": "tcu-wages-of-sin-2026-11",
+    "scope": "万象无终 05 段 The Wages of Sin（wos，05151–05185）57 条目录记录。57 条全部通过五维验收。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 57,
+    "verified": 57,
+    "unverified": 0,
+    "unimplemented": 0,
+    "testsPassed": 189
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+      "sha256": "ab546aab7fa8e5aced8264cbe89c5032ab1c6299cc236fe7490355d5a9515771"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+      "sha256": "90be688d1eec88a604f55b94bd643513f73d82cd7596135896d648da8a870712"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-p0-regressions.test.mjs",
+      "sha256": "032a3ef79e495e8fa5dbef2f10ce18ab76473a1fe056ff23ca65aa864d86978a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+      "sha256": "d01c5b909f1070a23c8a5918b134418718270e921d8644441225baff8673d2fd"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-interactions.test.mjs",
+      "sha256": "17674764d74ffcc71583660e18da0815ba10ccb3dee69f54666b9e2bb305b10e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-completion.test.mjs",
+      "sha256": "11ad9d1eda4646b4b9682dd09d185c15f248ed8bb65f0e0ab30a4afef27c434d"
+    }
+  ],
+  "entries": [
+    {
+      "code": "05151",
+      "name": "爱丽丝·洛克斯雷",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05151 爱丽丝·洛克斯雷 +1 智识；发现线索后横置对同地点敌人造成 1 点伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05151 爱丽丝·洛克斯雷 同地点没有敌人时不提供反应（不白横置）"
+        }
+      ]
+    },
+    {
+      "code": "05152",
+      "name": "妥善养护",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05152 妥善养护 宿主被弃后宿主与其[[升级]]附属一起返回手牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05152 妥善养护 快速附属到道具支援；每个支援仅限 1 张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05152 妥善养护 非调查阶段不能再打出（只能在你回合期间）"
+        }
+      ]
+    },
+    {
+      "code": "05153",
+      "name": "“老千”先生",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05153 “老千”先生 从牌库顶 3 张找 1 张抽取；有弱点时也抽 1 张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05153 “老千”先生 找出的卡走真实抽牌通道：选中的弱点按显现结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05153 “老千”先生 查找牌库顶时骇人真相（06023）可触发：在支援上放置 1 秘密"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05153 “老千”先生 查找牌库顶时骇人真相（06023）可触发：弃掉它并获得 2 资源"
+        }
+      ]
+    },
+    {
+      "code": "05154",
+      "name": "鹰眼折叠相机",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05154 鹰眼折叠相机 同场两张：最后线索后两张各触发一次，证据各记各的"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05154 鹰眼折叠相机 最后线索后放证据；证据给意志/智识/神智加值"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05154 鹰眼折叠相机 每台相机在每个地点仅限一次，换地点可再拿"
+        }
+      ]
+    },
+    {
+      "code": "05155",
+      "name": "亨利·万",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05155 亨利·万 揭示符号标记时无事发生"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05155 亨利·万 选择停下后，每揭示 1 枚标记抽 1 张或获得 1 资源"
+        }
+      ]
+    },
+    {
+      "code": "05156",
+      "name": "反应灵敏",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-completion.test.mjs",
+          "test": "TCU 05156 他人行动之间打出，立即执行一次行动并恢复座位与普通行动数；待决选择可 JSON 往返"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-completion.test.mjs",
+          "test": "TCU 05156 反应灵敏 只在「行动之间」窗口提供：技能检定/神话/敌人窗口不出现"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05156 反应灵敏 立即执行一次行动并保留普通行动数"
+        }
+      ]
+    },
+    {
+      "code": "05157",
+      "name": "凋零术",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05157 凋零术 同一场检定只结算一次符号效果（不重复叠加 -1）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05157 凋零术 用意志攻击；符号后敌人获得 -1 攻击值"
+        }
+      ]
+    },
+    {
+      "code": "05158",
+      "name": "第六感",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05158 第六感 同一场检定只结算一次（符号窗口重复开窗/重复枚举不重复触发）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05158 第六感 未揭示/不相连的地点不可选（无合法目标时不触发）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05158 第六感 符号后可选使用原调查地点的隐藏值"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05158 第六感 符号后改为在连接的已揭示地点调查（使用新地点隐藏值）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05158 第六感 符号窗口跳过询问后不再重复询问（同地点两名调查员也只问一次）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05158 第六感 非符号不触发"
+        }
+      ]
+    },
+    {
+      "code": "05159",
+      "name": "险中求胜",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05159 险中求胜 检定开始时横置：难度 +2，并获得 2 资源"
+        }
+      ]
+    },
+    {
+      "code": "05160",
+      "name": "勇闯虎穴",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05160 勇闯虎穴 成功躲避超过难度 2 点后，发现该敌人所在地点的线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+          "test": "TCU 05160 勇闯虎穴 躲避未超过难度 2 点时打不出"
+        }
+      ]
+    },
+    {
+      "code": "05161",
+      "name": "恶罪报应",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05161 [cultist]：本轮后入场的异端者也 +1 攻击/+1 躲避；tablet+elderthing 双标记都结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05161 恶罪报应：skull=X（胜利区未了之事+1）、cultist 本轮异端者+1、tablet 触发未了之事、elderthing 攻击失败结算闹鬼"
+        }
+      ]
+    },
+    {
+      "code": "05162",
+      "name": "倒吊人•XII",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05162 倒吊人·XII 背面：所有地点翻到幽灵面、看守人生成于绞刑者河、看守人组与幽灵弃牌堆洗回幽灵牌库"
+        }
+      ]
+    },
+    {
+      "code": "05163",
+      "name": "死亡来临",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05163 死亡来临：幽灵面地点不能再翻回非幽灵面（非幽灵地点仍可翻面）"
+        }
+      ]
+    },
+    {
+      "code": "05164",
+      "name": "追寻死者",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05164 追寻死者：幕 1 期间地点不能翻到幽灵面（议程翻面被阻止）；背面 4 处生成异端者、加线索、3+遗物发幽灵迷网"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05164 追寻死者：幕 1 期间议程推进不把地点翻到幽灵面"
+        }
+      ]
+    },
+    {
+      "code": "05165",
+      "name": "追寻生者",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05165 追寻生者：[fast] 翻面每轮每地点一次、非幽灵地点不能发现线索、4 张未了之事推进幕"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05165 追寻生者：幕 2 期间非幽灵地点不能发现线索"
+        }
+      ]
+    },
+    {
+      "code": "05166",
+      "name": "绞刑者河",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05166 绞刑者河：提供 [action] 撤退，结算后该调查员撤退"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05166b 绞刑者河：幽灵面隐藏值回填为 1；闹鬼撤退锁定按地点+轮对所有人生效"
+        }
+      ]
+    },
+    {
+      "code": "05166b",
+      "name": "绞刑者河",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05166b 绞刑者河：幽灵面隐藏值回填为 1；闹鬼撤退锁定按地点+轮对所有人生效"
+        }
+      ]
+    },
+    {
+      "code": "05167",
+      "name": "闹鬼农田",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05167 闹鬼农田：位于此地的幽灵敌人 +1 恐惧值"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05167b 闹鬼农田幽灵面：闹鬼把最近的幽灵敌人向闹鬼农田移动一次"
+        }
+      ]
+    },
+    {
+      "code": "05167b",
+      "name": "闹鬼农田",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05167b 闹鬼农田幽灵面：闹鬼把最近的幽灵敌人向闹鬼农田移动一次"
+        }
+      ]
+    },
+    {
+      "code": "05168",
+      "name": "废弃教堂",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05168 废弃教堂：神话阶段位于此地的调查员每项技能 -1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05168b 废弃教堂幽灵面：本轮每项技能 -1，轮末清理"
+        }
+      ]
+    },
+    {
+      "code": "05168b",
+      "name": "废弃教堂",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05168b 废弃教堂幽灵面：本轮每项技能 -1，轮末清理"
+        }
+      ]
+    },
+    {
+      "code": "05169",
+      "name": "绞刑架",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05169 绞刑架（169）：隐藏值 +1×场上女巫敌人数量"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05169b 绞刑架（169）幽灵面：闹鬼弃基础遭遇牌库顶 3 张，弃到女巫敌人时将其抽出交战"
+        }
+      ]
+    },
+    {
+      "code": "05169b",
+      "name": "绞刑架",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05169b 绞刑架（169）幽灵面：闹鬼弃基础遭遇牌库顶 3 张，弃到女巫敌人时将其抽出交战"
+        }
+      ]
+    },
+    {
+      "code": "05170",
+      "name": "绞刑架",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05170 绞刑架：翻面后 shroud 仍是 X（灵怪数量），而不是 -2+X"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05170b 绞刑架幽灵面：隐藏值 X = 灵怪数量，翻面不回填印表占位 -2"
+        }
+      ]
+    },
+    {
+      "code": "05170b",
+      "name": "绞刑架",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05170b 绞刑架幽灵面：隐藏值 X = 灵怪数量，翻面不回填印表占位 -2"
+        }
+      ]
+    },
+    {
+      "code": "05171",
+      "name": "异端者的墓地",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05171 异端者的墓地：调查时把当前意志值加入本次调查技能值"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05171b 幽灵面：基础意志减至 1 持续到该调查员下个回合结束（按 turnSerial 清理）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05171b 调查加成：意志值取含修正的当前值（scenarioRuntime.investigatorStat）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05171b/05176b 幽灵面调查加成：任意调查技能都加值（意志 / 手牌数）"
+        }
+      ]
+    },
+    {
+      "code": "05171b",
+      "name": "异端者的墓地",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05171b 幽灵面：基础意志减至 1 持续到该调查员下个回合结束（按 turnSerial 清理）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05171b 调查加成：意志值取含修正的当前值（scenarioRuntime.investigatorStat）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05171b/05176b 幽灵面调查加成：任意调查技能都加值（意志 / 手牌数）"
+        }
+      ]
+    },
+    {
+      "code": "05172",
+      "name": "异端者的墓地",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05172 异端者的墓地（172）：此地的女巫敌人被击败后弃基础遭遇牌库顶 2 张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05172b 异端者的墓地（172）幽灵面：闹鬼治愈场上每个异端者与女巫 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "05172b",
+      "name": "异端者的墓地",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05172b 异端者的墓地（172）幽灵面：闹鬼治愈场上每个异端者与女巫 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "05173",
+      "name": "教堂地下室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05173 教堂地下室（173）：没有重整状态的敌人时隐藏值 -3"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05173b 教堂地下室（173）幽灵面：牌库顶生成苏生亡者并与你交战，该牌移出游戏"
+        }
+      ]
+    },
+    {
+      "code": "05173b",
+      "name": "教堂地下室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05173b 教堂地下室（173）幽灵面：牌库顶生成苏生亡者并与你交战，该牌移出游戏"
+        }
+      ]
+    },
+    {
+      "code": "05174",
+      "name": "教堂地下室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05174 教堂地下室（174）：调查员威胁区没有巫术诡计时隐藏值 -3"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05174b 教堂地下室（174）幽灵面：把基础遭遇弃牌堆最顶的巫术诡计放进你的威胁区"
+        }
+      ]
+    },
+    {
+      "code": "05174b",
+      "name": "教堂地下室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05174b 教堂地下室（174）幽灵面：把基础遭遇弃牌堆最顶的巫术诡计放进你的威胁区"
+        }
+      ]
+    },
+    {
+      "code": "05175",
+      "name": "教堂阁楼",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05175 教堂阁楼：[反应] 可以选择不归还底下的卡牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05175b 教堂阁楼（175）幽灵面：闹鬼随机弃掉阁楼底下一张卡牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05175：引擎在发现线索之后调用 afterInvestigate（顺序契约）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05175：教堂阁楼定义带 investigateWithoutClues，0 线索也可成功调查并触发 afterInvestigate 反应"
+        }
+      ]
+    },
+    {
+      "code": "05175b",
+      "name": "教堂阁楼",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05175b 教堂阁楼（175）幽灵面：闹鬼随机弃掉阁楼底下一张卡牌"
+        }
+      ]
+    },
+    {
+      "code": "05176",
+      "name": "教堂阁楼",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05171b/05176b 幽灵面调查加成：任意调查技能都加值（意志 / 手牌数）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05176 教堂阁楼：把当前手牌数加入本次调查技能值（任意技能，且不泄漏到无关检定）"
+        }
+      ]
+    },
+    {
+      "code": "05176b",
+      "name": "教堂阁楼",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05171b/05176b 幽灵面调查加成：任意调查技能都加值（意志 / 手牌数）"
+        }
+      ]
+    },
+    {
+      "code": "05177",
+      "name": "幽灵迷网",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05177 幽灵迷网：没有灵怪敌人时不列出行动（避免白花 1 行动）"
+        }
+      ]
+    },
+    {
+      "code": "05178a",
+      "name": "异端者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05178a 异端者（A 面）：+2×人数生命、非幽灵地点冷漠且不可交战/不可伤害、被击败翻到未了之事 05178b"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "未了之事：持有者退场时翻回异端者面并清理威胁区与记录（05178b/d/f/h）"
+        }
+      ]
+    },
+    {
+      "code": "05178b",
+      "name": "未了之事",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05178a 异端者（A 面）：+2×人数生命、非幽灵地点冷漠且不可交战/不可伤害、被击败翻到未了之事 05178b"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "未了之事：持有者退场时翻回异端者面并清理威胁区与记录（05178b/d/f/h）"
+        }
+      ]
+    },
+    {
+      "code": "05178c",
+      "name": "异端者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05178c 异端者（C 面）：+2×人数生命、非幽灵地点冷漠且不可交战/不可伤害、被击败翻到未了之事 05178d"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05178d 未了之事（D）：轮末受到 1 伤害或翻回敌人面；在绞刑架无线索时意志/敏捷(4)驱除进胜利区"
+        }
+      ]
+    },
+    {
+      "code": "05178d",
+      "name": "未了之事",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05178c 异端者（C 面）：+2×人数生命、非幽灵地点冷漠且不可交战/不可伤害、被击败翻到未了之事 05178d"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05178d 未了之事（D）：轮末受到 1 伤害或翻回敌人面；在绞刑架无线索时意志/敏捷(4)驱除进胜利区"
+        }
+      ]
+    },
+    {
+      "code": "05178e",
+      "name": "异端者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05178e 异端者（E 面）：+2×人数生命、非幽灵地点冷漠且不可交战/不可伤害、被击败翻到未了之事 05178f"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05178f 未了之事（F）：轮末失去 2 资源或翻回敌人面；在教堂阁楼无线索时智识/敏捷(4)驱除"
+        }
+      ]
+    },
+    {
+      "code": "05178f",
+      "name": "未了之事",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05178e 异端者（E 面）：+2×人数生命、非幽灵地点冷漠且不可交战/不可伤害、被击败翻到未了之事 05178f"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05178f 未了之事（F）：轮末失去 2 资源或翻回敌人面；在教堂阁楼无线索时智识/敏捷(4)驱除"
+        }
+      ]
+    },
+    {
+      "code": "05178g",
+      "name": "异端者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05178g 异端者（G 面）：+2×人数生命、非幽灵地点冷漠且不可交战/不可伤害、被击败翻到未了之事 05178h"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05178h 未了之事（H）：轮末选择并弃掉 2 张手牌或翻回敌人面；在墓地无线索时意志/战斗(4)驱除"
+        }
+      ]
+    },
+    {
+      "code": "05178h",
+      "name": "未了之事",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05178g 异端者（G 面）：+2×人数生命、非幽灵地点冷漠且不可交战/不可伤害、被击败翻到未了之事 05178h"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05178h 未了之事（H）：轮末选择并弃掉 2 张手牌或翻回敌人面；在墓地无线索时意志/战斗(4)驱除"
+        }
+      ]
+    },
+    {
+      "code": "05178i",
+      "name": "异端者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05178i 异端者（I 面）：被击败后立即翻回敌人面并攻击，本场不能以任何方式被击败、谈判需 1+人数线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05178j：I→J 立即结算后谈判费用 = 1 + 人数（不再额外 +1）"
+        }
+      ]
+    },
+    {
+      "code": "05178j",
+      "name": "未了之事",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05178j：I→J 立即结算后谈判费用 = 1 + 人数（不再额外 +1）"
+        }
+      ]
+    },
+    {
+      "code": "05178k",
+      "name": "异端者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05178k 异端者（K 面）：被击败后翻回敌人面并攻击，注册「下次击败即驱除」；第二次击败进胜利区"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05178l 未了之事（L）：被击败且已注册「下次击败即驱除」时进入胜利区（不重复翻面）"
+        }
+      ]
+    },
+    {
+      "code": "05178l",
+      "name": "未了之事",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05178l 未了之事（L）：被击败且已注册「下次击败即驱除」时进入胜利区（不重复翻面）"
+        }
+      ]
+    },
+    {
+      "code": "05179",
+      "name": "复仇女巫",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05179 复仇女巫：生成于绞刑架/异端者墓地；被击败时同地点每位调查员受到其伤害与恐惧（直接）"
+        }
+      ]
+    },
+    {
+      "code": "05180",
+      "name": "恶毒邪灵",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05180 恶毒邪灵：幽灵地点 +1 伤害/+1 恐惧与闹鬼农田 horrorAura 叠加"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05180 恶毒邪灵：非[[法术]]/[[遗物]]伤害击倒时改为治疗+横置+移到幽灵地点；法术伤害不触发"
+        }
+      ]
+    },
+    {
+      "code": "05181",
+      "name": "惩罚",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard4.test.mjs",
+          "test": "05181 惩罚：[action] 意志(3)弃掉本卡；同地点有横置女巫敌人时自动成功"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05181 惩罚：威胁区每张惩罚各触发 1 点伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05181 惩罚：显现入威胁区；任意敌人被击败后威胁区持有者受 1 伤害"
+        }
+      ]
+    },
+    {
+      "code": "05182",
+      "name": "往昔重担",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05182 往昔重担：威胁区无未了之事时涌动；有则逐张触发强制"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05182 往昔重担：涌动条件按「你自己」的威胁区判定"
+        }
+      ]
+    },
+    {
+      "code": "05183",
+      "name": "凶兆",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05183 凶兆：抽幽灵遭遇牌库时带 peril 与「不能被取消」选项"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05183 凶兆：选择抽幽灵牌库顶时走 drawExtra(spectral)"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05183：抽到的卡在真正揭示期间按 peril/不可取消处理（第五轮引擎揭示标记）"
+        }
+      ]
+    },
+    {
+      "code": "05184",
+      "name": "长明灯",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05184 长明灯：从基础牌库抽出 → 洗入幽灵牌库并获得涌动；从幽灵牌库抽出 → 2 伤害并放回基础弃牌堆"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05184 长明灯：洗入幽灵牌库的位置由随机源决定（不是固定位置）"
+        }
+      ]
+    },
+    {
+      "code": "05185",
+      "name": "祸害生者",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05185 祸害生者：从幽灵牌库顶弃到灵怪敌人并生成交战"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05185 祸害生者：幽灵牌库弃空时把弃牌堆洗回再继续弃"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "05185 祸害生者：把未了之事翻回异端者面并放置一半生命的伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-wages-of-sin.test.mjs",
+          "test": "异端者翻回敌人面：生命值按 +2×人数 重置、伤害清零（05178*/05185）"
+        }
+      ]
+    }
+  ]
+}

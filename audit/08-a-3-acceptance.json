@@ -1,0 +1,581 @@
+{
+  "schemaVersion": 1,
+  "unit": "08-a-3",
+  "profile": {
+    "id": "eote-player-c-2026-11",
+    "scope": "地球边缘 08 段 eoep 玩家卡（08089–08133）45 条目录记录。29 条通过五维验收；16 条已披露近似（槽位/替换/窗口近似）暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 45,
+    "verified": 29,
+    "unverified": 16,
+    "unimplemented": 0,
+    "testsPassed": 103
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+      "sha256": "92735ec413693dde58e2dfbd82ebd42dc6ee4be98f1e552ba3952ddf7e153270"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+      "sha256": "736dbcbbb09fdf0d94c452ace100338257a0ee6d917f013c566c0ee92cb67ce3"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-rules.test.mjs",
+      "sha256": "21761e92e64ab38d14ded302954fddcf765e29ca215c5e2ca1c6216ed5c1d36d"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-primitives-geo.test.mjs",
+      "sha256": "0ef76e75a39d4a5e09b326280a3c197ec2b75e4a99e7f1801ea132da13f01efc"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-primitives-frost.test.mjs",
+      "sha256": "29a200cd215f5ffd3654610c67b5c1415041a6886c0c3e16be27cde7dd5644bf"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-interactions.test.mjs",
+      "sha256": "58d9dbad50d4646e8917cfdac42d47e930f3ca2e241f5f788f4a8c04d7ecb230"
+    }
+  ],
+  "entries": [
+    {
+      "code": "08089",
+      "name": "快拔枪套",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「只占1手部槽位的[[枪械]]」按 firearm 特性过滤，未再校验槽位数量；第二能力固定取附属支援第一条含「攻击/开火/射击」的能力（条目注释已披露 3 条近似）。"
+    },
+    {
+      "code": "08090",
+      "name": "克图格亚的烙印",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08090 克图格亚的烙印：按充能造成伤害并消耗充能"
+        }
+      ]
+    },
+    {
+      "code": "08091",
+      "name": "恩科西·马巴蒂",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08091 恩科西·马巴蒂：真实 performTest 的 tokenReveal 窗口把符号标记改为咒印"
+        }
+      ]
+    },
+    {
+      "code": "08092",
+      "name": "克图格亚的烙印",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08092 克图格亚的烙印（4 级）：+2 技能值，最多花 3 充能"
+        }
+      ]
+    },
+    {
+      "code": "08093",
+      "name": "巨石锤",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08093 巨石锤：加入意志，成功超过难度 3 点时 +2 伤害并击退"
+        }
+      ]
+    },
+    {
+      "code": "08094",
+      "name": "长柄大锤",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08094/08096 长柄大锤：两种挥砸的修正与伤害"
+        }
+      ]
+    },
+    {
+      "code": "08095",
+      "name": "防护服",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08095 防护服：危险诡计显现前自伤并取消显现"
+        }
+      ]
+    },
+    {
+      "code": "08096",
+      "name": "长柄大锤",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08094/08096 长柄大锤：两种挥砸的修正与伤害"
+        }
+      ]
+    },
+    {
+      "code": "08097",
+      "name": "袖珍望远镜",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「查看未揭示地点的揭示面」以日志展示信息实现，不改变地点揭示状态（已披露）。"
+    },
+    {
+      "code": "08098",
+      "name": "远古海图",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08098/08100 远古海图：不是自己的回合时玩家窗口不提供"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08098/08100 远古海图：横置花秘密免费执行移动/调查行动"
+        }
+      ]
+    },
+    {
+      "code": "08099",
+      "name": "吉恩·波尔格",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08099 吉恩·波尔格：移动后把连接地点的线索搬到自己所在地点"
+        }
+      ]
+    },
+    {
+      "code": "08100",
+      "name": "远古海图",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08098/08100 远古海图：不是自己的回合时玩家窗口不提供"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08098/08100 远古海图：横置花秘密免费执行移动/调查行动"
+        }
+      ]
+    },
+    {
+      "code": "08101",
+      "name": "占卜",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08101/08103 占卜：不发现标准线索，改为按充能发现线索"
+        }
+      ]
+    },
+    {
+      "code": "08102",
+      "name": "保护魂灵",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08102 保护魂灵：真实 assetLeavesPlay 窗口（盟友离场后返回拥有者手牌或抽 3 张）"
+        }
+      ]
+    },
+    {
+      "code": "08103",
+      "name": "占卜",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08101/08103 占卜：不发现标准线索，改为按充能发现线索"
+        }
+      ]
+    },
+    {
+      "code": "08104",
+      "name": "威廉·韦伯教授",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「不发现所在地点 1 个线索，改为连接地点线索」是追加而非替换（investigateSuccess 上下文无可写入口，已披露）。"
+    },
+    {
+      "code": "08105",
+      "name": "破冰锥",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08105/08107 破冰锥：真实攻击检定窗口出现 +1 技能值（横置）"
+        }
+      ]
+    },
+    {
+      "code": "08106",
+      "name": "威廉·韦伯教授",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 08104：替换语义未实现，改为追加（已披露）。"
+    },
+    {
+      "code": "08107",
+      "name": "破冰锥",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08105/08107 破冰锥：真实攻击检定窗口出现 +1 技能值（横置）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08107 破冰锥（3 级）：真实窗口弃掉自身换取成功后 +1 伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08107 破冰锥（3 级）：真实调查检定窗口弃掉自身换取额外 1 个线索"
+        }
+      ]
+    },
+    {
+      "code": "08108",
+      "name": "虚影易位",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08108 虚影易位：与 2 连接内的已揭示地点非精英敌人交换位置"
+        }
+      ]
+    },
+    {
+      "code": "08109",
+      "name": "身形虚化",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08109 身形虚化 成功躲避：花 1 充能并获得 1 个额外行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08109 身形虚化 没有充能时能力不可用"
+        }
+      ]
+    },
+    {
+      "code": "08110",
+      "name": "虚影易位",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08110 虚影易位 与已揭示地点的非精英敌人交换位置"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08110 虚影易位 已揭示地点没有非精英敌人时不能打出"
+        }
+      ]
+    },
+    {
+      "code": "08111",
+      "name": "身形虚化",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08111 身形虚化 成功后可花 2 充能获得 2 个额外行动"
+        }
+      ]
+    },
+    {
+      "code": "08112",
+      "name": "\"再来一张！\"",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「额外揭示 1 枚标记并把负值取正计入本次检定」用替代标记通道近似（已披露）。"
+    },
+    {
+      "code": "08113",
+      "name": "大肆借贷",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「游戏结束/退场时」强制窗口不存在，近似为每轮结束检查资源 < 10 即流放；且流放进 removedFromGame 而非战役 exiled（已披露）。"
+    },
+    {
+      "code": "08114",
+      "name": "珍贵记忆",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08114 珍贵记忆（来自前世）：失败且低于难度 2+ 后横置治愈自身 1 伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08114 珍贵记忆（来自前世）：成功且超过难度 2+ 后横置治愈自身 1 恐惧"
+        }
+      ]
+    },
+    {
+      "code": "08115",
+      "name": "珍贵记忆",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08115 珍贵记忆（来自后世）：失败治愈恐惧、成功治愈伤害（与前世互换）"
+        }
+      ]
+    },
+    {
+      "code": "08116",
+      "name": "护身法宝",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08116 护身法宝 伤害不足以击败你时不提供反应"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08116 护身法宝 将被击败时弃掉并取消最多 2 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "08117",
+      "name": "尘世宁静",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08117 尘世宁静 成功且等于难度时失去 1 资源"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08117 尘世宁静 每超过难度 1 点可花 1 充能治愈 1 伤害"
+        }
+      ]
+    },
+    {
+      "code": "08118",
+      "name": "附魔弓",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08118 附魔弓 意志替代战斗：+1 技能值、+1 伤害并横置"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08118 附魔弓 花 1 充能攻击连接地点的非精英敌人"
+        }
+      ]
+    },
+    {
+      "code": "08119",
+      "name": "尘世宁静",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08119 尘世宁静 意志(0) 成功且等于难度时失去 2 资源"
+        }
+      ]
+    },
+    {
+      "code": "08120",
+      "name": "先知先觉",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「支援资源可支付指定特性卡」无费用来源读点，用 beforePlayCost 减费近似（费用枚举仍要求资源池可支付，已披露）。"
+    },
+    {
+      "code": "08121",
+      "name": "一探究竟",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 08120（beforePlayCost 减费近似，已披露）。"
+    },
+    {
+      "code": "08122",
+      "name": "好勇斗狠",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 08120（beforePlayCost 减费近似，已披露）。"
+    },
+    {
+      "code": "08123",
+      "name": "技艺精湛",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 08120（beforePlayCost 减费近似，已披露）。"
+    },
+    {
+      "code": "08124",
+      "name": "古物藏家",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 08120（beforePlayCost 减费近似，已披露）。"
+    },
+    {
+      "code": "08125",
+      "name": "危险处境",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「购买时受 2 点创伤并获 3 经验」不能在建卡/购买层结算，改为每场冒险 setup 一次性结算并用战役记录防重复（P7 未做，已披露）。"
+    },
+    {
+      "code": "08126",
+      "name": "厚重皮衣",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08126 厚重皮衣 揭示符号标记后：自身受 1 伤害，取消并重抽"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08126 厚重皮衣 自动失败与数字标记不提供反应"
+        }
+      ]
+    },
+    {
+      "code": "08127",
+      "name": "雪橇犬",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08127 雪橇犬 2 张共占 1 个盟友槽"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08127 雪橇犬 横置 X 张：攻击 +X 战斗并造成 X 点伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08127 雪橇犬 横置 X 张：移动 X 次"
+        }
+      ]
+    },
+    {
+      "code": "08128",
+      "name": "驯兽之杖",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08128 驯兽之杖 2 个生物专用盟友槽 + 自己回合打出生物费用 -1"
+        }
+      ]
+    },
+    {
+      "code": "08129",
+      "name": "请求支援",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08129 请求支援 按控制的职阶依次结算：伤害/线索/治疗"
+        }
+      ]
+    },
+    {
+      "code": "08130",
+      "name": "臂伤",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「进行战斗或激活行动后锁定」窗口不带行动类型，近似为任意行动后锁住印刷行动类型至回合结束（已披露）。"
+    },
+    {
+      "code": "08131",
+      "name": "腿伤",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「进行移动/撤退/躲避行动后锁定」窗口不带行动类型，近似为任意行动后锁定（已披露）。"
+    },
+    {
+      "code": "08132",
+      "name": "惊慌",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「资源行动」用 capability:gainResources 近似（同时禁止卡牌效果获得资源，略偏严）；动作后锁近似为任意行动后锁（已披露）。"
+    },
+    {
+      "code": "08133",
+      "name": "麻木",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "动作后锁近似为任意行动后锁住印刷三类行动至回合结束（已披露）。"
+    }
+  ]
+}

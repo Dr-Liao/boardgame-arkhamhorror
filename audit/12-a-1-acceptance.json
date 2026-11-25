@@ -1,0 +1,529 @@
+{
+  "schemaVersion": 1,
+  "unit": "12-a-1",
+  "profile": {
+    "id": "core2026-player-a-2026-11",
+    "scope": "2026 核心盒 12 段（12001–12040）40 条目录记录。40 条全部通过五维验收（含 8 张跨包重印别名由 canonical 承载）。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 40,
+    "verified": 40,
+    "unverified": 0,
+    "unimplemented": 0,
+    "testsPassed": 52
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+      "sha256": "859affbb6d264238a33bdc5db6f9910786401c699e403a47470fc2c078fffc97"
+    },
+    {
+      "file": "games/arkhamhorror/tests/starter-batch-3.test.mjs",
+      "sha256": "2b3d0bb9ece2c3a59b03ef8aee404c3dbba61baaeccf1e8f0b54c997a905c31e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/reprint-aliases.test.mjs",
+      "sha256": "047fce342f4ec577a901cf2d978050315dbc2d66b11e3323b71ae9643bfda156"
+    }
+  ],
+  "entries": [
+    {
+      "code": "12001",
+      "name": "丹妮拉·雷耶丝",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "12-a-1 范围：12001–12040 core_2026 卡恰好 40 张（32 strict + 8 重印别名）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDC 12001 丹妮拉·雷耶斯：敌人攻击同地点调查员后可反应攻击（每轮一次）；旧印 +1 并对同地点敌人 1 伤"
+        }
+      ]
+    },
+    {
+      "code": "12002",
+      "name": "丹妮拉的扳手",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "FHV 12002 丹妮拉的扳手：横置使敌人交战并立即攻击；行动攻击 +2 战斗，敌人本轮攻击过则 +1 伤害"
+        }
+      ]
+    },
+    {
+      "code": "12003",
+      "name": "身临危境",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDC 12003 身临危境：对敌人造成伤害后受 1 伤并在本卡放伤害，3 点弃掉（游戏结束 1 物理创伤）"
+        }
+      ]
+    },
+    {
+      "code": "12004",
+      "name": "乔·戴蒙德",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "GOT 12004 乔·戴蒙德：成功调查后抽 1 张（每轮一次）；旧印 +1，成功后抽 1 并得 1 资源"
+        }
+      ]
+    },
+    {
+      "code": "12005",
+      "name": "侦探的直觉",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDE 12005 侦探的直觉：获得 2 资源并治愈 1 伤或 1 恐；抽到时可展示并额外抽 2 张"
+        }
+      ]
+    },
+    {
+      "code": "12006",
+      "name": "死路",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDC 12006 死路：搜索到它时抽取并取消搜索、洗牌；留在手牌游戏结束少 2 经验"
+        }
+      ]
+    },
+    {
+      "code": "12007",
+      "name": "特里希·斯卡波罗",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "GOT 12007 翠西·斯卡伯勒：每回合额外一次仅用于躲避的行动；旧印 +0，结算后可解除交战并移动"
+        }
+      ]
+    },
+    {
+      "code": "12008",
+      "name": "隐秘行动",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDE 12008 隐秘行动：躲避成功后横置，抽 1 张或移动到连接地点"
+        }
+      ]
+    },
+    {
+      "code": "12009",
+      "name": "黑室特工",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDC 12009 黑室特工：猎手/猎物（仅翠西）；躲避后放 1 线索，否则重整交战并攻击"
+        }
+      ]
+    },
+    {
+      "code": "12010",
+      "name": "戴克斯特·德雷克",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDE 12010 德克斯特·德雷克：打出支援后返回另一支援或支付费用打出手中支援（每轮一次）；旧印 +1 可返回非剧情支援"
+        }
+      ]
+    },
+    {
+      "code": "12011",
+      "name": "“下一招是……”",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDE 12011 “接下来是……”：查找法术/物品支援并减 2 费打出（不引发借机攻击）"
+        }
+      ]
+    },
+    {
+      "code": "12012",
+      "name": "死灵之书",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDC 12012 死灵之书：显现在威胁区、不能离场、禁止打出支援/启动其他支援；行动检定失败洗回并受 1 恐"
+        }
+      ]
+    },
+    {
+      "code": "12013",
+      "name": "伊莎贝拉·巴恩斯",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDE 12013 伊莎贝尔·巴恩斯：本人检定中受 1 直接恐惧，从弃牌堆投入技能并结算后洗回（每轮一次）"
+        }
+      ]
+    },
+    {
+      "code": "12014",
+      "name": "伊莎贝拉的.45双枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "GOT 12014 伊莎贝拉的 .45 双枪：6 弹药；行动开火 +1 战斗 +1 伤害；结算后可花 1 弹药横置用敏捷再攻击"
+        }
+      ]
+    },
+    {
+      "code": "12015",
+      "name": "忍耐极限",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDC 12015 崩溃点：显现受到 1 直接伤害，剩余神智 ≤6 / ≤3 各再受 1 点（真实引擎抽到结算）"
+        }
+      ]
+    },
+    {
+      "code": "12016",
+      "name": "保镖",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "GOT 12016 保镖：可承接同地点其他调查员的伤害；被击败时对同地点敌人 1 伤"
+        }
+      ]
+    },
+    {
+      "code": "12017",
+      "name": "耐性",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDE 12017 耐性：[fast] 花 1 资源本次检定 +1 战斗/敏捷（攻击或躲避 +2）"
+        }
+      ]
+    },
+    {
+      "code": "12018",
+      "name": "洛根·黑斯廷斯",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDC 12018 洛根·黑斯廷斯：+1 战斗；击败敌人后横置获得 1 资源"
+        }
+      ]
+    },
+    {
+      "code": "12019",
+      "name": "M1911手枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDC 12019 M1911：4 弹药；行动花 1 弹药攻击，+1 战斗 +1 伤害（真实引擎行动结算）"
+        }
+      ]
+    },
+    {
+      "code": "12020",
+      "name": "大砍刀",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDC 12020 砍刀（重印 01020）：标准 reprint 别名解析到 canonical"
+        }
+      ]
+    },
+    {
+      "code": "12021",
+      "name": "韧劲",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDC 12021 韧劲：卡面无能力文本（源参考卡定义同样无能力），仅提供 2 生命/2 理智与图标"
+        }
+      ]
+    },
+    {
+      "code": "12022",
+      "name": "吸取教训",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDE 12022 教训：快速；敌人攻击你后打出，发现所在地点 1 个线索"
+        }
+      ]
+    },
+    {
+      "code": "12023",
+      "name": "磨刀不误砍柴工",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDC 12023 合适的工具：查找牌库顶 9 张的工具/武器支援并加入手牌后洗回"
+        }
+      ]
+    },
+    {
+      "code": "12024",
+      "name": "犯罪现场",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDC 12024 犯罪现场（重印 04103）：标准 reprint 别名解析"
+        }
+      ]
+    },
+    {
+      "code": "12025",
+      "name": "致命打击",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDE 12025 凶残一击（重印 01025）：别名解析到 canonical"
+        }
+      ]
+    },
+    {
+      "code": "12026",
+      "name": "反手一击",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDE 12026 反击：快速；敌人攻击同地点调查员时取消并对其造成 1 伤"
+        }
+      ]
+    },
+    {
+      "code": "12027",
+      "name": "保镖",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "GOT 12027 保镖（等级 2）：可承接伤害；被击败时对同地点敌人 2 伤"
+        }
+      ]
+    },
+    {
+      "code": "12028",
+      "name": "长柄大锤",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "GOT 12028 大锤：单行动攻击 +1 伤害；双行动攻击 +3 战斗，成功可横置再 +2 伤害"
+        }
+      ]
+    },
+    {
+      "code": "12029",
+      "name": "温彻斯特12型霰弹枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDC 12029 温彻斯特 M12：3 弹药；+3 战斗，成功按差值 +1 伤害最多 +4，失败按差值伤害最多 5"
+        }
+      ]
+    },
+    {
+      "code": "12030",
+      "name": "多萝西·西蒙斯",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "GOT 12030 多萝西·西蒙斯：+1 智识；成功调查恰好超过 1 或 3 时横置获得 1 资源"
+        }
+      ]
+    },
+    {
+      "code": "12031",
+      "name": "指纹采集工具",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDE 12031 指纹采集工具（重印 05024）：别名解析到 canonical"
+        }
+      ]
+    },
+    {
+      "code": "12032",
+      "name": "实验室助理",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "FHV 12032 实验室助理（重印 02020）：别名解析到 canonical"
+        }
+      ]
+    },
+    {
+      "code": "12033",
+      "name": "本地地图",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "GOT 12033 本地地图：4 秘密；行动花 1 秘密调查连接的已揭示地点（+1 智识），成功可横置移动到该地点"
+        }
+      ]
+    },
+    {
+      "code": "12034",
+      "name": "放大镜",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDE 12034 放大镜（重印 01030）：别名解析到 canonical"
+        }
+      ]
+    },
+    {
+      "code": "12035",
+      "name": "言辞锐利",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "GOT 12035 犀利言辞：[fast] 花 1 资源本次检定 +1 智识/意志（调查或谈判 +2）"
+        }
+      ]
+    },
+    {
+      "code": "12036",
+      "name": "收集情报",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "GOT 12036 聚集情报：快速；敌人进入你所在地点时打出，抽 2 张牌"
+        }
+      ]
+    },
+    {
+      "code": "12037",
+      "name": "销声匿迹",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDE 12037 溜之大吉：躲避，每线索 +1 敏捷最多 +3；成功可解除交战并移动到已揭示连接地点"
+        }
+      ]
+    },
+    {
+      "code": "12038",
+      "name": "专业的直觉",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDE 12038 灵光乍现（重印 01037）：别名解析到 canonical"
+        }
+      ]
+    },
+    {
+      "code": "12039",
+      "name": "推理",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDE 12039 推理（重印 01039）：别名解析到 canonical"
+        }
+      ]
+    },
+    {
+      "code": "12040",
+      "name": "神奇魔典",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "12-a-1 范围：12001–12040 core_2026 卡恰好 40 张（32 strict + 8 重印别名）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard1.test.mjs",
+          "test": "TDC 12040 神秘魔典：4 秘密；横置花 1/2 秘密查找牌库顶 3/6 张抽 1（弱点也抽，已披露近似）"
+        }
+      ]
+    }
+  ]
+}

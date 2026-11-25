@@ -1,0 +1,557 @@
+{
+  "schemaVersion": 1,
+  "unit": "10-a-8",
+  "profile": {
+    "id": "fhv-campaign-e-2026-11",
+    "scope": "铁杉谷盛宴 10 段 fhvc 战役卡（10606–10644b）44 条目录记录。37 条通过五维验收；7 条剧情资产/内容引擎读点缺失暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 43,
+    "verified": 36,
+    "unverified": 7,
+    "unimplemented": 0,
+    "testsPassed": 189
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+      "sha256": "c26bd16fce45e6c20fd0351414b53dfb5f0ba5f54e04e66d3f30425ae6f0d913"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-scenario-theTwistedHollow.test.mjs",
+      "sha256": "0db7664a2a2d57c4f7d5f1ab3851a7f882c6e97b97ebf7b5e7610225317226ca"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-scenario-theLongestNight.test.mjs",
+      "sha256": "53f28f361cf34fa264065875b2f0052e40c5b270158638f3094d234e343bb00c"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-scenario-blockers.test.mjs",
+      "sha256": "65287e9f6d6460090afbb9798c8263fa7f86cf0aa261c6243282f0b77661792a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-rules.test.mjs",
+      "sha256": "0923adf4ff0b6d5b8e50ddf8bae63071dcae1f05ad9421ff0760e02715e615b7"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-primitives.test.mjs",
+      "sha256": "da22963c70f087153a13118a390afdd9f784d0bba5df3ab4dd603a806579639b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-interactions.test.mjs",
+      "sha256": "ec0fbb583bc1bb4240c8f184d861ed9761e33ec930a985c4e902e465041d693a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-campaign-flow.test.mjs",
+      "sha256": "50cf5665e2323b0c038355ad4caaeeb59ca588ec53561b38fb9d704d79874780"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-campaign-engine.test.mjs",
+      "sha256": "de69a978fccc696624d8505c2a94009120201233633bac958f1616da6f8498c3"
+    }
+  ],
+  "entries": [
+    {
+      "code": "10606",
+      "name": "黑暗渐深",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10606 黑暗渐深：黑暗地点调查阶段结束二选一（抽追击敌人/受 1 恐惧）；背面加黑暗并可清回正面"
+        }
+      ]
+    },
+    {
+      "code": "10607a",
+      "name": "冥思苦想",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10607a 冥思苦想：未带生成指示的敌人抽出即进入追击；轮末全员同一巢穴共付 3/人线索推进"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10607b 类熊混种：+2 生命/人；幕 2 期间将被击败 → 治愈并进入追击区域（不进胜利区）"
+        }
+      ]
+    },
+    {
+      "code": "10607b",
+      "name": "类熊混种",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10607b 类熊混种：+2 生命/人；幕 2 期间将被击败 → 治愈并进入追击区域（不进胜利区）"
+        }
+      ]
+    },
+    {
+      "code": "10608",
+      "name": "伯蒂在哪儿？",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10608 伯蒂在哪儿？：[fast] 花 1 线索查看相邻地点；幕 2 目标轮末全员在扭曲空洞共付 2/人线索"
+        }
+      ]
+    },
+    {
+      "code": "10609",
+      "name": "回到山谷",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10609 回到山谷：特殊议程 [fast] 横置提灯或共付 1/人线索；全员撤退 → 结局 1"
+        }
+      ]
+    },
+    {
+      "code": "10610a",
+      "name": "山谷提灯",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「[reaction] 调查员移动进入并揭示[[森林]]地点时横置提灯：忽略该地点强制效果」与「强制-提灯将离场时改为翻面并放最近地点」无读点：theTwistedHollow/behavior.js 无 assetLeftPlay/storyAssetLeftPlay，resolveLocationReveal 无提灯忽略分支。失黑暗已实现。"
+    },
+    {
+      "code": "10610b",
+      "name": "山谷提灯",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「[action]：控制提灯，然后翻面」在 behavior.actions() 无对应行动、无引擎剧情资产激活读点；「离场改为放最近地点」缺 assetLeftPlay。"
+    },
+    {
+      "code": "10611a",
+      "name": "山谷提灯",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「[action] 横置提灯：查看连接地点已揭示面并可移动/忽略强制」未实现；「离场翻面放最近地点」缺读点。"
+    },
+    {
+      "code": "10611b",
+      "name": "山谷提灯",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「[fast]：控制提灯并翻面」与「离场放最近地点」均无读点。"
+    },
+    {
+      "code": "10612",
+      "name": "荧光草地",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10612 荧光草地：可撤退；[action] 治愈 1 点恐惧（每轮一次）"
+        }
+      ]
+    },
+    {
+      "code": "10613",
+      "name": "枯疫空地",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10613 枯疫空地：揭示后生成攻击值最低的追击敌人（无追击则提示）"
+        }
+      ]
+    },
+    {
+      "code": "10614",
+      "name": "毒沼",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10614 毒沼：揭示后受到 1 点直接伤害，或每个盟友支援各 1 伤害"
+        }
+      ]
+    },
+    {
+      "code": "10615",
+      "name": "茂盛灌丛",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10615 茂盛灌丛：帷幕 -X；揭示后 agility(X) 失败生成生命最高的追击敌人"
+        }
+      ]
+    },
+    {
+      "code": "10616",
+      "name": "蘑菇园",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10616 蘑菇园：非黑暗时帷幕 +2；揭示后 intellect(X) 失败被躲避最高追击敌人攻击"
+        }
+      ]
+    },
+    {
+      "code": "10617",
+      "name": "月光空地",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "揭示 willpower(X) 强制已实现；印刷「敌人移动时每个[[田野]]地点视为互连」需要 behavior.enemyConnections，苦痛之影章节没有该读点（条目 note 自述未接线子句）。"
+    },
+    {
+      "code": "10618",
+      "name": "扭曲小路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10618 扭曲小路：帷幕 = 黑暗等级；查看相邻地点做成每回合一次免费行动（披露近似）"
+        }
+      ]
+    },
+    {
+      "code": "10619",
+      "name": "尸林",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10619 尸林：揭示后受 1 恐惧；成功调查后再受 1 恐惧"
+        }
+      ]
+    },
+    {
+      "code": "10620",
+      "name": "熊穴",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10620 熊穴：揭示后攻击最高追击敌人交战；没有则抽遭遇牌"
+        }
+      ]
+    },
+    {
+      "code": "10621",
+      "name": "扭曲空洞",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10621 扭曲空洞：地点胜利 1；幕 2 目标轮末全员在此共付 2/人线索推进"
+        }
+      ]
+    },
+    {
+      "code": "10622",
+      "name": "暗影深深",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10622 暗影深深：willpower(3/黑暗 5) 失败二选一（2 恐惧 / 提灯熄灭放连接地点）"
+        }
+      ]
+    },
+    {
+      "code": "10623",
+      "name": "惊惧潜伏",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10623 惊惧潜伏：agility(3/黑暗 5) 失败二选一（2 伤害 / 生成攻击最高追击敌人）"
+        }
+      ]
+    },
+    {
+      "code": "10624",
+      "name": "光明遭窃",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10624 光明遭窃：险境，二选一（议程放 1 毁灭 / 提灯熄灭放最远空地点）"
+        }
+      ]
+    },
+    {
+      "code": "10625",
+      "name": "猎踪混种",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10625 猎踪混种：生命=黑暗等级；猎物=提灯持有者；攻击后提灯熄灭并放到你的地点"
+        }
+      ]
+    },
+    {
+      "code": "10626",
+      "name": "最长一夜",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10626 最长一夜：剧本参考卡混乱标记表与 noResolution 结局已声明（剧本参考卡无单卡条目）"
+        }
+      ]
+    },
+    {
+      "code": "10627",
+      "name": "屏障、诱饵和陷阱",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10627 屏障、诱饵和陷阱：标记参考卡；引擎 location-defenses 真实读点"
+        }
+      ]
+    },
+    {
+      "code": "10628",
+      "name": "猛攻",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10628 猛攻：卡牌效果毁灭改放病俘；议程放毁灭后每位调查员抽敌人牌库顶；背面创伤或牺牲居民后推进幕"
+        }
+      ]
+    },
+    {
+      "code": "10629",
+      "name": "最长一夜",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10629 最长一夜：[fast] 花 1 线索放工事；[action] 撤退（场景声明 resignAnywhere）；目标不自动推进"
+        }
+      ]
+    },
+    {
+      "code": "10630",
+      "name": "农庄",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「农庄不能有陷阱、诱饵」已实现（definition noLocationDefenses + 引擎 location-defenses.js:9）；印刷「不能有玩家卡牌附属」无读点：definition cannotHaveAttachments / 条目 flags.cannotHavePlayerAttachments 均无消费者。"
+    },
+    {
+      "code": "10631",
+      "name": "牛奶房",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10631 牛奶房：放置工事时改放相邻地点；[action] 抽一张 Fire! 另一张洗入遭遇牌库"
+        }
+      ]
+    },
+    {
+      "code": "10632",
+      "name": "葡萄园",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10632 葡萄园：[fast] 每回合与一个敌人交战；敌人进入葡萄园时治愈 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "10633",
+      "name": "鸡笼",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10633 鸡笼：有诱饵时 -2 帷幕；此处敌人 +1 攻击/+1 躲避；Fire! 行动可用"
+        }
+      ]
+    },
+    {
+      "code": "10634",
+      "name": "谷仓",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10634 谷仓：此处敌人 +1 伤害；揭示时把放到一边的埃阿斯放入谷仓（Codex Ω）"
+        }
+      ]
+    },
+    {
+      "code": "10635",
+      "name": "牧场",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10635 牧场：[fast] 有陷阱可移动；重整未交战敌人关键词进入后再结算（无屏障时）"
+        }
+      ]
+    },
+    {
+      "code": "10636",
+      "name": "外围农田",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10636 外围农田（血染小径）：[action] 移动敌人（团队每场一次）；最后线索后治愈病俘 2"
+        }
+      ]
+    },
+    {
+      "code": "10637",
+      "name": "外围农田",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10637 外围农田（绝望丘陵）：[fast] 团队每场一次查看敌人牌库顶 1/人并弃任意数量"
+        }
+      ]
+    },
+    {
+      "code": "10638",
+      "name": "外围农田",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10638 外围农田（枯萎玉米田）：最后线索后放屏障；[fast] 每回合移动一个屏障"
+        }
+      ]
+    },
+    {
+      "code": "10639",
+      "name": "外围农田",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10639 外围农田（焦灼小丘）：最后线索后放陷阱；[fast] 每回合移动一个陷阱"
+        }
+      ]
+    },
+    {
+      "code": "10640",
+      "name": "外围农田",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10640 外围农田（腐败作物）：最后线索后放诱饵；[fast] 每回合移动一个诱饵；布置固定移除（披露近似）"
+        }
+      ]
+    },
+    {
+      "code": "10641",
+      "name": "病俘",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10641 病俘：敌军阶段重整未交战敌人攻击病俘（恐惧算伤害）；被击败 → 结局 3"
+        }
+      ]
+    },
+    {
+      "code": "10642",
+      "name": "埃阿斯",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「[action] 控制埃阿斯」已实现；印刷「每轮第一个行动不触发趁乱攻击」与「[action] 横置埃阿斯：移动两次或到任意[[田野]]」只保留在 flags（firstActionNoOpportunity/moveAbility），behavior.js 无对应读点、actions() 无移动能力行动。"
+    },
+    {
+      "code": "10643",
+      "name": "类熊混种",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10643 类熊混种（饥饿憎恶）：+3 生命/人；忽略屏障；田野互连；生成西面；胜利 2"
+        }
+      ]
+    },
+    {
+      "code": "10644a",
+      "name": "易羽混种",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10644a 易羽混种（东）：生成东面；伤害上限 1；忽略屏障；弃置入敌人牌库"
+        }
+      ]
+    },
+    {
+      "code": "10644b",
+      "name": "易羽混种",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10644b 易羽混种（南）：生成南面；伤害上限 1；忽略屏障"
+        }
+      ]
+    }
+  ]
+}

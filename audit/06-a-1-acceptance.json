@@ -1,0 +1,933 @@
+{
+  "schemaVersion": 1,
+  "unit": "06-a-1",
+  "profile": {
+    "id": "tde-beyond-gates-a-2026-11",
+    "scope": "食梦者 06 段 tde 豪华包前半（06001–06056）57 条目录记录。53 条通过五维验收；4 条因进入限制/动态帷幕规则键未接线暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 57,
+    "verified": 53,
+    "unverified": 4,
+    "unimplemented": 0,
+    "testsPassed": 529
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+      "sha256": "36d8ff7e994bf4c4690e623efae2f9141df7023ff0ef469f017128fd94f57527"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-investigators.test.mjs",
+      "sha256": "73689b48713e20c315ff6f622345ecf8e61597e7d81edda4db7c5c6ba15eef99"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+      "sha256": "d2dbd12452d984a7e5cb870a065413e670d9fe7b63e1192af45f70757d958e89"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+      "sha256": "6512f95034b0c9d9655bd3186f5902ae7237c86040a8a08e710bbeaa44597233"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+      "sha256": "2b4836e2e09230101f83d9ef9730aa8c57baf0a36b62b23ff6aecaa79a2b20fb"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+      "sha256": "2cb1f7184ce967e6761df0d7122862fd96d744f5740a005bfbf8766b4383ce45"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+      "sha256": "39bda187c894162c57ab8fc2684e578bdac1dbc1f11e3decfc65782095308400"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-rules.test.mjs",
+      "sha256": "682a74a0627dd5ea36463d3923dd20a4f1fb07c57740ad61d6100fdaba65c797"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-scenario-beyondTheGatesOfSleep.test.mjs",
+      "sha256": "bf69711989665a9acfed05ccf6a55808aa8a08006c157b9dee612db58312eb07"
+    }
+  ],
+  "entries": [
+    {
+      "code": "06001",
+      "name": "托米·马尔登",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "06-a-1 范围：06001–06056 目录记录恰好 57 张（含 06015a/b）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06001 托米·马尔登 控制支援被击败：获得伤害+恐惧资源并洗回牌库"
+        }
+      ]
+    },
+    {
+      "code": "06002",
+      "name": "曼蒂·汤普森",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06002 曼蒂·汤普森 查找牌库可额外查找 3 张（2→5 候选）"
+        }
+      ]
+    },
+    {
+      "code": "06003",
+      "name": "托尼·摩尔根",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06003 托尼·摩尔根 赏金专用额外行动只能用于交战/攻击带赏金敌人"
+        }
+      ]
+    },
+    {
+      "code": "06004",
+      "name": "卢克·罗宾逊",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06004 卢克·罗宾逊 以门之匣开局；每回合可把 1 张事件如同位于连接地点打出"
+        }
+      ]
+    },
+    {
+      "code": "06005",
+      "name": "派翠丝·海瑟薇",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06005 派翠丝·海瑟薇 手牌上限 -3、补给阶段弃非弱点补到 5、旧印洗回弃牌堆"
+        }
+      ]
+    },
+    {
+      "code": "06006",
+      "name": "贝基",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06006 贝基 贝基：使用 2 子弹，攻击 +2 战斗 +1 伤害"
+        }
+      ]
+    },
+    {
+      "code": "06007",
+      "name": "低级错误",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06007 低级错误 低级错误：弃掉带伤害/恐惧的支援；没有则洗回牌库"
+        }
+      ]
+    },
+    {
+      "code": "06008",
+      "name": "神秘证据",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06008 神秘证据 查找牌库发现它：揭示、抽走并发现 1 条线索"
+        }
+      ]
+    },
+    {
+      "code": "06009",
+      "name": "惊人的发现",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06009 惊人的发现 惊人的发现：强制取消查找、弃掉本卡并抽遭遇卡"
+        }
+      ]
+    },
+    {
+      "code": "06010",
+      "name": "赏金合约",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06010 赏金合约 赏金合约：入场放 6 赏金，敌人入场可移 1-3 赏金"
+        }
+      ]
+    },
+    {
+      "code": "06011",
+      "name": "托尼的.38柯尔特长管手枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06011 托尼的.38柯尔特长管手枪 托尼的 .38：每个赏金 +1 战斗、伤害 +1"
+        }
+      ]
+    },
+    {
+      "code": "06012",
+      "name": "托尼的猎物",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06012 托尼的猎物 托尼的猎物：最远地点生成、冷漠、入场 1 毁灭 1 赏金"
+        }
+      ]
+    },
+    {
+      "code": "06013",
+      "name": "门之匣",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06013 门之匣 门之匣：解除交战、放置梦境之门并移动过去"
+        }
+      ]
+    },
+    {
+      "code": "06014",
+      "name": "脱离现实",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06014 脱离现实 脱离现实：翻面或放置梦境之门、解除交战并移动过去"
+        }
+      ]
+    },
+    {
+      "code": "06015a",
+      "name": "梦境之门",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "06-a-1 范围：06001–06056 目录记录恰好 57 张（含 06015a/b）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06015a 梦境之门 Dream-Gate（奇妙旅程）：引擎原语可放置/翻面，且与 06015b 成对"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06015b 梦境之门 Dream-Gate（无谓现实）：调查入口与原语数据登记"
+        }
+      ]
+    },
+    {
+      "code": "06015b",
+      "name": "梦境之门",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06015a 梦境之门 Dream-Gate（奇妙旅程）：引擎原语可放置/翻面，且与 06015b 成对"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06015b 梦境之门 Dream-Gate（无谓现实）：调查入口与原语数据登记"
+        }
+      ]
+    },
+    {
+      "code": "06016",
+      "name": "派翠丝的小提琴",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06016 派翠丝的小提琴 派翠丝的小提琴：弃 1 张手牌并横置，同地点一位调查员获资源或抽牌"
+        }
+      ]
+    },
+    {
+      "code": "06017",
+      "name": "异次元监视者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06017 异次元监视者 异次元监视者：隐秘进手牌、可如在其地点攻击/躲避，牌库耗尽时攻击"
+        }
+      ]
+    },
+    {
+      "code": "06018",
+      "name": "渴血之刃",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06018 渴血之刃 入场将 3 张嗜血洗入牌库；攻击按附属数加值、+1 伤害、击败放贡品"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06018 渴血之刃 攻击时可将 1 张嗜血混洗回牌库换 +1 伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06018 渴血之刃 渴血之刃：附带 3 张嗜血打出，攻击按附属数加值"
+        }
+      ]
+    },
+    {
+      "code": "06019",
+      "name": "嗜血",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06019 嗜血 嗜血：移除 2 贡品附属，否则 1 恐惧并洗回牌库"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06019 嗜血 有渴血之刃时消耗 2 贡品附属；没有时受 1 恐惧并洗回牌库"
+        }
+      ]
+    },
+    {
+      "code": "06020",
+      "name": "庄严立誓",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06020 庄严立誓 庄严立誓：多重快速，置于同地点另一位调查员控制下"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06020 庄严立誓 置于同地点另一位调查员控制之下，并可在双方卡牌间移动 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "06021",
+      "name": "一瓣缟玛瑙",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06021 一瓣缟玛瑙 3 张在场时放在一边并找出皇后的挂坠放置入场"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06021 一瓣缟玛瑙 一瓣缟玛瑙：3 张在场时放一边并检索皇后的挂坠"
+        }
+      ]
+    },
+    {
+      "code": "06022",
+      "name": "皇后的挂坠",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06022 皇后的挂坠 皇后的挂坠：3 充能，花 1 充能做移动/发现线索/自动躲避，耗尽归还缟玛瑙"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06022 皇后的挂坠 花 1 充能选择已揭示地点：发现线索 / 充能耗尽复位"
+        }
+      ]
+    },
+    {
+      "code": "06023",
+      "name": "骇人真相",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06023 骇人真相 不能打出；查找牌库发现时弃掉自己"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06023 骇人真相 老千先生（05153）查找牌库顶时也能触发"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06023 骇人真相 骇人真相：不能主动打出，查找时弃掉并获 2 资源或放 1 秘密"
+        }
+      ]
+    },
+    {
+      "code": "06024",
+      "name": "梦境结晶器",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06024 梦境结晶器 入场检索结晶器守卫；打出事件后改为附属到它上面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06024 梦境结晶器 梦境结晶器：打出事件后正面朝下附属（最多 5），可作为手牌投入"
+        }
+      ]
+    },
+    {
+      "code": "06025",
+      "name": "结晶器守卫",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06025 结晶器守卫 无梦境结晶器时移出对局；有则横置入场并成为 bearer 猎物"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06025 结晶器守卫 结晶器守卫：入场横置，无结晶器时放绑定场外集合"
+        }
+      ]
+    },
+    {
+      "code": "06026",
+      "name": "冤大头",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06026 冤大头 冤大头：获得 2 资源抽 1 张，可免费再打出另一张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06026 冤大头 获得 2 资源并抽 1 张；可从手牌免费再打一张"
+        }
+      ]
+    },
+    {
+      "code": "06027",
+      "name": "仰望星空",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06027 仰望星空 仰望星空：遭遇牌库 ≥10 才能打出，把群星正确之时混入牌库顶 10 张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06027 仰望星空 遭遇牌库≥10 才能打出；把群星正确之时洗入遭遇牌库"
+        }
+      ]
+    },
+    {
+      "code": "06028",
+      "name": "群星正确之时",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06028 群星正确之时 从遭遇牌库抽取时正常显现"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06028 群星正确之时 绑定关系为仰望星空；显现：选一位调查员抽 1 张、获得 1 资源并移出游戏"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06028 群星正确之时 群星正确之时：被抽到时选一位调查员抽 1 获 1 资源并可立即行动，之后移出游戏"
+        }
+      ]
+    },
+    {
+      "code": "06029",
+      "name": "开启大门",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06029 开启大门 两处附属地点产生可见且可执行的移动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06029 开启大门 开启大门：快速附属到地点，连接附属地点，团队最多 3 张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06029 开启大门 快速附属到所在地点；团队 3 张后不能再打出"
+        }
+      ]
+    },
+    {
+      "code": "06030",
+      "name": "道尔女士",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06030 道尔女士 入场随机放置 1 张绑定支援入场，其余 2 张进弃牌堆；离场全部放在一边"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06030 道尔女士 道尔女士：检索希望/热诚/预见各 1 张随机入场、其余洗回、离场收回"
+        }
+      ]
+    },
+    {
+      "code": "06031",
+      "name": "希望",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06031 希望 希望：横置或弃掉做敏捷 5 躲避，弃掉自动成功"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06031 希望 横置：以基础敏捷 5 躲避与你交战的敌人"
+        }
+      ]
+    },
+    {
+      "code": "06032",
+      "name": "热诚",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06032 热诚 横置：以基础战斗 5 攻击同地点的敌人"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06032 热诚 热诚：横置或弃掉做战斗 5 攻击，弃掉自动造成伤害"
+        }
+      ]
+    },
+    {
+      "code": "06033",
+      "name": "预见",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06033 预见 横置：以基础智识 5 调查并发现线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06033 预见 预见：伙伴支援，与希望/热诚同组检索"
+        }
+      ]
+    },
+    {
+      "code": "06034",
+      "name": "意外的发现",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06034 意外的发现 X=弃牌堆同名张数：调查 +X 智识，成功发现 X 个额外线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06034 意外的发现 意外发现：快速事件，获得资源/线索的规则数据"
+        }
+      ]
+    },
+    {
+      "code": "06035",
+      "name": "自私自利",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06035 自私自利 显现进入威胁区域，花费 2 行动弃掉"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06035 自私自利 自私自利：专属弱点，显现结算存在"
+        }
+      ]
+    },
+    {
+      "code": "06036",
+      "name": "偷窃癖",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06036 偷窃癖 放置入场后夺取同地点另一位调查员的资源并洗回牌库"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06036 偷窃癖 盗窃癖：疯狂天赋，附着/结算规则存在"
+        }
+      ]
+    },
+    {
+      "code": "06037",
+      "name": "嗜睡症",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06037 嗜睡症 嗜睡症：疯狂弱点，显现结算存在"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06037 嗜睡症 威胁区：不能打出事件/进行调查，受到伤害后弃掉"
+        }
+      ]
+    },
+    {
+      "code": "06038",
+      "name": "最可怕的噩梦",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06038 最可怕的噩梦 你最可怕的梦魇：专属敌人弱点，生成与规则存在"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "test": "TDE 06038 最可怕的噩梦 显现生成敌人：猎手、猎物仅对承受者"
+        }
+      ]
+    },
+    {
+      "code": "06039",
+      "name": "梦境门外",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-beyondTheGatesOfSleep.test.mjs",
+          "test": "06039 章节清单：playable、12 地点、4 幕、1 议程、结局与参考卡"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06039 已验收 · scenario 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06039 梦境门外 参考卡：章节 playable、12 地点、4 幕 1 议程、结局与混乱标记表"
+        }
+      ]
+    },
+    {
+      "code": "06040",
+      "name": "穿越门扉之旅",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06040 已验收 · agenda 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06040 穿越门扉之旅 穿越门扉之旅：幕揭示写记录/创伤，Steps 上额外毁灭"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-beyondTheGatesOfSleep.test.mjs",
+          "test": "议程 06040 正面强制：神话阶段放毁灭且有人在[[台阶]]地点时额外 +1 毁灭"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-beyondTheGatesOfSleep.test.mjs",
+          "test": "议程 06040 背面：幕 4 分支记录偏离道路并击败全员；幕 1–3 分支逐人选择检定"
+        }
+      ]
+    },
+    {
+      "code": "06041",
+      "name": "进入幻梦境",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06041 已验收 · act 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06041 进入幻梦境 进入幻梦境：花光线索、生成两位守门祭司、混乱袋加 1 骷髅"
+        }
+      ]
+    },
+    {
+      "code": "06042",
+      "name": "纳什特和卡曼塔的考验",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06042 已验收 · act 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06042 纳什特和卡曼塔的考验 纳什特和卡曼塔的考验：目标清空守门祭司，背面放置台阶与小径"
+        }
+      ]
+    },
+    {
+      "code": "06043",
+      "name": "最后一阶",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06043 已验收 · act 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06043 最后一阶 最后的下降：目标全员在魔幻小路，章节流程 theFinalDescent"
+        }
+      ]
+    },
+    {
+      "code": "06044",
+      "name": "通路",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06044 已验收 · act 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06044 通路 小路：目标该地点线索、强制偏离记录、揭示二选一结局"
+        }
+      ]
+    },
+    {
+      "code": "06045",
+      "name": "七十级台阶",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06045 七十级台阶 七十级台阶：离开时手牌超 5 受恐惧；[fast] 弃 1 张手牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06045 已验收 · location 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06046",
+      "name": "火焰洞穴",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面「只能在『七十级台阶』上的全部线索被发现后进入」只写在 locationRule.entryError；全仓无 locationRule.entryError 读点（引擎只读 scenarioBehavior.moveError / investigatorEntryError，章节 behavior 也没有 moveError 分派），进入限制实际未生效。"
+    },
+    {
+      "code": "06047",
+      "name": "七百级台阶",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06047 七百级台阶 七百级台阶：离开时手牌超 3 受恐惧；[fast] 弃 1 张手牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06047 已验收 · location 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06048",
+      "name": "楼梯底部",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面「只能在『七百级台阶』上的全部线索被发现后进入」只写在 locationRule.entryError；引擎与本章 behavior 均无读点，进入限制未生效（同 06046 的缺口）。"
+    },
+    {
+      "code": "06049",
+      "name": "魔幻小路",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "两处卡面规则只有声明没有读点：①「楼梯底部的全部线索被发现前不能进入」写在 locationRule.entryError（引擎/章节 behavior 无读点）；②「场上每有一张未揭示的魔幻森林，本地隐藏值 +1」写在 locationRule.shroudPerUnrevealedEnchantedWoods，但本章 behavior 没有 locationShroudModifier，动态帷幕未实现。"
+    },
+    {
+      "code": "06050",
+      "name": "魔幻森林",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06050 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06050 魔幻森林 魔幻森林：离开时按本地线索数弃手牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-beyondTheGatesOfSleep.test.mjs",
+          "test": "魔幻森林（06050 离开弃牌 / 06055 回合开始随机标记 / 06056 轮末毁灭）"
+        }
+      ]
+    },
+    {
+      "code": "06051",
+      "name": "魔幻森林",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06051 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06051 魔幻森林 魔幻森林：祖格鼠生成时加蜂拥卡标记"
+        }
+      ]
+    },
+    {
+      "code": "06052",
+      "name": "魔幻森林",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06052 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06052 魔幻森林 巨石阵：揭示时把放在一边的辛劳的古革巨人生成在本地"
+        }
+      ]
+    },
+    {
+      "code": "06053",
+      "name": "魔幻森林",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面「当你调查本地点时，你手牌中每有 1 张卡牌，本地点帷幕 +1」只写成 flags.shroudPerHandCardWhileInvestigating，全仓无读点（本章 behavior 没有 locationShroudModifier，也没有任何地方读该 flag），动态帷幕未生效。"
+    },
+    {
+      "code": "06054",
+      "name": "魔幻森林",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06054 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06054 魔幻森林 魔幻森林：进入时受 2 恐惧或失去所有剩余行动"
+        }
+      ]
+    },
+    {
+      "code": "06055",
+      "name": "魔幻森林",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06055 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06055 魔幻森林 魔幻森林：回合开始揭示标记，坏标记受 1 伤害并失去 1 行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-beyondTheGatesOfSleep.test.mjs",
+          "test": "魔幻森林（06050 离开弃牌 / 06055 回合开始随机标记 / 06056 轮末毁灭）"
+        }
+      ]
+    },
+    {
+      "code": "06056",
+      "name": "魔幻森林",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "06-a-1 范围：06001–06056 目录记录恰好 57 张（含 06015a/b）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06056 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06056 魔幻森林 迷失森林：揭示时记录本轮未离开将放毁灭"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-beyondTheGatesOfSleep.test.mjs",
+          "test": "魔幻森林（06050 离开弃牌 / 06055 回合开始随机标记 / 06056 轮末毁灭）"
+        }
+      ]
+    }
+  ]
+}

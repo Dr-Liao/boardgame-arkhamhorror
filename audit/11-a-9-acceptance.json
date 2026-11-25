@@ -1,0 +1,725 @@
+{
+  "schemaVersion": 1,
+  "unit": "11-a-9",
+  "profile": {
+    "id": "tdc-campaign-f-2026-11",
+    "scope": "沉没之城 11 段 tdcc 战役卡（11697–11737）43 条目录记录。40 条通过五维验收；3 条地点能力/克苏鲁牌库分支缺失暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 43,
+    "verified": 40,
+    "unverified": 3,
+    "unimplemented": 0,
+    "testsPassed": 180
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+      "sha256": "339693885048a6cc85f3be34a8328603823d822eac1a6ba7ac14bbe38b7b984d"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartI.test.mjs",
+      "sha256": "4755863cd789626919d96203a02190f93d879414067c20fc0bd5f44adf1fbbaf"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+      "sha256": "ac59dc0317e93c7702f5edaca105c378ce49f10a941d92c0fb47b77fd10f68fa"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-scenario-sepulchreOfTheSleeper.test.mjs",
+      "sha256": "2bbeb5257fa553761c99dc0f8387adb42adaea00a7006749c7861e76dfcbdad8"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-p7-scenario-integrity.test.mjs",
+      "sha256": "e98da7ef14fa3bcec9a7dabec85340e668d11e836a6f53f7a35c08c184dee61e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-p7-scenario-lifecycle.test.mjs",
+      "sha256": "127798e3b82c2a94dd6c5141e5b8a2f50f806aacdecfe0b29e89ae3c49fa2afb"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-p7-story.test.mjs",
+      "sha256": "820ec84187e728b1a1bae045bf76d180cf1756e84373ff24a801d54eac357df1"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-rules.test.mjs",
+      "sha256": "541471492f102ef04f00c249498d1f4cd93173e554068f3cf86c1e1c26991e7b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-primitives.test.mjs",
+      "sha256": "c152d8c4f1e738adc1b1f75ac78ddfaa26012a91ed060d4a7132987df99e397b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+      "sha256": "25466d3868f2e9af5f0b6a9846202b4c7c60d1fb54994b4b60dc69611e2b1abf"
+    }
+  ],
+  "entries": [
+    {
+      "code": "11697",
+      "name": "圣玛丽医院",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「[reaction] 克苏鲁进入圣玛丽医院后：在本地点放置至多 3 个你的线索；每放置 1 个对一名敌人造成 1 点伤害（每场游戏团队限一次）」；条目只声明 `locationRule.floodBounds`，`theDoomOfArkhamPartII/behavior.js` 无 11697/医院反应引用，也没有「敌人进入地点」的地点反应钩子 → 整条反应不可用。"
+    },
+    {
+      "code": "11698",
+      "name": "南区",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「[action] 选择你弃牌堆中的一张[[道具]]支援，将其加入手牌（每场游戏团队限一次）」；条目只声明 `floodBounds`，`actions()` 不产出该行动、behavior 也无 11698 引用 → 整条动作不可用。"
+    },
+    {
+      "code": "11699",
+      "name": "西侧屋顶",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11699 西侧屋顶：不能淹没/放印记，可从屋顶攻击连接地点敌人"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+          "test": "P7 theDoomOfArkhamPartII 11699/11700 屋顶：位于屋顶可攻击/躲避连接地点敌人，普通地点不含"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：屋顶地点可攻击连接地点的敌人（11699/11700）"
+        }
+      ]
+    },
+    {
+      "code": "11700",
+      "name": "东侧屋顶",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11700 东侧屋顶：不能淹没/放印记，可从屋顶攻击连接地点敌人"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+          "test": "P7 theDoomOfArkhamPartII 11699/11700 屋顶：位于屋顶可攻击/躲避连接地点敌人，普通地点不含"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：屋顶地点可攻击连接地点的敌人（11699/11700）"
+        }
+      ]
+    },
+    {
+      "code": "11701",
+      "name": "克苏鲁",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11701 克苏鲁（本体）：多部位链接 + 巡逻最近可淹没地点、不能趁乱攻击"
+        }
+      ]
+    },
+    {
+      "code": "11702",
+      "name": "克苏鲁",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11702 克苏鲁部位（非狂怒面）：不能受伤/横置/击败，成功攻/躲翻至狂怒面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11702b 克苏鲁部位（狂怒面）：不能被横置，翻面后强制 + 躲避成功造成 1 伤"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：敌人不可伤害/不可横置按当前面条目动态生效（11702–11704）"
+        }
+      ]
+    },
+    {
+      "code": "11702b",
+      "name": "克苏鲁",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11702b 克苏鲁部位（狂怒面）：不能被横置，翻面后强制 + 躲避成功造成 1 伤"
+        }
+      ]
+    },
+    {
+      "code": "11703",
+      "name": "克苏鲁",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11703 克苏鲁部位（非狂怒面）：不能受伤/横置/击败，成功攻/躲翻至狂怒面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11703b 克苏鲁部位（狂怒面）：不能被横置，翻面后强制 + 躲避成功造成 1 伤"
+        }
+      ]
+    },
+    {
+      "code": "11703b",
+      "name": "克苏鲁",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11703b 克苏鲁部位（狂怒面）：不能被横置，翻面后强制 + 躲避成功造成 1 伤"
+        }
+      ]
+    },
+    {
+      "code": "11704",
+      "name": "克苏鲁",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11704 克苏鲁部位（非狂怒面）：不能受伤/横置/击败，成功攻/躲翻至狂怒面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11704b 克苏鲁部位（狂怒面）：不能被横置，翻面后强制 + 躲避成功造成 1 伤"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：敌人不可伤害/不可横置按当前面条目动态生效（11702–11704）"
+        }
+      ]
+    },
+    {
+      "code": "11704b",
+      "name": "克苏鲁",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11704b 克苏鲁部位（狂怒面）：不能被横置，翻面后强制 + 躲避成功造成 1 伤"
+        }
+      ]
+    },
+    {
+      "code": "11705",
+      "name": "无情冲锋",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11705 克苏鲁牌库行动卡：由章节 resolveCthulhuCard/phaseBegan 按卡号结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11705 无情冲锋：三部位在场分支（随机弃手/攻击或抽遭遇/战力检定）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+          "test": "P7 theDoomOfArkhamPartII 11705/11709/11715：无情冲锋攻击、拆毁废墟计数器、希望消逝封印读点"
+        }
+      ]
+    },
+    {
+      "code": "11706",
+      "name": "飓风之力",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11706 克苏鲁牌库行动卡：由章节 resolveCthulhuCard/phaseBegan 按卡号结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11706 飓风之力：额外巡逻 + 意志/敏捷检定分支"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+          "test": "P7 theDoomOfArkhamPartII 11706/11707 额外巡逻与 lastPatrolRound 判定（真实 runEnemyPatrol）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+          "test": "P7 theDoomOfArkhamPartII 克苏鲁行动卡 11706/11708/11710/11713：选择与阶段读点接线"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：弱点敌人不能进入开阔天空、遭遇附属不能离场、额外巡逻与放一边接管（11641/11531/11706/11549）"
+        }
+      ]
+    },
+    {
+      "code": "11707",
+      "name": "凶险狂风",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11707 克苏鲁牌库行动卡：由章节 resolveCthulhuCard/phaseBegan 按卡号结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11707 凶险狂风：随机弃手/额外巡逻/意志失败二选一"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+          "test": "P7 theDoomOfArkhamPartII 11706/11707 额外巡逻与 lastPatrolRound 判定（真实 runEnemyPatrol）"
+        }
+      ]
+    },
+    {
+      "code": "11708",
+      "name": "恐惧凝视",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11708 克苏鲁牌库行动卡：由章节 resolveCthulhuCard/phaseBegan 按卡号结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11708 恐惧凝视：敏捷/失去资源/共同决定三选一"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+          "test": "P7 theDoomOfArkhamPartII 克苏鲁行动卡 11706/11708/11710/11713：选择与阶段读点接线"
+        }
+      ]
+    },
+    {
+      "code": "11709",
+      "name": "拆毁",
+      "type": "story",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「在最近的屋顶放 1 个废墟标记；若该地点已有 2+ 废墟，每位调查员阵亡并弃掉该地点每名敌人，然后移除该地点与本卡；否则把本卡与克苏鲁弃牌堆一起洗回克苏鲁牌库」；`resolveCthulhuCard` 的 switch 只覆盖 11705/06/07/08/11/12/13/14，11709 落到 `default → resolved` 后直接弃回弃牌堆，所有子句不结算（条目 note 声称在 resolveCthulhuCard 结算，实际无分支——与 11651/11652 同类「账本记实现、实际未接线」）。"
+    },
+    {
+      "code": "11710",
+      "name": "第五只眼",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11710 克苏鲁牌库行动卡：由章节 resolveCthulhuCard/phaseBegan 按卡号结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11710 第五只眼：调查阶段结束放 1 毁灭并弃掉本卡"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+          "test": "P7 theDoomOfArkhamPartII 克苏鲁行动卡 11706/11708/11710/11713：选择与阶段读点接线"
+        }
+      ]
+    },
+    {
+      "code": "11711",
+      "name": "地震踩踏",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11711 克苏鲁牌库行动卡：由章节 resolveCthulhuCard/phaseBegan 按卡号结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11711 地震踩踏：无调查员则弃卡抽牌，否则敏捷/意志检定"
+        }
+      ]
+    },
+    {
+      "code": "11712",
+      "name": "异界呼唤",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11712 克苏鲁牌库行动卡：由章节 resolveCthulhuCard/phaseBegan 按卡号结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11712 异界呼唤：无调查员弃卡抽牌，否则失败则遭遇顶翻敌人生成"
+        }
+      ]
+    },
+    {
+      "code": "11713",
+      "name": "灵能斥责",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11713 克苏鲁牌库行动卡：由章节 resolveCthulhuCard/phaseBegan 按卡号结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11713 灵能斥责：胜利区克苏鲁敌人放回面板狂怒面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+          "test": "P7 theDoomOfArkhamPartII 克苏鲁行动卡 11706/11708/11710/11713：选择与阶段读点接线"
+        }
+      ]
+    },
+    {
+      "code": "11714",
+      "name": "涨潮",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11714 克苏鲁牌库行动卡：由章节 resolveCthulhuCard/phaseBegan 按卡号结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11714 涨潮：降 Cthulhu 地点淹没、提高另一地点；完全淹没地点敏捷检定"
+        }
+      ]
+    },
+    {
+      "code": "11715",
+      "name": "希望消逝",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11715 克苏鲁牌库行动卡：由章节 resolveCthulhuCard/phaseBegan 按卡号结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11715 希望消逝：封印 elder_sign，场景推进时弃掉并释放"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+          "test": "P7 theDoomOfArkhamPartII 11705/11709/11715：无情冲锋攻击、拆毁废墟计数器、希望消逝封印读点"
+        }
+      ]
+    },
+    {
+      "code": "11716",
+      "name": "夷为平地",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11716 夷为平地：敏捷(X=狂怒值) 失败受 2 伤"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11716 遭遇诡计：显现由章节 layWaste 结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+          "test": "P7 theDoomOfArkhamPartII 诡计 11716/11717/11719/11720：显现效果按狂怒值结算"
+        }
+      ]
+    },
+    {
+      "code": "11717",
+      "name": "伊克雷希特之眼",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11717 伊克雷希特之眼：险境，意志失败受 1 直恐并随机弃手牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11717 遭遇诡计：显现由章节 eyesOfYchlecht 结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+          "test": "P7 theDoomOfArkhamPartII 诡计 11716/11717/11719/11720：显现效果按狂怒值结算"
+        }
+      ]
+    },
+    {
+      "code": "11719",
+      "name": "恶心可塑性",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11719 恶心可塑性：放毁灭/提高淹没/全员 1 伤或恐三选一"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11719 遭遇诡计：显现由章节 grossPlasticity 结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+          "test": "P7 theDoomOfArkhamPartII 诡计 11716/11717/11719/11720：显现效果按狂怒值结算"
+        }
+      ]
+    },
+    {
+      "code": "11720",
+      "name": "阿卡姆遭袭",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11720 遭遇诡计：显现由章节 arkhamUnderAssault 结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11720 阿卡姆遭袭：全员意志检定，有人失败抽克苏鲁牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+          "test": "P7 theDoomOfArkhamPartII 诡计 11716/11717/11719/11720：显现效果按狂怒值结算"
+        }
+      ]
+    },
+    {
+      "code": "11721",
+      "name": "偷渡者工蜂",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11721 偷渡者工蜂：冷漠、巡逻无毁灭敌人；敌军阶段末给另一敌人放毁灭并弃卡"
+        }
+      ]
+    },
+    {
+      "code": "11722",
+      "name": "感染！",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11722 感染！：威胁区每人限 1；回合末放毁灭；意志(3) 成功弃卡"
+        }
+      ]
+    },
+    {
+      "code": "11723",
+      "name": "朝圣者侍僧",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11723 朝圣者侍僧：攻击后在其上放 1 毁灭"
+        }
+      ]
+    },
+    {
+      "code": "11724",
+      "name": "朝圣者领袖",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11724 朝圣者领袖：重整时其他异教徒 +2 战斗并获得猎手/无情"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：hunter 可被内容层授予/取消，过期后恢复印刷值（11724）"
+        }
+      ]
+    },
+    {
+      "code": "11725",
+      "name": "怪异星之眷族",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11725 怪异星之眷族：猎手/庞大/无情，攻/躲见 elder_thing 治愈 1"
+        }
+      ]
+    },
+    {
+      "code": "11726",
+      "name": "感染星之眷族",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11726 感染星之眷族：首次将败时治愈并重整；见 elder_thing 受 1 恐"
+        }
+      ]
+    },
+    {
+      "code": "11727",
+      "name": "珊瑚星之眷族",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11727 珊瑚星之眷族：有伤害时获得警戒/反击；见 elder_thing 受 1 伤"
+        }
+      ]
+    },
+    {
+      "code": "11728",
+      "name": "星之眷族观察者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11728 星之眷族观察者：调查其地点见 elder_thing → 交战并立刻攻击"
+        }
+      ]
+    },
+    {
+      "code": "11729",
+      "name": "深渊之眼",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11729 深渊之眼：cultist/tablet 视为 elder_thing；意志(3) 成功弃卡"
+        }
+      ]
+    },
+    {
+      "code": "11730",
+      "name": "狡诈拟态",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11730 狡诈拟态：无[[怪物]]敌人则涌动，否则智力(3) 失败最近怪物攻击"
+        }
+      ]
+    },
+    {
+      "code": "11731",
+      "name": "古老迷雾",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11731 古老迷雾：附属地点；四技能 -1；成功超 2 点弃卡"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：地点附属的 modifiers 对同地点调查员生效（11731）"
+        }
+      ]
+    },
+    {
+      "code": "11732",
+      "name": "腐蚀浓雾",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11732 腐蚀浓雾：智力/战力(4) 失败受 1 伤，差 3+ 改全员直接伤害"
+        }
+      ]
+    },
+    {
+      "code": "11733",
+      "name": "伏特鳗",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11733 伏特鳗：猎手；猎物线索最多；敌军阶段移动时完全淹没地点互相连接"
+        }
+      ]
+    },
+    {
+      "code": "11734",
+      "name": "梦游迁徙",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11734 梦游迁徙：无敌人则涌动；意志(3) 失败二选一"
+        }
+      ]
+    },
+    {
+      "code": "11735",
+      "name": "水下狩猎",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11735 水下狩猎：敏捷(3)，完全淹没 +2 难度；失败受 1 伤并提高最近地点淹没"
+        }
+      ]
+    },
+    {
+      "code": "11736",
+      "name": "致命急流",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11736 致命急流：未淹没则涌动；否则敏捷/战力(4) 两选一"
+        }
+      ]
+    },
+    {
+      "code": "11737",
+      "name": "水中之物",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11737 水中之物：涌动；显现提高最近地点淹没"
+        }
+      ]
+    }
+  ]
+}

@@ -8,8 +8,10 @@ import arkham from '../index.js'
 import { createGameState, applyMove, decisionSeat, actionPreview, performTest } from '../src/engine/engine.js'
 import { aiDecisionContext } from '../src/ai/ai-context.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
-import { buildDeck } from '../src/deck/deckbuilding.js'
+import { captureReplayLog, replayLog } from '../src/engine/replay.js'
 import { INVESTIGATORS } from '../src/cards/cards-data.js'
+import { loadArkhamDbRecommendation, planArkhamDbRecommendation } from '../src/integration/arkhamdb-recommendation.js'
+import recommendedDeckGuides from '../src/ai/recommended-deck-guides.json' with { type: 'json' }
 import { availablePurchases, replacementOptions, stagePurchase, upgradeRecord, finishUpgradeDraft } from '../src/campaign/campaign.js'
 import { commitAgentPlan, plansForObserver, normalizePlan } from '../src/ai/agent-plans.js'
 import { buildUserPrompt, buildChatUserPrompt, buildChatSystemPrompt } from '../../../lib/agent/prompt.js'
@@ -457,14 +459,15 @@ test('AI upgrades allow multiple purchases, draft restore, confirmation and canc
 const listen=server=>new Promise(resolve=>server.listen(0,'127.0.0.1',resolve))
 const close=server=>new Promise(resolve=>{server.closeAllConnections();server.close(resolve)})
 
-test('AI HTTP: model selects and builds, retries invalid deck, persists plans, masks private rationale', {timeout:30000},async()=>{
+test('AI HTTP: model selects, server equips the recommended deck, and the AI receives its strategy', {timeout:30000},async()=>{
   const keys=['DSH_HOME','AI_API_KEY','AI_BASE_URL','AI_MAX_RETRIES','AI_TIMEOUT_MS']
   const old=Object.fromEntries(keys.map(k=>[k,process.env[k]]))
   const home=fs.mkdtempSync(path.join(os.tmpdir(),'arkham-ai-complete-'))
   process.env.DSH_HOME=home;process.env.AI_API_KEY='local-stub';process.env.AI_MAX_RETRIES='2';process.env.AI_TIMEOUT_MS='3000'
-  const deck=buildDeck(INVESTIGATORS['01002'],{seed:'authored-test'}).playerCards
-  const queue=[{action:'hubSelectInvestigator',code:'01002'},{action:'hubSetDeck',codes:['01016']},
-    {action:'hubSetDeck',codes:deck},{action:'hubConfirmDeck'},{action:'hubDoneSeat'}]
+  const recommended = await loadArkhamDbRecommendation('01002')
+  const deck = planArkhamDbRecommendation(recommended, '01002').codes
+  const strategy = recommendedDeckGuides[recommended.id].strategy
+  const queue=[{action:'hubSelectInvestigator',code:'01002'},{action:'hubConfirmDeck'},{action:'hubDoneSeat'}]
   const prompts=[];let hall
   const model=http.createServer((req,res)=>{let body='';req.on('data',b=>body+=b);req.on('end',()=>{
     prompts.push(JSON.parse(body));const move=queue.shift()
@@ -479,16 +482,20 @@ test('AI HTTP: model selects and builds, retries invalid deck, persists plans, m
     for(const move of [{action:'hubGoSetup'},{action:'hubSelectInvestigator',code:'01001'},{action:'hubAutoDeck'},{action:'hubConfirmDeck'}, {action:'hubDoneSeat'}]) {
       s=(await post('/api/move',{sessionId:s.sessionId,revision:s.state.revision,move})).session
     }
-    assert.equal(queue.length,0);assert.equal(prompts.length,5)
+    assert.equal(queue.length,0);assert.equal(prompts.length,3)
     const messages = s.events.filter(e => e.type === 'chat' && e.origin === 'action')
-    assert.equal(messages.length, 4, 'only four committed moves publish messages; rejected deck publishes none')
-    assert.ok(messages.every(e => e.seat === 1 && e.to === null && e.text === '我来调查。' && e.replyRequested === false))
+    assert.equal(messages.length, 4, 'each committed move publishes a message')
+    assert.ok(messages.every(e => e.seat === 1 && e.to === null && e.replyRequested === false))
+    assert.equal(messages.filter(e => e.text === '我来调查。').length, 3)
     assert.equal(new Set(messages.map(e => e.revision)).size, 4)
-    assert.ok(prompts[2].messages.some(m=>m.content.includes('不合法')))
-    assert.ok(prompts[1].messages.some(m=>m.content.includes('buildPool')))
+    assert.ok(prompts[1].messages.some(m=>m.content.includes(strategy)))
     const saved=JSON.parse(fs.readFileSync(snapshotPath(s.sessionId),'utf8')).session
     assert.equal(saved.state.investigators[1].code,'01002')
     assert.equal(saved.state.investigators[1].autoBuilt,false)
+    const record = saved.state.campaign.investigators[1]
+    assert.equal(record.arkhamDbDecklistId, recommended.id)
+    assert.deepEqual(record.deck.filter(code => deck.includes(code)).sort(), deck.slice().sort())
+    assert.ok(!arkham.describeState(saved.state, 0).includes(strategy))
     assert.equal(saved.agentPlans[1].upgrade,'PRIVATE_UPGRADE')
     assert.ok(!JSON.stringify(s).includes('PRIVATE_UPGRADE'))
     assert.deepEqual(s.agentPlans.team,[{seat:1,role:'investigate'}])
@@ -502,10 +509,13 @@ test('AI HTTP: model selects and builds, retries invalid deck, persists plans, m
     assert.equal(loaded.state.uiState,'scenarioSetup')
     assert.equal(loaded.state.campaign.investigators[1].deck,undefined)
     assert.ok(loaded.state.campaign.investigators[1].deckSize>0)
+    assert.equal(loaded.state.campaign.investigators[1].arkhamDbDecklistId, undefined)
     const entered=(await post('/api/move',{sessionId:loaded.sessionId,revision:loaded.state.revision,move:{action:'hubBeginScenario'}})).session
     assert.equal(entered.state.uiState,'inScenario')
     assert.equal(entered.state.pendingChoice.kind,'mulligan')
-    assert.equal(prompts.length,5,'等待玩家换牌，不额外调用队友模型')
+    assert.equal(prompts.length,3,'等待玩家换牌，不额外调用队友模型')
+    const enteredSave = JSON.parse(fs.readFileSync(snapshotPath(entered.sessionId), 'utf8')).session
+    assert.ok(arkham.describeState(enteredSave.state, 1).includes(strategy), 'the guide is available in the scenario')
   } finally {
     if(hall)await close(hall);await close(model)
     for(const key of keys)old[key]===undefined?delete process.env[key]:process.env[key]=old[key]
@@ -513,7 +523,7 @@ test('AI HTTP: model selects and builds, retries invalid deck, persists plans, m
   }
 })
 
-test('AI fallback remains available without allowing model to silently delegate deckbuilding',async()=>{
+test('AI equips the recommendation even without a model',async()=>{
   const state=arkham.createState({},[{seat:0},{seat:1}])
   applyMove(state,0,{action:'hubGoSetup'});applyMove(state,0,{action:'hubSelectInvestigator',code:'01001'})
   applyMove(state,0,{action:'hubAutoDeck'});applyMove(state,0,{action:'hubConfirmDeck'}); applyMove(state,0,{action:'hubDoneSeat'})
@@ -521,7 +531,42 @@ test('AI fallback remains available without allowing model to silently delegate 
   const agent=createAgent({modById:()=>arkham,getAi:()=>({}),getConfig:()=>({apiKey:''})})
   let result=await agent.agentPlay(session,1);assert.equal(result.fallback,true)
   assert.equal(result.move.action,'hubSelectInvestigator');applyMove(state,1,result.move)
-  result=await agent.agentPlay(session,1);assert.equal(result.move.action,'hubAutoDeck')
+  result=await agent.agentPlay(session,1);assert.equal(result.move.action,'hubSetDeck')
   assert.ok(arkham.validateAgentMove(state,1,result.move))
   assert.equal(arkham.validateMove(state,1,result.move),null)
+  applyMove(state, 1, result.move)
+  const replayed = replayLog(captureReplayLog(state))
+  assert.deepEqual(replayed.campaign.investigators[1], state.campaign.investigators[1])
+})
+
+test('new online lists can suggest repeatable plays from the actual deck and an edited list clears the strategy', async () => {
+  const state = arkham.createState({}, [{ seat: 0 }, { seat: 1 }])
+  for (const move of [{ action: 'hubGoSetup' }, { action: 'hubSelectInvestigator', code: '01001' },
+    { action: 'hubAutoDeck' }, { action: 'hubConfirmDeck' }, { action: 'hubDoneSeat' }]) applyMove(state, 0, move)
+  applyMove(state, 1, { action: 'hubSelectInvestigator', code: '01002' })
+  const recommended = await loadArkhamDbRecommendation('01002')
+  const codes = planArkhamDbRecommendation(recommended, '01002').codes
+  applyMove(state, 1, { action: 'hubSetDeck', codes, arkhamDbDecklistId: '99999999' })
+  assert.match(arkham.describeState(state, 1), /"deckStrategy":"[^。]+皱缩术[^。]+。"/)
+  applyMove(state, 1, { action: 'hubSetDeck', codes })
+  assert.doesNotMatch(arkham.describeState(state, 1), /"deckStrategy"/)
+})
+
+test('AI uses default deckbuilding when ArkhamDB has no usable recommendation', async (t) => {
+  const state = arkham.createState({ campaignId: 'theScarletKeys' }, [{ seat: 0 }, { seat: 1 }])
+  for (const move of [{ action: 'hubGoSetup' }, { action: 'hubSelectInvestigator', code: '01001' },
+    { action: 'hubAutoDeck' }, { action: 'hubConfirmDeck' }, { action: 'hubDoneSeat' }]) applyMove(state, 0, move)
+  applyMove(state, 1, { action: 'hubSelectInvestigator', code: '09008' })
+  const fetch = t.mock.method(globalThis, 'fetch', async () => {
+    throw new Error('ArkhamDB unavailable')
+  })
+  const session = { modId: arkham.id, sessionId: 'no-recommendation', state, players: [{ role: 'human' }, { role: 'ai' }] }
+  const agent = createAgent({ modById: () => arkham, getAi: () => ({}), getConfig: () => ({ apiKey: 'unused' }) })
+  const result = await agent.agentPlay(session, 1)
+  assert.ok(fetch.mock.callCount() > 0)
+  assert.equal(result.move.action, 'hubAutoDeck')
+  assert.equal(result.attempts, 0)
+  applyMove(state, 1, result.move)
+  assert.equal(state.investigators[1].autoBuilt, true)
+  assert.equal(state.campaign.investigators[1].arkhamDbDecklistId, undefined)
 })

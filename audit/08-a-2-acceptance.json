@@ -1,0 +1,545 @@
+{
+  "schemaVersion": 1,
+  "unit": "08-a-2",
+  "profile": {
+    "id": "eote-player-b-2026-11",
+    "scope": "地球边缘 08 段 eoep 玩家卡（08043–08088）46 条目录记录。25 条通过五维验收；21 条存在印刷子句缺口或近似冒充暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 46,
+    "verified": 25,
+    "unverified": 21,
+    "unimplemented": 0,
+    "testsPassed": 172
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+      "sha256": "6997bc787f0a7ccf662e8e5e4eee59613c2af8489e202bf53361ce6783b978e3"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-player-m2-2.test.mjs",
+      "sha256": "9c86eb6b3afeec8520f8c33a57fd84393cacf4e9f1be36cdf5b1e8f3b78d87db"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+      "sha256": "92735ec413693dde58e2dfbd82ebd42dc6ee4be98f1e552ba3952ddf7e153270"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+      "sha256": "736dbcbbb09fdf0d94c452ace100338257a0ee6d917f013c566c0ee92cb67ce3"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-rules.test.mjs",
+      "sha256": "21761e92e64ab38d14ded302954fddcf765e29ca215c5e2ca1c6216ed5c1d36d"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-primitives-frost.test.mjs",
+      "sha256": "29a200cd215f5ffd3654610c67b5c1415041a6886c0c3e16be27cde7dd5644bf"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-primitives-geo.test.mjs",
+      "sha256": "0ef76e75a39d4a5e09b326280a3c197ec2b75e4a99e7f1801ea132da13f01efc"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-interactions.test.mjs",
+      "sha256": "58d9dbad50d4646e8917cfdac42d47e930f3ca2e241f5f788f4a8c04d7ecb230"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-migration.test.mjs",
+      "sha256": "d8884e030d36450dc73a58bd001a102b1fe1e4554245e8608a66783aaac5b170"
+    }
+  ],
+  "entries": [
+    {
+      "code": "08043",
+      "name": "通路档案",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「灵脉」核心状态未建模：卡面要求把灵脉放在非精英敌人上，后续行动只能选「与**带有灵脉**的敌人交战」的调查员；实现只扣减支援 uses、不记录灵脉归属，于是选择条件退化为任意交战敌人。且「解除交战并移动」用 api.autoEvadeEnemy 实现（会把敌人横置/躲避免费），而卡面只是解除交战。带灵脉选择与解除交战语义均与卡面不一致。"
+    },
+    {
+      "code": "08044",
+      "name": "通路档案",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 08043 的灵脉状态缺失：卡面 [action] 只能选择「**带有灵脉**的调查员」，实现退化为任意存活调查员；[fast] 放灵脉也只扣 uses 不记录归属，抽 1/治愈 1 的加成条件因此永远无法按卡面校验。"
+    },
+    {
+      "code": "08045",
+      "name": "亵渎预言",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08045 亵渎预言 入场指定坐标点；不在坐标点时 +1[智力] +1[敏捷] 且忽略趁乱攻击；可移动任意调查员至坐标点"
+        }
+      ]
+    },
+    {
+      "code": "08046",
+      "name": "地下支持",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面核心限制「你的牌库中每张非弱点、非署名卡最多 1 张（按卡名）」未实现：条目只声明 deckConstruction.sizeBonus（牌库 −5，web/deck-rules.js:43-46 有读点），按卡名唯一的构筑限制没有读点；构筑校验仍允许同名多张。"
+    },
+    {
+      "code": "08047",
+      "name": "提前侦察",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08047 提前侦察 最多移动 3 次，移动期间不与敌交战（approximation：移动后立即解除交战）"
+        }
+      ]
+    },
+    {
+      "code": "08048",
+      "name": "21点",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08048 21点 依次揭示直到停下，按总和（忽视 +/-）获得资源"
+        }
+      ]
+    },
+    {
+      "code": "08049",
+      "name": "反间谍活动",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面第二个升级「[reaction] 打出时加 2 费：把『你』改为『任意调查员』」只记录 playUpgrades.anyInvestigator 并加费，没有任何跨座位触发效果（取消/改抽仍只发生在自己遭遇窗口），等于玩家付费后无收益。引擎快速事件候选只枚举抽牌者自己的窗口（条目已承认请求 m2-2-08049.json 未接线）。"
+    },
+    {
+      "code": "08050",
+      "name": "欺骗制度",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-2.test.mjs",
+          "test": "P6 08050 欺骗制度：每控制一种不同职阶获得 1 资源；无卡牌时不获得"
+        }
+      ]
+    },
+    {
+      "code": "08051",
+      "name": "不当交易",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面「另一位调查员可以**作为其手牌打出**该支援」未实现：条目用 putIntoPlay(自己) + giveAsset 直接免费移交，既没有由该调查员支付打出费用，也没有走其手牌的打出通道/打出窗口；「决定是否打出」由打出者代替目标玩家询问（条目自认近似）。主效果的方向（谁付费、算谁的打出）与卡面不符。"
+    },
+    {
+      "code": "08052",
+      "name": "行业专家",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面「获得等于你最低技能值（除正在检定的技能外）的 [wild] 图标」应读**当前有效**技能值；commit 的 iconBonus 读取 cards-data 印刷技能值（printedSkill），任何属性修正（支援 +1、伤害/恐惧、临时修正）都不会计入，图标数会与实际技能值不符。条目已登记 primitive request 但未接线，属公式取错源。"
+    },
+    {
+      "code": "08053",
+      "name": "红色闹钟",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-2.test.mjs",
+          "test": "P6 08053 红色闹钟（2经验）：回合开始放充能/拿资源，1/2/3 充能分支；真实窗口移动按当前连接"
+        }
+      ]
+    },
+    {
+      "code": "08054",
+      "name": "金钱万能",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-2.test.mjs",
+          "test": "P6 08054 金钱万能：把进行中的检定改为资源技能检定并抽 1 张"
+        }
+      ]
+    },
+    {
+      "code": "08055",
+      "name": "黑市",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面的「放在一边（out of play）」与「放一边期间任意调查员可以将其打出，如同自己手牌」以及「下个调查阶段开始时仍未打出的洗回其所有者牌库」均未实现：实现改为「揭示 5 张直接移入原所有者弃牌堆 + 所有者可立即从弃牌堆打出一次」，未打出的牌留在弃牌堆且不再洗回。放一边的跨阶段状态与任意调查员可打是卡面核心。"
+    },
+    {
+      "code": "08056",
+      "name": "刚毅果敢",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面「非直接伤害/恐惧必须先分配给刚毅果敢」的**伤害**侧未实现：条目只声明 composure（引擎仅对非直接恐惧强制先分配），伤害侧用 assetRule.redirectOneDamageToSelf 每次只转移 1 点，玩家仍可把其余非直接伤害分给其它支援/调查员。引擎已支持条目 flags.composureDamage:true 的完整读点（harm-threat.js:207-214），本卡未声明。"
+    },
+    {
+      "code": "08057",
+      "name": "黑色扇子",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面「10+ 资源：+1 生命与 +1 神智」是资源条件加值，实现用 passive.healthBonus/passive.sanityBonus 无条件常驻，导致 0 资源时也获得 +1/+1（数值方向错误）；条件读点（modifiers resourcesAtLeast）只用于 20+ 资源的技能 +1。"
+    },
+    {
+      "code": "08058",
+      "name": "红色闹钟",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-2.test.mjs",
+          "test": "P6 08058 红色闹钟（5经验）：先拿取再放充能，1/2/3 充能分支"
+        }
+      ]
+    },
+    {
+      "code": "08059",
+      "name": "掉进兔子洞",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-2.test.mjs",
+          "test": "P6 08059 掉进兔子洞：真实关间计价（前 2 次升级 -1 经验、新购 +1 经验、每关间重置）"
+        }
+      ]
+    },
+    {
+      "code": "08060",
+      "name": "咏春棍",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-2.test.mjs",
+          "test": "P6 08060 咏春棍：额外法术槽；每个已填槽 +1 战斗，至少 2 个则 +1 伤害"
+        }
+      ]
+    },
+    {
+      "code": "08061",
+      "name": "冥想放空",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-2.test.mjs",
+          "test": "P6 08061 冥想放空：每个已填法术槽治愈 1 点伤害或恐惧"
+        }
+      ]
+    },
+    {
+      "code": "08062",
+      "name": "闭环",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面第三句「该行动期间执行的每次技能检定中，你可以改为使用 [willpower]」完全没有实现：free 能力只调用 api.beginImmediateAction 执行基础行动，没有对本次立即行动绑定技能替代效果；条目注释自认「缺少 ctx.api 级 substituteSkill 绑定时长，暂未接线」。"
+    },
+    {
+      "code": "08063",
+      "name": "力量之风",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-2.test.mjs",
+          "test": "P6 08063 力量之风：打出时放置 2 充能；回合中抽到时自动打出"
+        }
+      ]
+    },
+    {
+      "code": "08064",
+      "name": "先见",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "时机与目标与卡面相反：卡面是「在将要从牌库/遭遇牌库抽牌**时**打出，先指定一张牌名；若抽到的就是它……」。实现挂在 cardDrawn/encounterDrawn（抽牌**后**）并按刚抽到的卡 + 手牌/牌库组成候选，于是玩家可以先把刚抽到的牌命名为指定牌，任意一次抽牌都能被取消或以 -2 费打出（远超「猜中」的概率），且「抽牌前指定」的公开信息/顺序被绕过。"
+    },
+    {
+      "code": "08065",
+      "name": "密教理论",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面「其获得等于你 [intellect] 的 [willpower] 图标、等于你 [willpower] 的 [intellect] 图标」应读当前有效属性；commit 的 iconBonus 读 cards-data 印刷值（printed()），任何属性修正都不计入。与 08052/08078 同一根因。"
+    },
+    {
+      "code": "08066",
+      "name": "平行命运",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面「查看 6 张后可以**以任何顺序**放回该牌库顶」在引擎的 lookAt 任意排列只支持 ≤4 张；对 6 张请求 arrange 时无法枚举/应用任意顺序（条目注释自认「6 张时按放回顶部处理」并登记 primitive request m2-2-08066.json），卡面的核心选择缺失。"
+    },
+    {
+      "code": "08067",
+      "name": "天文地图集",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-2.test.mjs",
+          "test": "P6 08067 天文地图集：横置看顶 1 张，非弱点则正面朝下附属（最多 5 张）"
+        }
+      ]
+    },
+    {
+      "code": "08068",
+      "name": "治愈真言",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-2.test.mjs",
+          "test": "P6 08068 治愈真言：花费 1 充能治愈同地点调查员总计 2 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "08069",
+      "name": "情绪稳定",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「非直接伤害/恐惧必须先分配给情绪稳定」的伤害侧未实现：条目只声明 composure（引擎仅对非直接恐惧强制先分配），没有声明引擎已支持的 flags.composureDamage:true（harm-threat.js:206-214）；法术检定 +1 与资源换 +1 已实现。"
+    },
+    {
+      "code": "08070",
+      "name": "真法魔典",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-2.test.mjs",
+          "test": "P6 08070 真法魔典：揭示手牌法术支援并结算其能力"
+        }
+      ]
+    },
+    {
+      "code": "08071",
+      "name": "补给匮乏",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-2.test.mjs",
+          "test": "P6 08071 补给匮乏：游戏第一个回合开始时弃掉牌库顶 10 张（每局一次）"
+        }
+      ]
+    },
+    {
+      "code": "08072",
+      "name": "沙夫纳的目录",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-2.test.mjs",
+          "test": "P6 08072 沙夫纳的目录：不能支付非道具或远处的卡，拒绝代付后保留手牌和秘密"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-2.test.mjs",
+          "test": "P6 08072 沙夫纳的目录：用自己的秘密支付道具费用，耗尽后弃掉"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-2.test.mjs",
+          "test": "P6 08072 沙夫纳的目录：由同地点队友选择代付，可混合资源和多本目录"
+        }
+      ]
+    },
+    {
+      "code": "08073",
+      "name": "绷带",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-2.test.mjs",
+          "test": "P6 08073 绷带：同地点调查员/盟友受伤后花 1 补给治愈 1 点"
+        }
+      ]
+    },
+    {
+      "code": "08074",
+      "name": "应急装备",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-2.test.mjs",
+          "test": "P6 08074 应急装备：真实打出后声明式附属到道具支援（3 耐久）；宿主检定期间花 1 耐久 +2"
+        }
+      ]
+    },
+    {
+      "code": "08075",
+      "name": "厄运手镯",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-2.test.mjs",
+          "test": "P6 08075 厄运手镯：检定中花 1 充能 +2（每次检定一次）；被攻击后获得充能"
+        }
+      ]
+    },
+    {
+      "code": "08076",
+      "name": "阅后即焚",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-2.test.mjs",
+          "test": "P6 08076 阅后即焚：放逐一张 0-5 级手牌、发现 2 线索；等级≥2 时移除 1 毁灭"
+        }
+      ]
+    },
+    {
+      "code": "08077",
+      "name": "人多力量大",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-2.test.mjs",
+          "test": "P6 08077 人多力量大：每有一种不同职阶获得 1 个万能图标"
+        }
+      ]
+    },
+    {
+      "code": "08078",
+      "name": "无畏精神",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 08065：卡面图标数应等于你**当前有效**的 [combat]/[willpower] 值，实现读 cards-data 印刷技能值；属性修正（支援、临时效果等）都不计入，图标数会与实际技能值不符。"
+    },
+    {
+      "code": "08079",
+      "name": "血债血偿",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面「该攻击造成的伤害/恐惧不能分配给[[盟友]]支援」完全没有实现：条目只结算「每受到 1 点伤害/恐惧抽 1 张牌」，没有对本次攻击的分配策略做盟友限制（条目注释自认请求 m2-3-08079 未接线）。"
+    },
+    {
+      "code": "08080",
+      "name": "灭火器",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08080 灭火器：攻击 +1 伤害，弃掉时自动躲避所有交战敌人"
+        }
+      ]
+    },
+    {
+      "code": "08081",
+      "name": "有胆有识",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「非直接伤害/恐惧必须先分配给有胆有识」的伤害侧未实现：仅声明 composure（非直接恐惧），未声明引擎已支持的 flags.composureDamage:true；条目注释自认「目前只有恐惧侧生效」。"
+    },
+    {
+      "code": "08082",
+      "name": "抵挡",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08082 抵挡：非精英敌人生成时攻击并自动躲避，随后附属且不能重整"
+        }
+      ]
+    },
+    {
+      "code": "08083",
+      "name": "医学生",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08083 医学生：真实打出后治愈同地点调查员或盟友支援 1 伤害 1 恐惧"
+        }
+      ]
+    },
+    {
+      "code": "08084",
+      "name": "追踪",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面「选择你所在地点以外任意地点的一个敌人」不排除精英；实现 targets 过滤 `!enemy.elite`（08085 同），场上只有精英敌人时该事件直接不可用/无目标，目标可用性与卡面不符。"
+    },
+    {
+      "code": "08085",
+      "name": "追踪",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 08084：目标过滤排除精英敌人（卡面「任意地点的一个敌人」不排除精英）；其余（移动 2 次并在进入的地点各发现 1 线索）已实现。"
+    },
+    {
+      "code": "08086",
+      "name": "迈克尔·利",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08086 迈克尔·李：发起攻击时横置花证据，成功后追加 1 伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08086 迈克尔·李：属性 +1，调查成功放证据（最多 3）"
+        }
+      ]
+    },
+    {
+      "code": "08087",
+      "name": "狙击",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "两处与卡面不符：① 作用域被放宽为「本回合余下的所有检定」，卡面只限「下一个使用[[远程]]或[[枪械]]支援的攻击行动」；② 「本行动不会触发趁乱攻击」没有实现（条目注释自认没有延迟 noOpportunityAttack 读点，请求 m2-3-08087 未接线）。"
+    },
+    {
+      "code": "08088",
+      "name": "老旧的霰弹枪",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「打出一张事件卡牌时，将老旧的霰弹枪的使用值视为 2」被实现成 eventPlayed 反应里 api.setAssetUses(source, 2)：事件结算结束后 uses 仍是 2，等于给枪永久装 2 发子弹（可反复攻击），而卡面只是在**打出事件期间**把 uses 视图视为 2（用于该事件里引用 uses 的费用/条件）。机制与时机均不符。"
+    }
+  ]
+}

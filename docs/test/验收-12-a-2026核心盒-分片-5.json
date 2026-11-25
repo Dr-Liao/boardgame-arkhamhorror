@@ -1,0 +1,975 @@
+{
+  "unit": "12-a-5",
+  "generatedAt": "2026-11-25T08:07:48.729Z",
+  "scope": {
+    "cards": 36,
+    "selector": "12xxx unverified, 12161 <= code <= 12195, pack === 'core_2026'（战役侧）",
+    "packs": {
+      "core_2026": 36
+    },
+    "encounterGroups": [
+      "dead_ends",
+      "flying_terrors",
+      "gangs_of_arkham",
+      "whippoorwills_ch2",
+      "queen_of_ash",
+      "arkham_sewers",
+      "cultists_ch2",
+      "reeking_decay",
+      "torment"
+    ]
+  },
+  "verdict": "fail",
+  "verifiedCodes": [],
+  "failedCodes": [
+    {
+      "code": "12161",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12161.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（dead_ends）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12162",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12162.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（flying_terrors）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12163",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12163.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（flying_terrors）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12164",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12164.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（gangs_of_arkham）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12165",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12165.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（gangs_of_arkham）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12166",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12166.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（whippoorwills_ch2）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12167",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12167.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（whippoorwills_ch2）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12168",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12168.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12169",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12169.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12170",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12170.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12171",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12171.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12172",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12172.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12173",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12173.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12174",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12174.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12175",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12175.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12176",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12176.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12177",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12177.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12178",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12178.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12179",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12179.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12180",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12180.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12181",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12181.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12182",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12182.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（arkham_sewers）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12183",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12183.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（arkham_sewers）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12184",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12184.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（arkham_sewers）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12185",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12185.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（arkham_sewers）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12186",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12186.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（arkham_sewers）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12187",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12187.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（arkham_sewers）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12188",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12188.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（cultists_ch2）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12189",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12189.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（cultists_ch2）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12190",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12190.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（cultists_ch2）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12191",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12191.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（reeking_decay）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12192",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12192.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（reeking_decay）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12193",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12193.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（torment）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12194",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12194.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（torment）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12195",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12195.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（torment）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    },
+    {
+      "code": "12179b",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "批次 4 未迁移（无条目/无内容/无别名/catalog-only）",
+      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12179b.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。",
+      "evidence": [
+        "artifacts/acceptance/12-a-5/probe-defects.mjs",
+        "artifacts/acceptance/12-a-5/probe-defects.json"
+      ]
+    }
+  ],
+  "dimensions": {
+    "implementation": "fail",
+    "primitives": "fail",
+    "interaction": "fail",
+    "evidence": "fail",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "artifacts/acceptance/12-a-5/probe-defects.mjs",
+      "test": "逐卡 条目/别名/读点 复现（0 PASS / 36 FAIL）",
+      "codes": [
+        "12161",
+        "12162",
+        "12163",
+        "12164",
+        "12165",
+        "12166",
+        "12167",
+        "12168",
+        "12169",
+        "12170",
+        "12171",
+        "12172",
+        "12173",
+        "12174",
+        "12175",
+        "12176",
+        "12177",
+        "12178",
+        "12179",
+        "12180",
+        "12181",
+        "12182",
+        "12183",
+        "12184",
+        "12185",
+        "12186",
+        "12187",
+        "12188",
+        "12189",
+        "12190",
+        "12191",
+        "12192",
+        "12193",
+        "12194",
+        "12195",
+        "12179b"
+      ]
+    },
+    {
+      "file": "tests/starter-batch-3.test.mjs",
+      "test": "批次 3 只覆盖玩家侧 12001–12104（不含 12161+），佐证批次 4 未迁移",
+      "codes": []
+    },
+    {
+      "file": "src/deck/core2026-packs.js",
+      "test": "CORE2026_* 清单只到 12104；无战役侧 12105–12195 清单",
+      "codes": []
+    }
+  ],
+  "probe": {
+    "generatedAt": "2026-11-25T08:06:57.940Z",
+    "total": 36,
+    "failed": 36,
+    "entryFiles": [],
+    "aliasMapped": [],
+    "readPointCards": [],
+    "encounterGroups": [
+      {
+        "group": "dead_ends",
+        "definitionFiles": []
+      },
+      {
+        "group": "flying_terrors",
+        "definitionFiles": []
+      },
+      {
+        "group": "gangs_of_arkham",
+        "definitionFiles": []
+      },
+      {
+        "group": "whippoorwills_ch2",
+        "definitionFiles": []
+      },
+      {
+        "group": "queen_of_ash",
+        "definitionFiles": []
+      },
+      {
+        "group": "arkham_sewers",
+        "definitionFiles": []
+      },
+      {
+        "group": "cultists_ch2",
+        "definitionFiles": []
+      },
+      {
+        "group": "reeking_decay",
+        "definitionFiles": []
+      },
+      {
+        "group": "torment",
+        "definitionFiles": [
+          "content/campaigns/theInnsmouthConspiracy/story-text.js",
+          "content/campaigns/theScarletKeys/story-text.js",
+          "content/scenario-guide-sources/returnToTheDevourerBelow.json"
+        ]
+      }
+    ],
+    "results": [
+      {
+        "code": "12161",
+        "name": "障眼诱饵",
+        "type": "treachery",
+        "encounterCode": "dead_ends",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12162",
+        "name": "蝙蝠恐魔",
+        "type": "enemy",
+        "encounterCode": "flying_terrors",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12163",
+        "name": "空中追击",
+        "type": "treachery",
+        "encounterCode": "flying_terrors",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12164",
+        "name": "独行无赖",
+        "type": "enemy",
+        "encounterCode": "gangs_of_arkham",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12165",
+        "name": "交火",
+        "type": "treachery",
+        "encounterCode": "gangs_of_arkham",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12166",
+        "name": "夜鹰",
+        "type": "enemy",
+        "encounterCode": "whippoorwills_ch2",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": true,
+        "pass": false
+      },
+      {
+        "code": "12167",
+        "name": "渴望死亡",
+        "type": "treachery",
+        "encounterCode": "whippoorwills_ch2",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": true,
+        "pass": false
+      },
+      {
+        "code": "12168",
+        "name": "灰烬女王",
+        "type": "scenario",
+        "encounterCode": "queen_of_ash",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": true,
+        "pass": false
+      },
+      {
+        "code": "12169",
+        "name": "聚集于此",
+        "type": "agenda",
+        "encounterCode": "queen_of_ash",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12170",
+        "name": "重生",
+        "type": "agenda",
+        "encounterCode": "queen_of_ash",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12171",
+        "name": "灰烬同袍会",
+        "type": "agenda",
+        "encounterCode": "queen_of_ash",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12172",
+        "name": "搜查下水道",
+        "type": "act",
+        "encounterCode": "queen_of_ash",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12173",
+        "name": "阻止仪式",
+        "type": "act",
+        "encounterCode": "queen_of_ash",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12174",
+        "name": "地下水库",
+        "type": "location",
+        "encounterCode": "queen_of_ash",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12175",
+        "name": "水闸控制台",
+        "type": "location",
+        "encounterCode": "queen_of_ash",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12176",
+        "name": "灰烬重生",
+        "type": "treachery",
+        "encounterCode": "queen_of_ash",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12177",
+        "name": "*女王的骑士",
+        "type": "enemy",
+        "encounterCode": "queen_of_ash",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12178",
+        "name": "*烈焰兆使",
+        "type": "enemy",
+        "encounterCode": "queen_of_ash",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12179",
+        "name": "*俄洛寇斯",
+        "type": "enemy",
+        "encounterCode": "queen_of_ash",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12180",
+        "name": "*烈焰仆从",
+        "type": "enemy",
+        "encounterCode": "queen_of_ash",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12181",
+        "name": "收藏家",
+        "type": "asset",
+        "encounterCode": "queen_of_ash",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12182",
+        "name": "下水道涵洞",
+        "type": "location",
+        "encounterCode": "arkham_sewers",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12183",
+        "name": "下水道隧道",
+        "type": "location",
+        "encounterCode": "arkham_sewers",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12184",
+        "name": "下水道隧道",
+        "type": "location",
+        "encounterCode": "arkham_sewers",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12185",
+        "name": "下水道隧道",
+        "type": "location",
+        "encounterCode": "arkham_sewers",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12186",
+        "name": "下水道隧道",
+        "type": "location",
+        "encounterCode": "arkham_sewers",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12187",
+        "name": "下水道隧道",
+        "type": "location",
+        "encounterCode": "arkham_sewers",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12188",
+        "name": "狂信徒",
+        "type": "enemy",
+        "encounterCode": "cultists_ch2",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12189",
+        "name": "黑暗魔术师",
+        "type": "enemy",
+        "encounterCode": "cultists_ch2",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12190",
+        "name": "亵渎祝祷",
+        "type": "treachery",
+        "encounterCode": "cultists_ch2",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12191",
+        "name": "异常腐败",
+        "type": "treachery",
+        "encounterCode": "reeking_decay",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12192",
+        "name": "腐臭蒸汽",
+        "type": "treachery",
+        "encounterCode": "reeking_decay",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12193",
+        "name": "力竭",
+        "type": "treachery",
+        "encounterCode": "torment",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12194",
+        "name": "不谐",
+        "type": "treachery",
+        "encounterCode": "torment",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      },
+      {
+        "code": "12195",
+        "name": "折磨",
+        "type": "treachery",
+        "encounterCode": "torment",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": true,
+        "pass": false
+      },
+      {
+        "code": "12179b",
+        "name": "*俄洛寇斯",
+        "type": "enemy",
+        "encounterCode": "queen_of_ash",
+        "availability": "catalog-only",
+        "entryExists": false,
+        "aliasMapped": false,
+        "readPointFiles": [],
+        "docsMentioned": false,
+        "pass": false
+      }
+    ]
+  },
+  "notes": [
+    "范围：pack core_2026 36 张（12161–12195，含 12179b）；全部 catalog-only / unverified；复算脚本 artifacts/acceptance/12-a-5/scope-map.mjs。",
+    "失败 36 张，原因两类：批次 4 战役侧未迁移（无单卡条目、无 content 章节/遭遇组、无 12 段注册）；无 canonical 重印别名可借道（REPRINT_ALIASES/scenarios-data/duplicateOfCode 均无映射）。",
+    "通过 0 张；没有「已实现/别名可解析」的卡，故未新增 tests/acceptance-12-a-shard5.test.mjs（catalog-only 字段断言不构成真实执行证据）。",
+    "证据：probe-defects 0 PASS / 36 FAIL（entry=false alias=false implReadPoints=none）；gate 三道（card-index/encounter-index/compliance）exit 0。",
+    "重印别名核对：12179 仅 linked 12179b 双面关联；resolveCardIdentity 对全部 36 只会返回自 identity（mapped），不产生可玩实现。",
+    "本审计未改 src/content/audit/web/tools/既有 tests/package.json；未登记测试进 suites（无新测试）；账本 --check 重签需工作区干净。"
+  ]
+}

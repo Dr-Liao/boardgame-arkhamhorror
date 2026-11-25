@@ -1,0 +1,234 @@
+{
+  "unit": "12-a-3",
+  "generatedAt": "2026-11-25",
+  "scope": {
+    "cards": 40,
+    "selector": "pack==='core_2026' && 12081<=code<=12120",
+    "packs": {
+      "core_2026": 40
+    }
+  },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "12081",
+    "12082",
+    "12083",
+    "12084",
+    "12085",
+    "12087",
+    "12088",
+    "12089",
+    "12090",
+    "12091",
+    "12092",
+    "12093",
+    "12094",
+    "12095",
+    "12096",
+    "12097",
+    "12098",
+    "12099",
+    "12100",
+    "12101",
+    "12102",
+    "12103",
+    "12104"
+  ],
+  "failedCodes": [
+    {
+      "code": "12086",
+      "dimension": "implementation",
+      "reason": "条目自述 `approximation`：「检定成功后选择弃掉破瓶子换 +1 伤害」被实现为「攻击前询问、成功才弃置」，与印刷选择时机不同（引擎伤害加值须在结算前确定）。按 ACCEPTANCE-ORDER §0.6 披露近似不得 verified。",
+      "evidence": "src/cards/entries/12086.js:277（note: approximation）"
+    },
+    {
+      "code": "12105",
+      "dimension": "implementation",
+      "reason": "战役侧重发卡无实现：src/cards/entries/12105.js 不存在、registeredEntry('12105') 返回 null、_reprint-aliases.js/card-identity.js 无 12105 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。",
+      "evidence": "artifacts/acceptance/12-a-3/refs.mjs 独立 grep（仅 src/cards/cards-data.js 命中）"
+    },
+    {
+      "code": "12106",
+      "dimension": "implementation",
+      "reason": "战役侧重发卡无实现：src/cards/entries/12106.js 不存在、registeredEntry('12106') 返回 null、_reprint-aliases.js/card-identity.js 无 12106 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。",
+      "evidence": "artifacts/acceptance/12-a-3/refs.mjs 独立 grep（仅 src/cards/cards-data.js 命中）"
+    },
+    {
+      "code": "12107",
+      "dimension": "implementation",
+      "reason": "战役侧重发卡无实现：src/cards/entries/12107.js 不存在、registeredEntry('12107') 返回 null、_reprint-aliases.js/card-identity.js 无 12107 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。",
+      "evidence": "artifacts/acceptance/12-a-3/refs.mjs 独立 grep（仅 src/cards/cards-data.js 命中）"
+    },
+    {
+      "code": "12108",
+      "dimension": "implementation",
+      "reason": "战役侧重发卡无实现：src/cards/entries/12108.js 不存在、registeredEntry('12108') 返回 null、_reprint-aliases.js/card-identity.js 无 12108 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。",
+      "evidence": "artifacts/acceptance/12-a-3/refs.mjs 独立 grep（仅 src/cards/cards-data.js 命中）"
+    },
+    {
+      "code": "12109",
+      "dimension": "implementation",
+      "reason": "战役侧重发卡无实现：src/cards/entries/12109.js 不存在、registeredEntry('12109') 返回 null、_reprint-aliases.js/card-identity.js 无 12109 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。",
+      "evidence": "artifacts/acceptance/12-a-3/refs.mjs 独立 grep（仅 src/cards/cards-data.js 命中）"
+    },
+    {
+      "code": "12110",
+      "dimension": "implementation",
+      "reason": "战役侧重发卡无实现：src/cards/entries/12110.js 不存在、registeredEntry('12110') 返回 null、_reprint-aliases.js/card-identity.js 无 12110 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。",
+      "evidence": "artifacts/acceptance/12-a-3/refs.mjs 独立 grep（仅 src/cards/cards-data.js 命中）"
+    },
+    {
+      "code": "12111",
+      "dimension": "implementation",
+      "reason": "战役侧重发卡无实现：src/cards/entries/12111.js 不存在、registeredEntry('12111') 返回 null、_reprint-aliases.js/card-identity.js 无 12111 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。",
+      "evidence": "artifacts/acceptance/12-a-3/refs.mjs 独立 grep（仅 src/cards/cards-data.js 命中）"
+    },
+    {
+      "code": "12112",
+      "dimension": "implementation",
+      "reason": "战役侧重发卡无实现：src/cards/entries/12112.js 不存在、registeredEntry('12112') 返回 null、_reprint-aliases.js/card-identity.js 无 12112 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。",
+      "evidence": "artifacts/acceptance/12-a-3/refs.mjs 独立 grep（仅 src/cards/cards-data.js 命中）"
+    },
+    {
+      "code": "12113",
+      "dimension": "implementation",
+      "reason": "战役侧重发卡无实现：src/cards/entries/12113.js 不存在、registeredEntry('12113') 返回 null、_reprint-aliases.js/card-identity.js 无 12113 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。",
+      "evidence": "artifacts/acceptance/12-a-3/refs.mjs 独立 grep（仅 src/cards/cards-data.js 命中）"
+    },
+    {
+      "code": "12114",
+      "dimension": "implementation",
+      "reason": "战役侧重发卡无实现：src/cards/entries/12114.js 不存在、registeredEntry('12114') 返回 null、_reprint-aliases.js/card-identity.js 无 12114 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。",
+      "evidence": "artifacts/acceptance/12-a-3/refs.mjs 独立 grep（仅 src/cards/cards-data.js 命中）"
+    },
+    {
+      "code": "12115",
+      "dimension": "implementation",
+      "reason": "战役侧重发卡无实现：src/cards/entries/12115.js 不存在、registeredEntry('12115') 返回 null、_reprint-aliases.js/card-identity.js 无 12115 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。",
+      "evidence": "artifacts/acceptance/12-a-3/refs.mjs 独立 grep（仅 src/cards/cards-data.js 命中）"
+    },
+    {
+      "code": "12116",
+      "dimension": "implementation",
+      "reason": "战役侧重发卡无实现：src/cards/entries/12116.js 不存在、registeredEntry('12116') 返回 null、_reprint-aliases.js/card-identity.js 无 12116 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。",
+      "evidence": "artifacts/acceptance/12-a-3/refs.mjs 独立 grep（仅 src/cards/cards-data.js 命中）"
+    },
+    {
+      "code": "12117",
+      "dimension": "implementation",
+      "reason": "战役侧重发卡无实现：src/cards/entries/12117.js 不存在、registeredEntry('12117') 返回 null、_reprint-aliases.js/card-identity.js 无 12117 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。",
+      "evidence": "artifacts/acceptance/12-a-3/refs.mjs 独立 grep（仅 src/cards/cards-data.js 命中）"
+    },
+    {
+      "code": "12118",
+      "dimension": "implementation",
+      "reason": "战役侧重发卡无实现：src/cards/entries/12118.js 不存在、registeredEntry('12118') 返回 null、_reprint-aliases.js/card-identity.js 无 12118 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。",
+      "evidence": "artifacts/acceptance/12-a-3/refs.mjs 独立 grep（仅 src/cards/cards-data.js 命中）"
+    },
+    {
+      "code": "12119",
+      "dimension": "implementation",
+      "reason": "战役侧重发卡无实现：src/cards/entries/12119.js 不存在、registeredEntry('12119') 返回 null、_reprint-aliases.js/card-identity.js 无 12119 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。",
+      "evidence": "artifacts/acceptance/12-a-3/refs.mjs 独立 grep（仅 src/cards/cards-data.js 命中）"
+    },
+    {
+      "code": "12120",
+      "dimension": "implementation",
+      "reason": "战役侧重发卡无实现：src/cards/entries/12120.js 不存在、registeredEntry('12120') 返回 null、_reprint-aliases.js/card-identity.js 无 12120 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。",
+      "evidence": "artifacts/acceptance/12-a-3/refs.mjs 独立 grep（仅 src/cards/cards-data.js 命中）"
+    }
+  ],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "fail",
+    "primitives": "pass",
+    "interaction": "fail",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/acceptance-12-a-shard3.test.mjs（新增）",
+      "test": "玩家侧 24 张逐卡真实执行（新卡钩子直调 + 别名运行时解析/钩子执行 + 基础弱点强制/行动断言）+ 战役侧 16 张逐卡缺失证据断言；标题均含卡号",
+      "codes": [
+        "12081",
+        "12082",
+        "12083",
+        "12084",
+        "12085",
+        "12086",
+        "12087",
+        "12088",
+        "12089",
+        "12090",
+        "12091",
+        "12092",
+        "12093",
+        "12094",
+        "12095",
+        "12096",
+        "12097",
+        "12098",
+        "12099",
+        "12100",
+        "12101",
+        "12102",
+        "12103",
+        "12104",
+        "12105",
+        "12106",
+        "12107",
+        "12108",
+        "12109",
+        "12110",
+        "12111",
+        "12112",
+        "12113",
+        "12114",
+        "12115",
+        "12116",
+        "12117",
+        "12118",
+        "12119",
+        "12120"
+      ],
+      "result": "tests 41 / pass 41 / fail 0"
+    },
+    {
+      "file": "tests/starter-batch-3.test.mjs + tests/reprint-aliases.test.mjs",
+      "test": "批次 3 聚合验收与重印别名守卫，本轮重跑",
+      "result": "tests 9 / pass 9 / fail 0"
+    },
+    {
+      "file": "src/deck/core2026-packs.js + src/cards/entries/_reprint-aliases.js + src/integration/arkhamdb.js#canonicalCode（复核）",
+      "test": "12089→01088、12090→01089、12091→01092、12092→01091、12093→01090、12094→01093、12095→02158、12096→02157、12097→01096、12100→03040、12101→01097；catalog-only 别名运行时均注册条目（12095/12096 abilities=0 为永久槽位修正卡）"
+    },
+    {
+      "file": "artifacts/acceptance/12-a-3/refs.mjs（独立 grep）",
+      "test": "12105–12120 在 src/** 与 content/** 中仅命中 src/cards/cards-data.js；无条目文件、无 encounter-entries 落点、无 content 模块、无别名映射"
+    },
+    {
+      "file": "无历史账本（任务背景）",
+      "test": "2026 核心盒只有批次 3 玩家侧聚合测试（5 条），无 12 段文档/账本可复核；本结论基于 cards-data、条目文件、运行时注册与独立 grep"
+    }
+  ],
+  "commands": [
+    {
+      "command": "node --test tests/acceptance-12-a-shard3.test.mjs",
+      "result": "tests 41 / pass 41 / fail 0"
+    },
+    {
+      "command": "node --test tests/starter-batch-3.test.mjs tests/reprint-aliases.test.mjs",
+      "result": "tests 9 / pass 9 / fail 0"
+    },
+    {
+      "command": "npm run cards:check / cards:encounter-check / audit:entries",
+      "result": "通过（本分片 R1/R2/R3 0 条）"
+    },
+    {
+      "command": "npm run docs:check",
+      "result": "通过"
+    }
+  ],
+  "notes": "五维：实现完整性 fail（17 张：12086 披露近似；12105–12120 战役侧重发卡完全无条目/无读点/无内容模块）；原语设计 pass（批次 3 新原语 lateCommit / locationShroudModUntilRoundEnd / maxSanity / onFail / setCommitDestination / cannotLeavePlay / weaknessSpawnsAtFarthestEmptyLocation / discardCost / enemyEnteredLocation / enemySpawn / resourcesSpent / investigationPhaseEnds 均在引擎有读点且被新条目实际使用，逐 token 扫描无缺失）；玩家交互性 fail（玩家侧 24 张无新增面板、复用既有 UI；战役侧 16 张无任何交互入口——无场景/地点/遭遇注册，无法游玩 Night of the Zealot 重发）；证据 pass（新增 41 条逐卡用例全绿，其中 strict 16 张全部通过；别名卡通过 canonical 运行时解析验证）；合规 pass。分片 verdict=partial：23 张可切 verified（12081–12085、12087–12104，其中 12089–12096/12097/12100/12101 为 catalog-only 重印别名、行为由 canonical 条目承担），17 张保持 unverified。线索复核：任务背景「战役侧 12105+ 没有任何条目/内容模块」经独立 grep 证实（仅 cards-data 命中），与预计一致；玩家侧 batch 3 的 74 个条目中本分片 13 个自有条目 + 10 个别名号全部可解析。新增测试未登记 tests/suites.mjs / tests/node-suite.mjs（审计角色不改既有 tests/），主进程合并时必须登记，否则 suite-manifest 红。"
+}

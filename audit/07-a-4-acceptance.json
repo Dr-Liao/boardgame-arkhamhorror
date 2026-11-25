@@ -1,0 +1,893 @@
+{
+  "schemaVersion": 1,
+  "unit": "07-a-4",
+  "profile": {
+    "id": "tic-devil-reef-2026-11",
+    "scope": "印斯茅斯暗潮 07 段 Devil Reef（def，07152–07188）43 条目录记录。41 条通过五维验收；07165b 数值过度实现、07185 触发条件过宽暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 43,
+    "verified": 41,
+    "unverified": 2,
+    "unimplemented": 0,
+    "testsPassed": 317
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/tic-scenario-devilReef.test.mjs",
+      "sha256": "38f7136b554c3cd2f3f1c1830959b63fd595121d97a325ec81578c5c6eb4dd6f"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+      "sha256": "a050b7d56ddf46230278f6d30b5a21a7811898857976f0eb7c0ce9954f5693de"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-fishing-vessel.test.mjs",
+      "sha256": "c701f3ed20b9039e80187c68118f09db688d67fac7a973197eec223413d14a73"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-vehicle-restrictions.test.mjs",
+      "sha256": "07216b9b94b821412a4172dfe862eafee66c22ff5d89968e0b12d9d803e6b4d4"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-vortex-resign.test.mjs",
+      "sha256": "f85cc1d6dd686d39a29c9c6bda0a33787e11356f630239e4fe7b95ac96dc7419"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-walking-surcharge.test.mjs",
+      "sha256": "5e2a883b2c40bebb79d35fc2ca25b8aec6d70ad04bf1c788859174572bc8d041"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+      "sha256": "b4ecaedb1a2445d494b757be42e5133ef92a1091249e32565e2ad8b135756fd1"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+      "sha256": "3580319103f889db41d6871ecd68189d802ef3fe6d3339ee9997b46d27959044"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+      "sha256": "c2c69dc2fb3fe002419897d86711bcdcb9434dd22519dec707d50a2171afc3aa"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-flashbacks.test.mjs",
+      "sha256": "cf40ce2d84ef77409b0f8a747580bf42781d165582387c3976a31eb2e859fecd"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+      "sha256": "231d6d9ce438e87b3ca6b4d70c918fbf549fc8907225264a173b68fad6db98be"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+      "sha256": "68d334798dc094b59d7d0cafd643b50af82e2a62590d03eb8d1eb164653c7764"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-rules.test.mjs",
+      "sha256": "24972f73c0ee5c468034308b7bc51c7742bccc191406960dfc268169940a574a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-primitives.test.mjs",
+      "sha256": "2234fa4bbb8925066932c1ba1211d4349b1c7f19934ef2c6f023ce0131e92770"
+    }
+  ],
+  "entries": [
+    {
+      "code": "07152",
+      "name": "锐利目光",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07152 Keen Eye spends two resources for phase-long intellect/combat effects"
+        }
+      ]
+    },
+    {
+      "code": "07153",
+      "name": "耀灿一击",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07153 Radiant Smite seals zero through three tokens and returns to pool on defeat"
+        }
+      ]
+    },
+    {
+      "code": "07154",
+      "name": "真相的呼唤",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07154 The Truth Beckons stops on first newly revealed intermediate location"
+        }
+      ]
+    },
+    {
+      "code": "07155",
+      "name": "沃科施的凝视",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07155 Gaze of Ouraxsh inspects without resolving curse chains and divides damage"
+        }
+      ]
+    },
+    {
+      "code": "07156",
+      "name": "双面神父",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07156 enters-play blessing reaction is optional; upkeep curse or discard"
+        }
+      ]
+    },
+    {
+      "code": "07157",
+      "name": "密切监视",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07157 Under Surveillance triggers once on nonElite move and retains event until entry"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07157 Under Surveillance triggers once on nonElite spawn and retains event until entry"
+        }
+      ]
+    },
+    {
+      "code": "07158",
+      "name": "鲜血盟约",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07158 doom is a cost, adds two only to the matching test and is once per test"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07158 「每次检定一次」在同一回合的第二次检定仍可用（审计 M27 perTest 键回归）"
+        }
+      ]
+    },
+    {
+      "code": "07159",
+      "name": "深渊典籍",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07159 doom cap and intellect attack damage"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07159 doom-based bonus rechecks source doom at resolution"
+        }
+      ]
+    },
+    {
+      "code": "07160",
+      "name": "蝴蝶效应",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07160 Butterfly Effect late commit and withdrawal change actual icons and success rewards; numeric reveal cannot play"
+        }
+      ]
+    },
+    {
+      "code": "07161",
+      "name": "事不过三",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07161 Third Times a Charm actual test allows exactly two physical cancel-return-redraws and excludes remote play"
+        }
+      ]
+    },
+    {
+      "code": "07162",
+      "name": "操纵命运",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07162 Manipulate Destiny returns inspected tokens, avoids opportunity attack, damages or heals real target"
+        }
+      ]
+    },
+    {
+      "code": "07163",
+      "name": "魔鬼礁石",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-devilReef.test.mjs",
+          "test": "devilReef 混乱标记：07163 提示卡 skull 随团队持钥数变化，cultist/tablet/elderthing 按难度结算且 tablet 只伤不在载具上者"
+        }
+      ]
+    },
+    {
+      "code": "07164",
+      "name": "大海的秘密(版本一)",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07164 大海的秘密（版本I）：背面把 07164b 生成在渔船所在地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-walking-surcharge.test.mjs",
+          "test": "07164/07165/07166：不在载具上时，[[海洋]]地点之间移动额外花费 2 行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07164/07165：渔船不在场时背面回退 api.spawn(线索) 不抛错"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07164b/07165b：不能进入[[洞穴]]地点，普通地点不受限制"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07164b/07165b：声明了渔船生成点、[[洞穴]]禁入与 +3[每调查员]生命值读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07164b：按「渔船所在地点」生成，生命值 = 印刷 6 + 3 × 人数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07164b：被击败后正常进胜利区（印刷 Victory 1）"
+        }
+      ]
+    },
+    {
+      "code": "07164b",
+      "name": "魔鬼礁石的骇物",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07164 大海的秘密（版本I）：背面把 07164b 生成在渔船所在地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07164b/07165b：不能进入[[洞穴]]地点，普通地点不受限制"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07164b/07165b：声明了渔船生成点、[[洞穴]]禁入与 +3[每调查员]生命值读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07164b：按「渔船所在地点」生成，生命值 = 印刷 6 + 3 × 人数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07164b：被击败后正常进胜利区（印刷 Victory 1）"
+        }
+      ]
+    },
+    {
+      "code": "07165",
+      "name": "大海的秘密(版本二)",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-walking-surcharge.test.mjs",
+          "test": "07164/07165/07166：不在载具上时，[[海洋]]地点之间移动额外花费 2 行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07164/07165：渔船不在场时背面回退 api.spawn(线索) 不抛错"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07164b/07165b：不能进入[[洞穴]]地点，普通地点不受限制"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07164b/07165b：声明了渔船生成点、[[洞穴]]禁入与 +3[每调查员]生命值读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07165 大海的秘密（版本II）：背面把 07165b 生成在渔船所在地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07165b：将要被击败时改为移除所有伤害、横置并本轮不能重整"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-devilReef.test.mjs",
+          "test": "devilReef 幕/议程：07167 目标=集齐紫/白/黑钥匙；推进 07165 背面在渔船所在地生成魔鬼礁石骇物"
+        }
+      ]
+    },
+    {
+      "code": "07165b",
+      "name": "魔鬼礁石的骇物",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "过度实现：条目声明 `modifiers: [{ target: 'enemyHealth', amount: 3 × 人数 }]`（+3[每调查员]生命值），但 07165b 印刷卡文（中/英）没有这一句——+3 生命值只印在 07164b 上；07165b 的第 4 行是「将要被击败时改为移除所有伤害并横置」。实测 2 人局从渔船地点生成 07165b 后 enemyHealth=12（印刷生命 6，多出 6），战斗难度显著偏离卡面。仓库测试 tests/tic-middle-remaining.test.mjs:98-106 还把该修正同时断言给 07165b，属测试与实现一起写错；同文件 :113-123 只对 07164b 验证 6+3×N，未覆盖 07165b 的正确生命值。"
+    },
+    {
+      "code": "07166",
+      "name": "深海的魔鬼",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-walking-surcharge.test.mjs",
+          "test": "07164/07165/07166：不在载具上时，[[海洋]]地点之间移动额外花费 2 行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07166 深海的魔鬼：背面记录「浪潮愈烈」并进入结局 1"
+        }
+      ]
+    },
+    {
+      "code": "07167",
+      "name": "谜之礁石",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-devilReef.test.mjs",
+          "test": "devilReef 幕/议程：07167 目标=集齐紫/白/黑钥匙；推进 07165 背面在渔船所在地生成魔鬼礁石骇物"
+        }
+      ]
+    },
+    {
+      "code": "07168",
+      "name": "急涡水域",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-vortex-resign.test.mjs",
+          "test": "07168 急涡水域：只有在渔船上才出现撤退行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-vortex-resign.test.mjs",
+          "test": "07168 急涡水域：船上的人撤退、渔船移出游戏、紫黑白钥匙放到当前场景"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-devilReef.test.mjs",
+          "test": "devilReef 地点与连接/载具移动：急涡水域经符号连接 5 座岛，渔船移动带走乘客与卡面；07168 撤退入口在船上出现"
+        }
+      ]
+    },
+    {
+      "code": "07169",
+      "name": "孤岛",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07169: actual reveal at -4,-2 conserves opaque physical tiles, matches exact map and does not repeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07169: actual reveal at -4,2 conserves opaque physical tiles, matches exact map and does not repeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07169: actual reveal at 0,3 conserves opaque physical tiles, matches exact map and does not repeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07169: actual reveal at 4,-2 conserves opaque physical tiles, matches exact map and does not repeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07169: actual reveal at 4,2 conserves opaque physical tiles, matches exact map and does not repeat"
+        }
+      ]
+    },
+    {
+      "code": "07170",
+      "name": "隐蔽海湾",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07170: actual reveal at -4,-2 conserves opaque physical tiles, matches exact map and does not repeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07170: actual reveal at -4,2 conserves opaque physical tiles, matches exact map and does not repeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07170: actual reveal at 0,3 conserves opaque physical tiles, matches exact map and does not repeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07170: actual reveal at 4,-2 conserves opaque physical tiles, matches exact map and does not repeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07170: actual reveal at 4,2 conserves opaque physical tiles, matches exact map and does not repeat"
+        }
+      ]
+    },
+    {
+      "code": "07171",
+      "name": "浪蚀小岛",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07171: actual reveal at -4,-2 conserves opaque physical tiles, matches exact map and does not repeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07171: actual reveal at -4,2 conserves opaque physical tiles, matches exact map and does not repeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07171: actual reveal at 0,3 conserves opaque physical tiles, matches exact map and does not repeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07171: actual reveal at 4,-2 conserves opaque physical tiles, matches exact map and does not repeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07171: actual reveal at 4,2 conserves opaque physical tiles, matches exact map and does not repeat"
+        }
+      ]
+    },
+    {
+      "code": "07172",
+      "name": "盐沼",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07172: actual reveal at -4,-2 conserves opaque physical tiles, matches exact map and does not repeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07172: actual reveal at -4,2 conserves opaque physical tiles, matches exact map and does not repeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07172: actual reveal at 0,3 conserves opaque physical tiles, matches exact map and does not repeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07172: actual reveal at 4,-2 conserves opaque physical tiles, matches exact map and does not repeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07172: actual reveal at 4,2 conserves opaque physical tiles, matches exact map and does not repeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07172: purple key looks at an arbitrary distant hidden tunnel/depth without revealing it; group use survives JSON"
+        }
+      ]
+    },
+    {
+      "code": "07173",
+      "name": "黑礁",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07173: actual reveal at -4,-2 conserves opaque physical tiles, matches exact map and does not repeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07173: actual reveal at -4,2 conserves opaque physical tiles, matches exact map and does not repeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07173: actual reveal at 0,3 conserves opaque physical tiles, matches exact map and does not repeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07173: actual reveal at 4,-2 conserves opaque physical tiles, matches exact map and does not repeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07173: actual reveal at 4,2 conserves opaque physical tiles, matches exact map and does not repeat"
+        }
+      ]
+    },
+    {
+      "code": "07174a",
+      "name": "走私贩藏匿处",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07174a: actual reveal places one concealed random key; public state does not disclose its color"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07174a: only local controller of the correct key can use the once-per-group reward; JSON preserves usage"
+        }
+      ]
+    },
+    {
+      "code": "07174b",
+      "name": "走私贩藏匿处",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07174b: actual reveal places one concealed random key; public state does not disclose its color"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07174b: only local controller of the correct key can use the once-per-group reward; JSON preserves usage"
+        }
+      ]
+    },
+    {
+      "code": "07175a",
+      "name": "深潜者岩洞",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07175a: actual reveal sets printed flood and key; split local required keys and local clue cost make free claim available"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07175a: remote or eliminated key holder and insufficient local clues prevent claim without spending"
+        }
+      ]
+    },
+    {
+      "code": "07175b",
+      "name": "深潜者岩洞",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07175b: actual reveal sets printed flood and key; split local required keys and local clue cost make free claim available"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07175b: remote or eliminated key holder and insufficient local clues prevent claim without spending"
+        }
+      ]
+    },
+    {
+      "code": "07176a",
+      "name": "宏大废墟",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07176a: actual reveal sets printed flood and key; split local required keys and local clue cost make free claim available"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07176a: remote or eliminated key holder and insufficient local clues prevent claim without spending"
+        }
+      ]
+    },
+    {
+      "code": "07176b",
+      "name": "宏大废墟",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07176b: actual reveal sets printed flood and key; split local required keys and local clue cost make free claim available"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07176b: remote or eliminated key holder and insufficient local clues prevent claim without spending"
+        }
+      ]
+    },
+    {
+      "code": "07177a",
+      "name": "聚合神庙",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07177a: actual reveal sets printed flood and key; split local required keys and local clue cost make free claim available"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07177a: remote or eliminated key holder and insufficient local clues prevent claim without spending"
+        }
+      ]
+    },
+    {
+      "code": "07177b",
+      "name": "聚合神庙",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07177b: actual reveal sets printed flood and key; split local required keys and local clue cost make free claim available"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07177b: remote or eliminated key holder and insufficient local clues prevent claim without spending"
+        }
+      ]
+    },
+    {
+      "code": "07178",
+      "name": "渔船",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-fishing-vessel.test.mjs",
+          "test": "07178 渔船：只在载具所在地点提供「移动到连接的[[海洋]]地点」，移动时带走乘客与卡面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-fishing-vessel.test.mjs",
+          "test": "07178 渔船：移动到内陆（非[[海洋]]）地点不是合法目标"
+        }
+      ]
+    },
+    {
+      "code": "07179",
+      "name": "浪蚀偶像",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07179: actual Deep One spawn at controller location grants an action, another trait does not"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07179: actual floodChanged grants an immediate action, exhausts only the Idol and preserves normal action pool"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07179: an uncontrolled Idol beside a key holder cannot be exhausted for an investigator action"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07179: remote water change and capped no-op water change do not grant actions"
+        }
+      ]
+    },
+    {
+      "code": "07180",
+      "name": "觉醒斗篷",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07180: free move enumerates only connected flooded enterable targets and rejects forged barrier target atomically"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07180: unflooded or boat-protected origin and uncontrolled Mantle offer no movement"
+        }
+      ]
+    },
+    {
+      "code": "07181",
+      "name": "伊哈·恩斯雷的头冠",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07181: Fishing Vessel suppresses local flood bonus, but remote investigation still benefits from target flood after JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07181: actual 05029 Money Talks investigation still gets one total skill value after its half-resource base"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07181: combined-skill real investigation adds one total skill value, not one per underlying skill"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07181: real evade receives exactly one skill value for flooded target; dry target has no bonus"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07181: real fight receives exactly one skill value for flooded target; dry target has no bonus"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07181: real investigate receives exactly one skill value for flooded target; dry target has no bonus"
+        }
+      ]
+    },
+    {
+      "code": "07182",
+      "name": "掠食的深潜者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07182 掠食的深潜者：与你交战后你的 1 个线索移到它身上，击败时取回"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07182 掠食的深潜者：交战后你的钥匙移到它身上，击败时取回"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07182 掠食的深潜者：印刷关键词（猎手）与数值来自关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "07183",
+      "name": "追猎的深潜者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-vehicle-restrictions.test.mjs",
+          "test": "07183 追猎的深潜者：交战后不在载具上失去 2 资源，在载具上则被迫离开"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-vehicle-restrictions.test.mjs",
+          "test": "07183 追猎的深潜者：交战期间不能进入载具，也不能获得资源；解除交战即恢复"
+        }
+      ]
+    },
+    {
+      "code": "07184",
+      "name": "水中身影",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07184: Fishing Vessel protection changes test difficulty but preserves full physical flood after JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07184: a successful real revelation test applies no harm"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07184: real draw uses flood 0, then applies exactly two horror on failure"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07184: real draw uses flood 1, then applies exactly two horror on failure"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07184: real draw uses flood 2, then applies exactly two horror on failure"
+        }
+      ]
+    },
+    {
+      "code": "07185",
+      "name": "伏兵出水",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "PARTIAL：「在你攻击淹没地点的敌人时，揭示混乱标记时再揭示一个」的读点 src/engine/tests.js:44-56（floodedAttackExtraTokenRule）只检查 enemyId + 目标敌人所在地点是否淹没 + 密谋牌库旁是否有 07185，没有校验 actionKind/攻击，因此**躲避**淹没地点的敌人时也会额外揭示混乱标记。实测同一敌人的 attack/evade 两种 options 都返回 true（卡面仅攻击）；tests/tic-middle-remaining.test.mjs:243 只测了攻击分支。本项目 docs/campaign/theInnsmouthConspiracy/acceptance.md:159 已把「07185 仅攻击触发」列为待长期回归的非 HIGH 问题。"
+    },
+    {
+      "code": "07186",
+      "name": "深海恐惧",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07186: Fishing Vessel protection changes test difficulty but preserves full physical flood after JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07186: a successful real revelation test applies no harm"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07186: real draw uses flood 0, then applies exactly two damage on failure"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07186: real draw uses flood 1, then applies exactly two damage on failure"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07186: real draw uses flood 2, then applies exactly two damage on failure"
+        }
+      ]
+    },
+    {
+      "code": "07187",
+      "name": "偷偷上船",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-fishing-vessel.test.mjs",
+          "test": "07187 偷偷上船：没有调查员在载具上时获得涌动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-fishing-vessel.test.mjs",
+          "test": "07187 偷偷上船：选择承受的调查员留在船上并受到 1 点伤害与 1 点恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-fishing-vessel.test.mjs",
+          "test": "07187 偷偷上船：选择离开载具的调查员本轮不能再进入"
+        }
+      ]
+    },
+    {
+      "code": "07188",
+      "name": "拖入水底",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-vehicle-restrictions.test.mjs",
+          "test": "07188 拖入水底：战斗(3)或敏捷(3)检定成功弃掉本卡后可以再进入载具"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-vehicle-restrictions.test.mjs",
+          "test": "07188 拖入水底：进入威胁区、被迫离开载具，且此后不能进入载具"
+        }
+      ]
+    }
+  ]
+}

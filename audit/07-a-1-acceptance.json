@@ -1,0 +1,1069 @@
+{
+  "schemaVersion": 1,
+  "unit": "07-a-1",
+  "profile": {
+    "id": "tic-deluxe-a-2026-11",
+    "scope": "印斯茅斯暗潮 07 段 tic 豪华包前半（07001–07054）54 条目录记录。54 条全部通过五维验收。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 54,
+    "verified": 54,
+    "unverified": 0,
+    "unimplemented": 0,
+    "testsPassed": 739
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-07-a-shard1.test.mjs",
+      "sha256": "a49e7c03d2c2ff63ca152db2667896a6d080bac51fbb1a6db9423710eab796f6"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-investigators.test.mjs",
+      "sha256": "2e9b2e0d36067debf3f12bc2288c5758475f24d8ebb1cba46a883880580ce8a5"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+      "sha256": "b4ecaedb1a2445d494b757be42e5133ef92a1091249e32565e2ad8b135756fd1"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+      "sha256": "3580319103f889db41d6871ecd68189d802ef3fe6d3339ee9997b46d27959044"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+      "sha256": "c2c69dc2fb3fe002419897d86711bcdcb9434dd22519dec707d50a2171afc3aa"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-primitives.test.mjs",
+      "sha256": "8453001755501ca236be74abc05e428b5270c32b28ac29b4d74e91b07777bbbb"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-rules.test.mjs",
+      "sha256": "24972f73c0ee5c468034308b7bc51c7742bccc191406960dfc268169940a574a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+      "sha256": "7e776eb6970b754d96fc77e663932e5f3b2cd814e6f05be88473d5ff5f613c4e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenario-reference.test.mjs",
+      "sha256": "b637b38abc3c10647ca4451ea1a148d315d2badd80e2ed8233d5a34c5dfe6f66"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+      "sha256": "4d3cffa3d1848bf3b2accc6c0c9f2cb3f3622750975bdc5f0e46083ee8e999b1"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+      "sha256": "e9889a14cb1aff56ad4d125348b7ce6e7ea72758f6be3b37689c4a2bd6d809e9"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+      "sha256": "be5a9dd3de708930e9cb9fa6daa07540912a64482f9b56ca9827935d581cbca0"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-enemy-outcomes.test.mjs",
+      "sha256": "e052c99b022bd077b89799b47effb6c29a9ccf2bc4ce532f1a9b6dd51dfb9463"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenario-thePitOfDespair.test.mjs",
+      "sha256": "9afbcf1ea4c1b728595e0863e87fca3ca6e9af29fb959b522e8516217d376445"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-primitives.test.mjs",
+      "sha256": "2234fa4bbb8925066932c1ba1211d4349b1c7f19934ef2c6f023ce0131e92770"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-interactions.test.mjs",
+      "sha256": "64e5dde4e149d1da6c052fd7f8ddedca48037b9a7fb987baae599a5c089f5224"
+    }
+  ],
+  "entries": [
+    {
+      "code": "07001",
+      "name": "玛丽修女",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard1.test.mjs",
+          "test": "07-a-1 范围：07001–07054 目录记录恰好 54 张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-investigators.test.mjs",
+          "test": "P5 07001 自动构筑、专属依赖及合法／非法职业等级"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard1.test.mjs",
+          "test": "TIC 07001 玛丽修女 真实开局两祝福、轮末上限与旧印成功／失败"
+        }
+      ]
+    },
+    {
+      "code": "07002",
+      "name": "阿曼达·夏普",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-investigators.test.mjs",
+          "test": "P5 07002 自动构筑、专属依赖及合法／非法职业等级"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard1.test.mjs",
+          "test": "TIC 07002 阿曼达·夏普 真实开局换牌与调查阶段下方牌轮换"
+        }
+      ]
+    },
+    {
+      "code": "07003",
+      "name": "特里希·斯卡波罗",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-investigators.test.mjs",
+          "test": "P5 07003 自动构筑、专属依赖及合法／非法职业等级"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard1.test.mjs",
+          "test": "TIC 07003 特里希·斯卡波罗 发现线索后额外发现或自动躲避，每轮一次"
+        }
+      ]
+    },
+    {
+      "code": "07004",
+      "name": "戴克斯特·德雷克",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-investigators.test.mjs",
+          "test": "P5 07004 自动构筑、专属依赖及合法／非法职业等级"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard1.test.mjs",
+          "test": "TIC 07004 戴克斯特·德雷克 主动能力接入合法动作：弃旧支援折扣 1 打出不同名支援"
+        }
+      ]
+    },
+    {
+      "code": "07005",
+      "name": "塞拉斯·马什",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-investigators.test.mjs",
+          "test": "P5 07005 自动构筑、专属依赖及合法／非法职业等级"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard1.test.mjs",
+          "test": "TIC 07005 塞拉斯·马什 旧印从弃牌堆投入技能并在检定后回手"
+        }
+      ]
+    },
+    {
+      "code": "07006",
+      "name": "守护天使",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard1.test.mjs",
+          "test": "TIC 07006 守护天使 承接连接地点队友伤害并按点数加入祝福"
+        }
+      ]
+    },
+    {
+      "code": "07007",
+      "name": "信仰危机",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard1.test.mjs",
+          "test": "TIC 07007 信仰危机 每个祝福替换为诅咒或承受恐惧（精确替换）"
+        }
+      ]
+    },
+    {
+      "code": "07008",
+      "name": "晦涩研究",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard1.test.mjs",
+          "test": "TIC 07008 晦涩研究 投入前收回下方牌并改放晦涩研究"
+        }
+      ]
+    },
+    {
+      "code": "07009",
+      "name": "深海低语",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard1.test.mjs",
+          "test": "TIC 07009 深海低语 无显现弱点：抽取后留在手中，投入时图标改为减技能值"
+        }
+      ]
+    },
+    {
+      "code": "07010",
+      "name": "潜于阴影",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard1.test.mjs",
+          "test": "TIC 07010 潜于阴影 回合开始解除全部交战并阻止本轮再交战与敌人伤害"
+        }
+      ]
+    },
+    {
+      "code": "07011",
+      "name": "影子特工",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard1.test.mjs",
+          "test": "TIC 07011 影子特工 影子特工只追归属者；躲避成功后被弃掉"
+        }
+      ]
+    },
+    {
+      "code": "07012",
+      "name": "精湛手法",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard1.test.mjs",
+          "test": "TIC 07012 精湛手法 新支援入场后本轮触发能力技能 +2"
+        }
+      ]
+    },
+    {
+      "code": "07013",
+      "name": "密教残页",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard1.test.mjs",
+          "test": "TIC 07013 密教残页 神秘残片：在手 -2 意志、在场 -1 意志且不能行动打出"
+        }
+      ]
+    },
+    {
+      "code": "07014",
+      "name": "骇变鱼叉",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard1.test.mjs",
+          "test": "TIC 07014 骇变鱼叉 海变鱼叉：战斗 +1、投入技能伤害 +1、检定结束收回"
+        }
+      ]
+    },
+    {
+      "code": "07015",
+      "name": "塞拉斯的渔网",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard1.test.mjs",
+          "test": "TIC 07015 塞拉斯的渔网 塞拉斯的渔网：敏捷 +1、投入技能再躲避一个交战敌人"
+        }
+      ]
+    },
+    {
+      "code": "07016",
+      "name": "海妖之唤",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard1.test.mjs",
+          "test": "TIC 07016 海妖之唤 塞壬呼唤：进威胁区；投入需付 1 资源；两次行动移除"
+        }
+      ]
+    },
+    {
+      "code": "07017",
+      "name": "《圣经·诗篇》",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07017 Book of Psalms heals only one local investigator and clamps bless supply"
+        }
+      ]
+    },
+    {
+      "code": "07018",
+      "name": "蒙福之刃",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07018 Blessed Blade ready attack and optional before-reveal exhaust"
+        }
+      ]
+    },
+    {
+      "code": "07019",
+      "name": "成圣仪式",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07019 Rite of Sanctification seals chosen amount and pays last token for discount"
+        }
+      ]
+    },
+    {
+      "code": "07020",
+      "name": "命运之手",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07020 Hand of Fate cancels actual enemy attack and adds printed combined harm"
+        }
+      ]
+    },
+    {
+      "code": "07021",
+      "name": "加密编码盘",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07021 Cryptographic Cipher free and action modes use distinct shroud modifiers"
+        }
+      ]
+    },
+    {
+      "code": "07022",
+      "name": "神秘魔法书",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07022 Cryptic Grimoire translates with ten bag curses and replacement respects supply cap"
+        }
+      ]
+    },
+    {
+      "code": "07023",
+      "name": "深沉知识",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07023 Deep Knowledge distributes exactly three draws and adds two curses as cost"
+        }
+      ]
+    },
+    {
+      "code": "07024",
+      "name": "行动计划",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07024 Plan of Action has first/second/third completed-action boundaries"
+        }
+      ]
+    },
+    {
+      "code": "07025",
+      "name": ".25自动手枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07025 exhausted target bonus, ammo and empty-ammo rejection"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07025 exhausted-target bonus rechecks target readiness during the actual test"
+        }
+      ]
+    },
+    {
+      "code": "07026",
+      "name": "黑暗仪式",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07026 up-to-five seal, upkeep choice and leave-play release"
+        }
+      ]
+    },
+    {
+      "code": "07027",
+      "name": "眼花缭乱",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07027 cancels opportunity attack only and spends one charge"
+        }
+      ]
+    },
+    {
+      "code": "07028",
+      "name": "浮士德的交易",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07028 extra cost preflight and resource distribution"
+        }
+      ]
+    },
+    {
+      "code": "07029",
+      "name": "剑杖",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07029 enters-play reaction omits action and exhaust costs; action may use willpower"
+        }
+      ]
+    },
+    {
+      "code": "07030",
+      "name": "命运之潮",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07030 bag replacement leaves sealed tokens alone and schedules reverse replacement"
+        }
+      ]
+    },
+    {
+      "code": "07031",
+      "name": "光辉结界",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07031 five-token reveal cancels only with bless or elder sign and returns all physical tokens"
+        }
+      ]
+    },
+    {
+      "code": "07032",
+      "name": "允诺力量",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07032 Promise adds a curse after commit or takes two horror when pool full"
+        }
+      ]
+    },
+    {
+      "code": "07033",
+      "name": "宗教信物",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07033 Token of Faith any completed test includes cancelled curses, capped pool and exhaustion"
+        }
+      ]
+    },
+    {
+      "code": "07034",
+      "name": "坚守信念",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07034 Keep Faith fast play uses finite bless pool and no action"
+        }
+      ]
+    },
+    {
+      "code": "07035",
+      "name": "既定命运",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07035 Predestined any test max one; failure add bless or remove only bag curses"
+        }
+      ]
+    },
+    {
+      "code": "07036",
+      "name": "挚爱",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07036 Beloved real hand commitment replaces bless, removes physical skill, stops reveal and retains token"
+        }
+      ]
+    },
+    {
+      "code": "07037",
+      "name": "人定胜天",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07037 Tempt Fate then branch needs full three curses; full bless still draws"
+        }
+      ]
+    },
+    {
+      "code": "07038",
+      "name": "受诅拥趸",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07038 Accursed Follower actual weakness spawns farthest aloof, curses at actual enemy-phase end, stops after defeat"
+        }
+      ]
+    },
+    {
+      "code": "07039",
+      "name": "惊骇诅咒",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07039 Dread Curse actual weakness draw adds up to five and is discarded"
+        }
+      ]
+    },
+    {
+      "code": "07040",
+      "name": "清算之日",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07040 Day of Reckoning actual draw attaches one weakness and agenda advancement releases sealed eldersign"
+        }
+      ]
+    },
+    {
+      "code": "07041",
+      "name": "绝望深坑",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 easy canceled cultist has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 easy canceled elderthing has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 easy canceled skull has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 easy canceled tablet has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 easy cultist failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 easy cultist success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 easy elderthing failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 easy elderthing success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 easy exact flood0 skull and cultist condition"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 easy exact flood1 skull and cultist condition"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 easy exact flood2 skull and cultist condition"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 easy no controlled key and normal setAside Amalgam do not meet riders"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 easy skull failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 easy skull success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 easy tablet failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 easy tablet success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 expert canceled cultist has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 expert canceled elderthing has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 expert canceled skull has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 expert canceled tablet has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 expert cultist failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 expert cultist success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 expert elderthing failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 expert elderthing success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 expert exact flood0 skull and cultist condition"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 expert exact flood1 skull and cultist condition"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 expert exact flood2 skull and cultist condition"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 expert no controlled key and normal setAside Amalgam do not meet riders"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 expert skull failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 expert skull success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 expert tablet failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 expert tablet success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 hard canceled cultist has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 hard canceled elderthing has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 hard canceled skull has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 hard canceled tablet has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 hard cultist failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 hard cultist success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 hard elderthing failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 hard elderthing success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 hard exact flood0 skull and cultist condition"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 hard exact flood1 skull and cultist condition"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 hard exact flood2 skull and cultist condition"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 hard no controlled key and normal setAside Amalgam do not meet riders"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 hard skull failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 hard skull success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 hard tablet failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 hard tablet success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 standard canceled cultist has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 standard canceled elderthing has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 standard canceled skull has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 standard canceled tablet has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 standard cultist failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 standard cultist success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 standard elderthing failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 standard elderthing success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 standard exact flood0 skull and cultist condition"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 standard exact flood1 skull and cultist condition"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 standard exact flood2 skull and cultist condition"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 standard no controlled key and normal setAside Amalgam do not meet riders"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 standard skull failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 standard skull success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 standard tablet failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07041 standard tablet success actual printed value/effect and JSON"
+        }
+      ]
+    },
+    {
+      "code": "07042",
+      "name": "惊醒",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07042 raises revealed locations and future actual reveal exactly once across save"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-thePitOfDespair.test.mjs",
+          "test": "P7 绝望深坑 议程推进：07042→07043 水位升级与已揭示地点结算"
+        }
+      ]
+    },
+    {
+      "code": "07043",
+      "name": "水位涌起",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07043 replaces previous increase reminder and makes current/future revealed locations fully flooded"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-thePitOfDespair.test.mjs",
+          "test": "P7 绝望深坑 议程推进：07042→07043 水位升级与已揭示地点结算"
+        }
+      ]
+    },
+    {
+      "code": "07044",
+      "name": "献于深海",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07044 effect defeat grants one physical trauma only to survivors without exceeding health"
+        }
+      ]
+    },
+    {
+      "code": "07045",
+      "name": "深坑",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-thePitOfDespair.test.mjs",
+          "test": "P7 绝望深坑 幕 07045 推进与背面：生成阿玛尔加姆/洗入 07054/07055/初始化潮汐隧道牌堆"
+        }
+      ]
+    },
+    {
+      "code": "07046",
+      "name": "逃离此处",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07046 inactive act cannot expand and empty tunnel deck never duplicates physical locations"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07046 objective uses actual checkAct: one surviving investigator remaining prevents advance"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07046 real reveal expands down/left/right only into empty cells and preserves physical tunnel count"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-thePitOfDespair.test.mjs",
+          "test": "P7 绝望深坑 地点揭示与连接扩张：07046 背面只扩空位且 8 条物理隧道总数守恒"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-thePitOfDespair.test.mjs",
+          "test": "P7 绝望深坑 幕 07046 目标与背面：全部撤退/败北才推进，推进结算 resolution1 记录"
+        }
+      ]
+    },
+    {
+      "code": "07047",
+      "name": "陌生洞室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07047 random hidden key preserves physical identity and deterministic save"
+        }
+      ]
+    },
+    {
+      "code": "07048",
+      "name": "废弃骨坑",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07048 actual flashback activation checks actor/group keys and shared limit across JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07048 shroud counts all local investigator keys and excludes ground and remote keys"
+        }
+      ]
+    },
+    {
+      "code": "07049",
+      "name": "群鱼坟场",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07049 actual end-turn horror checks the ending investigator own keys and actual location"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07049 actual flashback activation checks actor/group keys and shared limit across JSON"
+        }
+      ]
+    },
+    {
+      "code": "07050",
+      "name": "达贡祭坛",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07050 local shared key requirement and group clue cost grant only the acting investigator green"
+        }
+      ]
+    },
+    {
+      "code": "07051",
+      "name": "偶像洞室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07051 actual flashback activation checks actor/group keys and shared limit across JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07051 real reveal places only the set-aside blue key and cannot steal or duplicate a claimed key"
+        }
+      ]
+    },
+    {
+      "code": "07052",
+      "name": "封印出口",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07052 reveal fully floods; another local green holder permits resign while keys and clues are left correctly"
+        }
+      ]
+    },
+    {
+      "code": "07053",
+      "name": "混生畸物",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-thePitOfDespair.test.mjs",
+          "test": "P7 绝望深坑 遭遇敌人/诡计 07053/07054/07055：深渊出入与真实涌动显现"
+        }
+      ]
+    },
+    {
+      "code": "07054",
+      "name": "有眼无珠",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard1.test.mjs",
+          "test": "07-a-1 范围：07001–07054 目录记录恰好 54 张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-enemy-outcomes.test.mjs",
+          "test": "07054 failed actual agility draw restores existing depths enemy then performs one real effect attack"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-thePitOfDespair.test.mjs",
+          "test": "P7 绝望深坑 幕 07045 推进与背面：生成阿玛尔加姆/洗入 07054/07055/初始化潮汐隧道牌堆"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-thePitOfDespair.test.mjs",
+          "test": "P7 绝望深坑 遭遇敌人/诡计 07053/07054/07055：深渊出入与真实涌动显现"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,697 @@
+{
+  "schemaVersion": 1,
+  "unit": "09-a-1",
+  "profile": {
+    "id": "tsk-player-a-2026-11",
+    "scope": "绯红密钥 09 段 tskp 调查员与玩家卡（09001–09043）43 条目录记录。42 条通过五维验收；1 条近似/缺口暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 43,
+    "verified": 42,
+    "unverified": 1,
+    "unimplemented": 0,
+    "testsPassed": 238
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-09-a-shard1.test.mjs",
+      "sha256": "e44e27991772f68d4dab893f71bf14568a432d3efebf456d2ba2937646563117"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+      "sha256": "94357ea35e9eab4dcf56759fa062ce1d6fae8f25cbf4b593f488b82a0e695992"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-player-m2-2.test.mjs",
+      "sha256": "a19a9030777563e27281aaff3fdd686813ca930c822b76cfe9b2071bc8cac269"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-player-m2-3.test.mjs",
+      "sha256": "b7f26a9b61ab4b2f3c34207cf0ebcb792b9b841014f4e066401cc041be7de6c2"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+      "sha256": "4c3561482920f880890afe80e56b24b125a7c262b97b6ff3324b392309c7c87a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-investigator-09001.test.mjs",
+      "sha256": "95e9015ed797e734b9afe51dc9e37777ca3386e8eaf909dee195c3a829c9710a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-investigator-09004.test.mjs",
+      "sha256": "ec06209b48476b05a1d19bbe6a0f05071c248a56f8edc143950de691e34f95a9"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-investigator-09008.test.mjs",
+      "sha256": "f780bd0881578df240a89cee08fad943b10a6559e1ee50445c36f46997cd1509"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-investigator-09011.test.mjs",
+      "sha256": "dc1fd01179e7e18fa7067618ec5435be791aa43dfd2a0154aaafb81f2339cccc"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-investigator-09015.test.mjs",
+      "sha256": "dd0bcaf26c6ee9daa0fb495772b0fdddd05e030eb81646783acf5ed7c59ad778"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-investigator-09018.test.mjs",
+      "sha256": "1056a916c9cec955e971d36cfddb15950a78217967c6db7a30c625468e7bd310"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-investigator-signatures.test.mjs",
+      "sha256": "76f966450300765d643bd72eac107a289a36ecb86f6b869a37fc9b2667518b45"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-rules.test.mjs",
+      "sha256": "5ae05cfcab8019f5322e8207b5145c1cf024104eeaf00a84312c17f902879ad8"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-customizable.test.mjs",
+      "sha256": "4311237d47f104f0b62635d521dcccf34a0804a9109d07f7f3aa3ff05800743b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-keys-hollow.test.mjs",
+      "sha256": "925b275cb5d75467558ff4fa6f11f5bd01c4500aa5a1b8d1562e9bcb267f2f09"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-interactions.test.mjs",
+      "sha256": "275c143401aaca1618ba01abe71f3838732d13b73ab5932098e13ff447146233"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-p0-regressions.test.mjs",
+      "sha256": "8d71ccce9008da1a2332f9e4d4381d6c26e096a8c5511eec83bde0e0d40a9e52"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-p1-regressions.test.mjs",
+      "sha256": "892ccba343a9c8a9186957c1a49018ba3fb3375c3298bf46d8bc91211614f8a4"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-p8-customization.test.mjs",
+      "sha256": "a50c5b376fcaaa058a34e445264d9fb5788980d653787815d586aa2ec720ef34"
+    }
+  ],
+  "entries": [
+    {
+      "code": "09001",
+      "name": "卡森·辛克莱",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard1.test.mjs",
+          "test": "09-a-1 范围：09001–09043 tskp 卡恰好 43 张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-investigator-09001.test.mjs",
+          "test": "P5 09001 专属弱点与投入到他人检定的记账口径"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-investigator-09001.test.mjs",
+          "test": "P5 09001 条目/旧印/构筑：注册、旧印 +0 抽牌、专属依赖与职阶选择"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-investigator-09001.test.mjs",
+          "test": "P5 09001 额外受限行动只用于授权能力，并调用立即行动原语"
+        }
+      ]
+    },
+    {
+      "code": "09002",
+      "name": "“如您所愿”",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「只能投入到其他调查员执行的检定」的 commit 描述子只写了空 `skill: {}`，缺少 `otherTestOnly`（对照 06157 的 `skill: { anySkill: true, otherTestOnly: true, ... }`）。引擎 `commitProfile = descriptor.skill`（`lifecycle.js`），`commit-rules.js:canCommitToTest` 依赖 `profile.otherTestOnly` 排除本人检定。真实引擎探针（`tests/acceptance-09-a-shard1.test.mjs`）：本人检定（performer=seat0）的 commit 窗口错误列出「投入：“如您所愿”」（违反卡面）；他人检定（performer=seat1）走 seat0 协助窗口可正确投入 09002（正确路径可达、09003 记账可触发）。即：卡面限制「只能投他人检定」未接线，出现非法自投入口。修法：commit 描述子改为 `skill: { otherTestOnly: true }`（wild 图标已有，anySkill 可省）后重跑本分片与 `tests/tsk-investigator-09001.test.mjs`。"
+    },
+    {
+      "code": "09003",
+      "name": "无私成疾",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard1.test.mjs",
+          "test": "TSK 09003 自私的错：回合结束未投入他人检定时受 1 恐惧并洗回牌库"
+        }
+      ]
+    },
+    {
+      "code": "09004",
+      "name": "文森特·李",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-investigator-09004.test.mjs",
+          "test": "P5 09004 条目/旧印/构筑：治疗旧印、30+签名、场外《术后恢复》"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-investigator-09004.test.mjs",
+          "test": "P5 09004 治疗后把场外《术后恢复》加入手牌（damageHealed 窗口）"
+        }
+      ]
+    },
+    {
+      "code": "09005",
+      "name": "骨锯",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard1.test.mjs",
+          "test": "TSK 09005 骨锯：攻击 +2 战斗/+1 伤害；治疗行动失败造成 1 物理创伤"
+        }
+      ]
+    },
+    {
+      "code": "09006",
+      "name": "术后恢复",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard1.test.mjs",
+          "test": "TSK 09006 术后恢复：投入后放到一边（场外）以替代弃牌堆"
+        }
+      ]
+    },
+    {
+      "code": "09007",
+      "name": "受伤路人",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-p1-regressions.test.mjs",
+          "test": "P1-R2 09007 受伤的旁观者：非直接伤害第 1 点强制分配给它"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard1.test.mjs",
+          "test": "TSK 09007 受伤的旁观者：入场 3 伤害；被击败承受 1 精神创伤；未致命不能离场"
+        }
+      ]
+    },
+    {
+      "code": "09008",
+      "name": "基玛尼·琼斯",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-investigator-09008.test.mjs",
+          "test": "P5 09008 快速交战已横置敌人"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-investigator-09008.test.mjs",
+          "test": "P5 09008 条目/旧印/构筑：额外 5 经验、旧印自动成功、专属依赖"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-investigator-09008.test.mjs",
+          "test": "P5 09008 躲避已横置非精英敌人时加入智识；成功超额弃敌接线"
+        }
+      ]
+    },
+    {
+      "code": "09009",
+      "name": "抓钩",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard1.test.mjs",
+          "test": "TSK 09009 抓钩：[行动][行动] 横置做至多 3 个基础行动"
+        }
+      ]
+    },
+    {
+      "code": "09010",
+      "name": "特工弗莱彻",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard1.test.mjs",
+          "test": "TSK 09010 弗莱彻探员：警觉/猎手/猎物；基玛尼躲避它时智识降为 0"
+        }
+      ]
+    },
+    {
+      "code": "09011",
+      "name": "阿米娜·齐达内",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-investigator-09011.test.mjs",
+          "test": "P5 09011 打支援减费 3 且带 1 毁灭入场（接线与词典）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-investigator-09011.test.mjs",
+          "test": "P5 09011 条目/旧印/构筑：减费反应、旧印 +2、专属依赖"
+        }
+      ]
+    },
+    {
+      "code": "09012",
+      "name": "受难真言",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard1.test.mjs",
+          "test": "TSK 09012 祸言之语：在支援上放 1 毁灭并免费结算其行动；可洗回福言之语"
+        }
+      ]
+    },
+    {
+      "code": "09013",
+      "name": "蒙福真言",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard1.test.mjs",
+          "test": "TSK 09013 福言之语：对带毁灭支援的检定加意志；可洗回祸言之语"
+        }
+      ]
+    },
+    {
+      "code": "09014",
+      "name": "骤然无声",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard1.test.mjs",
+          "test": "TSK 09014 震耳欲聋的寂静：把支援上的 1 毁灭移到当前密谋；否则洗回牌库"
+        }
+      ]
+    },
+    {
+      "code": "09015",
+      "name": "达雷尔·西蒙斯",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-p1-regressions.test.mjs",
+          "test": "P1-R7 09015 达雷尔：他人同地点检定的窗口参与声明"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-investigator-09015.test.mjs",
+          "test": "P5 09015 fast 花证据降低难度 2（每次检定限一次）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-investigator-09015.test.mjs",
+          "test": "P5 09015 条目/旧印/构筑：开局柯达在场、旧印放证据、专属依赖"
+        }
+      ]
+    },
+    {
+      "code": "09016",
+      "name": "达雷尔的柯达相机",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard1.test.mjs",
+          "test": "TSK 09016 达瑞尔的柯达：敌人/诡计入场后放证据标记，发现线索后收集证据"
+        }
+      ]
+    },
+    {
+      "code": "09017",
+      "name": "胶卷损坏",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard1.test.mjs",
+          "test": "TSK 09017 毁掉的底片：移除 4 个证据，不足每点受 1 点恐惧"
+        }
+      ]
+    },
+    {
+      "code": "09018",
+      "name": "查理·凯恩",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-investigator-09018.test.mjs",
+          "test": "P5 09018 双职阶选择与构筑合法性"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-investigator-09018.test.mjs",
+          "test": "P5 09018 条目/旧印/构筑：3 个额外盟友槽、双副职阶、专属依赖"
+        }
+      ]
+    },
+    {
+      "code": "09019",
+      "name": "邦妮·沃尔什",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard1.test.mjs",
+          "test": "TSK 09019 邦妮·沃尔什：横置后重整另一个已横置盟友（每轮一次）"
+        }
+      ]
+    },
+    {
+      "code": "09020",
+      "name": "领袖重担",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard1.test.mjs",
+          "test": "TSK 09020 领导的重担：每名盟友横置或受 1 直接伤害与恐惧；无盟友洗回牌库"
+        }
+      ]
+    },
+    {
+      "code": "09021",
+      "name": "猎人护甲",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-p8-customization.test.mjs",
+          "test": "P2-3 TSK 定制卡：费用修正与效果闸门在勾满前不生效（09021/09022/09023/09061/09099/09079/09119）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "P6 09021 猎人护甲 定制面板 7 项契约；轻量刻印 -1 费用；伤害优先分配给护甲"
+        }
+      ]
+    },
+    {
+      "code": "09022",
+      "name": "符文斧",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-p8-customization.test.mjs",
+          "test": "P2-3 TSK 定制卡：费用修正与效果闸门在勾满前不生效（09021/09022/09023/09061/09099/09079/09119）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "P6 09022 符文斧 攻击 +1[combat]；花 1 充能灌注精准再 +2；每轮开始补满 1 充能"
+        }
+      ]
+    },
+    {
+      "code": "09023",
+      "name": "定制改良",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-p8-customization.test.mjs",
+          "test": "P2-3 TSK 定制卡：费用修正与效果闸门在勾满前不生效（09021/09022/09023/09061/09099/09079/09119）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "P6 09023 定制改良 附属到[[枪械]]支援；攻击时揭示标记可取消并重抽"
+        }
+      ]
+    },
+    {
+      "code": "09024",
+      "name": "黑曜石手串",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "P6 09024 黑曜石手串 同地点其他调查员的伤害可以分配给本卡"
+        }
+      ]
+    },
+    {
+      "code": "09025",
+      "name": "绊脚索",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "P6 09025 绊脚索 用[combat]躲避；成功且非精英时附属，敌人躲避值 -1 且横置"
+        }
+      ]
+    },
+    {
+      "code": "09026",
+      "name": "强势破门",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "P6 09026 强势破门 检定[combat](1)：成功附属到地点，超难度每点放 1 迹象并使隐藏值 -1"
+        }
+      ]
+    },
+    {
+      "code": "09027",
+      "name": "深度伤痛",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "P6 09027 深度伤痛 附属到非精英敌人；轮末对附属敌人造成 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "09028",
+      "name": "励志演讲",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "P6 09028 励志演讲 谈判：同地点一位调查员以 -3 费用从手牌打出[[盟友]]支援"
+        }
+      ]
+    },
+    {
+      "code": "09029",
+      "name": "还剩一枪",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "P6 09029 还剩一枪 给打空弹药的[[枪械]]补 1 发；本轮攻击 +3 技能值"
+        }
+      ]
+    },
+    {
+      "code": "09030",
+      "name": "战斗课程",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "P6 09030 战斗课程 只能投入攻击/躲避检定；任意地点调查员的检定可投入"
+        }
+      ]
+    },
+    {
+      "code": "09031",
+      "name": "援助之手",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "P6 09031 援助之手 可投入任意检定且每次限 1 张；其他投入卡的图标翻倍"
+        }
+      ]
+    },
+    {
+      "code": "09032",
+      "name": "鼓舞决心",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "P6 09032 鼓舞决心 技能检定开始时花 1 充能：把一张非弱点手牌投入检定（图标视为[wild]）"
+        }
+      ]
+    },
+    {
+      "code": "09033",
+      "name": "外勤特工",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "P6 09033 外勤特工 +1[智力]；横置并受 1 点恐惧：发现所在地点 1 个线索"
+        }
+      ]
+    },
+    {
+      "code": "09034",
+      "name": "看门狗",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "P6 09034 看门狗 横置与同地点敌人交战并让它攻击你；受攻击伤害后反咬 1 点"
+        }
+      ]
+    },
+    {
+      "code": "09035",
+      "name": "手铐",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "P6 09035 手铐 用[combat]躲避[[类人]]敌人：成功清空其毁灭并附属，非精英不能重整"
+        }
+      ]
+    },
+    {
+      "code": "09036",
+      "name": "最坏的打算",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "P6 09036 最坏的打算 从牌库顶 9 张找出[[武器]]支援加入手牌并混洗牌库"
+        }
+      ]
+    },
+    {
+      "code": "09037",
+      "name": "殉道者护臂",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "P6 09037 殉道者护臂 显现结算时 +1 技能值；把同地点队友抽到的非险境遭遇改由你结算"
+        }
+      ]
+    },
+    {
+      "code": "09038",
+      "name": "吉里什·卡达贾",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "P6 09038 吉里什·卡达贾 承接同地点他人的伤害；横置令本次检定 +2，成功治愈自身 1 点"
+        }
+      ]
+    },
+    {
+      "code": "09039",
+      "name": "时刻警惕",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "P6 09039 时刻警惕 依次以 -1 费用打出最多 4 张手牌支援"
+        }
+      ]
+    },
+    {
+      "code": "09040",
+      "name": "炼金蒸馏",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "P6 09040 炼金蒸馏 花 1 补给：检定[智力](1) 成功让调查员抽 2 张；精炼入场 +2 补给"
+        }
+      ]
+    },
+    {
+      "code": "09041",
+      "name": "实证假设",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "09041 实证假设：前景惨淡只认最后一张手牌，独立变量只认从场上弃置"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "09041 实证假设：同地点队友可花证据，阶段结束或打出下一张卡时研究拨款消耗"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "09041 实证假设：试错识别支援承伤，备择假设可重整并切换到实地研究"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "P6 09041 实证假设 回合开始选判据；达成判据横置加 1 证据；花 1 证据抽 1 张"
+        }
+      ]
+    },
+    {
+      "code": "09042",
+      "name": "鸦翎羽毛笔",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "09042 神奇记录：从手牌、弃牌堆或牌库正常付费打出指定支援并附属"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "09042 鸦翎羽毛笔：附属宿主获得槽位豁免、检定加值及行动豁免，并能重整另一支援"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "P6 09042 鸦翎羽毛笔 附属到你控制的[[书籍]]支援；墨力汲取把 1 充能移给所附属支援"
+        }
+      ]
+    },
+    {
+      "code": "09043",
+      "name": "解剖工具",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard1.test.mjs",
+          "test": "09-a-1 范围：09001–09043 tskp 卡恰好 43 张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "P6 09043 解剖工具 同地点敌人被击败后放 1 证据；1/2 证据分别 +1[敏捷]/+1[战斗]"
+        }
+      ]
+    }
+  ]
+}

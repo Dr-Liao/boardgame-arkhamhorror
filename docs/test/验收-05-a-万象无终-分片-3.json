@@ -1,0 +1,110 @@
+{
+  "unit": "05-a-3",
+  "generatedAt": "2026-11-24",
+  "scope": {
+    "cards": 42,
+    "selector": "pack=tsn && effectStatus=unverified",
+    "product": "The Secret Name（《隐秘之名》，万象无终第 5 章）",
+    "codeRange": "05109-05150"
+  },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "05109", "05110", "05111", "05112", "05113", "05114", "05115", "05116", "05117", "05118", "05119",
+    "05120", "05123", "05124", "05125", "05126", "05127", "05128",
+    "05130", "05131", "05132", "05133", "05134", "05135", "05136", "05137", "05138", "05139", "05140",
+    "05141", "05142", "05143", "05144", "05145", "05146", "05147", "05148", "05149", "05150"
+  ],
+  "failedCodes": [
+    {
+      "code": "05121",
+      "name": "THE HERMIT · IX / 隐士·IX",
+      "dimension": "primitives",
+      "reason": "条目内 findInEncounter（遭遇弃牌堆→遭遇牌库顶逐张匹配后经 take* 原语取出）与 05122 的同名函数逐字重复，「查找遭遇牌库+弃牌堆」同句已第 3+ 次手写；引擎已登记 api.takeEncounterCard 可覆盖该句（05126/05143/05144 即使用它）。行为本身正确（新补证测试通过）。",
+      "evidence": [
+        "src/cards/encounter-entries/theCircleUndone/theSecretName/05121.js:621-637",
+        "src/cards/encounter-entries/theCircleUndone/theSecretName/05122.js:697-711",
+        "src/engine/scenario-runtime.js takeEncounterCard",
+        "tests/acceptance-05-a-shard3.test.mjs（验收 05121 … 用例）"
+      ]
+    },
+    {
+      "code": "05122",
+      "name": "The Familiar / 魔宠",
+      "dimension": "primitives",
+      "reason": "findInEncounter / findAnywhere 本地实现与 05121 重复（同句「search the encounter deck and discard pile for X」第 3+ 次手写），应复用 api.takeEncounterCard 或抽共享原语。行为本身正确（新补证测试通过）。",
+      "evidence": [
+        "src/cards/encounter-entries/theCircleUndone/theSecretName/05122.js:697-716",
+        "src/cards/encounter-entries/theCircleUndone/theSecretName/05121.js:621-637",
+        "tests/acceptance-05-a-shard3.test.mjs（验收 05122 … 用例）"
+      ]
+    },
+    {
+      "code": "05129",
+      "name": "Landlord's Quarters / 屋主的住处",
+      "dimension": "primitives",
+      "reason": "①条目 findInEncounter 与 05121/05122 同句重复手写（本卡为「先牌库后弃牌堆」变体，语义相同）；②本卡印刷的强制与闹鬼是同一句（查找鼠群生成在发霉的走道并混洗遭遇牌库），却分别实现在条目 locationRule.onReveal 与 behavior.hauntedScript('landlordsQuartersRats') 两处。行为本身正确（既有章节测试通过）。",
+      "evidence": [
+        "src/cards/encounter-entries/theCircleUndone/theSecretName/05129.js:986-1026",
+        "content/campaigns/theCircleUndone/scenarios/theSecretName/behavior.js:370-395",
+        "tests/tcu-secret-name.test.mjs（05129 屋主的住处…）"
+      ]
+    }
+  ],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "pass",
+    "primitives": "fail",
+    "interaction": "pass",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/tcu-player-m2-2.test.mjs",
+      "test": "TCU 05109/05110/05111/05112/05113/05114/05115/05116/05117/05118/05119 逐卡用例（标题含卡号）",
+      "codes": ["05109", "05110", "05111", "05112", "05113", "05114", "05115", "05116", "05117", "05118", "05119"],
+      "command": "node --test tests/tcu-player-m2-2.test.mjs",
+      "result": "51/51 pass"
+    },
+    {
+      "file": "tests/tcu-secret-name.test.mjs",
+      "test": "05120 章节清单/混乱标记；05129/05130/05133/05134/05136/05137/05138/05139/05140/05141/05142/05143/05144/05145/05146/05147/05148/05149 逐卡用例（标题含卡号）",
+      "codes": ["05120", "05129", "05130", "05133", "05134", "05136", "05137", "05138", "05139", "05140", "05141", "05142", "05143", "05144", "05145", "05146", "05147", "05148", "05149"],
+      "command": "node --test tests/tcu-secret-name.test.mjs",
+      "result": "47/47 pass"
+    },
+    {
+      "file": "tests/tcu-p0-regressions.test.mjs",
+      "test": "P0-1 05130 乔的房间：牌组含同名卡两张时场景行动不崩溃且正确检索",
+      "codes": ["05130"],
+      "command": "node --test tests/tcu-p0-regressions.test.mjs",
+      "result": "4/4 pass"
+    },
+    {
+      "file": "tests/acceptance-05-a-shard3.test.mjs",
+      "test": "验收 05121/05122/05123/05124/05125/05126/05127/05128/05131/05132/05135/05148/05149（真实条目/behavior 读点；05149 走真实引擎 createGameState→debug→advanceAgenda）",
+      "codes": ["05121", "05122", "05123", "05124", "05125", "05126", "05127", "05128", "05131", "05132", "05135", "05148", "05149"],
+      "command": "node --test tests/acceptance-05-a-shard3.test.mjs",
+      "result": "13/13 pass"
+    },
+    {
+      "file": "npm run cards:check",
+      "test": "一卡一文件 + 索引 + 条目合规",
+      "codes": ["*"],
+      "result": "exit 0（10 例）"
+    },
+    {
+      "file": "npm run cards:encounter-check",
+      "test": "非玩家卡索引 + 归属 + 条目合规",
+      "codes": ["*"],
+      "result": "exit 0（7 例）"
+    },
+    {
+      "file": "npm run audit:entries",
+      "test": "R1/R2/R3 条目合规审计（本分片 0 新增；42 卡均不在基线/watch）",
+      "codes": ["*"],
+      "result": "exit 0，directStateWrite 112 / singleCardField 21 / reprintDuplicate 0 / playConditionGap 0"
+    }
+  ],
+  "notes": "39 通过 / 3 未通过。3 张失败全部是原语复用债务（同句「查找遭遇牌库+弃牌堆」在 05121/05122/05129 重复手写，且 05129 强制/闹鬼两处实现），行为正确、证据齐全，修复只动复用不动行为。实现完整性：42 张逐子句有本地读点（actRule/agendaRule/locationRule/enemyScript/enemyStatRule/definition.haunted·advanceRule/chaos.js）；05130 P0-1 崩溃在本 HEAD 真实引擎回归通过。交互：未新增面板，复用既有场景行动/威胁区/自动强制窗口。合规：三条只读门禁 exit 0；未跑全量 test:fast（按 Lead 指示，仅跑相关测试；本次未改 src/content 无回归面）。非阻塞登记：05135/05140「进入检定-失败差值」可抽工厂（2 卡，原语候选）、地点每场一次记账（05130/32/34/37/38，全局 P3）、05137 死参数 allowNoClues。内容层 behavior 的直写不在 audit:entries 的 R1 口径内，作为全局观察项上交主报告。"
+}

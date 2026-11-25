@@ -1,0 +1,341 @@
+{
+  "unit": "12-a-4",
+  "generatedAt": "2026-11-25",
+  "scope": {
+    "cards": 40,
+    "selector": "12121-12160（pack=core_2026）&& effectStatus=unverified（战役侧：敌人/诡计/场景/幕/议程/地点）",
+    "baseline": "cards-data 复算 40 张全部 unverified；40 张均无 src/cards/entries/<code>.js、无 encounter 条目、无 content 引用、无反印别名；批次 3 只完成 12001–12104 玩家侧（src/cards/entries/12*.js + tests/starter-batch-3.test.mjs）"
+  },
+  "verdict": "fail",
+  "verifiedCodes": [],
+  "failedCodes": [
+    {
+      "code": "12121",
+      "dimension": "implementation",
+      "reason": "烈焰领唱（enemy，ashen_pilgrims）：战役侧批次 4 未迁移：遭遇组 ashen_pilgrims 无条目与注册——src/cards/encounter-entries/**/121xx.js 不存在、遭遇索引无该卡、content 无引用、全仓无该卡号读点。 实测 existsSync('src/cards/entries/12121.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12121 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12122",
+      "dimension": "implementation",
+      "reason": "地狱猎犬（enemy，ashen_pilgrims）：战役侧批次 4 未迁移：遭遇组 ashen_pilgrims 无条目与注册——src/cards/encounter-entries/**/121xx.js 不存在、遭遇索引无该卡、content 无引用、全仓无该卡号读点。 实测 existsSync('src/cards/entries/12122.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12122 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12123",
+      "dimension": "implementation",
+      "reason": "旁人（enemy，bystanders）：战役侧批次 4 未迁移：遭遇组 bystanders 无条目与注册——src/cards/encounter-entries/**/121xx.js 不存在、遭遇索引无该卡、content 无引用、全仓无该卡号读点。 实测 existsSync('src/cards/entries/12123.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12123 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12124",
+      "dimension": "implementation",
+      "reason": "宇宙恶魔（treachery，cosmic_evils）：战役侧批次 4 未迁移：遭遇组 cosmic_evils 的诡计无条目与注册——src/cards/encounter-entries/**/121xx.js 不存在、content 无引用、全仓无该卡号读点。 实测 existsSync('src/cards/entries/12124.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12124 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12125",
+      "dimension": "implementation",
+      "reason": "不可说的真相（treachery，eldritch_lore）：战役侧批次 4 未迁移：遭遇组 eldritch_lore 的诡计无条目与注册——src/cards/encounter-entries/**/121xx.js 不存在、content 无引用、全仓无该卡号读点。 实测 existsSync('src/cards/entries/12125.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12125 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12126",
+      "dimension": "implementation",
+      "reason": "禁忌秘密（treachery，eldritch_lore）：战役侧批次 4 未迁移：遭遇组 eldritch_lore 的诡计无条目与注册——src/cards/encounter-entries/**/121xx.js 不存在、content 无引用、全仓无该卡号读点。 实测 existsSync('src/cards/entries/12126.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12126 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12127",
+      "dimension": "implementation",
+      "reason": "超维幻想（treachery，hallucinations）：战役侧批次 4 未迁移：遭遇组 hallucinations 的诡计无条目与注册——src/cards/encounter-entries/**/121xx.js 不存在、content 无引用、全仓无该卡号读点。 实测 existsSync('src/cards/entries/12127.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12127 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12128",
+      "dimension": "implementation",
+      "reason": "狂野冲动（treachery，hallucinations）：战役侧批次 4 未迁移：遭遇组 hallucinations 的诡计无条目与注册——src/cards/encounter-entries/**/121xx.js 不存在、content 无引用、全仓无该卡号读点。 实测 existsSync('src/cards/entries/12128.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12128 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12129",
+      "dimension": "implementation",
+      "reason": "着火了！（treachery，fire_ch2）：战役侧批次 4 未迁移：遭遇组 fire_ch2 的诡计无条目与注册——src/cards/encounter-entries/**/121xx.js 不存在、content 无引用、全仓无该卡号读点。 实测 existsSync('src/cards/entries/12129.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12129 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12130",
+      "dimension": "implementation",
+      "reason": "有毒烟雾（treachery，fire_ch2）：战役侧批次 4 未迁移：遭遇组 fire_ch2 的诡计无条目与注册——src/cards/encounter-entries/**/121xx.js 不存在、content 无引用、全仓无该卡号读点。 实测 existsSync('src/cards/entries/12130.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12130 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12131",
+      "dimension": "implementation",
+      "reason": "突变！（treachery，mad_science）：战役侧批次 4 未迁移：遭遇组 mad_science 的诡计无条目与注册——src/cards/encounter-entries/**/121xx.js 不存在、content 无引用、全仓无该卡号读点。 实测 existsSync('src/cards/entries/12131.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12131 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12132",
+      "dimension": "implementation",
+      "reason": "突变实验体（enemy，mad_science）：战役侧批次 4 未迁移：遭遇组 mad_science 无条目与注册——src/cards/encounter-entries/**/121xx.js 不存在、遭遇索引无该卡、content 无引用、全仓无该卡号读点。 实测 existsSync('src/cards/entries/12132.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12132 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12133",
+      "dimension": "implementation",
+      "reason": "迷烟重重（scenario，smoke_and_mirrors）：战役侧批次 4 未迁移：新关卡《迷烟重重》smoke_and_mirrors 的 scenario 未注册——content/campaigns 下无对应场景模块（全仓 content/** 无 smoke_and_mirrors 引用），无 definition/behavior/story 文本；该卡号在全仓无条目、无读点。 实测 existsSync('src/cards/entries/12133.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12133 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12134",
+      "dimension": "implementation",
+      "reason": "阿卡姆热火朝天（agenda，smoke_and_mirrors）：战役侧批次 4 未迁移：新关卡《迷烟重重》smoke_and_mirrors 的 agenda 未注册——content/campaigns 下无对应场景模块（全仓 content/** 无 smoke_and_mirrors 引用），无 definition/behavior/story 文本；该卡号在全仓无条目、无读点。 实测 existsSync('src/cards/entries/12134.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12134 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12135",
+      "dimension": "implementation",
+      "reason": "邪恶渐起（agenda，smoke_and_mirrors）：战役侧批次 4 未迁移：新关卡《迷烟重重》smoke_and_mirrors 的 agenda 未注册——content/campaigns 下无对应场景模块（全仓 content/** 无 smoke_and_mirrors 引用），无 definition/behavior/story 文本；该卡号在全仓无条目、无读点。 实测 existsSync('src/cards/entries/12135.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12135 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12136",
+      "dimension": "implementation",
+      "reason": "烈焰预言（act，smoke_and_mirrors）：战役侧批次 4 未迁移：新关卡《迷烟重重》smoke_and_mirrors 的 act 未注册——content/campaigns 下无对应场景模块（全仓 content/** 无 smoke_and_mirrors 引用），无 definition/behavior/story 文本；该卡号在全仓无条目、无读点。 实测 existsSync('src/cards/entries/12136.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12136 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12137",
+      "dimension": "implementation",
+      "reason": "俄洛寇斯印记（treachery，smoke_and_mirrors）：战役侧批次 4 未迁移：遭遇组 smoke_and_mirrors 的诡计无条目与注册——src/cards/encounter-entries/**/121xx.js 不存在、content 无引用、全仓无该卡号读点。 实测 existsSync('src/cards/entries/12137.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12137 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12138",
+      "dimension": "implementation",
+      "reason": "*烈焰仆从（enemy，smoke_and_mirrors）：战役侧批次 4 未迁移：遭遇组 smoke_and_mirrors 无条目与注册——src/cards/encounter-entries/**/121xx.js 不存在、遭遇索引无该卡、content 无引用、全仓无该卡号读点。 实测 existsSync('src/cards/entries/12138.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12138 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12139",
+      "dimension": "implementation",
+      "reason": "*大卫·伦费尔德（enemy，people_of_arkham）：战役侧批次 4 未迁移：遭遇组 people_of_arkham 无条目与注册——src/cards/encounter-entries/**/121xx.js 不存在、遭遇索引无该卡、content 无引用、全仓无该卡号读点。 实测 existsSync('src/cards/entries/12139.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12139 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12140",
+      "dimension": "implementation",
+      "reason": "*柯妮丽娅·阿克里（enemy，people_of_arkham）：战役侧批次 4 未迁移：遭遇组 people_of_arkham 无条目与注册——src/cards/encounter-entries/**/121xx.js 不存在、遭遇索引无该卡、content 无引用、全仓无该卡号读点。 实测 existsSync('src/cards/entries/12140.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12140 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12141",
+      "dimension": "implementation",
+      "reason": "*内奥米·欧巴尼恩（enemy，people_of_arkham）：战役侧批次 4 未迁移：遭遇组 people_of_arkham 无条目与注册——src/cards/encounter-entries/**/121xx.js 不存在、遭遇索引无该卡、content 无引用、全仓无该卡号读点。 实测 existsSync('src/cards/entries/12141.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12141 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12142",
+      "dimension": "implementation",
+      "reason": "*厄尔·门罗警司（enemy，people_of_arkham）：战役侧批次 4 未迁移：遭遇组 people_of_arkham 无条目与注册——src/cards/encounter-entries/**/121xx.js 不存在、遭遇索引无该卡、content 无引用、全仓无该卡号读点。 实测 existsSync('src/cards/entries/12142.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12142 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12143",
+      "dimension": "implementation",
+      "reason": "*阿比盖尔·福尔曼（enemy，people_of_arkham）：战役侧批次 4 未迁移：遭遇组 people_of_arkham 无条目与注册——src/cards/encounter-entries/**/121xx.js 不存在、遭遇索引无该卡、content 无引用、全仓无该卡号读点。 实测 existsSync('src/cards/entries/12143.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12143 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12144",
+      "dimension": "implementation",
+      "reason": "*柳玛丽（enemy，people_of_arkham）：战役侧批次 4 未迁移：遭遇组 people_of_arkham 无条目与注册——src/cards/encounter-entries/**/121xx.js 不存在、遭遇索引无该卡、content 无引用、全仓无该卡号读点。 实测 existsSync('src/cards/entries/12144.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12144 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12145",
+      "dimension": "implementation",
+      "reason": "商业区（location，arkham_ch2）：战役侧批次 4 未迁移：arkham_ch2 地点组未注册——无 encounter 条目（src/cards/encounter-entries/**/121xx.js 不存在），无 content 场景 definition 引用，全仓无该卡号读点。 实测 existsSync('src/cards/entries/12145.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12145 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12146",
+      "dimension": "implementation",
+      "reason": "商业区（location，arkham_ch2）：战役侧批次 4 未迁移：arkham_ch2 地点组未注册——无 encounter 条目（src/cards/encounter-entries/**/121xx.js 不存在），无 content 场景 definition 引用，全仓无该卡号读点。 实测 existsSync('src/cards/entries/12146.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12146 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12147",
+      "dimension": "implementation",
+      "reason": "住宅区（location，arkham_ch2）：战役侧批次 4 未迁移：arkham_ch2 地点组未注册——无 encounter 条目（src/cards/encounter-entries/**/121xx.js 不存在），无 content 场景 definition 引用，全仓无该卡号读点。 实测 existsSync('src/cards/entries/12147.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12147 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12148",
+      "dimension": "implementation",
+      "reason": "住宅区（location，arkham_ch2）：战役侧批次 4 未迁移：arkham_ch2 地点组未注册——无 encounter 条目（src/cards/encounter-entries/**/121xx.js 不存在），无 content 场景 definition 引用，全仓无该卡号读点。 实测 existsSync('src/cards/entries/12148.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12148 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12149",
+      "dimension": "implementation",
+      "reason": "北区（location，arkham_ch2）：战役侧批次 4 未迁移：arkham_ch2 地点组未注册——无 encounter 条目（src/cards/encounter-entries/**/121xx.js 不存在），无 content 场景 definition 引用，全仓无该卡号读点。 实测 existsSync('src/cards/entries/12149.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12149 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12150",
+      "dimension": "implementation",
+      "reason": "东城区（location，arkham_ch2）：战役侧批次 4 未迁移：arkham_ch2 地点组未注册——无 encounter 条目（src/cards/encounter-entries/**/121xx.js 不存在），无 content 场景 definition 引用，全仓无该卡号读点。 实测 existsSync('src/cards/entries/12150.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12150 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12151",
+      "dimension": "implementation",
+      "reason": "商人区（location，arkham_ch2）：战役侧批次 4 未迁移：arkham_ch2 地点组未注册——无 encounter 条目（src/cards/encounter-entries/**/121xx.js 不存在），无 content 场景 definition 引用，全仓无该卡号读点。 实测 existsSync('src/cards/entries/12151.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12151 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12152",
+      "dimension": "implementation",
+      "reason": "滨水区（location，arkham_ch2）：战役侧批次 4 未迁移：arkham_ch2 地点组未注册——无 encounter 条目（src/cards/encounter-entries/**/121xx.js 不存在），无 content 场景 definition 引用，全仓无该卡号读点。 实测 existsSync('src/cards/entries/12152.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12152 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12153",
+      "dimension": "implementation",
+      "reason": "南区（location，arkham_ch2）：战役侧批次 4 未迁移：arkham_ch2 地点组未注册——无 encounter 条目（src/cards/encounter-entries/**/121xx.js 不存在），无 content 场景 definition 引用，全仓无该卡号读点。 实测 existsSync('src/cards/entries/12153.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12153 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12154",
+      "dimension": "implementation",
+      "reason": "法兰西山（location，arkham_ch2）：战役侧批次 4 未迁移：arkham_ch2 地点组未注册——无 encounter 条目（src/cards/encounter-entries/**/121xx.js 不存在），无 content 场景 definition 引用，全仓无该卡号读点。 实测 existsSync('src/cards/entries/12154.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12154 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12155",
+      "dimension": "implementation",
+      "reason": "米斯卡塔尼克大学（location，arkham_ch2）：战役侧批次 4 未迁移：arkham_ch2 地点组未注册——无 encounter 条目（src/cards/encounter-entries/**/121xx.js 不存在），无 content 场景 definition 引用，全仓无该卡号读点。 实测 existsSync('src/cards/entries/12155.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12155 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12156",
+      "dimension": "implementation",
+      "reason": "米斯卡塔尼克大学（location，arkham_ch2）：战役侧批次 4 未迁移：arkham_ch2 地点组未注册——无 encounter 条目（src/cards/encounter-entries/**/121xx.js 不存在），无 content 场景 definition 引用，全仓无该卡号读点。 实测 existsSync('src/cards/entries/12156.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12156 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12157",
+      "dimension": "implementation",
+      "reason": "奥术锁（treachery，arcane_lock）：战役侧批次 4 未迁移：遭遇组 arcane_lock 的诡计无条目与注册——src/cards/encounter-entries/**/121xx.js 不存在、content 无引用、全仓无该卡号读点。 实测 existsSync('src/cards/entries/12157.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12157 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12158",
+      "dimension": "implementation",
+      "reason": "大雨倾盆（treachery，bad_weather）：战役侧批次 4 未迁移：遭遇组 bad_weather 的诡计无条目与注册——src/cards/encounter-entries/**/121xx.js 不存在、content 无引用、全仓无该卡号读点。 实测 existsSync('src/cards/entries/12158.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12158 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12159",
+      "dimension": "implementation",
+      "reason": "暴洪骤来（treachery，bad_weather）：战役侧批次 4 未迁移：遭遇组 bad_weather 的诡计无条目与注册——src/cards/encounter-entries/**/121xx.js 不存在、content 无引用、全仓无该卡号读点。 实测 existsSync('src/cards/entries/12159.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12159 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    },
+    {
+      "code": "12160",
+      "dimension": "implementation",
+      "reason": "疑窦丛生（treachery，dead_ends）：战役侧批次 4 未迁移：遭遇组 dead_ends 的诡计无条目与注册——src/cards/encounter-entries/**/121xx.js 不存在、content 无引用、全仓无该卡号读点。 实测 existsSync('src/cards/entries/12160.js')=false；全仓（排除 cards-data/索引/replay 指纹）真实引用=0；REPRINT_ALIASES/card-identity 无 12160 键或值；同名同文 canonical 候选=无。",
+      "evidence": "artifacts/acceptance/12-a-4/scan-output.txt; artifacts/acceptance/12-a-4/evidence.json; artifacts/acceptance/12-a-4/scan.mjs; tests/starter-batch-3.test.mjs（仅玩家侧 12001–12104）"
+    }
+  ],
+  "pendingCodes": [],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "fail",
+    "primitives": "fail",
+    "interaction": "fail",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "artifacts/acceptance/12-a-4/scan-output.txt + evidence.json",
+      "test": "逐卡实测：entryExists=false、encounterEntryExists=false、duplicateOfCode 空、REPRINT_ALIASES 无 scope 键（12121–12160 作为 alias 0 个、作为 canonical 0 个）、同名同文 canonical 候选 0 个",
+      "codes": [
+        "12121",
+        "12122",
+        "12123",
+        "12124",
+        "12125",
+        "12126",
+        "12127",
+        "12128",
+        "12129",
+        "12130",
+        "12131",
+        "12132",
+        "12133",
+        "12134",
+        "12135",
+        "12136",
+        "12137",
+        "12138",
+        "12139",
+        "12140",
+        "12141",
+        "12142",
+        "12143",
+        "12144",
+        "12145",
+        "12146",
+        "12147",
+        "12148",
+        "12149",
+        "12150",
+        "12151",
+        "12152",
+        "12153",
+        "12154",
+        "12155",
+        "12156",
+        "12157",
+        "12158",
+        "12159",
+        "12160"
+      ]
+    },
+    {
+      "file": "全仓扫描（src/content/tests/web/tools，排除 cards-data/索引/fixtures/replay）",
+      "test": "40 个卡号真实引用 0；唯一命中为 web/audio/music/sources.json 的 SHA-256 子串（12128/12141/12158）与 replay 指纹 hash 子串（12131/12132/12144/12147），均非卡牌引用"
+    },
+    {
+      "file": "src/cards/encounter-entries/** 与 content/campaigns/**",
+      "test": "无 121xx.js 条目；遭遇组 ashen_pilgrims/bystanders/cosmic_evils/eldritch_lore/hallucinations/fire_ch2/mad_science/smoke_and_mirrors/people_of_arkham/arkham_ch2/arcane_lock/bad_weather/dead_ends 在注册表中 0 命中（仅 cards-data 有字段）；content/campaigns/nightOfTheZealot 不引用 12 段；无 core_2026 战役内容模块"
+    }
+  ],
+  "commands": [
+    {
+      "command": "node artifacts/acceptance/12-a-4/scan.mjs",
+      "result": "40/40 卡：entry=false、alias=none、真实引用 0"
+    },
+    {
+      "command": "node artifacts/acceptance/12-a-4/evidence.mjs",
+      "result": "40/40 卡：encounterEntryExists=false、duplicateOfCode 空、同名同文 canonical 0"
+    },
+    {
+      "command": "npm run cards:check",
+      "result": "10/10 pass；条目合规审计通过（无基线外新增违规）"
+    },
+    {
+      "command": "npm run cards:encounter-check",
+      "result": "7/7 pass；条目合规审计通过（无基线外新增违规）"
+    },
+    {
+      "command": "npm run audit:entries",
+      "result": "通过；directStateWrite 112（存量基线）"
+    }
+  ],
+  "notes": "1) 40 张：通过 0 / 失败 40 / pending 0。全部为「批次 4 战役侧未迁移」：无 src/cards/entries/<code>.js、无 src/cards/encounter-entries/**/<code>.js、无 content/campaigns 场景模块、遭遇组 0 注册、全仓无读点。2) 重印别名不覆盖本分片：_reprint-aliases.js 与 card-identity.js 中 12121–12160 作为 alias 或 canonical 键均为 0；同名同文 canonical 候选也为 0，因此不能按别名口径转判。3) 12133–12136（迷烟重重 scenario/agenda/agenda/act）与 12121/12122/12123/12124/12125/12126/12127/12128/12129/12130/12131/12132/12137/12138/12139–12160 全部无战役内容模块；新遭遇组 ashen_pilgrims/bystanders/cosmic_evils/eldritch_lore/hallucinations/fire_ch2/mad_science/smoke_and_mirrors/people_of_arkham/arkham_ch2/arcane_lock/bad_weather/dead_ends 只在 cards-data 中出现。4) 证据可复现：existsSync=false、encounterEntryExists=false、全仓 grep 0（排除 cards-data/索引/replay 指纹；web/audio 与 replay 中的命中均为 SHA-256 子串伪命中）。5) 无已实现/可别名卡，按任务口径不需要新增执行测试；本轮未新增 tests 文件。6) 未改 src/**、content/**、audit/**、web/**、tools/**、既有 tests/、package.json；未删除文档；未碰 web/campaign-presentation.js。7) 通过卡 0 张，无可切 verified；待批次 4 迁移完成后按五维重验。"
+}

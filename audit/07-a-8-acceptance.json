@@ -1,0 +1,817 @@
+{
+  "schemaVersion": 1,
+  "unit": "07-a-8",
+  "profile": {
+    "id": "tic-into-the-maelstrom-2026-11",
+    "scope": "印斯茅斯暗潮 07 段 Into the Maelstrom（itm，07301–07338）40 条目录记录。39 条通过五维验收；07315 因缺可选推进原语暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 40,
+    "verified": 39,
+    "unverified": 1,
+    "unimplemented": 0,
+    "testsPassed": 661
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-07-a-shard8.test.mjs",
+      "sha256": "109e12625ee659a769eb6a2799f505e9aa2a67220475f35e6bfa9d3b6d86bb64"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
+      "sha256": "2112b6318d9e04c73d080314ebd3bff5b37f778590f945b18caf330629f61e69"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
+      "sha256": "8929f8453e7a0f4a498d9421cf268fc675735de2741e96d623bffb0511487bc9"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+      "sha256": "bdbbd310d7ea827e0c59649fe8a1bb9eb6aa3d67abc57e7c27b95adf7f803dbb"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenarios-late-registered.test.mjs",
+      "sha256": "d51b97ba6a6b910dd56790c22c1e58481527a488645c2e1b4d934573d3b23fb0"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-maelstrom-act.test.mjs",
+      "sha256": "f1062c5014ca367f9a5f6ce69c8da542b0fade75d5991e807b69f1b052b42ace"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-maelstrom-agendas.test.mjs",
+      "sha256": "8f4363634abe2e82a761766da49e870276ab1460aab5ea6f2577e65584a37cc2"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-maelstrom-treacheries.test.mjs",
+      "sha256": "a79c19de114a992f96e8bda07bf5ad24d894072972ede0a37c44b4bb916d0714"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+      "sha256": "1337a2f1cf3b0837f4ad9c2382ab108a6549acfd31b91f59a588db5f1b4b88f9"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+      "sha256": "79d5d9a653bd58558944f301335671daf48de4967683119c926469a5eae0ea32"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
+      "sha256": "b9e22f0e3a022736b955102561ca95934630b4d2367477308bda1435bcac5da0"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-interludes.test.mjs",
+      "sha256": "571f9f687637f63bb894b080b6d606ca05c42a0b361576f67b5f9cb105f5212a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+      "sha256": "b4ecaedb1a2445d494b757be42e5133ef92a1091249e32565e2ad8b135756fd1"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+      "sha256": "3580319103f889db41d6871ecd68189d802ef3fe6d3339ee9997b46d27959044"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+      "sha256": "c2c69dc2fb3fe002419897d86711bcdcb9434dd22519dec707d50a2171afc3aa"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-primitives.test.mjs",
+      "sha256": "8453001755501ca236be74abc05e428b5270c32b28ac29b4d74e91b07777bbbb"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-rules.test.mjs",
+      "sha256": "24972f73c0ee5c468034308b7bc51c7742bccc191406960dfc268169940a574a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-primitives.test.mjs",
+      "sha256": "2234fa4bbb8925066932c1ba1211d4349b1c7f19934ef2c6f023ce0131e92770"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-interactions.test.mjs",
+      "sha256": "64e5dde4e149d1da6c052fd7f8ddedca48037b9a7fb987baae599a5c089f5224"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+      "sha256": "4d3cffa3d1848bf3b2accc6c0c9f2cb3f3622750975bdc5f0e46083ee8e999b1"
+    }
+  ],
+  "entries": [
+    {
+      "code": "07301",
+      "name": "圣洁",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07301 Hallow pays ten physical bless including seals and removes one chosen doom"
+        }
+      ]
+    },
+    {
+      "code": "07302",
+      "name": "圣矛",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07302 Holy Spear seals two bless for stronger attack and can later release one"
+        }
+      ]
+    },
+    {
+      "code": "07303",
+      "name": "先祖知识",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07303 Ancestral Knowledge stores five random non-weakness skills and draws chosen one"
+        }
+      ]
+    },
+    {
+      "code": "07304",
+      "name": "阿里阿德涅之线",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07304 Ariadne Twine pays colocated asset secrets and converts own secrets/resources"
+        }
+      ]
+    },
+    {
+      "code": "07305",
+      "name": ".25自动手枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07305 actual evade reaction pays ammo and no extra action"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07305 exhausted target bonus, ammo and empty-ammo rejection"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07305 exhausted-target bonus rechecks target readiness during the actual test"
+        }
+      ]
+    },
+    {
+      "code": "07306",
+      "name": "不择手段",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07306 any-skill commit exact curse cost and automatic success"
+        }
+      ]
+    },
+    {
+      "code": "07307",
+      "name": "幸运骰子",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07307 Dice exact curse cost ignores one token and guarded next curse returns asset"
+        }
+      ]
+    },
+    {
+      "code": "07308",
+      "name": "均衡仪式",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07308 add tokens or heal horror distributed over local investigator and asset"
+        }
+      ]
+    },
+    {
+      "code": "07309",
+      "name": "雅各布·莫里森",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07309 Jacob Morrison failure bonus works and own bless can ready exhausted Jacob"
+        }
+      ]
+    },
+    {
+      "code": "07310",
+      "name": "命运三女神的祭坛",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07310 Shrine of Moirai actual attached event is usable by local teammate, pays encounter before recovering two cards with total level at most five"
+        }
+      ]
+    },
+    {
+      "code": "07311",
+      "name": "暗潮之下",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
+          "test": "intoTheMaelstrom 混乱标记：07311 skull 随未淹没伊哈·恩斯雷地点数、cultist/tablet/elderthing 分支"
+        }
+      ]
+    },
+    {
+      "code": "07312",
+      "name": "海面之下",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07312: real agenda back transfers reserved enemies and all discard into the encounter deck exactly once"
+        }
+      ]
+    },
+    {
+      "code": "07313",
+      "name": "星潮合相",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-maelstrom-agendas.test.mjs",
+          "test": "07313 天体阵列：已苏醒的面不重复翻，未在场的不报错"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-maelstrom-agendas.test.mjs",
+          "test": "07313 天体阵列：推进到背面时把在场的沉睡达贡/海德拉翻至苏醒面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-maelstrom-agendas.test.mjs",
+          "test": "07313/07314 条目注册：议程规则带 onReveal，07314 另有 phaseBegan"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
+          "test": "intoTheMaelstrom 议程：07313 把沉睡古神翻至苏醒面、07314 每个阶段开始翻面并在背面进入结局8"
+        }
+      ]
+    },
+    {
+      "code": "07314",
+      "name": "洪水",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-maelstrom-agendas.test.mjs",
+          "test": "07313/07314 条目注册：议程规则带 onReveal，07314 另有 phaseBegan"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-maelstrom-agendas.test.mjs",
+          "test": "07314 洪水：推进到背面（→R8）结算结局 8"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-maelstrom-agendas.test.mjs",
+          "test": "07314 洪水：每个阶段开始时把沉睡的古神翻至苏醒面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
+          "test": "intoTheMaelstrom 议程：07313 把沉睡古神翻至苏醒面、07314 每个阶段开始翻面并在背面进入结局8"
+        }
+      ]
+    },
+    {
+      "code": "07315",
+      "name": "回到深海",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面目标「如果每位未击败的调查员都在伊哈·恩斯雷门扉且持有蓝红黄绿钥匙，你可以选择推进（you may choose to advance）」缺少玩家选择：条目 actRule.objective 只返回布尔值，引擎 act-agenda.js#checkAct 命中即无条件 advanceAct，无「可选推进」原语/询问；自动推进取代了玩家选择权。"
+    },
+    {
+      "code": "07316",
+      "name": "深海之城(版本一)",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
+          "test": "07316 [快速] 能力 a：古神伤害不足 1[每调查员]时不能作为费用（选项 A 不可用）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
+          "test": "07316 [快速] 能力 a：移除古神 1[每调查员]伤害作为费用，并降低淹没等级（审计 H15 回归）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
+          "test": "07316 [快速] 能力 b：[[巢穴]]地点的调查员共同花费线索，降低非[[圣堂]]地点淹没等级"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
+          "test": "07316 完成：无其他场景卡 → 立即结局1（加入胜利区，Victory 2）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
+          "test": "07316 完成：有并行幕时选择「立即进入结局1」→ resolution1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
+          "test": "07316 完成：有并行幕时队长选择「继续游戏」，actIndex 推进且场景继续"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
+          "test": "07316 目标：场上每个地点都未淹没才成立（初始 Act 2 有淹没地点 → false）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
+          "test": "intoTheMaelstrom 并行幕：07317/07318 目标与 07316 完成时的「继续游戏」选择"
+        }
+      ]
+    },
+    {
+      "code": "07317",
+      "name": "深海之城(版本二)",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
+          "test": "07317 完成：有另一张场景卡 → 选择继续，加入胜利区并移出活动槽；无其他幕 → 自动 R1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
+          "test": "07317 目标：三处地点无线索且财富宝库带紫钥匙才成立"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
+          "test": "07317 目标：按「带紫钥匙的那一份财富宝库」判定，而不是按卡号取第一张（审计 H16 回归）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
+          "test": "intoTheMaelstrom 并行幕：07317/07318 目标与 07316 完成时的「继续游戏」选择"
+        }
+      ]
+    },
+    {
+      "code": "07318",
+      "name": "深海之城(版本三)",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
+          "test": "07318 完成：加入胜利区（Victory 2）并在无其他幕时自动进入结局1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
+          "test": "07318 目标：达贡与海德拉各至少 4[每调查员]伤害（3 人局需各 12 点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
+          "test": "intoTheMaelstrom 并行幕：07317/07318 目标与 07316 完成时的「继续游戏」选择"
+        }
+      ]
+    },
+    {
+      "code": "07319",
+      "name": "黑暗深渊",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07319: actual last clue discovery floods only this physical Abyss and its connected locations, respecting locks"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07319: each physical Dark Abyss takes one hidden set-aside key without leaking its color"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
+          "test": "intoTheMaelstrom 地点与连接：门扉正交四连接、生态通道网格、07319 深渊揭示暗置钥匙、07321 沉没厅堂黑钥匙行动与敌人进入 2 伤害"
+        }
+      ]
+    },
+    {
+      "code": "07320",
+      "name": "伊哈·恩斯雷门扉",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07320 definition/setup-only: real partial flood, orthogonal adjacency, play-zone and investigator starts"
+        }
+      ]
+    },
+    {
+      "code": "07321",
+      "name": "沉没厅堂",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
+          "test": "intoTheMaelstrom 地点与连接：门扉正交四连接、生态通道网格、07319 深渊揭示暗置钥匙、07321 沉没厅堂黑钥匙行动与敌人进入 2 伤害"
+        }
+      ]
+    },
+    {
+      "code": "07322",
+      "name": "财富宝库",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07322: real remote non-Elite relocation, key placement and exactly one repeated-upkeep ready suppression"
+        }
+      ]
+    },
+    {
+      "code": "07323",
+      "name": "海下长廊",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07323: real key-placement action, free connected movement and per-investigator round limit survive JSON"
+        }
+      ]
+    },
+    {
+      "code": "07324",
+      "name": "深海群像",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07324: actual failed investigation damages only performer; unrelated failure and successful investigation do not"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07324: actual local team key+clue cost automatically evades distant Ancient Ones, permanently drains only source and limits whole group"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07324: remote clues and missing key cannot partially pay a crafted local group activation"
+        }
+      ]
+    },
+    {
+      "code": "07325",
+      "name": "水下神庙",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07325: actual enemy fight modifier applies only to local Deep One enemies at revealed Temple"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07325: actual local team key+clue cost automatically evades distant Ancient Ones, permanently drains only source and limits whole group"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07325: remote clues and missing key cannot partially pay a crafted local group activation"
+        }
+      ]
+    },
+    {
+      "code": "07326",
+      "name": "朔望会堂",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07326: actual local team key+clue cost automatically evades distant Ancient Ones, permanently drains only source and limits whole group"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07326: actual remote flood increase harms each local investigator once; decreases, capped no-op and remote investigators do not"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07326: remote clues and missing key cannot partially pay a crafted local group activation"
+        }
+      ]
+    },
+    {
+      "code": "07327",
+      "name": "缟玛瑙守卫",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
+          "test": "07327 缟玛瑙守卫：敌军阶段期间重整的[[古神]]敌人攻击本地点的调查员（审计 H16 回归）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07327: actual local team key+clue cost automatically evades distant Ancient Ones, permanently drains only source and limits whole group"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07327: remote clues and missing key cannot partially pay a crafted local group activation"
+        }
+      ]
+    },
+    {
+      "code": "07328",
+      "name": "达贡巢穴",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
+          "test": "07328 达贡巢穴：7 把钥匙都在地点上且仪式被破坏时可触发记忆闪回 XIV（审计 H17 回归）"
+        }
+      ]
+    },
+    {
+      "code": "07329",
+      "name": "海德拉巢穴",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07329: shroud counts keyed Sanctum locations once, key placement damages distant awake Ancient One and shared limit survives JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07329: sleeping-only and wrong-color key states do not consume cost or action"
+        }
+      ]
+    },
+    {
+      "code": "07330a",
+      "name": "达贡",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07330a 沉睡达贡：印刷意志(4) 行动成功后可横置或移除 1 个毁灭"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07330a 沉睡达贡：真实卡牌仍不是基础攻击/躲避/交战目标，提交也会被拒绝"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07330a 沉睡达贡：行动失败低于难度 3 点才放置 1 个毁灭"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07330a/07331a：调查阶段结束时，在巢穴且有调查员且处于重整才放置毁灭"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07330a→07330b 物理换面：保留 id/伤害/毁灭/钥匙，觉醒面具备猎手庞大反击且无生命值"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07330b 觉醒达贡：受到伤害后对一张达贡之子造成同量伤害；被躲避后同样躲避子嗣"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07330b 觉醒达贡：每个有钥匙的圣堂地点 -1 攻击，非圣堂地点不计"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07330b/07331b：没有生命值的觉醒古神受到 100 点伤害也不会自动击败"
+        }
+      ]
+    },
+    {
+      "code": "07330b",
+      "name": "达贡",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07330a→07330b 物理换面：保留 id/伤害/毁灭/钥匙，觉醒面具备猎手庞大反击且无生命值"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07330b 觉醒达贡：受到伤害后对一张达贡之子造成同量伤害；被躲避后同样躲避子嗣"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07330b 觉醒达贡：每个有钥匙的圣堂地点 -1 攻击，非圣堂地点不计"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07330b/07331b：没有生命值的觉醒古神受到 100 点伤害也不会自动击败"
+        }
+      ]
+    },
+    {
+      "code": "07331a",
+      "name": "海德拉",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07330a/07331a：调查阶段结束时，在巢穴且有调查员且处于重整才放置毁灭"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07330b/07331b：没有生命值的觉醒古神受到 100 点伤害也不会自动击败"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07331a 沉睡海德拉：同一条管线（巢穴换成海德拉巢穴，行动同样可用）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07331b 觉醒海德拉：只镜像到海德拉之子，不会命中达贡之子"
+        }
+      ]
+    },
+    {
+      "code": "07331b",
+      "name": "海德拉",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07330b/07331b：没有生命值的觉醒古神受到 100 点伤害也不会自动击败"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07331b 觉醒海德拉：只镜像到海德拉之子，不会命中达贡之子"
+        }
+      ]
+    },
+    {
+      "code": "07332",
+      "name": "水生异怪",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
+          "test": "intoTheMaelstrom 敌人：沉睡/苏醒古神换面、07332 水生异怪与 07338 潜水服读点"
+        }
+      ]
+    },
+    {
+      "code": "07333",
+      "name": "达贡之子",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard8.test.mjs",
+          "test": "07333 达贡之子：交战强制在「达贡放毁灭」与「达贡攻击」间选择（沉睡时只能放毁灭）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard8.test.mjs",
+          "test": "07333 达贡之子：真实遭遇抽取在「达贡巢穴 / 门扉」中选离抽牌者更远的生成点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07333: actual drawer resolves tied farthest spawn after pending-choice JSON without duplicate physical enemy"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07333: real encounter draw spawns at farther physical Lair/Gateway measured from drawer1, not lead0"
+        }
+      ]
+    },
+    {
+      "code": "07334",
+      "name": "海德拉之子",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard8.test.mjs",
+          "test": "07334 海德拉之子：交战强制在「海德拉放毁灭」与「海德拉攻击」间选择（沉睡时只能放毁灭）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard8.test.mjs",
+          "test": "07334 海德拉之子：真实遭遇抽取在「海德拉巢穴 / 门扉」中选离抽牌者更远的生成点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07334: actual drawer resolves tied farthest spawn after pending-choice JSON without duplicate physical enemy"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07334: real encounter draw spawns at farther physical Lair/Gateway measured from drawer1, not lead0"
+        }
+      ]
+    },
+    {
+      "code": "07335",
+      "name": "危险深渊",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07335: discard enough printed asset cost using real leave-play; Permanent excluded"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07335: insufficient asset total cannot choose discard; real water cap leaves no fake choice"
+        }
+      ]
+    },
+    {
+      "code": "07336",
+      "name": "深潜者暗潮",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07336: difficulty counts keyed Sanctum locations, not number of keys; failure can actually advance agenda"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07336: nearest attack option excludes sleeping/cannot-attack Ancient Ones; assigned damage remains real"
+        }
+      ]
+    },
+    {
+      "code": "07337",
+      "name": "深海恐惧症",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07337 注册为 treachery 且实现现通道"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-maelstrom-treacheries.test.mjs",
+          "test": "07337：没有调查员在淹没地点 → 获得涌动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07337：没有调查员在淹没地点 → 获得涌动且不造成恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-maelstrom-treacheries.test.mjs",
+          "test": "07337：注册为 treachery 且实现"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-maelstrom-treacheries.test.mjs",
+          "test": "07337：部分淹没 1 恐惧、完全淹没 1 直接恐惧（互不影响）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07337：部分淹没 1 恐惧、完全淹没 1 直接恐惧，两者互不影响"
+        }
+      ]
+    },
+    {
+      "code": "07338",
+      "name": "潜水服",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
+          "test": "intoTheMaelstrom 敌人：沉睡/苏醒古神换面、07332 水生异怪与 07338 潜水服读点"
+        }
+      ]
+    }
+  ]
+}

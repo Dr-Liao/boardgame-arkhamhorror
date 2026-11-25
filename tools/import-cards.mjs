@@ -14,6 +14,7 @@ import { carcosaCampaignCardVerified, CARCOSA_CAMPAIGN_ACCEPTANCE_PROFILE } from
 import { carcosaInvestigatorCardVerified, CARCOSA_INVESTIGATOR_ACCEPTANCE_PROFILE } from '../content/packs/carcosaInvestigators/manifest.js'
 import { tfaInvestigatorCardVerified, TFA_INVESTIGATOR_ACCEPTANCE_PROFILE } from '../content/packs/tfaInvestigators/manifest.js'
 import { tfaPlayerCardVerified, TFA_PLAYER_ACCEPTANCE_PROFILE } from '../content/packs/tfaPlayer/manifest.js'
+import { CARD_ACCEPTANCE_REGISTRY } from '../src/cards/acceptance-registry.js'
 import { applyEoteTextFixes } from '../content/campaigns/edgeOfTheEarth/card-text-fixes.js'
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..')
@@ -255,6 +256,15 @@ export function buildImport(root = ROOT) {
     if (!profile) continue
     card.effectStatus = 'verified'
     card.acceptanceProfile = profile.id
+  }
+  // 逐单元验收账本（docs/test/ACCEPTANCE-ORDER.md）：新增单元只登记在
+  // src/cards/acceptance-registry.js，本文件不再逐单元加分支。账本只声明 verified 的卡号，
+  // 失败卡保留目录原状态（见 docs/test 的逐卡报告）。
+  for (const card of Object.values(merged.cards)) {
+    const acceptance = CARD_ACCEPTANCE_REGISTRY.find(entry => entry.verified(card.code))
+    if (!acceptance) continue
+    card.effectStatus = 'verified'
+    card.acceptanceProfile = acceptance.profile.id
   }
   const union = ordered(new Set(sources.flatMap(source => source.rows.map(row => row.code))))
   if (stableStringify(union) !== stableStringify(frozen.coverage.unionCodes)) throw new Error('来源编号并集偏离 N0')

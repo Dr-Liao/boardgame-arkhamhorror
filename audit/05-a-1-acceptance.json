@@ -1,0 +1,1017 @@
+{
+  "schemaVersion": 1,
+  "unit": "05-a-1",
+  "profile": {
+    "id": "tcu-deluxe-a-2026-11",
+    "scope": "万象无终 05 段 tcu 豪华包前半（05001–05055）55 条目录记录。53 条通过五维验收；2 条（05020 谈判、05037 攻击行动指示未按对应行动结算）暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 55,
+    "verified": 53,
+    "unverified": 2,
+    "unimplemented": 0,
+    "testsPassed": 423
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-05-a-shard1.test.mjs",
+      "sha256": "16dad22cc662269dae74792faecc028ea2e28f1b98ee0fddebecd81ed8c6bc4e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+      "sha256": "28ab385e67397f62b92a394ee7794e8587281c6695efc1bd5ca39bb4e6a1c23e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+      "sha256": "35c5a0734c9b215105f4a4c919d8da4863b7ebc9e94394d9b031c8bd8ac3cb4e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-witching-hour.test.mjs",
+      "sha256": "25632efd14a00f2f3ed99e63b42945b240109c24946c7335fee042257067fa00"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-completion.test.mjs",
+      "sha256": "11ad9d1eda4646b4b9682dd09d185c15f248ed8bb65f0e0ab30a4afef27c434d"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-p1-regressions.test.mjs",
+      "sha256": "1003ff31f4f3c4f908e7b508f18d212435ccdb3021411ebf93d7b9e608a28455"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-p0-regressions.test.mjs",
+      "sha256": "032a3ef79e495e8fa5dbef2f10ce18ab76473a1fe056ff23ca65aa864d86978a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/ability-layer.test.mjs",
+      "sha256": "c580dcd56da3bf4afa9fd68d8c16a6cf8191628755e0c5906685aad5425d8027"
+    },
+    {
+      "file": "games/arkhamhorror/tests/save-migration.test.mjs",
+      "sha256": "63b3143b54bde80bf3d76d8a30f71c155abca5c4a72267bb9fc369ecc6428fa1"
+    },
+    {
+      "file": "games/arkhamhorror/tests/slot-rules.test.mjs",
+      "sha256": "3f875290a90b98be11cddf482245aaeb2ea448e4ad0381f7b1f12fab324870f0"
+    },
+    {
+      "file": "games/arkhamhorror/tests/play-channels.test.mjs",
+      "sha256": "9094f67fd1c66aa3f7463182352692c24071c6a3c02473e7b0a274b4ae66fe32"
+    },
+    {
+      "file": "games/arkhamhorror/tests/phase5-migration.test.mjs",
+      "sha256": "3c353e5ff57bd3278769445dd6c6b008bf55c588e1d9ac69eb6e579b006b30ed"
+    },
+    {
+      "file": "games/arkhamhorror/tests/card-interactions.test.mjs",
+      "sha256": "3cca1de28c68b72db8610909a7ce4ed222ab31c156d3f80d831b9230630dc5e1"
+    },
+    {
+      "file": "games/arkhamhorror/tests/carcosa-final.test.mjs",
+      "sha256": "36dd150cc769472c1c2092026fd281b281cef4ed2a85eda7b29fcdddae038acc"
+    }
+  ],
+  "entries": [
+    {
+      "code": "05001",
+      "name": "卡洛琳·弗恩",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05001：legacy effect-data 通道（急救）治他人恐惧时按发起者座位触发反应"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05007+05001：同一治疗内追加 1 点，不重开 horrorHealed（卡洛琳只结算一次）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "task-33 05001 卡洛琳：技能卡成功治愈恐惧也会触发「获得 1 资源」（引擎 events 修复回归）"
+        }
+      ]
+    },
+    {
+      "code": "05002",
+      "name": "乔·戴蒙德",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05002 乔：手牌同名另一张按普通价打出，hunchRevealed 保留并在阶段末洗回"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05002：hunch 揭示牌可从直觉牌库打出（-2 费、清标记、正常弃置）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05002：手中同名另一张按普通价打出，不吃 hunch 折扣、不误清揭示标记"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05002：手牌含同名另一张时，揭示副本仍可按 -2 费打出"
+        },
+        {
+          "file": "games/arkhamhorror/tests/card-interactions.test.mjs",
+          "test": "hunch deck revealed card binds choice options back to the table hunch row (05002)"
+        }
+      ]
+    },
+    {
+      "code": "05003",
+      "name": "普雷斯顿·费尔蒙特",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-completion.test.mjs",
+          "test": "TCU 05003/05011 分离资源池：资源损失不扣卡上资源，费用可选择全从资源池支付"
+        }
+      ]
+    },
+    {
+      "code": "05004",
+      "name": "黛安娜·史丹利",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05004 黛安娜：05280 忽略伤害走 api.noteCancelled，触发 cardCancelled 并把卡压到黛安娜底下"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05013+05004：beneath 通道结算期间黛安娜 reaction 被排除"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R8 05004 黛安娜：两张同名取消支援时，cardCancelled 只弃真正取消的那一张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "task-41 05004 黛安娜：真实闪避 01023 取消攻击后触发反应（引擎 allowNested wrapper 修复回归）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "task-50 05004 黛安娜：01523 闪躲直接写 context.cancelled 取消攻击后触发反应（R5 自动记账）"
+        }
+      ]
+    },
+    {
+      "code": "05005",
+      "name": "丽塔·杨",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard1.test.mjs",
+          "test": "05-a1 05005 丽塔：躲避后反应造成 1 点伤害（每轮一次），旧印解除本轮限制"
+        }
+      ]
+    },
+    {
+      "code": "05006",
+      "name": "玛丽·朗博",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05006：入场即带毁灭的支援获得 1 个法术专用行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05006：旧印移除毁灭到 0 时收回未使用的法术专用额度"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "fix 05006 法术额度：先花法术专用行动后普通可用行动数正确（不残留额外行动）"
+        }
+      ]
+    },
+    {
+      "code": "05007",
+      "name": "催眠疗法",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05007+05001：同一治疗内追加 1 点，不重开 horrorHealed（卡洛琳只结算一次）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "task-22 05007 催眠疗法：治疗盟友恐惧不触发额外治疗；[action] 无恐惧也能让目标抽牌"
+        }
+      ]
+    },
+    {
+      "code": "05008",
+      "name": "理性思考",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05008：blockHealOtherCards 阻止治疗其它卡牌，但不阻止治疗调查员"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05008：改道可选（redirect 治汇点 / skip 治原目标）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05008：超出汇点剩余恐惧的治疗量按 overflow:\"discard\" 丢弃"
+        }
+      ]
+    },
+    {
+      "code": "05009",
+      "name": "侦探的柯尔特1911式手枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/slot-rules.test.mjs",
+          "test": "05009 柯尔特：在场时打出第一张[[工具]]（放大镜）不需要弃置资产腾槽"
+        },
+        {
+          "file": "games/arkhamhorror/tests/slot-rules.test.mjs",
+          "test": "05009 柯尔特：在场时第二张[[工具]]同样豁免手槽"
+        },
+        {
+          "file": "games/arkhamhorror/tests/slot-rules.test.mjs",
+          "test": "05009 柯尔特：豁免只作用于[[工具]]；非工具与第三张工具仍受手槽限制"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "fix 05009 柯尔特：未击败敌人时不触发回收（不再用敌人是否离场近似）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "fix 05009 柯尔特：本次攻击击败敌人时回收弃牌堆洞察事件（attackResult 判定）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "task-33 05009 侦探手枪：最多 2 张[[工具]]支援不占用手部槽位"
+        }
+      ]
+    },
+    {
+      "code": "05010",
+      "name": "悬案",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "fix 05010 悬案：scenarioXpModifier 已登记，供结局 XP 结算读取"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "fix 05010 悬案：在威胁区也能打出（playableFromThreat），放线索并移出游戏"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "fix 05010 悬案：直觉牌库揭示时作为弱点事件打出，放线索到最高隐藏值地点并移出游戏"
+        }
+      ]
+    },
+    {
+      "code": "05011",
+      "name": "家族遗产",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05011：withdrawBanked 将卡上资源移动到真实资源池"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-completion.test.mjs",
+          "test": "TCU 05003/05011 分离资源池：资源损失不扣卡上资源，费用可选择全从资源池支付"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-completion.test.mjs",
+          "test": "TCU 05011 旧合并资源存档只迁移一次，读取后仍可支付并续玩"
+        }
+      ]
+    },
+    {
+      "code": "05012",
+      "name": "秘社“债务”",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "fix 05012 秘社“债务”：抽到后留在手牌（不立即结算、不进弃牌堆）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "fix 05012 秘社“债务”：支付 10 资源打出后移出游戏"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "fix 05012：游戏结束时仍在手牌 → 1 点精神创伤；已移出游戏则不触发"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "fix 05012：退场后再结算游戏结束不重复结算精神创伤（finishScenario 跳过已退场者）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "fix 05012：退场时仍在手牌 → 1 点精神创伤（eliminateInvestigator 读点）"
+        }
+      ]
+    },
+    {
+      "code": "05013",
+      "name": "银暮匕首",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "05013 beneath 通道：匕首横置时底下的牌也不出现在反应窗口"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "05013 beneath 通道：底下的 fromHand 反应描述子（05324）在能力窗口可触发"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "05013 beneath 通道：底下的快速事件出现在反应窗口，选中后横置匕首并正常进弃牌堆"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05013 beneath 打出候选：legalMoves/validateMove 应提供 fromBeneath 候选"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05013 beneath 通道：两张同名牌可以同时出现在投入窗口"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05013 beneath 通道：从底下打出事件（横置匕首、按手牌费用）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05013 beneath 通道：匕首横置时不提供 beneath 打出/投入选项"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05013 beneath 通道：投入底下技能（横置匕首、图标生效、检定后进弃牌堆）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05013 beneath：从底下打出 03153 灵力风暴不引发借机攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05013 银暮匕首：卡面「攻击。」→ 攻击行动不引发借机攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05013+05004：beneath 通道结算期间黛安娜 reaction 被排除"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "task-22 05013 银暮匕首：攻击可以选择战斗或意志（原先固定用意志）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/play-channels.test.mjs",
+          "test": "银暮匕首（05013）下方的事件进入收尾快速卡窗口并横置支援"
+        }
+      ]
+    },
+    {
+      "code": "05014",
+      "name": "黑暗洞察",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R6 05014 黑暗洞察：抽到普通弱点时可取消并洗回牌库（不重抽）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R6 05014 黑暗洞察：普通抽牌不触发（窗口只对弱点开）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R6 05015 可怕的秘密：印刷「不能取消」，05014 的取消不生效"
+        }
+      ]
+    },
+    {
+      "code": "05015",
+      "name": "可怕的秘密",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R6 05015 可怕的秘密：印刷「不能取消」，05014 的取消不生效"
+        }
+      ]
+    },
+    {
+      "code": "05016",
+      "name": "“我不会再逃了！”",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard1.test.mjs",
+          "test": "05-a1 05016 “我不会再逃了！”：重整并交战所有敌人，躲避可改为造成 1 伤害"
+        }
+      ]
+    },
+    {
+      "code": "05017",
+      "name": "兜帽人",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard1.test.mjs",
+          "test": "05-a1 05017 兜帽人：被躲避后强制攻击躲避它的调查员"
+        }
+      ]
+    },
+    {
+      "code": "05018",
+      "name": "神秘乐曲",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-final.test.mjs",
+          "test": "Black Stars Rise does not advance while 05018 locks the doom threshold this phase"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "fix 05018 神秘乐曲：快速打出后移出游戏（exileAfterPlay 在快速窗口生效）"
+        }
+      ]
+    },
+    {
+      "code": "05019",
+      "name": "安息日男爵",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05019 安息日男爵：3 个毁灭标记后弃掉（真实离场）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05019 安息日男爵：同地点调查员受到伤害时额外 +1 点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05019 安息日男爵：少于 3 个毁灭标记时离场被拒"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "R7 05019 安息日男爵：显现后进入支援区（doom=0，不占威胁区）"
+        }
+      ]
+    },
+    {
+      "code": "05020",
+      "name": "拷问",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面粗体行动指示「谈判。」未按 Parley 行动结算：played 描述子只声明 noOpportunityAttack，未声明 actionKind:'parley'/countsAs，引擎 actionKind() 返回 'evade'（src/engine/table-decisions.js:310）。行动历史与「执行过谈判行动」类效果不计入，属未披露近似。"
+    },
+    {
+      "code": "05021",
+      "name": "劫数延后",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05021 劫数延后 快速打出可附属同地点队友；受伤害/恐惧时弃掉并真实离场"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05021 劫数延后 神话阶段结束：资源≥2 可支付保留（附属来源）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05021 劫数延后 神话阶段结束：资源不足或选择弃掉时弃掉附属"
+        }
+      ]
+    },
+    {
+      "code": "05022",
+      "name": "坚定不移",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05022 坚定不移 剩余生命+神志 ≥5 / ≥10 时追加意志与战斗图标"
+        }
+      ]
+    },
+    {
+      "code": "05023",
+      "name": "宝剑王牌",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/ability-layer.test.mjs",
+          "test": "P0-A 05023 宝剑王牌在冒险开始时放置入场"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05023 宝剑王牌 塔罗槽 +1 战斗；开局 [reaction] 可选放置入场"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05023 宝剑王牌 塔罗槽已满时开局 [reaction] 不放置入场（保留手牌）"
+        }
+      ]
+    },
+    {
+      "code": "05024",
+      "name": "指纹采集工具",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05024 指纹采集工具 横置花补给调查：+1 智识且成功额外发现 1 线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05024 指纹采集工具 补给耗尽后仍在场（卡面没有弃置句）"
+        }
+      ]
+    },
+    {
+      "code": "05025",
+      "name": "串联线索",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/ability-layer.test.mjs",
+          "test": "P0-A 事件卡从手牌反应：05025 串联线索在发现最后线索后生效"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05025 串联线索 发现最后线索后从手牌反应：发现低隐藏值地点 2 线索"
+        }
+      ]
+    },
+    {
+      "code": "05026",
+      "name": "好奇心",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05026 好奇心 手牌 ≥4 / ≥7 时追加意志与智识图标"
+        }
+      ]
+    },
+    {
+      "code": "05027",
+      "name": "死神·XIII",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05027 死神·XIII 塔罗槽 +1 智识并在开局入场"
+        }
+      ]
+    },
+    {
+      "code": "05028",
+      "name": "良好人脉",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/ability-layer.test.mjs",
+          "test": "P0-A 05028 良好人脉只在检定窗口内可用并横置"
+        },
+        {
+          "file": "games/arkhamhorror/tests/ability-layer.test.mjs",
+          "test": "P0-A 05028 良好人脉在手牌中不会打开检定免费窗口"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05028 良好人脉 横置获得每 5 资源 +1 技能值，且每位调查员仅限 1 张"
+        }
+      ]
+    },
+    {
+      "code": "05029",
+      "name": "金钱万能",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05029 金钱万能 检定开始时打出：改为资源技能检定（基础值 floor(资源/2)，只吃万能图标）"
+        }
+      ]
+    },
+    {
+      "code": "05030",
+      "name": "狡猾",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05030 狡猾 资源 ≥5 / ≥10 时追加智识与敏捷图标"
+        }
+      ]
+    },
+    {
+      "code": "05031",
+      "name": "月亮·XVIII",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05031 月亮·XVIII 塔罗槽 +1 敏捷并在开局入场"
+        }
+      ]
+    },
+    {
+      "code": "05032",
+      "name": "否决存在",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05032 否决存在 只有单项伤害时直接整体忽略"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05032 否决存在 同时受到 2 伤害 2 恐惧时只能整体忽略一项（不提供拆分点数）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05032 否决存在 弱点显现（失忆）的弃手牌可忽略"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05032 否决存在 敌人攻击时弃手牌（伊斯观察者「攻击时随机弃 1 张」）可忽略"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05032 否决存在 玩家卡自伤不能取消（source=other）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05032 否决存在 遭遇卡使失去资源/失去行动时可忽略"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05032 否决存在 遭遇卡使随机弃手牌时可忽略"
+        }
+      ]
+    },
+    {
+      "code": "05033",
+      "name": "恐怖灵感",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05033 恐怖灵感 auto_fail 窗口也能打出（凋零术不因 auto_fail 产生修正）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05033 恐怖灵感 取消凋零术的符号效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05033 恐怖灵感 让凋零术的符号效果再结算一次"
+        }
+      ]
+    },
+    {
+      "code": "05034",
+      "name": "预见未来",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05034 预见未来 场上毁灭 ≥3 / ≥6 时追加万能图标"
+        }
+      ]
+    },
+    {
+      "code": "05035",
+      "name": "圣杯四",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05035 圣杯四 塔罗槽 +1 意志并在开局入场"
+        }
+      ]
+    },
+    {
+      "code": "05036",
+      "name": "钉鞋",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05036 钉鞋 +1 敏捷；移动后横置敏捷(3)检定，成功再移动到连接地点"
+        }
+      ]
+    },
+    {
+      "code": "05037",
+      "name": "绝望之举",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面粗体行动指示「攻击。」未按 Fight 行动结算：played 描述子只声明 noOpportunityAttack，未声明 countsAs:'fight'，引擎 actionKind() 返回 'evade'（src/engine/table-decisions.js:310）；同类卡 05009/05013 已声明 countsAs:'fight'。"
+    },
+    {
+      "code": "05038",
+      "name": "体格强健",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05038 体格强健 控制[[道具]] ≤2 / ≤1 时追加战斗与敏捷图标"
+        }
+      ]
+    },
+    {
+      "code": "05039",
+      "name": "星币五",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05039 星币五 塔罗槽 +1 生命上限 +1 神智上限并在开局入场"
+        }
+      ]
+    },
+    {
+      "code": "05040",
+      "name": "权杖王牌",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05040 权杖王牌 流放自身换额外 1 行动；该次行动期间每项技能 +2"
+        }
+      ]
+    },
+    {
+      "code": "05041",
+      "name": "第十三幻象",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05041 第十三幻象 技能值等于难度时检定改为失败（本人 + 同地点队友）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05041 第十三幻象 显现进入威胁区域并用[action][action]弃掉"
+        }
+      ]
+    },
+    {
+      "code": "05042",
+      "name": "高塔·XVI",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/slot-rules.test.mjs",
+          "test": "TCU 05042 高塔·XVI 从手牌打出需要 4 个资源和 1 个行动，入场后解除投入封锁"
+        },
+        {
+          "file": "games/arkhamhorror/tests/slot-rules.test.mjs",
+          "test": "TCU 05042 高塔·XVI 打出时可以替换已经占用塔罗槽的资产"
+        },
+        {
+          "file": "games/arkhamhorror/tests/save-migration.test.mjs",
+          "test": "TCU 05042 高塔·XVI 读档时恢复旧行动缓存里缺失的打出行动"
+        }
+      ]
+    },
+    {
+      "code": "05043",
+      "name": "暮色庄园失踪事件",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-p1-regressions.test.mjs",
+          "test": "P1 05043 序章：混乱标记含义进入 state.scenario.tokenMeanings（AI/符号结算可读）"
+        }
+      ]
+    },
+    {
+      "code": "05044",
+      "name": "审判·XX",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard1.test.mjs",
+          "test": "05-a1 05044 审判·XX：放置毁灭后每位调查员受伤/恐惧，被击败推进议程且保留毁灭"
+        }
+      ]
+    },
+    {
+      "code": "05045",
+      "name": "失踪事件",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard1.test.mjs",
+          "test": "05-a1 05045 失踪事件：调查员退场时其线索放到幕上"
+        }
+      ]
+    },
+    {
+      "code": "05046",
+      "name": "加弗瑞拉·米兹拉克",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "fix 05046 加弗瑞拉：所在地点没有线索时不提供反应（ClueOnLocation）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "fix 05046 加弗瑞拉：攻击被取消后仍触发反应并发现线索（有线索时）"
+        }
+      ]
+    },
+    {
+      "code": "05047",
+      "name": "杰罗姆·戴维斯",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "task-41 05047 杰罗姆：真实 treachery 窗口按智力图标弃牌取消显现"
+        }
+      ]
+    },
+    {
+      "code": "05048",
+      "name": "瓦伦蒂诺·里瓦斯",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "fix 05048 瓦伦蒂诺：[free] 检定期间花 2 资源降难度（投入前/投入后窗口都可用、每轮一次）"
+        }
+      ]
+    },
+    {
+      "code": "05049",
+      "name": "佩妮·怀特",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "task-50 05049 佩妮：显现效果期间的旧印给下回合额外行动，普通检定不给"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "task-50 05049 佩妮：显现效果期间（弱点/诡计）的检定成功后反应发现 1 个线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+          "test": "task-50 05049 佩妮：普通（非显现）检定成功后不提供反应"
+        }
+      ]
+    },
+    {
+      "code": "05050",
+      "name": "巫异时刻",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-witching-hour.test.mjs",
+          "test": "05050 章节清单：playable、原卡、地点/幕/议程/结局数量"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-p1-regressions.test.mjs",
+          "test": "P1 05050 巫异时刻：behavior.tokenMeanings 并进 state.scenario（不再是死声明）"
+        }
+      ]
+    },
+    {
+      "code": "05051",
+      "name": "节制•XIV",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard1.test.mjs",
+          "test": "05-a1 05051 节制·XIV：弃遭遇牌库至 5 张，场上卡最多的调查员抽女巫敌人"
+        }
+      ]
+    },
+    {
+      "code": "05052",
+      "name": "深夜号叫",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-completion.test.mjs",
+          "test": "TCU 05052 征兆/诅咒从完整已实现收藏抽取，包括卡尔克萨与失落的时代弱点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-completion.test.mjs",
+          "test": "TCU 05052 收藏弱点厄运降临跨章节升级并永久替换，不进入弃牌堆"
+        }
+      ]
+    },
+    {
+      "code": "05053",
+      "name": "森林迷途",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-witching-hour.test.mjs",
+          "test": "05053/05054 面前地点限制：movementError 读点覆盖效果移动与所有阶段，act2 背面解锁"
+        }
+      ]
+    },
+    {
+      "code": "05054",
+      "name": "女巫作祟",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-witching-hour.test.mjs",
+          "test": "05053/05054 面前地点限制：movementError 读点覆盖效果移动与所有阶段，act2 背面解锁"
+        }
+      ]
+    },
+    {
+      "code": "05055",
+      "name": "通向曙光",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard1.test.mjs",
+          "test": "05-a1 05055 通向曙光：揭示女巫圆环并放入游戏区域中央"
+        }
+      ]
+    }
+  ]
+}

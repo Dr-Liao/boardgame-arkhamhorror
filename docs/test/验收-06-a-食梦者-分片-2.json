@@ -1,0 +1,141 @@
+{
+  "unit": "06-a-2",
+  "generatedAt": "2026-11-24",
+  "status": "complete",
+  "scope": {
+    "cards": 55,
+    "selector": "code =~ /^06/ && 06057 <= code <= 06109 && pack === 'tde' && effectStatus != 'verified'",
+    "packs": {
+      "tde": 55
+    },
+    "types": {
+      "enemy": 16,
+      "story": 3,
+      "asset": 3,
+      "treachery": 18,
+      "scenario": 1,
+      "agenda": 3,
+      "act": 3,
+      "location": 8
+    }
+  },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "06057",
+    "06057b",
+    "06058",
+    "06058b",
+    "06059",
+    "06060",
+    "06061",
+    "06062",
+    "06063",
+    "06064",
+    "06065",
+    "06067",
+    "06068",
+    "06069",
+    "06070",
+    "06071",
+    "06072",
+    "06073",
+    "06074",
+    "06075",
+    "06076",
+    "06077",
+    "06078",
+    "06079",
+    "06080",
+    "06082",
+    "06083",
+    "06084",
+    "06085",
+    "06086",
+    "06090",
+    "06091",
+    "06092",
+    "06093",
+    "06094",
+    "06095",
+    "06096",
+    "06097",
+    "06100",
+    "06101",
+    "06102",
+    "06103",
+    "06104",
+    "06105",
+    "06106",
+    "06107",
+    "06109"
+  ],
+  "failedCodes": [
+    {
+      "code": "06066",
+      "dimension": "implementation",
+      "reason": "卡面第二句「Each [[Spider]] enemy at an infested location gets +1 fight and +1 evade」没有读点：条目声明 agendaRule.spiderAtInfestedBonus，条目注释称 behavior.enemyStatModifier 读取，但章节 behavior 没有该钩子、共享层 enemyStatModifier 只读 entry.enemyStatRule；全仓库无 spiderAtInfestedBonus 读者（声明即接线缺失）。神话阶段滋生检定与背面的桥梁之阶 +8/结局 4 已实现。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/wakingNightmare/06066.js:26,31；content/campaigns/theDreamEaters/encounter-rules.js:585-615（仅 enemyStatRule）",
+      "repro": "grep 全仓库 spiderAtInfestedBonus：仅条目自身出现；node --test tests/acceptance-06-a-shard2.test.mjs 中 06066 用例仅能断言该字段「已声明」，攻击/躲避无实际加成。"
+    },
+    {
+      "code": "06081",
+      "dimension": "implementation",
+      "reason": "卡面核心（不能攻击、不能被攻击、不能被造成伤害、不能被击败）未实现：条目把这 4 条写成 flags.cannotAttack/cannotBeAttacked/cannotBeDamaged/cannotBeDefeated，但引擎读的是敌人规则（enemyRule.cannotX 并入 definition / entityRule cannot:*），TDE 共享层与觉醒噩梦章节均未读取这些 flags；全仓库无读者。仅「与你交战时不能调查」（blocksInvestigationWhileEngaged）有读点并可用。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/wakingNightmare/06081.js:25-31；content/campaigns/theDreamEaters/scenarios/wakingNightmare/behavior.js:576-581（仅 blocksInvestigationWhileEngaged）",
+      "repro": "grep cannotBeDamaged/cannotBeAttacked/cannotAttack：06081 仅声明，无 reader；node --test 用例只能断言 flags 数据与调查封锁。"
+    },
+    {
+      "code": "06087",
+      "dimension": "implementation",
+      "reason": "隐藏牌核心限制未实现：卡面「你不能打出费用为奇数的卡牌；你不能触发费用为奇数的能力；[action] 弃一张费用为偶数的玩家卡：从手牌弃掉本卡」全部只声明在 hiddenRule（cannotPlayOddCost/cannotTriggerOddCost/discardEvenCostAction），引擎 hidden-rules 仅支持 cannotPlayTypes/cannotTriggerFree/cannotFightTraits/maxMovesPerTurn，全仓库无这些 key 的读取或对应行动。隐藏入手上牌由引擎自动完成，但这三条限制与摆脱行动没有行为。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/_shared/agents_of_nyarlathotep/06087.js:9-14；src/engine/hidden-rules.js:105-172（支持的 hiddenRule 字段集合）",
+      "repro": "grep cannotPlayOddCost：仅 06087 自己；node --test 用例只能断言 hiddenRule 已并入 definition，无法验证任何限制。"
+    },
+    {
+      "code": "06088",
+      "dimension": "implementation",
+      "reason": "隐藏牌核心限制未实现：「不能对技能检定投入技能图标总数为奇数的卡牌；[action] 弃技能图标数为偶数的玩家卡以弃掉本卡」只声明 hiddenRule（cannotCommitOddSkillIcons/discardEvenSkillIconsAction），引擎 hidden-rules 无对应读点与行动；提交区只支持 cannotPlayTypes/maxCommitsPerRound 等既有能力。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/_shared/agents_of_nyarlathotep/06088.js:10-13；src/engine/hidden-rules.js:105-172、src/engine/commit-rules.js",
+      "repro": "grep cannotCommitOddSkillIcons：仅 06088 自己。"
+    },
+    {
+      "code": "06089",
+      "dimension": "implementation",
+      "reason": "隐藏牌核心限制未实现：「不能打出/投入卡牌名称为奇数个词的卡牌；[action] 弃名称为偶数个词的玩家卡以弃掉本卡」只声明 hiddenRule（cannotPlayOddWordsInTitle/cannotCommitOddWordsInTitle/discardEvenWordsAction），引擎无词数统计读点与摆脱行动。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/_shared/agents_of_nyarlathotep/06089.js:13-16；src/engine/hidden-rules.js:105-172",
+      "repro": "grep cannotPlayOddWordsInTitle：仅 06089 自己。"
+    },
+    {
+      "code": "06098",
+      "dimension": "implementation",
+      "reason": "威胁区行动的收尾与卡面不符：卡面「[action] 意志(4)。本次检定结束后弃掉黑夜恐怖（即使失败）」，实现在共享 performEncounterAction 中只在检定成功时 api.removeThreat；失败则本卡永远留在威胁区，与「即使失败」冲突。失败后的牌库顶 3 张强制（flags.afterFailTest）已由 TDE encounter-rules.afterTest 实现。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/_shared/merging_realities/06098.js:14-19；content/campaigns/theDreamEaters/encounter-rules.js:838-846（仅 result.success 分支 removeThreat）",
+      "repro": "直接调用 performEncounterAction（失败）→ removeThreat 未调用；本分片 06098 用例覆盖 afterFailTest 与行动数据，失败收尾缺陷登记于此。"
+    },
+    {
+      "code": "06099",
+      "dimension": "implementation",
+      "reason": "卡面「当你将受到伤害和/或恐惧时：受到 1 点额外伤害或恐惧」语义是二选一；引擎 harmInterceptor 读点（enemies.js:1057-1060）在同时有伤害与恐惧时给两者各 +1（等价于「和」），没有选择。放置威胁区与 [fast] 弃掉后受 1 伤 1 恐（flags.fastDiscardFollowUp）已实现。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/_shared/merging_realities/06099.js:15；src/engine/enemies.js:1057-1060",
+      "repro": "同一次攻击同时造成伤害+恐惧时，引擎分别 +1 → 额外 1 伤 1 恐，未提供二选一。"
+    },
+    {
+      "code": "06108",
+      "dimension": "implementation",
+      "reason": "被击败强制只实现了一部分：卡面「隐蔽的祖格鼠被击败时：取消所有超出伤害，并把其余的蜂拥/头领卡牌移动到一个连接地点，呈横置状态」。enemyScript.onSwarmDefeated 只在「本敌人作为蜂拥卡被击败」时触发，且只移动头领（未把其余蜂拥卡一并移动）；作为头领被击败的分支没有对应处理。取消超出伤害（cancelExcessDamage）已接引擎 enemies.js:916。",
+      "evidence": "src/cards/encounter-entries/theDreamEaters/_shared/zoogs/06108.js:12-30；src/engine/enemies.js:833-836,916-925",
+      "repro": "以头领身份被击败（或击败一张蜂拥卡但还有其它蜂拥卡）时，其余蜂拥卡不会随头领移动到连接地点；本分片仅能验证头领移动+取消溢出伤害。"
+    }
+  ],
+  "pendingCodes": [],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "fail",
+    "primitives": "pass",
+    "interaction": "pass",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [],
+  "notes": "通过 47 / 失败 8 / 进行中 0。失败前两类原因：① 隐藏牌/敌人持续限制只有数据声明、没有引擎读点（06087/06088/06089/06081）；② 印刷收尾与二选一语义未落实（06098/06099/06108）+ 数据字段无读者（06066）。tde-release.md 与 tde-migration 账本声称 gaps=0/simplified=0，与本分片实测不符，建议主进程修复后复核账本。"
+}

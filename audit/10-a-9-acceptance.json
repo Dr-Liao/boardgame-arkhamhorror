@@ -1,0 +1,561 @@
+{
+  "schemaVersion": 1,
+  "unit": "10-a-9",
+  "profile": {
+    "id": "fhv-campaign-f-2026-11",
+    "scope": "铁杉谷盛宴 10 段 fhvc 战役卡（10644c–10676）43 条目录记录。31 条通过五维验收；12 条检定前 fast/渲染时序无读点暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 43,
+    "verified": 31,
+    "unverified": 12,
+    "unimplemented": 0,
+    "testsPassed": 221
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+      "sha256": "cf67e92cce35d08fc5b92abbd0c94b0ba380a28ce71a3dec82e0cb609f5a9c42"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-scenario-fateOfTheVale.test.mjs",
+      "sha256": "03bca59b7f85cb0b67e527de78aab8731f7eb8e6ff99d6fc459aa775bd9da195"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-scenario-dawnOfTheFinalDay.test.mjs",
+      "sha256": "3d603d9f0f26264017e0ba02dd881561d4671043fb63be4821df3cde03626898"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-scenario-dawnOfTheSecondDay.test.mjs",
+      "sha256": "0db93c0c854231fc069bfc65edd8f0dda63897dcdae3713a3f8057811f097278"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-rules.test.mjs",
+      "sha256": "0923adf4ff0b6d5b8e50ddf8bae63071dcae1f05ad9421ff0760e02715e615b7"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-primitives.test.mjs",
+      "sha256": "da22963c70f087153a13118a390afdd9f784d0bba5df3ab4dd603a806579639b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-interactions.test.mjs",
+      "sha256": "ec0fbb583bc1bb4240c8f184d861ed9761e33ec930a985c4e902e465041d693a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-campaign-flow.test.mjs",
+      "sha256": "50cf5665e2323b0c038355ad4caaeeb59ca588ec53561b38fb9d704d79874780"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-campaign-engine.test.mjs",
+      "sha256": "de69a978fccc696624d8505c2a94009120201233633bac958f1616da6f8498c3"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-campaign-records.test.mjs",
+      "sha256": "5228e2dca842a993f7278244c415b995019f850e5af32a792e08ab7f0a4b672c"
+    }
+  ],
+  "entries": [
+    {
+      "code": "10644c",
+      "name": "易羽混种",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10644c 易羽混种：生成西侧农田、冷漠/巡逻（农庄）、伤害降为 1"
+        }
+      ]
+    },
+    {
+      "code": "10645a",
+      "name": "狼形混种",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10645a 狼形混种：生成north侧、反击、攻击后自愈 1"
+        }
+      ]
+    },
+    {
+      "code": "10645b",
+      "name": "狼形混种",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10645b 狼形混种：生成east侧、反击、攻击后自愈 1"
+        }
+      ]
+    },
+    {
+      "code": "10645c",
+      "name": "狼形混种",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10645c 狼形混种：生成south侧、反击、攻击后自愈 1"
+        }
+      ]
+    },
+    {
+      "code": "10646",
+      "name": "山羊混种",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10646 山羊混种：敌人最少外围农田、警戒/巡逻、忽略诱饵"
+        }
+      ]
+    },
+    {
+      "code": "10647a",
+      "name": "马状混种",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10647a 马状混种：生成north侧、忽略陷阱、伤害降为 1"
+        }
+      ]
+    },
+    {
+      "code": "10647b",
+      "name": "马状混种",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10647b 马状混种：生成east侧、忽略陷阱、伤害降为 1"
+        }
+      ]
+    },
+    {
+      "code": "10647c",
+      "name": "马状混种",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10647c 马状混种：生成west侧、忽略陷阱、伤害降为 1"
+        }
+      ]
+    },
+    {
+      "code": "10648",
+      "name": "蠕滑混种",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10648 蠕滑混种：敌人最多外围农田、忽略屏障/诱饵/陷阱与 Fire! 伤害"
+        }
+      ]
+    },
+    {
+      "code": "10649",
+      "name": "无尽夜晚",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10649 无尽夜晚：险境显现二选一（移毁灭/伤病俘/受 3 直伤 3 直恐）"
+        }
+      ]
+    },
+    {
+      "code": "10650",
+      "name": "入侵",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10650 入侵：敏捷 X=场上毁灭一半向上取整，失败逐点触发突变敌人"
+        }
+      ]
+    },
+    {
+      "code": "10651",
+      "name": "山谷的命运",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10651 山谷的命运（提示卡）：混乱标记数值表与章节身份"
+        }
+      ]
+    },
+    {
+      "code": "10652",
+      "name": "寂灭",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「单次查看宇宙密使超过 15 秒即发疯」；条目 note 披露引擎无计时读点，仅保留 flags.cosmicEmissaryGaze → 子句无实现。"
+    },
+    {
+      "code": "10653",
+      "name": "危险瘴气",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 10652：凝视超过 15 秒发疯只保留界面标记。"
+    },
+    {
+      "code": "10654",
+      "name": "往升",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 10652：凝视超过 15 秒发疯只保留界面标记。"
+    },
+    {
+      "code": "10655",
+      "name": "破碎记忆",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷 [fast] 花费 1 个线索：本次技能检定 +2；fateOfTheVale/behavior.js 无读点（note 披露未接线）。"
+    },
+    {
+      "code": "10656",
+      "name": "失落自我",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 10655 的 [fast] 缺失；且 `advanceToAct3` 仍写 `state.actIndex = 2`（fateOfTheVale/behavior.js），引擎 actReveal 后再 `++` → 越过 3 张幕牌库，幕 3a 永不揭示、R1–R5 不可达（full-scan §467-468 未修复）。"
+    },
+    {
+      "code": "10657",
+      "name": "山谷的命运(版本一)",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 10655/10656 的 [fast] 缺失，且该条目 note 未披露。"
+    },
+    {
+      "code": "10658",
+      "name": "山谷的命运(版本二)",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「你可以花费 1[每人] 线索使其以横置状态入场」为可选；note 披露实现简化为「谈判成功即横置入场」→ 可选项无读点。"
+    },
+    {
+      "code": "10659",
+      "name": "山谷的命运(版本三)",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "note 披露：placeKindling 按 1/人 线索 = 1 引线逐次结算（一次行动不解析 X）；「花 5 资源或弃 1 张[[道具]]支援换额外 1 引线」未接线。"
+    },
+    {
+      "code": "10660",
+      "name": "山谷的命运(版本四)",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10660 山谷的命运 v.IV：6 项条件≥5 可撤退，全员撤退推进"
+        }
+      ]
+    },
+    {
+      "code": "10661",
+      "name": "破碎自我",
+      "type": "investigator",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "note 披露：只实现手牌上限 -3、X 技能与旧印 +2；[reaction]「投入卡牌技能图标翻倍」与旧印「可以抽 1 张卡」缺条目级窗口/收益读点。"
+    },
+    {
+      "code": "10661b",
+      "name": "旧时记忆",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "note 披露：「取消该卡牌的显现效果并将其移出游戏」没有取消窗口读点；只把旧时记忆入场，深渊抽牌结果交给调用方。"
+    },
+    {
+      "code": "10662a",
+      "name": "宇宙密使",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10662a 宇宙密使（正面）：不能受伤 + 成功攻/躲改为本轮不攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10662b 宇宙密使（破碎面）：被击败时每位调查员意志(100)失败即阵亡"
+        }
+      ]
+    },
+    {
+      "code": "10662b",
+      "name": "宇宙密使",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「宇宙密使得到 +2[每人] 生命」；条目/definition 未声明 healthPerInvestigator，fate behavior 的 enemyStatModifier 只处理水晶仿体 → 数值不生效。"
+    },
+    {
+      "code": "10663a",
+      "name": "宇宙密使",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10663a 宇宙密使（正面）：不能受伤 + 成功攻/躲改为本轮不攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10663b 宇宙密使（破碎面）：elderthing 标记反应（自动失败或攻击）"
+        }
+      ]
+    },
+    {
+      "code": "10663b",
+      "name": "宇宙密使",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10663b 宇宙密使（破碎面）：elderthing 标记反应（自动失败或攻击）"
+        }
+      ]
+    },
+    {
+      "code": "10664a",
+      "name": "宇宙密使",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10664a 宇宙密使（正面）：不能受伤 + 成功攻/躲改为本轮不攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10664b 宇宙密使（破碎面）：cultist 标记反应（自动失败或攻击）"
+        }
+      ]
+    },
+    {
+      "code": "10664b",
+      "name": "宇宙密使",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10664b 宇宙密使（破碎面）：cultist 标记反应（自动失败或攻击）"
+        }
+      ]
+    },
+    {
+      "code": "10665a",
+      "name": "宇宙密使",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10665a 宇宙密使（正面）：不能受伤 + 成功攻/躲改为本轮不攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10665b 宇宙密使（破碎面）：tablet 标记反应（自动失败或攻击）"
+        }
+      ]
+    },
+    {
+      "code": "10665b",
+      "name": "宇宙密使",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10665b 宇宙密使（破碎面）：tablet 标记反应（自动失败或攻击）"
+        }
+      ]
+    },
+    {
+      "code": "10666",
+      "name": "镜巢",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10666 镜巢：顺时针/逆时针连接 + 回合末强制（fight）"
+        }
+      ]
+    },
+    {
+      "code": "10667",
+      "name": "镜巢",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10667 镜巢：顺时针/逆时针连接 + 回合末强制（evade）"
+        }
+      ]
+    },
+    {
+      "code": "10668",
+      "name": "镜巢",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10668 镜巢：顺时针/逆时针连接 + 回合末强制（investigate）"
+        }
+      ]
+    },
+    {
+      "code": "10669",
+      "name": "镜巢",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10669 镜巢：共同花 7/人 线索查找深渊（每幕一次）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10669 镜巢：顺时针/逆时针连接 + 回合末强制（随机弃手牌）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-scenario-fateOfTheVale.test.mjs",
+          "test": "P7 fateOfTheVale 镜巢回合末：未成功攻击时二选一、10669 总是随机弃牌"
+        }
+      ]
+    },
+    {
+      "code": "10670",
+      "name": "深渊",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「敌军阶段期间，每个在深渊的[[破碎]]敌人失去冷漠」；note 披露只保留卡面文本（未接线）。"
+    },
+    {
+      "code": "10670b",
+      "name": "深渊",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10670b 深渊（故事面）：从底抽/弃顶/五类揭示规则"
+        }
+      ]
+    },
+    {
+      "code": "10671",
+      "name": "水晶仿体",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10671 水晶仿体：战斗/躲避 X=手牌数，攻击后随机弃 1 手牌"
+        }
+      ]
+    },
+    {
+      "code": "10672",
+      "name": "升华",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10672 诡计：willpower(4) 失败二选一"
+        }
+      ]
+    },
+    {
+      "code": "10673",
+      "name": "碎裂",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10673 诡计：agility(4) 失败二选一"
+        }
+      ]
+    },
+    {
+      "code": "10674",
+      "name": "狂喜",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10674 诡计：intellect(4) 失败二选一"
+        }
+      ]
+    },
+    {
+      "code": "10675",
+      "name": "第一日",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10675 第一日：时间标记数据（第 1 日 / 正面 day 背面 night）"
+        }
+      ]
+    },
+    {
+      "code": "10676",
+      "name": "虫群",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10676 虫群：敏捷(3)，每失败 1 点失去 1 资源或受 1 伤"
+        }
+      ]
+    }
+  ]
+}

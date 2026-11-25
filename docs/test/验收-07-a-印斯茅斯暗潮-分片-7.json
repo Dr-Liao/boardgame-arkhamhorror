@@ -1,0 +1,127 @@
+{
+  "unit": "07-a-7",
+  "generatedAt": "2026-11-24",
+  "scope": {
+    "cards": 42,
+    "selector": "pack=lod && effectStatus=unverified",
+    "product": "The Lair of Dagon（《达贡的巢穴》，印斯茅斯暗潮第 5 章）",
+    "codeRange": "07261-07300b"
+  },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "07261", "07262", "07263", "07264", "07265", "07266", "07268", "07269", "07270", "07271", "07272", "07274",
+    "07275", "07276", "07277", "07278", "07279",
+    "07283", "07284", "07285", "07286", "07287", "07288", "07289", "07290", "07291",
+    "07292a", "07292b", "07293", "07294", "07295", "07296", "07297", "07298", "07299",
+    "07300", "07300b"
+  ],
+  "failedCodes": [
+    {
+      "code": "07280",
+      "name": "The First Oath / 第一誓约",
+      "dimension": "primitives",
+      "reason": "三张达贡幕正面同句模板（嫌犯三行 modifiers + [fast] 花蓝/红/白/黄钥匙清屏障）三份手写声明之一；p8-release §7 的维护项 w5-07280-oath-shared-rules（共用正面模板工厂）明确未完成。行为正确，仅复用债务。",
+      "evidence": [
+        "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07280.js:571-609",
+        "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07281.js:706-742",
+        "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07282.js:815-847",
+        "docs/campaign/theInnsmouthConspiracy/p8-release.md:62-65,169-172",
+        "tests/acceptance-07-a-shard7.test.mjs（验收 07280/07281/07282 缺陷复现…）"
+      ]
+    },
+    {
+      "code": "07281",
+      "name": "The Second Oath / 第二誓约",
+      "dimension": "primitives",
+      "reason": "同句模板三份手写声明之一（与 07280/07282 逐字重复），共享工厂重构未完成。行为正确。",
+      "evidence": [
+        "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07281.js:706-742",
+        "tests/acceptance-07-a-shard7.test.mjs（验收 07280/07281/07282 缺陷复现…）"
+      ]
+    },
+    {
+      "code": "07282",
+      "name": "The Third Oath / 第三誓约",
+      "dimension": "primitives",
+      "reason": "同句模板三份手写声明之一（与 07280/07281 逐字重复），共享工厂重构未完成。行为正确。",
+      "evidence": [
+        "src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07282.js:815-847",
+        "tests/acceptance-07-a-shard7.test.mjs（验收 07280/07281/07282 缺陷复现…）"
+      ]
+    },
+    {
+      "code": "07267",
+      "name": "Ikiaq / 伊恰克",
+      "dimension": "interaction",
+      "reason": "新承载区 capturedCards（面朝下放于伊恰克下方的基础弱点）只被 projection 折成 capturedCardCount，web/** 无渲染读点，docs/card-model.md §7.1 未登记 → 玩家看不到下方弱点数量；违反 ARCHITECTURE §3.5「新增承载区 card-defs/observation/web 三处一起改并登记」。行为本身正确。",
+      "evidence": [
+        "src/engine/player-mechanics.js:319-329",
+        "src/integration/presentation-state.js:75",
+        "src/cards/entries/07267.js",
+        "tests/acceptance-07-a-shard7.test.mjs（验收 07267 伊恰克缺陷复现…）"
+      ]
+    },
+    {
+      "code": "07273",
+      "name": "Purifying Corruption / 净化腐败",
+      "dimension": "interaction",
+      "reason": "新使用标记类型 usesType:'corruption' 未登记 web/table-components.js#USE_TOKEN_DISPLAY，也未补中英词典（AGENTS 要求新增使用标记类型同轮补展示登记 + 词典）→ 卡面腐化计数回退显示原始 id。行为本身正确。",
+      "evidence": [
+        "src/cards/entries/07273.js:222-244",
+        "web/table-components.js（USE_TOKEN_DISPLAY 无 corruption）",
+        "web/locales/zh-CN.table.js、web/locales/en.table.js",
+        "tests/acceptance-07-a-shard7.test.mjs（验收 07273 净化腐败缺陷复现…）"
+      ]
+    }
+  ],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "pass",
+    "primitives": "fail",
+    "interaction": "fail",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/tic-scenario-theLairOfDagon.test.mjs + tests/tic-late-b-cards.test.mjs + tests/tic-scenarios-late.test.mjs",
+      "test": "本章逐卡（标题含卡号）：幕/议程/地点/敌人/诡计/剧情资产 + 章节流程",
+      "codes": ["07274", "07275", "07276", "07277", "07278", "07279", "07280", "07281", "07282", "07283", "07284", "07285", "07286", "07287", "07288", "07289", "07290", "07291", "07293", "07294", "07295", "07296", "07297", "07298", "07299", "07300", "07300b"],
+      "command": "node --test tests/tic-scenario-theLairOfDagon.test.mjs tests/tic-late-b-cards.test.mjs tests/tic-scenarios-late.test.mjs",
+      "result": "130/130 pass"
+    },
+    {
+      "file": "tests/tic-player-guardian-seeker.test.mjs + tests/tic-player-rogue-mystic.test.mjs + tests/tic-player-survivor-neutral.test.mjs + tests/tic-scenario-reference-printed.test.mjs + tests/tic-slumbering-bosses.test.mjs",
+      "test": "玩家卡逐卡（标题含卡号）+ 场景参考卡 07274 + 沉睡达贡 07292a/07292b",
+      "codes": ["07261", "07262", "07263", "07264", "07265", "07266", "07267", "07268", "07269", "07270", "07273", "07274", "07292a", "07292b"],
+      "command": "node --test tests/tic-player-guardian-seeker.test.mjs tests/tic-player-rogue-mystic.test.mjs tests/tic-player-survivor-neutral.test.mjs tests/tic-scenario-reference-printed.test.mjs tests/tic-slumbering-bosses.test.mjs",
+      "result": "246/246 pass"
+    },
+    {
+      "file": "tests/acceptance-07-a-shard7.test.mjs",
+      "test": "本分片补证：07271/07272 标题含卡号真实执行；07267/07273/07280–07282 缺陷复现",
+      "codes": ["07271", "07272", "07267", "07273", "07280", "07281", "07282"],
+      "command": "node --test tests/acceptance-07-a-shard7.test.mjs",
+      "result": "5/5 pass"
+    },
+    {
+      "file": "npm run audit:entries",
+      "test": "条目合规 R1/R2/R3（本分片 42 卡号 R1/R2/R3 全 0；07297 命中非阻塞 R5 testWrapper watch）",
+      "codes": ["*"],
+      "result": "exit 0；directStateWrite 112 / singleCardField 21 / reprintDuplicate 0 / playConditionGap 0 / testWrapper 25"
+    },
+    {
+      "file": "npm run cards:check",
+      "test": "一卡一文件 + 索引 + 条目合规",
+      "codes": ["*"],
+      "result": "exit 0（10 例）"
+    },
+    {
+      "file": "npm run cards:encounter-check",
+      "test": "非玩家索引 + 归属 + 条目合规",
+      "codes": ["*"],
+      "result": "exit 0（7 例）"
+    }
+  ],
+  "notes": "37 通过 / 5 未通过（verdict partial）。失败分类：07280/07281/07282 原语复用债务（三张达贡幕正面同句模板三份手写；p8-release §7 的 w5-07280-oath-shared-rules 维护项明确未完成，行为正确）；07267 交互/展示（新承载区 capturedCards 只有投影计数与引擎侧写点，web 无渲染读点且 card-model §7.1 未登记）；07273 交互/展示（新使用标记类型 corruption 未登记 USE_TOKEN_DISPLAY 与中英词典）。实现完整性 42/42 通过：印刷子句逐条有引擎/内容读点，H11（07300 花钥匙→重整+翻面→背面能力）已修复且实测通过，07292a/b 沉睡/觉醒双面与物理换面正确，07298 水深读取语义正确。证据：42/42 张标题含卡号的真实执行测试且本地重跑通过（既有 130/130 + 246/246，新增补证 5/5）。合规三条只读门禁 exit 0；未改运行期文件；未跑全量 test:fast（按 Lead 指示）。已知非 HIGH 项复核：07291 shroud（cards-data 与 chapter-data 均为 3，一致，视为已修复但缺专门回归断言）；07297 testWrapper 为非阻塞 R5 watch（实际有失败分支逻辑，非空包装）。账本口径：audit/tic-all-card-acceptance.json 的 252 条文件级证据与本轮复核不一致（至少 5 张有展示/复用缺陷），建议在 07-a 主报告登记「逐卡账本去假绿」，本轮不重签账本。"
+}

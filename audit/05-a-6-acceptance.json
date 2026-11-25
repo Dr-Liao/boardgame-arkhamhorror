@@ -1,0 +1,669 @@
+{
+  "schemaVersion": 1,
+  "unit": "05-a-6",
+  "profile": {
+    "id": "tcu-union-disillusion-2026-11",
+    "scope": "万象无终 05 段 Union and Disillusion（uad，05229–05272）48 条目录记录。42 条通过五维验收；6 条因重印未登记/双实现、R1 与触发条件越界暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 48,
+    "verified": 42,
+    "unverified": 6,
+    "unimplemented": 0,
+    "testsPassed": 134
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+      "sha256": "4ed52967508680914be3fa9bfa400a2b8053ae51fdb003aebbe462e974737d5a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-union-disillusion.test.mjs",
+      "sha256": "b9fda7c050a9ab42d1f055ee9bbcfbbb2a5e871d5d72b4bec7e1249e0bd1861f"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+      "sha256": "96600f3e7e76725560f719638d8003ae11edea57a56ac0245cad3478c168b1f6"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-scenario-hooks.test.mjs",
+      "sha256": "8b3deca44a0c9ed625054e2c4fe2388201989847e6c4c885d0ed97a9a457c27b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-chapters-smoke.test.mjs",
+      "sha256": "3d65b25c5d2e2d00321e738015ac5cf3629c6e6ea11d6e24d916896393b56257"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-p1-regressions.test.mjs",
+      "sha256": "1003ff31f4f3c4f908e7b508f18d212435ccdb3021411ebf93d7b9e608a28455"
+    }
+  ],
+  "entries": [
+    {
+      "code": "05229",
+      "name": "鸣枪示警",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05229 鸣枪示警 花 1 子弹把所在地点所有非精英敌人赶去连接地点"
+        }
+      ]
+    },
+    {
+      "code": "05230",
+      "name": "瞄准镜",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05230 瞄准镜 反应横置写回宿主 attachments 实体（不能反复触发）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05230 瞄准镜 对与你交战的敌人：所附属枪械不出现在攻击列表，直接结算也被拦截"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05230 瞄准镜 快速附属到[[枪械]]支援（引擎已支持手槽过滤；附属期能力见条目 note）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05230 瞄准镜 本地无敌人：所附属枪械的攻击入口仍出现，反应改指连接地点的非精英敌人"
+        }
+      ]
+    },
+    {
+      "code": "05231",
+      "name": "知识就是力量",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05231 知识就是力量 结算所选[[书籍]]支援的[行动]能力（忽略费用）"
+        }
+      ]
+    },
+    {
+      "code": "05232",
+      "name": "绝密地图集",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05232 绝密地图集 花秘密横置移动到距离正好为 2 的已揭示地点"
+        }
+      ]
+    },
+    {
+      "code": "05233",
+      "name": "投资",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05233 投资 横置放置补给（上限 10），兑现时把全部补给换成资源"
+        }
+      ]
+    },
+    {
+      "code": "05234",
+      "name": "诱敌",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05234 诱敌 修复：没有可躲避的非精英敌人时打不出（含连接地点判定）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05234 诱敌 自动躲避非精英敌人；可支付 +2 资源改为最多 2 个"
+        }
+      ]
+    },
+    {
+      "code": "05235",
+      "name": "蠕虫的秘密",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05235 蠕虫的秘密 横置并放 1 毁灭：从弃牌堆免费-1 费打出法术/洞察事件，之后移出游戏"
+        }
+      ]
+    },
+    {
+      "code": "05236",
+      "name": "指路鬼魂",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：`source.removedFromGame = true` 直接写支援实例字段，未走 ctx.api；`audit-card-entry-compliance.mjs` 的 R1 正则只从 state 根/context 解构起污点，漏检 resolve 参数 `source`，因此账本 R2/R1 未报（本条目在本轮审计中独立发现）。"
+    },
+    {
+      "code": "05237",
+      "name": "幸运或是注定",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "触发条件比卡面宽：卡面「when doom would be placed on any scenario card」，引擎 doomPlaced 窗口对「任意卡上的毁灭」都会打开（含玩家支援，如 05235 用 api.placeDoomOnCard 在自己身上放毁灭），条目 criteria 只检查 context.card.doom > 0，未排除玩家卡；实测范围内可响应玩家支援上的毁灭（错值/越界触发）。"
+    },
+    {
+      "code": "05238",
+      "name": "聚合幻灭",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-union-disillusion.test.mjs",
+          "test": "05238 [elder_thing]：真实流程里 state.skillTest 已关闭，从 result.source 识别阵法行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05238 真实引擎：聚合幻灭可由真实战役流程建立，布置/混乱袋/火盆/幕牌库可读"
+        }
+      ]
+    },
+    {
+      "code": "05239",
+      "name": "恋人•VI",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-union-disillusion.test.mjs",
+          "test": "05239 被偷走的灵魂：看守人不在场先记账，入场时补成真实资源标记并折算攻击/生命"
+        }
+      ]
+    },
+    {
+      "code": "05240",
+      "name": "命运的十字路口",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05240 命运的十字路口：背面每位幸存调查员被击败并承受 1 点肉体创伤，进入结局 5"
+        }
+      ]
+    },
+    {
+      "code": "05241",
+      "name": "未访之岛",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-union-disillusion.test.mjs",
+          "test": "05241 命运卡：按玩家顺序分组结算（不是按发牌顺序）"
+        }
+      ]
+    },
+    {
+      "code": "05242",
+      "name": "命数已定",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05242 命数已定：背面生成看守人并洗入攫噬/注视，灵怪陷阱入场；本幕不能离开面前地点"
+        }
+      ]
+    },
+    {
+      "code": "05243",
+      "name": "迷雾彼端(版本一)",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05243 迷雾彼端（v. I）：背面揭示灵怪陷阱、拉入岛上调查员，法术成功生成安妮特"
+        }
+      ]
+    },
+    {
+      "code": "05244",
+      "name": "迷雾彼端(版本二)",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05244 迷雾彼端（v. II）：背面把异教徒标记从混乱袋/封印区/战役袋移除"
+        }
+      ]
+    },
+    {
+      "code": "05245",
+      "name": "迷雾彼端(版本三)",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05245 迷雾彼端（v. III）：背面生成秘社新信徒并洗入剩余银暮秘社，约瑟夫健在则生成且禁止谈判"
+        }
+      ]
+    },
+    {
+      "code": "05246",
+      "name": "迷雾彼端(版本四)",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-union-disillusion.test.mjs",
+          "test": "05246 谈判：只有未被封锁且与约瑟夫同地点时才列出，performAction 再校验一次"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05246 迷雾彼端（v. IV）：背面不生成秘社新信徒，只洗银暮秘社并（约瑟夫健在时）生成约瑟夫"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-union-disillusion.test.mjs",
+          "test": "05246/05248 [fast]：任一调查员可在阵法检定期花自己的线索降难度（逐人询问）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-union-disillusion.test.mjs",
+          "test": "05246/05248 [fast]：任意玩家窗口出现（behavior.fastActions），使用后同一检定每人一次"
+        }
+      ]
+    },
+    {
+      "code": "05247",
+      "name": "咒缚仪式",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05247 绑定仪式：看守人在灵怪陷阱被击败且火盆点燃时推进；背面进入结局 1"
+        }
+      ]
+    },
+    {
+      "code": "05248",
+      "name": "仪式遭毁",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-union-disillusion.test.mjs",
+          "test": "05246/05248 [fast]：任一调查员可在阵法检定期花自己的线索降难度（逐人询问）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-union-disillusion.test.mjs",
+          "test": "05246/05248 [fast]：任意玩家窗口出现（behavior.fastActions），使用后同一检定每人一次"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-union-disillusion.test.mjs",
+          "test": "05248 目标：火盆状态以看守人被击败瞬间为准，之后变化不影响判定"
+        }
+      ]
+    },
+    {
+      "code": "05249",
+      "name": "米斯卡塔尼克河",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05249 米斯卡塔尼克河：定义声明撤退行动（引擎 loc.resign 读点）"
+        }
+      ]
+    },
+    {
+      "code": "05250",
+      "name": "危险河岸",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05250 危险河岸：阵法选择意志/智力(3)，成功后点燃火盆；闹鬼二选一失去行动或资源"
+        }
+      ]
+    },
+    {
+      "code": "05251",
+      "name": "未访之岛",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05251 立石：阵法意志+智力(10)；闹鬼令本轮阵法检定难度 +2"
+        }
+      ]
+    },
+    {
+      "code": "05252",
+      "name": "未访之岛",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05252 迷雾空地：阵法意志+敏捷(11)；闹鬼二选一放毁灭或受到 1 伤 1 恐"
+        }
+      ]
+    },
+    {
+      "code": "05253",
+      "name": "未访之岛",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05253 弃林：阵法意志+战斗(11)；闹鬼可选查找夜鹰生成或最近夜鹰攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-union-disillusion.test.mjs",
+          "test": "05253 最近的夜鹰：按地点连接距离取最近，而不是第一个/同地点"
+        }
+      ]
+    },
+    {
+      "code": "05254",
+      "name": "未访之岛",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-union-disillusion.test.mjs",
+          "test": "05254 苔藓阶梯：只有移动行动加价，效果位移不扣行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05254 苔藓阶梯：阵法战斗+敏捷(10)；闹鬼让下一次移动行动多花 1 行动"
+        }
+      ]
+    },
+    {
+      "code": "05255",
+      "name": "未访之岛",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05255 闹鬼泉：阵法智力+敏捷(9)；闹鬼可选弃支援或受 1 伤（无支援时只剩受伤）"
+        }
+      ]
+    },
+    {
+      "code": "05256",
+      "name": "未访之岛",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05256 腐朽柳树：阵法智力+战斗(9)；闹鬼选择并弃掉手牌 1 张"
+        }
+      ]
+    },
+    {
+      "code": "05257",
+      "name": "灵怪陷阱",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05257 灵怪陷阱：四技能(20)阵法；看守人位于此地获得反击；未揭示不能进入"
+        }
+      ]
+    },
+    {
+      "code": "05258",
+      "name": "加弗瑞拉·米兹拉克",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-scenario-hooks.test.mjs",
+          "test": "c7shared：05258–05261 剧情支援条目声明 +1 技能与卡面能力"
+        }
+      ]
+    },
+    {
+      "code": "05259",
+      "name": "杰罗姆·戴维斯",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05259 杰罗姆·戴维斯：同地点抽到诡计且弃 ≥2 智力图标后取消显现"
+        }
+      ]
+    },
+    {
+      "code": "05260",
+      "name": "佩妮·怀特",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05260 佩妮·怀特：显现效果期间检定成功后横置发现 1 线索"
+        }
+      ]
+    },
+    {
+      "code": "05261",
+      "name": "瓦伦蒂诺·里瓦斯",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-scenario-hooks.test.mjs",
+          "test": "c7shared：05258–05261 剧情支援条目声明 +1 技能与卡面能力"
+        }
+      ]
+    },
+    {
+      "code": "05262",
+      "name": "加弗瑞拉的命运",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-union-disillusion.test.mjs",
+          "test": "05262-05265：翻回敌人面的命运敌人与「结算这张卡的调查员」交战；person 记录键正确"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-union-disillusion.test.mjs",
+          "test": "05262b 加弗瑞拉：成功攻击后只有「未被击败且重整」才受 1 点恐惧"
+        }
+      ]
+    },
+    {
+      "code": "05262b",
+      "name": "加弗瑞拉·米兹拉克",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-union-disillusion.test.mjs",
+          "test": "05262b 加弗瑞拉：成功攻击后只有「未被击败且重整」才受 1 点恐惧"
+        }
+      ]
+    },
+    {
+      "code": "05263",
+      "name": "杰罗姆的命运",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05263 杰罗姆的命运：失踪且在追查 → 控制剧情支援、不占盟友槽、记录还活着"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05263b 杰罗姆·戴维斯（敌人面）：与你交战后选择并弃掉 2 张手牌"
+        }
+      ]
+    },
+    {
+      "code": "05263b",
+      "name": "杰罗姆·戴维斯",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05263b 杰罗姆·戴维斯（敌人面）：与你交战后选择并弃掉 2 张手牌"
+        }
+      ]
+    },
+    {
+      "code": "05264",
+      "name": "佩妮的命运",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05264 佩妮的命运：被幽灵夺走性命且在追查 → 翻回敌人面横置不交战"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05264b 佩妮·怀特（敌人面）：成功躲避后受到 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "05264b",
+      "name": "佩妮·怀特",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05264b 佩妮·怀特（敌人面）：成功躲避后受到 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "05265",
+      "name": "瓦伦蒂诺的命运",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-union-disillusion.test.mjs",
+          "test": "05262-05265：翻回敌人面的命运敌人与「结算这张卡的调查员」交战；person 记录键正确"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05265b 瓦伦蒂诺·里瓦斯（敌人面）：与你交战后失去 2 资源"
+        }
+      ]
+    },
+    {
+      "code": "05265b",
+      "name": "瓦伦蒂诺·里瓦斯",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05265b 瓦伦蒂诺·里瓦斯（敌人面）：与你交战后失去 2 资源"
+        }
+      ]
+    },
+    {
+      "code": "05266",
+      "name": "夜鹰",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R2 跨循环重印双实现：05266 Whippoorwill 与 02090(dwl)/12166(core_2026) 同名同文（印刷文本逐字一致），cards-data 未标 duplicateOfCode/duplicatedBy，`_reprint-aliases.js` 也无别名；05266 在 unionAndDisillusion 目录另写一份 enemySpawnRule/enemyStatRule（02090 的条目只声明 flags.nightgaunt，光环在 Dunwich 章节行为另实现），同一张印刷卡存在两份实现。"
+    },
+    {
+      "code": "05267",
+      "name": "幽灵乌鸦",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05267 幽灵乌鸦：猎物为智力最低；交战二选一得到 +2 攻/躲直到调查阶段结束"
+        }
+      ]
+    },
+    {
+      "code": "05268",
+      "name": "渴望死亡",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R2 跨循环重印双实现：05268 Eager for Death 与 02091(dwl)/12167(core_2026) 同名同文，cards-data 未标重印关系、无别名；02091 已用同一条声明式 treacheryRule.test（skill willpower / difficulty 2+damage / fail takeHorror 2）实现，05268 又复制了一份等价条目。"
+    },
+    {
+      "code": "05269",
+      "name": "灵魂之歌",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R2 跨循环重印双实现 + 同句规则重复手写：05269 Psychopomp's Song 与 02221(bota) 同名同文（Surge. Peril. / Revelation - Add ... to any investigator's threat area / Forced - 额外 2 伤害并弃卡），cards-data 未标重印、无别名；02221 已有等价 harmInterceptor + encounterResolve 实现（encounterResolveCampaigns: [\"dunwich\"]），05269 再手写一份，且「加入任意调查员威胁区」模板已是第 3+ 份。"
+    },
+    {
+      "code": "05270",
+      "name": "死期临近",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "同句规则重复手写：「Revelation - Add X to any investigator's threat area」+ 威胁区伤害/恐惧拦截模板在 02221、05269、05270 已出现三份（05270 的 encounterResolve 与 05269 逐字复制，仅 harmInterceptor.trigger 不同），按迁移规范 §4.3 应上收为共享条目/工厂；fix-plan P2-3 已登记未做。"
+    },
+    {
+      "code": "05271",
+      "name": "死亡记号",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05271 死亡记号：敏捷(2+已受恐惧)失败受 2 伤害（声明式 treacheryRule.test）"
+        }
+      ]
+    },
+    {
+      "code": "05272",
+      "name": "看守人的注视",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05272 看守人的注视：每位调查员意志(5)，失败者二选一结算所在地或看守人所在地闹鬼"
+        }
+      ]
+    }
+  ]
+}

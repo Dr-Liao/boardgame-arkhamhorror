@@ -1,0 +1,617 @@
+{
+  "schemaVersion": 1,
+  "unit": "05-a-7",
+  "profile": {
+    "id": "tcu-clutches-of-chaos-2026-11",
+    "scope": "万象无终 05 段 In the Clutches of Chaos（icc，05273–05312）42 条目录记录。33 条通过五维验收；2 条 R1、7 条 [fast] 时机近似未披露暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 42,
+    "verified": 33,
+    "unverified": 9,
+    "unimplemented": 0,
+    "testsPassed": 190
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-05-a-shard7.test.mjs",
+      "sha256": "d358d831b14a8f3f7fa08992765e5fe307dc02159eb6bf5d18ed05d27b70fb1d"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-clutches-chaos.test.mjs",
+      "sha256": "5654e200824a19d1c7efd67ba342b9acffa09e2c3875ff67718440ead9fa2d41"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-p1-regressions.test.mjs",
+      "sha256": "1003ff31f4f3c4f908e7b508f18d212435ccdb3021411ebf93d7b9e608a28455"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-location-api.test.mjs",
+      "sha256": "76748355282785e7c18d85aad700d9c8d573dd418a0ebfe2c4280b18d1d24e5b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+      "sha256": "96600f3e7e76725560f719638d8003ae11edea57a56ac0245cad3478c168b1f6"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+      "sha256": "c6dfa505d08f79472f2bea966902f3e5f70c4bff478cbb6c6384a58c718de2a7"
+    },
+    {
+      "file": "games/arkhamhorror/tests/play-channels.test.mjs",
+      "sha256": "9094f67fd1c66aa3f7463182352692c24071c6a3c02473e7b0a274b4ae66fe32"
+    },
+    {
+      "file": "games/arkhamhorror/tests/card-entries.test.mjs",
+      "sha256": "7af761867db156a667bcc1240ca5587a2fd09945e18de3744636731b47528780"
+    }
+  ],
+  "entries": [
+    {
+      "code": "05273",
+      "name": "MK1手榴弹",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05273 MK1手榴弹 命中后对所在地点每个敌人造成 2 点伤害，补给耗尽后弃置"
+        }
+      ]
+    },
+    {
+      "code": "05274",
+      "name": "特工支援",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05274 特工支援 两条[快速]能力：对敌人 1 伤害 / 发现 1 线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05274 特工支援 可以替同地点其他调查员承伤"
+        }
+      ]
+    },
+    {
+      "code": "05275",
+      "name": "恐怖揭露",
+      "type": "event",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：played 结算里写 `state.investigators[inv.seat].defeatCause = 'card'`（src/cards/entries/05275.js:57）。这是引擎「保留预设 defeatCause」的内部字段，条目应通过 api 表达（如 lethalSelfDamage 的 cause 选项/专用 api），不应直写 inv 实例。审计工具漏检索引式写入（docs/campaign/theCircleUndone/full-scan.md:241 已记录该盲区），因此 `npm run audit:entries` 显示 TCU R1=0，但按 ACCEPTANCE-ORDER 维度 2 该卡不得 verified。"
+    },
+    {
+      "code": "05276",
+      "name": "苦心钻研",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05276 苦心钻研 永久卡让起始手牌多 1 张"
+        }
+      ]
+    },
+    {
+      "code": "05277",
+      "name": "帮个小忙",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05277 帮个小忙 修复：范围模式不含自身地点；没有可伤害目标时打不出"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05277 帮个小忙 对所在地点非精英敌人造成 1 点伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05277 帮个小忙 额外付 2 费可指向连接 2 次内的地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05277 帮个小忙 额外付 2 费改成 2 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "05278",
+      "name": "干一天活计拿一天钱",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05278 干一天活计拿一天钱 永久卡在开局多给 2 资源"
+        }
+      ]
+    },
+    {
+      "code": "05279",
+      "name": "黛雅娜·艾丝帕伦斯",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：free 能力 resolve 里写 `source.attachments ||= []`（src/cards/entries/05279.js:49），source 是场上支援实例；条目应只读状态、附着走 `api.moveCard({to:'attached'})`（后续 api 调用已做，该行是多余直写）。同样属审计工具漏检的 `source.*` 盲区（full-scan.md:241）。按维度 2 不得 verified。"
+    },
+    {
+      "code": "05280",
+      "name": "否决存在",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05280 否决存在 同时受到 2 伤害 2 恐惧时整项二选一，并反向治愈所选面向"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05280 否决存在 弱点显现（妄想症）的失去全部资源可忽略并反向获得"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05280 否决存在 忽略失去行动并反向获得等量额外行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05280 否决存在 忽略失去资源并反向获得等量资源"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05280 否决存在 忽略弃手牌并反向抽等量牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05280 否决存在 忽略敌人攻击的伤害并反向治愈"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05280 否决存在 忽略遭遇卡造成的恐惧并反向治愈"
+        }
+      ]
+    },
+    {
+      "code": "05281",
+      "name": "勇闯火线",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05281 勇闯火线 把选定技能的基础值设为 5 直到回合结束"
+        }
+      ]
+    },
+    {
+      "code": "05282",
+      "name": "偷梁换柱",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05282 偷梁换柱 修复：没有可躲避的敌人时打不出"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05282 偷梁换柱 打出按「躲避」结算，不引发借机攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05282 偷梁换柱 躲避交战敌人成功后把它移到连接地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05282 偷梁换柱 躲避连接地点的非精英敌人并交换地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05282 偷梁换柱 选项 B 走真实躲避（含躲避支援加值/evadeSuccess 窗口）"
+        }
+      ]
+    },
+    {
+      "code": "05283",
+      "name": "安娜·卡斯洛",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05283 安娜·卡斯洛 入场后检索一张塔罗支援并放置入场"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05283 安娜·卡斯洛 游戏开始时从起始手牌放置入场"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05283 安娜·卡斯洛 额外 2 个塔罗槽位"
+        }
+      ]
+    },
+    {
+      "code": "05284",
+      "name": "混沌魔掌",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-clutches-chaos.test.mjs",
+          "test": "05284 异教徒标记（非检定揭示）：没有 afterTest 窗口时当场放裂口"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-p1-regressions.test.mjs",
+          "test": "P1 05284 幕上裂口 / 05203 四把钥匙 / 密谋牌库旁：真实 viewState 可观察"
+        }
+      ]
+    },
+    {
+      "code": "05285",
+      "name": "战车•VII",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-clutches-chaos.test.mjs",
+          "test": "05285：人数+1 个裂口按队长选择的顺序逐处放置"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-clutches-chaos.test.mjs",
+          "test": "05285：神话阶段「在当前密谋放 1 毁灭」走 doomPlacementReplacement（引擎契约 + 行为契约）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-clutches-chaos.test.mjs",
+          "test": "议程 05285：毁灭将要放置时改为在「人数+1」个随机地点各放 1 裂口（引擎替换窗口）"
+        }
+      ]
+    },
+    {
+      "code": "05286a",
+      "name": "黑暗知识(版本一)",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 印刷 `[fast]`（英文 text：\"[fast] Remove 3 breaches from this act…\"）的时序被近似为「0 行动的 scenarioAction」：`behavior.actions` 推入 `actions: 0` 的普通场景行动（content/…/inTheClutchesOfChaos/behavior.js:827-832），没有走引擎已登记的 `behavior.fastActions` [fast] 窗口读点（src/engine/encounter.js:680-682、gap-actions.js），因此不能在任意玩家窗口发动；章节 `migrationHistory` 未披露该近似。另 cards-data 中文 textZh 把本卡写作 `[free]`（与英文 `[fast]` 不一致，属翻译数据缺陷）。因为中文卡面写 [free]、英文写 [fast]，实现与哪一个口径等价无法单方定论，按规程记 pending（按未通过计），待主进程裁决口径后修复。"
+    },
+    {
+      "code": "05286b",
+      "name": "安妮特·梅森",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard7.test.mjs",
+          "test": "05286b 安妮特·梅森：生成在绞刑者山丘、每线索生命-2；其地点放裂口后每位调查员受伤或恐惧"
+        }
+      ]
+    },
+    {
+      "code": "05287",
+      "name": "坟墓彼端",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard7.test.mjs",
+          "test": "05287 坟墓彼端：目标是击败安妮特·梅森，背面进入结局 1"
+        }
+      ]
+    },
+    {
+      "code": "05288a",
+      "name": "黑暗知识(版本二)",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 与 05286a 同文同数据：印刷 [fast] / 中文 textZh [free] 不一致，行为以 0 行动 scenarioAction 近似，未走 `behavior.fastActions` [fast] 窗口；口径待裁决。"
+    },
+    {
+      "code": "05288b",
+      "name": "卡尔·桑福德",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard7.test.mjs",
+          "test": "05288b 卡尔·桑福德：每线索生命-2；幕裂口被移除后把 1 个裂口放到其所在地点"
+        }
+      ]
+    },
+    {
+      "code": "05289",
+      "name": "世界新秩序",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard7.test.mjs",
+          "test": "05289 世界新秩序：目标是击败卡尔·桑福德，背面进入结局 2"
+        }
+      ]
+    },
+    {
+      "code": "05290",
+      "name": "法兰西山",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-clutches-chaos.test.mjs",
+          "test": "05290 法兰西山（弃牌版）：只按意志图标计数，wild 图标不算"
+        }
+      ]
+    },
+    {
+      "code": "05291",
+      "name": "法兰西山",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard7.test.mjs",
+          "test": "05291 法兰西山（检定版）：意志(2)成功且每超出 1 点，把 1 个裂口移到当前幕"
+        }
+      ]
+    },
+    {
+      "code": "05292",
+      "name": "河岸城",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-clutches-chaos.test.mjs",
+          "test": "05292 法兰西山（检定版）：只按智识图标计数，wild 图标不算"
+        }
+      ]
+    },
+    {
+      "code": "05293",
+      "name": "河岸城",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard7.test.mjs",
+          "test": "05293 河岸城（检定版）：智识(2)成功且每超出 1 点，把 1 个裂口移到当前幕"
+        }
+      ]
+    },
+    {
+      "code": "05294",
+      "name": "南区",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 地点条目以 `actions: 0, fast: true` 声明 [fast] 行动（src/cards/encounter-entries/theCircleUndone/inTheClutchesOfChaos/05294.js），但 locationRule.actions 产出的行动只进普通 scenarioAction 列表，`fast:true` 标志没有被引擎消费；引擎唯一 [fast] 窗口读点是 behavior.fastActions（encounter.js:680-682）。英文 text 为 [fast]，中文 textZh 为 [free]，口径不一致且迁移记录未披露——记 pending。"
+    },
+    {
+      "code": "05295",
+      "name": "南区",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 同 05294：英文 [fast] / 中文 [free] 不一致，地点 [fast] 行动只以 0 行动 scenarioAction 近似，未接 `behavior.fastActions` 窗口。"
+    },
+    {
+      "code": "05296",
+      "name": "住宅区",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard7.test.mjs",
+          "test": "05296 住宅区（弃牌版）：只按敏捷图标计数，wild 图标不算"
+        }
+      ]
+    },
+    {
+      "code": "05297",
+      "name": "住宅区",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard7.test.mjs",
+          "test": "05297 住宅区（检定版）：敏捷(2)成功且每超出 1 点，把 1 个裂口移到当前幕"
+        }
+      ]
+    },
+    {
+      "code": "05298",
+      "name": "南区教堂",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard7.test.mjs",
+          "test": "05298 南区教堂（抽遭遇版）：抽 1 张遭遇牌后把所有裂口移到当前幕；另有撤退行动"
+        }
+      ]
+    },
+    {
+      "code": "05299",
+      "name": "南区教堂",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-clutches-chaos.test.mjs",
+          "test": "05299 南区教堂（弃支援版）：通过 leaveAsset 弃支援；无支援时行动不出现"
+        }
+      ]
+    },
+    {
+      "code": "05300",
+      "name": "商人区",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-clutches-chaos.test.mjs",
+          "test": "05300 商人区（弃牌版）：弃到的弱点走抽牌管线（drawDiscard）结算"
+        }
+      ]
+    },
+    {
+      "code": "05301",
+      "name": "商人区",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 同 05294：`[fast] Spend 2 resources…` 以 0 行动 scenarioAction 近似，中文 textZh 写作 [free]，未走 [fast] 窗口读点。"
+    },
+    {
+      "code": "05302",
+      "name": "绞刑者山丘",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard7.test.mjs",
+          "test": "05302 绞刑者山丘（受诅咒的歌）：查找遭遇牌库/弃牌堆的女巫敌人并抽取，然后把裂口移到当前幕"
+        }
+      ]
+    },
+    {
+      "code": "05303",
+      "name": "银暮秘社",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 同 05294：`[fast] Take 1 horror…` 以 0 行动 scenarioAction 近似，中文 textZh 写作 [free]，未走 [fast] 窗口读点。"
+    },
+    {
+      "code": "05304",
+      "name": "绞刑者山丘",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 同 05294：`[fast] Take 1 damage…` 以 0 行动 scenarioAction 近似，中文 textZh 写作 [free]，未走 [fast] 窗口读点。"
+    },
+    {
+      "code": "05305",
+      "name": "银暮秘社",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard7.test.mjs",
+          "test": "05305 银暮秘社（宇宙之秘）：查找遭遇牌库/弃牌堆的银暮秘社敌人并抽取，然后把裂口移到当前幕"
+        }
+      ]
+    },
+    {
+      "code": "05306",
+      "name": "混沌幽现",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-clutches-chaos.test.mjs",
+          "test": "05306 混沌幽现：失败者在 X 个不同地点里选择放置裂口的顺序"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-clutches-chaos.test.mjs",
+          "test": "05306 混沌幽现：意志检定失败按低于难度点数在随机地点放裂口"
+        }
+      ]
+    },
+    {
+      "code": "05307",
+      "name": "元初通道",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-clutches-chaos.test.mjs",
+          "test": "05307 元初通道：地点本阶段已入侵过也照样补到正好 3 个裂口（不吃阶段保护提前停）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-clutches-chaos.test.mjs",
+          "test": "05307 元初通道：附属随机地点并把裂口补到 3，可用意志检定关闭（真实附属实例）"
+        }
+      ]
+    },
+    {
+      "code": "05308",
+      "name": "猛鬼出笼",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-clutches-chaos.test.mjs",
+          "test": "05308 猛鬼出笼：先补 1 裂口，再按裂口+毁灭受到伤害或恐惧"
+        }
+      ]
+    },
+    {
+      "code": "05309",
+      "name": "秘社打手",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-clutches-chaos.test.mjs",
+          "test": "05309 秘社打手：其所在地点的印刷文本视为空白（行动消失且不能执行）"
+        }
+      ]
+    },
+    {
+      "code": "05310",
+      "name": "异界之秘",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-clutches-chaos.test.mjs",
+          "test": "05310 异界之秘：按异教徒敌人上的毁灭放裂口；无目标时获得涌动"
+        }
+      ]
+    },
+    {
+      "code": "05311",
+      "name": "混沌见证者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-p1-regressions.test.mjs",
+          "test": "P1 05311 breachOnEnter：进入地点后真实放置 1 裂口"
+        }
+      ]
+    },
+    {
+      "code": "05312",
+      "name": "不惮辛劳不惮烦",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-clutches-chaos.test.mjs",
+          "test": "05312 不惮辛劳不惮烦：选择结算所在地点入侵"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-clutches-chaos.test.mjs",
+          "test": "05312：选择重演遭遇弃牌堆最顶部的力量诡计（就地结算，不经过抽牌）"
+        }
+      ]
+    }
+  ]
+}

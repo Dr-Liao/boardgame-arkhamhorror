@@ -1,0 +1,1189 @@
+{
+  "schemaVersion": 1,
+  "unit": "04-a-2",
+  "profile": {
+    "id": "tfa-shattered-aeons-boundary-beyond-city-of-archives-2026-11",
+    "scope": "失落时代 04 段 Shattered Aeons（sha，36 条）+ The Boundary Beyond（tbb，31 条）+ The City of Archives（tcoa，28 条）共 95 条目录记录，锁定审计时未验收清单。81 条通过五维验收；14 条因存量 R1 直写、声明即未接线或可选反应自动结算暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为 tests/acceptance-04-a-shard2.test.mjs 与 tfa-*.test.mjs 的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 95,
+    "verified": 81,
+    "unverified": 14,
+    "unimplemented": 0,
+    "testsPassed": 306
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+      "sha256": "f335651a017049323dbbefdf47490cde865b42da414cb711bcfa640b8f11f7d8"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tfa-shattered-aeons.test.mjs",
+      "sha256": "0b1a28db16909a29c58e15179a47dab64cff35fd4330d08c526c1d79495f37e2"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tfa-boundary-beyond.test.mjs",
+      "sha256": "659734cd6db5dcf04836becd98b783bb40a655e5bda8f525b6999de125c166a6"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tfa-city-of-archives.test.mjs",
+      "sha256": "6d1fc60a81065191daa54e3fa8e4c51da78058bfd0cae09bddb5a12059db3ab5"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tfa-turn-back-time.test.mjs",
+      "sha256": "c632138f1ce6cdfb82fe1aed2d7461f82b85dba6b51ded274a075d4a6570c7b8"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tfa-encounter-p1.test.mjs",
+      "sha256": "e086a73075bcb309cce8dbf2eee71e875042f547dcceb6dac4bd680af618ec93"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tfa-p2-hooks.test.mjs",
+      "sha256": "284edaa0f228dd292fd65e4c1cacef667bf30ae9f93f3c30f3a68070a5bde775"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tfa-mechanics.test.mjs",
+      "sha256": "f5a85bb3d04bc65fa5776e1a38ca1209ec982846e4dd53f331fc0ad6f52ed2e6"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tfa-scenario-acceptance.test.mjs",
+      "sha256": "47cf8284995d584d9dc4a48d44bc1531110029a723acd539abc244cfb6853b3c"
+    }
+  ],
+  "entries": [
+    {
+      "code": "04161",
+      "name": "界限彼端",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-boundary-beyond.test.mjs",
+          "test": "04161 混乱标记：普通难度一个蛇族攻击、困难每个；异教徒毁灭与古代地点线索"
+        }
+      ]
+    },
+    {
+      "code": "04162",
+      "name": "界限崩坏",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-boundary-beyond.test.mjs",
+          "test": "04162 预示者进场后从放在一边移除，并按记录带伤"
+        }
+      ]
+    },
+    {
+      "code": "04163",
+      "name": "屏障薄弱",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-boundary-beyond.test.mjs",
+          "test": "04163 未来幻象：换密谋 3a 时清掉旧密谋的毁灭"
+        }
+      ]
+    },
+    {
+      "code": "04164",
+      "name": "时间坍塌",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04164 时间坍塌：翻面进入结局 2（被困在时间的另一边）"
+        }
+      ]
+    },
+    {
+      "code": "04165",
+      "name": "穿越界限",
+      "type": "act",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：`state.scenarioFlags ||= {}`（存量基线），未走 api.scenarioFlag。"
+    },
+    {
+      "code": "04166",
+      "name": "过去与现在",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04166 过去与现在：背面换图并通过 hooks 放进胜利区；6 处无线索特诺奇蒂特兰地点推进幕"
+        }
+      ]
+    },
+    {
+      "code": "04167",
+      "name": "归家之旅",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04167 归家之旅：目标数据限定在大神庙共同付线索；帕德玛被击败即推进"
+        }
+      ]
+    },
+    {
+      "code": "04168",
+      "name": "神庙遗迹",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04168 神庙废墟：两点行动的探索按地点符号替换格位"
+        }
+      ]
+    },
+    {
+      "code": "04169",
+      "name": "大都会教堂",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04169 大都会教堂：受 1 恐惧抽 2 张；6 张以上手牌才开放探索"
+        }
+      ]
+    },
+    {
+      "code": "04170",
+      "name": "查普尔特佩克公园",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04170 查普尔特佩克公园：在此地意志检定失败后受到 1 点恐惧"
+        }
+      ]
+    },
+    {
+      "code": "04171",
+      "name": "索卡洛广场",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-boundary-beyond.test.mjs",
+          "test": "04171 索卡洛广场：由玩家选择弃哪些手牌，而不是自动按费用降序弃"
+        }
+      ]
+    },
+    {
+      "code": "04172",
+      "name": "霍奇米尔科",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04172 霍奇米尔科：不能获得资源，探索需花费 3 资源"
+        }
+      ]
+    },
+    {
+      "code": "04173",
+      "name": "科约阿坎区",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04173 科约阿坎区：探索前选择受到 1 点伤害或 1 点恐惧"
+        }
+      ]
+    },
+    {
+      "code": "04174",
+      "name": "大神庙",
+      "type": "location",
+      "status": "pending",
+      "dimension": "interaction",
+      "reason": "卡面 [reaction]「击败/躲避蛇族后发现 1 线索」被 temploMayorReaction 自动结算，未用 api.choose 询问玩家是否触发（缺放弃入口），且未披露近似。"
+    },
+    {
+      "code": "04175",
+      "name": "大神庙",
+      "type": "location",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：`inv.discard.splice` / `inv.deck.push`（存量基线）。"
+    },
+    {
+      "code": "04176",
+      "name": "特诺奇蒂特兰神庙",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04176 特诺奇蒂特兰神庙（直接伤害）：入场时此地的每位调查员受到 1 点直接伤害，低血量时隐藏值 -2"
+        }
+      ]
+    },
+    {
+      "code": "04177",
+      "name": "特诺奇蒂特兰神庙",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-boundary-beyond.test.mjs",
+          "test": "古代地点入场：04177 在最近敌人上放毁灭、04181 放 4 资源、04182 失去所有行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-boundary-beyond.test.mjs",
+          "test": "古代地点动作：04175/04177/04178/04184 发现线索的团队每轮一次"
+        }
+      ]
+    },
+    {
+      "code": "04178",
+      "name": "查普尔特佩克山",
+      "type": "location",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：`inv.discard.push(...inv.hand)` / `inv.hand = []`（存量基线）。"
+    },
+    {
+      "code": "04179",
+      "name": "查普尔特佩克山",
+      "type": "location",
+      "status": "pending",
+      "dimension": "interaction",
+      "reason": "卡面 [reaction]「抽到巫术卡后发现 1 线索」被 chapultepecHillHexReaction 自动结算，未询问玩家，未披露近似。"
+    },
+    {
+      "code": "04180",
+      "name": "特诺奇蒂特兰运河",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04180 特诺奇蒂特兰运河：此地的敌人 +2 躲避，有横置敌人时隐藏值 -3"
+        }
+      ]
+    },
+    {
+      "code": "04181",
+      "name": "特诺奇蒂特兰运河",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-boundary-beyond.test.mjs",
+          "test": "古代地点入场：04177 在最近敌人上放毁灭、04181 放 4 资源、04182 失去所有行动"
+        }
+      ]
+    },
+    {
+      "code": "04182",
+      "name": "霍奇米尔科湖",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-boundary-beyond.test.mjs",
+          "test": "古代地点入场：04177 在最近敌人上放毁灭、04181 放 4 资源、04182 失去所有行动"
+        }
+      ]
+    },
+    {
+      "code": "04183",
+      "name": "霍奇米尔科湖",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04183 霍奇米尔科湖（直接恐惧）：入场直接恐惧 1，低神智时隐藏值 -2"
+        }
+      ]
+    },
+    {
+      "code": "04184",
+      "name": "圣林",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-boundary-beyond.test.mjs",
+          "test": "古代地点动作：04175/04177/04178/04184 发现线索的团队每轮一次"
+        }
+      ]
+    },
+    {
+      "code": "04185",
+      "name": "圣林",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04185 圣林：在此地打出卡牌费用 +2，调查时每张支援令隐藏值 -1"
+        }
+      ]
+    },
+    {
+      "code": "04186",
+      "name": "帕德玛·阿姆丽塔",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-boundary-beyond.test.mjs",
+          "test": "04186 帕德玛攻击：有线索时翻成地点毁灭，无线索受 3 点恐惧"
+        }
+      ]
+    },
+    {
+      "code": "04187",
+      "name": "特诺奇蒂特兰恶蛇",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04187 特诺奇蒂特兰恶蛇：古代地点有线索时获得反击与警戒，否则获得猎手"
+        }
+      ]
+    },
+    {
+      "code": "04188",
+      "name": "兄弟会之手",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04188 兄弟会之手：生成在任意无人地点；重整时封锁所在地与连接地点的行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-boundary-beyond.test.mjs",
+          "test": "04188 兄弟会之手：生成在无人地点（玩家选择）"
+        }
+      ]
+    },
+    {
+      "code": "04189",
+      "name": "异时空之窗",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "声明 `treacheryRule.threatArea` 在失落时代无读点，且本卡是「险境/显现二选一」而非威胁区卡；实际结算在 behavior.resolveEncounter（已覆盖）。"
+    },
+    {
+      "code": "04190",
+      "name": "时间线失稳",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "声明 `treacheryRule.threatArea` 在失落时代无读点，本卡是「显现-检定」；另有 R5 观察项 revelationTestStubs。"
+    },
+    {
+      "code": "04191",
+      "name": "古代遗物",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-p2-hooks.test.mjs",
+          "test": "04191 古代遗物：意志/智识(4) 检定成功移除密谋毁灭，每场游戏最多一次"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-shattered-aeons.test.mjs",
+          "test": "04191（阻断未来）同样算古代遗物：可被搜索、可被控制、可推进幕 3a"
+        }
+      ]
+    },
+    {
+      "code": "04237",
+      "name": "天机之城",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-city-of-archives.test.mjs",
+          "test": "04237 混乱标记：困难面石板按差值弃牌、异教徒成功也放线索"
+        }
+      ]
+    },
+    {
+      "code": "04238",
+      "name": "伟大种族之城",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04238 伟大种族之城：序幕 1 期间不能把道具支援放入场或打出"
+        }
+      ]
+    },
+    {
+      "code": "04239",
+      "name": "失去的记忆",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04239 失去的记忆：密谋 2 让每位调查员手牌上限 -2"
+        }
+      ]
+    },
+    {
+      "code": "04240",
+      "name": "遗忘人类身份",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04240 遗忘人类身份：密谋 3 让每位调查员手牌上限 -4"
+        }
+      ]
+    },
+    {
+      "code": "04241",
+      "name": "探索纳克特",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04241 探索纳克特：序幕 1 期间每个伊斯观测者获得冷漠"
+        }
+      ]
+    },
+    {
+      "code": "04242",
+      "name": "禁止通行",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04242 禁止通行：场景 2b 的六项任务里完成三项即必须推进"
+        }
+      ]
+    },
+    {
+      "code": "04243",
+      "name": "回归自我",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04243 回归自我：幸存者人手 10 张手牌推进；花 1 线索抽 2（超上限再抽 1）"
+        }
+      ]
+    },
+    {
+      "code": "04244",
+      "name": "伊斯人身体",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-p2-hooks.test.mjs",
+          "test": "04244 伊斯人身体：四属性 2、生命 7、旧印 +2 抽 1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-city-of-archives.test.mjs",
+          "test": "04244 图标翻倍只作用于持有者自己执行的检定"
+        }
+      ]
+    },
+    {
+      "code": "04245",
+      "name": "会谈间",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-city-of-archives.test.mjs",
+          "test": "04245 会谈间：回合开始有伊斯敌人时询问是否抽卡"
+        }
+      ]
+    },
+    {
+      "code": "04246",
+      "name": "会谈间",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04246 拘束室：谈判可选智识或战斗(4)，成功记住「进行了一次会谈」"
+        }
+      ]
+    },
+    {
+      "code": "04247",
+      "name": "会谈间",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04247 充满脓液的房间：进入后意志(3)检定，按失败差额受到恐惧"
+        }
+      ]
+    },
+    {
+      "code": "04248",
+      "name": "纳克特廊道",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04248 纳克特廊道（北翼）：免费弃 1 张手牌移动到另一处廊道（每回合一次）"
+        }
+      ]
+    },
+    {
+      "code": "04249",
+      "name": "纳克特廊道",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04249 纳克特廊道（东侧）：同一份行动实现，可从东翼移到北翼"
+        }
+      ]
+    },
+    {
+      "code": "04250",
+      "name": "纳克特廊道",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04250 纳克特廊道（西翼）：同一份行动实现，可从西翼移到东翼"
+        }
+      ]
+    },
+    {
+      "code": "04251",
+      "name": "大图书馆",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04251 大图书馆：共同支付每人 1 线索破译归位程式；轮末补足到 4 线索"
+        }
+      ]
+    },
+    {
+      "code": "04252",
+      "name": "伊斯的太阳系仪",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04252 伊斯的太阳系仪：两行动记住现在年份；身处此地手牌上限 +2"
+        }
+      ]
+    },
+    {
+      "code": "04253",
+      "name": "伟大种族的实验室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04253 伟大种族的实验室：无线索时检定敏捷(3)，失败给地点加 1 线索、成功记住启动设备"
+        }
+      ]
+    },
+    {
+      "code": "04254",
+      "name": "解构室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04254 解构室：战斗难度随线索数提高；成功记住解剖器官"
+        }
+      ]
+    },
+    {
+      "code": "04255",
+      "name": "纳克特之塔",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04255 纳克特之塔：弃 N 张手牌，把弃牌堆洗回牌库并抽 N+1 张（每回合一次）"
+        }
+      ]
+    },
+    {
+      "code": "04256",
+      "name": "看管人",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "interaction",
+      "reason": "卡面 [reaction]「调查阶段开始时控制看管人则同地点每位调查员抽 1」被 phaseBegan 自动结算，未询问玩家，未披露近似。"
+    },
+    {
+      "code": "04257",
+      "name": "大图书馆的监守人",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-city-of-archives.test.mjs",
+          "test": "04257/04258：记录达成后失去冷漠并获得猎手（动态关键词）"
+        }
+      ]
+    },
+    {
+      "code": "04258",
+      "name": "伊斯科学家",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-city-of-archives.test.mjs",
+          "test": "04257/04258：记录达成后失去冷漠并获得猎手（动态关键词）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-city-of-archives.test.mjs",
+          "test": "真实引擎：04258 失去冷漠后，猎手移动进调查员所在地点会自动交战"
+        }
+      ]
+    },
+    {
+      "code": "04259",
+      "name": "伊斯学者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-encounter-p1.test.mjs",
+          "test": "04259 的猎物是手牌最多者，引擎有对应的排序键"
+        }
+      ]
+    },
+    {
+      "code": "04260",
+      "name": "伊斯人登场",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-city-of-archives.test.mjs",
+          "test": "04260 伊斯人登场：同名威胁再抽到也再放一张"
+        }
+      ]
+    },
+    {
+      "code": "04261",
+      "name": "残酷拷问",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "声明 `treacheryRule.threatArea` 无读点（威胁区入场由 behavior 的 api.threat 完成）；threat.noDrawAction 与 surge 有读点，仅该字段无效。"
+    },
+    {
+      "code": "04262",
+      "name": "丧失人性",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04262 失去人性：意志(5)失败按差额移除牌库顶，总牌数不足 10 时发疯"
+        }
+      ]
+    },
+    {
+      "code": "04263",
+      "name": "被监禁的意识",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04263 囚禁意识：意志(0)检定后无论成败把手牌弃到修正后技能值"
+        }
+      ]
+    },
+    {
+      "code": "04264",
+      "name": "离体体验",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-p2-hooks.test.mjs",
+          "test": "04264 离体体验：本卡也算作手牌，手牌洗回牌库后重抽「手牌数+1」张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-p2-hooks.test.mjs",
+          "test": "04264 离体体验：牌库只剩它自己时结算也能终止（不会被自己的抽牌递归重抽）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-p2-hooks.test.mjs",
+          "test": "04264 离体体验：空手抽到也要算本卡，至少重抽 1 张（不会空转无限抽牌）"
+        }
+      ]
+    },
+    {
+      "code": "04314",
+      "name": "破碎永世",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-shattered-aeons.test.mjs",
+          "test": "04314 混乱标记：遗物所在地的骷髅、困难面每个异教徒、困难面巫术总洗回"
+        }
+      ]
+    },
+    {
+      "code": "04315",
+      "name": "时间之线",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04315 时间之线：翻面时无形之子在联结点生成，密谋进胜利区并获得复仇 1"
+        }
+      ]
+    },
+    {
+      "code": "04316",
+      "name": "垂下的丝线",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：`nexus.doom`、`state.victoryDisplay`、`state.encounterDeck`（存量基线）。"
+    },
+    {
+      "code": "04317",
+      "name": "断了的线",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04317 断了的线：翻面直接进入结局 4（时间之布被拆解）"
+        }
+      ]
+    },
+    {
+      "code": "04318",
+      "name": "彼端的世界",
+      "type": "act",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：`state.explorationDeck`、`state.scenarioFlags.pocketInDeck`（存量基线）。"
+    },
+    {
+      "code": "04319",
+      "name": "搜寻兄弟会",
+      "type": "act",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：`state.explorationDeck`、`state.encounterDiscard`、`state.relicOfAges`（存量基线）。"
+    },
+    {
+      "code": "04320",
+      "name": "伊斯人的遗物",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-shattered-aeons.test.mjs",
+          "test": "04320 背面：遗物资产离场会清空控制者并把场景重置到 3a"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-shattered-aeons.test.mjs",
+          "test": "04320：把遗物资产取得或打出即视为控制，场景 3a 可以推进"
+        }
+      ]
+    },
+    {
+      "code": "04321",
+      "name": "修补裂痕",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04321 修补裂痕：检定成功把破碎地点附属到遗物，凑够人数+1 后推进幕 4a"
+        }
+      ]
+    },
+    {
+      "code": "04322",
+      "name": "失乐园",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04322 失乐园：瓦卢西亚被附属到遗物时推进幕 4a"
+        }
+      ]
+    },
+    {
+      "code": "04323",
+      "name": "锁定时间",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04323 锁定时间：纳克特被附属到遗物时推进幕 4a"
+        }
+      ]
+    },
+    {
+      "code": "04324",
+      "name": "恩凯联结点",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-shattered-aeons.test.mjs",
+          "test": "04324/04330 的节点探索：复用引擎 explore 并临时忽略地点强制效果"
+        }
+      ]
+    },
+    {
+      "code": "04325",
+      "name": "伊塔卡",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04325 伊塔卡：同地点可谈判，拒绝条件后横置并禁止再谈判"
+        }
+      ]
+    },
+    {
+      "code": "04325b",
+      "name": "伊格的宽恕",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04325 伊塔卡：同地点可谈判，拒绝条件后横置并禁止再谈判"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04325b 伊格的宽恕：接受条件换成失乐园并放过蛇族；伊格之怒 16 时拒绝"
+        }
+      ]
+    },
+    {
+      "code": "04326",
+      "name": "亚历山卓·维拉",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04326 亚历山卓·维拉：同地点可谈判，揭示石板标记时自动成功并翻面"
+        }
+      ]
+    },
+    {
+      "code": "04326b",
+      "name": "另有他法",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04326 亚历山卓·维拉：同地点可谈判，揭示石板标记时自动成功并翻面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04326b 另有他法：拒绝条件后翻回正面并禁止再与亚历山卓谈判"
+        }
+      ]
+    },
+    {
+      "code": "04327",
+      "name": "犹格斯星",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-shattered-aeons.test.mjs",
+          "test": "04327 犹格斯星：没有线索时不能发动翻面行动"
+        }
+      ]
+    },
+    {
+      "code": "04328",
+      "name": "拉莱耶海岸",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04328 拉莱耶海岸：入场放 1 毁灭，隐藏值按本地点每张卡（含自身）的毁灭 +1"
+        }
+      ]
+    },
+    {
+      "code": "04329",
+      "name": "隐匿之城",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-p2-hooks.test.mjs",
+          "test": "毁灭放置钩子：04329 隐匿之城让异教徒额外获得 1 个毁灭"
+        }
+      ]
+    },
+    {
+      "code": "04330",
+      "name": "时间之窗",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-shattered-aeons.test.mjs",
+          "test": "04324/04330 的节点探索：复用引擎 explore 并临时忽略地点强制效果"
+        }
+      ]
+    },
+    {
+      "code": "04331",
+      "name": "纽约遗址",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-shattered-aeons.test.mjs",
+          "test": "04331 纽约遗址：入场把队长牌库顶的牌变成飞天水螅"
+        }
+      ]
+    },
+    {
+      "code": "04332",
+      "name": "姆大陆",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04332 姆大陆：每次检定的第一个符号标记获得「再揭示一个标记」"
+        }
+      ]
+    },
+    {
+      "code": "04333",
+      "name": "亚特兰蒂斯",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04333 亚特兰蒂斯：自动失败标记放毁灭，满 3 个时地点移出游戏并击败此地所有单位"
+        }
+      ]
+    },
+    {
+      "code": "04334",
+      "name": "纳克特",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04334 纳克特：需 3 个石板标记；发动后拿走本地全部线索并抽等量牌（每场一次）"
+        }
+      ]
+    },
+    {
+      "code": "04335",
+      "name": "瓦卢西亚",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04335 瓦卢西亚：需 3 个异教徒标记；发动后治疗 2/2 并令隐藏值归 0（每场一次）"
+        }
+      ]
+    },
+    {
+      "code": "04336",
+      "name": "冷原",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04336 冷原：在冷原揭示旧神标记受到 1 点恐惧，其他地点不受影响"
+        }
+      ]
+    },
+    {
+      "code": "04337",
+      "name": "无形之子",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04337 无形之子：生成于联结点、不能移动，攻防按联结点毁灭标记提升"
+        }
+      ]
+    },
+    {
+      "code": "04338",
+      "name": "时间吞噬者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-shattered-aeons.test.mjs",
+          "test": "04338 最远地点并列时由玩家选择"
+        }
+      ]
+    },
+    {
+      "code": "04339",
+      "name": "破碎的时代",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04339 破碎的时代：意志检定失败时除联结点外每处地点各得 1 线索"
+        }
+      ]
+    },
+    {
+      "code": "04340",
+      "name": "异界之间",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04340 异界之间：显现时作为 3 隐藏值 1 线索的异界地点入场并与联结点相连"
+        }
+      ]
+    },
+    {
+      "code": "04341",
+      "name": "时空撕裂",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04341 时空撕裂：破碎地点上的调查员额外检定，失败受到 2 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "04342",
+      "name": "黑暗隐伏",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-shattered-aeons.test.mjs",
+          "test": "04342 黑暗隐伏：可在联结点用火把或意志检定弃掉"
+        }
+      ]
+    },
+    {
+      "code": "04343",
+      "name": "古代遗物",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04343 时光涌流：探索中结算诡计后把它洗回探索牌库而不是弃掉"
+        }
+      ]
+    },
+    {
+      "code": "04344",
+      "name": "时间倒流",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-encounter-p1.test.mjs",
+          "test": "04344 时间倒流困难面：旧神标记不要求失败也放毁灭"
+        }
+      ]
+    },
+    {
+      "code": "04345",
+      "name": "再次进入遗迹",
+      "type": "act",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：`state.explorationDeck`、`state.scenarioFlags.chamberOfTimeInDeck`（存量基线）。"
+    },
+    {
+      "code": "04346",
+      "name": "留存的石室",
+      "type": "act",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：`state.relicOfAges`、`yig.damageTaken = 0`（存量基线）。"
+    },
+    {
+      "code": "04347",
+      "name": "毁灭之时",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs",
+          "test": "04347 毁灭之时：翻面进入结局 1；第三幕提供古代遗物打击伊格的场景行动"
+        }
+      ]
+    }
+  ]
+}

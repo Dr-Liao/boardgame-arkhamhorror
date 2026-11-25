@@ -99,6 +99,8 @@
     "cards:encounter-check": "node tools/build-encounter-index.mjs --check && node --test tests/encounter-entries.test.mjs && node tools/audit-card-entry-compliance.mjs --check",
     "audit:entries": "node tools/audit-card-entry-compliance.mjs --check",
     "audit:entries:write": "node tools/audit-card-entry-compliance.mjs --write",
+    "audit:units": "node tools/audit-card-unit.mjs --all",
+    "audit:units:write": "node tools/audit-card-unit.mjs --all --write",
     "cards:migrate": "node tools/cards-migrate.mjs",
     "cards:migrate:list": "node tools/migrate-card.mjs --list",
     "cards:scaffold": "node tools/scaffold-card.mjs",

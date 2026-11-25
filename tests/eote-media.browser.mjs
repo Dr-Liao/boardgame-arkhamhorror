@@ -3,7 +3,12 @@ import {readFileSync} from 'node:fs'
 import {fileURLToPath} from 'node:url'
 import {SCENARIO_MUSIC} from '../web/scenario-music.js'
 import {MUSIC_TRACKS} from '../web/music-player.js'
+import {campaignPresentation} from '../web/campaign-presentation.js'
 const manifest=JSON.parse(readFileSync(new URL('../web/img/campaigns/edgeOfTheEarth/assets.json',import.meta.url)))
+const illustrationUrls=manifest.assets.map(({id,title})=>{
+ const {assets}=campaignPresentation('edgeOfTheEarth',id)
+ return {title,url:assets[id==='table'?'tableOverlay':id==='hub'?'hubHero':'storyDefault']}
+})
 for(const [name,width,height] of [['desktop',1440,950],['mobile',390,844]]){
  test(`地球边缘插画解码、八章歌单切换与三首实播 ${name}`,async({page})=>{
   test.setTimeout(90000)
@@ -20,7 +25,7 @@ for(const [name,width,height] of [['desktop',1440,950],['mobile',390,844]]){
    const results=[]
    for(const asset of assets){
     const img=new Image()
-    img.src='/mods/arkhamhorror/img/campaigns/edgeOfTheEarth/'+asset.file
+    img.src=asset.url
     img.style.width='100%'
     await img.decode()
     const figure=document.createElement('figure')
@@ -48,7 +53,7 @@ for(const [name,width,height] of [['desktop',1440,950],['mobile',390,844]]){
    document.body.append(window.selectChapter('iceAndDeathPart1'))
    window.musicAudio.muted=true
    return results
-  },manifest.assets)
+  },illustrationUrls)
   expect(sizes).toEqual(manifest.assets.map(()=>[1536,1024]))
   await page.getByRole('button',{name:'展开音乐播放器',exact:true}).click()
   for(const [id,chapter] of Object.entries(SCENARIO_MUSIC.edgeOfTheEarth)){

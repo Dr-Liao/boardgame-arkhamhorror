@@ -1,6 +1,6 @@
 {
  "catalog": {
-  "resourceVersion": "8bf241a1af63b8b1ea3940cf01df14bacb55de3c1a8f2d3f15d6660e7ed333be",
+  "resourceVersion": "827977434bc55fdf5094a6cb18056b0bb006b61a44c0d170db89e0c8f907b43c",
   "schemaVersion": 2,
   "total": 5930
  },
@@ -118,7 +118,7 @@
   },
   {
    "path": "games/arkhamhorror/src/integration/web-api.js",
-   "sha256": "37b9bd6b75af61ec940a57f71e1d92a537223aae72510561e17ffa1d6226b53d"
+   "sha256": "966b2a7505ce90e2c3b5e946ebb01e01f73461a77a7bf6ef2799a472ae64cbe4"
   },
   {
    "path": "games/arkhamhorror/web/images.js",
@@ -317,7 +317,7 @@
   }
  },
  "phase": "N2",
- "presentationVersion": "eeab727b50fd61a8280f59dbfff2bb11d8e42a0fe57e3488ecf94ffc67d94043",
+ "presentationVersion": "7416f98c11737a031c4cb8bbe5154af0fb9e8323f820c769d49ce9a5e73505c3",
  "samples": [
   {
    "code": "01001",

@@ -697,6 +697,7 @@ function executeHubMove(state, seat, move, events) {
           previous.startingDeckReady = false
           delete previous.startingDeckConfirmationPending
           delete previous.investigatorBuild
+          delete previous.arkhamDbDecklistId
         } else if (previous && previous.status !== 'active') {
           campaign.retired.push(structuredClone(previous))
           delete campaign.investigators[seat]
@@ -728,6 +729,7 @@ function executeHubMove(state, seat, move, events) {
         if (record) {
           record.startingDeckReady = false
           delete record.startingDeckConfirmationPending
+          delete record.arkhamDbDecklistId
           if (record.draftMode) delete record.draftMode
         }
         if (isDraftMode(state)) startInitialDraft(state, seat, basicWeaknessPool(state, inv.code, { automatic: true }))
@@ -784,6 +786,11 @@ function executeHubMove(state, seat, move, events) {
             ...(retained.length ? retained : built.basicWeaknesses)].sort()
         }
         const record = existing || registerCampaignInvestigator(campaign, inv, built.deck)
+        if (move.action === 'hubSetDeck' && typeof move.arkhamDbDecklistId === 'string' && /^\d{1,10}$/.test(move.arkhamDbDecklistId)) {
+          record.arkhamDbDecklistId = move.arkhamDbDecklistId
+        } else {
+          delete record.arkhamDbDecklistId
+        }
         applyStartingDeckExperience(campaign, record, built, { choosePurchaseEffect: spec => requestChoice(state, spec) })
         record.startingDeckReady = !deferBasicWeakness
         if (deferBasicWeakness) record.startingDeckConfirmationPending = true

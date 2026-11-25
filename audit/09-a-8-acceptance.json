@@ -1,0 +1,629 @@
+{
+  "schemaVersion": 1,
+  "unit": "09-a-8",
+  "profile": {
+    "id": "tsk-campaign-e-2026-11",
+    "scope": "绯红密钥 09 段 tskc 战役卡（09662–09695）45 条目录记录。39 条通过五维验收；6 条缺读点/结算时机错误暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 45,
+    "verified": 39,
+    "unverified": 6,
+    "unimplemented": 0,
+    "testsPassed": 233
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+      "sha256": "bd0e5ced735a2dd698eb2128a9349b73e98eda5451b7cf42e0e4b0bbc2ee1e7b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-scenario-shadesOfSuffering.test.mjs",
+      "sha256": "f231f390e7be972c84e5e768efea58da9cf9ff4c56d5f5634479cf812fd56ce3"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-scenario-congressOfTheKeys.test.mjs",
+      "sha256": "479100d083f3a0b6c4345cc26d5e1b605fa6c01b9eaad11717efa212eed921c3"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+      "sha256": "55b9d956584e3b77069606a9a33ab8d055576c4c7fffeaf27c92a43d6e5bd8fc"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-shared-encounters-b.test.mjs",
+      "sha256": "dd9606f52b2f69f8933612e9d97dc1f4b05897b10c8f0bcca73c2f42856f254d"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-rules.test.mjs",
+      "sha256": "5ae05cfcab8019f5322e8207b5145c1cf024104eeaf00a84312c17f902879ad8"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-customizable.test.mjs",
+      "sha256": "4311237d47f104f0b62635d521dcccf34a0804a9109d07f7f3aa3ff05800743b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-keys-hollow.test.mjs",
+      "sha256": "925b275cb5d75467558ff4fa6f11f5bd01c4500aa5a1b8d1562e9bcb267f2f09"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-state.test.mjs",
+      "sha256": "46ca77b4b6442473ff0bbe6570b437187086df6337c989fb89f9cb4c3decbb18"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-map.test.mjs",
+      "sha256": "a46ed2ac6953edaecec26fe89a8ac494a3a275ba8e2c56ab21a124ca23a7afc2"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-interactions.test.mjs",
+      "sha256": "275c143401aaca1618ba01abe71f3838732d13b73ab5932098e13ff447146233"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-p0-regressions.test.mjs",
+      "sha256": "8d71ccce9008da1a2332f9e4d4381d6c26e096a8c5511eec83bde0e0d40a9e52"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-p1-regressions.test.mjs",
+      "sha256": "892ccba343a9c8a9186957c1a49018ba3fb3375c3298bf46d8bc91211614f8a4"
+    }
+  ],
+  "entries": [
+    {
+      "code": "09662",
+      "name": "亡灵未眠",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09662 亡灵未眠：单人毁灭阈值 +1；与朱三娘交战时线索不足改为抽遭遇"
+        }
+      ]
+    },
+    {
+      "code": "09663",
+      "name": "畏惧收割者",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09663 畏惧收割者：灵怪获得猎手/反击且不能翻面；毁灭放置时从朱三娘底下生成灵怪；背面全员被击败→R3"
+        }
+      ]
+    },
+    {
+      "code": "09664",
+      "name": "红伞夫人",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09664 红伞夫人：与朱三娘交战付团队线索；背面降头师幕间（美拉提商店入场+全队移动）"
+        }
+      ]
+    },
+    {
+      "code": "09665",
+      "name": "鬼灵之光",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09665 鬼灵之光：灵怪不能离开闹鬼地点；轮末无灵怪推进；背面翻到血债血偿并直推密谋 3a"
+        }
+      ]
+    },
+    {
+      "code": "09666",
+      "name": "收割苦难",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09666 收割苦难：Tzu 强制伤害可用团队线索取消；背面选择用伞→R1 / 放她走→R2"
+        }
+      ]
+    },
+    {
+      "code": "09667",
+      "name": "吉隆坡火车站",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09667 吉隆坡火车站（东翼）：[fast] 支付 2 资源移动；弃支援换半价资源并记住「换到小猫」"
+        }
+      ]
+    },
+    {
+      "code": "09668",
+      "name": "吉隆坡火车站",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09668 吉隆坡火车站（西翼）：地点可撤退；团队线索各治愈 2 恐惧并记住「便宜纪念品」"
+        }
+      ]
+    },
+    {
+      "code": "09669",
+      "name": "雪兰莪俱乐部",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「在场调查员维持阶段不获得资源」没有读点：引擎 phases.js:196 的维持供给只读调查员条目 upkeepResources；苦痛之影 behavior 无维持阶段/资源抑制钩子；条目只落 printedShroud/printedClues 元数据。"
+    },
+    {
+      "code": "09670",
+      "name": "雪兰莪俱乐部草坪",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09670 雪兰莪俱乐部草坪：combat(4) 加入球赛，失败记住「让领事蒙羞」/成功 +3 资源（每轮一次成功）"
+        }
+      ]
+    },
+    {
+      "code": "09671",
+      "name": "美拉提的商店",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09671 美拉提的商店：团队线索记住「眺望彼端」并查看迷你卡/灵怪另一面"
+        }
+      ]
+    },
+    {
+      "code": "09672",
+      "name": "哇扬皮影偶戏剧场",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09672 哇扬皮影偶戏剧场：帷幕 = ceil(影穑充能/2)（上限 8）；团队线索各治愈 2 伤害并记住「分担痛苦」"
+        }
+      ]
+    },
+    {
+      "code": "09673",
+      "name": "锡矿",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09673 锡矿：agility(6) 成功抽 2 张并记住「掩埋遗骨」（团队每场一次）；失败受 1 伤害"
+        }
+      ]
+    },
+    {
+      "code": "09674a",
+      "name": "诡怪的阴影",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09674a 灵怪：+1 生命/人；谈判费用降难度(6)后成功翻面结算剧情"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09674b 剧情面：已记住「让领事蒙羞」则加入胜利区（胜利 1）"
+        }
+      ]
+    },
+    {
+      "code": "09674b",
+      "name": "顽皮的阴影",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09674b 剧情面：已记住「让领事蒙羞」则加入胜利区（胜利 1）"
+        }
+      ]
+    },
+    {
+      "code": "09674c",
+      "name": "诡怪的阴影",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09674c 灵怪：+1 生命/人；谈判费用降难度(6)后成功翻面结算剧情"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09674d 剧情面：已记住「眺望彼端」则加入胜利区（胜利 1）"
+        }
+      ]
+    },
+    {
+      "code": "09674d",
+      "name": "羞怯的阴影",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09674d 剧情面：已记住「眺望彼端」则加入胜利区（胜利 1）"
+        }
+      ]
+    },
+    {
+      "code": "09675a",
+      "name": "被掩埋的矿工",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09675a 灵怪：+1 生命/人；谈判费用降难度(6)后成功翻面结算剧情"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09675b 剧情面：已记住「找到便宜的纪念品」则加入胜利区（胜利 1）"
+        }
+      ]
+    },
+    {
+      "code": "09675b",
+      "name": "遗失的纪念品",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09675b 剧情面：已记住「找到便宜的纪念品」则加入胜利区（胜利 1）"
+        }
+      ]
+    },
+    {
+      "code": "09675c",
+      "name": "被掩埋的矿工",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09675c 灵怪：+1 生命/人；谈判费用降难度(6)后成功翻面结算剧情"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09675d 剧情面：已记住「找到掩埋的遗骨」则加入胜利区（胜利 1）"
+        }
+      ]
+    },
+    {
+      "code": "09675d",
+      "name": "发掘遗骨",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09675d 剧情面：已记住「找到掩埋的遗骨」则加入胜利区（胜利 1）"
+        }
+      ]
+    },
+    {
+      "code": "09676a",
+      "name": "被杀害的工头",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09676a 灵怪：+1 生命/人；谈判费用降难度(6)后成功翻面结算剧情"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09676b 剧情面：已记住「分担了深沉的痛苦」则加入胜利区（胜利 1）"
+        }
+      ]
+    },
+    {
+      "code": "09676b",
+      "name": "怜悯同情之痛",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09676b 剧情面：已记住「分担了深沉的痛苦」则加入胜利区（胜利 1）"
+        }
+      ]
+    },
+    {
+      "code": "09676c",
+      "name": "被杀害的工头",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09676c 灵怪：+1 生命/人；谈判费用降难度(6)后成功翻面结算剧情"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09676d 剧情面：已记住「换到了一只小猫」则加入胜利区（胜利 1）"
+        }
+      ]
+    },
+    {
+      "code": "09676d",
+      "name": "家庭分离之痛",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09676d 剧情面：已记住「换到了一只小猫」则加入胜利区（胜利 1）"
+        }
+      ]
+    },
+    {
+      "code": "09677",
+      "name": "酷刑折磨",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09677 酷刑折磨：显现放 1 充能；意志(3)（≥8 充能改 6），失败选手牌或 2 伤害"
+        }
+      ]
+    },
+    {
+      "code": "09678",
+      "name": "魂灵收割",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09678 魂灵收割：Peril；二选一（全体 1 伤害 1 恐惧 / 朱三娘变换影穑并放 2 充能）"
+        }
+      ]
+    },
+    {
+      "code": "09679a",
+      "name": "朱三娘",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09679a 朱三娘：Concealed 2；将要被击败 → 治愈全部伤害、清毁灭、返回阴影并重新分配迷你卡"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09679b 朱三娘（血债血偿）：+2 生命/人；攻击/躲避成功按成功点数移除充能并承受等量伤害/恐惧"
+        }
+      ]
+    },
+    {
+      "code": "09679b",
+      "name": "朱三娘",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09679b 朱三娘（血债血偿）：+2 生命/人；攻击/躲避成功按成功点数移除充能并承受等量伤害/恐惧"
+        }
+      ]
+    },
+    {
+      "code": "09680a",
+      "name": "影穑",
+      "type": "key",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09680a 影穑（稳定面）：Shift 选择非精英敌人，可移动并强制其以恐惧攻击另一敌人"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09680b 影穑（动荡面）：每位调查员失去 1 行动（不在其回合则下回合）；调查员变换时翻回稳定面"
+        }
+      ]
+    },
+    {
+      "code": "09680b",
+      "name": "影穑",
+      "type": "key",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09680b 影穑（动荡面）：每位调查员失去 1 行动（不在其回合则下回合）；调查员变换时翻回稳定面"
+        }
+      ]
+    },
+    {
+      "code": "09681",
+      "name": "不留痕迹",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09681 不留痕迹：剧本参考卡混乱标记表（skull 地点数 / cultist 域外敌人 / tablet 空洞 / elderthing 空洞化）"
+        }
+      ]
+    },
+    {
+      "code": "09682",
+      "name": "异界恐惧",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「进入未揭示地点的额外费用（团队 1×人数线索）」时机错误：behavior.locationEntered 只写单一 flags.pendingEntryCost，真正扣款在下一移动的 locationLeft（注释自述），可被下一次进入覆盖/延后到离开。"
+    },
+    {
+      "code": "09683",
+      "name": "异界的羔羊",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 09682 的入场费用时机问题；背面三选二已实现。"
+    },
+    {
+      "code": "09684",
+      "name": "异界的屠杀",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 09682 的入场费用时机问题；另背面「已撤退者可立即推进幕 3b」是可选动作，agendaDrivenInsane 自动 finish，未询问玩家（近似未登记）。"
+    },
+    {
+      "code": "09685",
+      "name": "穿越域外之地",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09685 穿越域外之地：域外来客之巢揭示推进；背面生成横置拟态克星、弃牌堆空洞、红手套放一边"
+        }
+      ]
+    },
+    {
+      "code": "09686",
+      "name": "红色废墟",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09686 红色废墟：与拟态克星同地点花 1 线索造成 2 伤害；红手套入场推进幕 2"
+        }
+      ]
+    },
+    {
+      "code": "09687",
+      "name": "逃出异界",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「Forced - 若戴红手套的男子被击败：将他移出游戏」无实现：章节只有 assetEntered，没有 assetLeftPlay/被击败分支（引擎 assets.js:438 有 assetLeftPlay 读点）。"
+    },
+    {
+      "code": "09688",
+      "name": "域外来客之廷",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09688 域外来客之廷：撤退检定(4)成功撤退并把同谋加入胜利区；失败后本回合难度 -1"
+        }
+      ]
+    },
+    {
+      "code": "09689",
+      "name": "域外来客之巢",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「此地点每个域外敌人失去冷漠」无读点：+1 fight/evade 已实现（enemyStatModifier），但地点定义无 losesAloof 字段、behavior 只在幕 3 用自动交战近似（披露在 scenarioGaps）。"
+    },
+    {
+      "code": "09690",
+      "name": "拟态克星",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09690 拟态克星：造成伤害改为弃等量空洞；轮末本地调查员空洞化或受攻击"
+        }
+      ]
+    },
+    {
+      "code": "09691",
+      "name": "原生质重组者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09691 原生质重组者：Spawn 离所有调查员最远；敌军阶段末生成魔像（以牌库顶空洞近似）"
+        }
+      ]
+    },
+    {
+      "code": "09692",
+      "name": "戴红手套的男子",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09692 戴红手套的男子：攻击/躲避域外敌人超过难度 2 点时横置→1 伤害+1 线索"
+        }
+      ]
+    },
+    {
+      "code": "09693",
+      "name": "艾里奇·佐尼·奥佩勒曲亚",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09693 艾里奇：迷你卡揭露后横置→选择一张放一边的空洞由所有者抽回"
+        }
+      ]
+    },
+    {
+      "code": "09694",
+      "name": "钥匙议会",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09694 钥匙议会：混乱标记表（skull 幕编号 / cultist 翻稳定钥匙 / tablet 对重整域外自动失败 / elderthing 空洞化投入卡）"
+        }
+      ]
+    },
+    {
+      "code": "09695",
+      "name": "因果汇流",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09695 因果汇流：幕 2/3/4 时跳过 b 面；背面按幕版本结算（vII 放 4 毁灭并推进幕，vI/vIII 变钥匙+额外敌军阶段近似）"
+        }
+      ]
+    }
+  ]
+}

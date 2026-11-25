@@ -6,7 +6,7 @@ import sharp from 'sharp'
 import { chapters } from '../content/campaigns/theInnsmouthConspiracy/shared.js'
 import { SCENARIO_MUSIC } from '../web/scenario-music.js'
 import { musicTracksForPlaylist } from '../web/music-player.js'
-import { campaignPresentation, campaignPlaylistId } from '../web/campaign-presentation.js'
+import { CAMPAIGN_IMAGE_ROOT, campaignPresentation, campaignPlaylistId } from '../web/campaign-presentation.js'
 
 test('六循环八关各三首，旧曲复用不超过40%，循环内无重复且战役歌单完整', () => {
   const campaign = 'theInnsmouthConspiracy'
@@ -48,6 +48,6 @@ test('六循环牌桌、战役图及八关WebP尺寸与哈希正确，实际展�
     const theme = campaignPresentation('theInnsmouthConspiracy', asset.id)
     assert.equal(theme.id, 'theInnsmouthConspiracy')
     const key = asset.id === 'table' ? 'tableOverlay' : asset.id === 'hub' ? 'hubHero' : 'storyDefault'
-    assert.equal(theme.assets[key], '/mods/arkhamhorror/img/campaigns/theInnsmouthConspiracy/' + asset.file)
+    assert.equal(theme.assets[key], CAMPAIGN_IMAGE_ROOT + 'theInnsmouthConspiracy/' + asset.file)
   }
 })

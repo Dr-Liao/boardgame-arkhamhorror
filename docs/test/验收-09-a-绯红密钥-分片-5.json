@@ -1,0 +1,432 @@
+{
+  "unit": "09-a-5",
+  "generatedAt": "2026-11-25T03:51:51.071Z",
+  "scope": {
+    "cards": 45,
+    "selector": "09xxx unverified, 09543 <= code <= 09583, pack === 'tskc'",
+    "packs": {
+      "tskc": 45
+    },
+    "chapters": {
+      "deadHeat": 3,
+      "sanguineShadows": 22,
+      "dealingsInTheDark": 20
+    }
+  },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "09543",
+    "09547",
+    "09548",
+    "09549",
+    "09555",
+    "09557",
+    "09559",
+    "09561",
+    "09562",
+    "09563",
+    "09564",
+    "09568",
+    "09569",
+    "09570",
+    "09571",
+    "09573",
+    "09574",
+    "09575",
+    "09576",
+    "09579"
+  ],
+  "failedCodes": [
+    {
+      "code": "09544a",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "Shift 文本无玩家调用点",
+      "reason": "玩家 `shiftKey` 只翻面并派发 `tskKeyShifted` 窗口（`dispatch.js:1121`），但 09544a/b 条目没有挂窗口能力；`deadHeat/behavior.js` 的 `shiftLastBlossom` 只有敌人路径调用（`:1066/:1076`），无玩家变换调用点 → 「治愈你所在地点每位调查员 1 伤 1 恐」不结算。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    },
+    {
+      "code": "09544b",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "Shift 文本无玩家调用点",
+      "reason": "同 09544a：「治愈场上每个敌人 1 点伤害 / 调查员变换则翻回稳定面」没有玩家变换调用点；`shiftLastBlossom` 只在敌人变换路径被调用。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    },
+    {
+      "code": "09545",
+      "dimension": "implementation",
+      "group": "F2",
+      "summary": "tablet 只取消技能牌",
+      "reason": "印刷 tablet：「取消投入本次技能检定的**每张卡牌**上的效果和图标」；引擎读点 `tests.js:1459` 用 `cardDef(item.code)?.type === 'skill'` 过滤，只取消技能卡，投入的事件/支援图标与效果仍生效（`cancelCommitted` 由本章 chaos 声明）。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    },
+    {
+      "code": "09546",
+      "dimension": "implementation",
+      "group": "F2",
+      "summary": "开局无初始毁灭",
+      "reason": "印刷「游戏开始时，或密谋牌库重置后：毁灭 = 1[每人]」；`setupLocations` 未写毁灭（`state.doom` 保持 0），只有 `resetStageDecks`（`:556-557`）写 1/每人 → 开局分支缺失。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    },
+    {
+      "code": "09550",
+      "dimension": "implementation",
+      "group": "F2",
+      "summary": "缺额外线索降难度",
+      "reason": "`performLookAction`（`behavior.js:733-744`）固定 `difficulty: 4`，没有「花额外 1 线索把难度降低 2」的选择分支。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    },
+    {
+      "code": "09551",
+      "dimension": "implementation",
+      "group": "F2",
+      "summary": "缺额外线索降难度",
+      "reason": "同 09550（同一 `performLookAction` 模板）。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    },
+    {
+      "code": "09552",
+      "dimension": "implementation",
+      "group": "F2",
+      "summary": "X 恐惧不可分配",
+      "reason": "`performSpendLookAction` 用 `api.directHorror` 直接加恐惧（`behavior.js:764`），绕过伤害分配；印刷「受到 X 点恐惧」应可正常分配/吸收。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    },
+    {
+      "code": "09553",
+      "dimension": "implementation",
+      "group": "F2",
+      "summary": "缺额外线索降难度",
+      "reason": "同 09550（同一 `performLookAction` 模板）。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    },
+    {
+      "code": "09554",
+      "dimension": "implementation",
+      "group": "F2",
+      "summary": "市议会能力未实现",
+      "reason": "印刷 [fast]「查看本地点一张隐匿迷你卡已揭示面；抽遭遇牌顶；可花 2 线索取消并弃掉」；`actions()`/`fastActions` 无 theCabildo 分支，全仓无对应实现（full-scan §2.3 同项，fix-plan 未收口）。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    },
+    {
+      "code": "09556",
+      "dimension": "implementation",
+      "group": "F2",
+      "summary": "缺额外线索降难度",
+      "reason": "同 09550（同一 `performLookAction` 模板）。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    },
+    {
+      "code": "09557b",
+      "dimension": "implementation",
+      "group": "F2",
+      "summary": "阴影状态两句未实现",
+      "reason": "条目 `simplified: true`：只落「横置记录锚点 + 回合开始移回」；「在阴影中时不在任何地点」「与你交战的敌人生成改到先前地点」需要 `new.investigatorInShadows` 原语（未实现，`note` 已披露）。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    },
+    {
+      "code": "09558",
+      "dimension": "implementation",
+      "group": "F2",
+      "summary": "攻击路径翻倍缺读点",
+      "reason": "印刷「攻击履约夜魇时揭示的每个负值修正翻倍」；`enemyRule.doubleNegative` 的引擎读点在**躲避**路径（`combat.js#doEvade → tests.js:1448`），攻击路径无读点（条目 `simplified: true` 已披露）。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    },
+    {
+      "code": "09560",
+      "dimension": "implementation",
+      "group": "F2",
+      "summary": "后三句未实现",
+      "reason": "实现只有「附属到无标靶地点 + 内容层禁止花费线索」（`callingCard`、`cluesSpendBlocked`）；印刷「你调查所在位置期间，查看本地点一张隐藏迷你卡已揭示面」与「调查成功：将其翻回、洗回、可花 2 线索取消」等后三句未实现（`scenarioApproximations` 披露）。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    },
+    {
+      "code": "09565a",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "Shift 文本无玩家调用点",
+      "reason": "`sanguineShadows/behavior.js#shiftWeepingLady`（`:808`）全仓无调用点（仅测试直接调用）；玩家变换密钥后「发现所在地点或连接地点 1 个线索」不结算。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    },
+    {
+      "code": "09565b",
+      "dimension": "implementation",
+      "group": "F1",
+      "summary": "Shift 文本无玩家调用点",
+      "reason": "同 09565a：动荡面「每位调查员弃 1 个支援 / 调查员变换则翻回稳定面」无玩家变换调用点。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    },
+    {
+      "code": "09566",
+      "dimension": "implementation",
+      "group": "F3",
+      "summary": "[cultist] 改值缺失",
+      "reason": "`dealingsChaosToken` 固定返回 -5/-7 并提供 `cultistDoomSwap` 提示，但 `resolveChaosToken` 只打印「本章近似：不提供改值选择」；印刷「你可以放 1 毁灭把修正改为 -1/-3」不可选。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    },
+    {
+      "code": "09567",
+      "dimension": "implementation",
+      "group": "F3",
+      "summary": "隐匿 1 诱饵按人数",
+      "reason": "`concealEnemy`（`dealingsInTheDark/behavior.js:100`）默认 `decoyCount = numInvestigators(state)`；本卡给异教徒的是 Concealed 1（1 诱饵+1 真身），多人局实际放 N+1 张 → 数值错误。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    },
+    {
+      "code": "09571b",
+      "dimension": "implementation",
+      "group": "F3",
+      "summary": "敌人变换不翻面",
+      "reason": "条目 `note` 披露：敌人夺取密钥后「敌人变换它」只写剧本标记、不翻面（原语 shiftKey 恒翻面）；印刷要求变换（翻面）后保留在动荡面。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    },
+    {
+      "code": "09572",
+      "dimension": "implementation",
+      "group": "F3",
+      "summary": "额外费用近似",
+      "reason": "`LOCATION_RULES.galataDocks.entryDiscardCards = 1` 近似为「随机弃 1 张手牌」；印刷要求「弃掉总计至少 3 个相同技能图标的卡牌」→ 费用条件/可支付性都不同。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    },
+    {
+      "code": "09577",
+      "dimension": "implementation",
+      "group": "F3",
+      "summary": "地点规则未接引擎读点",
+      "reason": "章节 `LOCATION_RULES.bazaarDarkenedAlley.concealedFightEvadeBonus = 2`，但数据型条目 09577 没有 `locationRule`；引擎读 `registeredEntry(loc).locationRule`（`moves.js:456`/`dispatch.js:1255`）→ 隐匿迷你卡攻/躲 +2 不生效。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    },
+    {
+      "code": "09578",
+      "dimension": "implementation",
+      "group": "F3",
+      "summary": "武器文本空白无读点",
+      "reason": "章节 `LOCATION_RULES.bazaarPublicBaths.blankAssetsWithTrait = 'Weapon'`，条目无 `locationRule`，且全仓无引擎读点（`blankAssetsWithTrait` 仅 `describe()` 展示）→ 印刷规则不生效。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    },
+    {
+      "code": "09580",
+      "dimension": "implementation",
+      "group": "F3",
+      "summary": "只找本地异教徒",
+      "reason": "`exposeAt` 用 `cultistEnemies().find(enemy => enemy.location === locationId)`；印刷「移到最近的异教徒」允许异教徒在其他连接地点：本地无教派时线索不动（`behavior.js:155-166`）。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    },
+    {
+      "code": "09581",
+      "dimension": "implementation",
+      "group": "F3",
+      "summary": "失败两选项同结果",
+      "reason": "印刷失败二选一：失去 1 行动 **或** 取消移动；`movement.js:394-398` 失败分支只调用 `locationLeaveFailed`，不进入目的地，behavior 的 `loseAction` 只扣行动不重试移动 → 两个选项实际都是取消移动。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    },
+    {
+      "code": "09582",
+      "dimension": "implementation",
+      "group": "F3",
+      "summary": "关键词再结算过触发",
+      "reason": "`scenarioApproximations` 披露 `enemyMoved` 钩子不带移动原因：实现对所有移动到本地点（含效果移动）的敌人都再结算猎手/巡逻，印刷只对经猎手/巡逻移动的敌人。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    },
+    {
+      "code": "09583",
+      "dimension": "implementation",
+      "group": "F3",
+      "summary": "免费打出 ≠ 按点数降费",
+      "reason": "`performSceneAction` 只筛 `cost ≤ successBy` 的[[守护]]/[[遗物]]并 `playCardFromHandFree` 免费打出；印刷「每超过 1 点使费用 -1（最低 0）」允许费用高于成功点数时折扣后付费，且不免费。",
+      "evidence": [
+        "tests/acceptance-09-a-shard5.test.mjs",
+        "artifacts/acceptance/09-a-5/probe-defects.mjs"
+      ]
+    }
+  ],
+  "dimensions": {
+    "implementation": "fail",
+    "primitives": "fail",
+    "interaction": "fail",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/acceptance-09-a-shard5.test.mjs",
+      "test": "45 个逐卡用例（标题含卡号；注册期校验 + 章节 behavior 真实调用）",
+      "codes": [
+        "09543",
+        "09544a",
+        "09544b",
+        "09545",
+        "09546",
+        "09547",
+        "09548",
+        "09549",
+        "09550",
+        "09551",
+        "09552",
+        "09553",
+        "09554",
+        "09555",
+        "09556",
+        "09557",
+        "09557b",
+        "09558",
+        "09559",
+        "09560",
+        "09561",
+        "09562",
+        "09563",
+        "09564",
+        "09565a",
+        "09565b",
+        "09566",
+        "09567",
+        "09568",
+        "09569",
+        "09570",
+        "09571",
+        "09571b",
+        "09572",
+        "09573",
+        "09574",
+        "09575",
+        "09576",
+        "09577",
+        "09578",
+        "09579",
+        "09580",
+        "09581",
+        "09582",
+        "09583"
+      ]
+    },
+    {
+      "file": "tests/tsk-scenario-sanguineShadows.test.mjs / tsk-scenario-deadHeat.test.mjs / tsk-scenario-dealingsInTheDark.test.mjs",
+      "test": "章节结构/机制/结局回归（既有，全部通过）",
+      "codes": []
+    },
+    {
+      "file": "tests/tsk-rules.test.mjs / tsk-all-cards.test.mjs / tsk-p0-regressions.test.mjs / tsk-p1-regressions.test.mjs",
+      "test": "规则、全卡注册、P0/P1 回归（既有，全部通过）",
+      "codes": []
+    },
+    {
+      "file": "artifacts/acceptance/09-a-5/probe-defects.mjs",
+      "test": "25 项 FAIL 复现（25 张失败卡）",
+      "codes": [
+        "09544a",
+        "09544b",
+        "09545",
+        "09546",
+        "09550",
+        "09551",
+        "09552",
+        "09553",
+        "09554",
+        "09556",
+        "09557b",
+        "09558",
+        "09560",
+        "09565a",
+        "09565b",
+        "09566",
+        "09567",
+        "09571b",
+        "09572",
+        "09577",
+        "09578",
+        "09580",
+        "09581",
+        "09582",
+        "09583"
+      ]
+    }
+  ],
+  "ledgerStatus": {
+    "verified": 9,
+    "simplified": 6,
+    "scenario-data": 28,
+    "scenario-reference": 2
+  },
+  "notes": [
+    "范围：pack tskc 45 张（09543–09583）；复算脚本 artifacts/acceptance/09-a-5/scope-map.mjs；43 张有单卡条目，09545/09566 为章节参考卡。",
+    "失败 25 张：F1 密钥 Shift 文本不可达 4 张；F2 血色阴影 11 张；F3 暗中交易 10 张（逐卡见 failedCodes）。",
+    "通过 20 张：09543、09547、09548、09549、09555、09557、09559、09561、09562、09563、09564、09568、09569、09570、09571、09573、09574、09575、09576、09579。",
+    "证据：新增逐卡测试 45/45 通过；既有 TSK 章节/规则/全卡/P0/P1 回归重跑通过；probe-defects 25 FAIL。",
+    "门禁：npm run cards:check / cards:encounter-check / audit:entries 均 exit 0；本审计未改 src/content/audit/web/tools/既有 tests/package.json。",
+    "账本冲突：tsk-all-card-acceptance 的 verified/simplified/scenario-data 不能替代逐卡核对（strictComplete=false）；09565a/b 账本 verified 但本审计 fail。",
+    "未登记进 tests/suites.mjs：按协议由主进程合并时登记；账本 --check 重签需工作区干净。"
+  ]
+}

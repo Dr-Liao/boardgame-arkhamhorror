@@ -5,7 +5,7 @@ import {createHash} from 'node:crypto'
 import {chapters} from '../content/campaigns/edgeOfTheEarth/shared.js'
 import {SCENARIO_MUSIC} from '../web/scenario-music.js'
 import {MUSIC_TRACKS, musicTracksForPlaylist} from '../web/music-player.js'
-import {campaignPresentation,campaignPlaylistId} from '../web/campaign-presentation.js'
+import {CAMPAIGN_IMAGE_ROOT,campaignPresentation,campaignPlaylistId} from '../web/campaign-presentation.js'
 
 test('地球边缘八章各三首，实际旧曲复用低于 40%，循环内无重复',()=>{
  const config=SCENARIO_MUSIC.edgeOfTheEarth
@@ -54,6 +54,6 @@ test('地球边缘十张 WebP 的尺寸、摘要、章节插画与桌布展示�
   const theme=campaignPresentation('edgeOfTheEarth',a.id)
   assert.equal(theme.id,'edgeOfTheEarth')
   const key=a.id==='table'?'tableOverlay':a.id==='hub'?'hubHero':'storyDefault'
-  assert.equal(theme.assets[key],'/mods/arkhamhorror/img/campaigns/edgeOfTheEarth/'+a.file)
+  assert.equal(theme.assets[key],CAMPAIGN_IMAGE_ROOT+'edgeOfTheEarth/'+a.file)
  }
 })

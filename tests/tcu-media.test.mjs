@@ -5,7 +5,7 @@ import { createHash } from 'node:crypto'
 import { chapters } from '../content/campaigns/theCircleUndone/shared.js'
 import { SCENARIO_MUSIC, SIDE_STORY_MUSIC } from '../web/scenario-music.js'
 import { musicTracksForPlaylist } from '../web/music-player.js'
-import { campaignPresentation, campaignPlaylistId } from '../web/campaign-presentation.js'
+import { CAMPAIGN_IMAGE_ROOT, campaignPresentation, campaignPlaylistId } from '../web/campaign-presentation.js'
 
 test('四循环九章每关三首，跨循环复用与循环内重复均不超过 30%', () => {
   assert.deepEqual(Object.keys(SCENARIO_MUSIC.theCircleUndone).sort(), chapters.map(c => c.id).sort())
@@ -40,6 +40,6 @@ test('四循环桌布和九章原画均落盘，尺寸、摘要与实际展示�
     const theme = campaignPresentation('theCircleUndone', asset.id)
     assert.equal(theme.id, 'theCircleUndone')
     const key = asset.id === 'table' ? 'tableOverlay' : 'storyDefault'
-    assert.equal(theme.assets[key], '/mods/arkhamhorror/img/campaigns/theCircleUndone/' + asset.file)
+    assert.equal(theme.assets[key], CAMPAIGN_IMAGE_ROOT + 'theCircleUndone/' + asset.file)
   }
 })

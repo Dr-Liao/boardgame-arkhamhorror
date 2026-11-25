@@ -1,0 +1,1061 @@
+{
+  "schemaVersion": 1,
+  "unit": "07-a-6",
+  "profile": {
+    "id": "tic-light-in-the-fog-2026-11",
+    "scope": "印斯茅斯暗潮 07 段 A Light in the Fog（lif，07220–07260）42 条目录记录。42 条全部通过五维验收（两处显式披露近似）。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 42,
+    "verified": 42,
+    "unverified": 0,
+    "unimplemented": 0,
+    "testsPassed": 483
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-07-a-shard6.test.mjs",
+      "sha256": "7a64f4f608d64fb28eb427acb19e05550a083f302357d484b992c0eca1a9f91d"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+      "sha256": "864afbe29ed09d1157c108d0109685f9091c927779ba58bc4f5a48fc2284848d"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
+      "sha256": "b8afb1a10f98d90b15742fa03def68a23e4c4ca0d5b04c9ff8ecbe7cad0cd2b8"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+      "sha256": "1337a2f1cf3b0837f4ad9c2382ab108a6549acfd31b91f59a588db5f1b4b88f9"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+      "sha256": "bdbbd310d7ea827e0c59649fe8a1bb9eb6aa3d67abc57e7c27b95adf7f803dbb"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-capture.test.mjs",
+      "sha256": "710a9e2a33381da333e1394f2cf2b949931a2a9c5b45f53931b677f541dfacbc"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-w2-new-cards.test.mjs",
+      "sha256": "2d14c4a50e643b7ad0fa60ee9a0bb2dee9ddc24c55a978505cbfb3d6da8d86a9"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+      "sha256": "68d334798dc094b59d7d0cafd643b50af82e2a62590d03eb8d1eb164653c7764"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+      "sha256": "e9889a14cb1aff56ad4d125348b7ce6e7ea72758f6be3b37689c4a2bd6d809e9"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenarios-a1.test.mjs",
+      "sha256": "e88a7278a0f27c2a9249f2098b4437ba52e103441cfdf37f9bc66fac87bd3c14"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-flashbacks.test.mjs",
+      "sha256": "cf40ce2d84ef77409b0f8a747580bf42781d165582387c3976a31eb2e859fecd"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-alight-cards.test.mjs",
+      "sha256": "f373f0691f9589e52cc583fc930a226fec404b3dca569e56eba7b7518ff8f403"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+      "sha256": "b4ecaedb1a2445d494b757be42e5133ef92a1091249e32565e2ad8b135756fd1"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+      "sha256": "3580319103f889db41d6871ecd68189d802ef3fe6d3339ee9997b46d27959044"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+      "sha256": "c2c69dc2fb3fe002419897d86711bcdcb9434dd22519dec707d50a2171afc3aa"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-primitives.test.mjs",
+      "sha256": "8453001755501ca236be74abc05e428b5270c32b28ac29b4d74e91b07777bbbb"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-interactions.test.mjs",
+      "sha256": "64e5dde4e149d1da6c052fd7f8ddedca48037b9a7fb987baae599a5c089f5224"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-rules.test.mjs",
+      "sha256": "24972f73c0ee5c468034308b7bc51c7742bccc191406960dfc268169940a574a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-primitives.test.mjs",
+      "sha256": "2234fa4bbb8925066932c1ba1211d4349b1c7f19934ef2c6f023ce0131e92770"
+    }
+  ],
+  "entries": [
+    {
+      "code": "07220",
+      "name": "圣玫瑰珠",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07220 Holy Rosary boosts willpower and adds bless after a treachery willpower success"
+        }
+      ]
+    },
+    {
+      "code": "07221",
+      "name": "信仰之盾",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07221 Shield of Faith releases its last seal to cancel actual attack and discards"
+        }
+      ]
+    },
+    {
+      "code": "07222",
+      "name": "鬼灵精怪",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07222 Fey optionally returns after an actually revealed curse and otherwise discards"
+        }
+      ]
+    },
+    {
+      "code": "07223",
+      "name": "隐形指引",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07223 Guided by the Unseen searches performer top three and commits only after secret payment"
+        }
+      ]
+    },
+    {
+      "code": "07224",
+      "name": "“幸运”分币",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07224 coin uses deterministic random and draws only on bless-to-curse"
+        }
+      ]
+    },
+    {
+      "code": "07225",
+      "name": "迪精之眼",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07225 Djinn sets current base to five without lasting into later tests or others turns"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07225 Djinn sets each base skill in a combined-skill test to five"
+        }
+      ]
+    },
+    {
+      "code": "07226",
+      "name": "哈米吉多顿",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard6.test.mjs",
+          "test": "07226 哈米吉多顿：花 1 充能用意志攻击（+2 意志、+1 伤害），每枚诅咒可补 1 充能或造成 1 伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07226 curse reward occurs even on failure; base once and upgrade each curse"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07226 uses willpower, printed bonus and exact charge cost"
+        }
+      ]
+    },
+    {
+      "code": "07227",
+      "name": "混乱之眼",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard6.test.mjs",
+          "test": "07227 混乱之眼：花 1 充能用意志 +2 调查并多发现 1 线索；每枚诅咒可发现连接地点线索或补充能"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07227 curse reward occurs even on failure; base once and upgrade each curse"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07227 uses willpower, printed bonus and exact charge cost"
+        }
+      ]
+    },
+    {
+      "code": "07228",
+      "name": "暗影遁形",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard6.test.mjs",
+          "test": "07228 暗影遁形：花 1 充能用意志 +2 躲避（非敏捷）；成功可移动非精英敌人，每枚诅咒可移动自己"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07228 curse reward occurs even on failure; base once and upgrade each curse"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07228 uses willpower, printed bonus and exact charge cost"
+        }
+      ]
+    },
+    {
+      "code": "07229",
+      "name": "人性抉择",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07229 Spirit of Humanity pays assignable combined harm or exact two curses before healing, with exhaustion and failed preflight"
+        }
+      ]
+    },
+    {
+      "code": "07230",
+      "name": "恢复和谐",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07230 Harmony Restored removes only up to bag bless count and gains actual resources"
+        }
+      ]
+    },
+    {
+      "code": "07231",
+      "name": "雾中之光",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 actor chooses nearest tied enemy, excluding Massive engagement and unreachable fallback"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 easy canceled elderthing cannot move enemy or ignore Aloof"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 easy cultist ST8 uses location after original result callback"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 easy cultist failure actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 easy cultist success actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 easy elderthing failure actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 easy elderthing success actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 easy exhausted nearest enemy eligible only on Hard/Expert"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 easy full flood cannot increase; fallback horror only Hard/Expert"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 easy skull failure actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 easy skull success actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 easy tablet failure actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 easy tablet success actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 easy unflooded skull reveals no additional token; unflooded tablet no damage"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 expert canceled elderthing cannot move enemy or ignore Aloof"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 expert cultist ST8 uses location after original result callback"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 expert cultist failure actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 expert cultist success actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 expert elderthing failure actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 expert elderthing success actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 expert exhausted nearest enemy eligible only on Hard/Expert"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 expert full flood cannot increase; fallback horror only Hard/Expert"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 expert skull failure actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 expert skull success actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 expert tablet failure actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 expert tablet success actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 expert unflooded skull reveals no additional token; unflooded tablet no damage"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 hard canceled elderthing cannot move enemy or ignore Aloof"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 hard cultist ST8 uses location after original result callback"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 hard cultist failure actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 hard cultist success actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 hard elderthing failure actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 hard elderthing success actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 hard exhausted nearest enemy eligible only on Hard/Expert"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 hard full flood cannot increase; fallback horror only Hard/Expert"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 hard skull failure actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 hard skull success actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 hard tablet failure actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 hard tablet success actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 hard unflooded skull reveals no additional token; unflooded tablet no damage"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 standard canceled elderthing cannot move enemy or ignore Aloof"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 standard cultist ST8 uses location after original result callback"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 standard cultist failure actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 standard cultist success actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 standard elderthing failure actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 standard elderthing success actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 standard exhausted nearest enemy eligible only on Hard/Expert"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 standard full flood cannot increase; fallback horror only Hard/Expert"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 standard skull failure actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 standard skull success actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 standard tablet failure actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 standard tablet success actual test and effect with JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+          "test": "07231 standard unflooded skull reveals no additional token; unflooded tablet no damage"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "test": "aLightInTheFog 混乱/帮助：07231 提示卡分支（skull 追加抽、tablet 淹没才伤害、cultist 涨水）"
+        }
+      ]
+    },
+    {
+      "code": "07232",
+      "name": "海湾浓雾",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07232 背面：毁灭移到下个密谋、马什与队长交战带蓝钥匙、全员失线索、灯塔地下室入场、场景直接推进 2a"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "test": "aLightInTheFog 议程：07232 背面毁灭转移+全员失线索+地下室入场+场景直接推进 2a"
+        }
+      ]
+    },
+    {
+      "code": "07233",
+      "name": "不变如海",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-capture.test.mjs",
+          "test": "07233 onCaptured 只在该议程为当前议程时生效"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-capture.test.mjs",
+          "test": "07233 不变如海：被俘推进议程；毁灭移到下个密谋；背面全员被俘/马什放一边/地图扩张/直接推进 3a"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "test": "aLightInTheFog 议程 07233 围捕：被俘推进议程、毁灭转移、全员被俘、地图扩张并直接推进 3a"
+        }
+      ]
+    },
+    {
+      "code": "07234",
+      "name": "浪潮汹涌",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
+          "test": "07234 浪潮汹涌：场外找马什、搬走猎鹰岬占位者并移除地点、提升最底下4处淹没"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-alight-cards.test.mjs",
+          "test": "07234 浪潮汹涌：背面从场外生成马什、移出猎鹰岬地点、提升最底下 4 处淹没"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "test": "aLightInTheFog 议程：07234 浪潮汹涌背面移出猎鹰岬地点、把占位者搬到浅层并提升最底下 4 处淹没"
+        }
+      ]
+    },
+    {
+      "code": "07235",
+      "name": "猎鹰岬的恐怖",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07235 正面：只有奥赛罗思·马什得到 +2[每调查员] 生命值"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07235 注册为 agenda：马什生命修正 + 背面 onReveal"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07235 背面：可提升地点不足 4 张 → 结局 3"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07235 背面：足够 4 张时提升最底下 4 处并翻回正面继续"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "test": "aLightInTheFog 议程：07235 马什生命修正与背面 4 处淹没（不足则结局3）"
+        }
+      ]
+    },
+    {
+      "code": "07236",
+      "name": "灯塔",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-alight-cards.test.mjs",
+          "test": "07236 灯塔：线索不足时目标入口不出现；支付后背面横置马什+蓝钥匙并直接推进议程 2a"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
+          "test": "07236 灯塔：线索目标推进后生成横置马什/蓝钥匙、洗入尽腥尽力、地下室放到梯井正下方"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "test": "aLightInTheFog 幕/议程：07236 线索目标与背面布置、07237 进入地下室目标、07238 全员撤退目标"
+        }
+      ]
+    },
+    {
+      "code": "07237",
+      "name": "寻找前路",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-alight-cards.test.mjs",
+          "test": "07237 寻找前路：无人在地下室时目标不推进；进入地下室后推进并铺开 2b"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
+          "test": "07237 寻找前路：进入灯塔地下室即推进；2b 放深层/底层与9张潮水通道、马什进胜利区"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "test": "aLightInTheFog 幕/议程：07236 线索目标与背面布置、07237 进入地下室目标、07238 全员撤退目标"
+        }
+      ]
+    },
+    {
+      "code": "07238",
+      "name": "深海信徒",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-alight-cards.test.mjs",
+          "test": "07238 深海信徒：调查阶段末全淹没者选下移/受伤；全员撤退按 resignedInMoonRoom 选 R1/R2"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
+          "test": "07238 深海信徒：调查阶段结束时全淹没者受伤/下移；全员撤退推进并按月之室记录选 R1/R2"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "test": "aLightInTheFog 幕/议程：07236 线索目标与背面布置、07237 进入地下室目标、07238 全员撤退目标"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-a1.test.mjs",
+          "test": "investigationPhaseEnds 窗口对非当前幕不误触发（07238 只在当前幕结算）"
+        }
+      ]
+    },
+    {
+      "code": "07239",
+      "name": "猎鹰岬门房",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-alight-cards.test.mjs",
+          "test": "07239 猎鹰岬门房：不能被完全淹没；在门房才能撤退，黑/红钥匙放到当前幕"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
+          "test": "07239 猎鹰岬门房：淹没上限为部分淹没；撤退前把黑/红钥匙放到当前场景"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "test": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-a1.test.mjs",
+          "test": "引擎读点：07239 猎鹰岬门房不能被完全淹没（floodBounds max=1）"
+        }
+      ]
+    },
+    {
+      "code": "07240",
+      "name": "灯塔梯井",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard6.test.mjs",
+          "test": "07240 灯塔梯井：有[[遗物]]剧情支援放在一边时，[free] 将其中 1 张加入手牌"
+        }
+      ]
+    },
+    {
+      "code": "07241",
+      "name": "灯光室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07241: real reveal places exactly its reserved key, cap remains after JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "test": "aLightInTheFog 地点与连接：同一行地点互相连接、灯光室垂直连接梯井、07239/07241 淹没上限"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "test": "aLightInTheFog 地点行为/钥匙：07241 白钥匙、07243 黄钥匙、07247 红钥匙+帷幕、07249 涨水、07250 全淹没+黑钥匙"
+        }
+      ]
+    },
+    {
+      "code": "07242",
+      "name": "猎鹰岬崖边",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard6.test.mjs",
+          "test": "07242 猎鹰岬崖边：shroud 1 / clues 1 / 不能被完全淹没；控制白色钥匙时 [free] 阅读记忆闪回 XII"
+        }
+      ]
+    },
+    {
+      "code": "07243",
+      "name": "灯塔看门人小屋",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07243: real reveal places exactly its reserved key, cap remains after JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "test": "aLightInTheFog 地点行为/钥匙：07241 白钥匙、07243 黄钥匙、07247 红钥匙+帷幕、07249 涨水、07250 全淹没+黑钥匙"
+        }
+      ]
+    },
+    {
+      "code": "07244",
+      "name": "沉没岩洞",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07244: local team pays n clues for same-row private look, no reveal or clues"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07244: real movement honors blue key only while basement is unrevealed"
+        }
+      ]
+    },
+    {
+      "code": "07245",
+      "name": "沉没岩洞",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard6.test.mjs",
+          "test": "07245 沉没岩洞（中层）：shroud 3 / clues 0；[free] 团队花费 1×人数线索查看本行潮水通道地点已揭示面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07245: local team pays n clues for same-row private look, no reveal or clues"
+        }
+      ]
+    },
+    {
+      "code": "07246",
+      "name": "沉没岩洞",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard6.test.mjs",
+          "test": "07246 沉没岩洞（底层）：shroud 4 / clues 0；[free] 团队花费 1×人数线索查看本行潮水通道地点已揭示面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07246: local team pays n clues for same-row private look, no reveal or clues"
+        }
+      ]
+    },
+    {
+      "code": "07247",
+      "name": "海德拉祭坛",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
+          "test": "07247 海德拉祭坛：揭示放红钥匙；绿钥匙使帷幕 -3；线索只能靠调查发现"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-alight-cards.test.mjs",
+          "test": "07247 海德拉祭坛：揭示放红钥匙；绿钥匙在本地点 -3 帷幕；线索只能靠调查发现"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "test": "aLightInTheFog 地点行为/钥匙：07241 白钥匙、07243 黄钥匙、07247 红钥匙+帷幕、07249 涨水、07250 全淹没+黑钥匙"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-a1.test.mjs",
+          "test": "引擎读点：07247 除调查外不能发现线索；07250 淹没时不能发现线索"
+        }
+      ]
+    },
+    {
+      "code": "07248",
+      "name": "深潜者温床",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard6.test.mjs",
+          "test": "07248 深潜者温床：shroud 2 / clues 0；揭示时提升自身淹没等级；控制紫色钥匙时 [free] 阅读记忆闪回 XIII"
+        }
+      ]
+    },
+    {
+      "code": "07249",
+      "name": "月之室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
+          "test": "07249 月之室：揭示提升淹没等级；未淹没时撤退并记录来自月之室"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-alight-cards.test.mjs",
+          "test": "07249 月之室：揭示提升淹没；未淹没才出现撤退入口；撤退记录 resignedInMoonRoom"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "test": "aLightInTheFog 地点行为/钥匙：07241 白钥匙、07243 黄钥匙、07247 红钥匙+帷幕、07249 涨水、07250 全淹没+黑钥匙"
+        }
+      ]
+    },
+    {
+      "code": "07250",
+      "name": "沉没档案库",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
+          "test": "07250 沉没档案库：揭示即完全淹没并放黑钥匙；淹没时不能发现线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-alight-cards.test.mjs",
+          "test": "07250 沉没档案库：揭示即完全淹没并放黑钥匙；淹没时不能发现线索，未淹没可以"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "test": "aLightInTheFog 地点行为/钥匙：07241 白钥匙、07243 黄钥匙、07247 红钥匙+帷幕、07249 涨水、07250 全淹没+黑钥匙"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-a1.test.mjs",
+          "test": "引擎读点：07247 除调查外不能发现线索；07250 淹没时不能发现线索"
+        }
+      ]
+    },
+    {
+      "code": "07251",
+      "name": "水泵室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07251: real skill choice and water transfer at success margin -1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07251: real skill choice and water transfer at success margin 1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07251: real skill choice and water transfer at success margin 2"
+        }
+      ]
+    },
+    {
+      "code": "07252",
+      "name": "惨遭俘获！",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-capture.test.mjs",
+          "test": "07252 首读：第一次被俘读剧情文本，后续只结算同样的物理效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-capture.test.mjs",
+          "test": "07252b 地点限制：不能被淹没；敌人不能进入/生成（改到沉没岩洞，无候选时生成失败）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-capture.test.mjs",
+          "test": "07252b 行动：战斗/敏捷(3)成功解救；控制黄钥匙自动成功；无被俘者时行动不出现"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "test": "aLightInTheFog 开局布置与区域守恒：初始行/灯光室、7 色钥匙、07252 剧情卡、4 张密谋阈值与遭遇牌库"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "test": "aLightInTheFog 遭遇与捕获：07260 失败被俘、07252 剧情翻面成拘禁室 07252b、07252b 限制与解救"
+        }
+      ]
+    },
+    {
+      "code": "07252b",
+      "name": "拘禁室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-capture.test.mjs",
+          "test": "07252b 地点限制：不能被淹没；敌人不能进入/生成（改到沉没岩洞，无候选时生成失败）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-capture.test.mjs",
+          "test": "07252b 行动：战斗/敏捷(3)成功解救；控制黄钥匙自动成功；无被俘者时行动不出现"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "test": "aLightInTheFog 遭遇与捕获：07260 失败被俘、07252 剧情翻面成拘禁室 07252b、07252b 限制与解救"
+        }
+      ]
+    },
+    {
+      "code": "07253",
+      "name": "奥赛罗思·马什",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-capture.test.mjs",
+          "test": "07253 奥赛罗思·马什：淹没时 +2 躲避；成功躲避按差值夺钥匙"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-capture.test.mjs",
+          "test": "07253 敌军阶段攻击后被俘+钥匙放马什；非敌军阶段不触发"
+        }
+      ]
+    },
+    {
+      "code": "07254",
+      "name": "深潜者保姆",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07254 深潜者保姆：与你交战后抽取遭遇牌库顶牌且该牌失去涌动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07254 深潜者保姆：印刷关键词（冷漠/反击）来自关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07254 深潜者保姆：未交战时同地点与连接地点的其他[[深潜者]] +1 攻击/+1 躲避"
+        }
+      ]
+    },
+    {
+      "code": "07255",
+      "name": "深潜者幼体",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard6.test.mjs",
+          "test": "07255 深潜者幼体：涌动；交战后失去 1 行动或它攻击你；被击败后最近的另一名深潜者向你移动一步"
+        }
+      ]
+    },
+    {
+      "code": "07256",
+      "name": "丑恶摇篮曲",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07256: highest actual Deep One fight sets a real test; non-Deep-One value excluded"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07256: no Deep Ones surges once and performs no skill test"
+        }
+      ]
+    },
+    {
+      "code": "07257",
+      "name": "咸海之吻",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07257: actual combat test at water 0; physical threat blocks all owner draw/gain until real enemy-phase end"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07257: actual combat test at water 1; physical threat blocks all owner draw/gain until real enemy-phase end"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07257: success creates no threat or prohibition"
+        }
+      ]
+    },
+    {
+      "code": "07258",
+      "name": "全蚀",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07258: failed revelation creates one physical threat; real flooded entry hurts only owner; own turn end discards once"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07258: successful revelation discards immediately and creates no persistent movement effect"
+        }
+      ]
+    },
+    {
+      "code": "07259",
+      "name": "尽腥尽力",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-w2-new-cards.test.mjs",
+          "test": "07259 显现：附属到奥赛罗思·马什（在场）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-w2-new-cards.test.mjs",
+          "test": "07259 显现：马什在胜利区时也能附属"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-w2-new-cards.test.mjs",
+          "test": "07259 马什攻击时本次 +1 伤害 +1 恐惧，并弃掉本卡"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-w2-new-cards.test.mjs",
+          "test": "07259 马什通过猎手关键词移动后未交战：再次结算猎手，且本阶段不能攻击（每轮一次）"
+        }
+      ]
+    },
+    {
+      "code": "07260",
+      "name": "惨遭俘虏",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-capture.test.mjs",
+          "test": "07260 惨遭俘虏：敏捷(4)失败被俘+钥匙放拘禁室；成功不受影响"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",
+          "test": "aLightInTheFog 遭遇与捕获：07260 失败被俘、07252 剧情翻面成拘禁室 07252b、07252b 限制与解救"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "unit": "12-a-2",
+  "generatedAt": "2026-11-25",
+  "status": "complete",
+  "scope": {
+    "cards": 40,
+    "selector": "code =~ /^12/ && 12041 <= code <= 12080 && pack === 'core_2026' && effectStatus != 'verified'",
+    "packs": {
+      "core_2026": 40
+    },
+    "types": {
+      "event": 12,
+      "asset": 23,
+      "skill": 5
+    },
+    "availability": {
+      "strict": [
+        "12041",
+        "12043",
+        "12045",
+        "12046",
+        "12047",
+        "12048",
+        "12051",
+        "12052",
+        "12053",
+        "12054",
+        "12055",
+        "12057",
+        "12058",
+        "12059",
+        "12060",
+        "12061",
+        "12062",
+        "12063",
+        "12066",
+        "12067",
+        "12068",
+        "12070",
+        "12071",
+        "12072",
+        "12074",
+        "12075",
+        "12076",
+        "12079",
+        "12080"
+      ],
+      "catalogOnly": [
+        "12042",
+        "12044",
+        "12049",
+        "12050",
+        "12056",
+        "12064",
+        "12065",
+        "12069",
+        "12073",
+        "12077",
+        "12078"
+      ]
+    }
+  },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "12041",
+    "12042",
+    "12043",
+    "12044",
+    "12045",
+    "12046",
+    "12047",
+    "12048",
+    "12049",
+    "12050",
+    "12051",
+    "12053",
+    "12054",
+    "12055",
+    "12056",
+    "12057",
+    "12058",
+    "12059",
+    "12060",
+    "12061",
+    "12062",
+    "12063",
+    "12064",
+    "12065",
+    "12067",
+    "12069",
+    "12070",
+    "12071",
+    "12072",
+    "12073",
+    "12074",
+    "12075",
+    "12076",
+    "12077",
+    "12078",
+    "12079",
+    "12080"
+  ],
+  "failedCodes": [
+    {
+      "code": "12052",
+      "dimension": "implementation",
+      "reason": "卡面「在你的回合结束时，将你控制的一张[[道具]]支援返回你的手牌」允许选择你控制的任意一张道具支援、且时机为你的回合结束；实现只给「本次用变戏法打出的那一张」加实例级标记，并在轮末（新一轮开始）统一返回，玩家的选择权与时机均与卡面不等价（条目注释已披露该近似，但结果不等价，按失败判）。",
+      "evidence": "src/cards/entries/12052.js:337-339（轮末近似披露）；同文件 374-384（只标记本次打出的实例）",
+      "repro": "tests/acceptance-12-a-shard2.test.mjs 12052 用例：打出道具后仅该实例带 returnToHandAtRoundEnd，无法返回其它道具支援。"
+    },
+    {
+      "code": "12066",
+      "dimension": "implementation",
+      "reason": "卡面「在你控制的一张玩家卡牌上放置 1 个毁灭标记」——调查员卡本身也是玩家卡，实现只在 `inv.assets` 中枚举目标：控制 0 张支援时事件结算直接空转（费用已付、无毁灭、无线索），控制支援时也无法选择把毁灭放在自己的调查员卡上。目标集合比卡面窄，属印刷子句不等价。",
+      "evidence": "src/cards/entries/12066.js:998-1012（controlled = inv.assets；无支援即 return）",
+      "repro": "tests/acceptance-12-a-shard2.test.mjs 12066 用例只覆盖「控制支援」路径；无支援时 play 后不放毁灭（条目第 1000-1003 行）。"
+    },
+    {
+      "code": "12068",
+      "dimension": "implementation",
+      "reason": "strict 玩家卡无法打出：cards-data `slots: [\"Head\"]`，而引擎 `SLOT_CAPACITY` 只有 hand/ally/arcane/accessory/body/tarot，没有 head；`assetReplacementPlans` 判定「没有合法的支援放置方案」，`doPlay` 在 legalMoves 阶段即拒绝，卡面能力（3 充能、额外揭示标记二选一）完全不可达。",
+      "evidence": "src/engine/engine.js:SLOT_CAPACITY（无 head）；src/engine/assets.js assetReplacementPlans/canEquip；src/cards/cards-data.js 12068 slots",
+      "repro": "tests/acceptance-12-a-shard2.test.mjs 12068 用例：move({action:'play',cardId:'12068'}) 断言抛出 /没有合法的支援放置方案/（当前缺陷行为）。"
+    },
+    {
+      "code": "12068",
+      "dimension": "primitives",
+      "reason": "引擎槽位原语缺 Head 槽：2026 核心盒新增 Mask/Head 槽卡，但 SLOT_CAPACITY 未登记 head，assetReplacementPlans/canEquip 对 12068 一律返回不可放置——属「新卡引入了新槽位而原语未同步」的原语缺口，不是单卡条目问题。",
+      "evidence": "src/engine/engine.js:SLOT_CAPACITY = { hand, ally, arcane, accessory, body, tarot }（无 head）；src/engine/assets.js assetReplacementPlans",
+      "repro": "tests/acceptance-12-a-shard2.test.mjs 12068 用例复现拒绝路径。"
+    }
+  ],
+  "pendingCodes": [],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "fail",
+    "primitives": "fail",
+    "interaction": "pass",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [],
+  "notes": "（验收进行中）"
+}

@@ -1,0 +1,65 @@
+{
+  "unit": "05-a-4",
+  "generatedAt": "2026-11-24",
+  "scope": { "cards": 57, "selector": "pack=wos && effectStatus=unverified", "range": "05151-05185" },
+  "verdict": "pass",
+  "verifiedCodes": [
+    "05151", "05152", "05153", "05154", "05155", "05156", "05157", "05158", "05159", "05160",
+    "05161", "05162", "05163", "05164", "05165",
+    "05166", "05166b", "05167", "05167b", "05168", "05168b", "05169", "05169b", "05170", "05170b",
+    "05171", "05171b", "05172", "05172b", "05173", "05173b", "05174", "05174b", "05175", "05175b",
+    "05176", "05176b", "05177", "05178a", "05178b", "05178c", "05178d", "05178e", "05178f", "05178g",
+    "05178h", "05178i", "05178j", "05178k", "05178l", "05179", "05180", "05181", "05182", "05183",
+    "05184", "05185"
+  ],
+  "failedCodes": [],
+  "excludedCodes": [],
+  "pendingCodes": [],
+  "dimensions": {
+    "implementation": "pass",
+    "primitives": "pass",
+    "interaction": "pass",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/acceptance-05-a-shard4.test.mjs",
+      "test": "32 例、标题覆盖 33 张卡的新增逐卡证据（05161/05162/05163/05164/05165/05166/05167/05167b/05168/05168b/05169/05169b/05171/05172/05172b/05173/05173b/05174/05174b/05175b/05179/05178a/05178b/05178c/05178d/05178e/05178f/05178g/05178h/05178i/05178k/05178l/05181）",
+      "codes": ["05161", "05162", "05163", "05164", "05165", "05166", "05167", "05167b", "05168", "05168b", "05169", "05169b", "05171", "05172", "05172b", "05173", "05173b", "05174", "05174b", "05175b", "05179", "05178a", "05178b", "05178c", "05178d", "05178e", "05178f", "05178g", "05178h", "05178i", "05178k", "05178l", "05181"],
+      "result": "node --test tests/acceptance-05-a-shard4.test.mjs → tests 32 / pass 32 / fail 0"
+    },
+    {
+      "file": "tests/tcu-wages-of-sin.test.mjs",
+      "test": "本章既有 71 例（标题含 05161/05164/05165/05166/05166b/05169/05169b/05170/05170b/05171/05171b/05175/05176/05176b/05177/05178b/05178j/05180/05181/05182/05183/05184/05185）",
+      "codes": ["05161", "05164", "05165", "05166", "05166b", "05169", "05169b", "05170", "05170b", "05171", "05171b", "05175", "05176", "05176b", "05177", "05178b", "05178j", "05180", "05181", "05182", "05183", "05184", "05185"],
+      "result": "本地重跑通过"
+    },
+    {
+      "file": "tests/tcu-p0-regressions.test.mjs",
+      "test": "P0-2 幽灵面翻面保留线索 / P0-3 双面地点翻面后分组识别（真实引擎 createGameState→startScenario→advanceAct/advanceAgenda；标题不含具体卡号，作为修复回归证据）",
+      "codes": [],
+      "result": "本地重跑通过"
+    },
+    {
+      "file": "tests/tcu-player-m2-2.test.mjs",
+      "test": "玩家卡 05151–05160 逐卡真实引擎用例（51 例，标题含卡号）",
+      "codes": ["05151", "05152", "05153", "05154", "05155", "05156", "05157", "05158", "05159", "05160"],
+      "result": "本地重跑通过"
+    },
+    {
+      "file": "tests/tcu-interactions.test.mjs",
+      "test": "幽灵遭遇牌库投影、闹鬼选择面板模型、幽灵地点徽标、异端者双面徽标（05178a/05178b）；标题不含卡号，作为交互证据",
+      "codes": [],
+      "result": "本地重跑 7/7 通过（浏览器证据为既有 tests/tcu-interactions.browser.mjs 1440/390 档，本轮未重跑）"
+    }
+  ],
+  "commands": [
+    { "command": "node --test tests/acceptance-05-a-shard4.test.mjs", "result": "tests 32 / pass 32 / fail 0" },
+    { "command": "node --test <05-a-shard4 + tcu-wages-of-sin + tcu-p0-regressions + tcu-player-m2-2 + tcu-interactions + tcu-completion>", "result": "tests 189 / pass 189 / fail 0" },
+    { "command": "npm run cards:check", "result": "exit 0" },
+    { "command": "npm run cards:encounter-check", "result": "exit 0" },
+    { "command": "npm run audit:entries", "result": "exit 0；directStateWrite 112 / singleCardField 21 / reprintDuplicate 0 / playConditionGap 0（本范围 R1/R2/R3=0，均存量基线）" }
+  ],
+  "notes": "57/57 通过（verdict pass）。历史 P0-2/P0-3（幽灵面翻面保留线索、变体地点翻面分组）与 P1-7（05152/05156）在当前 HEAD 由真实引擎用例复核仍成立。结构性回迁债务（非本轮判失败）：本章 35 个非玩家条目为薄声明、单卡规则集中在 theWagesOfSin/behavior.js；11 张幽灵面 05166b–05176b 无逐面单卡文件，规则由 spectralLocation 数据 + hauntedScript 承载；05161 为剧本参考卡（无单卡文件，manifest 已约定）。既有账本口径偏宽：audit/tcu-scenario-acceptance.json 的 theWagesOfSin 标 literalCardBehavior=true 但 notes.testCoveredCodes 仅 6/28（uncovered 含 05178a/c/e/g/i/k、05179），本轮已补齐标题级用例；因 web/campaign-presentation.js 未提交 WIP 阻塞 TCU 账本重签，本轮未重签任何账本。新增测试 tests/acceptance-05-a-shard4.test.mjs 需由主进程登记进 tests/suites.mjs fast tier 与 tests/node-suite.mjs（同 05-a-shard1/2/3），否则 suite-manifest.test.mjs 会因未登记用例变红。"
+}

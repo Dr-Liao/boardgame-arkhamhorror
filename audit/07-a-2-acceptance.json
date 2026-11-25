@@ -1,0 +1,1077 @@
+{
+  "schemaVersion": 1,
+  "unit": "07-a-2",
+  "profile": {
+    "id": "tic-deluxe-b-2026-11",
+    "scope": "印斯茅斯暗潮 07 段 tic 豪华包后半（07055–07107）54 条目录记录。52 条通过五维验收；2 条因 victory 数据语义判错暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 54,
+    "verified": 52,
+    "unverified": 2,
+    "unimplemented": 0,
+    "testsPassed": 296
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+      "sha256": "b8e39e92896761bdaf7b4e5eea2530680806ef462fd16e0eb2bd7e80fe264e03"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+      "sha256": "2da6257f85a067539555ccea5097bcc4bf2c451b80c012bda1c25f540416c079"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+      "sha256": "7e776eb6970b754d96fc77e663932e5f3b2cd814e6f05be88473d5ff5f613c4e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
+      "sha256": "56d390512f57573f8bc2cf40671fac78edcc1a26e6e101ada9b4e38071c408a6"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+      "sha256": "68d334798dc094b59d7d0cafd643b50af82e2a62590d03eb8d1eb164653c7764"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-fog-and-locals.test.mjs",
+      "sha256": "60e643d4cb772093776ddda20f8c442aae65e0968086e424fd9e7f23e18f7e46"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-aside-hazards.test.mjs",
+      "sha256": "217cd50fedd1168adb8ae99e9ccbd0b4542aac3235091c9366b0938e78d342d9"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-dynamic-aloof.test.mjs",
+      "sha256": "cf9c53dc62e5e7f9827317f921587f9275a2dd67ed600c4d6ff0ead2f749b4c1"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-encounter-search.test.mjs",
+      "sha256": "9a2cfd2624ded61a8ca5fa962417ecc03be52eb04f409105d7ab60e49b218a97"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-innsmouth-look.test.mjs",
+      "sha256": "3b91f7f45bf739f9051fe7e4a61ce6f10ea83ec8c54a23154c856ca4157878de"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-enemy-outcomes.test.mjs",
+      "sha256": "e052c99b022bd077b89799b47effb6c29a9ccf2bc4ce532f1a9b6dd51dfb9463"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
+      "sha256": "b026fd4314c7ca646ad79879e8e96e6b7cd77a4b69446e730015ff3f863fc694"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenario-devilReef.test.mjs",
+      "sha256": "38f7136b554c3cd2f3f1c1830959b63fd595121d97a325ec81578c5c6eb4dd6f"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-interactions.test.mjs",
+      "sha256": "64e5dde4e149d1da6c052fd7f8ddedca48037b9a7fb987baae599a5c089f5224"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-primitives.test.mjs",
+      "sha256": "2234fa4bbb8925066932c1ba1211d4349b1c7f19934ef2c6f023ce0131e92770"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-rules.test.mjs",
+      "sha256": "24972f73c0ee5c468034308b7bc51c7742bccc191406960dfc268169940a574a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-flashbacks.test.mjs",
+      "sha256": "cf40ce2d84ef77409b0f8a747580bf42781d165582387c3976a31eb2e859fecd"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
+      "sha256": "88c8e7f725ed3c4ae41c00491aa8adbb719cd08182152982c76ef003e1afecd6"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-chase-vehicles.test.mjs",
+      "sha256": "a1055dc8ef21c65fe9b8757a8fd30484a724772a2294e413c34cf7b14a4c7f5e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-fishing-vessel.test.mjs",
+      "sha256": "c701f3ed20b9039e80187c68118f09db688d67fac7a973197eec223413d14a73"
+    }
+  ],
+  "entries": [
+    {
+      "code": "07055",
+      "name": "来自深渊",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-enemy-outcomes.test.mjs",
+          "test": "07055 semantics use actual encounter draw: active->depths preserves keys and truly surges; next draw restores same id without surge"
+        }
+      ]
+    },
+    {
+      "code": "07056",
+      "name": "艾莲娜·哈珀失踪案",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+          "test": "P7 哈珀 chaos token 07056 提示卡：skull 按议程阶段、easy 失败符号效果（cultist 毁灭/tablet 恐惧/elderthing 线索）"
+        }
+      ]
+    },
+    {
+      "code": "07057",
+      "name": "腐朽衰败",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+          "test": "P7 哈珀 setup 初始设置与区域守恒：07062a 剧情资产/私有迹象牌堆/7 地点/幕 07060 议程 07057"
+        }
+      ]
+    },
+    {
+      "code": "07058",
+      "name": "愈发起疑",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TDE 07058 愈发起疑：背面（→R1）；正面击败非绑架犯嫌疑人取得线索并记录寻仇"
+        }
+      ]
+    },
+    {
+      "code": "07059",
+      "name": "狂热追击",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+          "test": "P7 哈珀 议程 07059 狂热追击：推进 → resolution1/TheMissionFailed 结算并交接到 interlude2"
+        }
+      ]
+    },
+    {
+      "code": "07060",
+      "name": "寻找哈珀特工",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
+          "test": "07060 团队线索不足时谈判入口不出现"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
+          "test": "07060 团队线索谈判：花费 X[每调查员]、揭示并抽取 1 张、其余与遭遇顶洗回、团队每轮一次"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
+          "test": "07060 背面推进发出 ticHarperAccusation 事件（payload 契约）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
+          "test": "07060 轮末可选推进：skip 不推进 / advance 发起指控"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
+          "test": "07060/07061 注册：code/scope/implemented 与 actRule 契约"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
+          "test": "Harper 章节夹具就位：07060 当前幕 + 私有答案/迹象牌堆 + 结局键"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+          "test": "P7 哈珀 setup 初始设置与区域守恒：07062a 剧情资产/私有迹象牌堆/7 地点/幕 07060 议程 07057"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+          "test": "P7 哈珀 幕 07060 团队线索谈判：花费 X[每调查员]、揭示抽取 1 张、其余洗回、团队每轮一次"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+          "test": "P7 哈珀 幕 07060 指控 0 正确：全员撤退 → resolution1/TheMissionFailed 记录、不转场"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+          "test": "P7 哈珀 幕 07060 指控 1 正确：愤怒暴民 07062b 见于印斯茅斯广场、07062a 离场、仍转入 07061"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+          "test": "P7 哈珀 幕 07060 指控 2 正确：转营救幕/议程、藏身处+07083 在下方+绑架犯、保留 07062a"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+          "test": "P7 哈珀 幕 07060 轮末可选推进：skip 不推进 / advance 进入指控并转入 07061"
+        }
+      ]
+    },
+    {
+      "code": "07061",
+      "name": "营救",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
+          "test": "07060/07061 注册：code/scope/implemented 与 actRule 契约"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
+          "test": "07061 修正：真实章节 state 下同样生效（fixture 换当前幕为 07061）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
+          "test": "07061 修正：绑架犯失去冷漠/不能谈判/+1[每调查员]生命，其他嫌疑不受影响"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
+          "test": "07061 六种绑架犯 → resolution2..7，且每个结局键在 content 剧本文本中存在"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
+          "test": "07061 目标：1 人局任一条件 / ≥2 人局两条件都必须满足"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
+          "test": "07061 目标：艾莲娜按「地点下方」或「地点附属」两种形态都能定位"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
+          "test": "07061 背面推进发出 ticHarperRescue 事件（经真实 advanceAct → actReveal 链路）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+          "test": "P7 哈珀 JSON 保存/恢复：合法动作一致，恢复后继续推进 07061 得到真实营救结局"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+          "test": "P7 哈珀 幕 07060 指控 1 正确：愤怒暴民 07062b 见于印斯茅斯广场、07062a 离场、仍转入 07061"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+          "test": "P7 哈珀 幕 07060 轮末可选推进：skip 不推进 / advance 进入指控并转入 07061"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+          "test": "P7 哈珀 幕 07061 修正：绑架犯失去冷漠/不能谈判/+1×人数生命，其他嫌疑敌人不受影响"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+          "test": "P7 哈珀 幕 07061 目标：1 人局 OR / ≥2 人局 AND（绑架犯在胜利区 + 藏身处无线索）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+          "test": "P7 哈珀 幕 07061 营救结局：六种绑架犯 → resolution2–7 + TheMissionWasSuccessful 记录"
+        }
+      ]
+    },
+    {
+      "code": "07062a",
+      "name": "找到哈珀特工",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07062b health scales once per investigator and prevents actual opportunity attack"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+          "test": "P7 哈珀 setup 初始设置与区域守恒：07062a 剧情资产/私有迹象牌堆/7 地点/幕 07060 议程 07057"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+          "test": "P7 哈珀 幕 07060 指控 1 正确：愤怒暴民 07062b 见于印斯茅斯广场、07062a 离场、仍转入 07061"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+          "test": "P7 哈珀 幕 07060 指控 2 正确：转营救幕/议程、藏身处+07083 在下方+绑架犯、保留 07062a"
+        }
+      ]
+    },
+    {
+      "code": "07062b",
+      "name": "愤怒暴民",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07062b health scales once per investigator and prevents actual opportunity attack"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+          "test": "P7 哈珀 幕 07060 指控 1 正确：愤怒暴民 07062b 见于印斯茅斯广场、07062a 离场、仍转入 07061"
+        }
+      ]
+    },
+    {
+      "code": "07063",
+      "name": "马什精炼厂",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07063 real two-action draw is personal once per game and rejects remote activation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07079 嫌疑人：揭示生成于07063并带 1×人数线索；谈判取得 1 线索"
+        }
+      ]
+    },
+    {
+      "code": "07064",
+      "name": "吉尔曼旅社",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07064 split healing spends one real action and survives a pending-choice save"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07081 嫌疑人：揭示生成于07064并带 1×人数线索；谈判取得 1 线索"
+        }
+      ]
+    },
+    {
+      "code": "07065",
+      "name": "印斯茅斯广场",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07065 resource-paid free move is no ordinary action and rejects non-Innsmouth destinations"
+        }
+      ]
+    },
+    {
+      "code": "07066",
+      "name": "印斯茅斯港口",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07066 only investigation success by at least three peeks and shuffles without drawing"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07076 嫌疑人：揭示生成于07066并带 1×人数线索；谈判取得 1 线索"
+        }
+      ]
+    },
+    {
+      "code": "07067",
+      "name": "国立第一杂货铺",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07067 searches only top six, returns remainder, shuffles once and keeps optional selection"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07078 嫌疑人：揭示生成于07067并带 1×人数线索；谈判取得 1 线索"
+        }
+      ]
+    },
+    {
+      "code": "07068",
+      "name": "鱼街旧桥",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07068 gains exactly four resources for two actions and keeps separate personal limit"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07077 嫌疑人：揭示生成于07068并带 1×人数线索；谈判取得 1 线索"
+        }
+      ]
+    },
+    {
+      "code": "07069",
+      "name": "小利透书店",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07069 only failed investigation at this physical location mixes encounter top into private deck"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07080 嫌疑人：揭示生成于07069并带 1×人数线索；谈判取得 1 线索"
+        }
+      ]
+    },
+    {
+      "code": "07070",
+      "name": "达贡密教",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07070 actual final-clue discovery removes one hidden lead; earlier discovery does not"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07070–07073 real revelation finds actual template identity and never clones unique locations"
+        }
+      ]
+    },
+    {
+      "code": "07071",
+      "name": "锯骨巷",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07071 aura applies only to local Humanoids and disappears on moving away"
+        }
+      ]
+    },
+    {
+      "code": "07072",
+      "name": "朝岸贫民窟",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07072 each failed investigation adds one doom and reduces real subsequent shroud by two"
+        }
+      ]
+    },
+    {
+      "code": "07073",
+      "name": "水街老屋",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07070–07073 real revelation finds actual template identity and never clones unique locations"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07073 borrowed investigation resolves the actual investigator rather than current turn seat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07073 success by three selects actual encounter draw or unseen top-card shuffle"
+        }
+      ]
+    },
+    {
+      "code": "07074",
+      "name": "印斯茅斯监狱",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面「在印斯茅斯监狱击败一个**没有胜利点**的敌人后：将其洗入线索牌堆」的核心分支对本案最常见的敌人（嫌疑敌人 07076–07081 的印刷数据 victory=0，以及 07062b 愤怒暴民 victory=0）永不触发：criteria 用 `!Object.hasOwn(ALL_CARDS[code],'victory')` 判断「没有胜利点」，而 victory:0 也是自有属性，于是被当成有胜利点。全仓库同为「有胜利点」的既有口径是 `Number(victory||0) > 0`（如 07280/_shared awardLocationVictory）。"
+    },
+    {
+      "code": "07075",
+      "name": "新格林教堂",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面「查看线索牌堆顶牌；若它**没有胜利X**，弃掉它」对 victory:0 的牌（嫌疑敌人 07076–07081）判定反了：resolve 用 `Object.hasOwn(ALL_CARDS[code],'victory')`，于是没有胜利点的嫌疑敌人被当成有胜利点、不被弃掉；只有完全不带 victory 字段的牌才会被弃。行动可用性与线索牌堆顶/揭视读点正常。"
+    },
+    {
+      "code": "07076",
+      "name": "罗伯特·弗兰得礼",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07076 actual Revelation uses both chapter homes; successful parleys transfer clues and banish Victory0 without defeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07076 failed real parley keeps clues and applies only its printed failure penalty"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07076 嫌疑人：揭示生成于07066并带 1×人数线索；谈判取得 1 线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07076 嫌疑人：谈判检定失败受到 1 伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07076 罗伯特·弗兰得礼：印刷数值 4 生命、冷漠、全部线索被取得后进胜利区"
+        }
+      ]
+    },
+    {
+      "code": "07077",
+      "name": "扎多克·艾伦",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07077 actual Revelation uses both chapter homes; successful parleys transfer clues and banish Victory0 without defeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07077 failed real parley keeps clues and applies only its printed failure penalty"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07077 嫌疑人：揭示生成于07068并带 1×人数线索；谈判取得 1 线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07077 扎多克·艾伦：生成于鱼街旧桥/07136，带 1×人数线索，谈判入口为敏捷"
+        }
+      ]
+    },
+    {
+      "code": "07078",
+      "name": "布里安·伯纳姆",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07078 嫌疑人：揭示生成于07067并带 1×人数线索；谈判取得 1 线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07078 布里安·伯纳姆：生成于国立第一杂货铺/07137，弃 3 个技能图标谈判"
+        }
+      ]
+    },
+    {
+      "code": "07079",
+      "name": "巴纳巴斯·马什",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07079 actual Revelation uses both chapter homes; successful parleys transfer clues and banish Victory0 without defeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07079 failed real parley keeps clues and applies only its printed failure penalty"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07079 嫌疑人：揭示生成于07063并带 1×人数线索；谈判取得 1 线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07079 嫌疑人：谈判检定失败受到 1 恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07079 巴纳巴斯·马什：生成于马什精炼厂/07141，谈判意志(2)"
+        }
+      ]
+    },
+    {
+      "code": "07080",
+      "name": "乔伊斯·小利透",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07080 actual Revelation uses both chapter homes; successful parleys transfer clues and banish Victory0 without defeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07080 failed real parley keeps clues and applies only its printed failure penalty"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07080 乔伊斯·小利透：生成于小利透书店/07135，谈判意志(3)"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07080 嫌疑人：揭示生成于07069并带 1×人数线索；谈判取得 1 线索"
+        }
+      ]
+    },
+    {
+      "code": "07081",
+      "name": "欧斯拉·吉尔曼",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07081 actual Revelation uses both chapter homes; successful parleys transfer clues and banish Victory0 without defeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07081 insufficient three-resource parley rejects before action or clue mutation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07081 嫌疑人：揭示生成于07064并带 1×人数线索；谈判取得 1 线索"
+        }
+      ]
+    },
+    {
+      "code": "07082",
+      "name": "托马斯·道森",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07082 draws for a local attacked investigator even when attack was canceled and owner cannot draw"
+        }
+      ]
+    },
+    {
+      "code": "07083",
+      "name": "艾莲娜·哈珀",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07083 first actual action ignores opportunity attack, free move leaves this protection unused"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theVanishingOfElinaHarper.test.mjs",
+          "test": "P7 哈珀 幕 07060 指控 2 正确：转营救幕/议程、藏身处+07083 在下方+绑架犯、保留 07062a"
+        }
+      ]
+    },
+    {
+      "code": "07084",
+      "name": "达贡祭司",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07084 达贡祭司：从遭遇牌库生成到任意无人地点，声明 spawnAnyEmpty"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07084 达贡祭司：无毁灭时将要被击败改为治愈全部伤害/重整/放 1 毁灭；有毁灭时正常离场"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07084 达贡祭司：真实回合流程跨轮时轮末强制自动结算（审计 H12 回归）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07084 达贡祭司：轮末重整且无毁灭时放置 1 毁灭，已有毁灭不再叠加"
+        }
+      ]
+    },
+    {
+      "code": "07085",
+      "name": "达贡新信徒",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07085 达贡新信徒：从遭遇牌库生成到任意无人地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07085 达贡新信徒：只有重整且无毁灭时才在轮末放置毁灭"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07085 达贡新信徒：无毁灭标记时 +2 攻击/+2 躲避，获得毁灭后加成消失"
+        }
+      ]
+    },
+    {
+      "code": "07086",
+      "name": "洛依高尔",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-dynamic-aloof.test.mjs",
+          "test": "07086 洛依高尔：失去冷漠后会被移动进来的调查员自动交战"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-dynamic-aloof.test.mjs",
+          "test": "07086 洛依高尔：描述层按有效冷漠关键词展示（不是印刷快照）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-dynamic-aloof.test.mjs",
+          "test": "07086 洛依高尔：敌军阶段结束时，此地与连接地点的调查员各随机弃 1 张手牌，更远的调查员不受影响"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-dynamic-aloof.test.mjs",
+          "test": "07086 洛依高尔：本地有调查员没有手牌时失去冷漠，不出现攻击行动；有手牌时仍是冷漠目标"
+        }
+      ]
+    },
+    {
+      "code": "07087",
+      "name": "魂牵梦绕",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07087 魂牵梦绕：没有手牌时获得涌动且不结算检定"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07087 魂牵梦绕：随机弃 1 张手牌，按印刷费用做意志检定，失败失去 1 行动"
+        }
+      ]
+    },
+    {
+      "code": "07088",
+      "name": "深潜者巨怪",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-encounter-search.test.mjs",
+          "test": "07088 深潜者巨怪：交战后的「选择并弃掉 1 张手牌」走实体能力面同一份实现"
+        }
+      ]
+    },
+    {
+      "code": "07089",
+      "name": "潜伏的深潜者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07089 潜伏的深潜者：猎物敏捷最低；与你交战后受到 1 伤害"
+        }
+      ]
+    },
+    {
+      "code": "07090",
+      "name": "深潜者来袭",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-encounter-search.test.mjs",
+          "test": "07090 深潜者来袭：本地深潜者先解除交战，再与本调查员交战"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-encounter-search.test.mjs",
+          "test": "07090 深潜者来袭：没有深潜者交战时，搜索遭遇牌库生成并交战，然后洗回牌库"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-encounter-search.test.mjs",
+          "test": "07090 深潜者来袭：牌库里没有时从弃牌堆找；两个堆都没有则什么也不生成"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-encounter-search.test.mjs",
+          "test": "07090 深潜者来袭：进不去当前地点的深潜者不算搜索候选"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-encounter-search.test.mjs",
+          "test": "07090 深潜者来袭：连接地点的深潜者被带过来并与你交战"
+        }
+      ]
+    },
+    {
+      "code": "07091",
+      "name": "暗流涌动",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
+          "test": "P7 深陷危局 遭遇共享组 07091 暗流：淹没地点显现后进入威胁区"
+        }
+      ]
+    },
+    {
+      "code": "07092",
+      "name": "潮起",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07092 潮起：提升最近且可提升淹没等级的地点 1 级"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07092 潮起：没有可提升淹没等级的地点时获得涌动"
+        }
+      ]
+    },
+    {
+      "code": "07093",
+      "name": "激流",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07093 激流：完全淹没时敏捷(4)，不能弃支援则按失败差值失去资源"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07093 激流：所在地点未淹没时获得涌动且不进行检定"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07093 激流：部分淹没时敏捷(3)，失败弃掉 1 个支援"
+        }
+      ]
+    },
+    {
+      "code": "07094",
+      "name": "长翼者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-fog-and-locals.test.mjs",
+          "test": "07094 长翼者：[[近战]]武器攻击被减 1 点伤害，[[枪械]]攻击不受影响"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-fog-and-locals.test.mjs",
+          "test": "07094 长翼者：空手攻击同样减伤，但最低仍造成 1 点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07094 长翼者：躲避值等于所在地点的隐蔽值 X（审计 H13 回归）"
+        }
+      ]
+    },
+    {
+      "code": "07095",
+      "name": "印斯茅斯之雾",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-aside-hazards.test.mjs",
+          "test": "07095 印斯茅斯之雾：成功时可由调查员选择放到密谋牌库旁，之后每个地点隐藏值 +1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-aside-hazards.test.mjs",
+          "test": "07095 印斯茅斯之雾：成功时选择恐惧则不放置；失败时两者都执行"
+        }
+      ]
+    },
+    {
+      "code": "07096",
+      "name": "死亡纪念",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07096 死亡纪念：意志(3)失败受到 2 点恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07096 死亡纪念：检定期间揭示 cultist 标记时自动失败"
+        }
+      ]
+    },
+    {
+      "code": "07097",
+      "name": "崩裂意识",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07097 崩裂意识：智力(3)检定与 tablet 自动失败均造成 2 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "07098",
+      "name": "湮灭记忆",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07098 湮灭记忆：揭示 elderthing 标记时自动失败并弃手牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-shared-encounters.test.mjs",
+          "test": "07098 湮灭记忆：选择智力(4)，失败按差值弃掉相应数量手牌"
+        }
+      ]
+    },
+    {
+      "code": "07099",
+      "name": "机械故障",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-devilReef.test.mjs",
+          "test": "devilReef 遭遇/诡计：07099 机械故障附属最近[[载具]]剧情支援并封锁宿主的[action]，不进入遭遇弃牌堆"
+        }
+      ]
+    },
+    {
+      "code": "07100",
+      "name": "星潮合相",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07100 星潮合相：险境；选有调查员的地点涨水并造成 1 伤害，未涨水则涌动"
+        }
+      ]
+    },
+    {
+      "code": "07101",
+      "name": "朔望",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07101 朔望：险境；必须三选一（全队失 3 资源 / 全队 2 恐惧 / 密谋 1 毁灭）"
+        }
+      ]
+    },
+    {
+      "code": "07102",
+      "name": "水下洞窟",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07102 水下洞窟：揭示后完全淹没；[action] 移动到任意已淹没洞穴地点"
+        }
+      ]
+    },
+    {
+      "code": "07103",
+      "name": "潮池",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07103 潮池：揭示后随机放一把放一边的钥匙（不看）；帷幕随淹没等级 +1/+2"
+        }
+      ]
+    },
+    {
+      "code": "07104",
+      "name": "地下暗河",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard2.test.mjs",
+          "test": "TIC 07104 地下暗河：不能被完全淹没（max 1）；揭示后提升 1 级淹没"
+        }
+      ]
+    },
+    {
+      "code": "07105",
+      "name": "印斯茅斯闹事者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-fog-and-locals.test.mjs",
+          "test": "07105 印斯茅斯闹事者：「线索最多」并列时由领队选择生成地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-fog-and-locals.test.mjs",
+          "test": "07105 印斯茅斯闹事者：从遭遇牌库生成在「线索最多的地点」"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-fog-and-locals.test.mjs",
+          "test": "07105 印斯茅斯闹事者：没有线索时谈判不出现在合法行动里"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-fog-and-locals.test.mjs",
+          "test": "07105 印斯茅斯闹事者：谈判把 1 个线索放到本地点、横置它，并在下一个补给阶段不重整"
+        }
+      ]
+    },
+    {
+      "code": "07106",
+      "name": "印斯茅斯面容",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-innsmouth-look.test.mjs",
+          "test": "07106 印斯茅斯面容：进入威胁区，智识 -1、神智 -1，并获得[[深潜者]]特性"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-innsmouth-look.test.mjs",
+          "test": "07106：威胁区卡的行动只对持有者出现"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-innsmouth-look.test.mjs",
+          "test": "07106：意志(3) 成功弃掉本卡后属性与特性一起恢复；失败则保留"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-innsmouth-look.test.mjs",
+          "test": "07106：描述层列出调查员有效特性（AI 需要看到[[深潜者]]）"
+        }
+      ]
+    },
+    {
+      "code": "07107",
+      "name": "鬼祟的当地人",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-aside-hazards.test.mjs",
+          "test": "07107 鬼祟的当地人：失败时受到 1 点伤害并放到场边"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-aside-hazards.test.mjs",
+          "test": "07107 鬼祟的当地人：放到密谋牌库旁后所有调查员不能谈判"
+        }
+      ]
+    }
+  ]
+}

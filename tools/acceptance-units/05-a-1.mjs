@@ -1,0 +1,58 @@
+// 验收单元 05-a-1：05-a 万象无终分片 1（tcu 豪华包前半）。
+// 规程见 docs/test/ACCEPTANCE-ORDER.md；生成器见 tools/audit-card-unit.mjs。
+// 审计报告：docs/test/验收-05-a-万象无终-分片-1.md / .json（2026-11）。
+import fs from 'node:fs'
+
+// 失败清单直接取审计结论 JSON，避免配置与报告两处漂移。
+const verdict = JSON.parse(fs.readFileSync(new URL('../../docs/test/验收-05-a-万象无终-分片-1.json', import.meta.url), 'utf8'))
+const failed = verdict.failedCodes.map(({ code, dimension, reason }) => ({ code, dimension, reason }))
+
+// 范围锁定为审计时未验收的 55 条记录（tcu）。
+const codes = ["05001", "05002", "05003", "05004", "05005", "05006", "05007", "05008", "05009", "05010", "05011", "05012", "05013", "05014", "05015", "05016", "05017", "05018", "05019", "05020", "05021", "05022", "05023", "05024", "05025", "05026", "05027", "05028", "05029", "05030", "05031", "05032", "05033", "05034", "05035", "05036", "05037", "05038", "05039", "05040", "05041", "05042", "05043", "05044", "05045", "05046", "05047", "05048", "05049", "05050", "05051", "05052", "05053", "05054", "05055"]
+const codeSet = new Set(codes)
+
+export default {
+  id: "05-a-1",
+  acceptanceId: "tcu-deluxe-a-2026-11",
+  exportPrefix: "TCU_SHARD1",
+  verifiedFn: "tcuShard1CardVerified",
+  profile: {
+    id: "tcu-deluxe-a-2026-11",
+    scope: "万象无终 05 段 tcu 豪华包前半（05001–05055）55 条目录记录。53 条通过五维验收；2 条（05020 谈判、05037 攻击行动指示未按对应行动结算）暂不切换。",
+    basis: '独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。',
+    houseRules: [
+      '保留项目既有的自动奖励反应与协作请求规则',
+      '结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收',
+      '存档与重放沿用引擎统一事务模型',
+    ],
+    sources: [
+      '参考资源/ArkhamHorror-main/frontend/public/cards_en.json',
+      '参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham',
+    ],
+  },
+  select: card => codeSet.has(card.code),
+  exclude: [],
+  expectedCount: 55,
+  failed,
+  testFiles: [
+    "games/arkhamhorror/tests/acceptance-05-a-shard1.test.mjs",
+    "games/arkhamhorror/tests/tcu-investigators.test.mjs",
+    "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+    "games/arkhamhorror/tests/tcu-witching-hour.test.mjs",
+    "games/arkhamhorror/tests/tcu-completion.test.mjs",
+    "games/arkhamhorror/tests/tcu-p1-regressions.test.mjs",
+    "games/arkhamhorror/tests/tcu-p0-regressions.test.mjs",
+    "games/arkhamhorror/tests/ability-layer.test.mjs",
+    "games/arkhamhorror/tests/save-migration.test.mjs",
+    "games/arkhamhorror/tests/slot-rules.test.mjs",
+    "games/arkhamhorror/tests/play-channels.test.mjs",
+    "games/arkhamhorror/tests/phase5-migration.test.mjs",
+    "games/arkhamhorror/tests/card-interactions.test.mjs",
+    "games/arkhamhorror/tests/carcosa-final.test.mjs",
+  ],
+  evidence: { linkedFace: true, forbidTitles: /目录|存在性|可构筑/ },
+  outputs: {
+    ledger: "audit/05-a-1-acceptance.json",
+    module: "src/cards/05-a-1-acceptance.js",
+  },
+}

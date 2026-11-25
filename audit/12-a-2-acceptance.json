@@ -1,0 +1,509 @@
+{
+  "schemaVersion": 1,
+  "unit": "12-a-2",
+  "profile": {
+    "id": "core2026-player-b-2026-11",
+    "scope": "2026 核心盒 12 段玩家卡（12041–12080）40 条目录记录。37 条通过五维验收；12068 Head 槽/12052/12066 目标收窄暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 40,
+    "verified": 37,
+    "unverified": 3,
+    "unimplemented": 0,
+    "testsPassed": 39
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+      "sha256": "f30bc2de5b024e99ba3daa284e22f3bfcccec9c666b7241b13299269c1475236"
+    },
+    {
+      "file": "games/arkhamhorror/tests/starter-batch-3.test.mjs",
+      "sha256": "2b3d0bb9ece2c3a59b03ef8aee404c3dbba61baaeccf1e8f0b54c997a905c31e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/reprint-aliases.test.mjs",
+      "sha256": "047fce342f4ec577a901cf2d978050315dbc2d66b11e3323b71ae9643bfda156"
+    }
+  ],
+  "entries": [
+    {
+      "code": "12041",
+      "name": "销声匿迹",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12041 溜之大吉：每控制 1 线索 +2 敏捷（上限 +6），成功可与敌人解除交战并移动"
+        }
+      ]
+    },
+    {
+      "code": "12042",
+      "name": "苦心钻研",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12042/12044/12049/12050/12056/12064/12065/12069/12073/12077/12078 重印别名解析到已实现 canonical"
+        }
+      ]
+    },
+    {
+      "code": "12043",
+      "name": "狂野知识",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12043 狂野知识：查看牌库顶 5 张（≥2 线索为 8 张），抽 3 张其余放顶/底"
+        }
+      ]
+    },
+    {
+      "code": "12044",
+      "name": "幸运烟盒",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12042/12044/12049/12050/12056/12064/12065/12069/12073/12077/12078 重印别名解析到已实现 canonical"
+        }
+      ]
+    },
+    {
+      "code": "12045",
+      "name": "M1903击锤内置式手枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12045 M1903 击锤内置式手枪：花 1 弹药敏捷攻击，目标横置时伤害 +1"
+        }
+      ]
+    },
+    {
+      "code": "12046",
+      "name": "奥利维尔·毕晓普",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12046 奥利维尔·毕晓普：+1 敏捷；[fast] 横置移动到连接地点"
+        }
+      ]
+    },
+    {
+      "code": "12047",
+      "name": "三寸之舌",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12047 三寸之舌：检定期间花 1 资源获得本次智识 +1"
+        }
+      ]
+    },
+    {
+      "code": "12048",
+      "name": "妙手空空",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12048 妙手空空：成功躲避后横置获得 1 资源"
+        }
+      ]
+    },
+    {
+      "code": "12049",
+      "name": "扒手行窃工具",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12042/12044/12049/12050/12056/12064/12065/12069/12073/12077/12078 重印别名解析到已实现 canonical"
+        }
+      ]
+    },
+    {
+      "code": "12050",
+      "name": "破门而入",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12042/12044/12049/12050/12056/12064/12065/12069/12073/12077/12078 重印别名解析到已实现 canonical"
+        }
+      ]
+    },
+    {
+      "code": "12051",
+      "name": "血腥狂欢",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12051 血洗全城：从遭遇牌库顶 9 张找非精英敌人，抽取并获得其印刷生命值资源"
+        }
+      ]
+    },
+    {
+      "code": "12052",
+      "name": "变戏法",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面「在你的回合结束时，将你控制的一张[[道具]]支援返回你的手牌」允许选择你控制的任意一张道具支援、且时机为你的回合结束；实现只给「本次用变戏法打出的那一张」加实例级标记，并在轮末（新一轮开始）统一返回，玩家的选择权与时机均与卡面不等价（条目注释已披露该近似，但结果不等价，按失败判）。"
+    },
+    {
+      "code": "12053",
+      "name": "视线盲区",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12053 视线盲区：成功且超过难度 2+ 时解除交战并移动到已揭示连接地点"
+        }
+      ]
+    },
+    {
+      "code": "12054",
+      "name": "妙手空空",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12054 妙手空空（2 经验）：快速打出，成功躲避后横置获得 1 资源"
+        }
+      ]
+    },
+    {
+      "code": "12055",
+      "name": "致胜一击",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12055 致胜一击：战斗 +2、伤害 +1；击败敌人获得 5 资源"
+        }
+      ]
+    },
+    {
+      "code": "12056",
+      "name": "干一天活计拿一天钱",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12042/12044/12049/12050/12056/12064/12065/12069/12073/12077/12078 重印别名解析到已实现 canonical"
+        }
+      ]
+    },
+    {
+      "code": "12057",
+      "name": "视线盲区",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12057 视线盲区（3 经验）：成功且超过难度 1+ 时移动到 1–2 个连接内的已揭示地点"
+        }
+      ]
+    },
+    {
+      "code": "12058",
+      "name": "共鸣长袍",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12058 共鸣长袍：恐惧放到本卡后横置，对同地点敌人造成 1 伤害"
+        }
+      ]
+    },
+    {
+      "code": "12059",
+      "name": "宇宙烈焰",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12059 宇宙烈焰：意志攻击；成功后花 1 充能使本次攻击 +1 伤害"
+        }
+      ]
+    },
+    {
+      "code": "12060",
+      "name": "吉姆·卡尔弗",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12060 吉姆·卡尔弗：+1 意志；受到伤害/恐惧后横置抽 1 张"
+        }
+      ]
+    },
+    {
+      "code": "12061",
+      "name": "幸运符",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12061 幸运符：花 1 充能并横置，把 1 点伤害/恐惧从同地点卡牌移到你控制的牌上"
+        }
+      ]
+    },
+    {
+      "code": "12062",
+      "name": "通灵视觉",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12062 第二视觉：意志调查；成功后花 1 充能在所在地点额外发现 1 线索"
+        }
+      ]
+    },
+    {
+      "code": "12063",
+      "name": "灵感敏锐",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12063 灵性直觉：检定期间花 1 资源获得意志/战斗 +1"
+        }
+      ]
+    },
+    {
+      "code": "12064",
+      "name": "危险预感",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12042/12044/12049/12050/12056/12064/12065/12069/12073/12077/12078 重印别名解析到已实现 canonical"
+        }
+      ]
+    },
+    {
+      "code": "12065",
+      "name": "守护结界",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12042/12044/12049/12050/12056/12064/12065/12069/12073/12077/12078 重印别名解析到已实现 canonical"
+        }
+      ]
+    },
+    {
+      "code": "12066",
+      "name": "宇宙意志",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面「在你控制的一张玩家卡牌上放置 1 个毁灭标记」——调查员卡本身也是玩家卡，实现只在 `inv.assets` 中枚举目标：控制 0 张支援时事件结算直接空转（费用已付、无毁灭、无线索），控制支援时也无法选择把毁灭放在自己的调查员卡上。目标集合比卡面窄，属印刷子句不等价。"
+    },
+    {
+      "code": "12067",
+      "name": "灵魂链接",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12067 灵魂链接：作为投入的额外费用受到 1 点恐惧"
+        }
+      ]
+    },
+    {
+      "code": "12068",
+      "name": "西勒诺斯面具",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "引擎槽位原语缺 Head 槽：2026 核心盒新增 Mask/Head 槽卡，但 SLOT_CAPACITY 未登记 head，assetReplacementPlans/canEquip 对 12068 一律返回不可放置——属「新卡引入了新槽位而原语未同步」的原语缺口，不是单卡条目问题。"
+    },
+    {
+      "code": "12069",
+      "name": "无所畏惧",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12042/12044/12049/12050/12056/12064/12065/12069/12073/12077/12078 重印别名解析到已实现 canonical"
+        }
+      ]
+    },
+    {
+      "code": "12070",
+      "name": "俄洛寇斯的预言",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12070 俄洛寇斯的预言：智力调查把意志加入智力；成功额外 1 线索，符号标记可弃威胁区恐怖诡计"
+        }
+      ]
+    },
+    {
+      "code": "12071",
+      "name": "宇宙烈焰",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12071 宇宙烈焰（5 经验）：意志 +2、伤害 +1；成功后花 1 充能对同地点敌人 1 伤害"
+        }
+      ]
+    },
+    {
+      "code": "12072",
+      "name": "阿列克谢·萨布罗夫",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12072 阿列克谢·萨布罗夫：回合开始时治愈自身 1 点伤害或恐惧"
+        }
+      ]
+    },
+    {
+      "code": "12073",
+      "name": "绷带",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12042/12044/12049/12050/12056/12064/12065/12069/12073/12077/12078 重印别名解析到已实现 canonical"
+        }
+      ]
+    },
+    {
+      "code": "12074",
+      "name": "猎人直觉",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12074 猎人直觉：与敌人交战后花 1 补给并横置，从弃牌堆拿回一张 0 级事件"
+        }
+      ]
+    },
+    {
+      "code": "12075",
+      "name": "连体服",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12075 连体服：弃掉本卡，从弃牌堆把一张工具/武器支援加入手牌"
+        }
+      ]
+    },
+    {
+      "code": "12076",
+      "name": "镇静自若",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12076 镇静自若：检定期间花 1 资源获得意志/敏捷 +1"
+        }
+      ]
+    },
+    {
+      "code": "12077",
+      "name": "切肉刀",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12042/12044/12049/12050/12056/12064/12065/12069/12073/12077/12078 重印别名解析到已实现 canonical"
+        }
+      ]
+    },
+    {
+      "code": "12078",
+      "name": "“看看我发现了什么！”",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12042/12044/12049/12050/12056/12064/12065/12069/12073/12077/12078 重印别名解析到已实现 canonical"
+        }
+      ]
+    },
+    {
+      "code": "12079",
+      "name": "“滚开！”",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12079 “滚开！”：成功躲避后对被躲避的敌人造成 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "12080",
+      "name": "灵活脱身",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12080 灵活脱身：躲避非精英敌人成功后，该敌人下一个补给阶段不重整"
+        }
+      ]
+    }
+  ]
+}

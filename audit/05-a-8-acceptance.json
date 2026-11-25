@@ -1,0 +1,701 @@
+{
+  "schemaVersion": 1,
+  "unit": "05-a-8",
+  "profile": {
+    "id": "tcu-before-the-black-throne-2026-11",
+    "scope": "万象无终 05 段 Before the Black Throne（bbt，05313–05346）34 条目录记录。33 条通过五维验收；1 条（05322）同类规则第 4 次手写暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 34,
+    "verified": 33,
+    "unverified": 1,
+    "unimplemented": 0,
+    "testsPassed": 425
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+      "sha256": "6c0f142d180cffe49967c68e7816f27686fca819f4d3c4c17c2cd530f61cbc27"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-black-throne.test.mjs",
+      "sha256": "39469c65b3e5a7062c00157491499d18e9487ab664847a66ca8228f19fda611f"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+      "sha256": "c6dfa505d08f79472f2bea966902f3e5f70c4bff478cbb6c6384a58c718de2a7"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
+      "sha256": "bfccf38913dc74e1ffd05fb7a426f1379e03b91ee1bcadbc781ff0a0067b25fa"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-p1-regressions.test.mjs",
+      "sha256": "1003ff31f4f3c4f908e7b508f18d212435ccdb3021411ebf93d7b9e608a28455"
+    }
+  ],
+  "entries": [
+    {
+      "code": "05313",
+      "name": "圣化之镜",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05313 圣化之镜 入场检索 3 张舒缓旋律（1 入手/2 洗回牌库），离场全部收回场外集合"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05313 圣化之镜 入场检索 3 张舒缓旋律（1 张入手，其余洗回牌库）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05313 圣化之镜 离场时把所有舒缓旋律收回场外集合（含其他调查员区域与场外区域）"
+        }
+      ]
+    },
+    {
+      "code": "05314",
+      "name": "舒缓旋律",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05314 舒缓旋律 两点治疗可分配给伤害/恐惧并抽 1 张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05314 舒缓旋律 两点治疗可分配给伤害、恐惧或盟友支援并抽 1 张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05314 舒缓旋律 恐惧与盟友支援同样是治疗目标"
+        }
+      ]
+    },
+    {
+      "code": "05315",
+      "name": "“我见过更糟的……”",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05315 “我见过更糟的……” 取消最多 2 点伤害并换成同等资源"
+        }
+      ]
+    },
+    {
+      "code": "05316",
+      "name": "密教辞典",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05316 密教辞典 入场检索 3 张鲜血仪式（1 入手/2 洗回牌库）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05316 密教辞典 入场检索 3 张鲜血仪式（1 张入手，其余洗回牌库）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05316 密教辞典 离场时把所有鲜血仪式收回场外集合（含其他调查员区域与移出游戏区）"
+        }
+      ]
+    },
+    {
+      "code": "05317",
+      "name": "鲜血仪式",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05317 鲜血仪式 弃牌后可花 1 资源对敌人造成伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05317 鲜血仪式 抽 2 张、弃 1 张换资源"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05317 鲜血仪式 抽 2 张、弃 1 张换资源且不引发借机攻击"
+        }
+      ]
+    },
+    {
+      "code": "05318",
+      "name": "窥看不思议之事",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05318 窥看不思议之事 非弱点手牌洗回牌库、补抽到手牌上限并移出游戏"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05318 窥看不思议之事 非弱点手牌洗回牌库并补抽到手牌上限、自身移出游戏"
+        }
+      ]
+    },
+    {
+      "code": "05319",
+      "name": "“你欠我一次”",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05319 “你欠我一次” 对方手里有同名两张时只拿走一张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05319 “你欠我一次” 打出另一位调查员手牌并双方各抽 1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05319 “你欠我一次” 打出对方手牌中的支援后置于自己控制之下"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05319 “你欠我一次” 技能/弱点/付不起的卡不作为可打出候选"
+        }
+      ]
+    },
+    {
+      "code": "05320",
+      "name": "超级加倍",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05320 超级加倍 再次打出时支付该事件自己的费用（2 费事件结算两次）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05320 超级加倍 打出一张事件后横置自身再次打出该事件"
+        }
+      ]
+    },
+    {
+      "code": "05321",
+      "name": "凋零术",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05321 凋零术 05033「恐怖灵感」可取消符号窗口里的凋零术效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05321 凋零术 05033「恐怖灵感」可让符号窗口里的凋零术效果再结算一次"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05321 凋零术 先减生命再结算伤害，2 点生命的敌人会被本次攻击击败"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05321 凋零术 攻击揭示符号标记后敌人本回合 -1 攻/-1 血/-1 躲（最低 1）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05321 凋零术 用意志代替战斗攻击并 +2 意志"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05321 凋零术 用意志代替战斗攻击，符号后敌人本回合 -1 攻/-1 血/-1 躲"
+        }
+      ]
+    },
+    {
+      "code": "05322",
+      "name": "第六感",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "「连接次数不超过 2 的地点」查询是同一句卡文模板的第四次逐卡手写（05111:16、05234:16、05277:16、05322:21），未上收原语、也未登记 escape；违反 docs/arkham-content-migration.md §4.3「同句规则只写一次 / 第三张停止写卡补原语」与 AGENTS.md 对应条款。行为本身可执行，但原语维度不合格。"
+    },
+    {
+      "code": "05323",
+      "name": "诱敌深人",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05323 诱敌深人 多诱饵取最近：两个地点附属时猎手走向最近的一个"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05323 诱敌深人 附属到地点：敌人阶段朝附属地点移动、轮末恰好弃 1 张"
+        }
+      ]
+    },
+    {
+      "code": "05324",
+      "name": "美满结局",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05324 美满结局 负修正标记将要令技能值降到 0 时取消并改为旧印"
+        }
+      ]
+    },
+    {
+      "code": "05325",
+      "name": "黑色王座",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-p1-regressions.test.mjs",
+          "test": "P1 05325《黑色王座》计时器/参考资源：真实 viewState 可观察"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
+          "test": "TCU 05325 已验收 · scenario 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05325 黑色王座 参考卡：混乱标记表、阿撒托斯毁灭/参考资源进入真实 viewState"
+        }
+      ]
+    },
+    {
+      "code": "05326",
+      "name": "命运之轮•X",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05326 命运之轮•X 命运之轮·X：推进时弃异教徒移毁灭、抽魔鬼的笛声、保留敌人毁灭"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
+          "test": "TCU 05326 已验收 · agenda 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "05327",
+      "name": "它在等待",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05327 它在等待 它在等待：意志(4) 失败受到 1 伤害与 1 恐惧，破旧十字架可跳过"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
+          "test": "TCU 05327 已验收 · agenda 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-black-throne.test.mjs",
+          "test": "议程 05327：意志(4) 失败受到 1 伤害与 1 恐惧"
+        }
+      ]
+    },
+    {
+      "code": "05328",
+      "name": "最后的倒计时",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-black-throne.test.mjs",
+          "test": "05346：05328 吸收场上毁灭后 doomPlaced 把总量推到 10 → 结局 1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
+          "test": "TCU 05328 已验收 · agenda 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05328 最后的倒计时 最后的倒计时：玉米壳娃娃移除 1 毁灭，推进后毁灭直落阿撒托斯"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-black-throne.test.mjs",
+          "test": "议程 05328：玉米壳娃娃从阿撒托斯移除 1 点毁灭"
+        }
+      ]
+    },
+    {
+      "code": "05329",
+      "name": "宇宙的呼唤",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05329 宇宙的呼唤 宇宙的呼唤：花线索抽宇宙行动 + 背面重建场景 2（皇廷枢纽）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
+          "test": "TCU 05329 已验收 · act 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-black-throne.test.mjs",
+          "test": "幕 1 背面（05329）：场景 2 摆盘——皇廷+宇宙顶 2 张隐藏放 (1,2)/(1,-2)/(2,0)、7 虚空格、移到憎恶宫殿"
+        }
+      ]
+    },
+    {
+      "code": "05330",
+      "name": "阿撒托斯的领域",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
+          "test": "TCU 05330 已验收 · act 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05330 阿撒托斯的领域 阿撒托斯的领域：背面重建场景 3（黑色王座枢纽）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-black-throne.test.mjs",
+          "test": "幕 2 背面（05330）：场景 3 摆盘——黑色王座+宇宙顶 3 张隐藏放 (1,2)/(1,-2)/(3,1)/(3,-1)、8 虚空格、移到皇廷"
+        }
+      ]
+    },
+    {
+      "code": "05331",
+      "name": "必竟之事",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
+          "test": "TCU 05331 已验收 · act 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05331 必竟之事 必竟之事：队长在黑色王座且无线索时推进；背面给 R2/R3/R4 选择"
+        }
+      ]
+    },
+    {
+      "code": "05332",
+      "name": "宇宙入口",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05332 宇宙入口 宇宙入口：回合末补线索到 3，虚空地点获得洗回宇宙行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
+          "test": "TCU 05332 已验收 · location 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "05333",
+      "name": "憎恶宫殿",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
+          "test": "TCU 05333 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05333 憎恶宫殿 憎恶宫殿：回合末补线索到 4，虚空地点获得洗回宇宙行动"
+        }
+      ]
+    },
+    {
+      "code": "05334",
+      "name": "旧日支配者皇廷",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
+          "test": "TCU 05334 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05334 旧日支配者皇廷 旧日支配者皇廷：回合末补线索到 6，虚空地点获得洗回宇宙行动"
+        }
+      ]
+    },
+    {
+      "code": "05335",
+      "name": "黑色王座",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
+          "test": "TCU 05335 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05335 黑色王座 黑色王座：隐藏值 +ceil(毁灭/2)，闹鬼可选放毁灭或被攻击"
+        }
+      ]
+    },
+    {
+      "code": "05336",
+      "name": "舞者之雾",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
+          "test": "TCU 05336 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05336 舞者之雾 舞者之雾：宇宙-右方连接/花 2 资源改向；进入时可花参考资源再移动"
+        }
+      ]
+    },
+    {
+      "code": "05337",
+      "name": "飞入湮灭",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
+          "test": "TCU 05337 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05337 飞入湮灭 飞入湮灭：宇宙-上方连接/吃 2 恐惧改向；[action] 上移一格（每场一次）"
+        }
+      ]
+    },
+    {
+      "code": "05338",
+      "name": "无尽黑暗",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
+          "test": "TCU 05338 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05338 无尽黑暗 无尽黑暗：宇宙-下方连接/吃 2 伤害改向；[action] 下移一格（每场一次）"
+        }
+      ]
+    },
+    {
+      "code": "05339",
+      "name": "宇宙门扉",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05339 宇宙门扉 宇宙门扉：进入时花 1 线索或受 1 恐惧；行动可转移任意调查员到虚空地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
+          "test": "TCU 05339 已验收 · location 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "05340",
+      "name": "虚空之路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
+          "test": "TCU 05340 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05340 虚空之路 虚空之路：进入时弃 1 手牌或受 1 伤害；[action] 移到相邻位置（每轮一次）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-black-throne.test.mjs",
+          "test": "「宇宙 -」按行动者位置选格位：05340 任意方向 = 行动者四方向空格"
+        }
+      ]
+    },
+    {
+      "code": "05341",
+      "name": "盲目舞者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-black-throne.test.mjs",
+          "test": "05341 三张盲目舞者分别保存虚空位置和强制次数，JSON存档往返不互相覆盖"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-black-throne.test.mjs",
+          "test": "05341 盲目舞者：Spawn - Farthest empty space（锚点地点 + 虚空格位置记录）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-black-throne.test.mjs",
+          "test": "05341 盲目舞者：本轮再次猎手已用 → 进入虚空格并停住，下一轮从虚空格继续移动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-black-throne.test.mjs",
+          "test": "05341 盲目舞者：进入虚空格用 cosmos 格位表达（穿越虚空格后再次猎手，每轮一次）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-black-throne.test.mjs",
+          "test": "05341 盲目舞者：连续两格虚空格时停在第二格，下一轮继续（不再原地不动）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
+          "test": "TCU 05341 已验收 · enemy 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05341 盲目舞者 盲目舞者：生成在最远虚空格、穿越虚空格再次猎手（每轮一次）"
+        }
+      ]
+    },
+    {
+      "code": "05342",
+      "name": "究极混沌",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-black-throne.test.mjs",
+          "test": "05342 究极混沌：失败附属计时，3 张时放毁灭或攻击全员"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
+          "test": "TCU 05342 已验收 · treachery 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05342 究极混沌 究极混沌：意志(4) 失败附属计时，3 张时放毁灭或按玩家顺序攻击；不能取消"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-black-throne.test.mjs",
+          "test": "第四轮接线：05342 不可取消声明与玩家顺序攻击、05346 防御性免疫钩子"
+        }
+      ]
+    },
+    {
+      "code": "05343",
+      "name": "耳语契约",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-black-throne.test.mjs",
+          "test": "05343 耳语契约：放 1 毁灭或阿撒托斯攻击你"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
+          "test": "TCU 05343 已验收 · treachery 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05343 耳语契约 耳语契约：显现时在阿撒托斯放 1 毁灭或阿撒托斯攻击你"
+        }
+      ]
+    },
+    {
+      "code": "05344",
+      "name": "终结将至",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-black-throne.test.mjs",
+          "test": "05344 终结将至：难度 = 1 + 当前议程编号；失败把异教徒毁灭移到阿撒托斯"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
+          "test": "TCU 05344 已验收 · treachery 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05344 终结将至 终结将至：难度 1+议程编号，失败把异教徒毁灭移到阿撒托斯"
+        }
+      ]
+    },
+    {
+      "code": "05345",
+      "name": "黑暗世界",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-black-throne.test.mjs",
+          "test": "05345 黑暗世界：按阿撒托斯毁灭逐项选择；无毁灭时获得涌动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
+          "test": "TCU 05345 已验收 · treachery 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05345 黑暗世界 黑暗世界：无毁灭时获得涌动，否则按毁灭逐项选择四种代价"
+        }
+      ]
+    },
+    {
+      "code": "05346",
+      "name": "阿撒托斯",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-black-throne.test.mjs",
+          "test": "05346：05328 吸收场上毁灭后 doomPlaced 把总量推到 10 → 结局 1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-black-throne.test.mjs",
+          "test": "05346：agendaReveal 置 azathothAbsorbsAllDoom 且总量已 ≥10 → 立即结局 1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-black-throne.test.mjs",
+          "test": "05346：总量 <10 不触发；已触发后不重复结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
+          "test": "TCU 05346 已验收 · enemy 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05346 阿撒托斯 阿撒托斯：不生成实体/不可击败、攻击 3/3、≥10 毁灭触发结局 1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-black-throne.test.mjs",
+          "test": "第四轮接线：05342 不可取消声明与玩家顺序攻击、05346 防御性免疫钩子"
+        }
+      ]
+    }
+  ]
+}

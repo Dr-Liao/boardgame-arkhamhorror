@@ -1,0 +1,374 @@
+{
+  "unit": "04-a-2",
+  "generatedAt": "2026-11-24",
+  "scope": {
+    "cards": 95,
+    "selector": "pack in (sha, tbb, tcoa) && effectStatus=unverified；含 turnBackTime 的 sha 段卡 04344–04347",
+    "packs": {
+      "sha": 36,
+      "tbb": 31,
+      "tcoa": 28
+    }
+  },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "04314",
+    "04315",
+    "04317",
+    "04320",
+    "04321",
+    "04322",
+    "04323",
+    "04324",
+    "04325",
+    "04325b",
+    "04326",
+    "04326b",
+    "04327",
+    "04328",
+    "04329",
+    "04330",
+    "04331",
+    "04332",
+    "04333",
+    "04334",
+    "04335",
+    "04336",
+    "04337",
+    "04338",
+    "04339",
+    "04340",
+    "04341",
+    "04342",
+    "04343",
+    "04344",
+    "04347",
+    "04161",
+    "04162",
+    "04163",
+    "04164",
+    "04166",
+    "04167",
+    "04168",
+    "04169",
+    "04170",
+    "04171",
+    "04172",
+    "04173",
+    "04176",
+    "04177",
+    "04180",
+    "04181",
+    "04182",
+    "04183",
+    "04184",
+    "04185",
+    "04186",
+    "04187",
+    "04188",
+    "04191",
+    "04237",
+    "04238",
+    "04239",
+    "04240",
+    "04241",
+    "04242",
+    "04243",
+    "04244",
+    "04245",
+    "04246",
+    "04247",
+    "04248",
+    "04249",
+    "04250",
+    "04251",
+    "04252",
+    "04253",
+    "04254",
+    "04255",
+    "04257",
+    "04258",
+    "04259",
+    "04260",
+    "04262",
+    "04263",
+    "04264"
+  ],
+  "failedCodes": [
+    {
+      "code": "04165",
+      "dimension": "primitives",
+      "evidence": "src/cards/encounter-entries/theForgottenAge/theBoundaryBeyond/04165.js:14",
+      "reason": "R1 直写运行时状态：`state.scenarioFlags ||= {}`（存量基线 directStateWrite 内；本条为条目直接改状态，未走 api.scenarioFlag）。"
+    },
+    {
+      "code": "04175",
+      "dimension": "primitives",
+      "evidence": "src/cards/encounter-entries/theForgottenAge/theBoundaryBeyond/04175.js:37-38",
+      "reason": "R1 直写运行时状态：`inv.discard.splice` / `inv.deck.push`（存量基线 directStateWrite 内）。"
+    },
+    {
+      "code": "04178",
+      "dimension": "primitives",
+      "evidence": "src/cards/encounter-entries/theForgottenAge/theBoundaryBeyond/04178.js:26-27",
+      "reason": "R1 直写运行时状态：`inv.discard.push(...inv.hand)` / `inv.hand = []`（存量基线 directStateWrite 内）。"
+    },
+    {
+      "code": "04316",
+      "dimension": "primitives",
+      "evidence": "src/cards/encounter-entries/theForgottenAge/shatteredAeons/04316.js:20,26-27",
+      "reason": "R1 直写运行时状态：`nexus.doom =`、`state.victoryDisplay =`、`state.encounterDeck =`（存量基线 directStateWrite 内；其中 nexus.doom 未被审计正则捕获，仍属直写）。"
+    },
+    {
+      "code": "04318",
+      "dimension": "primitives",
+      "evidence": "src/cards/encounter-entries/theForgottenAge/shatteredAeons/04318.js:19-20",
+      "reason": "R1 直写运行时状态：`state.explorationDeck =`、`state.scenarioFlags.pocketInDeck =`（存量基线 directStateWrite 内）。"
+    },
+    {
+      "code": "04319",
+      "dimension": "primitives",
+      "evidence": "src/cards/encounter-entries/theForgottenAge/shatteredAeons/04319.js:19-29,41",
+      "reason": "R1 直写运行时状态：`state.explorationDeck =/push`、`state.encounterDiscard.splice`、`state.relicOfAges =`（存量基线 directStateWrite 内）。"
+    },
+    {
+      "code": "04345",
+      "dimension": "primitives",
+      "evidence": "src/cards/encounter-entries/theForgottenAge/turnBackTime/04345.js:16-20",
+      "reason": "R1 直写运行时状态：`state.explorationDeck =`、`state.scenarioFlags ||= {}`/`chamberOfTimeInDeck =`（存量基线 directStateWrite 内）。"
+    },
+    {
+      "code": "04346",
+      "dimension": "primitives",
+      "evidence": "src/cards/encounter-entries/theForgottenAge/turnBackTime/04346.js:36,43",
+      "reason": "R1 直写运行时状态：`state.relicOfAges =`、`yig.damageTaken = 0`（relicOfAges 在存量基线 directStateWrite 内；damageTaken 未被正则捕获，仍属直写）。"
+    },
+    {
+      "code": "04189",
+      "dimension": "implementation",
+      "evidence": "src/cards/encounter-entries/theForgottenAge/theBoundaryBeyond/04189.js:11",
+      "reason": "条目声明 `treacheryRule: { threatArea: true }`，但失落时代的遭遇读点不读 threatArea（全仓唯一读点在卡城幽影 card-data），且本卡是「险境/显现二选一」不是威胁区卡；属「声明了没人读」且声明与卡文不符。卡的实际结算是 behavior.resolveEncounter（已覆盖），仅该字段无效。"
+    },
+    {
+      "code": "04190",
+      "dimension": "implementation",
+      "evidence": "src/cards/encounter-entries/theForgottenAge/theBoundaryBeyond/04190.js:8",
+      "reason": "条目声明 `treacheryRule: { threatArea: true }`，失落时代无读点；本卡是「显现-检定」不是威胁区卡。另在 audit watch 的 revelationTestStubs（未用声明式 treacheryRule.test，属 R5 观察项，非阻断）。"
+    },
+    {
+      "code": "04261",
+      "dimension": "implementation",
+      "evidence": "src/cards/encounter-entries/theForgottenAge/theCityOfArchives/04261.js:10",
+      "reason": "条目声明 `treacheryRule: { threatArea: true }`，失落时代不读该字段（威胁区入场由 behavior.resolveEncounter 的 api.threat 完成）；`threat.noDrawAction` 与 `surge` 均有读点，仅 threatArea 为声明了没人读。"
+    },
+    {
+      "code": "04174",
+      "dimension": "interaction",
+      "evidence": "content/campaigns/theForgottenAge/scenarios/theBoundaryBeyond/behavior.js:585-594",
+      "reason": "卡面 [reaction]「击败/躲避蛇族后发现 1 线索」被 temploMayorReaction 自动结算，未通过 api.choose 询问玩家是否触发（缺少放弃入口）；迁移账本未披露该近似。"
+    },
+    {
+      "code": "04179",
+      "dimension": "interaction",
+      "evidence": "content/campaigns/theForgottenAge/scenarios/theBoundaryBeyond/behavior.js:574-582",
+      "reason": "卡面 [reaction]「抽到巫术卡后发现 1 线索」被 chapultepecHillHexReaction 自动结算，未询问玩家是否触发；未披露近似。"
+    },
+    {
+      "code": "04256",
+      "dimension": "interaction",
+      "evidence": "content/campaigns/theForgottenAge/scenarios/theCityOfArchives/behavior.js:792-803",
+      "reason": "卡面 [reaction]「调查阶段开始时控制看管人则同地点每位调查员抽 1」被 phaseBegan 自动结算，未询问玩家是否触发；未披露近似。"
+    }
+  ],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "fail",
+    "primitives": "fail",
+    "interaction": "fail",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/acceptance-04-a-shard2.test.mjs",
+      "test": "60 个 `test(<卡号> …)` 用例；断言条目规则/章节 behavior 钩子/引擎数据规则的真实读点",
+      "codes": [
+        "04315",
+        "04316",
+        "04317",
+        "04319",
+        "04321",
+        "04322",
+        "04323",
+        "04325",
+        "04325b",
+        "04326",
+        "04326b",
+        "04328",
+        "04332",
+        "04333",
+        "04334",
+        "04335",
+        "04336",
+        "04337",
+        "04339",
+        "04340",
+        "04341",
+        "04343",
+        "04345",
+        "04346",
+        "04347",
+        "04164",
+        "04166",
+        "04167",
+        "04168",
+        "04169",
+        "04170",
+        "04172",
+        "04173",
+        "04176",
+        "04180",
+        "04183",
+        "04185",
+        "04187",
+        "04188",
+        "04189",
+        "04190",
+        "04238",
+        "04239",
+        "04240",
+        "04241",
+        "04242",
+        "04243",
+        "04246",
+        "04247",
+        "04248",
+        "04249",
+        "04250",
+        "04251",
+        "04252",
+        "04253",
+        "04254",
+        "04255",
+        "04261",
+        "04262",
+        "04263"
+      ]
+    },
+    {
+      "file": "tests/tfa-shattered-aeons.test.mjs",
+      "test": "51 个章节用例（含 04314/04320/04324/04327/04329/04330/04331/04338/04342/04191 卡号标题）",
+      "codes": [
+        "04314",
+        "04318",
+        "04320",
+        "04324",
+        "04327",
+        "04329",
+        "04330",
+        "04331",
+        "04338",
+        "04342",
+        "04191"
+      ]
+    },
+    {
+      "file": "tests/tfa-boundary-beyond.test.mjs",
+      "test": "44 个章节用例（含 04161/04162/04163/04165/04171/04174/04175/04177/04178/04179/04181/04182/04184/04186/04188）",
+      "codes": [
+        "04161",
+        "04162",
+        "04163",
+        "04165",
+        "04171",
+        "04174",
+        "04175",
+        "04177",
+        "04178",
+        "04179",
+        "04181",
+        "04182",
+        "04184",
+        "04186",
+        "04188"
+      ]
+    },
+    {
+      "file": "tests/tfa-city-of-archives.test.mjs",
+      "test": "54 个章节用例（含 04237/04244/04245/04256/04257/04258/04260）",
+      "codes": [
+        "04237",
+        "04244",
+        "04245",
+        "04256",
+        "04257",
+        "04258",
+        "04260"
+      ]
+    },
+    {
+      "file": "tests/tfa-turn-back-time.test.mjs",
+      "test": "29 个章节用例（时间倒流全流程，04344–04347 所在章节）",
+      "codes": [
+        "04344",
+        "04345",
+        "04346",
+        "04347"
+      ]
+    },
+    {
+      "file": "tests/tfa-encounter-p1.test.mjs",
+      "test": "27 个遭遇用例（含 04259 猎物排序、04344 困难面旧神标记）",
+      "codes": [
+        "04259",
+        "04344"
+      ]
+    },
+    {
+      "file": "tests/tfa-p2-hooks.test.mjs",
+      "test": "25 个 P2 钩子用例（含 04318/04329/04191/04244/04264）",
+      "codes": [
+        "04318",
+        "04329",
+        "04191",
+        "04244",
+        "04264"
+      ]
+    },
+    {
+      "file": "tests/tfa-scenarios.browser.mjs",
+      "test": "真实大厅浏览器：theBoundaryBeyond / theCityOfArchives / shatteredAeons / turnBackTime 各桌面 1440 与移动 390 共 8 例",
+      "command": "npx playwright test --config games/arkhamhorror/tests/playwright/playwright.config.mjs tfa-scenarios.browser.mjs -g \"theCityOfArchives|shatteredAeons|theBoundaryBeyond|turnBackTime\"",
+      "result": "8 passed（截图：G:/boardgame-hall-ai/artifacts/tfa-migration/scenario-<chapter>-{desktop,mobile}.png）",
+      "codes": [
+        "04161",
+        "04237",
+        "04314",
+        "04344"
+      ]
+    }
+  ],
+  "commands": [
+    {
+      "command": "node --test tests/acceptance-04-a-shard2.test.mjs",
+      "result": "tests 60 / pass 60 / fail 0"
+    },
+    {
+      "command": "node --test tests/tfa-shattered-aeons.test.mjs tests/tfa-boundary-beyond.test.mjs tests/tfa-city-of-archives.test.mjs tests/tfa-turn-back-time.test.mjs tests/tfa-encounter-p1.test.mjs tests/tfa-p2-hooks.test.mjs",
+      "result": "tests 230 / pass 230 / fail 0"
+    },
+    {
+      "command": "npm run cards:check",
+      "result": "通过（索引 + card-entries + audit:entries）"
+    },
+    {
+      "command": "npm run cards:encounter-check",
+      "result": "通过（索引 + encounter-entries + audit:entries）"
+    },
+    {
+      "command": "npm run audit:entries",
+      "result": "通过：无基线外新增违规（R1 112 / R2 0 / R3 0；本分片 8 张 R1 在存量基线内）"
+    }
+  ],
+  "notes": "五维结论：证据（逐卡测试）与合规门禁通过；实现完整性有 3 张「声明了没人读」字段（04189/04190/04261 的 treacheryRule.threatArea）；原语维度有 8 张条目直写运行时状态（R1，存量基线；审计正则还漏检 04165 的 scenarioFlags 子字段、04316 的 nexus.doom、04346 的 yig.damageTaken 等直写）；交互维度有 3 张可选 [reaction] 被自动结算（04174/04179/04256）。分片 verdict=partial：81 张可切换 verified，14 张保持 unverified。新增测试文件未登记进 tests/suites.mjs 与 tests/node-suite.mjs（审计角色禁止改既有 tests/），主进程合并时必须登记，否则 suite-manifest 守卫会失败。"
+}

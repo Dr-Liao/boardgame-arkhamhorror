@@ -1,0 +1,418 @@
+{
+  "unit": "08-a-5",
+  "generatedAt": "2026-11-25T02:23:55.300Z",
+  "scope": {
+    "cards": 45,
+    "selector": "08xxx unverified, code >= '08546' && code <= '08573', pack === 'eoec'（08573b 归下一分片）",
+    "packs": {
+      "eoec": 45
+    }
+  },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "08549",
+    "08553",
+    "08554",
+    "08555",
+    "08556",
+    "08556b",
+    "08557b",
+    "08558b",
+    "08559b",
+    "08560b",
+    "08561b",
+    "08562b",
+    "08563b",
+    "08564b",
+    "08565b",
+    "08566b",
+    "08567b",
+    "08568b",
+    "08569b",
+    "08570b",
+    "08571b",
+    "08572b"
+  ],
+  "failedCodes": [
+    {
+      "code": "08546",
+      "dimension": "implementation",
+      "reason": "印刷「每个[[幻灵]]敌人获得胜利 0」无执行读点：场上有胜利 1 的幻灵敌人（如 08522），引擎/章节没有把幻灵敌人胜利值改为 0 的钩子；其余子句（幕目标/营地撤退行动/背面结局 1-2）已实现并有读点。",
+      "evidence": [
+        "src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart3/08546.js:5-13",
+        "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js:223-263（actObjectiveMet/actions/performAction/actReveal 均无胜利值处理）",
+        "artifacts/acceptance/08-a-5/probe-defects.mjs（FAIL 08546）",
+        "audit/eote-primitive-requests.json#p7-08546（pending；objective/撤退 hook 已在 HEAD 接线，但 victory 0 仍缺）"
+      ]
+    },
+    {
+      "code": "08547",
+      "dimension": "implementation",
+      "reason": "两条印刷子句未实现/未接线：(1)「位于渗出梦魇所在地点的[[幻灵]]敌人移动时其地点视为与营地相连」——引擎有 `scenarioBehavior.enemyConnections` 钩子，但 part3 behavior 未实现（无 enemyConnections）；(2)「底下没有正面朝下卡时获得猎手」——条目声明的 `enemyRule.hunterWhenNoBeneath` 在引擎/章节无读取点（仅 setup/08544 议程钩子里手写 hunter）。第三条「被击败时移除底下所有面朝下卡」已接线（`enemies.js#defeatEnemy → behavior.enemyDefeated`）并有本期用例覆盖。",
+      "evidence": [
+        "src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart3/08547.js:12-13",
+        "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js:160-174（enemyDefeated 有引擎读点）",
+        "artifacts/acceptance/08-a-5/probe-defects.mjs（FAIL 08547 ×2）"
+      ]
+    },
+    {
+      "code": "08548",
+      "dimension": "implementation",
+      "reason": "整条显现效果未实现：条目只声明 `treacheryRule.spawnBeneathOrHunterAttack` 与 `flags.surgeIfNoSeepingNightmare`，引擎/章节 behavior 均无读取点，也没有按卡号的显现处理（「无渗出梦魇则涌动；否则翻出底下 1 张卡 / 让最近渗出梦魇移动并攻击」均不结算）。现有用例只断言 flag 存在（`tests/eote-scenario-iceAndDeathPart3.test.mjs:236`），属声明级证据。",
+      "evidence": [
+        "src/cards/encounter-entries/edgeOfTheEarth/iceAndDeathPart3/08548.js:12-13",
+        "content/campaigns/edgeOfTheEarth/scenarios/iceAndDeathPart3/behavior.js（无 treachery 显现处理函数）",
+        "tests/eote-scenario-iceAndDeathPart3.test.mjs:236（只断言 flag）",
+        "artifacts/acceptance/08-a-5/probe-defects.mjs（FAIL 08548）"
+      ]
+    },
+    {
+      "code": "08550",
+      "dimension": "implementation",
+      "reason": "正面 [fast]「受到 1 点恐惧：移动到记忆囚笼」未实现：条目声明 `agendaRule.freeMoveToPrisonOfMemories`，但引擎/章节 behavior 无读取点（fatalMirage behavior.actions 只提供幻景翻面与「推进当前幕」）；背面逐版本结算已实现并有本期用例覆盖。",
+      "evidence": [
+        "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08550.js:agendaRule",
+        "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js:645-683（actions/performAction 无囚笼移动）",
+        "artifacts/acceptance/08-a-5/probe-defects.mjs（FAIL 08550–08552）"
+      ]
+    },
+    {
+      "code": "08551",
+      "dimension": "implementation",
+      "reason": "正面 [fast]「受到 1 点恐惧：移动到记忆囚笼」未实现：条目声明 `agendaRule.freeMoveToPrisonOfMemories`，但引擎/章节 behavior 无读取点（fatalMirage behavior.actions 只提供幻景翻面与「推进当前幕」）；背面逐版本结算已实现并有本期用例覆盖。",
+      "evidence": [
+        "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08551.js:agendaRule",
+        "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js:645-683（actions/performAction 无囚笼移动）",
+        "artifacts/acceptance/08-a-5/probe-defects.mjs（FAIL 08550–08552）"
+      ]
+    },
+    {
+      "code": "08552",
+      "dimension": "implementation",
+      "reason": "正面 [fast]「受到 1 点恐惧：移动到记忆囚笼」未实现：条目声明 `agendaRule.freeMoveToPrisonOfMemories`，但引擎/章节 behavior 无读取点（fatalMirage behavior.actions 只提供幻景翻面与「推进当前幕」）；背面逐版本结算已实现并有本期用例覆盖。",
+      "evidence": [
+        "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08552.js:agendaRule",
+        "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js:645-683（actions/performAction 无囚笼移动）",
+        "artifacts/acceptance/08-a-5/probe-defects.mjs（FAIL 08550–08552）"
+      ]
+    },
+    {
+      "code": "08557",
+      "dimension": "implementation",
+      "reason": "条目声明的印刷特殊规则 flag（reactionInvestigate：调查差 1 失败时受 1 恐惧换 +1 技能值）在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。",
+      "evidence": [
+        "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08557.js:flags",
+        "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js:109/137/357（只读 storyFlip/tier/locationShroudModifier，未读任何特殊规则 flag）",
+        "artifacts/acceptance/08-a-5/probe-defects.mjs（FAIL 列表）",
+        "audit/eote-primitive-requests.json#p7-08560（pending：fatalMirage 地点强制/额外费用缺少通用 locationRule 读点）"
+      ]
+    },
+    {
+      "code": "08558",
+      "dimension": "implementation",
+      "reason": "条目声明的印刷特殊规则 flag（forcedInvestigate：调查时 +2 隐藏值或额外 1 行动）在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。",
+      "evidence": [
+        "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08558.js:flags",
+        "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js:109/137/357（只读 storyFlip/tier/locationShroudModifier，未读任何特殊规则 flag）",
+        "artifacts/acceptance/08-a-5/probe-defects.mjs（FAIL 列表）",
+        "audit/eote-primitive-requests.json#p7-08560（pending：fatalMirage 地点强制/额外费用缺少通用 locationRule 读点）"
+      ]
+    },
+    {
+      "code": "08559",
+      "dimension": "implementation",
+      "reason": "条目声明的印刷特殊规则 flag（forcedReveal：翻面时按花费线索弃牌库顶并抽取忒咳哩-哩弱点）在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。",
+      "evidence": [
+        "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08559.js:flags",
+        "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js:109/137/357（只读 storyFlip/tier/locationShroudModifier，未读任何特殊规则 flag）",
+        "artifacts/acceptance/08-a-5/probe-defects.mjs（FAIL 列表）",
+        "audit/eote-primitive-requests.json#p7-08560（pending：fatalMirage 地点强制/额外费用缺少通用 locationRule 读点）"
+      ]
+    },
+    {
+      "code": "08560",
+      "dimension": "implementation",
+      "reason": "条目声明的印刷特殊规则 flag（forcedAfterInvestigate：调查后本回合隐藏值 +1 且不能离开）在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。",
+      "evidence": [
+        "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08560.js:flags",
+        "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js:109/137/357（只读 storyFlip/tier/locationShroudModifier，未读任何特殊规则 flag）",
+        "artifacts/acceptance/08-a-5/probe-defects.mjs（FAIL 列表）",
+        "audit/eote-primitive-requests.json#p7-08560（pending：fatalMirage 地点强制/额外费用缺少通用 locationRule 读点）"
+      ]
+    },
+    {
+      "code": "08561",
+      "dimension": "implementation",
+      "reason": "条目声明的印刷特殊规则 flag（shroudBonusIfTreacheryAttached：有诡计附属时 +3 隐藏值）在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。",
+      "evidence": [
+        "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08561.js:flags",
+        "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js:109/137/357（只读 storyFlip/tier/locationShroudModifier，未读任何特殊规则 flag）",
+        "artifacts/acceptance/08-a-5/probe-defects.mjs（FAIL 列表）",
+        "audit/eote-primitive-requests.json#p7-08560（pending：fatalMirage 地点强制/额外费用缺少通用 locationRule 读点）"
+      ]
+    },
+    {
+      "code": "08562",
+      "dimension": "implementation",
+      "reason": "条目声明的印刷特殊规则 flag（forcedOnFrostReveal：揭示 frost 后受 1 恐惧，成功额外 1 线索）在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。",
+      "evidence": [
+        "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08562.js:flags",
+        "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js:109/137/357（只读 storyFlip/tier/locationShroudModifier，未读任何特殊规则 flag）",
+        "artifacts/acceptance/08-a-5/probe-defects.mjs（FAIL 列表）",
+        "audit/eote-primitive-requests.json#p7-08560（pending：fatalMirage 地点强制/额外费用缺少通用 locationRule 读点）"
+      ]
+    },
+    {
+      "code": "08563",
+      "dimension": "implementation",
+      "reason": "条目声明的印刷特殊规则 flag（forcedOnCluesDiscovered：单次发现 ≥2 线索后洗入忒咳哩-哩牌）在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。",
+      "evidence": [
+        "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08563.js:flags",
+        "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js:109/137/357（只读 storyFlip/tier/locationShroudModifier，未读任何特殊规则 flag）",
+        "artifacts/acceptance/08-a-5/probe-defects.mjs（FAIL 列表）",
+        "audit/eote-primitive-requests.json#p7-08560（pending：fatalMirage 地点强制/额外费用缺少通用 locationRule 读点）"
+      ]
+    },
+    {
+      "code": "08564",
+      "dimension": "implementation",
+      "reason": "条目声明的印刷特殊规则 flag（forcedTekeliliDraw：抽忒咳哩-哩额外结算一次后发现 1 线索）在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。",
+      "evidence": [
+        "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08564.js:flags",
+        "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js:109/137/357（只读 storyFlip/tier/locationShroudModifier，未读任何特殊规则 flag）",
+        "artifacts/acceptance/08-a-5/probe-defects.mjs（FAIL 列表）",
+        "audit/eote-primitive-requests.json#p7-08560（pending：fatalMirage 地点强制/额外费用缺少通用 locationRule 读点）"
+      ]
+    },
+    {
+      "code": "08565",
+      "dimension": "implementation",
+      "reason": "条目声明的印刷特殊规则 flag（forcedOnFrostReveal：揭示 frost 后受 1 伤害，成功额外 1 线索）在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。",
+      "evidence": [
+        "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08565.js:flags",
+        "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js:109/137/357（只读 storyFlip/tier/locationShroudModifier，未读任何特殊规则 flag）",
+        "artifacts/acceptance/08-a-5/probe-defects.mjs（FAIL 列表）",
+        "audit/eote-primitive-requests.json#p7-08560（pending：fatalMirage 地点强制/额外费用缺少通用 locationRule 读点）"
+      ]
+    },
+    {
+      "code": "08566",
+      "dimension": "implementation",
+      "reason": "条目声明的印刷特殊规则 flag（investigatorShroudBonus：高田弘子在本地点时 -2 隐藏值）在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。",
+      "evidence": [
+        "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08566.js:flags",
+        "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js:109/137/357（只读 storyFlip/tier/locationShroudModifier，未读任何特殊规则 flag）",
+        "artifacts/acceptance/08-a-5/probe-defects.mjs（FAIL 列表）",
+        "audit/eote-primitive-requests.json#p7-08560（pending：fatalMirage 地点强制/额外费用缺少通用 locationRule 读点）"
+      ]
+    },
+    {
+      "code": "08567",
+      "dimension": "implementation",
+      "reason": "条目声明的印刷特殊规则 flag（investigatorShroudBonus：伊里亚在本地点时 -2 隐藏值）在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。",
+      "evidence": [
+        "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08567.js:flags",
+        "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js:109/137/357（只读 storyFlip/tier/locationShroudModifier，未读任何特殊规则 flag）",
+        "artifacts/acceptance/08-a-5/probe-defects.mjs（FAIL 列表）",
+        "audit/eote-primitive-requests.json#p7-08560（pending：fatalMirage 地点强制/额外费用缺少通用 locationRule 读点）"
+      ]
+    },
+    {
+      "code": "08568",
+      "dimension": "implementation",
+      "reason": "条目声明的印刷特殊规则 flag（investigatorShroudBonus：丹佛斯在本地点时 -2 隐藏值（+忒咳哩-哩改洗入牌库））在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。",
+      "evidence": [
+        "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08568.js:flags",
+        "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js:109/137/357（只读 storyFlip/tier/locationShroudModifier，未读任何特殊规则 flag）",
+        "artifacts/acceptance/08-a-5/probe-defects.mjs（FAIL 列表）",
+        "audit/eote-primitive-requests.json#p7-08560（pending：fatalMirage 地点强制/额外费用缺少通用 locationRule 读点）"
+      ]
+    },
+    {
+      "code": "08569",
+      "dimension": "implementation",
+      "reason": "条目声明的印刷特殊规则 flag（investigatorShroudBonus：戴尔在本地点时 -2 隐藏值（+[action] 洗牌治愈））在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。",
+      "evidence": [
+        "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08569.js:flags",
+        "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js:109/137/357（只读 storyFlip/tier/locationShroudModifier，未读任何特殊规则 flag）",
+        "artifacts/acceptance/08-a-5/probe-defects.mjs（FAIL 列表）",
+        "audit/eote-primitive-requests.json#p7-08560（pending：fatalMirage 地点强制/额外费用缺少通用 locationRule 读点）"
+      ]
+    },
+    {
+      "code": "08570",
+      "dimension": "implementation",
+      "reason": "条目声明的印刷特殊规则 flag（investigatorShroudBonus：辛哈医生在本地点时 -2 隐藏值（+首次进入扣伤害））在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。",
+      "evidence": [
+        "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08570.js:flags",
+        "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js:109/137/357（只读 storyFlip/tier/locationShroudModifier，未读任何特殊规则 flag）",
+        "artifacts/acceptance/08-a-5/probe-defects.mjs（FAIL 列表）",
+        "audit/eote-primitive-requests.json#p7-08560（pending：fatalMirage 地点强制/额外费用缺少通用 locationRule 读点）"
+      ]
+    },
+    {
+      "code": "08571",
+      "dimension": "implementation",
+      "reason": "条目声明的印刷特殊规则 flag（investigatorShroudBonus：肯斯勒博士在本地点时 -2 隐藏值（+成功调查后受恐惧/弃秘密））在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。",
+      "evidence": [
+        "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08571.js:flags",
+        "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js:109/137/357（只读 storyFlip/tier/locationShroudModifier，未读任何特殊规则 flag）",
+        "artifacts/acceptance/08-a-5/probe-defects.mjs（FAIL 列表）",
+        "audit/eote-primitive-requests.json#p7-08560（pending：fatalMirage 地点强制/额外费用缺少通用 locationRule 读点）"
+      ]
+    },
+    {
+      "code": "08572",
+      "dimension": "implementation",
+      "reason": "条目声明的印刷特殊规则 flag（investigatorShroudBonus：埃尔斯沃思在本地点时 -2 隐藏值（+诡计附属时获得涌动））在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。",
+      "evidence": [
+        "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08572.js:flags",
+        "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js:109/137/357（只读 storyFlip/tier/locationShroudModifier，未读任何特殊规则 flag）",
+        "artifacts/acceptance/08-a-5/probe-defects.mjs（FAIL 列表）",
+        "audit/eote-primitive-requests.json#p7-08560（pending：fatalMirage 地点强制/额外费用缺少通用 locationRule 读点）"
+      ]
+    },
+    {
+      "code": "08573",
+      "dimension": "implementation",
+      "reason": "条目声明的印刷特殊规则 flag（investigatorShroudBonus：曲奇在本地点时 -2 隐藏值（+非精英敌人 +2 攻击且失去反击））在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。",
+      "evidence": [
+        "src/cards/encounter-entries/edgeOfTheEarth/fatalMirage/08573.js:flags",
+        "content/campaigns/edgeOfTheEarth/scenarios/fatalMirage/behavior.js:109/137/357（只读 storyFlip/tier/locationShroudModifier，未读任何特殊规则 flag）",
+        "artifacts/acceptance/08-a-5/probe-defects.mjs（FAIL 列表）",
+        "audit/eote-primitive-requests.json#p7-08560（pending：fatalMirage 地点强制/额外费用缺少通用 locationRule 读点）"
+      ]
+    }
+  ],
+  "excludedCodes": [
+    {
+      "code": "08573b",
+      "reason": "按 Lead 分片约定归下一分片（08574+）"
+    }
+  ],
+  "dimensions": {
+    "implementation": "fail",
+    "primitives": "fail",
+    "interaction": "fail",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/acceptance-08-a-shard5.test.mjs",
+      "test": "45 个逐卡用例（标题含卡号）",
+      "codes": [
+        "08546",
+        "08547",
+        "08548",
+        "08549",
+        "08550",
+        "08551",
+        "08552",
+        "08553",
+        "08554",
+        "08555",
+        "08556",
+        "08556b",
+        "08557",
+        "08557b",
+        "08558",
+        "08558b",
+        "08559",
+        "08559b",
+        "08560",
+        "08560b",
+        "08561",
+        "08561b",
+        "08562",
+        "08562b",
+        "08563",
+        "08563b",
+        "08564",
+        "08564b",
+        "08565",
+        "08565b",
+        "08566",
+        "08566b",
+        "08567",
+        "08567b",
+        "08568",
+        "08568b",
+        "08569",
+        "08569b",
+        "08570",
+        "08570b",
+        "08571",
+        "08571b",
+        "08572",
+        "08572b",
+        "08573"
+      ]
+    },
+    {
+      "file": "tests/eote-scenario-fatalMirage.test.mjs",
+      "test": "章节结构/版本/Mirage 关键词/伙伴/放逐/混乱标记/结局（既有真实引擎回归，51/51 通过）",
+      "codes": [
+        "08549",
+        "08550",
+        "08556",
+        "08560",
+        "08556b",
+        "08560b",
+        "08569b"
+      ]
+    },
+    {
+      "file": "tests/eote-scenario-iceAndDeathPart3.test.mjs",
+      "test": "第三章 setup/议程/撤退/渗透梦魇（既有，含 08548 flag 断言 :236）",
+      "codes": [
+        "08546",
+        "08547",
+        "08548"
+      ]
+    },
+    {
+      "file": "tests/eote-all-cards.test.mjs / eote-rules.test.mjs / eote-scenario-shared.test.mjs",
+      "test": "全卡注册与规则契约回归（既有，51/51 通过）",
+      "codes": []
+    },
+    {
+      "file": "artifacts/acceptance/08-a-5/probe-defects.mjs",
+      "test": "22 项 FAIL：17 地点特殊规则、08547×2、08548、08546、08550–08552",
+      "codes": [
+        "08546",
+        "08547",
+        "08548",
+        "08550",
+        "08551",
+        "08552",
+        "08557",
+        "08558",
+        "08559",
+        "08560",
+        "08561",
+        "08562",
+        "08563",
+        "08564",
+        "08565",
+        "08566",
+        "08567",
+        "08568",
+        "08569",
+        "08570",
+        "08571",
+        "08572",
+        "08573"
+      ]
+    }
+  ],
+  "notes": [
+    "范围：pack eoec 45 张（08546–08573，08573b 归下一分片）；复算脚本 artifacts/acceptance/08-a-5/scope-map.mjs。45 张全部有单卡条目文件；规则执行在 EOTE 章节 behavior/definition/chaos。",
+    "失败 23 张：17 个幻景地点（08557–08573）印刷特殊规则 flag 无读取点（F1）；08546「幻灵敌人胜利 0」缺失（F2a）；08547 两条子句未接线（F2b）；08548 整条显现未实现（F2c）；08550–08552 正面 [fast] 移动能力未实现（F3）。",
+    "通过 22 张：08549、08553–08555、08556、17 张剧情卡 08556b–08572b。",
+    "证据：新增 tests/acceptance-08-a-shard5.test.mjs 45/45 通过（45 张逐卡标题证据）；既有 EOTE 5 个测试文件 51/51 通过；probe-defects.mjs 22 项 FAIL（exit 1）。",
+    "门禁：npm run cards:check / cards:encounter-check / audit:entries 均 exit 0；本审计未改 src/content/audit/web/tools/既有 tests/package.json。",
+    "账本差异：audit/eote-all-card-acceptance.json 把 08547/08548 等判 verified 与本审计冲突（08547/08548 应 blocked）；其 missing 清单多为「无标题测试证据」，需以本报告逐卡核对结果重判。",
+    "未登记进 tests/suites.mjs：按协议由主进程合并时登记。账本 --check 重签需工作区干净（本机有他人未提交的 web/ 改动，本审计未触碰 web/campaign-presentation.js）。"
+  ]
+}

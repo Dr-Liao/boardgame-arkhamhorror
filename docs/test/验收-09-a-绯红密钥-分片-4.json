@@ -1,0 +1,44 @@
+{
+  "unit": "09-a-4",
+  "generatedAt": "2026-11-25",
+  "scope": {
+    "cards": 45,
+    "selector": "09501-09542（pack=tskc 战役内容）&& effectStatus=unverified（含 09519a/b、09536b、09537b）",
+    "baseline": "cards-data 复算 45 张全部 unverified；45 张均有单卡文件（riddlesAndRain 19 + deadHeat 26）"
+  },
+  "verdict": "partial",
+  "verifiedCodes": ["09501","09502","09503","09504","09505","09506","09507","09508","09509","09511","09512","09513","09514","09515","09516","09517","09519a","09519b","09520","09521","09522","09523","09524","09525","09526","09527","09528","09529","09530","09531","09532","09533","09534","09535","09536","09536b","09540"],
+  "failedCodes": [
+    {"code": "09510", "dimension": "implementation", "reason": "印刷「强制 - 如果伦敦雨街没有线索：在上面增加线索，直到其有 1[每调查员]个线索」未生效：behavior.refillRainyLondonStreets 用 `locationOf(state, RAW.rainyLondonStreets)`（RAW 是卡号 '09510'）查地点，而地点实例 id 是 'rainyLondonStreets' → 永远返回 0；locationRevealed/cluesRemoved/locationEntered 三个钩子都因此空转。实测把线索置 0 后 refill 返回 0、线索仍 0（缺陷复现于 acceptance-09-a-shard4 09510 用例）。", "evidence": "content/campaigns/theScarletKeys/scenarios/riddlesAndRain/behavior.js:196-197; tests/acceptance-09-a-shard4.test.mjs「09510 …」; artifacts/acceptance/09-a-4/"},
+    {"code": "09518", "dimension": "implementation", "reason": "幕 4 谈判行动 `api.test(inv.seat, skill, 5, { source, resolve })` 第四参传对象，而引擎签名要求第四参为回调函数（src/engine/scenario-runtime.js:859）→ 真实使用抛 TypeError: options.resolve is not a function，盘问无法结算、资源(bounty)无法放置。隐匿 1/调查员、反击、精英/胜利数据本身正确。", "evidence": "src/cards/encounter-entries/theScarletKeys/riddlesAndRain/09518.js:43; src/engine/scenario-runtime.js:859; tests/acceptance-09-a-shard4.test.mjs「09518 …」"},
+    {"code": "09537", "dimension": "implementation", "reason": "[pending] 「伤害/恐惧分配给支援时击败该支援并变换每把附属密钥」以「攻击前后支援 damage/horror 快照」近似（条目 note 已披露），未走引擎支援伤害/击败入口；属近似实现，需裁决是否等价。", "evidence": "09537.js:557-569; deadHeat/behavior.js enemyAttackStarted/Resolved"},
+    {"code": "09537b", "dimension": "implementation", "reason": "[pending] 「攻击时变换每把附属密钥」近似为每次攻击统一 Shift 一次（note 披露，primitive-requests/09544a.json 口径），未区分调查员/敌人触发的翻面差异。", "evidence": "09537b.js:578-592"},
+    {"code": "09538", "dimension": "implementation", "reason": "[pending] 「任意钥匙变换后重整/即时攻击」只接剧本发起的变换（shiftLastBlossom→razinReactsToKeyShift），P4 玩家发起的 Shift 没有全局 keyShifted 窗口（note 披露，primitive-requests/09538.json）。", "evidence": "09538.js:594-612"},
+    {"code": "09539", "dimension": "interaction", "reason": "[pending] 「[fast] 尝试躲避奴仆，本次躲避它获得警戒」走章节行为自建快速行动，失败时由行为补一次攻击；引擎关键字管线未自动处理「本次躲避获得警戒」（note 披露，primitive-requests/09539.json）。", "evidence": "09539.js:614-635"},
+    {"code": "09541", "dimension": "interaction", "reason": "[pending] 「尽可能均匀地分配」用固定轮转顺序（相邻地点依次分配），不提供玩家/队长选择（note 披露）。", "evidence": "09541.js:654-670"},
+    {"code": "09542", "dimension": "implementation", "reason": "[pending] 「你打出每张卡牌的费用提升1点」写在所有在场地点的 playCostIncrease（引擎唯一读点），因此对全桌生效而不是只对「你」生效（note 披露）。轮末弃置读点 treacheryRule.discardAtRoundEnd 已接线。", "evidence": "09542.js:672-695"}
+  ],
+  "pendingCodes": ["09537", "09537b", "09538", "09539", "09541", "09542"],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "fail",
+    "primitives": "fail",
+    "interaction": "fail",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {"file": "tests/acceptance-09-a-shard4.test.mjs", "test": "45 例逐卡真实执行（标题含卡号）：谜雨经合成战役注册走真实 startScenario/legalMoves/applyMove；死亡酷暑用章节 behavior/definition 真实函数 + state 夹具。本地 node --test 45/45 通过。", "codes": ["09501","09502","09503","09504","09505","09506","09507","09508","09509","09510","09511","09512","09513","09514","09515","09516","09517","09518","09519a","09519b","09520","09521","09522","09523","09524","09525","09526","09527","09528","09529","09530","09531","09532","09533","09534","09535","09536","09536b","09537","09537b","09538","09539","09540","09541","09542"]},
+    {"file": "tests/tsk-scenario-riddlesAndRain.test.mjs", "test": "章节既有强证据：幕/议程背面、隐匿分配、伦敦塔、渡鸦之眼 Shift、混乱标记、地点能力（09502–09509/09511–09517/09519a/b 等）", "codes": ["09502","09503","09504","09505","09506","09507","09508","09509","09511","09512","09513","09514","09515","09516","09517","09519a","09519b"]},
+    {"file": "tests/tsk-scenario-deadHeat.test.mjs", "test": "章节既有强证据：时间分支、幕/议程背面、阿玛兰斯/拉辛/劫掠者/哈立德/奴仆/饥荒、平民救援与后果、地点废弃交换（09520–09542）", "codes": ["09520","09521","09522","09523","09524","09525","09526","09527","09528","09529","09530","09531","09532","09533","09534","09535","09536","09536b","09537","09537b","09538","09539","09540","09541","09542"]},
+    {"file": "tests/tsk-p1-regressions.test.mjs", "test": "P1 修复回归：09524 苋将击败→推进幕 1；09521/09522 关键词；09532 支援费用 +2；09516 伦敦塔入门费与 09517 迷你卡落点重定向", "codes": ["09516","09517","09521","09522","09524","09532"]}
+  ],
+  "commands": [
+    {"command": "node --test tests/acceptance-09-a-shard4.test.mjs", "result": "tests 45 / pass 45 / fail 0（新增）"},
+    {"command": "npm run cards:check", "result": "tests 10 / pass 10；条目合规审计通过（无基线外新增违规）"},
+    {"command": "npm run cards:encounter-check", "result": "tests 7 / pass 7；条目合规审计通过（无基线外新增违规）"},
+    {"command": "npm run audit:entries", "result": "通过；directStateWrite 112（存量基线）"},
+    {"command": "node --test --test-reporter=tap tests/tsk-scenario-riddlesAndRain.test.mjs tests/tsk-scenario-deadHeat.test.mjs tests/tsk-p1-regressions.test.mjs", "result": "全部通过；但 37/45 张既有标题不含卡号，故新增验收文件"}
+  ],
+  "notes": "1) 45 张：通过 37 / 失败 2 / pending 6。2) 失败①09510：强制补线索查地点用卡号 '09510' 而地点实例 id 为 'rainyLondonStreets'，refillRainyLondonStreets 永不命中（locationRevealed/cluesRemoved/locationEntered 三钩子空转）。3) 失败②09518：幕 4 谈判 api.test 第四参传对象 → 真实使用 TypeError；同类问题在 EOTE 分片也曾出现（条目 API 用法错误）。4) pending 6 张均为条目 note 已披露的近似实现（阿玛兰斯攻击/翻面、拉辛仅接剧本 Shift、奴仆自建躲避行动、哈立德固定轮转分配、饥荒费用全桌化），需主进程裁决是否接受或补原语。5) 谜雨 09502–09517 多数为 P7 数据型条目：印刷数据由 definition 读取、行为由章节 behavior 承接，本轮用真实引擎/behavior 逐卡复核确认接线。6) 新增测试未登记 tests/suites.mjs（分片边界不允许），主进程合并时必须登记 fast/slow tier。7) 未改 src/content/audit/web/tools/既有 tests/package.json，未重签 TSK 账本，未碰 web/campaign-presentation.js。8) 通过 37 张可切 verified；失败/pending 修好或裁决后重跑 acceptance-09-a-shard4 与 tsk-scenario-riddlesAndRain/deadHeat。"
+}

@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 
 test('Core 图鉴验收状态、随机地点和未验收扩展隔离在真实界面可见',async({page,request})=>{
-  const verified=await (await request.get('/api/mods/arkhamhorror/catalog?campaign=core&effectStatus=verified&limit=200')).json()
+  const verified=await (await request.get('/api/mods/arkhamhorror/catalog?packCode=core&effectStatus=verified&limit=200')).json()
   expect(verified.total).toBe(183)
   await page.goto('/index.html')
   await page.locator('.bg-card').filter({hasText:'诡镇奇谈'}).click()
@@ -12,10 +12,10 @@ test('Core 图鉴验收状态、随机地点和未验收扩展隔离在真实界
   await modal.getByLabel('卡号或名称').fill('01127')
   await modal.getByRole('button',{name:'检索',exact:true}).click()
   await expect(modal.locator('.ah-catalog-card')).toHaveCount(1)
-  await expect(modal.locator('.ah-catalog-card')).toContainText('已验收')
+  await expect(modal.locator('.ah-catalog-card')).toContainText('已校验')
   await modal.locator('.ah-catalog-card').click()
   const detail=page.getByRole('dialog',{name:'卡牌详情'})
-  await expect(detail.locator('.ah-status-badges')).toContainText('已验收')
+  await expect(detail.locator('.ah-status-badges')).toContainText('已校验')
   await expect(detail.locator('.ah-status-badges')).not.toContainText('待规则审计')
   await page.screenshot({path:'artifacts/arkham-polish/core-acceptance-catalog.png'})
   const expansion=await (await request.get('/api/mods/arkhamhorror/catalog?code=05001')).json()

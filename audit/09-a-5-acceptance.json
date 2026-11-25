@@ -1,0 +1,525 @@
+{
+  "schemaVersion": 1,
+  "unit": "09-a-5",
+  "profile": {
+    "id": "tsk-campaign-b-2026-11",
+    "scope": "绯红密钥 09 段 tskc 战役卡（09543–09583）45 条目录记录。20 条通过五维验收；25 条密钥 Shift 调用点/章节规则缺口暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 45,
+    "verified": 20,
+    "unverified": 25,
+    "unimplemented": 0,
+    "testsPassed": 163
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-09-a-shard5.test.mjs",
+      "sha256": "54ddbd3ac3751e4067de7b55b620d7e26dafc7bcfb39f00a38e5eaaa1b82cb05"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-scenario-sanguineShadows.test.mjs",
+      "sha256": "f90c674f1d115d135bdbd4e5e79bc7d78bd6cb30eac49ca8fa0e23fdc658479e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-scenario-dealingsInTheDark.test.mjs",
+      "sha256": "cf1d626d7161c42c86324b8add6fc7f9b95d601263bd24fa83950110580a405b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-rules.test.mjs",
+      "sha256": "5ae05cfcab8019f5322e8207b5145c1cf024104eeaf00a84312c17f902879ad8"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-customizable.test.mjs",
+      "sha256": "4311237d47f104f0b62635d521dcccf34a0804a9109d07f7f3aa3ff05800743b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-keys-hollow.test.mjs",
+      "sha256": "925b275cb5d75467558ff4fa6f11f5bd01c4500aa5a1b8d1562e9bcb267f2f09"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-state.test.mjs",
+      "sha256": "46ca77b4b6442473ff0bbe6570b437187086df6337c989fb89f9cb4c3decbb18"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-map.test.mjs",
+      "sha256": "a46ed2ac6953edaecec26fe89a8ac494a3a275ba8e2c56ab21a124ca23a7afc2"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-interactions.test.mjs",
+      "sha256": "275c143401aaca1618ba01abe71f3838732d13b73ab5932098e13ff447146233"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-p0-regressions.test.mjs",
+      "sha256": "8d71ccce9008da1a2332f9e4d4381d6c26e096a8c5511eec83bde0e0d40a9e52"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-p1-regressions.test.mjs",
+      "sha256": "892ccba343a9c8a9186957c1a49018ba3fb3375c3298bf46d8bc91211614f8a4"
+    }
+  ],
+  "entries": [
+    {
+      "code": "09543",
+      "name": "围困！",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard5.test.mjs",
+          "test": "09-a5 09543 围困！：显现把结算交给章节事件 deadHeatCornered"
+        }
+      ]
+    },
+    {
+      "code": "09544a",
+      "name": "末绽之花",
+      "type": "key",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "玩家 `shiftKey` 只翻面并派发 `tskKeyShifted` 窗口（`dispatch.js:1121`），但 09544a/b 条目没有挂窗口能力；`deadHeat/behavior.js` 的 `shiftLastBlossom` 只有敌人路径调用（`:1066/:1076`），无玩家变换调用点 → 「治愈你所在地点每位调查员 1 伤 1 恐」不结算。"
+    },
+    {
+      "code": "09544b",
+      "name": "末绽之花",
+      "type": "key",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 09544a：「治愈场上每个敌人 1 点伤害 / 调查员变换则翻回稳定面」没有玩家变换调用点；`shiftLastBlossom` 只在敌人变换路径被调用。"
+    },
+    {
+      "code": "09545",
+      "name": "血色阴影",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷 tablet：「取消投入本次技能检定的**每张卡牌**上的效果和图标」；引擎读点 `tests.js:1459` 用 `cardDef(item.code)?.type === 'skill'` 过滤，只取消技能卡，投入的事件/支援图标与效果仍生效（`cancelCommitted` 由本章 chaos 声明）。"
+    },
+    {
+      "code": "09546",
+      "name": "她在哪儿……？",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「游戏开始时，或密谋牌库重置后：毁灭 = 1[每人]」；`setupLocations` 未写毁灭（`state.doom` 保持 0），只有 `resetStageDecks`（`:556-557`）写 1/每人 → 开局分支缺失。"
+    },
+    {
+      "code": "09547",
+      "name": "猩红阴影",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard5.test.mjs",
+          "test": "09-a5 09547 猩红阴影：与红衣女郎交战即推进幕 1"
+        }
+      ]
+    },
+    {
+      "code": "09548",
+      "name": "一路追踪",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard5.test.mjs",
+          "test": "09-a5 09548 一路追踪：幕 2 谈判（可花 1 线索降 2 难度）进入 actions 并真实检定"
+        }
+      ]
+    },
+    {
+      "code": "09549",
+      "name": "五月大道",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard5.test.mjs",
+          "test": "09-a5 09549 五月大道：X 隐藏值按难度，且地点有撤退入口（resign）"
+        }
+      ]
+    },
+    {
+      "code": "09550",
+      "name": "玫瑰宫",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "`performLookAction`（`behavior.js:733-744`）固定 `difficulty: 4`，没有「花额外 1 线索把难度降低 2」的选择分支。"
+    },
+    {
+      "code": "09551",
+      "name": "主教座堂",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 09550（同一 `performLookAction` 模板）。"
+    },
+    {
+      "code": "09552",
+      "name": "雷科莱塔公墓",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "`performSpendLookAction` 用 `api.directHorror` 直接加恐惧（`behavior.js:764`），绕过伤害分配；印刷「受到 X 点恐惧」应可正常分配/吸收。"
+    },
+    {
+      "code": "09553",
+      "name": "伊拉祖里兹宫",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 09550（同一 `performLookAction` 模板）。"
+    },
+    {
+      "code": "09554",
+      "name": "市议会",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷 [fast]「查看本地点一张隐匿迷你卡已揭示面；抽遭遇牌顶；可花 2 线索取消并弃掉」；`actions()`/`fastActions` 无 theCabildo 分支，全仓无对应实现（full-scan §2.3 同项，fix-plan 未收口）。"
+    },
+    {
+      "code": "09555",
+      "name": "省立银行",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard5.test.mjs",
+          "test": "09-a5 09555 省立银行：花 X 线索与三倍资源查看 X 张迷你卡"
+        }
+      ]
+    },
+    {
+      "code": "09556",
+      "name": "哥伦布剧院",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 09550（同一 `performLookAction` 模板）。"
+    },
+    {
+      "code": "09557",
+      "name": "红衣女郎",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard5.test.mjs",
+          "test": "09-a5 09557 红衣女郎：隐匿 5，交战调查员移动时解除交战"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard5.test.mjs",
+          "test": "09-a5 09557b 红衣女郎（剧情支援）：回合结束横置 → 记录阴影锚点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-p1-regressions.test.mjs",
+          "test": "P1-14d sanguine「云开见日 7」：生成 09557b 剧情支援并进入「见红」"
+        }
+      ]
+    },
+    {
+      "code": "09557b",
+      "name": "红衣女郎",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "条目 `simplified: true`：只落「横置记录锚点 + 回合开始移回」；「在阴影中时不在任何地点」「与你交战的敌人生成改到先前地点」需要 `new.investigatorInShadows` 原语（未实现，`note` 已披露）。"
+    },
+    {
+      "code": "09558",
+      "name": "履约夜魇",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「攻击履约夜魇时揭示的每个负值修正翻倍」；`enemyRule.doubleNegative` 的引擎读点在**躲避**路径（`combat.js#doEvade → tests.js:1448`），攻击路径无读点（条目 `simplified: true` 已披露）。"
+    },
+    {
+      "code": "09559",
+      "name": "猫抓老鼠",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard5.test.mjs",
+          "test": "09-a5 09559 猫抓老鼠： treacheryRule.resolveKind → catAndMouse 分派"
+        }
+      ]
+    },
+    {
+      "code": "09560",
+      "name": "来访名片",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "实现只有「附属到无标靶地点 + 内容层禁止花费线索」（`callingCard`、`cluesSpendBlocked`）；印刷「你调查所在位置期间，查看本地点一张隐藏迷你卡已揭示面」与「调查成功：将其翻回、洗回、可花 2 线索取消」等后三句未实现（`scenarioApproximations` 披露）。"
+    },
+    {
+      "code": "09561",
+      "name": "技高一筹",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard5.test.mjs",
+          "test": "09-a5 09561 技高一筹：失败后真实二选一（放毁灭）"
+        }
+      ]
+    },
+    {
+      "code": "09562",
+      "name": "见红",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard5.test.mjs",
+          "test": "09-a5 09562 见红：毁灭达阈值 → 每位调查员被击败并受 1 精神创伤"
+        }
+      ]
+    },
+    {
+      "code": "09563",
+      "name": "血色监视者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard5.test.mjs",
+          "test": "09-a5 09563 血色监视者：敌军阶段结束重整 → 每位调查员 2 伤或 2 恐"
+        }
+      ]
+    },
+    {
+      "code": "09564",
+      "name": "分裂精魂",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard5.test.mjs",
+          "test": "09-a5 09564 分裂精魂：隐匿 4，被揭露后对监视者 5 伤并返回阴影"
+        }
+      ]
+    },
+    {
+      "code": "09565a",
+      "name": "恸哭女士",
+      "type": "key",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "`sanguineShadows/behavior.js#shiftWeepingLady`（`:808`）全仓无调用点（仅测试直接调用）；玩家变换密钥后「发现所在地点或连接地点 1 个线索」不结算。"
+    },
+    {
+      "code": "09565b",
+      "name": "恸哭女士",
+      "type": "key",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 09565a：动荡面「每位调查员弃 1 个支援 / 调查员变换则翻回稳定面」无玩家变换调用点。"
+    },
+    {
+      "code": "09566",
+      "name": "暗中交易",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "`dealingsChaosToken` 固定返回 -5/-7 并提供 `cultistDoomSwap` 提示，但 `resolveChaosToken` 只打印「本章近似：不提供改值选择」；印刷「你可以放 1 毁灭把修正改为 -1/-3」不可选。"
+    },
+    {
+      "code": "09567",
+      "name": "黑暗使徒",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "`concealEnemy`（`dealingsInTheDark/behavior.js:100`）默认 `decoyCount = numInvestigators(state)`；本卡给异教徒的是 Concealed 1（1 诱饵+1 真身），多人局实际放 N+1 张 → 数值错误。"
+    },
+    {
+      "code": "09568",
+      "name": "寻找手稿",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard5.test.mjs",
+          "test": "09-a5 09568 寻找手稿：教派线索达到阈值 → 推进幕 1"
+        }
+      ]
+    },
+    {
+      "code": "09569",
+      "name": "寻找护身符",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard5.test.mjs",
+          "test": "09-a5 09569 寻找护身符：东门调查员线索达到阈值 → 推进幕 2"
+        }
+      ]
+    },
+    {
+      "code": "09570",
+      "name": "追逐",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard5.test.mjs",
+          "test": "09-a5 09570 追逐：持钥敌人在加拉塔码头 → 进入结局 6；持钥调查员在码头 → 结局 1"
+        }
+      ]
+    },
+    {
+      "code": "09571",
+      "name": "彰显",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard5.test.mjs",
+          "test": "09-a5 09571 彰显：异教徒敌人被放置毁灭后翻至线索面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard5.test.mjs",
+          "test": "09-a5 09571b 解封：毁灭改为移动+攻击，攻击持钥者夺钥数据在条目声明"
+        }
+      ]
+    },
+    {
+      "code": "09571b",
+      "name": "解封",
+      "type": "story",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "条目 `note` 披露：敌人夺取密钥后「敌人变换它」只写剧本标记、不翻面（原语 shiftKey 恒翻面）；印刷要求变换（翻面）后保留在动荡面。"
+    },
+    {
+      "code": "09572",
+      "name": "加拉塔码头",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "`LOCATION_RULES.galataDocks.entryDiscardCards = 1` 近似为「随机弃 1 张手牌」；印刷要求「弃掉总计至少 3 个相同技能图标的卡牌」→ 费用条件/可支付性都不同。"
+    },
+    {
+      "code": "09573",
+      "name": "加拉塔",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard5.test.mjs",
+          "test": "09-a5 09573 加拉塔：花 3 资源谈判揭露任意地点迷你卡（团队每轮一次）"
+        }
+      ]
+    },
+    {
+      "code": "09574",
+      "name": "狄奥多西方尖碑",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard5.test.mjs",
+          "test": "09-a5 09574 狄奥多西方尖碑：调查失败后把 1 个线索移到最近异教徒"
+        }
+      ]
+    },
+    {
+      "code": "09575",
+      "name": "伊斯坦布尔大学",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard5.test.mjs",
+          "test": "09-a5 09575 伊斯坦布尔大学：检定成功取 1 个彰显的线索（每场游戏一次成功）"
+        }
+      ]
+    },
+    {
+      "code": "09576",
+      "name": "圣索菲亚",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard5.test.mjs",
+          "test": "09-a5 09576 圣索菲亚：研究标记行动与每标记 +3 隐藏值"
+        }
+      ]
+    },
+    {
+      "code": "09577",
+      "name": "大巴扎",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "章节 `LOCATION_RULES.bazaarDarkenedAlley.concealedFightEvadeBonus = 2`，但数据型条目 09577 没有 `locationRule`；引擎读 `registeredEntry(loc).locationRule`（`moves.js:456`/`dispatch.js:1255`）→ 隐匿迷你卡攻/躲 +2 不生效。"
+    },
+    {
+      "code": "09578",
+      "name": "大巴扎",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "章节 `LOCATION_RULES.bazaarPublicBaths.blankAssetsWithTrait = 'Weapon'`，条目无 `locationRule`，且全仓无引擎读点（`blankAssetsWithTrait` 仅 `describe()` 展示）→ 印刷规则不生效。"
+    },
+    {
+      "code": "09579",
+      "name": "大巴扎",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard5.test.mjs",
+          "test": "09-a5 09579 大理石喷泉：快速谈判取走异教徒 1 线索并把它送回阴影"
+        }
+      ]
+    },
+    {
+      "code": "09580",
+      "name": "大巴扎",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "`exposeAt` 用 `cultistEnemies().find(enemy => enemy.location === locationId)`；印刷「移到最近的异教徒」允许异教徒在其他连接地点：本地无教派时线索不动（`behavior.js:155-166`）。"
+    },
+    {
+      "code": "09581",
+      "name": "大巴扎",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷失败二选一：失去 1 行动 **或** 取消移动；`movement.js:394-398` 失败分支只调用 `locationLeaveFailed`，不进入目的地，behavior 的 `loseAction` 只扣行动不重试移动 → 两个选项实际都是取消移动。"
+    },
+    {
+      "code": "09582",
+      "name": "大巴扎",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "`scenarioApproximations` 披露 `enemyMoved` 钩子不带移动原因：实现对所有移动到本地点（含效果移动）的敌人都再结算猎手/巡逻，印刷只对经猎手/巡逻移动的敌人。"
+    },
+    {
+      "code": "09583",
+      "name": "大巴扎",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "`performSceneAction` 只筛 `cost ≤ successBy` 的[[守护]]/[[遗物]]并 `playCardFromHandFree` 免费打出；印刷「每超过 1 点使费用 -1（最低 0）」允许费用高于成功点数时折扣后付费，且不免费。"
+    }
+  ]
+}

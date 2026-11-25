@@ -1,0 +1,629 @@
+{
+  "schemaVersion": 1,
+  "unit": "11-a-2",
+  "profile": {
+    "id": "tdc-player-b-2026-11",
+    "scope": "沉没之城 11 段 tdcp 玩家卡（11045–11087）44 条目录记录。44 条全部通过五维验收。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 44,
+    "verified": 44,
+    "unverified": 0,
+    "unimplemented": 0,
+    "testsPassed": 175
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+      "sha256": "c91d87a07b11731203bc3fc16236a3781b4a59e957de300deae6ede9e66084d1"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
+      "sha256": "fcb9eb7eed8368236c75dc1f11c40b4cf6e30f4037467ee00aa43550da0c9dab"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+      "sha256": "ee09ded2dda84a7c4122ae9981232231b1c879768b22809bb5daafb33b15a074"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+      "sha256": "2ab49d19a48bb5d7cb4b26cacc1de2649ce63d80b34a4f890f47d79c3185cf13"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-investigators.test.mjs",
+      "sha256": "8caeff86348bfb9e398b57cdc2c1c54b648d563be121ca3effcd76358c9340d0"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-rules.test.mjs",
+      "sha256": "541471492f102ef04f00c249498d1f4cd93173e554068f3cf86c1e1c26991e7b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-primitives.test.mjs",
+      "sha256": "c152d8c4f1e738adc1b1f75ac78ddfaa26012a91ed060d4a7132987df99e397b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+      "sha256": "25466d3868f2e9af5f0b6a9846202b4c7c60d1fb54994b4b60dc69611e2b1abf"
+    }
+  ],
+  "entries": [
+    {
+      "code": "11045",
+      "name": "专业的直觉",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11045 is playable only for a revealed clue and discovers it remotely without spending an action"
+        }
+      ]
+    },
+    {
+      "code": "11046",
+      "name": "远古钟面",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11035 records research on its fourth charge and unlocks 11046, 11047 and 11048 only as its replacement"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11046 seals a failed test’s revealed token, pays once to keep it, then releases it at round end"
+        }
+      ]
+    },
+    {
+      "code": "11047",
+      "name": "远古钟面",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11035 records research on its fourth charge and unlocks 11046, 11047 and 11048 only as its replacement"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11047 rerolls the upgraded device’s fight test and deals the extra damage after success"
+        }
+      ]
+    },
+    {
+      "code": "11048",
+      "name": "远古钟面",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11035 records research on its fourth charge and unlocks 11046, 11047 and 11048 only as its replacement"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11048 spends one charge without spending an action and selects among an extra token per local enemy"
+        }
+      ]
+    },
+    {
+      "code": "11049",
+      "name": "安提基特拉机械",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11049 banks two additional actions until the owner’s next turn begins"
+        }
+      ]
+    },
+    {
+      "code": "11050",
+      "name": "鲁格P08手枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
+          "test": "11050 免费攻击消耗一枚弹药，装填费用为一个行动和一个资源"
+        }
+      ]
+    },
+    {
+      "code": "11051",
+      "name": "罗伯特·卡斯泰根",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
+          "test": "11051 弃置真实手枪后仍打开枪械响应，并可将攻击改指连接地点"
+        }
+      ]
+    },
+    {
+      "code": "11052",
+      "name": "虚晃一枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
+          "test": "11052 对原无警戒的直立敌人，失败时仍触发本次警戒攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
+          "test": "11052 把躲避失败边界提升为成功，保留交战，抽牌并横置来源"
+        }
+      ]
+    },
+    {
+      "code": "11053",
+      "name": "“宴会在哪儿？”",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
+          "test": "11053 合并查找遭遇牌库和弃牌堆，可选弃牌敌人并横置交战生成"
+        }
+      ]
+    },
+    {
+      "code": "11054",
+      "name": "“你见过更糟的……”",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
+          "test": "11054 连接地点受伤者自己的支付取消伤害与恐惧，事件拥有者不获得资源"
+        }
+      ]
+    },
+    {
+      "code": "11055",
+      "name": "闲人勿进",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
+          "test": "11055 将战斗加入躲避检定，达成成功差值后先伤害再移动非精英敌人"
+        }
+      ]
+    },
+    {
+      "code": "11056",
+      "name": "威吓",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
+          "test": "11056 成功谈判按剩余生命检定，可将非精英洗回或伤害精英"
+        }
+      ]
+    },
+    {
+      "code": "11057",
+      "name": "百发百中",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
+          "test": "11057 普通攻击不可投入，控制的枪械印刷能力发起时可以投入"
+        }
+      ]
+    },
+    {
+      "code": "11058",
+      "name": "二重身",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
+          "test": "11058 老剧本中敌人进入附属地点后，所有者可从不相连地点立即移动过去"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
+          "test": "11058 老剧本中远处敌人离开附属地点时，所属调查员回手并远程躲避它"
+        }
+      ]
+    },
+    {
+      "code": "11059",
+      "name": "黑道人脉",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
+          "test": "11059 在非法支援被弃置时盖放该卡，随后支付资源抽回原牌"
+        }
+      ]
+    },
+    {
+      "code": "11060",
+      "name": "变幻莫测",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
+          "test": "11060 与敌人交战后释放封印按帷幕攻击，揭示新地点后重新封印"
+        }
+      ]
+    },
+    {
+      "code": "11061",
+      "name": "“吃我一招！”",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
+          "test": "11061 押注费用与成功差值门槛，刚好成功无回报，超过一点获双倍资源"
+        }
+      ]
+    },
+    {
+      "code": "11062",
+      "name": "罗伯特·卡斯泰根",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
+          "test": "11062 展示手枪的攻击无费用，之后可弃掉抽牌或支付费用装备"
+        }
+      ]
+    },
+    {
+      "code": "11063",
+      "name": "“你见过更糟的……”",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
+          "test": "11063 连接地点受伤者转交资源，取消对应数量的伤害与恐惧"
+        }
+      ]
+    },
+    {
+      "code": "11064",
+      "name": "加特林机枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
+          "test": "11064 失败时只由所选攻击目标反击，且不分摊伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
+          "test": "11064 花费选择的弹药，以同地点敌人战斗总值检定并分摊伤害"
+        }
+      ]
+    },
+    {
+      "code": "11065",
+      "name": "透特之血",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11065 gains one offering for controlled doom and uses all offerings for a teammate action"
+        }
+      ]
+    },
+    {
+      "code": "11066",
+      "name": "沉睡者的吐息",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11066 uses willpower, pays one charge, and deals +2 only when the chosen face matches an ignored token"
+        }
+      ]
+    },
+    {
+      "code": "11067",
+      "name": "入梦者的眼睛",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11067 discovers the matching ignored token bonus in the same investigation"
+        }
+      ]
+    },
+    {
+      "code": "11068a",
+      "name": "大作",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+          "test": "11068a 在败退后接管牌组，替换签名与专属弱点，保持本局败退"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11068b adds two skill points only to a Spell check and draws a card on elder sign"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+          "test": "11068b 不能作为起始调查员，牌组锁定，再次败退时死亡"
+        }
+      ]
+    },
+    {
+      "code": "11068b",
+      "name": "失魂的人造人",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11068b adds two skill points only to a Spell check and draws a card on elder sign"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+          "test": "11068b 不能作为起始调查员，牌组锁定，再次败退时死亡"
+        }
+      ]
+    },
+    {
+      "code": "11069",
+      "name": "卡塔琳娜·索尔加",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11069 resolves the first revealed symbol and returns all ignored numeric tokens"
+        }
+      ]
+    },
+    {
+      "code": "11070",
+      "name": "谢罗塔法之符",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11038 and 11070 gain evidence from a real seal, then spends it to discover and damage an attacking Geist"
+        }
+      ]
+    },
+    {
+      "code": "11071",
+      "name": "幽灵护盾",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11071 protects an investigator, removes the owner’s last charge, and then discards itself after cancellation"
+        }
+      ]
+    },
+    {
+      "code": "11072",
+      "name": "毁灭低语",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11072 excludes weakness targets, defeats regular enemies, damages Elites and places doom on failure"
+        }
+      ]
+    },
+    {
+      "code": "11073",
+      "name": "加塔诺托亚之眼",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11073 reveals only the actual encounter top to each observer while the asset is in play"
+        }
+      ]
+    },
+    {
+      "code": "11074",
+      "name": "剑杖",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11074 enters fast, damages and fights without a cost, then pays an action to evade"
+        }
+      ]
+    },
+    {
+      "code": "11075",
+      "name": "灵魂回响",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11075 repeats the same spell at the attached location, pays both charges and only one action"
+        }
+      ]
+    },
+    {
+      "code": "11076",
+      "name": "变形",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11076 changes the printed front while preserving harm capacities, campaign identity and play limit"
+        }
+      ]
+    },
+    {
+      "code": "11077",
+      "name": "如痴如醉",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11077 allows only one committed copy and distributes up to three uses across local assets"
+        }
+      ]
+    },
+    {
+      "code": "11078",
+      "name": "失落的阿尔卡那",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11078 funds an empty Spell and restores a charge when the last local clue is discovered"
+        }
+      ]
+    },
+    {
+      "code": "11079",
+      "name": "升腾",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11079 draws both investigators’ cards for its player, gives the first surge and skips the next draw step"
+        }
+      ]
+    },
+    {
+      "code": "11080",
+      "name": "惊悚烙刻",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+          "test": "11080 offers the branded Spell before drawing a starting hand and charges its regular price"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+          "test": "11080 支付特殊经验费用后记下法术名，拒绝再次购买同名法术"
+        }
+      ]
+    },
+    {
+      "code": "11081",
+      "name": "锚链",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11081 从手牌付费躲避，成功可额外弃牌阻止敌人补给重整"
+        }
+      ]
+    },
+    {
+      "code": "11082",
+      "name": "手钩",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+          "test": "11082 从手牌发动时只弃掉选择的副本，并且不支付印刷资源费用"
+        }
+      ]
+    },
+    {
+      "code": "11083",
+      "name": "劳伦斯·卡莱尔",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11083 增加智识，并在自己的回合弃手牌后横置获得资源"
+        }
+      ]
+    },
+    {
+      "code": "11084",
+      "name": "航海图",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11084 在场时横置而不离场，弃 1 张手牌使本次调查多发现一个线索"
+        }
+      ]
+    },
+    {
+      "code": "11085",
+      "name": "亵渎偶像",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11085 只能从弃牌堆打出，被击败后单张洗回牌库"
+        }
+      ]
+    },
+    {
+      "code": "11086",
+      "name": "“接着！”",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11086 的额外费用检查手部道具，并区分手牌与场上支援"
+        }
+      ]
+    },
+    {
+      "code": "11087",
+      "name": "非常手段",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11087 正常调查，从场上弃置的费用让成功调查一次发现两个线索"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,217 @@
+{
+  "unit": "07-a-3",
+  "generatedAt": "2026-11-24",
+  "scope": {
+    "cards": 44,
+    "selector": "pack==='itd' && 07108<=code<=07151 && effectStatus==='unverified'",
+    "packs": {
+      "itd": 44
+    }
+  },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "07108",
+    "07109",
+    "07110",
+    "07111",
+    "07112",
+    "07113",
+    "07114",
+    "07115",
+    "07116",
+    "07117",
+    "07118",
+    "07119",
+    "07120",
+    "07121",
+    "07122",
+    "07123",
+    "07124",
+    "07125",
+    "07126",
+    "07127",
+    "07128",
+    "07139",
+    "07142",
+    "07143",
+    "07144",
+    "07145",
+    "07146",
+    "07147",
+    "07148",
+    "07149",
+    "07150",
+    "07151"
+  ],
+  "failedCodes": [
+    {
+      "code": "07129",
+      "dimension": "primitives",
+      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。",
+      "evidence": "07129.js:11-26；07130.js:5-14；07131.js:10-18；07132.js:10-18；07133.js:13-25；07134.js:11-19；07135.js:12-23；07136.js:12-25；07137.js:8-32；07138.js:10-23；07140.js:10-22；07141.js:24-31（各自的 parley+test+barriers.removeConnected 块）"
+    },
+    {
+      "code": "07130",
+      "dimension": "primitives",
+      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。",
+      "evidence": "07129.js:11-26；07130.js:5-14；07131.js:10-18；07132.js:10-18；07133.js:13-25；07134.js:11-19；07135.js:12-23；07136.js:12-25；07137.js:8-32；07138.js:10-23；07140.js:10-22；07141.js:24-31（各自的 parley+test+barriers.removeConnected 块）"
+    },
+    {
+      "code": "07131",
+      "dimension": "primitives",
+      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。",
+      "evidence": "07129.js:11-26；07130.js:5-14；07131.js:10-18；07132.js:10-18；07133.js:13-25；07134.js:11-19；07135.js:12-23；07136.js:12-25；07137.js:8-32；07138.js:10-23；07140.js:10-22；07141.js:24-31（各自的 parley+test+barriers.removeConnected 块）"
+    },
+    {
+      "code": "07132",
+      "dimension": "primitives",
+      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。",
+      "evidence": "07129.js:11-26；07130.js:5-14；07131.js:10-18；07132.js:10-18；07133.js:13-25；07134.js:11-19；07135.js:12-23；07136.js:12-25；07137.js:8-32；07138.js:10-23；07140.js:10-22；07141.js:24-31（各自的 parley+test+barriers.removeConnected 块）"
+    },
+    {
+      "code": "07133",
+      "dimension": "primitives",
+      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。",
+      "evidence": "07129.js:11-26；07130.js:5-14；07131.js:10-18；07132.js:10-18；07133.js:13-25；07134.js:11-19；07135.js:12-23；07136.js:12-25；07137.js:8-32；07138.js:10-23；07140.js:10-22；07141.js:24-31（各自的 parley+test+barriers.removeConnected 块）"
+    },
+    {
+      "code": "07134",
+      "dimension": "primitives",
+      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。",
+      "evidence": "07129.js:11-26；07130.js:5-14；07131.js:10-18；07132.js:10-18；07133.js:13-25；07134.js:11-19；07135.js:12-23；07136.js:12-25；07137.js:8-32；07138.js:10-23；07140.js:10-22；07141.js:24-31（各自的 parley+test+barriers.removeConnected 块）"
+    },
+    {
+      "code": "07135",
+      "dimension": "primitives",
+      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。",
+      "evidence": "07129.js:11-26；07130.js:5-14；07131.js:10-18；07132.js:10-18；07133.js:13-25；07134.js:11-19；07135.js:12-23；07136.js:12-25；07137.js:8-32；07138.js:10-23；07140.js:10-22；07141.js:24-31（各自的 parley+test+barriers.removeConnected 块）"
+    },
+    {
+      "code": "07136",
+      "dimension": "primitives",
+      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。",
+      "evidence": "07129.js:11-26；07130.js:5-14；07131.js:10-18；07132.js:10-18；07133.js:13-25；07134.js:11-19；07135.js:12-23；07136.js:12-25；07137.js:8-32；07138.js:10-23；07140.js:10-22；07141.js:24-31（各自的 parley+test+barriers.removeConnected 块）"
+    },
+    {
+      "code": "07137",
+      "dimension": "primitives",
+      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。",
+      "evidence": "07129.js:11-26；07130.js:5-14；07131.js:10-18；07132.js:10-18；07133.js:13-25；07134.js:11-19；07135.js:12-23；07136.js:12-25；07137.js:8-32；07138.js:10-23；07140.js:10-22；07141.js:24-31（各自的 parley+test+barriers.removeConnected 块）"
+    },
+    {
+      "code": "07138",
+      "dimension": "primitives",
+      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。",
+      "evidence": "07129.js:11-26；07130.js:5-14；07131.js:10-18；07132.js:10-18；07133.js:13-25；07134.js:11-19；07135.js:12-23；07136.js:12-25；07137.js:8-32；07138.js:10-23；07140.js:10-22；07141.js:24-31（各自的 parley+test+barriers.removeConnected 块）"
+    },
+    {
+      "code": "07140",
+      "dimension": "primitives",
+      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。",
+      "evidence": "07129.js:11-26；07130.js:5-14；07131.js:10-18；07132.js:10-18；07133.js:13-25；07134.js:11-19；07135.js:12-23；07136.js:12-25；07137.js:8-32；07138.js:10-23；07140.js:10-22；07141.js:24-31（各自的 parley+test+barriers.removeConnected 块）"
+    },
+    {
+      "code": "07141",
+      "dimension": "primitives",
+      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。",
+      "evidence": "07129.js:11-26；07130.js:5-14；07131.js:10-18；07132.js:10-18；07133.js:13-25；07134.js:11-19；07135.js:12-23；07136.js:12-25；07137.js:8-32；07138.js:10-23；07140.js:10-22；07141.js:24-31（各自的 parley+test+barriers.removeConnected 块）"
+    }
+  ],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "pass",
+    "primitives": "fail",
+    "interaction": "pass",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/acceptance-07-a-shard3.test.mjs",
+      "test": "7 个新增用例：07117/07118/07119/07126/07141/07148 + 07123 场景参考卡（真实 legalMoves/真实引擎状态）",
+      "codes": [
+        "07117",
+        "07118",
+        "07119",
+        "07123",
+        "07126",
+        "07141",
+        "07148"
+      ],
+      "result": "tests 7 / pass 7 / fail 0"
+    },
+    {
+      "file": "tests/tic-player-guardian-seeker + tic-player-rogue-mystic + tic-player-survivor-neutral + tic-scenarios-early + tic-flooded-agendas + tic-scenario-inTooDeep + tic-scenario-reference-final",
+      "test": "既有逐卡真实用例（含 H8 07125 / H10 07120 / H7 07128 回归）本轮重跑",
+      "codes": [
+        "07108",
+        "07109",
+        "07110",
+        "07111",
+        "07112",
+        "07113",
+        "07114",
+        "07115",
+        "07116",
+        "07117",
+        "07118",
+        "07120",
+        "07121",
+        "07122",
+        "07123",
+        "07124",
+        "07125",
+        "07126",
+        "07127",
+        "07128",
+        "07139",
+        "07142",
+        "07143",
+        "07144",
+        "07145",
+        "07146",
+        "07147",
+        "07148",
+        "07149",
+        "07150",
+        "07151"
+      ],
+      "result": "tests 406 / pass 406 / fail 0"
+    },
+    {
+      "file": "tests/tde? no",
+      "test": "TIC 浏览器证据（既有）：tic-chapters-acceptance.desktop/mobile 32 例 + tic-rules 6 例；本轮未重跑（会写 audit/tic-* 与 artifacts/tde 之外目录）",
+      "codes": [
+        "07124",
+        "07125",
+        "07126",
+        "07127",
+        "07128",
+        "07129",
+        "07141",
+        "07150",
+        "07151"
+      ],
+      "note": "交互面板均为既有（淹没/钥匙/谈判/闪回），无新增面板。"
+    }
+  ],
+  "commands": [
+    {
+      "command": "node --test tests/acceptance-07-a-shard3.test.mjs",
+      "result": "tests 7 / pass 7 / fail 0"
+    },
+    {
+      "command": "node --test tests/tic-player-guardian-seeker.test.mjs tests/tic-player-rogue-mystic.test.mjs tests/tic-player-survivor-neutral.test.mjs tests/tic-scenarios-early.test.mjs tests/tic-flooded-agendas.test.mjs tests/tic-scenario-inTooDeep.test.mjs tests/tic-scenario-reference-final.test.mjs",
+      "result": "tests 406 / pass 406 / fail 0"
+    },
+    {
+      "command": "npm run cards:check && npm run cards:encounter-check && npm run audit:entries",
+      "result": "通过（R1/R2/R3 本分片 0 条）"
+    },
+    {
+      "command": "npm run docs:check",
+      "result": "通过"
+    }
+  ],
+  "notes": "五维：实现完整性 pass（44 张印刷子句均有本地读点；H7 07128 全员撤退、H8 07125 暴民+随机未揭示钥匙、H10 07120 自动成功、07148 失败东移+钥匙放置均在当前 HEAD 成立）；原语 fail（12 张地点同一「谈判移除屏障」模板逐卡手写，另有 5 份「揭示随机放钥匙」重复）；交互 pass（无新增面板：淹没/钥匙/谈判/闪回/屏障均复用既有 token）；证据 pass（44/44 卡号标题真实执行：新增 7 例 + 既有 7 文件 406 例本轮重跑）；合规 pass。分片 verdict=partial：32 张可切 verified，12 张保持 unverified（只需上收共享工厂，行为本身已实测正确）。线索复核：audit/tic-all-card-acceptance.json 对 44 张均 verified，但其战役卡证据为文件级（tic-campaign-card-acceptance.test.mjs 只比对卡文/definition）；tic-scenario-inTooDeep.test.mjs 本轮重跑通过；审计还确认 07124–07127 已使用 floodedTurnEndAgenda 共享工厂、07130/07133/07135/07139 已用 keyedFlashbackAbility，说明「同句一次」在本章其余位置已执行，唯独 12 张 barrier-parley 未上收。上一轮顺带完成的 TDE 观察：无。"
+}

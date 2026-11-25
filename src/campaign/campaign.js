@@ -610,6 +610,7 @@ export function campaignView(campaign, observerSeat) {
     record.deckSize = record.deck.length
     if (record.seat !== observerSeat) {
       delete record.deck
+      delete record.arkhamDbDecklistId
       delete record.purchases
       delete record.removedCards
       delete record.draftMode
@@ -621,6 +622,7 @@ export function campaignView(campaign, observerSeat) {
     for (const record of result.investigators) {
       if (record.seat !== observerSeat) {
         delete record.deck
+        delete record.arkhamDbDecklistId
         delete record.purchases
       }
     }

@@ -1,0 +1,509 @@
+{
+  "schemaVersion": 1,
+  "unit": "10-a-2",
+  "profile": {
+    "id": "fhv-player-b-2026-11",
+    "scope": "铁杉谷盛宴 10 段 fhvp 玩家卡（10034–10068）35 条目录记录。26 条通过五维验收；9 条近似/缺口暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 35,
+    "verified": 26,
+    "unverified": 9,
+    "unimplemented": 0,
+    "testsPassed": 156
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-1.test.mjs",
+      "sha256": "0133ea21562f6da12f3881db64e5453fa4b13b36d5f0bda45c706ac8ff24aa6e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-2.test.mjs",
+      "sha256": "4f3dd2780e3c00cae1c549d711d11a89ec2740df43e8f1826e58b643081b1ea4"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-3.test.mjs",
+      "sha256": "087e3c842cdbec4acafec77595994bf7855cfdd9a880ce35ae7b55d0666be046"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
+      "sha256": "4f3832d8757b6538ddf9347a908d364504970331c542d295eef7af8af8441038"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-5.test.mjs",
+      "sha256": "e3c9544d66843da656e9432545760e4a04b5072dd1298a6e202490bae3e2e503"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-6.test.mjs",
+      "sha256": "f24cc9ffb9570160ed5d46758ea2ae4f93933b06862dc11096ee689b72715229"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-rules.test.mjs",
+      "sha256": "0923adf4ff0b6d5b8e50ddf8bae63071dcae1f05ad9421ff0760e02715e615b7"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-primitives.test.mjs",
+      "sha256": "afc355d82436df1d0c2e58d43ac1e982d1efb0d068edad72b0c74da5d8a89412"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-investigator-10001.test.mjs",
+      "sha256": "0980a3ffb136e57cc42b369d7fd1727bce544d8d150f57b49c96b8bfcaa03526"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-investigator-10004.test.mjs",
+      "sha256": "39b44697645f0bace9739ac5554f1bdaddff50d95f21e101e682c6817573be28"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-investigator-10009.test.mjs",
+      "sha256": "1dc7e43c493b7e8c56bd738df7e754a0cabf030b457f2e0a85d3ad9b3147a6d6"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-investigator-10012.test.mjs",
+      "sha256": "0132547d7f71987c0ffa1ea4639d2516627219bedec5f80e9a2a8109efaa7baf"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-investigator-10015.test.mjs",
+      "sha256": "7f797ffb5d58a0b3f5003838ec7c921fd865793182399406a6b6f7725dcc36d2"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-investigator-signatures.test.mjs",
+      "sha256": "c778ecb63528b6ea68cf26764f4cb9704b79980c6d76dc296e0cfcdf6936f1d6"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-interactions.test.mjs",
+      "sha256": "ec0fbb583bc1bb4240c8f184d861ed9761e33ec930a985c4e902e465041d693a"
+    }
+  ],
+  "entries": [
+    {
+      "code": "10034",
+      "name": "蒙福之刃",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-2.test.mjs",
+          "test": "P6 10034 蒙福之刃：战斗 +2、成功 +1 伤害，揭示的祝福返回混乱袋，可横置预加 2 祝福"
+        }
+      ]
+    },
+    {
+      "code": "10035",
+      "name": "瓦卢西亚之瞳",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「[fast] 检索绑定卡并把幽嘶之刃与瓦卢西亚之瞳**交换**（移动所有充能）」未实现为就地交换：实现让刀入场后把瞳 returnAssetToHand（瞳回到手牌，可再次打出/再次触发入场与交换），而绑定卡离场应放在一边（场外），且交换不应重新走打出/入场流程。充能迁移正确，但交换语义与绑定卡去向不符（条目 simplified+note，primitive-requests/10035.json）。"
+    },
+    {
+      "code": "10036",
+      "name": "幽嘶之刃",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面「[fast] 检索绑定卡并把瓦卢西亚之瞳与幽嘶之刃交换（弃掉所有充能）」要求绑定卡就地交换；实现要求瞳**已在手牌**才可交换（`if (!(inv.hand||[]).includes(EYES)) return`），绑定卡通常在场外集合而非手牌，因此该能力在正常状态下不可用；同时刀返回手牌而非场外（simplified+note，primitive-requests/10036.json）。"
+    },
+    {
+      "code": "10037",
+      "name": "旋风连击",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-2.test.mjs",
+          "test": "P6 10037 旋风连击：Double 额外花费 1 行动，用近战支援连续攻击并结束回合"
+        }
+      ]
+    },
+    {
+      "code": "10038",
+      "name": "奇迹祝愿",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-2.test.mjs",
+          "test": "P6 10038 奇迹祝愿：祝福揭示后快速打出，转瞬为神入场并按揭示数放置祝愿"
+        }
+      ]
+    },
+    {
+      "code": "10039",
+      "name": "转瞬为神",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面反应「结算该调查员的 [elder_sign] 效果（在所有其它已揭示标记之外）」应完整结算旧印能力（含文字效果）；实现只把 investigator.elderSign 的**数值修正**并入本次检定，旧印附带的文字效果（抽牌/治疗/发现线索等，多数调查员旧印都有）完全不结算（simplified+note，primitive-requests/10039.json）。"
+    },
+    {
+      "code": "10040",
+      "name": "化学品套装",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-3.test.mjs",
+          "test": "P6 10040 化学品套装：横置调查，成功差值 2 抽 1 张；失败差值 2 弃掉本卡"
+        }
+      ]
+    },
+    {
+      "code": "10041",
+      "name": "查尔斯·威斯特三世博士",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-3.test.mjs",
+          "test": "P6 10041 查尔斯·威斯特三世博士：额外手槽只放[[工具]]；成功调查差值 1/3 后横置造成 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "10042",
+      "name": "显微镜",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-3.test.mjs",
+          "test": "P6 10042 显微镜：敌人被击败后放证据；[action][action] 调查按证据 +智识，成功后花证据换额外线索"
+        }
+      ]
+    },
+    {
+      "code": "10043",
+      "name": "鼠面具",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面「在你**揭示一个地点**或把一个新地点放入场后补满 1 个贡品」的『揭示地点』触发未实现：条目只挂 locationPlaced（新地点入场），已存在但未揭示地点的揭示（locationRevealed）不补贡品；条目 note 自认缺描述子窗口读点（primitive-requests/10043.json）。"
+    },
+    {
+      "code": "10044",
+      "name": "饥饿霉菌",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-3.test.mjs",
+          "test": "P6 10044 饥饿霉菌：查找绑定卡加入手牌；3 个生长换成资源并记录「识别了新物种」"
+        }
+      ]
+    },
+    {
+      "code": "10045",
+      "name": "诡异疯长",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-3.test.mjs",
+          "test": "P6 10045 诡异疯长：成功后按差值在饥饿霉菌上放生长并放在场外，失败返回手牌"
+        }
+      ]
+    },
+    {
+      "code": "10046",
+      "name": "控制变量",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-3.test.mjs",
+          "test": "P6 10046 控制变量：技能检定揭示[诅咒]标记后快速打出，发现 1 个线索"
+        }
+      ]
+    },
+    {
+      "code": "10047",
+      "name": "冲刺实验",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-3.test.mjs",
+          "test": "P6 10047 冲刺实验：额外花 1 行动，按隐藏值升序调查并在地点调查失败后停止"
+        }
+      ]
+    },
+    {
+      "code": "10048",
+      "name": "刨根问底",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-3.test.mjs",
+          "test": "P6 10048 刨根问底：额外花 1 行动，同地点调查员共抽 5 张（由你分配）"
+        }
+      ]
+    },
+    {
+      "code": "10049",
+      "name": "“用书砸它！”",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
+          "test": "P6 10049 用书砸它：成功后也可以改为自动躲避被攻击的敌人"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
+          "test": "P6 10049 用书砸它：检定失败时既不躲避也不结算书籍能力"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
+          "test": "P6 10049 用书砸它：用[[书籍]]攻击得到 +X[战斗]（X=印刷费用），成功后结算书籍上的 [action] 能力"
+        }
+      ]
+    },
+    {
+      "code": "10050",
+      "name": "原型惊变",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面「所附属敌人获得：庞大、不能移动；[reaction] 你躲避此敌人后，在其地点发现 1 线索（每轮一次）」三条全部未实现：实现只完成「智力替代的躲避 + 成功后把原型惊变附属到非精英敌人」，没有给敌人加 massive、没有禁止移动的写点、附属卡也不是能力窗口来源（玩家卡附敌不在 descriptorSources 敌人分支）。full-scan 亦标 high/D1。"
+    },
+    {
+      "code": "10051",
+      "name": "资金充裕",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
+          "test": "P6 10051 资金充裕：控制[[科学]]/[[工具]]支援时获得[wild]，3 个以上改为 2 个[wild]"
+        }
+      ]
+    },
+    {
+      "code": "10052",
+      "name": "加布里埃尔·卡里洛",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
+          "test": "P6 10052 加布里埃尔·卡里洛：回合开始加入 1 个[curse]并抽 1 张，+1[智力]"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
+          "test": "P6 10052 加布里埃尔·卡里洛：混乱袋已满 10 个[curse]时不提供反应"
+        }
+      ]
+    },
+    {
+      "code": "10053",
+      "name": "手法稳当",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
+          "test": "P6 10053 手法稳当：也可以选择成功点数少 1 点（治愈不触发）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
+          "test": "P6 10053 手法稳当：检定将要成功时横置，成功点数多 1 点，正好差值 2 时治愈 1 点恐惧"
+        }
+      ]
+    },
+    {
+      "code": "10054",
+      "name": "精准调配",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面唯一能力「所附属支援横置后横置精准调配：重整该支援」对大多数宿主不可触发：当前 HEAD 引擎只在旧式 ability-exec cost.exhaust 与 api.exhaust 派发 assetExhausted 窗口；描述子 cost.exhaust（ability-rules.js#payAbilityCost 只写 source.exhausted）不派发，而多数支援的 [action] 横置费用是描述子写法，因此这些宿主横置后精准调配无提示（full-scan high/D2；条目 note 与 primitive-requests/10054.json）。"
+    },
+    {
+      "code": "10055",
+      "name": "绝密手段",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
+          "test": "P6 10055 绝密手段：检定失败时按失败差值加入[curse]"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
+          "test": "P6 10055 绝密手段：检定结束后按成功差值在混乱袋加入[curse]"
+        }
+      ]
+    },
+    {
+      "code": "10056",
+      "name": "棱相眼镜",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
+          "test": "P6 10056 棱相眼镜：没有揭示[curse]时不提供额外线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
+          "test": "P6 10056 棱相眼镜：行动费用加入[curse]，调查 +2；揭示了[curse]时横置并额外发现 1 个线索"
+        }
+      ]
+    },
+    {
+      "code": "10057",
+      "name": "云山雾罩",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
+          "test": "P6 10057 云山雾罩：智识(X=敌人躲避值)检定成功，发现 2 线索并自动躲避非精英敌人（下个补给阶段不重整）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
+          "test": "P6 10057 云山雾罩：精英敌人仍发现线索，但不会被自动躲避"
+        }
+      ]
+    },
+    {
+      "code": "10058",
+      "name": "显微镜",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
+          "test": "P6 10058 显微镜：[action][action] 调查每证据 +2[智力]（最多 +6），成功后花证据额外发现线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
+          "test": "P6 10058 显微镜：不在你所在地点的敌人被躲避时不放置证据"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
+          "test": "P6 10058 显微镜：你所在地点的敌人被击败后放置 1 资源作为证据"
+        }
+      ]
+    },
+    {
+      "code": "10059",
+      "name": "饥饿霉菌",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面取消条件用「该调查员所在地点的**隐藏值**（有效值）」与成长数比较；实现用 location.shroud + shroudMod 直接计算，地点附属/章节钩子给的**有效隐藏值**不参与，因此在隐藏值被修正的场景下取消触发判定会错（条目 simplified+note，primitive-requests/10059.json）。"
+    },
+    {
+      "code": "10060",
+      "name": "饥饿霉菌",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-5.test.mjs",
+          "test": "P6 10060 饥饿霉菌 剩余生命值不超过生长数的非精英敌人被击败并清空生长"
+        }
+      ]
+    },
+    {
+      "code": "10061",
+      "name": "饥饿霉菌",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-5.test.mjs",
+          "test": "P6 10061 饥饿霉菌 移除全部生长：治愈自身等量伤恐，或把同地点调查员的伤恐移上来"
+        }
+      ]
+    },
+    {
+      "code": "10062",
+      "name": "“咪咪”比安卡",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-5.test.mjs",
+          "test": "P6 10062 “咪咪”比安卡 借出 X 资源并检定[敏捷](X)；失败记欠款、生成敌人并移出游戏"
+        }
+      ]
+    },
+    {
+      "code": "10063",
+      "name": "“咪咪”比安卡",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "敌人弱点面「强制 - 离场时洗入你的牌库」只实现了「被击败」路径（enemyWeakness.shuffleIntoDeckOnDefeat）；被弃置/移出游戏/放逐等其它离场路径没有敌人离场窗口，不会洗回牌库（simplified+note，primitive-requests/10063.json）。"
+    },
+    {
+      "code": "10064",
+      "name": "敲诈文件",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-5.test.mjs",
+          "test": "P6 10064 敲诈文件 谈判检定[意志](印刷生命值)；成功解除交战并获得冷漠直到本轮结束"
+        }
+      ]
+    },
+    {
+      "code": "10065",
+      "name": "不列颠斗牛犬左轮手枪",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面反应「你与敌人谈判时技能检定失败后：把手牌中的不列颠斗牛犬左轮手枪放置入场」的触发判定不完整：skillTestFail 窗口 context 不带 actionKind，实现只能读 state.skillTest.actionKind==='parley'；由 played 描述子 countsAs:'parley' 发起的谈判检定（如 09052 存在之谜）不写该字段，反应不会触发（simplified+note，primitive-requests/10065.json）。"
+    },
+    {
+      "code": "10066",
+      "name": "假证",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-5.test.mjs",
+          "test": "P6 10066 假证 谈判成功发现线索并放置疑点（难度随之 +1）；失败让所选敌人攻击"
+        }
+      ]
+    },
+    {
+      "code": "10067",
+      "name": "狐面具",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-5.test.mjs",
+          "test": "P6 10067 狐面具 每位调查员限 1 张[[面具]]；花 1 贡品本次检定 +2；离开有敌人的地点补 1 贡品"
+        }
+      ]
+    },
+    {
+      "code": "10068",
+      "name": "贝壳护符",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-5.test.mjs",
+          "test": "P6 10068 贝壳护符 横置加入 1-3 个[诅咒]标记：获得 1 资源，每加入 1 个再获得 1 资源"
+        }
+      ]
+    }
+  ]
+}

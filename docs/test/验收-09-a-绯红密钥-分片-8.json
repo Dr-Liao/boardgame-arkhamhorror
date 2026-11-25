@@ -1,0 +1,77 @@
+{
+  "unit": "09-a-8",
+  "generatedAt": "2026-11-25",
+  "scope": { "cards": 45, "selector": "pack=tskc && range 09662-09695", "range": "09662-09695" },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "09662", "09663", "09664", "09665", "09666", "09667", "09668", "09670", "09671", "09672", "09673",
+    "09674a", "09674b", "09674c", "09674d", "09675a", "09675b", "09675c", "09675d",
+    "09676a", "09676b", "09676c", "09676d", "09677", "09678", "09679a", "09679b", "09680a", "09680b",
+    "09681", "09685", "09686", "09688", "09690", "09691", "09692", "09693",
+    "09694", "09695"
+  ],
+  "failedCodes": [
+    { "code": "09669", "dimension": "implementation", "reason": "印刷「在场调查员维持阶段不获得资源」没有读点：引擎 phases.js:196 的维持供给只读调查员条目 upkeepResources；苦痛之影 behavior 无维持阶段/资源抑制钩子；条目只落 printedShroud/printedClues 元数据。", "evidence": "09669.js（数据型条目）；src/engine/phases.js:196；content/campaigns/theScarletKeys/scenarios/shadesOfSuffering/behavior.js（无 upkeep 钩子）；tests/acceptance-09-a-shard8.test.mjs 09669 用例" },
+    { "code": "09682", "dimension": "implementation", "reason": "「进入未揭示地点的额外费用（团队 1×人数线索）」时机错误：behavior.locationEntered 只写单一 flags.pendingEntryCost，真正扣款在下一移动的 locationLeft（注释自述），可被下一次进入覆盖/延后到离开。", "evidence": "withoutATrace/behavior.js:1156-1198；tests/acceptance-09-a-shard8.test.mjs 09682 用例" },
+    { "code": "09683", "dimension": "implementation", "reason": "同 09682 的入场费用时机问题；背面三选二已实现。", "evidence": "withoutATrace/behavior.js:1156-1198；09683 用例" },
+    { "code": "09684", "dimension": "implementation", "reason": "同 09682 的入场费用时机问题；另背面「已撤退者可立即推进幕 3b」是可选动作，agendaDrivenInsane 自动 finish，未询问玩家（近似未登记）。", "evidence": "withoutATrace/behavior.js:1444（agendaDrivenInsane）与 1156-1198；09684 用例" },
+    { "code": "09687", "dimension": "implementation", "reason": "「Forced - 若戴红手套的男子被击败：将他移出游戏」无实现：章节只有 assetEntered，没有 assetLeftPlay/被击败分支（引擎 assets.js:438 有 assetLeftPlay 读点）。", "evidence": "withoutATrace/behavior.js（无 assetLeftPlay）；src/engine/assets.js:438；09687 用例断言 behavior.assetLeftPlay === undefined" },
+    { "code": "09689", "dimension": "implementation", "reason": "「此地点每个域外敌人失去冷漠」无读点：+1 fight/evade 已实现（enemyStatModifier），但地点定义无 losesAloof 字段、behavior 只在幕 3 用自动交战近似（披露在 scenarioGaps）。", "evidence": "withoutATrace/definition.js 的 outsidersLair 定义；withoutATrace/behavior.js phaseBegan 近似；09689 用例" }
+  ],
+  "pendingCodes": [],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "fail",
+    "primitives": "fail",
+    "interaction": "pass",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/acceptance-09-a-shard8.test.mjs",
+      "test": "45 例：每条标题逐字面含一个卡号；通过卡断言条目/definition/behavior 真实执行路径，失败卡用可执行断言锁定缺口",
+      "codes": "09662-09695（45/45）",
+      "result": "node --test tests/acceptance-09-a-shard8.test.mjs → tests 45 / pass 45 / fail 0"
+    },
+    {
+      "file": "tests/tsk-scenario-shadesOfSuffering.test.mjs",
+      "test": "苦痛之影章节装配/布置/灵怪/朱三娘/影穑/幕密谋/结局",
+      "codes": ["09662", "09663", "09664", "09665", "09666", "09674a", "09679a", "09680a"],
+      "result": "本地重跑通过"
+    },
+    {
+      "file": "tests/tsk-scenario-withoutATrace.test.mjs",
+      "test": "不留痕迹异界牌库/阴影/空洞/幕议程",
+      "codes": ["09681", "09682", "09683", "09684", "09685", "09687", "09688", "09689", "09690"],
+      "result": "本地重跑通过"
+    },
+    {
+      "file": "tests/tsk-scenario-congressOfTheKeys.test.mjs",
+      "test": "钥匙议会审判/密钥/终局",
+      "codes": ["09694", "09695"],
+      "result": "本地重跑通过"
+    },
+    {
+      "file": "tests/tsk-all-cards.test.mjs",
+      "test": "TSK 逐卡账本与披露一致性",
+      "codes": [],
+      "result": "94/96；2 项失败为账本 disclosures 与条目 note 漂移（非本分片卡行为断言，受仓库账本状态影响）"
+    }
+  ],
+  "commands": [
+    { "command": "node --test tests/acceptance-09-a-shard8.test.mjs", "result": "tests 45 / pass 45 / fail 0" },
+    { "command": "node --test tests/tsk-scenario-shadesOfSuffering.test.mjs tests/tsk-scenario-withoutATrace.test.mjs tests/tsk-scenario-congressOfTheKeys.test.mjs tests/tsk-all-cards.test.mjs", "result": "tests 96 / pass 94 / fail 2（2 项为账本披露漂移，pre-existing；日志 artifacts/acceptance/09-a-8/relevant-tests.log）" },
+    { "command": "npm run cards:check", "result": "exit 0" },
+    { "command": "npm run cards:encounter-check", "result": "exit 0" },
+    { "command": "npm run audit:entries", "result": "exit 0；本范围无 R1/R2/R3" },
+    { "command": "node artifacts/acceptance/09-a-8/scan-titles.mjs", "result": "strict(title+boundary) title-evidence: 45/45" },
+    { "command": "node artifacts/acceptance/09-a-8/scan-wiring.mjs", "result": "63 声明键中仅 stableSide/printedShroud 两个元数据键无引擎读点（非规则子句）" }
+  ],
+  "ledgerDiscrepancy": {
+    "summary": "audit/tsk-all-card-acceptance.json：439 条总记录 verified 161 / simplified 120 / scenarioData 148 / scenarioReference 10，missing 0 / blocked 0 / gateComplete true / strictComplete false。",
+    "scopeStatus": "本分片 45 张：scenario-data 21 / simplified 16 / verified 6 / scenario-reference 2，没有 missing 或 blocked。",
+    "independentConclusion": "账本把「章节 behavior 承担」统一记为 scenario-data，本分片由此漏掉 6 张卡的未实现子句（09669 维持资源、09682–09684 入场费用时机、09687 红手套移出、09689 失去冷漠）。09681/09694 的 scenario-reference 口径正确。本轮不重签账本。"
+  },
+  "notes": "45 张：39 通过 / 6 失败 / 0 待定 → partial。五维：实现完整性 fail、原语设计 fail（维持阶段资源抑制、入场额外费用时机、实体 loses:aloof、assetLeftPlay 等读点缺失）、交互 pass（无新增面板，复用既有剧本书/选择面板，三章已生产注册；未重跑浏览器档）、证据 pass（新增 45 例、标题 45/45；既有 4 个 TSK 文件 94/96，2 项为账本披露漂移 pre-existing）、合规 pass（cards:check / cards:encounter-check / audit:entries exit 0）。已披露近似：灵怪剧情面内容层结算、影穑充能旗标与跨章 moveAndClash 只记录（congress gap）、单人阈值 Setup 改写、09668/09672 团队线索治疗按本地逐人结算（建议按规则书裁决「Heal 2」总量）、withoutATrace 的 Expose 行动/tskExposed/空洞移除/魔像近似/记时/启程节点、09686 红手套不可弃抽、congress 审判计票与额外敌军阶段近似。新增测试需主进程登记进 tests/suites.mjs fast tier 与 tests/node-suite.mjs。"
+}

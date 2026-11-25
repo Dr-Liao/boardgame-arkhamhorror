@@ -1,0 +1,553 @@
+{
+  "schemaVersion": 1,
+  "unit": "10-a-6",
+  "profile": {
+    "id": "fhv-campaign-b-2026-11",
+    "scope": "铁杉谷盛宴 10 段 fhvc 战役卡（10536b–10571）43 条目录记录。28 条通过五维验收；15 条敌人地点每人生/参考卡结构缺口暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 43,
+    "verified": 28,
+    "unverified": 15,
+    "unimplemented": 0,
+    "testsPassed": 175
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+      "sha256": "729b0387b145b862aca0b89aaaed2d3ecad756b5962b73399b06646779791705"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-scenario-writtenInRock.test.mjs",
+      "sha256": "afedff90bb726b383b01690e8b899e55a0057356c2df96a2d37b62558c2d6631"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-scenario-hemlockHouse.test.mjs",
+      "sha256": "9658af1ad930a9ecc19af2988e442b88157a0045b0efa84cce4f9135da579960"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-rules.test.mjs",
+      "sha256": "0923adf4ff0b6d5b8e50ddf8bae63071dcae1f05ad9421ff0760e02715e615b7"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-primitives.test.mjs",
+      "sha256": "da22963c70f087153a13118a390afdd9f784d0bba5df3ab4dd603a806579639b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-interactions.test.mjs",
+      "sha256": "ec0fbb583bc1bb4240c8f184d861ed9761e33ec930a985c4e902e465041d693a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-campaign-flow.test.mjs",
+      "sha256": "50cf5665e2323b0c038355ad4caaeeb59ca588ec53561b38fb9d704d79874780"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-campaign-engine.test.mjs",
+      "sha256": "de69a978fccc696624d8505c2a94009120201233633bac958f1616da6f8498c3"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-scenario-blockers.test.mjs",
+      "sha256": "65287e9f6d6460090afbb9798c8263fa7f86cf0aa261c6243282f0b77661792a"
+    }
+  ],
+  "entries": [
+    {
+      "code": "10536b",
+      "name": "活的盥洗室",
+      "type": "enemy_location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「活的盥洗室」生命值为每人生命（卡表 healthPerInvestigator），但敌人-地点生成用静态 face.health（engine/enemy-location.js#turnLocationIntoEnemy 只收整数），behavior/definition 无每人生命读点；条目 note 已披露该声明无读点。"
+    },
+    {
+      "code": "10537",
+      "name": "盥洗室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10537 地点：盥洗室：移动本地 1 线索到正下方（条目 flags 由 hemlockHouse behavior 消费）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10537b 活的房间（敌人-地点）：揭示强制效果 attacksHereIfClues 由 behavior 分派，但「+N 每人生命」无读点"
+        }
+      ]
+    },
+    {
+      "code": "10537b",
+      "name": "活的盥洗室",
+      "type": "enemy_location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「活的盥洗室」每人生命未按人数缩放（同上）。"
+    },
+    {
+      "code": "10538",
+      "name": "盥洗室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10538 地点：盥洗室：移动本地 1 线索到正下方（条目 flags 由 hemlockHouse behavior 消费）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10538b 活的房间（敌人-地点）：揭示强制效果 discardRandomPerClue 由 behavior 分派，但「+N 每人生命」无读点"
+        }
+      ]
+    },
+    {
+      "code": "10538b",
+      "name": "活的盥洗室",
+      "type": "enemy_location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「活的盥洗室」每人生命未按人数缩放（同上）。"
+    },
+    {
+      "code": "10539",
+      "name": "藏书室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10539 地点：藏书室：发现秘密通道（条目 flags 由 hemlockHouse behavior 消费）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10539b 活的房间（敌人-地点）：揭示强制效果 loseResources 由 behavior 分派，但「+N 每人生命」无读点"
+        }
+      ]
+    },
+    {
+      "code": "10539b",
+      "name": "活的藏书室",
+      "type": "enemy_location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「活的藏书室得到 +1[per_investigator] 生命」：条目 flags.healthPerInvestigatorBonus 无 behavior/引擎读点，生成用静态 health 4。"
+    },
+    {
+      "code": "10540",
+      "name": "藏书室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10540 地点：藏书室：发现秘密通道（条目 flags 由 hemlockHouse behavior 消费）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10540b 活的房间（敌人-地点）：揭示强制效果 horror 由 behavior 分派，但「+N 每人生命」无读点"
+        }
+      ]
+    },
+    {
+      "code": "10540b",
+      "name": "活的藏书室",
+      "type": "enemy_location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「活的藏书室得到 +1[per_investigator] 生命」无读点（同上）。"
+    },
+    {
+      "code": "10541",
+      "name": "客厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10541 地点：客厅：花 1 线索对连接地点敌人 2 伤 + 智力检定（条目 flags 由 hemlockHouse behavior 消费）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10541b 活的房间（敌人-地点）：揭示强制效果 attacksHere 由 behavior 分派，但「+N 每人生命」无读点"
+        }
+      ]
+    },
+    {
+      "code": "10541b",
+      "name": "活的客厅",
+      "type": "enemy_location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「活的客厅得到 +2[per_investigator] 生命」无读点（同上）。"
+    },
+    {
+      "code": "10542",
+      "name": "餐厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10542 地点：餐厅：发现最后线索后随机弃 1 张手牌（条目 flags 由 hemlockHouse behavior 消费）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10542b 活的房间（敌人-地点）：揭示强制效果 predationTest 由 behavior 分派，但「+N 每人生命」无读点"
+        }
+      ]
+    },
+    {
+      "code": "10542b",
+      "name": "活的餐厅",
+      "type": "enemy_location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「活的餐厅得到 +2[per_investigator] 生命」无读点（同上）。"
+    },
+    {
+      "code": "10543",
+      "name": "门厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10543 地点：门厅：[fast] 移动 + [action] 撤退（条目 flags 由 hemlockHouse behavior 消费）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10543b 活的房间（敌人-地点）：揭示强制效果 attacksHere 由 behavior 分派，但「+N 每人生命」无读点"
+        }
+      ]
+    },
+    {
+      "code": "10543b",
+      "name": "活的门厅",
+      "type": "enemy_location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「活的门厅」每人生命未按人数缩放（同上）。"
+    },
+    {
+      "code": "10544",
+      "name": "紧锢孽种",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「紧锢孽种得到 +X 生命，X 为其当前层数（最少 +1）」与「（黑夜）反击」：flags.floorHealthBonus / nightRetaliate 无任何 behavior/引擎读点（仅猎手由卡文解析、基础反击由敌人定义生效）。"
+    },
+    {
+      "code": "10545",
+      "name": "墙外奇物",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10545 墙外奇物：显现检定成功后三条分支由 behavior.outOfTheWallsFailure 结算"
+        }
+      ]
+    },
+    {
+      "code": "10546",
+      "name": "拖离正道",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10546 拖离正道：无敌人-地点时获得涌动，否则战斗(4)失败事件结算"
+        }
+      ]
+    },
+    {
+      "code": "10547",
+      "name": "失形地窖",
+      "type": "enemy_location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「失形地窖」生命值为每人生命（卡表 healthPerInvestigator:true），placeCellar 使用 CELLAR_ENEMY_FACE.health=5 静态值，无每人生命读点。"
+    },
+    {
+      "code": "10548",
+      "name": "小西尔维",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "小西尔维两张 [reaction]（从手牌/牌库被弃时打出；横置改为放回牌库顶）的 flags.playWhenDiscarded / exhaustToSaveDiscard 无任何读点（条目 note 称由引擎弃牌窗口覆盖，但当前无消费方）。"
+    },
+    {
+      "code": "10549",
+      "name": "寂静荒野",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "剧本参考卡没有单卡条目文件（同战役 fateOfTheVale 的 10651/10661 均建了 scenario 条目），标记表/失败追加只写在内容层 chaos/behavior，无 scenarioRule 条目读点，违反一卡一文件与声明即接线，无法逐卡入账。"
+    },
+    {
+      "code": "10550",
+      "name": "不安的宁静",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10550 议程：毁灭放置时揭示标记并可能生成族群虫后（doomPlaced 读点）"
+        }
+      ]
+    },
+    {
+      "code": "10551",
+      "name": "荒芜(版本一)",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10551 议程：毁灭放置时揭示标记并可能生成族群虫后（doomPlaced 读点）"
+        }
+      ]
+    },
+    {
+      "code": "10552",
+      "name": "荒芜(版本二)",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「每个[[昆虫]]敌人失去巡逻」：条目 flags.insectsLosePatrol 无 behavior/引擎读点（仅 definition 声明；巡逻仍按静态目标移动；失去冷漠/获得猎手已接线）。"
+    },
+    {
+      "code": "10553",
+      "name": "失落的遗产",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10553 幕：目标与背面由 definition/behavior 承接（warrensBack）"
+        }
+      ]
+    },
+    {
+      "code": "10554",
+      "name": "搜寻荒野",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10554 幕：目标与背面由 definition/behavior 承接（laidToRest）"
+        }
+      ]
+    },
+    {
+      "code": "10555",
+      "name": "水晶果园",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10555 地点：水晶果园：团队付线索把水晶残骸加入胜利区（behavior 读点 crystalGrove）"
+        }
+      ]
+    },
+    {
+      "code": "10556",
+      "name": "珀尔庄园废墟",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10556 地点：珀尔庄园废墟：撤退并把受控残骸加入胜利区（behavior 读点 resignRemains）"
+        }
+      ]
+    },
+    {
+      "code": "10557",
+      "name": "惨白斜坡",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10557 地点：惨白斜坡：揭示时敏捷(4)失败 2 伤（behavior 读点 revealTest）"
+        }
+      ]
+    },
+    {
+      "code": "10558",
+      "name": "盐厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10558 洞穴地点：法典/揭示入场与暗堆读点（saltChamber）"
+        }
+      ]
+    },
+    {
+      "code": "10559",
+      "name": "幼虫隧道",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10559 幼虫隧道：成功躲避后的暗堆抽取以幕 2 暗堆行动覆盖（条目披露近似）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10559 洞穴地点：法典/揭示入场与暗堆读点（larvalTunnel）"
+        }
+      ]
+    },
+    {
+      "code": "10560",
+      "name": "水晶温床",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「你在水晶温床结束自己回合后，受到 1 点直接恐惧：抽取暗堆顶（团队每轮一次）」无逐地点回合结束读点/恐惧成本/团队限次；当前只有幕 2 的通用暗堆抽取行动（条目 note 已披露近似，但印刷强制与成本未实现）。"
+    },
+    {
+      "code": "10561",
+      "name": "号令共振",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10561 诡计：显现经 behavior 事件结算（silentHeathCommandingResonance）"
+        }
+      ]
+    },
+    {
+      "code": "10562",
+      "name": "保卫虫巢",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10562 诡计：显现经 behavior 事件结算（silentHeathDefendTheNest）"
+        }
+      ]
+    },
+    {
+      "code": "10563",
+      "name": "无彩幼虫",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10563 无彩幼虫：攻击后击败（enemyAttackResolved 读点 defeatAfterAttack）"
+        }
+      ]
+    },
+    {
+      "code": "10564",
+      "name": "族群兵虫",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10564 族群兵虫：巡逻（有线索洞穴）+ 重整时地点 +2 帷幕（两个读点）"
+        }
+      ]
+    },
+    {
+      "code": "10565",
+      "name": "族群虫后",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10565 族群虫后：生成于法典 Σ，每其他昆虫 +1 攻击，+X 每人生命（X=天数）"
+        }
+      ]
+    },
+    {
+      "code": "10566",
+      "name": "水晶残骸",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10566 水晶残骸（child）：回合开始强制 + 击败后进暗堆（turnEffect/assetLeftPlay 读点）"
+        }
+      ]
+    },
+    {
+      "code": "10567",
+      "name": "水晶残骸",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10567 水晶残骸（father）：回合开始强制 + 击败后进暗堆（turnEffect/assetLeftPlay 读点）"
+        }
+      ]
+    },
+    {
+      "code": "10568",
+      "name": "水晶残骸",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10568 水晶残骸（mother）：回合开始强制 + 击败后进暗堆（turnEffect/assetLeftPlay 读点）"
+        }
+      ]
+    },
+    {
+      "code": "10569",
+      "name": "消失的姐妹",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "剧本参考卡没有单卡条目文件（同战役 fateOfTheVale 的 10651/10661 均建了 scenario 条目），标记表/失败追加只写在内容层 chaos/behavior，无 scenarioRule 条目读点。"
+    },
+    {
+      "code": "10570",
+      "name": "深入洞穴",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10570 深入洞穴：背面生成虾类混种/黑暗地点弃牌/按天数放毁灭（agendaReveal 读点）"
+        }
+      ]
+    },
+    {
+      "code": "10571",
+      "name": "黑暗围拢",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10571 黑暗围拢：背面每位未撤退调查员被击败并承受 1 精神创伤（agendaReveal 读点）"
+        }
+      ]
+    }
+  ]
+}

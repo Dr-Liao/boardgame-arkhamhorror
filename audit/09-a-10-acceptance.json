@@ -1,0 +1,505 @@
+{
+  "schemaVersion": 1,
+  "unit": "09-a-10",
+  "profile": {
+    "id": "tsk-campaign-g-2026-11",
+    "scope": "绯红密钥 09 段 tskc 战役卡（09737–09770b）41 条目录记录。23 条通过五维验收；17 条实现缺口、1 条待稳定探针暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 41,
+    "verified": 23,
+    "unverified": 18,
+    "unimplemented": 0,
+    "testsPassed": 168
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+      "sha256": "e8461fc5bb8a2f00a16b83698cd385b9c5923d6ffb23b91e9f57c227d9aa1e0d"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+      "sha256": "55b9d956584e3b77069606a9a33ab8d055576c4c7fffeaf27c92a43d6e5bd8fc"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-shared-encounters-b.test.mjs",
+      "sha256": "dd9606f52b2f69f8933612e9d97dc1f4b05897b10c8f0bcca73c2f42856f254d"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-scenario-shadesOfSuffering.test.mjs",
+      "sha256": "f231f390e7be972c84e5e768efea58da9cf9ff4c56d5f5634479cf812fd56ce3"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-rules.test.mjs",
+      "sha256": "5ae05cfcab8019f5322e8207b5145c1cf024104eeaf00a84312c17f902879ad8"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-customizable.test.mjs",
+      "sha256": "4311237d47f104f0b62635d521dcccf34a0804a9109d07f7f3aa3ff05800743b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-keys-hollow.test.mjs",
+      "sha256": "925b275cb5d75467558ff4fa6f11f5bd01c4500aa5a1b8d1562e9bcb267f2f09"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-state.test.mjs",
+      "sha256": "46ca77b4b6442473ff0bbe6570b437187086df6337c989fb89f9cb4c3decbb18"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-map.test.mjs",
+      "sha256": "a46ed2ac6953edaecec26fe89a8ac494a3a275ba8e2c56ab21a124ca23a7afc2"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-interactions.test.mjs",
+      "sha256": "275c143401aaca1618ba01abe71f3838732d13b73ab5932098e13ff447146233"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-p0-regressions.test.mjs",
+      "sha256": "8d71ccce9008da1a2332f9e4d4381d6c26e096a8c5511eec83bde0e0d40a9e52"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-p1-regressions.test.mjs",
+      "sha256": "892ccba343a9c8a9186957c1a49018ba3fb3375c3298bf46d8bc91211614f8a4"
+    }
+  ],
+  "entries": [
+    {
+      "code": "09737",
+      "name": "常态颠扑者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+          "test": "验收 09737/09741/09742/09743/09744 域外使徒/空间异常：真实显现与强制能力结算"
+        }
+      ]
+    },
+    {
+      "code": "09738",
+      "name": "物质颠倒",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "附属敌人 +1 攻击/+1 躲避/获得反击缺附属卡→宿主敌人修正读点（primitive-requests/09738.json）。"
+    },
+    {
+      "code": "09739",
+      "name": "犹格斯星的密使",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "共享组敌人「入场即结算 Concealed 2」缺 content 侧统一入口；fix-plan 明确未完成。"
+    },
+    {
+      "code": "09740",
+      "name": "阴晦日食",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-p1-regressions.test.mjs",
+          "test": "P1-R1 09740阴霾日食：每位调查员每轮最多揭露 1 张（exposeLimitPerInvestigatorPerRound）"
+        }
+      ]
+    },
+    {
+      "code": "09741",
+      "name": "裂隙空间",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+          "test": "验收 09737/09741/09742/09743/09744 域外使徒/空间异常：真实显现与强制能力结算"
+        }
+      ]
+    },
+    {
+      "code": "09742",
+      "name": "越界",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+          "test": "验收 09737/09741/09742/09743/09744 域外使徒/空间异常：真实显现与强制能力结算"
+        }
+      ]
+    },
+    {
+      "code": "09743",
+      "name": "现实扭曲",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+          "test": "验收 09737/09741/09742/09743/09744 域外使徒/空间异常：真实显现与强制能力结算"
+        }
+      ]
+    },
+    {
+      "code": "09744",
+      "name": "异世界之触",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+          "test": "验收 09737/09741/09742/09743/09744 域外使徒/空间异常：真实显现与强制能力结算"
+        }
+      ]
+    },
+    {
+      "code": "09745",
+      "name": "突来冲动",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「本回合第一个行动必须是该能力」缺 legalMoves/validateMove 前置限制读点。"
+    },
+    {
+      "code": "09746",
+      "name": "理智扭曲",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「不能连续执行同一类型行动」缺少 legalMoves 侧限制读点。"
+    },
+    {
+      "code": "09747a",
+      "name": "凌乱道路",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "私人查看只记场景旗标（无座位可见投影）；隐匿迷你卡攻防 +2 无引擎读点。"
+    },
+    {
+      "code": "09747b",
+      "name": "凌乱道路",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同上（X 最短连接近似 + 攻防 +2 暂不生效）。"
+    },
+    {
+      "code": "09747c",
+      "name": "凌乱道路",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同上。"
+    },
+    {
+      "code": "09748a",
+      "name": "异星边境",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "异界牌库顶私人查看只记旗标（无投影读点）；方向用地图坐标近似。"
+    },
+    {
+      "code": "09748b",
+      "name": "异星边境",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "私人查看只记旗标。"
+    },
+    {
+      "code": "09749a",
+      "name": "拟像旷野",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "交换迷你卡/阴影地点无交换原语，用随机重排近似（非玩家指定）。"
+    },
+    {
+      "code": "09749b",
+      "name": "拟像旷野",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "交换位置用随机重排近似。"
+    },
+    {
+      "code": "09750",
+      "name": "疯狂峭壁",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「平均移到相邻空位」以随机重排近似（非平均）。"
+    },
+    {
+      "code": "09751",
+      "name": "超维恐怖",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「把诱饵翻面」无翻面读点（只做 reshuffle）；险境由内容层文本处理。"
+    },
+    {
+      "code": "09752",
+      "name": "戴红手套的男子",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09752 戴红手套的男子：反击关键词 + 钥匙翻至稳定面后攻击并变换附属钥匙"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-p1-regressions.test.mjs",
+          "test": "P1-1b 密钥变换派发 tskKeyShifted：09752 真实强制能力结算"
+        }
+      ]
+    },
+    {
+      "code": "09753",
+      "name": "红衣女郎",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09753 红衣女郎：敌军阶段结束收资源、击败后分配；冷漠 + 最远生成"
+        }
+      ]
+    },
+    {
+      "code": "09754",
+      "name": "血色监视者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09754 血色监视者：猎手；被击败时变换附属钥匙两次"
+        }
+      ]
+    },
+    {
+      "code": "09755",
+      "name": "深红斗篷的恶兽",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09755 深红斗篷的恶兽：猎手/最远生成；在它所在地点检定失败且它重整时变换钥匙"
+        }
+      ]
+    },
+    {
+      "code": "09756",
+      "name": "暗红骑士",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09756 暗红骑士：结社光环数据 + 同伴离场时变换钥匙（自身排除）"
+        }
+      ]
+    },
+    {
+      "code": "09757",
+      "name": "索恩",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09757 索恩：入场变换钥匙；[fast] 移除身上的钥匙交给索恩并进胜利区"
+        }
+      ]
+    },
+    {
+      "code": "09758",
+      "name": "德西德柔·戴佳多·欧瓦瑞兹",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09758 德西德柔：巡逻向「有其他结社敌人的最近地点」移动 1 格"
+        }
+      ]
+    },
+    {
+      "code": "09759",
+      "name": "苋",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "full-scan §6：伤害分配到支援的击败分支未完全验证，保留 unverified；无稳定探针。"
+    },
+    {
+      "code": "09760",
+      "name": "朱三娘",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09760 朱三娘：猎手/反击；攻击或躲避成功且超过难度 2 点以上才变换钥匙"
+        }
+      ]
+    },
+    {
+      "code": "09761",
+      "name": "艾里奇·佐尼·奥佩勒曲亚",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09761 艾里奇：敌军阶段结束空洞化牌库顶；出现同名空洞时变换钥匙"
+        }
+      ]
+    },
+    {
+      "code": "09762",
+      "name": "福林探员",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "只实现「抽 1 张」分支；取消揭露/翻回背面/改揭另一张缺 tskExposed interrupt 与放回原位的原语。"
+    },
+    {
+      "code": "09763",
+      "name": "阿丽·奎因特工",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09763 阿丽·奎因特工：所在地点有隐匿迷你卡时 +1 三项技能；揭露后抽 1 张"
+        }
+      ]
+    },
+    {
+      "code": "09764",
+      "name": "戴维·伊拉万博士",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「揭示手牌」只作筛选条件，无公开揭示展示读点。"
+    },
+    {
+      "code": "09765",
+      "name": "快捷旅票",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「旅行到地图任意一处」需战役启程流程传入世界地图图结构（未交付）。"
+    },
+    {
+      "code": "09766",
+      "name": "基金会情报",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09766 基金会情报：抽到留手 + 抽牌日志提示（弱点生命周期读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-p1-regressions.test.mjs",
+          "test": "P1-R5 09766 基金会情报：cannotLeaveHand 四个通道读点"
+        }
+      ]
+    },
+    {
+      "code": "09767",
+      "name": "超维认识",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09767 超维认识：弱点描述子——变换一个动荡钥匙，或把所有稳定钥匙翻至动荡面"
+        }
+      ]
+    },
+    {
+      "code": "09768a",
+      "name": "镜刃",
+      "type": "key",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "密钥进场与 shift 时机的战役层契约未交付（primitive-requests/09768a.json）。"
+    },
+    {
+      "code": "09768b",
+      "name": "镜刃",
+      "type": "key",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09768a/09768b 镜刃：稳定面对敌人造成伤害后翻面；动荡面全员 1 点直接伤害"
+        }
+      ]
+    },
+    {
+      "code": "09769a",
+      "name": "灾祸引擎",
+      "type": "key",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09769a/09769b 灾祸引擎：稳定面加 1 使用次数；动荡面全员失去 3 资源"
+        }
+      ]
+    },
+    {
+      "code": "09769b",
+      "name": "灾祸引擎",
+      "type": "key",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09769a/09769b 灾祸引擎：稳定面加 1 使用次数；动荡面全员失去 3 资源"
+        }
+      ]
+    },
+    {
+      "code": "09770a",
+      "name": "灾毁之钟",
+      "type": "key",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09770a/09770b 灾毁之钟：稳定面自动躲避本地所有敌人；动荡面全员 1 点直接恐惧"
+        }
+      ]
+    },
+    {
+      "code": "09770b",
+      "name": "灾毁之钟",
+      "type": "key",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09770a/09770b 灾毁之钟：稳定面自动躲避本地所有敌人；动荡面全员 1 点直接恐惧"
+        }
+      ]
+    }
+  ]
+}

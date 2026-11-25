@@ -1,0 +1,476 @@
+{
+  "unit": "05-a-1",
+  "generatedAt": "2026-11-24",
+  "scope": {
+    "cards": 55,
+    "selector": "pack === 'tcu' && code <= '05055' && effectStatus !== 'verified'"
+  },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "05001",
+    "05002",
+    "05003",
+    "05004",
+    "05005",
+    "05006",
+    "05007",
+    "05008",
+    "05009",
+    "05010",
+    "05011",
+    "05012",
+    "05013",
+    "05014",
+    "05015",
+    "05016",
+    "05017",
+    "05018",
+    "05019",
+    "05021",
+    "05022",
+    "05023",
+    "05024",
+    "05025",
+    "05026",
+    "05027",
+    "05028",
+    "05029",
+    "05030",
+    "05031",
+    "05032",
+    "05033",
+    "05034",
+    "05035",
+    "05036",
+    "05038",
+    "05039",
+    "05040",
+    "05041",
+    "05042",
+    "05043",
+    "05044",
+    "05045",
+    "05046",
+    "05047",
+    "05048",
+    "05049",
+    "05050",
+    "05051",
+    "05052",
+    "05053",
+    "05054",
+    "05055"
+  ],
+  "failedCodes": [
+    {
+      "code": "05020",
+      "dimension": "implementation",
+      "reason": "卡面粗体行动指示「谈判。」未按 Parley 行动结算：played 描述子只声明 noOpportunityAttack，未声明 actionKind:'parley'/countsAs，引擎 actionKind() 返回 'evade'（src/engine/table-decisions.js:310）。行动历史与「执行过谈判行动」类效果不计入，属未披露近似。",
+      "evidence": "artifacts/acceptance/05-a-1/probe-designators.mjs → FAIL 05020 期望 parley / 实际 evade（exit 1）"
+    },
+    {
+      "code": "05037",
+      "dimension": "implementation",
+      "reason": "卡面粗体行动指示「攻击。」未按 Fight 行动结算：played 描述子只声明 noOpportunityAttack，未声明 countsAs:'fight'，引擎 actionKind() 返回 'evade'（src/engine/table-decisions.js:310）；同类卡 05009/05013 已声明 countsAs:'fight'。",
+      "evidence": "artifacts/acceptance/05-a-1/probe-designators.mjs → FAIL 05037 期望 fight / 实际 evade（exit 1）"
+    }
+  ],
+  "excludedCodes": [
+    "05055b"
+  ],
+  "dimensions": {
+    "implementation": "fail",
+    "primitives": "pass",
+    "interaction": "pass",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/acceptance-05-a-shard1.test.mjs",
+      "test": "05-a1 05005 丽塔：躲避后反应造成 1 点伤害（每轮一次），旧印解除本轮限制",
+      "codes": [
+        "05005"
+      ]
+    },
+    {
+      "file": "tests/acceptance-05-a-shard1.test.mjs",
+      "test": "05-a1 05016 “我不会再逃了！”：重整并交战所有敌人，躲避可改为造成 1 伤害",
+      "codes": [
+        "05016"
+      ]
+    },
+    {
+      "file": "tests/acceptance-05-a-shard1.test.mjs",
+      "test": "05-a1 05017 兜帽人：被躲避后强制攻击躲避它的调查员",
+      "codes": [
+        "05017"
+      ]
+    },
+    {
+      "file": "tests/acceptance-05-a-shard1.test.mjs",
+      "test": "05-a1 05044 审判·XX：放置毁灭后每位调查员受伤/恐惧，被击败推进议程且保留毁灭",
+      "codes": [
+        "05044"
+      ]
+    },
+    {
+      "file": "tests/acceptance-05-a-shard1.test.mjs",
+      "test": "05-a1 05045 失踪事件：调查员退场时其线索放到幕上",
+      "codes": [
+        "05045"
+      ]
+    },
+    {
+      "file": "tests/acceptance-05-a-shard1.test.mjs",
+      "test": "05-a1 05051 节制·XIV：弃遭遇牌库至 5 张，场上卡最多的调查员抽女巫敌人",
+      "codes": [
+        "05051"
+      ]
+    },
+    {
+      "file": "tests/acceptance-05-a-shard1.test.mjs",
+      "test": "05-a1 05055 通向曙光：揭示女巫圆环并放入游戏区域中央",
+      "codes": [
+        "05055"
+      ]
+    },
+    {
+      "file": "tests/tcu-investigators.test.mjs",
+      "test": "task-33 05001 卡洛琳：技能卡成功治愈恐惧也会触发「获得 1 资源」（引擎 events 修复回归）",
+      "codes": [
+        "05001"
+      ]
+    },
+    {
+      "file": "tests/card-interactions.test.mjs",
+      "test": "hunch deck revealed card binds choice options back to the table hunch row (05002)",
+      "codes": [
+        "05002"
+      ]
+    },
+    {
+      "file": "tests/tcu-completion.test.mjs",
+      "test": "TCU 05003/05011 分离资源池：资源损失不扣卡上资源，费用可选择全从资源池支付",
+      "codes": [
+        "05003"
+      ]
+    },
+    {
+      "file": "tests/tcu-investigators.test.mjs",
+      "test": "task-41 05004 黛安娜：真实闪避 01023 取消攻击后触发反应（引擎 allowNested wrapper 修复回归）",
+      "codes": [
+        "05004"
+      ]
+    },
+    {
+      "file": "tests/tcu-investigators.test.mjs",
+      "test": "fix 05006 法术额度：先花法术专用行动后普通可用行动数正确（不残留额外行动）",
+      "codes": [
+        "05006"
+      ]
+    },
+    {
+      "file": "tests/tcu-investigators.test.mjs",
+      "test": "task-22 05007 催眠疗法：治疗盟友恐惧不触发额外治疗；[action] 无恐惧也能让目标抽牌",
+      "codes": [
+        "05007"
+      ]
+    },
+    {
+      "file": "tests/tcu-investigators.test.mjs",
+      "test": "R7 05008：改道可选（redirect 治汇点 / skip 治原目标）",
+      "codes": [
+        "05008"
+      ]
+    },
+    {
+      "file": "tests/slot-rules.test.mjs",
+      "test": "05009 柯尔特：在场时打出第一张[[工具]]（放大镜）不需要弃置资产腾槽",
+      "codes": [
+        "05009"
+      ]
+    },
+    {
+      "file": "tests/tcu-investigators.test.mjs",
+      "test": "fix 05010 悬案：直觉牌库揭示时作为弱点事件打出，放线索到最高隐藏值地点并移出游戏",
+      "codes": [
+        "05010"
+      ]
+    },
+    {
+      "file": "tests/tcu-completion.test.mjs",
+      "test": "TCU 05003/05011 分离资源池：资源损失不扣卡上资源，费用可选择全从资源池支付",
+      "codes": [
+        "05011"
+      ]
+    },
+    {
+      "file": "tests/tcu-investigators.test.mjs",
+      "test": "fix 05012 秘社“债务”：抽到后留在手牌（不立即结算、不进弃牌堆）",
+      "codes": [
+        "05012"
+      ]
+    },
+    {
+      "file": "tests/play-channels.test.mjs",
+      "test": "银暮匕首（05013）下方的事件进入收尾快速卡窗口并横置支援",
+      "codes": [
+        "05013"
+      ]
+    },
+    {
+      "file": "tests/tcu-investigators.test.mjs",
+      "test": "R6 05014 黑暗洞察：抽到普通弱点时可取消并洗回牌库（不重抽）",
+      "codes": [
+        "05014"
+      ]
+    },
+    {
+      "file": "tests/tcu-investigators.test.mjs",
+      "test": "R6 05015 可怕的秘密：印刷「不能取消」，05014 的取消不生效",
+      "codes": [
+        "05015"
+      ]
+    },
+    {
+      "file": "tests/carcosa-final.test.mjs",
+      "test": "Black Stars Rise does not advance while 05018 locks the doom threshold this phase",
+      "codes": [
+        "05018"
+      ]
+    },
+    {
+      "file": "tests/tcu-investigators.test.mjs",
+      "test": "R7 05019 安息日男爵：显现后进入支援区（doom=0，不占威胁区）",
+      "codes": [
+        "05019"
+      ]
+    },
+    {
+      "file": "tests/tcu-player-m2-1.test.mjs",
+      "test": "TCU 05020 拷问 谈判战斗检定：难度=3+敌人伤害，成功发现两处线索",
+      "codes": [
+        "05020"
+      ]
+    },
+    {
+      "file": "tests/tcu-player-m2-1.test.mjs",
+      "test": "TCU 05021 劫数延后 快速打出可附属同地点队友；受伤害/恐惧时弃掉并真实离场",
+      "codes": [
+        "05021"
+      ]
+    },
+    {
+      "file": "tests/tcu-player-m2-1.test.mjs",
+      "test": "TCU 05022 坚定不移 剩余生命+神志 ≥5 / ≥10 时追加意志与战斗图标",
+      "codes": [
+        "05022"
+      ]
+    },
+    {
+      "file": "tests/ability-layer.test.mjs",
+      "test": "P0-A 05023 宝剑王牌在冒险开始时放置入场",
+      "codes": [
+        "05023"
+      ]
+    },
+    {
+      "file": "tests/tcu-player-m2-1.test.mjs",
+      "test": "TCU 05024 指纹采集工具 横置花补给调查：+1 智识且成功额外发现 1 线索",
+      "codes": [
+        "05024"
+      ]
+    },
+    {
+      "file": "tests/ability-layer.test.mjs",
+      "test": "P0-A 事件卡从手牌反应：05025 串联线索在发现最后线索后生效",
+      "codes": [
+        "05025"
+      ]
+    },
+    {
+      "file": "tests/tcu-player-m2-1.test.mjs",
+      "test": "TCU 05026 好奇心 手牌 ≥4 / ≥7 时追加意志与智识图标",
+      "codes": [
+        "05026"
+      ]
+    },
+    {
+      "file": "tests/tcu-player-m2-1.test.mjs",
+      "test": "TCU 05027 死神·XIII 塔罗槽 +1 智识并在开局入场",
+      "codes": [
+        "05027"
+      ]
+    },
+    {
+      "file": "tests/ability-layer.test.mjs",
+      "test": "P0-A 05028 良好人脉只在检定窗口内可用并横置",
+      "codes": [
+        "05028"
+      ]
+    },
+    {
+      "file": "tests/tcu-player-m2-1.test.mjs",
+      "test": "TCU 05029 金钱万能 检定开始时打出：改为资源技能检定（基础值 floor(资源/2)，只吃万能图标）",
+      "codes": [
+        "05029"
+      ]
+    },
+    {
+      "file": "tests/tcu-player-m2-1.test.mjs",
+      "test": "TCU 05030 狡猾 资源 ≥5 / ≥10 时追加智识与敏捷图标",
+      "codes": [
+        "05030"
+      ]
+    },
+    {
+      "file": "tests/tcu-player-m2-1.test.mjs",
+      "test": "TCU 05031 月亮·XVIII 塔罗槽 +1 敏捷并在开局入场",
+      "codes": [
+        "05031"
+      ]
+    },
+    {
+      "file": "tests/tcu-player-m2-1.test.mjs",
+      "test": "TCU 05032 否决存在 同时受到 2 伤害 2 恐惧时只能整体忽略一项（不提供拆分点数）",
+      "codes": [
+        "05032"
+      ]
+    },
+    {
+      "file": "tests/tcu-player-m2-1.test.mjs",
+      "test": "TCU 05033 恐怖灵感 取消凋零术的符号效果",
+      "codes": [
+        "05033"
+      ]
+    },
+    {
+      "file": "tests/tcu-player-m2-1.test.mjs",
+      "test": "TCU 05034 预见未来 场上毁灭 ≥3 / ≥6 时追加万能图标",
+      "codes": [
+        "05034"
+      ]
+    },
+    {
+      "file": "tests/tcu-player-m2-1.test.mjs",
+      "test": "TCU 05035 圣杯四 塔罗槽 +1 意志并在开局入场",
+      "codes": [
+        "05035"
+      ]
+    },
+    {
+      "file": "tests/tcu-player-m2-1.test.mjs",
+      "test": "TCU 05036 钉鞋 +1 敏捷；移动后横置敏捷(3)检定，成功再移动到连接地点",
+      "codes": [
+        "05036"
+      ]
+    },
+    {
+      "file": "tests/phase5-migration.test.mjs",
+      "test": "2026-10-27：攻击事件只有未交战冷漠敌人时不能打出（04033/04266/05037）",
+      "codes": [
+        "05037"
+      ]
+    },
+    {
+      "file": "tests/tcu-player-m2-1.test.mjs",
+      "test": "TCU 05038 体格强健 控制[[道具]] ≤2 / ≤1 时追加战斗与敏捷图标",
+      "codes": [
+        "05038"
+      ]
+    },
+    {
+      "file": "tests/tcu-player-m2-1.test.mjs",
+      "test": "TCU 05039 星币五 塔罗槽 +1 生命上限 +1 神智上限并在开局入场",
+      "codes": [
+        "05039"
+      ]
+    },
+    {
+      "file": "tests/tcu-player-m2-1.test.mjs",
+      "test": "TCU 05040 权杖王牌 流放自身换额外 1 行动；该次行动期间每项技能 +2",
+      "codes": [
+        "05040"
+      ]
+    },
+    {
+      "file": "tests/tcu-player-m2-1.test.mjs",
+      "test": "TCU 05041 第十三幻象 显现进入威胁区域并用[action][action]弃掉",
+      "codes": [
+        "05041"
+      ]
+    },
+    {
+      "file": "tests/save-migration.test.mjs",
+      "test": "TCU 05042 高塔·XVI 读档时恢复旧行动缓存里缺失的打出行动",
+      "codes": [
+        "05042"
+      ]
+    },
+    {
+      "file": "tests/tcu-p1-regressions.test.mjs",
+      "test": "P1 05043 序章：混乱标记含义进入 state.scenario.tokenMeanings（AI/符号结算可读）",
+      "codes": [
+        "05043"
+      ]
+    },
+    {
+      "file": "tests/tcu-investigators.test.mjs",
+      "test": "fix 05046 加弗瑞拉：攻击被取消后仍触发反应并发现线索（有线索时）",
+      "codes": [
+        "05046"
+      ]
+    },
+    {
+      "file": "tests/tcu-investigators.test.mjs",
+      "test": "task-41 05047 杰罗姆：真实 treachery 窗口按智力图标弃牌取消显现",
+      "codes": [
+        "05047"
+      ]
+    },
+    {
+      "file": "tests/tcu-investigators.test.mjs",
+      "test": "fix 05048 瓦伦蒂诺：[free] 检定期间花 2 资源降难度（投入前/投入后窗口都可用、每轮一次）",
+      "codes": [
+        "05048"
+      ]
+    },
+    {
+      "file": "tests/tcu-investigators.test.mjs",
+      "test": "task-50 05049 佩妮：显现效果期间（弱点/诡计）的检定成功后反应发现 1 个线索",
+      "codes": [
+        "05049"
+      ]
+    },
+    {
+      "file": "tests/tcu-p1-regressions.test.mjs",
+      "test": "P1 05050 巫异时刻：behavior.tokenMeanings 并进 state.scenario（不再是死声明）",
+      "codes": [
+        "05050"
+      ]
+    },
+    {
+      "file": "tests/tcu-completion.test.mjs",
+      "test": "TCU 05052 征兆/诅咒从完整已实现收藏抽取，包括卡尔克萨与失落的时代弱点",
+      "codes": [
+        "05052"
+      ]
+    },
+    {
+      "file": "tests/tcu-witching-hour.test.mjs",
+      "test": "05053/05054 面前地点限制：movementError 读点覆盖效果移动与所有阶段，act2 背面解锁",
+      "codes": [
+        "05053"
+      ]
+    },
+    {
+      "file": "tests/tcu-witching-hour.test.mjs",
+      "test": "05053/05054 面前地点限制：movementError 读点覆盖效果移动与所有阶段，act2 背面解锁",
+      "codes": [
+        "05054"
+      ]
+    }
+  ],
+  "notes": "53/55 可切 verified；05020/05037 因卡面行动指示（谈判。/攻击。）未按对应行动结算而失败（actionKind 实测 evade，复现 artifacts/acceptance/05-a-1/probe-designators.mjs）。TCU 账本重签仍被 web/campaign-presentation.js 的未提交 WIP 阻塞（规程 §7.1，不在本分片范围）；新增测试需由主进程登记进 tests/suites.mjs 与 tests/node-suite.mjs。"
+}

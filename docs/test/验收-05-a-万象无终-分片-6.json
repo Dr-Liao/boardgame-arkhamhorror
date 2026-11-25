@@ -1,0 +1,230 @@
+{
+  "unit": "05-a-6",
+  "generatedAt": "2026-11-24",
+  "scope": {
+    "cards": 48,
+    "selector": "pack==='uad' && effectStatus==='unverified'（05229–05272）",
+    "packs": {
+      "uad": 48
+    }
+  },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "05229",
+    "05230",
+    "05231",
+    "05232",
+    "05233",
+    "05234",
+    "05235",
+    "05238",
+    "05239",
+    "05240",
+    "05241",
+    "05242",
+    "05243",
+    "05244",
+    "05245",
+    "05246",
+    "05247",
+    "05248",
+    "05249",
+    "05250",
+    "05251",
+    "05252",
+    "05253",
+    "05254",
+    "05255",
+    "05256",
+    "05257",
+    "05258",
+    "05259",
+    "05260",
+    "05261",
+    "05262",
+    "05262b",
+    "05263",
+    "05263b",
+    "05264",
+    "05264b",
+    "05265",
+    "05265b",
+    "05267",
+    "05271",
+    "05272"
+  ],
+  "failedCodes": [
+    {
+      "code": "05236",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：`source.removedFromGame = true` 直接写支援实例字段，未走 ctx.api；`audit-card-entry-compliance.mjs` 的 R1 正则只从 state 根/context 解构起污点，漏检 resolve 参数 `source`，因此账本 R2/R1 未报（本条目在本轮审计中独立发现）。",
+      "evidence": "src/cards/entries/05236.js:35（read point 在 src/engine/ability-rules.js:139/149、src/engine/reveal.js:398，属引擎实例字段；建议补 api.removeAssetFromGame / exileAsset 原语后删除直写）"
+    },
+    {
+      "code": "05237",
+      "dimension": "implementation",
+      "reason": "触发条件比卡面宽：卡面「when doom would be placed on any scenario card」，引擎 doomPlaced 窗口对「任意卡上的毁灭」都会打开（含玩家支援，如 05235 用 api.placeDoomOnCard 在自己身上放毁灭），条目 criteria 只检查 context.card.doom > 0，未排除玩家卡；实测范围内可响应玩家支援上的毁灭（错值/越界触发）。",
+      "evidence": "src/cards/entries/05237.js:25-29；src/engine/act-agenda.js:523-526（窗口无卡类过滤）；src/cards/entries/05235.js:63（玩家支援放毁灭的调用）"
+    },
+    {
+      "code": "05266",
+      "dimension": "primitives",
+      "reason": "R2 跨循环重印双实现：05266 Whippoorwill 与 02090(dwl)/12166(core_2026) 同名同文（印刷文本逐字一致），cards-data 未标 duplicateOfCode/duplicatedBy，`_reprint-aliases.js` 也无别名；05266 在 unionAndDisillusion 目录另写一份 enemySpawnRule/enemyStatRule（02090 的条目只声明 flags.nightgaunt，光环在 Dunwich 章节行为另实现），同一张印刷卡存在两份实现。",
+      "evidence": "src/cards/encounter-entries/theCircleUndone/unionAndDisillusion/05266.js；src/cards/encounter-entries/theDunwichLegacy/_shared/whippoorwills/02090.js；ALL_CARDS[\"05266\"]/[\"02090\"]/[\"12166\"] 文本逐字一致"
+    },
+    {
+      "code": "05268",
+      "dimension": "primitives",
+      "reason": "R2 跨循环重印双实现：05268 Eager for Death 与 02091(dwl)/12167(core_2026) 同名同文，cards-data 未标重印关系、无别名；02091 已用同一条声明式 treacheryRule.test（skill willpower / difficulty 2+damage / fail takeHorror 2）实现，05268 又复制了一份等价条目。",
+      "evidence": "src/cards/encounter-entries/theCircleUndone/unionAndDisillusion/05268.js；src/cards/encounter-entries/theDunwichLegacy/_shared/whippoorwills/02091.js"
+    },
+    {
+      "code": "05269",
+      "dimension": "primitives",
+      "reason": "R2 跨循环重印双实现 + 同句规则重复手写：05269 Psychopomp's Song 与 02221(bota) 同名同文（Surge. Peril. / Revelation - Add ... to any investigator's threat area / Forced - 额外 2 伤害并弃卡），cards-data 未标重印、无别名；02221 已有等价 harmInterceptor + encounterResolve 实现（encounterResolveCampaigns: [\"dunwich\"]），05269 再手写一份，且「加入任意调查员威胁区」模板已是第 3+ 份。",
+      "evidence": "src/cards/encounter-entries/theCircleUndone/unionAndDisillusion/05269.js:11-28；src/cards/encounter-entries/theDunwichLegacy/bloodOnTheAltar/02221.js:14-26"
+    },
+    {
+      "code": "05270",
+      "dimension": "primitives",
+      "reason": "同句规则重复手写：「Revelation - Add X to any investigator's threat area」+ 威胁区伤害/恐惧拦截模板在 02221、05269、05270 已出现三份（05270 的 encounterResolve 与 05269 逐字复制，仅 harmInterceptor.trigger 不同），按迁移规范 §4.3 应上收为共享条目/工厂；fix-plan P2-3 已登记未做。",
+      "evidence": "src/cards/encounter-entries/theCircleUndone/unionAndDisillusion/05270.js:11-28（与 05269.js:11-28 逐字相同）"
+    }
+  ],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "fail",
+    "primitives": "fail",
+    "interaction": "pass",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/acceptance-05-a-shard6.test.mjs",
+      "test": "31 个新增用例（标题含卡号）：幕/议程/地点/命运/敌人/诡计 behavior 读点 + 05238 真实引擎建局",
+      "codes": [
+        "05240",
+        "05242",
+        "05243",
+        "05244",
+        "05245",
+        "05246",
+        "05247",
+        "05249",
+        "05250",
+        "05251",
+        "05252",
+        "05253",
+        "05254",
+        "05255",
+        "05256",
+        "05257",
+        "05259",
+        "05260",
+        "05263",
+        "05263b",
+        "05264",
+        "05264b",
+        "05265",
+        "05265b",
+        "05266",
+        "05267",
+        "05268",
+        "05269",
+        "05270",
+        "05271",
+        "05272",
+        "05238"
+      ]
+    },
+    {
+      "file": "tests/tcu-union-disillusion.test.mjs",
+      "test": "43 个章节用例（含 05238/05239/05241/05246/05248/05253/05254/05262/05262b/05265 卡号标题）",
+      "codes": [
+        "05238",
+        "05239",
+        "05241",
+        "05246",
+        "05248",
+        "05253",
+        "05254",
+        "05262",
+        "05262b",
+        "05265"
+      ],
+      "result": "通过（本轮重跑）"
+    },
+    {
+      "file": "tests/tcu-player-m2-3.test.mjs",
+      "test": "玩家卡 05229–05237 逐卡标题用例（含 05230 目标枚举 / 05236 composure / 05237 取消毁灭）",
+      "codes": [
+        "05229",
+        "05230",
+        "05231",
+        "05232",
+        "05233",
+        "05234",
+        "05235",
+        "05236",
+        "05237"
+      ],
+      "result": "通过（本轮与 tcu-union-disillusion 等 5 个文件合并重跑 103/103）"
+    },
+    {
+      "file": "tests/tcu-scenario-hooks.test.mjs",
+      "test": "c7shared：05258–05261 剧情支援 +1 技能与卡面能力",
+      "codes": [
+        "05258",
+        "05261"
+      ]
+    },
+    {
+      "file": "tests/tcu-chapters-smoke.test.mjs",
+      "test": "P1-12 九章真实引擎冒烟（含 unionAndDisillusion），本轮复跑通过",
+      "codes": [
+        "05238"
+      ]
+    },
+    {
+      "file": "tests/tcu-scenarios.browser.mjs + tcu-interactions.browser.mjs",
+      "test": "TCU 9 章桌面 1440/移动 390 实机进入 + TCU 交互面板（既有证据；截图 artifacts/tcu-migration/p8-scenario-unionAndDisillusion-{desktop,mobile}.png 存在）",
+      "codes": [
+        "05238",
+        "05239",
+        "05241",
+        "05249",
+        "05250",
+        "05257"
+      ],
+      "note": "未在本轮重跑：运行该 spec 会写 audit/tcu-browser-acceptance.json 与 artifacts/tcu-migration，超出本审计允许写范围；以既有 spec 覆盖 + 面板复用读点判定。"
+    }
+  ],
+  "commands": [
+    {
+      "command": "node --test tests/acceptance-05-a-shard6.test.mjs",
+      "result": "tests 31 / pass 31 / fail 0"
+    },
+    {
+      "command": "node --test tests/tcu-union-disillusion.test.mjs tests/tcu-player-m2-3.test.mjs tests/tcu-scenario-hooks.test.mjs tests/tcu-chapters-smoke.test.mjs tests/tcu-p1-regressions.test.mjs",
+      "result": "tests 103 / pass 103 / fail 0"
+    },
+    {
+      "command": "npm run cards:check",
+      "result": "通过"
+    },
+    {
+      "command": "npm run cards:encounter-check",
+      "result": "通过"
+    },
+    {
+      "command": "npm run audit:entries",
+      "result": "通过（无基线外新增违规；R1 112 / R2 0 / R3 0）"
+    },
+    {
+      "command": "npm run docs:check",
+      "result": "101 个文件、529 条本地链接全部可解析"
+    }
+  ],
+  "notes": "五维：实现完整性 fail（05237 触发条件越界）、原语 fail（05236 R1 直写 audit 漏检；05266/05268/05269 跨循环重印未登记且双实现；05270 同句模板第 3+ 份手写）、交互 pass（无新增面板，复用场景行动栏/威胁区/选择事务；既有桌面+移动浏览器证据存在但本轮未重跑，原因见 evidence note）、证据 pass（48/48 卡号标题测试，31 新例 + 既有用例本轮重跑）、合规 pass（三门禁通过）。分片 verdict=partial：42 张可切换 verified，6 张保持 unverified。P2 余项复核：fix-plan P2-3（05269/05270 复用）未做；P2-2 账本「377/377 全绿」与本次 6 张失败不符；P2-6 文档漂移：notes.js 仍称「远古恶魔/寒冷刺骨不参与牌堆」但当前 UAD 遭遇牌库实际含 ancient_evils 3 张 + chilling_cold 4 张，story-text SETUP 也称缺两个核组；05230 条目顶部注释仍称 reaction/限制未实现，但当前 HEAD 已接线（过时披露）。新增测试未登记 tests/suites.mjs 与 tests/node-suite.mjs（审计角色不得改既有 tests/），主进程合并时必须登记，否则 suite-manifest 守卫失败。"
+}

@@ -3,11 +3,11 @@ import assert from 'node:assert/strict'
 import { presentationChanges, publicSequence } from '../web/table-presentation.js'
 import { createGameState, applyMove } from '../src/engine/engine.js'
 import { mapGeometry } from '../web/map-layout.js'
-import { campaignPresentation, presentationAttributes } from '../web/campaign-presentation.js'
+import { CAMPAIGN_IMAGE_ROOT, CAMPAIGN_PRESENTATIONS, campaignPresentation, presentationAttributes } from '../web/campaign-presentation.js'
 import { chaosTokenFace } from '../web/chaos-token.js'
 import { buildChapter, chapterSpecs, locationId } from '../content/campaigns/theDunwichLegacy/chapters.js'
 import { layout as essexLayout, manifest as essexManifest } from '../content/campaigns/theDunwichLegacy/scenarios/theEssexCountyExpress/index.js'
-import { readFileSync } from 'node:fs'
+import { readFileSync, readdirSync } from 'node:fs'
 
 test('map arrows retain asymmetric rule direction and merge mutual connections once', () => {
   const locations = [{ id: 'b', connections: ['a'] }, { id: 'a', connections: ['c', 'missing'] }, { id: 'c', connections: ['a'] }]
@@ -81,6 +81,19 @@ test('campaign presentation layers common assets with opening-campaign art and p
   assert.equal(readFileSync(hiddenBack).subarray(0, 4).toString('ascii'), 'RIFF')
   assert.ok(readFileSync(hiddenBack).length > 100 * 1024)
   assert.equal(campaignPresentation('unregisteredCampaign').id, 'common')
+})
+
+test('all campaign illustrations use the CDN and are excluded from release packages', () => {
+  assert.equal(CAMPAIGN_IMAGE_ROOT, 'https://drliao1.com/arkhamhorror/campaigns/')
+  const local = readdirSync(new URL('../web/img/campaigns/', import.meta.url), { recursive: true })
+    .filter(file => file.endsWith('.webp'))
+    .map(file => CAMPAIGN_IMAGE_ROOT + file.replaceAll('\\', '/'))
+  const configured = Object.values(CAMPAIGN_PRESENTATIONS).flatMap(campaign =>
+    [campaign, ...Object.values(campaign.scenarios || {})].flatMap(theme => Object.values(theme.assets)),
+  )
+  assert.deepEqual(new Set(configured), new Set(local))
+  const manifest = JSON.parse(readFileSync(new URL('../boardgame-mod.json', import.meta.url), 'utf8'))
+  assert.ok(manifest.exclude.includes('web/img/campaigns/'))
 })
 
 test('chaos token faces resolve to the delivered WebP assets', () => {

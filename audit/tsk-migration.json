@@ -323,7 +323,7 @@
     "allCards": {
       "pass": true,
       "path": "audit/tsk-all-card-acceptance.json",
-      "sha256": "a50548e1d7325941fe7605b1a5673d53d9426bb00d9d55401b2896855b2791a5",
+      "sha256": "c52efd075241826a86e62553992078838ed4a55253b3793ea2b8765aedb7e78d",
       "summary": {
         "total": 439,
         "verified": 161,
@@ -565,13 +565,13 @@
           "pass": true,
           "command": "node tools/build-presentation.mjs --check",
           "exitCode": 0,
-          "tail": "t\": 2592,\n \"genericBacks\": {\n  \"encounter\": 1635,\n  \"player\": 1703\n },\n \"localizedArtEntries\": 6493,\n \"localImagesCopied\": 0,\n \"remoteManifestEntries\": 30895,\n \"referenceLocalMediaFiles\": 230,\n \"presentationVersion\": \"fe0023c478d66c9aa59d48f7a99533e577d607cd0dbdb264dab9c6d97bf6d61c\",\n \"drift\": []\n}\n"
+          "tail": "t\": 2592,\n \"genericBacks\": {\n  \"encounter\": 1635,\n  \"player\": 1703\n },\n \"localizedArtEntries\": 6493,\n \"localImagesCopied\": 0,\n \"remoteManifestEntries\": 30895,\n \"referenceLocalMediaFiles\": 230,\n \"presentationVersion\": \"7416f98c11737a031c4cb8bbe5154af0fb9e8323f820c769d49ce9a5e73505c3\",\n \"drift\": []\n}\n"
         },
         "docs": {
           "pass": true,
           "command": "node tools/check-doc-links.mjs",
           "exitCode": 0,
-          "tail": "文档链接体检：87 个文件、484 条本地链接全部可解析\n"
+          "tail": "文档链接体检：163 个文件、644 条本地链接全部可解析\n"
         }
       }
     },
@@ -2663,7 +2663,7 @@
     },
     "allCards": {
       "path": "audit/tsk-all-card-acceptance.json",
-      "sha256": "a50548e1d7325941fe7605b1a5673d53d9426bb00d9d55401b2896855b2791a5",
+      "sha256": "c52efd075241826a86e62553992078838ed4a55253b3793ea2b8765aedb7e78d",
       "summary": {
         "total": 439,
         "verified": 161,
@@ -2830,7 +2830,7 @@
     },
     {
       "path": "audit/tsk-all-card-acceptance.json",
-      "sha256": "a50548e1d7325941fe7605b1a5673d53d9426bb00d9d55401b2896855b2791a5"
+      "sha256": "c52efd075241826a86e62553992078838ed4a55253b3793ea2b8765aedb7e78d"
     },
     {
       "path": "audit/tsk-release-browser.json",

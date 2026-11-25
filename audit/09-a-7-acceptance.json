@@ -1,0 +1,469 @@
+{
+  "schemaVersion": 1,
+  "unit": "09-a-7",
+  "profile": {
+    "id": "tsk-campaign-d-2026-11",
+    "scope": "绯红密钥 09 段 tskc 战役卡（09623–09661）45 条目录记录。7 条通过五维验收；6 条实现缺失、32 条逐卡证据缺口暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 45,
+    "verified": 7,
+    "unverified": 38,
+    "unimplemented": 0,
+    "testsPassed": 179
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-09-a-shard7.test.mjs",
+      "sha256": "d0b51fc8e572aa5370bd9cbf0e2612954224dd648fa1105f3c869e9c9b85f08f"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-scenario-onThinIce.test.mjs",
+      "sha256": "7edd6db8e3c003f84206512a050744d7234b54e83275e01dee7c41e84b1271f2"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-scenario-dogsOfWar.test.mjs",
+      "sha256": "6be43a0fc5744c9fa2c909413327840702169653504de812a8455d363fce121b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-scenario-shadesOfSuffering.test.mjs",
+      "sha256": "f231f390e7be972c84e5e768efea58da9cf9ff4c56d5f5634479cf812fd56ce3"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-p0-regressions.test.mjs",
+      "sha256": "8d71ccce9008da1a2332f9e4d4381d6c26e096a8c5511eec83bde0e0d40a9e52"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-p1-regressions.test.mjs",
+      "sha256": "892ccba343a9c8a9186957c1a49018ba3fb3375c3298bf46d8bc91211614f8a4"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-rules.test.mjs",
+      "sha256": "5ae05cfcab8019f5322e8207b5145c1cf024104eeaf00a84312c17f902879ad8"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-customizable.test.mjs",
+      "sha256": "4311237d47f104f0b62635d521dcccf34a0804a9109d07f7f3aa3ff05800743b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-keys-hollow.test.mjs",
+      "sha256": "925b275cb5d75467558ff4fa6f11f5bd01c4500aa5a1b8d1562e9bcb267f2f09"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-state.test.mjs",
+      "sha256": "46ca77b4b6442473ff0bbe6570b437187086df6337c989fb89f9cb4c3decbb18"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-map.test.mjs",
+      "sha256": "a46ed2ac6953edaecec26fe89a8ac494a3a275ba8e2c56ab21a124ca23a7afc2"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-interactions.test.mjs",
+      "sha256": "275c143401aaca1618ba01abe71f3838732d13b73ab5932098e13ff447146233"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-campaign-flow.test.mjs",
+      "sha256": "dd10a6a0a57edee884a3bf570cca4223bce5e2361ea27d4ebb39c9d838686307"
+    }
+  ],
+  "entries": [
+    {
+      "code": "09623",
+      "name": "猎人小屋",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "实现由章节 behavior/definition 承接，缺标题含卡号真实执行测试。"
+    },
+    {
+      "code": "09624",
+      "name": "废弃金矿",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "同上。"
+    },
+    {
+      "code": "09625a",
+      "name": "索恩",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "被击败时把玄丧之镜交给调查员：enemyRule.handsKeyToInvestigatorOnDefeat 无章节/引擎读点。"
+    },
+    {
+      "code": "09625b",
+      "name": "索恩",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard7.test.mjs",
+          "test": "验收 09625a/09625b 索恩双面：+2/人生命、危险诡计后换钥、空洞反应立即行动的数据读点齐备"
+        }
+      ]
+    },
+    {
+      "code": "09626",
+      "name": "虚空奇美拉",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "同上。"
+    },
+    {
+      "code": "09627",
+      "name": "虚空奇美拉",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "同上（patrol.mostInvestigators 由章节巡逻解析，但缺逐卡标题测试）。"
+    },
+    {
+      "code": "09628",
+      "name": "虚空奇美拉",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "同上。"
+    },
+    {
+      "code": "09629",
+      "name": "虚空奇美拉",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "同上。"
+    },
+    {
+      "code": "09630",
+      "name": "虚空奇美拉",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "同上。"
+    },
+    {
+      "code": "09631",
+      "name": "饥饿的灰熊",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "同上。"
+    },
+    {
+      "code": "09632",
+      "name": "冰层破裂",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard7.test.mjs",
+          "test": "验收 09632/09633 冰层破裂/积雪崩坍：显现结算真实执行（密谋旁 3 张清空 + 敏捷检定 + 直接伤害）"
+        }
+      ]
+    },
+    {
+      "code": "09633",
+      "name": "积雪崩坍",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard7.test.mjs",
+          "test": "验收 09632/09633 冰层破裂/积雪崩坍：显现结算真实执行（密谋旁 3 张清空 + 敏捷检定 + 直接伤害）"
+        }
+      ]
+    },
+    {
+      "code": "09634a",
+      "name": "玄丧之镜",
+      "type": "key",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard7.test.mjs",
+          "test": "验收 09634a/09634b/09659a/09659b 绯红密钥 Shift：4 面效果均走章节 resolveKeyShift 真实执行点"
+        }
+      ]
+    },
+    {
+      "code": "09634b",
+      "name": "玄丧之镜",
+      "type": "key",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard7.test.mjs",
+          "test": "验收 09634a/09634b/09659a/09659b 绯红密钥 Shift：4 面效果均走章节 resolveKeyShift 真实执行点"
+        }
+      ]
+    },
+    {
+      "code": "09635",
+      "name": "战争疮痍",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "章节参考卡，缺标题含卡号测试。"
+    },
+    {
+      "code": "09636",
+      "name": "酝酿灾祸(版本一)",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "数据型议程由 definition/behavior 承接，缺逐卡测试。"
+    },
+    {
+      "code": "09637",
+      "name": "酝酿灾祸(版本二)",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "同上。"
+    },
+    {
+      "code": "09638",
+      "name": "酝酿灾祸(版本三)",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "同上。"
+    },
+    {
+      "code": "09639",
+      "name": "惊弓之鸟(版本一)",
+      "type": "act",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "同上。"
+    },
+    {
+      "code": "09640",
+      "name": "惊弓之鸟(版本二)",
+      "type": "act",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "同上。"
+    },
+    {
+      "code": "09641",
+      "name": "惊弓之鸟(版本三)",
+      "type": "act",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "同上。"
+    },
+    {
+      "code": "09642",
+      "name": "证券交易所",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "地点数据型，缺逐卡测试。"
+    },
+    {
+      "code": "09643",
+      "name": "证券交易所",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "同上。"
+    },
+    {
+      "code": "09644",
+      "name": "证券交易所",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "同上。"
+    },
+    {
+      "code": "09645",
+      "name": "温莎宫酒店",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "同上。"
+    },
+    {
+      "code": "09646",
+      "name": "维多利亚学院",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "同上。"
+    },
+    {
+      "code": "09647",
+      "name": "奎贝堡",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "同上。"
+    },
+    {
+      "code": "09648",
+      "name": "滨海大道",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "同上。"
+    },
+    {
+      "code": "09649",
+      "name": "妇女市集",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "同上（英文卡名已在 fix-plan 核对）。"
+    },
+    {
+      "code": "09650",
+      "name": "亚历山大地下陵墓",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "同上。"
+    },
+    {
+      "code": "09651",
+      "name": "亚历山大地下陵墓",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "同上；另「不能进入/野兽不能离开」为待补原语（已在条目 note 披露）。"
+    },
+    {
+      "code": "09652",
+      "name": "亚历山大地下陵墓",
+      "type": "location",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "同上。"
+    },
+    {
+      "code": "09653a",
+      "name": "钥匙节点",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「可当作 4 攻击值敌人攻击」依赖未交付原语 primitive-requests/09653a.json；attackableAsEnemy 无读点。"
+    },
+    {
+      "code": "09653b",
+      "name": "钥匙节点",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同上：可被攻击原语未交付。"
+    },
+    {
+      "code": "09654a",
+      "name": "暗红骑士",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "本地检定失败后变换身上钥匙：enemyRule.shiftsKeysOnFailedTestAtLocation 无读点。"
+    },
+    {
+      "code": "09654b",
+      "name": "暗红骑士",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "资源搬运由章节剧本行动（knightToAsset/knightFromAsset）承接，缺逐卡标题测试。"
+    },
+    {
+      "code": "09655a",
+      "name": "深红斗篷的恶兽",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「将被击败→治愈/横置/退到地下陵墓」cannotBeDefeatedHealsAndFlees 无读点；「不能离开地下陵墓」无移动拦截读点。"
+    },
+    {
+      "code": "09655b",
+      "name": "深红斗篷的恶兽",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "缺逐卡标题测试。"
+    },
+    {
+      "code": "09656",
+      "name": "猩红野兽",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "locusSiteStatModifier 系章节 enemyStatModifier 读点，缺逐卡标题测试。"
+    },
+    {
+      "code": "09657",
+      "name": "结社煽动者",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "生成到最近钥匙节点 spawnNearestKeyLocus、重整时禁攻击他人 blocksOtherAttacksWhileReady 均无读点。"
+    },
+    {
+      "code": "09658",
+      "name": "节点脉冲",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "encounterResolve 已实现，缺标题含卡号测试。"
+    },
+    {
+      "code": "09659a",
+      "name": "法罗斯之光",
+      "type": "key",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard7.test.mjs",
+          "test": "验收 09634a/09634b/09659a/09659b 绯红密钥 Shift：4 面效果均走章节 resolveKeyShift 真实执行点"
+        }
+      ]
+    },
+    {
+      "code": "09659b",
+      "name": "法罗斯之光",
+      "type": "key",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard7.test.mjs",
+          "test": "验收 09634a/09634b/09659a/09659b 绯红密钥 Shift：4 面效果均走章节 resolveKeyShift 真实执行点"
+        }
+      ]
+    },
+    {
+      "code": "09660",
+      "name": "苦痛之影",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "章节参考卡，缺标题含卡号测试。"
+    },
+    {
+      "code": "09661",
+      "name": "苦难历史",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "数据型议程由 definition/behavior 承接，缺逐卡测试。"
+    }
+  ]
+}

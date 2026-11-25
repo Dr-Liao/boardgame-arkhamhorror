@@ -1,0 +1,31 @@
+{
+  "unit": "10-a-11",
+  "generatedAt": "2026-11-25",
+  "scope": {
+    "cards": 43,
+    "selector": "pack=fhvc && effectStatus=unverified && 10707a<=code<=10743",
+    "codeRange": "10707a-10743"
+  },
+  "verdict": "partial",
+  "verifiedCodes": ["10707a", "10707b", "10708a", "10708b", "10709a", "10709b", "10710a", "10710b", "10711a", "10711b", "10712a", "10712b", "10713", "10714", "10715", "10716", "10717", "10718", "10720", "10722", "10723", "10725", "10726", "10728", "10729", "10730", "10731", "10733", "10735", "10737", "10738", "10742"],
+  "failedCodes": [
+    { "code": "10719", "name": "Overgrown Tunnel", "dimension": "implementation", "reason": "「离开时额外 1 行动」用离开后扣行动近似，行动不足不阻止移动（缺移动前置读点）。", "evidence": ["src/cards/encounter-entries/theFeastOfHemlockVale/_shared/horrors_in_the_rock/10719.js note", "tests/acceptance-10-a-shard11.test.mjs"] },
+    { "code": "10721", "name": "Crystal Parasite", "dimension": "implementation", "reason": "黑夜「+1 伤害值」缺实体修正目标，仅 flags.night 声明未接线。", "evidence": ["10721.js note", "tests/acceptance-10-a-shard11.test.mjs"] },
+    { "code": "10724", "name": "Miasmatic Shadow", "dimension": "implementation", "reason": "「弃 1 张或更多手牌后」按 handCardDiscarded 逐张触发（同批弃多张会多次攻击），非等价。", "evidence": ["10724.js note", "tests/acceptance-10-a-shard11.test.mjs"] },
+    { "code": "10727", "name": "Fungal Rot", "dimension": "implementation", "reason": "宿主文本框空白仅覆盖可选能力枚举；「[action] 战斗(3) 摆脱」无行动枚举入口（仅 flags.escapeAction）。", "evidence": ["10727.js note", "tests/acceptance-10-a-shard11.test.mjs"] },
+    { "code": "10732", "name": "Poisonblossom", "dimension": "implementation", "reason": "「每个疯长 +1 伤害值」无运行期读点，留待 P8。", "evidence": ["10732.js note", "tests/acceptance-10-a-shard11.test.mjs"] },
+    { "code": "10734", "name": "Cochleal Stag", "dimension": "implementation", "reason": "「本地与连接地点每位调查员每项技能 -2」无敌人光环技能修正读点。", "evidence": ["10734.js note", "tests/acceptance-10-a-shard11.test.mjs"] },
+    { "code": "10736", "name": "Wall of Thorns", "dimension": "implementation", "reason": "白日/黑夜进入移动强制仅落 flags.dayMoveInto/nightMoveInOut，未接移动窗口。", "evidence": ["10736.js note", "tests/acceptance-10-a-shard11.test.mjs"] },
+    { "code": "10739", "name": "Corpse Lichen", "dimension": "implementation", "reason": "白日「不能移动」需按昼夜刷新 enemy.immobile，仅 flags.dayCannotMove。", "evidence": ["10739.js note", "tests/acceptance-10-a-shard11.test.mjs"] },
+    { "code": "10740", "name": "Psychotropic Spores", "dimension": "implementation", "reason": "「每轮第一次抽牌受 1 恐惧」与「[action] 摆脱，可受 1 恐惧自动成功」无威胁区窗口/行动入口，仅 flags。", "evidence": ["10740.js note", "tests/acceptance-10-a-shard11.test.mjs"] },
+    { "code": "10741", "name": "Sudden Mutation", "dimension": "implementation", "reason": "「附属敌人被击败时弃牌直到弃掉敌人并在此生成」时点无读点，仅 flags.onAttachedDefeated。", "evidence": ["10741.js note", "tests/acceptance-10-a-shard11.test.mjs"] },
+    { "code": "10743", "name": "Fire!", "dimension": "implementation", "reason": "「轮末本地每张有生命值的卡牌受 1 点直接伤害」无地点附属轮末窗口，仅落 flags；另有 P0-3 注册风险。", "evidence": ["10743.js note", "content/campaigns/theFeastOfHemlockVale/scenarios/hemlockHouse/definition.js exclude"] }
+  ],
+  "excludedCodes": [],
+  "dimensions": { "implementation": "fail", "primitives": "pass", "interaction": "pass", "evidence": "pass", "compliance": "pass" },
+  "evidence": [
+    { "file": "tests/acceptance-10-a-shard11.test.mjs", "test": "5 例：the_vale 12 地点、10713–10715 传家宝、10716–10720 洞穴地点、10721–10743 遭遇组、11 张失败卡缺陷复现", "codes": ["10707a", "10707b", "10708a", "10708b", "10709a", "10709b", "10710a", "10710b", "10711a", "10711b", "10712a", "10712b", "10713", "10714", "10715", "10716", "10717", "10718", "10719", "10720", "10721", "10722", "10723", "10724", "10725", "10726", "10727", "10728", "10729", "10730", "10731", "10732", "10733", "10734", "10735", "10736", "10737", "10738", "10739", "10740", "10741", "10742", "10743"], "command": "node --test tests/acceptance-10-a-shard11.test.mjs", "result": "5/5 pass" },
+    { "file": "tests/fhv-scenario-*.test.mjs + fhv-campaign-flow/engine/records + fhv-rules/primitives/interactions", "test": "既有章节/回归（不采信为逐卡结论）", "codes": ["*"], "result": "本轮抽跑通过" }
+  ],
+  "notes": "32 通过 / 11 未通过（partial）。失败全部为实现缺口（未接线/近似不等价）：敌人伤害值修正（10721/10732）、敌人光环技能修正（10734）、地点附属轮末/移动窗口（10736/10743）、威胁区抽牌与摆脱行动入口（10727/10740）、附属敌人被击败时点（10741）、按昼夜刷新 immobile（10739）、移动前置行动费用（10719）、弃手牌批次窗口（10724）。HEAD 复核：P0-1（hemlockHouse massive 崩溃）与 P0-2（无 seat choose）已修；P0-3（10743 未注册 encounterDefinitions）与 P0-7（fateOfTheVale 终章主线 fateTrueSelfReturned 键形/actIndex 越界）未修——后者属章节层，影响 the_vale 可达性。证据：43/43 张有标题含卡号测试（新增 5/5 全绿）。合规：未改运行期文件、无新增 R1/R2/R3。账本不可采信：fhv-all-card-acceptance 对本 43 张记 scenarioData 20/verified 16/simplified 7，未区分「数据型已由 behavior 承接」与「子句仅落 flags」；建议主报告登记「FHV 账本去假绿 + 声明键/窗口读点检测」，本轮不重签账本。"
+}

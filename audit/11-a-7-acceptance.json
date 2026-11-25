@@ -1,0 +1,661 @@
+{
+  "schemaVersion": 1,
+  "unit": "11-a-7",
+  "profile": {
+    "id": "tdc-campaign-d-2026-11",
+    "scope": "沉没之城 11 段 tdcc 战役卡（11619–11659）43 条目录记录。41 条通过五维验收；11651/11652 缺场景撤退行动读点暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 43,
+    "verified": 41,
+    "unverified": 2,
+    "unimplemented": 0,
+    "testsPassed": 146
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+      "sha256": "97f2acf21636ea6ddbb4cb1eb18e757a99d50a4f1e6d580a5c915bb5c817661c"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-scenario-courtOfTheAncients.test.mjs",
+      "sha256": "4b65a690fdd6916f84a74cbd0e525c62f18b2a72ee34277313b8747d79e7081f"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-scenario-obsidianCanyons.test.mjs",
+      "sha256": "4bb62be9139b5f96f2e0a37807444ba91459610f07f66d47d5ee2d191565e510"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-p7-scenario-integrity.test.mjs",
+      "sha256": "e98da7ef14fa3bcec9a7dabec85340e668d11e836a6f53f7a35c08c184dee61e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-p7-scenario-lifecycle.test.mjs",
+      "sha256": "127798e3b82c2a94dd6c5141e5b8a2f50f806aacdecfe0b29e89ae3c49fa2afb"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-p7-campaign-layer.test.mjs",
+      "sha256": "5f9aabd3f82a437f7ae19b6b19c71cf1ae2c22ca9b80530460829784e80bbc95"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-rules.test.mjs",
+      "sha256": "541471492f102ef04f00c249498d1f4cd93173e554068f3cf86c1e1c26991e7b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-primitives.test.mjs",
+      "sha256": "c152d8c4f1e738adc1b1f75ac78ddfaa26012a91ed060d4a7132987df99e397b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+      "sha256": "25466d3868f2e9af5f0b6a9846202b4c7c60d1fb54994b4b60dc69611e2b1abf"
+    }
+  ],
+  "entries": [
+    {
+      "code": "11619",
+      "name": "西侧前厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11619/11620/11621/11622/11622b/11623/11624/11625/11626/11627/11628/11629/11630/11631/11632/11633/11634/11635/11636/11637/11638 古代法庭：条目与 definition/behavior 读点"
+        }
+      ]
+    },
+    {
+      "code": "11620",
+      "name": "东侧前厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11619/11620/11621/11622/11622b/11623/11624/11625/11626/11627/11628/11629/11630/11631/11632/11633/11634/11635/11636/11637/11638 古代法庭：条目与 definition/behavior 读点"
+        }
+      ]
+    },
+    {
+      "code": "11621",
+      "name": "扭曲栈桥",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-courtOfTheAncients.test.mjs",
+          "test": "P7 courtOfTheAncients 敌军阶段钩子：11637 移动到猎物、11635 对相邻地点直接恐惧、11621 战后弃手牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11619/11620/11621/11622/11622b/11623/11624/11625/11626/11627/11628/11629/11630/11631/11632/11633/11634/11635/11636/11637/11638 古代法庭：条目与 definition/behavior 读点"
+        }
+      ]
+    },
+    {
+      "code": "11622",
+      "name": "大升降机",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11619/11620/11621/11622/11622b/11623/11624/11625/11626/11627/11628/11629/11630/11631/11632/11633/11634/11635/11636/11637/11638 古代法庭：条目与 definition/behavior 读点"
+        }
+      ]
+    },
+    {
+      "code": "11622b",
+      "name": "大升降机",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11619/11620/11621/11622/11622b/11623/11624/11625/11626/11627/11628/11629/11630/11631/11632/11633/11634/11635/11636/11637/11638 古代法庭：条目与 definition/behavior 读点"
+        }
+      ]
+    },
+    {
+      "code": "11623",
+      "name": "古代祭坛",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-courtOfTheAncients.test.mjs",
+          "test": "P7 courtOfTheAncients 11623 进入费用：同地点组线索不足拒绝，支付 4×人数后进入"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：进入古代祭坛的共同线索费用（11623）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11619/11620/11621/11622/11622b/11623/11624/11625/11626/11627/11628/11629/11630/11631/11632/11633/11634/11635/11636/11637/11638 古代法庭：条目与 definition/behavior 读点"
+        }
+      ]
+    },
+    {
+      "code": "11624",
+      "name": "环形图书馆",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-courtOfTheAncients.test.mjs",
+          "test": "P7 courtOfTheAncients 11624 [reaction] 弃顶：弃 1 手牌后额外弃 2 张（encounterCardsDiscardedFromTop 窗口）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11619/11620/11621/11622/11622b/11623/11624/11625/11626/11627/11628/11629/11630/11631/11632/11633/11634/11635/11636/11637/11638 古代法庭：条目与 definition/behavior 读点"
+        }
+      ]
+    },
+    {
+      "code": "11625",
+      "name": "环形图书馆",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-courtOfTheAncients.test.mjs",
+          "test": "P7 courtOfTheAncients 11625 [reaction] 弃顶：受到 1 点直接恐惧并额外弃 3 张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-courtOfTheAncients.test.mjs",
+          "test": "P7 courtOfTheAncients 11625 费用口径：直接恐惧作为反应费用在额外弃牌前结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11619/11620/11621/11622/11622b/11623/11624/11625/11626/11627/11628/11629/11630/11631/11632/11633/11634/11635/11636/11637/11638 古代法庭：条目与 definition/behavior 读点"
+        }
+      ]
+    },
+    {
+      "code": "11626",
+      "name": "高空栈道",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11619/11620/11621/11622/11622b/11623/11624/11625/11626/11627/11628/11629/11630/11631/11632/11633/11634/11635/11636/11637/11638 古代法庭：条目与 definition/behavior 读点"
+        }
+      ]
+    },
+    {
+      "code": "11627",
+      "name": "高空栈道",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-courtOfTheAncients.test.mjs",
+          "test": "P7 courtOfTheAncients 11627 强制弃顶：最近的重整非精英敌人解除交战并移动到高空栈道"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11619/11620/11621/11622/11622b/11623/11624/11625/11626/11627/11628/11629/11630/11631/11632/11633/11634/11635/11636/11637/11638 古代法庭：条目与 definition/behavior 读点"
+        }
+      ]
+    },
+    {
+      "code": "11628",
+      "name": "荧光档案库",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-courtOfTheAncients.test.mjs",
+          "test": "P7 courtOfTheAncients 11628 [fast]：花 X 次行动搜索弃牌堆符文（X=1/2 扣行动、抽取数量正确）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11619/11620/11621/11622/11622b/11623/11624/11625/11626/11627/11628/11629/11630/11631/11632/11633/11634/11635/11636/11637/11638 古代法庭：条目与 definition/behavior 读点"
+        }
+      ]
+    },
+    {
+      "code": "11629",
+      "name": "荧光档案库",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-courtOfTheAncients.test.mjs",
+          "test": "P7 courtOfTheAncients 11629 强制：调查阶段结束时把附属[[符文]]诡计混洗入遭遇牌库"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11619/11620/11621/11622/11622b/11623/11624/11625/11626/11627/11628/11629/11630/11631/11632/11633/11634/11635/11636/11637/11638 古代法庭：条目与 definition/behavior 读点"
+        }
+      ]
+    },
+    {
+      "code": "11630",
+      "name": "议庭守护者[tdc_rune_k]",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-courtOfTheAncients.test.mjs",
+          "test": "P7 courtOfTheAncients 11630/11631 动态关键词：<10 不加、≥10 加、跌破后移除并随 phaseBegan/enemySpawned/victoryChanged 同步"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11619/11620/11621/11622/11622b/11623/11624/11625/11626/11627/11628/11629/11630/11631/11632/11633/11634/11635/11636/11637/11638 古代法庭：条目与 definition/behavior 读点"
+        }
+      ]
+    },
+    {
+      "code": "11631",
+      "name": "议庭守护者[tdc_rune_j]",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-courtOfTheAncients.test.mjs",
+          "test": "P7 courtOfTheAncients 11630/11631 动态关键词：<10 不加、≥10 加、跌破后移除并随 phaseBegan/enemySpawned/victoryChanged 同步"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11619/11620/11621/11622/11622b/11623/11624/11625/11626/11627/11628/11629/11630/11631/11632/11633/11634/11635/11636/11637/11638 古代法庭：条目与 definition/behavior 读点"
+        }
+      ]
+    },
+    {
+      "code": "11632",
+      "name": "古代秘库[tdc_rune_g]",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11619/11620/11621/11622/11622b/11623/11624/11625/11626/11627/11628/11629/11630/11631/11632/11633/11634/11635/11636/11637/11638 古代法庭：条目与 definition/behavior 读点"
+        }
+      ]
+    },
+    {
+      "code": "11633",
+      "name": "古代秘库[tdc_rune_i]",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11619/11620/11621/11622/11622b/11623/11624/11625/11626/11627/11628/11629/11630/11631/11632/11633/11634/11635/11636/11637/11638 古代法庭：条目与 definition/behavior 读点"
+        }
+      ]
+    },
+    {
+      "code": "11634",
+      "name": "破损星盘仪[tdc_rune_h]",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11619/11620/11621/11622/11622b/11623/11624/11625/11626/11627/11628/11629/11630/11631/11632/11633/11634/11635/11636/11637/11638 古代法庭：条目与 definition/behavior 读点"
+        }
+      ]
+    },
+    {
+      "code": "11635",
+      "name": "巨型暴君",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-courtOfTheAncients.test.mjs",
+          "test": "P7 courtOfTheAncients 11635 不能移动：enemyRule.immobile 拦下移动，setEnemyKeywords 关闭后恢复移动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-courtOfTheAncients.test.mjs",
+          "test": "P7 courtOfTheAncients 敌军阶段钩子：11637 移动到猎物、11635 对相邻地点直接恐惧、11621 战后弃手牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11619/11620/11621/11622/11622b/11623/11624/11625/11626/11627/11628/11629/11630/11631/11632/11633/11634/11635/11636/11637/11638 古代法庭：条目与 definition/behavior 读点"
+        }
+      ]
+    },
+    {
+      "code": "11636",
+      "name": "宇宙预兆",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11619/11620/11621/11622/11622b/11623/11624/11625/11626/11627/11628/11629/11630/11631/11632/11633/11634/11635/11636/11637/11638 古代法庭：条目与 definition/behavior 读点"
+        }
+      ]
+    },
+    {
+      "code": "11637",
+      "name": "飞翼守护者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-courtOfTheAncients.test.mjs",
+          "test": "P7 courtOfTheAncients 敌军阶段钩子：11637 移动到猎物、11635 对相邻地点直接恐惧、11621 战后弃手牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-courtOfTheAncients.test.mjs",
+          "test": "P7 courtOfTheAncients 生成落点：11637 最高层且没有调查员处"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11619/11620/11621/11622/11622b/11623/11624/11625/11626/11627/11628/11629/11630/11631/11632/11633/11634/11635/11636/11637/11638 古代法庭：条目与 definition/behavior 读点"
+        }
+      ]
+    },
+    {
+      "code": "11638",
+      "name": "伊克雷希特碎片",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-courtOfTheAncients.test.mjs",
+          "test": "P7 courtOfTheAncients 11638 [reaction]：星之眷族敌人进入地点时横置碎片并横置该敌人"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-courtOfTheAncients.test.mjs",
+          "test": "P7 courtOfTheAncients 11638 被动：每轮首次[[星之眷族]]攻击可忽略（ignoredAttackRound 记账）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：受控剧情资产每轮可忽略首次敌人攻击，且敌人不能进入未淹没地点（11638/11605）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11619/11620/11621/11622/11622b/11623/11624/11625/11626/11627/11628/11629/11630/11631/11632/11633/11634/11635/11636/11637/11638 古代法庭：条目与 definition/behavior 读点"
+        }
+      ]
+    },
+    {
+      "code": "11639",
+      "name": "黑曜石峡谷",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11639/11640/11640b/11641/11642/11643/11644/11645/11646/11647/11648/11649/11650 黑曜石峡谷场景/风卡/幕/议程/地点：读点齐备"
+        }
+      ]
+    },
+    {
+      "code": "11640",
+      "name": "西风",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11639/11640/11640b/11641/11642/11643/11644/11645/11646/11647/11648/11649/11650 黑曜石峡谷场景/风卡/幕/议程/地点：读点齐备"
+        }
+      ]
+    },
+    {
+      "code": "11640b",
+      "name": "东风",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11639/11640/11640b/11641/11642/11643/11644/11645/11646/11647/11648/11649/11650 黑曜石峡谷场景/风卡/幕/议程/地点：读点齐备"
+        }
+      ]
+    },
+    {
+      "code": "11641",
+      "name": "异界风暴",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-obsidianCanyons.test.mjs",
+          "test": "P7 obsidianCanyons 东征布置：2 幕、议程 11641、西风面、11 张开阔天空、穷途异魔整组放一边"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：弱点敌人不能进入开阔天空、遭遇附属不能离场、额外巡逻与放一边接管（11641/11531/11706/11549）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11639/11640/11640b/11641/11642/11643/11644/11645/11646/11647/11648/11649/11650 黑曜石峡谷场景/风卡/幕/议程/地点：读点齐备"
+        }
+      ]
+    },
+    {
+      "code": "11642",
+      "name": "逼近的风暴",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11639/11640/11640b/11641/11642/11643/11644/11645/11646/11647/11648/11649/11650 黑曜石峡谷场景/风卡/幕/议程/地点：读点齐备"
+        }
+      ]
+    },
+    {
+      "code": "11643",
+      "name": "搜寻尖塔",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11639/11640/11640b/11641/11642/11643/11644/11645/11646/11647/11648/11649/11650 黑曜石峡谷场景/风卡/幕/议程/地点：读点齐备"
+        }
+      ]
+    },
+    {
+      "code": "11644",
+      "name": "前往古代圆顶！",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11639/11640/11640b/11641/11642/11643/11644/11645/11646/11647/11648/11649/11650 黑曜石峡谷场景/风卡/幕/议程/地点：读点齐备"
+        }
+      ]
+    },
+    {
+      "code": "11645",
+      "name": "扫荡尖塔",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11639/11640/11640b/11641/11642/11643/11644/11645/11646/11647/11648/11649/11650 黑曜石峡谷场景/风卡/幕/议程/地点：读点齐备"
+        }
+      ]
+    },
+    {
+      "code": "11646",
+      "name": "致命天空",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11639/11640/11640b/11641/11642/11643/11644/11645/11646/11647/11648/11649/11650 黑曜石峡谷场景/风卡/幕/议程/地点：读点齐备"
+        }
+      ]
+    },
+    {
+      "code": "11647",
+      "name": "返回海岸线",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11639/11640/11640b/11641/11642/11643/11644/11645/11646/11647/11648/11649/11650 黑曜石峡谷场景/风卡/幕/议程/地点：读点齐备"
+        }
+      ]
+    },
+    {
+      "code": "11648",
+      "name": "拉莱耶街道",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：地点不能被移动/离场，巡逻最近空特性地点（11648–11652/11670）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11639/11640/11640b/11641/11642/11643/11644/11645/11646/11647/11648/11649/11650 黑曜石峡谷场景/风卡/幕/议程/地点：读点齐备"
+        }
+      ]
+    },
+    {
+      "code": "11649",
+      "name": "中央尖塔",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11639/11640/11640b/11641/11642/11643/11644/11645/11646/11647/11648/11649/11650 黑曜石峡谷场景/风卡/幕/议程/地点：读点齐备"
+        }
+      ]
+    },
+    {
+      "code": "11650",
+      "name": "漂浮尖塔",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11639/11640/11640b/11641/11642/11643/11644/11645/11646/11647/11648/11649/11650 黑曜石峡谷场景/风卡/幕/议程/地点：读点齐备"
+        }
+      ]
+    },
+    {
+      "code": "11651",
+      "name": "西墙",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面 [action] 撤退（Retreat）无实现读点：obsidianCanyons behavior/definition 无 resign/retreat 分支，条目也未声明撤退能力（同章 11644/11647 目标「每位存活调查员均已撤退」缺玩家入口）。"
+    },
+    {
+      "code": "11652",
+      "name": "古代圆顶",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同上；条目 note 自述「[action] 撤退未接」。"
+    },
+    {
+      "code": "11653",
+      "name": "东侧学府[tdc_rune_b]",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11651/11652/11653/11654/11655/11656/11657/11658/11659 黑曜石地点：行为分派函数存在且条目声明齐备"
+        }
+      ]
+    },
+    {
+      "code": "11654",
+      "name": "西侧学府[tdc_rune_c]",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11651/11652/11653/11654/11655/11656/11657/11658/11659 黑曜石地点：行为分派函数存在且条目声明齐备"
+        }
+      ]
+    },
+    {
+      "code": "11655",
+      "name": "黑曜石悬崖",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11651/11652/11653/11654/11655/11656/11657/11658/11659 黑曜石地点：行为分派函数存在且条目声明齐备"
+        }
+      ]
+    },
+    {
+      "code": "11656",
+      "name": "悬浮礁石",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11651/11652/11653/11654/11655/11656/11657/11658/11659 黑曜石地点：行为分派函数存在且条目声明齐备"
+        }
+      ]
+    },
+    {
+      "code": "11657",
+      "name": "悬挂船只",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11651/11652/11653/11654/11655/11656/11657/11658/11659 黑曜石地点：行为分派函数存在且条目声明齐备"
+        }
+      ]
+    },
+    {
+      "code": "11658",
+      "name": "古代峡谷",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：搜索遭遇牌并生成交战（11658）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11651/11652/11653/11654/11655/11656/11657/11658/11659 黑曜石地点：行为分派函数存在且条目声明齐备"
+        }
+      ]
+    },
+    {
+      "code": "11659",
+      "name": "炫目天际线",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11651/11652/11653/11654/11655/11656/11657/11658/11659 黑曜石地点：行为分派函数存在且条目声明齐备"
+        }
+      ]
+    }
+  ]
+}

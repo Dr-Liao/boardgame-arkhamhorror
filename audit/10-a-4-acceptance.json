@@ -1,0 +1,457 @@
+{
+  "schemaVersion": 1,
+  "unit": "10-a-4",
+  "profile": {
+    "id": "fhv-player-d-2026-11",
+    "scope": "铁杉谷盛宴 10 段 fhvp 玩家卡（10104–10138）35 条目录记录。14 条通过五维验收；21 条近似/缺口暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 35,
+    "verified": 14,
+    "unverified": 21,
+    "unimplemented": 0,
+    "testsPassed": 227
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-1.test.mjs",
+      "sha256": "0133ea21562f6da12f3881db64e5453fa4b13b36d5f0bda45c706ac8ff24aa6e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-2.test.mjs",
+      "sha256": "4f3dd2780e3c00cae1c549d711d11a89ec2740df43e8f1826e58b643081b1ea4"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-3.test.mjs",
+      "sha256": "087e3c842cdbec4acafec77595994bf7855cfdd9a880ce35ae7b55d0666be046"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
+      "sha256": "4f3832d8757b6538ddf9347a908d364504970331c542d295eef7af8af8441038"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-5.test.mjs",
+      "sha256": "e3c9544d66843da656e9432545760e4a04b5072dd1298a6e202490bae3e2e503"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-6.test.mjs",
+      "sha256": "f24cc9ffb9570160ed5d46758ea2ae4f93933b06862dc11096ee689b72715229"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-7.test.mjs",
+      "sha256": "bf1d854922604bb474b2ed8abd35b67a93ad1ee22fd229e609283ae4ace98884"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-8.test.mjs",
+      "sha256": "4b0bcbb5cdcc074b09956b8168feae189061bad71ee43bd450500cd9ae8886ca"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-9.test.mjs",
+      "sha256": "730e1a91984e081d8bcd42f0e86144270f66f4ece326575016d5102f195e6d6d"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-10.test.mjs",
+      "sha256": "267e84e4201af115822f08a61de0fa7171a07bf5cae859dd6addf2b3cb085e07"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-11.test.mjs",
+      "sha256": "033cd720e63298017c47fdb287740848865002dbf3f2ce69e2263a98e2f55829"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-12.test.mjs",
+      "sha256": "589e3b22ec381e53429b3c209c85fba2aac55f19d4e21ba4cc5c8c145819aee2"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-rules.test.mjs",
+      "sha256": "0923adf4ff0b6d5b8e50ddf8bae63071dcae1f05ad9421ff0760e02715e615b7"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-primitives.test.mjs",
+      "sha256": "afc355d82436df1d0c2e58d43ac1e982d1efb0d068edad72b0c74da5d8a89412"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-investigator-10001.test.mjs",
+      "sha256": "0980a3ffb136e57cc42b369d7fd1727bce544d8d150f57b49c96b8bfcaa03526"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-investigator-10004.test.mjs",
+      "sha256": "39b44697645f0bace9739ac5554f1bdaddff50d95f21e101e682c6817573be28"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-investigator-10009.test.mjs",
+      "sha256": "1dc7e43c493b7e8c56bd738df7e754a0cabf030b457f2e0a85d3ad9b3147a6d6"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-investigator-10012.test.mjs",
+      "sha256": "0132547d7f71987c0ffa1ea4639d2516627219bedec5f80e9a2a8109efaa7baf"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-investigator-10015.test.mjs",
+      "sha256": "7f797ffb5d58a0b3f5003838ec7c921fd865793182399406a6b6f7725dcc36d2"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-investigator-signatures.test.mjs",
+      "sha256": "c778ecb63528b6ea68cf26764f4cb9704b79980c6d76dc296e0cfcdf6936f1d6"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-interactions.test.mjs",
+      "sha256": "ec0fbb583bc1bb4240c8f184d861ed9761e33ec930a985c4e902e465041d693a"
+    }
+  ],
+  "entries": [
+    {
+      "code": "10104",
+      "name": "所罗门之钥",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 近似：healUpToTwo 每点重新枚举目标，允许 2 点治愈分配给不同目标；印刷要求从同一个调查员/盟友支援上治愈最多 2 点（低严重度、已披露）。"
+    },
+    {
+      "code": "10105",
+      "name": "上古封印",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 近似：「查找绑定卡牌并放置入场」经 shuffleCopyIntoDeck+takeDeckCard 搬运，会顺带洗一次牌库；印刷不洗牌（note/primitive-requests 已披露）。"
+    },
+    {
+      "code": "10106",
+      "name": "钥匙看管者",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 近似：「放在一边，位于场外」用 zoneReplacement+leavesPlay 收回绑定集合，但引擎在 leavesPlay 后仍会 push 一次弃牌堆 → 绑定集合回收副本同时弃牌堆多一张同号卡；[bless] 反应与发现线索已实现。"
+    },
+    {
+      "code": "10107",
+      "name": "黄铜仆从",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 同 10106 的近似：绑定集合回收同时弃牌堆多一张副本；[curse] 反应与 2 点伤害已实现。"
+    },
+    {
+      "code": "10108",
+      "name": "火柴盒",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-9.test.mjs",
+          "test": "P6 10108 火柴盒：使用（3 补给）；快速横置花 1 补给使你地点本回合隐蔽值 -1，用尽弃掉"
+        }
+      ]
+    },
+    {
+      "code": "10109",
+      "name": "毛皮货",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "两条印刷子句均无读点：①「在手牌中时你的手牌上限减少 3 张」只写成 modifiers target:'handSize'（sourceInHand），但 stats.js#handSize 只读 passive.handSizeBonus/威胁区/调查员规则，不读 modifierTotal('handSize')（实测 modifierTotal=-3 而 handSize 不变）；②「游戏结束/撤退时仍在手牌→下一张新购卡经验 -1」没有描述子窗口（finishScenario 只扫 traumaAtGameEndWhenInHand，grantPurchaseDiscount 无调用者）。既有 P6 测试只断言 modifierTotal 与 note 文本，未验证手牌上限变化。"
+    },
+    {
+      "code": "10110",
+      "name": "草叉",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "interaction",
+      "reason": "[pending] 近似：「附属地点获得 [action]：控制草叉」复用引擎通用 detach 行动（文案为「解除……并放回游戏区域」，以 ownerSeat:null 间接实现任意调查员可触发）；地点离场时该玩家附属会随地点消失而非进弃牌堆。攻击加值/加伤害/成功附属已实现。"
+    },
+    {
+      "code": "10111",
+      "name": "雀面具",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-10.test.mjs",
+          "test": "P6 10111 雀面具 [fast] 花 1 贡品：本次[敏捷]检定 +2，每次检定仅限一次"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-10.test.mjs",
+          "test": "P6 10111 雀面具 每人限 1 张[[面具]]；受伤后补 1 贡品"
+        }
+      ]
+    },
+    {
+      "code": "10112",
+      "name": "围魏救赵",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 近似：对每个敌人额外提供第三选项「不处理这个敌人」，卡面只允许在「非精英自动躲避 / 精英 1 伤害」二选一（已披露近似）。"
+    },
+    {
+      "code": "10113",
+      "name": "破釜沉舟",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-10.test.mjs",
+          "test": "P6 10113 破釜沉舟 忽略所有费用（含[action]与弹药）结算弃牌堆武器的[action]能力，然后洗回牌库"
+        }
+      ]
+    },
+    {
+      "code": "10114",
+      "name": "缓兵之计",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-10.test.mjs",
+          "test": "P6 10114 缓兵之计 谈判检定[意志]（较低的战斗/躲避）；成功横置且非精英下次补给不重整，失败返回手牌"
+        }
+      ]
+    },
+    {
+      "code": "10115",
+      "name": "阴差阳错",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-10.test.mjs",
+          "test": "P6 10115 阴差阳错 Double 额外 1 行动；移动最多 5 点伤害/恐惧，每击败一个支援抽 1 张，然后移出游戏"
+        }
+      ]
+    },
+    {
+      "code": "10116",
+      "name": "出奇制胜",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-10.test.mjs",
+          "test": "P6 10116 出奇制胜 只能投入对所在地点/连接地点敌人的攻击或躲避检定；成功后对该敌人造成 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "10117",
+      "name": "飞斧",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「所附属敌人获得：[reaction] 在所附属敌人被击败时：控制飞斧」完全未实现：玩家卡不在 enemy.attachments 的能力来源枚举中；敌人离场时 discardHostedAssets 把飞斧弃到控制者弃牌堆而不是让任意调查员取回。攻击+敏捷/+1 伤害/击败弃卡/否则附属均正确。"
+    },
+    {
+      "code": "10118",
+      "name": "百折不挠",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「你可以从弃牌堆投入百折不挠；若如此，本次检定后将其洗回牌库」两半都未实现：abilities: []，引擎 commitCandidates 只扫手牌 + playChannels（beneath/playCommit/attachedCommit/deckTopCommit），无弃牌堆投入通道与「投入后洗回牌库」档案字段。"
+    },
+    {
+      "code": "10119",
+      "name": "“恶魔”",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-11.test.mjs",
+          "test": "P6 10119 “恶魔” 回合开始移动 1 点伤害；被击败时对地点每个敌人与调查员各造成 2 点伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-11.test.mjs",
+          "test": "P6 10119 “恶魔” 被普通伤害分配击败时，assetDefeated 窗口同样结算死亡反噬"
+        }
+      ]
+    },
+    {
+      "code": "10120",
+      "name": "消防斧",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-11.test.mjs",
+          "test": "P6 10120 消防斧 资源池为空时攻击 +1 伤害；[fast] 花资源 +2[combat]（每次攻击限三次）"
+        }
+      ]
+    },
+    {
+      "code": "10121",
+      "name": "猎装",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "interaction",
+      "reason": "[pending] 近似：[fast] 能力写成 kind:'action'（cost.action:false），只进入本人回合行动清单，不会像 free 描述子那样在任意玩家窗口/其他调查员回合提供候选（扫描披露）。"
+    },
+    {
+      "code": "10122",
+      "name": "水手的罗盘",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-11.test.mjs",
+          "test": "P6 10122 水手的罗盘 无资源调查成功额外发现 1 线索；失败重整；[fast] 花资源 +1[intellect]"
+        }
+      ]
+    },
+    {
+      "code": "10123",
+      "name": "求生技术",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "模式 1「[fast] 选择一张附属在你地点且归你所有的卡牌并横置求生技术：将该卡加入你的手牌」完全未实现（条目只声明模式 2）：引擎 playerLocationAttachments 无「地点附属→手牌」写入口。模式 2（地点/地点附属诡计检定 +2）完整。"
+    },
+    {
+      "code": "10124",
+      "name": "坚守信念",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-11.test.mjs",
+          "test": "P6 10124 坚守信念 快速（不花行动）加入 4 个祝福标记，受实体标记池上限限制"
+        }
+      ]
+    },
+    {
+      "code": "10125",
+      "name": "天命护佑",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-11.test.mjs",
+          "test": "P6 10125 天命护佑 检定成功时按伤害/恐惧较少者加入祝福标记"
+        }
+      ]
+    },
+    {
+      "code": "10126",
+      "name": "宗教信物",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 近似：失败后「再次尝试该检定」用 api.retryTest 只重跑技能/难度/来源，不重放原检定的 resolve 后续效果；转祝福与池上限完整。"
+    },
+    {
+      "code": "10127",
+      "name": "黑马",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-11.test.mjs",
+          "test": "P6 10127 黑马 无资源时四项技能 +1；补给阶段可以选择不获得资源"
+        }
+      ]
+    },
+    {
+      "code": "10128",
+      "name": "惊世巧舌",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-11.test.mjs",
+          "test": "P6 10128 惊世巧舌 从弃牌堆打出带谈判的事件，花 1 充能并移出游戏"
+        }
+      ]
+    },
+    {
+      "code": "10129",
+      "name": "静候时机",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 近似：「下个回合期间可以进行额外两次行动」实现为额外 1 次行动（引擎 inv.extraActionNextTurn 为布尔值、turn.js 固定 +1，缺计数式原语）；额外费用 1 行动正确。"
+    },
+    {
+      "code": "10130",
+      "name": "盛装出席",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-12.test.mjs",
+          "test": "P6 10130 盛装出席 谈判检定期间投入时获得[wild][wild][wild]（印刷 1 + 3）"
+        }
+      ]
+    },
+    {
+      "code": "10131",
+      "name": "黎明之星",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 近似：多个敌人时只询问一次目标，全部「每 1 个[诅咒]标记 1 点伤害」都打给同一敌人；印刷允许每点分别指向同地点任意敌人（已披露）。"
+    },
+    {
+      "code": "10132",
+      "name": "密教珍藏",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 近似：「额外 1 个手部、饰品或法术槽位（三选一）」用 restrictedSlots 三条声明近似 → 三个槽位各 1 格，最多比印刷多 2 格容量（已披露）。"
+    },
+    {
+      "code": "10133",
+      "name": "破碎冠冕",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 近似：缺「绑定卡就地交换」原语——3 贡品后检索暮光冠冕放置入场、贡品转移、破碎冠冕返回手牌（可按费用再次打出）而非回到场外绑定集合；同特性 Mask 崩溃路径在当前 HEAD 已被 legalMoves/validateMove 拦截（见 10111 证据）。贡品改用 uses 计数。"
+    },
+    {
+      "code": "10134",
+      "name": "暮光冠冕",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 近似：反向交换要求破碎冠冕此刻在手牌（否则只打印日志不交换），暮光冠冕返回手牌而非场外绑定集合；[curse]→[elder_sign] 与贡品消耗已实现。"
+    },
+    {
+      "code": "10135",
+      "name": "手部残疾",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「除上述 [action][action] 能力外不能离场」没有读点：引擎有 cannotLeavePlay（harm-threat.js:116 / asset-departure.js）但条目未声明，任何「弃掉威胁区一张卡」的效果都能移除它；显现二选一与 2 行动弃掉已实现。"
+    },
+    {
+      "code": "10136",
+      "name": "背伤",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 10135：缺 cannotLeavePlay 声明/读点，威胁区弃卡效果可移除本卡；显现可选分支与洗回牌库已实现。"
+    },
+    {
+      "code": "10137",
+      "name": "银蛾",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 10135：缺 cannotLeavePlay 声明/读点；-1 神智与 2 行动弃掉已实现。"
+    },
+    {
+      "code": "10138",
+      "name": "德兹特里奇之誓",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 10135：缺 cannotLeavePlay 声明/读点；显现二选一/-1 神智/2 行动弃掉已实现。"
+    }
+  ]
+}

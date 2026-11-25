@@ -1,0 +1,605 @@
+{
+  "schemaVersion": 1,
+  "unit": "09-a-9",
+  "profile": {
+    "id": "tsk-campaign-f-2026-11",
+    "scope": "绯红密钥 09 段 tskc 战役卡（09696–09736）45 条目录记录。39 条通过五维验收；6 条原语复用债务/实现缺口暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 45,
+    "verified": 39,
+    "unverified": 6,
+    "unimplemented": 0,
+    "testsPassed": 160
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+      "sha256": "65822b7944c5088dce450f5c952bd9b9a856d1a729c161c65d7d44f14a3373d8"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-scenario-congressOfTheKeys.test.mjs",
+      "sha256": "479100d083f3a0b6c4345cc26d5e1b605fa6c01b9eaad11717efa212eed921c3"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+      "sha256": "55b9d956584e3b77069606a9a33ab8d055576c4c7fffeaf27c92a43d6e5bd8fc"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-shared-encounters-b.test.mjs",
+      "sha256": "dd9606f52b2f69f8933612e9d97dc1f4b05897b10c8f0bcca73c2f42856f254d"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-rules.test.mjs",
+      "sha256": "5ae05cfcab8019f5322e8207b5145c1cf024104eeaf00a84312c17f902879ad8"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-customizable.test.mjs",
+      "sha256": "4311237d47f104f0b62635d521dcccf34a0804a9109d07f7f3aa3ff05800743b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-keys-hollow.test.mjs",
+      "sha256": "925b275cb5d75467558ff4fa6f11f5bd01c4500aa5a1b8d1562e9bcb267f2f09"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-state.test.mjs",
+      "sha256": "46ca77b4b6442473ff0bbe6570b437187086df6337c989fb89f9cb4c3decbb18"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-map.test.mjs",
+      "sha256": "a46ed2ac6953edaecec26fe89a8ac494a3a275ba8e2c56ab21a124ca23a7afc2"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-interactions.test.mjs",
+      "sha256": "275c143401aaca1618ba01abe71f3838732d13b73ab5932098e13ff447146233"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-p0-regressions.test.mjs",
+      "sha256": "8d71ccce9008da1a2332f9e4d4381d6c26e096a8c5511eec83bde0e0d40a9e52"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-p1-regressions.test.mjs",
+      "sha256": "892ccba343a9c8a9186957c1a49018ba3fb3375c3298bf46d8bc91211614f8a4"
+    }
+  ],
+  "entries": [
+    {
+      "code": "09696",
+      "name": "不速之界",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09696/09697/09698/09699/09700/09701/09702/09703/09704/09705/09706/09707/09708/09709/09710/09711/09712/09713/09714 国会大厦：每张卡在章节 definition/behavior 有承接（数据/读点存在）"
+        }
+      ]
+    },
+    {
+      "code": "09697",
+      "name": "万物尽红",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09696/09697/09698/09699/09700/09701/09702/09703/09704/09705/09706/09707/09708/09709/09710/09711/09712/09713/09714 国会大厦：每张卡在章节 definition/behavior 有承接（数据/读点存在）"
+        }
+      ]
+    },
+    {
+      "code": "09698",
+      "name": "秘密与谎言(版本一)",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09696/09697/09698/09699/09700/09701/09702/09703/09704/09705/09706/09707/09708/09709/09710/09711/09712/09713/09714 国会大厦：每张卡在章节 definition/behavior 有承接（数据/读点存在）"
+        }
+      ]
+    },
+    {
+      "code": "09699",
+      "name": "秘密与谎言(版本二)",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09696/09697/09698/09699/09700/09701/09702/09703/09704/09705/09706/09707/09708/09709/09710/09711/09712/09713/09714 国会大厦：每张卡在章节 definition/behavior 有承接（数据/读点存在）"
+        }
+      ]
+    },
+    {
+      "code": "09700",
+      "name": "秘密与谎言(版本三)",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09696/09697/09698/09699/09700/09701/09702/09703/09704/09705/09706/09707/09708/09709/09710/09711/09712/09713/09714 国会大厦：每张卡在章节 definition/behavior 有承接（数据/读点存在）"
+        }
+      ]
+    },
+    {
+      "code": "09701",
+      "name": "登塔",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09696/09697/09698/09699/09700/09701/09702/09703/09704/09705/09706/09707/09708/09709/09710/09711/09712/09713/09714 国会大厦：每张卡在章节 definition/behavior 有承接（数据/读点存在）"
+        }
+      ]
+    },
+    {
+      "code": "09702",
+      "name": "登顶",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09696/09697/09698/09699/09700/09701/09702/09703/09704/09705/09706/09707/09708/09709/09710/09711/09712/09713/09714 国会大厦：每张卡在章节 definition/behavior 有承接（数据/读点存在）"
+        }
+      ]
+    },
+    {
+      "code": "09703",
+      "name": "最后的疏忽",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09696/09697/09698/09699/09700/09701/09702/09703/09704/09705/09706/09707/09708/09709/09710/09711/09712/09713/09714 国会大厦：每张卡在章节 definition/behavior 有承接（数据/读点存在）"
+        }
+      ]
+    },
+    {
+      "code": "09704",
+      "name": "猩红走廊",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09696/09697/09698/09699/09700/09701/09702/09703/09704/09705/09706/09707/09708/09709/09710/09711/09712/09713/09714 国会大厦：每张卡在章节 definition/behavior 有承接（数据/读点存在）"
+        }
+      ]
+    },
+    {
+      "code": "09705",
+      "name": "猩红走廊",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09696/09697/09698/09699/09700/09701/09702/09703/09704/09705/09706/09707/09708/09709/09710/09711/09712/09713/09714 国会大厦：每张卡在章节 definition/behavior 有承接（数据/读点存在）"
+        }
+      ]
+    },
+    {
+      "code": "09706",
+      "name": "议会室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09696/09697/09698/09699/09700/09701/09702/09703/09704/09705/09706/09707/09708/09709/09710/09711/09712/09713/09714 国会大厦：每张卡在章节 definition/behavior 有承接（数据/读点存在）"
+        }
+      ]
+    },
+    {
+      "code": "09707",
+      "name": "议会室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09696/09697/09698/09699/09700/09701/09702/09703/09704/09705/09706/09707/09708/09709/09710/09711/09712/09713/09714 国会大厦：每张卡在章节 definition/behavior 有承接（数据/读点存在）"
+        }
+      ]
+    },
+    {
+      "code": "09708",
+      "name": "结社藏书室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09696/09697/09698/09699/09700/09701/09702/09703/09704/09705/09706/09707/09708/09709/09710/09711/09712/09713/09714 国会大厦：每张卡在章节 definition/behavior 有承接（数据/读点存在）"
+        }
+      ]
+    },
+    {
+      "code": "09709",
+      "name": "结社藏书室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09696/09697/09698/09699/09700/09701/09702/09703/09704/09705/09706/09707/09708/09709/09710/09711/09712/09713/09714 国会大厦：每张卡在章节 definition/behavior 有承接（数据/读点存在）"
+        }
+      ]
+    },
+    {
+      "code": "09710",
+      "name": "藏钥馆",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09696/09697/09698/09699/09700/09701/09702/09703/09704/09705/09706/09707/09708/09709/09710/09711/09712/09713/09714 国会大厦：每张卡在章节 definition/behavior 有承接（数据/读点存在）"
+        }
+      ]
+    },
+    {
+      "code": "09711",
+      "name": "藏钥馆",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09696/09697/09698/09699/09700/09701/09702/09703/09704/09705/09706/09707/09708/09709/09710/09711/09712/09713/09714 国会大厦：每张卡在章节 definition/behavior 有承接（数据/读点存在）"
+        }
+      ]
+    },
+    {
+      "code": "09712",
+      "name": "万千纠结之塔",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09696/09697/09698/09699/09700/09701/09702/09703/09704/09705/09706/09707/09708/09709/09710/09711/09712/09713/09714 国会大厦：每张卡在章节 definition/behavior 有承接（数据/读点存在）"
+        }
+      ]
+    },
+    {
+      "code": "09713",
+      "name": "悖逆重力之阶",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09696/09697/09698/09699/09700/09701/09702/09703/09704/09705/09706/09707/09708/09709/09710/09711/09712/09713/09714 国会大厦：每张卡在章节 definition/behavior 有承接（数据/读点存在）"
+        }
+      ]
+    },
+    {
+      "code": "09714",
+      "name": "睥睨众生之巅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09696/09697/09698/09699/09700/09701/09702/09703/09704/09705/09706/09707/09708/09709/09710/09711/09712/09713/09714 国会大厦：每张卡在章节 definition/behavior 有承接（数据/读点存在）"
+        }
+      ]
+    },
+    {
+      "code": "09715",
+      "name": "拟态克星",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-scenario-congressOfTheKeys.test.mjs",
+          "test": "P7 congressOfTheKeys 条目 09715：庞大/趁乱攻击/每调查员生命值/受伤揭示迷你卡"
+        }
+      ]
+    },
+    {
+      "code": "09716a",
+      "name": "结社特工(A)",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "与 09716b/c 同一印刷文本，三份条目各自手写同一套揭露/弃置实现（full-scan 登记应上收共享实现，fix-plan P2 未完成）。"
+    },
+    {
+      "code": "09716b",
+      "name": "结社特工(B)",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "同上（三份独立实现之一）。"
+    },
+    {
+      "code": "09716c",
+      "name": "结社特工(C)",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "同上（三份独立实现之一）。"
+    },
+    {
+      "code": "09717",
+      "name": "红色阴谋",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09717 红色阴谋：阴影有敌人时放 1 毁灭；否则检索带隐匿敌人并抽取"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09717/09721/09722 共享诡计：真实条目导入 + 执行入口 + tskExposed 窗口读点"
+        }
+      ]
+    },
+    {
+      "code": "09718",
+      "name": "现实塌缩",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09718/09719/09723/09724/09725/09728/09733/09734/09735/09736 共享遭遇：条目文件与执行入口齐备"
+        }
+      ]
+    },
+    {
+      "code": "09719",
+      "name": "瓢泼大雨",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09718/09719/09723/09724/09725/09728/09733/09734/09735/09736 共享遭遇：条目文件与执行入口齐备"
+        }
+      ]
+    },
+    {
+      "code": "09720",
+      "name": "结社代表",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「重整时本地点的隐匿迷你卡不能被玩家卡牌效果揭露」缺 expose-block 读点（note 自述 primitive request）。"
+    },
+    {
+      "code": "09721",
+      "name": "就在眼前",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-p0-regressions.test.mjs",
+          "test": "P0-6 苦痛之影遭遇牌库的 09720/09721 已注册，真实抽取不再「未知遭遇卡」"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09717/09721/09722 共享诡计：真实条目导入 + 执行入口 + tskExposed 窗口读点"
+        }
+      ]
+    },
+    {
+      "code": "09722",
+      "name": "暗中一刀",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09717/09721/09722 共享诡计：真实条目导入 + 执行入口 + tskExposed 窗口读点"
+        }
+      ]
+    },
+    {
+      "code": "09723",
+      "name": "乔装卧底",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09718/09719/09723/09724/09725/09728/09733/09734/09735/09736 共享遭遇：条目文件与执行入口齐备"
+        }
+      ]
+    },
+    {
+      "code": "09724",
+      "name": "误见阴影",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09718/09719/09723/09724/09725/09728/09733/09734/09735/09736 共享遭遇：条目文件与执行入口齐备"
+        }
+      ]
+    },
+    {
+      "code": "09725",
+      "name": "黑暗中的身影",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09718/09719/09723/09724/09725/09728/09733/09734/09735/09736 共享遭遇：条目文件与执行入口齐备"
+        }
+      ]
+    },
+    {
+      "code": "09726a",
+      "name": "结社打手(A)",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-p1-regressions.test.mjs",
+          "test": "P1-1a 揭露迷你卡派发 tskExposed：强制条目（09726a）真实结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09726a/09726b/09727a/09727b/09730/09731 红衣结社与共享敌人：条目规则/能力声明齐备"
+        }
+      ]
+    },
+    {
+      "code": "09726b",
+      "name": "结社打手(B)",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09726a/09726b/09727a/09727b/09730/09731 红衣结社与共享敌人：条目规则/能力声明齐备"
+        }
+      ]
+    },
+    {
+      "code": "09727a",
+      "name": "结社刺客(A)",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09726a/09726b/09727a/09727b/09730/09731 红衣结社与共享敌人：条目规则/能力声明齐备"
+        }
+      ]
+    },
+    {
+      "code": "09727b",
+      "name": "结社刺客(B)",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09726a/09726b/09727a/09727b/09730/09731 红衣结社与共享敌人：条目规则/能力声明齐备"
+        }
+      ]
+    },
+    {
+      "code": "09728",
+      "name": "溜之大吉",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09718/09719/09723/09724/09725/09728/09733/09734/09735/09736 共享遭遇：条目文件与执行入口齐备"
+        }
+      ]
+    },
+    {
+      "code": "09729",
+      "name": "身染猩红",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「本地点每个敌人得到 +1 攻击/躲避」缺实时修正读点（note 披露 primitive request）。"
+    },
+    {
+      "code": "09730",
+      "name": "钥匙充能",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09726a/09726b/09727a/09727b/09730/09731 红衣结社与共享敌人：条目规则/能力声明齐备"
+        }
+      ]
+    },
+    {
+      "code": "09731",
+      "name": "无端存在",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09726a/09726b/09727a/09727b/09730/09731 红衣结社与共享敌人：条目规则/能力声明齐备"
+        }
+      ]
+    },
+    {
+      "code": "09732",
+      "name": "天启噩兆",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「被击败时不加入胜利区，改为弃掉」击败去向覆盖读点未交付（note 自述 primitive-requests/09732.json）。"
+    },
+    {
+      "code": "09733",
+      "name": "物质伪饰",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09718/09719/09723/09724/09725/09728/09733/09734/09735/09736 共享遭遇：条目文件与执行入口齐备"
+        }
+      ]
+    },
+    {
+      "code": "09734",
+      "name": "异界仿体",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09718/09719/09723/09724/09725/09728/09733/09734/09735/09736 共享遭遇：条目文件与执行入口齐备"
+        }
+      ]
+    },
+    {
+      "code": "09735",
+      "name": "记忆变体",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09718/09719/09723/09724/09725/09728/09733/09734/09735/09736 共享遭遇：条目文件与执行入口齐备"
+        }
+      ]
+    },
+    {
+      "code": "09736",
+      "name": "失落的秘密",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09718/09719/09723/09724/09725/09728/09733/09734/09735/09736 共享遭遇：条目文件与执行入口齐备"
+        }
+      ]
+    }
+  ]
+}

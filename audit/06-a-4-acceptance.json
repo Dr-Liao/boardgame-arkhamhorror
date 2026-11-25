@@ -1,0 +1,521 @@
+{
+  "schemaVersion": 1,
+  "unit": "06-a-4",
+  "profile": {
+    "id": "tde-search-for-kadath-b-2026-11",
+    "scope": "食梦者 06 段 The Search for Kadath（sfk，06133–06154）33 条目录记录。15 条通过五维验收；5 条功能缺口、13 条死声明/元数据待裁决暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 33,
+    "verified": 15,
+    "unverified": 18,
+    "unimplemented": 0,
+    "testsPassed": 382
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-06-a-shard4.test.mjs",
+      "sha256": "8156b5370811c630adad415d2cd936289a8a3450600058431c1cbddd4811c79a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-scenario-theSearchForKadath.test.mjs",
+      "sha256": "579fe5855982c0f041a34245e27ebd896106695b94c23eff1665d6a7ed087a76"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+      "sha256": "39bda187c894162c57ab8fc2684e578bdac1dbc1f11e3decfc65782095308400"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-rules.test.mjs",
+      "sha256": "682a74a0627dd5ea36463d3923dd20a4f1fb07c57740ad61d6100fdaba65c797"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+      "sha256": "6512f95034b0c9d9655bd3186f5902ae7237c86040a8a08e710bbeaa44597233"
+    }
+  ],
+  "entries": [
+    {
+      "code": "06133",
+      "name": "伊莱克-瓦达",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard4.test.mjs",
+          "test": "06133 伊莱克-瓦达：每轮第一张法术/仪式/遗物卡费用 -1（引擎 playCost 读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard4.test.mjs",
+          "test": "06133b 彩虹宫殿：位于伊莱克-瓦达的每位调查员治愈 2 恐惧并抽 2 张牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06133 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06133b 已验收 · story 关联面 06133"
+        }
+      ]
+    },
+    {
+      "code": "06133b",
+      "name": "彩虹宫殿",
+      "type": "story",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 卡面行为由 assetRule.resolve 完整实现并有真实用例，但条目声明 `story: true` 字段无任何读点（全仓无 assetRule.story 读取）。属「声明未接线」债务，按规程不得 verified；是否以「纯元数据」豁免需主进程裁决。建议删除该字段或在通用 story 管线补读点。"
+    },
+    {
+      "code": "06134",
+      "name": "禁闭之地",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-theSearchForKadath.test.mjs",
+          "test": "06130b 卡达瑟隆之柱 / 06134b 诸神庙宇：神迹 +1 并洗入 1 张黑暗夜魇"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard4.test.mjs",
+          "test": "06134 禁闭之地：战斗(1)→敏捷(2)→意志(3) 全成功翻面读故事，任一失败受 1 伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06134 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06134b 已验收 · story 关联面 06134"
+        }
+      ]
+    },
+    {
+      "code": "06134b",
+      "name": "诸神庙宇",
+      "type": "story",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 行为完整（神迹+1、洗入黑暗夜魇），但 `story: true` 与 `signs: 1` 两个字段无读点（全仓无 `.signs` / `assetRule.story` 读取；神迹由 resolve 内 api.markers.add 完成）。同 06133b 的元数据声明问题。"
+    },
+    {
+      "code": "06135",
+      "name": "祖兰-提克",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard4.test.mjs",
+          "test": "06135 祖兰-提克：轮末按在此的调查员数给夜色怪群加蜂拥卡"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard4.test.mjs",
+          "test": "06135b 祖兰-提克的地穴：发现 1 神迹并把夜色怪群加入胜利牌区"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06135 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06135b 已验收 · story 关联面 06135"
+        }
+      ]
+    },
+    {
+      "code": "06135b",
+      "name": "祖兰-提克的地穴",
+      "type": "story",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「将夜色怪群加入胜利牌区」用 api.banish，但引擎 banishEnemyToVictory 只移除头领本体，不清理头领已附属的蜂拥卡（swarm 卡是 state.enemies 里的独立敌人实体）；夜色怪群在本章区域设置时以 Swarming 1/人 生成，实战中翻面结算 06135b 会留下 hostId 指向已移除头领的孤儿蜂拥敌人。已用真实引擎函数复现：placeSwarmCards(host,2) 后 banish(host)，state.enemies 仍剩 2 张 swarm 卡。"
+    },
+    {
+      "code": "06136",
+      "name": "巴哈那港",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard4.test.mjs",
+          "test": "06136 巴哈那港：掩藏地点翻面读故事并记录「在巴哈那港口获取补给」"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard4.test.mjs",
+          "test": "06136b 巴哈那港的货物：弃牌堆的[[道具]]/[[供给]]返回手牌并记录补给"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06136 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06136b 已验收 · story 关联面 06136"
+        }
+      ]
+    },
+    {
+      "code": "06136b",
+      "name": "巴哈那港的货物",
+      "type": "story",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 行为完整（道具/供给回手 + 记录补给港口），但 `story: true`/`signs` 声明无读点。"
+    },
+    {
+      "code": "06137",
+      "name": "恩格拉尼克山脉",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-theSearchForKadath.test.mjs",
+          "test": "06137 恩格拉尼克山脉：无补给时进入触发战斗/敏捷(3)检定，失败失去行动并结束回合"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard4.test.mjs",
+          "test": "06137b 远古诸神的面容：发现 1 神迹并洗入 1 张放在一边的黑暗夜魇"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06137 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06137b 已验收 · story 关联面 06137"
+        }
+      ]
+    },
+    {
+      "code": "06137b",
+      "name": "远古诸神的面容",
+      "type": "story",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 行为完整（神迹+1、洗入黑暗夜魇），但 `story: true`/`signs: 1` 声明无读点。"
+    },
+    {
+      "code": "06138",
+      "name": "无名遗迹",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-theSearchForKadath.test.mjs",
+          "test": "06138 无名遗迹：回合结束时对[盟友]支援造成 1 点直接伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard4.test.mjs",
+          "test": "06138b 特尔菲亚的废墟：发现 1 个神迹"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06138 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06138b 已验收 · story 关联面 06138"
+        }
+      ]
+    },
+    {
+      "code": "06138b",
+      "name": "特尔菲亚的废墟",
+      "type": "story",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 行为完整（神迹+1），但 `story: true`/`signs: 1` 声明无读点。"
+    },
+    {
+      "code": "06139",
+      "name": "塞勒菲斯",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard4.test.mjs",
+          "test": "06139 塞勒菲斯：翻面读「王之良言」，记录向王祈求帮助并洗入黑暗夜魇"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard4.test.mjs",
+          "test": "06139b 王之良言：记录「向王祈求帮助」并把黑暗夜魇洗入遭遇牌库"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06139 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06139b 已验收 · story 关联面 06139"
+        }
+      ]
+    },
+    {
+      "code": "06139b",
+      "name": "王之良言",
+      "type": "story",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 行为完整（记录向王祈求帮助、洗入黑暗夜魇），但 `story: true` 声明无读点。"
+    },
+    {
+      "code": "06140",
+      "name": "塞拉尼安",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard4.test.mjs",
+          "test": "06140 塞拉尼安：进入/离开必须弃 1 张手牌作为额外费用，没有手牌则不能移动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard4.test.mjs",
+          "test": "06140b 永恒美景：位于塞拉尼安的每位调查员治愈 2 伤害、获得 2 资源并发现 1 神迹"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06140 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06140b 已验收 · story 关联面 06140"
+        }
+      ]
+    },
+    {
+      "code": "06140b",
+      "name": "永恒美景",
+      "type": "story",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 行为完整（治愈 2 伤害、+2 资源、神迹+1），但 `story: true`/`signs: 1` 声明无读点。"
+    },
+    {
+      "code": "06141",
+      "name": "哈祖斯-克列格",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard4.test.mjs",
+          "test": "06141 哈祖斯-克列格：翻面读「无以达愿」，把无以达愿之庙放入场"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard4.test.mjs",
+          "test": "06141b 无以达愿：把放在一边的无以达愿之庙放置入场"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06141 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06141b 已验收 · story 关联面 06141"
+        }
+      ]
+    },
+    {
+      "code": "06141b",
+      "name": "无以达愿",
+      "type": "story",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 行为完整（放入无以达愿之庙），但 `story: true` 声明无读点。"
+    },
+    {
+      "code": "06142",
+      "name": "无以达愿之庙",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-theSearchForKadath.test.mjs",
+          "test": "06142 无以达愿之庙：没有「向王祈求帮助」时行为拒绝进入"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard4.test.mjs",
+          "test": "06142b 城中之城：把放在一边的地图未见之城放置入场"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06142 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06142b 已验收 · story 关联面 06142"
+        }
+      ]
+    },
+    {
+      "code": "06142b",
+      "name": "城中之城",
+      "type": "story",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 行为完整（放入地图未见之城），但 `story: true` 声明无读点。"
+    },
+    {
+      "code": "06143",
+      "name": "地图未见之城",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard4.test.mjs",
+          "test": "06143 地图未见之城：隐藏值随千面祭司 -1；调查失败后检索生成千面祭司并洗回"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard4.test.mjs",
+          "test": "06143b 凶星：发现 2 神迹、弃掉本地敌人、把调查员移到神庙并把地点加入胜利区"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06143 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06143b 已验收 · story 关联面 06143"
+        }
+      ]
+    },
+    {
+      "code": "06143b",
+      "name": "凶星",
+      "type": "story",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 行为完整（两神迹、弃本地敌人、移动调查员、地点进胜利区），但 `story: true`/`signs: 2` 声明无读点。"
+    },
+    {
+      "code": "06144",
+      "name": "维吉尔·格雷",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "①印刷为 [reaction]（可选反应）：「发现至少 1 个神迹后」的触发在 behavior.resolveStoryCard 里被无条件自动结算（triggerSignsGained 直接调 afterSignsUncovered，选项里没有「不触发」），玩家无法放弃；控制权也自动交给第一位其他调查员而非由玩家选择。②条目 assetRule.removeFromGameOnLeave 无任何读点：behavior.assetLeftPlay 直接按卡号常量 VIRGIL_GRAY 处理；引擎 assets.js 只读顶层 entry.removeFromGameOnLeave，读不到嵌套在 assetRule 里的这份声明（「声明即接线」不成立）。"
+    },
+    {
+      "code": "06145",
+      "name": "乌撒之猫",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "两条印刷子句未实现（条目注释已披露为简化，但引用的 primitive-requests/w-p8-b-evade-extra-token.json 在仓库中不存在）：①「在你尝试躲避本敌人、揭示混乱标记时，额外揭示一个混乱标记（每次检定限一次）」——全仓无 evade 额外标记读点（引擎只有 07185 的 floodedAttackExtraToken 专用读点）；②「击败乌撒之猫或击败其 1 张蜂拥卡牌时」的蜂拥卡分支未接入（蜂拥卡被击败走 returnSwarmCard，不触发头领 enemyScript.onDefeated）。现有用例只覆盖头领首次被击败分支。"
+    },
+    {
+      "code": "06146",
+      "name": "跟踪的蝎狮",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard4.test.mjs",
+          "test": "06146 跟踪的蝎狮：成功躲避后解除交战但不横置，本阶段不能再与其交战"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06146 已验收 · enemy 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06147",
+      "name": "夜色怪群",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-theSearchForKadath.test.mjs",
+          "test": "06147 夜色怪群：头领被击败时改为横置（接管击败）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06147 已验收 · enemy 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06148",
+      "name": "伊伯生物",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「猎物 - 仅限位于[[遗迹]]地点的调查员」未实现：定义把猎物解析为原始卡文串（printedPrey），引擎 PREY_RANK 只认枚举键（mostClues/lowestCombat…），behavior 也无 06148 的 prey 处理，因此猎物选择退化为任意调查员，猎手移动目标不再受「遗迹地点」限制。"
+    },
+    {
+      "code": "06149",
+      "name": "千面祭司",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「……6 个或更多的神迹时，千面祭司得到伤害值+1，并获得反击」中的「获得反击」未实现：behavior 只读 signsOfTheGodsBonuses 的 fight/evade/health/damage，没有动态 retaliate 读点（引擎只从 definition 解析印刷关键词）；条目注释引用 primitive-requests/w-p8-b-dynamic-retaliate.json，该文件在仓库中不存在。"
+    },
+    {
+      "code": "06150",
+      "name": "黑暗夜魇",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "[pending] 条目 `enemyRule.setAsideDuringActSetup: true` 无任何读点（全仓唯一出现处即该条目）；实际规则由 behavior.setNightgauntsAside/restoreNightgaunts 用卡号常量 TENEBROUS_NIGHTGAUNT 实现。功能可用（新用例覆盖「区域设置放一边→放回城市」），但「声明即接线」不成立，且单卡规则以卡号常量写在内容层（card-model §6 回迁债务）。"
+    },
+    {
+      "code": "06151",
+      "name": "一群乌尼斯",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard4.test.mjs",
+          "test": "06151 一群乌尼斯：头领没有附属蜂拥卡时攻击值+2、躲避值+2"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06151 已验收 · enemy 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06152",
+      "name": "夜骑",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard4.test.mjs",
+          "test": "06152 夜骑：头领无蜂拥卡时躲避值-3；成功躲避后弃掉"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06152 已验收 · enemy 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06153",
+      "name": "麦格鸟之歌",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "[pending] 条目 `treacheryRule.attachedToLocation: true` 无任何读点（引擎/内容层均不读该键）；其余子句（显现附属、离开后 1 恐惧+1 毁灭+弃卡、意志/战斗(4) 关闭行动）均有 behavior 读点与用例。属声明未接线债务。"
+    },
+    {
+      "code": "06154",
+      "name": "奇妙平原",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "[pending] `treacheryRule.attachedToLocation` 无读点；`treacheryRule.shroudModifier: -2` 也无读点——behavior.locationShroudModifier 直接按卡号常量 RAW.c06154 判断并 -2（单卡规则以卡号常量写在内容层）。显现/成功调查后的强制均有读点与用例。"
+    }
+  ]
+}

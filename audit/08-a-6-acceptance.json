@@ -1,0 +1,509 @@
+{
+  "schemaVersion": 1,
+  "unit": "08-a-6",
+  "profile": {
+    "id": "eote-campaign-c-2026-11",
+    "scope": "地球边缘 08 段 eoec 战役卡（08573b–08607）45 条目录记录。21 条通过五维验收；24 条 fatalMirage 逐卡规则声明无读点/结构条件缺陷暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 45,
+    "verified": 21,
+    "unverified": 24,
+    "unimplemented": 0,
+    "testsPassed": 159
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+      "sha256": "6f8060a59f3748e302f1a2cd3481ec04938285ab1c2467a0396f4677e99bac15"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-scenario-fatalMirage.test.mjs",
+      "sha256": "9625cd3ace52514d9f8f71346f0d6093577677de52af8deea7fce400fe07f353"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-scenario-shared.test.mjs",
+      "sha256": "dffe598c635f887e2c14c4a73e1d8c4574524342277b592ff1ecffa190f68cea"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-all-cards.test.mjs",
+      "sha256": "fe9bd752dd3444a13d4f0aa0e9b25bb7a6860856b9db8bf7792068bb997be516"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-rules.test.mjs",
+      "sha256": "21761e92e64ab38d14ded302954fddcf765e29ca215c5e2ca1c6216ed5c1d36d"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-primitives-frost.test.mjs",
+      "sha256": "29a200cd215f5ffd3654610c67b5c1415041a6886c0c3e16be27cde7dd5644bf"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-primitives-travel.test.mjs",
+      "sha256": "0faec6c9ae96e6432ce3e0179fd0b24a93890f1f999a2579c1b62dd47f904d16"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-primitives-geo.test.mjs",
+      "sha256": "0ef76e75a39d4a5e09b326280a3c197ec2b75e4a99e7f1801ea132da13f01efc"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-primitives-campaign.test.mjs",
+      "sha256": "7182c4a750b5e3e56c17544ab4bd66bcb62324d03669c74b89792a162ddae8ea"
+    }
+  ],
+  "entries": [
+    {
+      "code": "08573b",
+      "name": "奥斯曼前线",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08573b 地点记忆剧情：伙伴活着时生成放一边的记忆敌人，伙伴被划掉时放逐记忆并允许推进"
+        }
+      ]
+    },
+    {
+      "code": "08574",
+      "name": "黑色岩石",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「伙伴艾弗里在场时本地点 -2 帷幕」与「[fast] 加 1 frost：发现 2 线索（团队每场一次）」无读点：flags.investigatorShroudBonus / freeFrostForClues 无任何引擎或内容层消费，条目也没有 abilities；mirageId 亦为未读字段。"
+    },
+    {
+      "code": "08574b",
+      "name": "黑色岩石",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08574b 地点记忆剧情：伙伴活着时生成放一边的记忆敌人，伙伴被划掉时放逐记忆并允许推进"
+        }
+      ]
+    },
+    {
+      "code": "08575",
+      "name": "狩猎失败之记忆",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "Prey「拥有对应伙伴的调查员」未映射（flags.preyPartner 无读点；章节敌人定义 prey 缺失），且专属反应/谈判能力（reaction*/parley* flags）没有条目 abilities、引擎窗口或内容层钩子；仅「被击败翻面」与 Alert/Retaliate 生效。"
+    },
+    {
+      "code": "08575b",
+      "name": "狩猎失败之记忆",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08575b 记忆敌人剧情：记录直面内心恶魔、伙伴切换坚毅、进胜利区并允许推进"
+        }
+      ]
+    },
+    {
+      "code": "08576",
+      "name": "去世病人之记忆",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "Prey「拥有对应伙伴的调查员」未映射（flags.preyPartner 无读点；章节敌人定义 prey 缺失），且专属反应/谈判能力（reaction*/parley* flags）没有条目 abilities、引擎窗口或内容层钩子；仅「被击败翻面」与 Alert/Retaliate 生效。"
+    },
+    {
+      "code": "08576b",
+      "name": "去世病人之记忆",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08576b 记忆敌人剧情：记录直面内心恶魔、伙伴切换坚毅、进胜利区并允许推进"
+        }
+      ]
+    },
+    {
+      "code": "08577",
+      "name": "失踪父亲之记忆",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "Prey「拥有对应伙伴的调查员」未映射（flags.preyPartner 无读点；章节敌人定义 prey 缺失），且专属反应/谈判能力（reaction*/parley* flags）没有条目 abilities、引擎窗口或内容层钩子；仅「被击败翻面」与 Alert/Retaliate 生效。"
+    },
+    {
+      "code": "08577b",
+      "name": "失踪父亲之记忆",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08577b 记忆敌人剧情：记录直面内心恶魔、伙伴切换坚毅、进胜利区并允许推进"
+        }
+      ]
+    },
+    {
+      "code": "08578",
+      "name": "饱经战乱的国家之记忆",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "Prey「拥有对应伙伴的调查员」未映射（flags.preyPartner 无读点；章节敌人定义 prey 缺失），且专属反应/谈判能力（reaction*/parley* flags）没有条目 abilities、引擎窗口或内容层钩子；仅「被击败翻面」与 Alert/Retaliate 生效。"
+    },
+    {
+      "code": "08578b",
+      "name": "饱经战乱的国家之记忆",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08578b 记忆敌人剧情：记录直面内心恶魔、伙伴切换坚毅、进胜利区并允许推进"
+        }
+      ]
+    },
+    {
+      "code": "08579",
+      "name": "悔恨航程之记忆",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "Prey「拥有对应伙伴的调查员」未映射（flags.preyPartner 无读点；章节敌人定义 prey 缺失），且专属反应/谈判能力（reaction*/parley* flags）没有条目 abilities、引擎窗口或内容层钩子；仅「被击败翻面」与 Alert/Retaliate 生效。"
+    },
+    {
+      "code": "08579b",
+      "name": "悔恨航程之记忆",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08579b 记忆敌人剧情：记录直面内心恶魔、伙伴切换坚毅、进胜利区并允许推进"
+        }
+      ]
+    },
+    {
+      "code": "08580",
+      "name": "无法述说的恶魔之记忆",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "Prey「拥有对应伙伴的调查员」未映射（flags.preyPartner 无读点；章节敌人定义 prey 缺失），且专属反应/谈判能力（reaction*/parley* flags）没有条目 abilities、引擎窗口或内容层钩子；仅「被击败翻面」与 Alert/Retaliate 生效。"
+    },
+    {
+      "code": "08580b",
+      "name": "无法述说的恶魔之记忆",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08580b 记忆敌人剧情：记录直面内心恶魔、伙伴切换坚毅、进胜利区并允许推进"
+        }
+      ]
+    },
+    {
+      "code": "08581",
+      "name": "可怕发现之记忆",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "Prey「拥有对应伙伴的调查员」未映射（flags.preyPartner 无读点；章节敌人定义 prey 缺失），且专属反应/谈判能力（reaction*/parley* flags）没有条目 abilities、引擎窗口或内容层钩子；仅「被击败翻面」与 Alert/Retaliate 生效。"
+    },
+    {
+      "code": "08581b",
+      "name": "可怕发现之记忆",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08581b 记忆敌人剧情：记录直面内心恶魔、伙伴切换坚毅、进胜利区并允许推进"
+        }
+      ]
+    },
+    {
+      "code": "08582",
+      "name": "翻译异星文字之记忆",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "Prey「拥有对应伙伴的调查员」未映射（flags.preyPartner 无读点；章节敌人定义 prey 缺失），且专属反应/谈判能力（reaction*/parley* flags）没有条目 abilities、引擎窗口或内容层钩子；仅「被击败翻面」与 Alert/Retaliate 生效。"
+    },
+    {
+      "code": "08582b",
+      "name": "翻译异星文字之记忆",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08582b 记忆敌人剧情：记录直面内心恶魔、伙伴切换坚毅、进胜利区并允许推进"
+        }
+      ]
+    },
+    {
+      "code": "08583",
+      "name": "单恋之记忆",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "Prey「拥有对应伙伴的调查员」未映射（flags.preyPartner 无读点；章节敌人定义 prey 缺失），且专属反应/谈判能力（reaction*/parley* flags）没有条目 abilities、引擎窗口或内容层钩子；仅「被击败翻面」与 Alert/Retaliate 生效。"
+    },
+    {
+      "code": "08583b",
+      "name": "单恋之记忆",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08583b 记忆敌人剧情：记录直面内心恶魔、伙伴切换坚毅、进胜利区并允许推进"
+        }
+      ]
+    },
+    {
+      "code": "08584",
+      "name": "恐怖阴影",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「位于已破除幻景地点时失去冷漠」与「发现/控制本地线索后放置等量毁灭」两个强制无读点：flags.losesAloofAtFlippedLocation / doomOnClueDiscover 无消费方，条目无 abilities。"
+    },
+    {
+      "code": "08585",
+      "name": "易散之雾",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「附属到最近未破除幻景地点并放 2 线索 / 翻面额外花 2 线索或各受 2 伤 / 地点破除幻景后弃掉」全部无读点：treacheryRule.attachToNearestUnflippedLocation 与 flags.attachLocationClues / discardWhenLocationFlipped 无消费方，且无 encounterResolve 或声明式检定。"
+    },
+    {
+      "code": "08586",
+      "name": "回首往事",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "显现二选一（受 2 恐惧 / 当前密谋放 1 毁灭且可推进）无读点：treacheryRule.chooseOne 无消费方，无 encounterResolve 或声明式检定；Peril 由卡文解析生效。"
+    },
+    {
+      "code": "08587",
+      "name": "威廉·戴尔教授",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "伙伴能力完全缺失：flags.partnerRules 字符串无读点，条目 abilities 为空；choosePartner 创建的资产 uses/usesType 也不从条目接线（ALL_CARDS 无 uses 字段）。"
+    },
+    {
+      "code": "08588",
+      "name": "丹佛斯",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "伙伴能力完全缺失：flags.partnerRules 字符串无读点，条目 abilities 为空；choosePartner 创建的资产 uses/usesType 也不从条目接线（ALL_CARDS 无 uses 字段）。"
+    },
+    {
+      "code": "08589",
+      "name": "伊里亚·阿什瓦克",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[fast] 能力被声明为 action（时机错误）且 uses 资产无使用数/类型；resolve 直接调用 api.evade(seat,{enemyId,skill,baseValue}) 与引擎攻击/躲避面不一致，能力不可按卡面使用；partnerRules 无读点。"
+    },
+    {
+      "code": "08590",
+      "name": "玛拉·辛哈医生",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "伙伴能力完全缺失：flags.partnerRules 字符串无读点，条目 abilities 为空；choosePartner 创建的资产 uses/usesType 也不从条目接线（ALL_CARDS 无 uses 字段）。"
+    },
+    {
+      "code": "08591",
+      "name": "艾弗里·克莱普尔",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "伙伴能力完全缺失：flags.partnerRules 字符串无读点，条目 abilities 为空；choosePartner 创建的资产 uses/usesType 也不从条目接线（ALL_CARDS 无 uses 字段）。"
+    },
+    {
+      "code": "08592",
+      "name": "詹姆斯·“曲奇”·弗雷德里克斯",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[fast] 攻击能力时机错误（声明 action）且 uses 未接线；「本轮不能攻击」以 addEffect 空 modifiers 实现，不产生实际禁止攻击读点；partnerRules 无读点。"
+    },
+    {
+      "code": "08593",
+      "name": "艾米·肯斯勒博士",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[fast] 调查能力时机错误（声明 action）且 uses 未接线；成功后只查看自己牌库顶 1 张，缺「任一位调查员牌库或遭遇牌库」与「可弃掉该牌」子句；partnerRules 无读点。"
+    },
+    {
+      "code": "08594",
+      "name": "罗尔德·埃尔斯沃思",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "伙伴能力完全缺失：flags.partnerRules 字符串无读点，条目 abilities 为空；choosePartner 创建的资产 uses/usesType 也不从条目接线（ALL_CARDS 无 uses 字段）。"
+    },
+    {
+      "code": "08595",
+      "name": "高田弘子",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "伙伴能力完全缺失：flags.partnerRules 字符串无读点，条目 abilities 为空；choosePartner 创建的资产 uses/usesType 也不从条目接线（ALL_CARDS 无 uses 字段）。"
+    },
+    {
+      "code": "08596",
+      "name": "失落之峰",
+      "type": "scenario",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "剧本参考卡没有单卡条目文件（同战役 08549 参考卡有 entry）。标记数值与失败追加效果只写在内容层 chaos.js/behavior.js，没有 scenarioRule 条目读点，违反「一张有行为的卡=一个文件」与「声明即接线」，无法按 08-a 账本逐卡切换 verified。"
+    },
+    {
+      "code": "08597",
+      "name": "失落山峰",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08597 失落山峰：移动后线索回供应堆；背面在最高处生成星之恐怖并夺走探险支援"
+        }
+      ]
+    },
+    {
+      "code": "08598",
+      "name": "恐怖降临",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08598 恐怖降临：移动后线索回供应堆；背面按是否有调查员撤退进入结局 1/2"
+        }
+      ]
+    },
+    {
+      "code": "08599",
+      "name": "登上高峰",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08599 登上高峰：目标全撤退推进；行动可控制本地点探险支援"
+        }
+      ]
+    },
+    {
+      "code": "08600",
+      "name": "深厚积雪",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08600 深厚积雪：从下方进入时弃牌库顶 3 张并抽取其中的弱点"
+        }
+      ]
+    },
+    {
+      "code": "08601",
+      "name": "白色断崖",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08601 白色断崖：从下方进入检定敏捷(X=高度+1)，失败失去探险支援"
+        }
+      ]
+    },
+    {
+      "code": "08602",
+      "name": "陡峭斜坡",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08602 陡峭斜坡：从下方进入受到 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "08603",
+      "name": "狭窄山脊",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08603 狭窄山脊：从下方进入受到 1 点恐惧"
+        }
+      ]
+    },
+    {
+      "code": "08604",
+      "name": "岩架",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08604 岩架：从下方进入把忒咳哩-哩牌库顶 1 张洗入牌库"
+        }
+      ]
+    },
+    {
+      "code": "08605",
+      "name": "白雪覆盖的峭壁",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08605 白雪覆盖的峭壁：从下方进入横置你控制的所有支援"
+        }
+      ]
+    },
+    {
+      "code": "08606",
+      "name": "迎风通路",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「如果其高度为 0」条件未实现：内容层 locationRevealed 对 placeCluesPerInvestigator 不检查高度，任何高度揭示都会放 1×人数线索（测试在高度 1 记录到 +2，与卡面不符）。"
+    },
+    {
+      "code": "08607",
+      "name": "山顶",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08607 山顶：线索只能调查发现；揭示加 frost；[action] 撤退把探险支援加入胜利区"
+        }
+      ]
+    }
+  ]
+}

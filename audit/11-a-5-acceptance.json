@@ -1,0 +1,705 @@
+{
+  "schemaVersion": 1,
+  "unit": "11-a-5",
+  "profile": {
+    "id": "tdc-campaign-b-2026-11",
+    "scope": "沉没之城 11 段 tdcc 战役卡（11539–11577）43 条目录记录。39 条通过五维验收；4 条声明未接线/翻面替代暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 43,
+    "verified": 39,
+    "unverified": 4,
+    "unimplemented": 0,
+    "testsPassed": 276
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+      "sha256": "bd461eedd8f0e99be12ab2503334511dad301280d84f4fa8e388925847a33f6e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-scenario-theApiary.test.mjs",
+      "sha256": "508f9a5ad4fea368d10588105951505a3826817eca5cd86a772282d51a78b1b6"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-scenario-theDrownedQuarter.test.mjs",
+      "sha256": "f7d7fc9606975f6d2eb1acbc54224c669e1bdec16dc8fd20638bd9f3fb6b4af7"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-scenario-oneLastJob.test.mjs",
+      "sha256": "00ebbda3a8d3d11bda7ec04ffcd8aeb5f1a47afc8f6970c175b60a7fedf323e4"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-p7-scenario-integrity.test.mjs",
+      "sha256": "e98da7ef14fa3bcec9a7dabec85340e668d11e836a6f53f7a35c08c184dee61e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-p7-scenario-lifecycle.test.mjs",
+      "sha256": "127798e3b82c2a94dd6c5141e5b8a2f50f806aacdecfe0b29e89ae3c49fa2afb"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+      "sha256": "e925fd080e322417aa7e5ef9299f6f19a9b1c30c07afc245ad76960d8bb83d09"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-p7-shared-encounters.test.mjs",
+      "sha256": "ea62175d890f5e3b5746e13e1c8c4186b39724995d81e06aede3bf126618ac87"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-rules.test.mjs",
+      "sha256": "541471492f102ef04f00c249498d1f4cd93173e554068f3cf86c1e1c26991e7b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-primitives.test.mjs",
+      "sha256": "c152d8c4f1e738adc1b1f75ac78ddfaa26012a91ed060d4a7132987df99e397b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+      "sha256": "25466d3868f2e9af5f0b6a9846202b4c7c60d1fb54994b4b60dc69611e2b1abf"
+    }
+  ],
+  "entries": [
+    {
+      "code": "11539",
+      "name": "重新激活核心",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11539 重新激活核心：相邻即相连、[fast] 1/人线索降淹没、目标全员在已激活核心"
+        }
+      ]
+    },
+    {
+      "code": "11540",
+      "name": "屏障核心",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11540 屏障核心：6+ 已揭示未淹没海床 → 翻面；转移淹没并按 3/人放线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11540b 屏障核心（已激活）：5 或更少未淹没海床 → 翻面；2/人线索取屏障节点"
+        }
+      ]
+    },
+    {
+      "code": "11540b",
+      "name": "屏障核心",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11540b 屏障核心（已激活）：5 或更少未淹没海床 → 翻面；2/人线索取屏障节点"
+        }
+      ]
+    },
+    {
+      "code": "11541",
+      "name": "深渊沟壑",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11541 深渊沟壑：X=已揭示海床一半，攻/躲成功后降敌淹没（每局一次）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDrownedQuarter.test.mjs",
+          "test": "P7 theDrownedQuarter 11541 深渊沟壑：成功攻击或躲避后降低本地点淹没（每场团队一次）"
+        }
+      ]
+    },
+    {
+      "code": "11542",
+      "name": "淹没卫城",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11542 淹没卫城：回合末提高淹没或受 1 恐惧；[action] 提高自身换任意地点降淹没（每局 2 次）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDrownedQuarter.test.mjs",
+          "test": "P7 theDrownedQuarter 海床地点 11542–11545 行动：提高自身淹没并降低目标淹没（团队 2 次 / 每轮 1 次 + 付费）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDrownedQuarter.test.mjs",
+          "test": "P7 theDrownedQuarter 海床地点 11542–11545：回合结束强制（提高淹没或受恐惧/伤害）"
+        }
+      ]
+    },
+    {
+      "code": "11543",
+      "name": "淹没卫城",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11543 淹没卫城：回合末提高相邻淹没或受 1 伤害"
+        }
+      ]
+    },
+    {
+      "code": "11544",
+      "name": "残破遗迹",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11544 残破遗迹：回合末提高自身淹没；共同花 5 资源降淹没（每轮一次）"
+        }
+      ]
+    },
+    {
+      "code": "11545",
+      "name": "残破遗迹",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11545 残破遗迹：回合末提高自身淹没；共同弃 1/人手牌降淹没"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDrownedQuarter.test.mjs",
+          "test": "P7 theDrownedQuarter 海床地点 11542–11545 行动：提高自身淹没并降低目标淹没（团队 2 次 / 每轮 1 次 + 付费）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDrownedQuarter.test.mjs",
+          "test": "P7 theDrownedQuarter 海床地点 11542–11545：回合结束强制（提高淹没或受恐惧/伤害）"
+        }
+      ]
+    },
+    {
+      "code": "11546",
+      "name": "珊瑚礁",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11546 珊瑚礁：[action][action] 抽 2 牌得 2 资源并生成水下寄生虫（每局一次）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDrownedQuarter.test.mjs",
+          "test": "P7 theDrownedQuarter 11546 雕像花园 / 11548 古代展廊：抽牌与资源 / 放一边遗物入场"
+        }
+      ]
+    },
+    {
+      "code": "11547",
+      "name": "珊瑚礁",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11547 珊瑚礁：揭示后弃遭遇直到敌人生成；发现线索后生成水下寄生虫"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDrownedQuarter.test.mjs",
+          "test": "P7 theDrownedQuarter 11547 觅食地：揭示后弃到敌人生成 + 发现线索生成放一边寄生虫"
+        }
+      ]
+    },
+    {
+      "code": "11548",
+      "name": "古代展廊",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11548 古代展廊：弃 2 张手牌把黑曜石遗物放入场由你控制"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDrownedQuarter.test.mjs",
+          "test": "P7 theDrownedQuarter 11546 雕像花园 / 11548 古代展廊：抽牌与资源 / 放一边遗物入场"
+        }
+      ]
+    },
+    {
+      "code": "11549",
+      "name": "水下寄生虫[tdc_rune_x]",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11549 水下寄生虫：攻击后/离场时翻面结算故事面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11549b 水下寄生虫（故事面）：翻面移动或记录符文 X 并加入胜利区"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDrownedQuarter.test.mjs",
+          "test": "P7 theDrownedQuarter enemyWouldBeSetAside：11549 放一边路径翻面进胜利区且不进入放一边区"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：弱点敌人不能进入开阔天空、遭遇附属不能离场、额外巡逻与放一边接管（11641/11531/11706/11549）"
+        }
+      ]
+    },
+    {
+      "code": "11549b",
+      "name": "水下寄生虫[tdc_rune_x]",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11549b 水下寄生虫（故事面）：翻面移动或记录符文 X 并加入胜利区"
+        }
+      ]
+    },
+    {
+      "code": "11550",
+      "name": "黑曜石遗物[tdc_rune_y]",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「如果你成功，将本卡牌翻面并结算其文本（符文 Y + 胜利区）」；实现是检定成功后把 11550 实例离场、由章节 `assetLeftPlay` 把故事卡 11550b 加入胜利区并记录符文 Y，**实例面不翻**（条目 note 披露引擎 `applyPhysicalFace` 拒绝 asset→story 跨类型翻面）。结局效果等价，但玩家看不到故事面文本/翻面动画，按「声明即接线 + 卡面动作」判失败。"
+    },
+    {
+      "code": "11550b",
+      "name": "黑曜石遗物[tdc_rune_y]",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11550b 黑曜石遗物（故事面）：记录符文 Y「知识」并加入胜利区"
+        }
+      ]
+    },
+    {
+      "code": "11551",
+      "name": "水母",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11551 水母：冷漠、巡逻未/部分淹没地点；敌军阶段开始提高淹没否则放毁灭"
+        }
+      ]
+    },
+    {
+      "code": "11552",
+      "name": "屏障节点",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「符文 q/x/g/k/s 集齐时屏障节点 +2 生命」；条目只声明 `flags.glyphLine/glyphHealthBonus`，引擎与章节均无读点（note 亦披露「没有可观测数值差异」），按声明即未接线计。"
+    },
+    {
+      "code": "11553",
+      "name": "养育场",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11553 养育场：骷髅=敌/支援上毁灭一半（上限 4），cultist 见异教徒再揭示"
+        }
+      ]
+    },
+    {
+      "code": "11554",
+      "name": "黑暗中的躁动",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11554 黑暗中的躁动：背面补线索并把奇丑混种洗入牌库底"
+        }
+      ]
+    },
+    {
+      "code": "11555",
+      "name": "可憎寄生虫",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11555 可憎寄生虫：放毁灭时若无非精英敌人从遭遇顶翻到敌人生成；背面未撤退者被击败"
+        }
+      ]
+    },
+    {
+      "code": "11556",
+      "name": "不安的兆象",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11556 不安的兆象：每线索弃遭遇顶 5（单人 10）并抽弃掉的地点；全体在圣所可推进"
+        }
+      ]
+    },
+    {
+      "code": "11557",
+      "name": "失落的朝圣者",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11557 失落的朝圣者：异教徒得胜利 0/冷漠；谈判移动；敌军阶段末按偷渡者数受伤"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theApiary.test.mjs",
+          "test": "P7 theApiary 11557 失落的朝圣者：[[异教徒]]敌人获得胜利 0 与冷漠（已在场/后续生成）"
+        }
+      ]
+    },
+    {
+      "code": "11558",
+      "name": "蜂巢思维",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11558 蜂巢思维：[fast] 放 X 线索造成 X 伤害；轮末掷币旋转中央腔室；主母被击败推进"
+        }
+      ]
+    },
+    {
+      "code": "11559",
+      "name": "养育场入口",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11559 养育场入口：共同 1/人线索洗地点入牌库底 10；[fast] 最远地点补线索；撤退"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11559b 养育场入口（危险出口）：偷渡者改在入口生成；1/人线索把异教徒放幕下"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theApiary.test.mjs",
+          "test": "P7 theApiary 11559 引诱之光：[action] 共同花费线索把遭遇弃牌堆中的地点洗入牌库底 10 张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theApiary.test.mjs",
+          "test": "P7 theApiary 11559b 危险出口：[[偷渡者]]敌人生成到入口；[action] 把异教徒支援/敌人放到场景下方"
+        }
+      ]
+    },
+    {
+      "code": "11559b",
+      "name": "养育场入口",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11559b 养育场入口（危险出口）：偷渡者改在入口生成；1/人线索把异教徒放幕下"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theApiary.test.mjs",
+          "test": "P7 theApiary 11559b 危险出口：[[偷渡者]]敌人生成到入口；[action] 把异教徒支援/敌人放到场景下方"
+        }
+      ]
+    },
+    {
+      "code": "11560",
+      "name": "血肉道路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11560 养育场地点：显现放置入场并结算该地点显现效果"
+        }
+      ]
+    },
+    {
+      "code": "11561",
+      "name": "血肉道路[tdc_rune_r]",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11561 养育场地点：显现放置入场并结算该地点显现效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11561 血肉道路[R]：发现符文 R「时间」并翻译"
+        }
+      ]
+    },
+    {
+      "code": "11562",
+      "name": "增生原野",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11562 养育场地点：显现放置入场并结算该地点显现效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11562 增生原野：显现同放隐藏秘库；意志(8) 控制骇人「面具」"
+        }
+      ]
+    },
+    {
+      "code": "11563",
+      "name": "翻涌裂隙",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11563 养育场地点：显现放置入场并结算该地点显现效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11563 翻涌裂隙：显现生成带鳞寄生虫；回合开始可移动到任意已揭示地点"
+        }
+      ]
+    },
+    {
+      "code": "11564",
+      "name": "腐化秘库[tdc_rune_q]",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11564 养育场地点：显现放置入场并结算该地点显现效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11564 腐化秘库[Q]：[action][action] 发现符文 Q「手」"
+        }
+      ]
+    },
+    {
+      "code": "11565",
+      "name": "荧光通道",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11565 养育场地点：显现放置入场并结算该地点显现效果"
+        }
+      ]
+    },
+    {
+      "code": "11566",
+      "name": "繁殖地",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11566 养育场地点：显现放置入场并结算该地点显现效果"
+        }
+      ]
+    },
+    {
+      "code": "11567",
+      "name": "迷失营地",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「[action]：抽取迷失营地下方最上方的卡牌」；`theApiary/behavior.js`/`definition.js` 全无 beneath/迷失营地摸牌动作，`actions()` 也不产出该行动（数据型条目 note 声称已接线，实际没有读点）。"
+    },
+    {
+      "code": "11568",
+      "name": "玛莉亚·里维拉",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11568 玛莉亚·里维拉：异教徒伤害改放到她身上，毁灭转嫁，被击败入胜利区"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theApiary.test.mjs",
+          "test": "P7 theApiary 11568 玛莉亚·里维拉：异教徒敌人伤害改道 / 毁灭转嫁为伤害（真实引擎读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：异教徒敌人伤害改道到受控剧情资产（11568）"
+        }
+      ]
+    },
+    {
+      "code": "11569",
+      "name": "攫噬长廊",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11569 养育场地点：显现放置入场并结算该地点显现效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11569 攫噬长廊：弃牌堆洗回牌库、饥渴长廊/腐化秘库入底 10；受 1 恐惧补线索"
+        }
+      ]
+    },
+    {
+      "code": "11570",
+      "name": "饥渴长廊",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11570 养育场地点：显现放置入场并结算该地点显现效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11570 饥渴长廊：弃牌堆洗回牌库、酸性体腔/翻涌裂隙入底 10"
+        }
+      ]
+    },
+    {
+      "code": "11571",
+      "name": "酸性体腔",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11571 养育场地点：显现放置入场并结算该地点显现效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11571 酸性体腔：从本地点移动到养育场入口额外受 1 伤"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theApiary.test.mjs",
+          "test": "P7 theApiary 11571 酸性体腔：移动到养育场入口额外受 1 点伤害（其他出发地不收费）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：从酸性体腔移动到养育场入口的额外费用（11571）"
+        }
+      ]
+    },
+    {
+      "code": "11572",
+      "name": "中央腔室",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「强制 - 你的回合结束时，如果你位于本地点：检定敏捷(1)，失败则移动到一处连接地点或主母攻击你」；`theApiary/behavior.js` 没有 `turnEnded` 钩子（导出函数与 behavior 对象均无），该强制与二选一未实现（动态连接本身已接线）。"
+    },
+    {
+      "code": "11573",
+      "name": "主母",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11573 主母：庞大/无情，另一偷渡者被击败时伤害移到主母"
+        }
+      ]
+    },
+    {
+      "code": "11574",
+      "name": "奇丑混种",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11574 奇丑混种：猎手/反击；用武器攻击后在该支援放 1 毁灭"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theApiary.test.mjs",
+          "test": "P7 theApiary 11574 奇丑混种：用[[武器]]支援攻击它后，在该支援上放 1 个毁灭标记（真实 damageEnemy 窗口）"
+        }
+      ]
+    },
+    {
+      "code": "11575",
+      "name": "养育场看守",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11575 养育场看守：本地点放毁灭时重整、失去冷漠、若交战则立刻攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theApiary.test.mjs",
+          "test": "P7 theApiary 11575 养育场看守：本地点卡牌放置毁灭 → 重整 / 失去冷漠 / 交战立刻攻击（doomPlaced 钩子）"
+        }
+      ]
+    },
+    {
+      "code": "11576",
+      "name": "饥饿的墙壁",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11576 饥饿的墙壁：附属地点；离开时敏捷/战力(4) 检定，失败分支结算并弃置"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theApiary.test.mjs",
+          "test": "P7 theApiary 11576 饥饿的墙壁：离开宿主地点检定；失败按技能结算并弃置诡计，成功无惩罚"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：附属于地点的诡计在离开时强制检定并弃置（11576）"
+        }
+      ]
+    },
+    {
+      "code": "11577",
+      "name": "危险的好奇心",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11577 危险的好奇心：意志(X=隐藏值) 失败受 1 伤并弃到偷渡者敌人抽取"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theApiary.test.mjs",
+          "test": "P7 theApiary 11577 危险的好奇心：失败受 1 伤害、弃到偷渡者敌人并抽取、弃掉的地点洗回遭遇牌库"
+        }
+      ]
+    }
+  ]
+}

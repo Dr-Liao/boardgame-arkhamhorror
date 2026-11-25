@@ -1,0 +1,685 @@
+{
+  "schemaVersion": 1,
+  "unit": "11-a-6",
+  "profile": {
+    "id": "tdc-campaign-c-2026-11",
+    "scope": "沉没之城 11 段 tdcc 战役卡（11578–11618）43 条目录记录。43 条全部通过五维验收。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 43,
+    "verified": 43,
+    "unverified": 0,
+    "unimplemented": 0,
+    "testsPassed": 262
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+      "sha256": "29eb0d815390f910f8463eec72fa347b4084ec43dbc39ebd73a591554ce1b713"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-scenario-theGrandVault.test.mjs",
+      "sha256": "8ab6411537dc5dbe1f4a21e74474e71ae0d1caef04e90d855f136dd74b8109b5"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-scenario-courtOfTheAncients.test.mjs",
+      "sha256": "4b65a690fdd6916f84a74cbd0e525c62f18b2a72ee34277313b8747d79e7081f"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-scenario-theDrownedQuarter.test.mjs",
+      "sha256": "f7d7fc9606975f6d2eb1acbc54224c669e1bdec16dc8fd20638bd9f3fb6b4af7"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-p7-scenario-integrity.test.mjs",
+      "sha256": "e98da7ef14fa3bcec9a7dabec85340e668d11e836a6f53f7a35c08c184dee61e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-p7-scenario-lifecycle.test.mjs",
+      "sha256": "127798e3b82c2a94dd6c5141e5b8a2f50f806aacdecfe0b29e89ae3c49fa2afb"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+      "sha256": "e925fd080e322417aa7e5ef9299f6f19a9b1c30c07afc245ad76960d8bb83d09"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-p7-shared-encounters.test.mjs",
+      "sha256": "ea62175d890f5e3b5746e13e1c8c4186b39724995d81e06aede3bf126618ac87"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-rules.test.mjs",
+      "sha256": "541471492f102ef04f00c249498d1f4cd93173e554068f3cf86c1e1c26991e7b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-primitives.test.mjs",
+      "sha256": "c152d8c4f1e738adc1b1f75ac78ddfaa26012a91ed060d4a7132987df99e397b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+      "sha256": "25466d3868f2e9af5f0b6a9846202b4c7c60d1fb54994b4b60dc69611e2b1abf"
+    }
+  ],
+  "entries": [
+    {
+      "code": "11578",
+      "name": "外星虫卵",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11578 养育场条目：显现经 behavior 事件结算（apiaryDoomNearestEnemy）"
+        }
+      ]
+    },
+    {
+      "code": "11579",
+      "name": "隐藏秘库[tdc_rune_u]",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11579 养育场条目：显现经 behavior 事件结算（apiaryPlaceLocation）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11579b 背面故事：记录符文并翻面/进胜利区（flipHiddenVault 读点）"
+        }
+      ]
+    },
+    {
+      "code": "11579b",
+      "name": "隐藏秘库[tdc_rune_u]",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11579b 背面故事：记录符文并翻面/进胜利区（flipHiddenVault 读点）"
+        }
+      ]
+    },
+    {
+      "code": "11580",
+      "name": "带鳞寄生虫[tdc_rune_t]",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11580 带鳞寄生虫：反击/每人生命/被击败翻面；将离场时放一边（enemyLeftPlay 读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11580b 背面故事：记录符文并翻面/进胜利区（flipSquamousParasite 读点）"
+        }
+      ]
+    },
+    {
+      "code": "11580b",
+      "name": "带鳞寄生虫[tdc_rune_t]",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11580b 背面故事：记录符文并翻面/进胜利区（flipSquamousParasite 读点）"
+        }
+      ]
+    },
+    {
+      "code": "11581",
+      "name": "古代遗物[tdc_rune_s]",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11581 古代遗物：受控剧情资产；受伤后自伤 forced；离场放一边；结局翻面（assetLeftPlay 读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11581b 背面故事：记录符文并翻面/进胜利区（flipAncientRelic 读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：受控剧情资产可声明 action/free 能力并进入行动窗口（11550/11581/11582/11611/11612 系列）"
+        }
+      ]
+    },
+    {
+      "code": "11581b",
+      "name": "古代遗物[tdc_rune_s]",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11581b 背面故事：记录符文并翻面/进胜利区（flipAncientRelic 读点）"
+        }
+      ]
+    },
+    {
+      "code": "11582",
+      "name": "骇人“面具”",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11582 骇人面具：两个 [fast] 受控剧情资产能力；解除交战 + 持续能力禁止 + 符文门槛"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：受控剧情资产可声明 action/free 能力并进入行动窗口（11550/11581/11582/11611/11612 系列）"
+        }
+      ]
+    },
+    {
+      "code": "11583",
+      "name": "寄生变形",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11583 寄生变形：威胁区弱点；敌人交战放毁灭（behavior.enemyEngaged）；[action][action] 弃掉（threatEffect.discardCost）"
+        }
+      ]
+    },
+    {
+      "code": "11587",
+      "name": "大秘库",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11587 剧本参考卡：无单卡条目（TDC scenario-reference 约定），标记表在内容层 chaos/definition"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theGrandVault.test.mjs",
+          "test": "P8 11587 困难邪教徒等到检定结算后，忽略符号时不触发"
+        }
+      ]
+    },
+    {
+      "code": "11588",
+      "name": "城市腹地",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11588 大秘库议程：求取空气强制/穷途异魔成长由 definition/behavior 读点承接"
+        }
+      ]
+    },
+    {
+      "code": "11589",
+      "name": "机器中的恶魔",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11589 大秘库议程：求取空气强制/穷途异魔成长由 definition/behavior 读点承接"
+        }
+      ]
+    },
+    {
+      "code": "11590",
+      "name": "不断变换的墙壁",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11590 大秘库议程：求取空气强制/穷途异魔成长由 definition/behavior 读点承接"
+        }
+      ]
+    },
+    {
+      "code": "11591",
+      "name": "谨慎导航",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11591 大秘库幕：目标由 behavior 读点承接（tidalTabletControlledBy）"
+        }
+      ]
+    },
+    {
+      "code": "11592",
+      "name": "穿过机器返回",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11592 大秘库幕：目标由 behavior 读点承接（checkObjectives）"
+        }
+      ]
+    },
+    {
+      "code": "11593",
+      "name": "大阶梯",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11593 大秘库地点：淹没限制/进入限制/行动由 locationRule 与 behavior 读点承接"
+        }
+      ]
+    },
+    {
+      "code": "11594",
+      "name": "移动平台",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11594 大秘库地点：淹没限制/进入限制/行动由 locationRule 与 behavior 读点承接"
+        }
+      ]
+    },
+    {
+      "code": "11595",
+      "name": "秘库核心",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11595 大秘库地点：淹没限制/进入限制/行动由 locationRule 与 behavior 读点承接"
+        }
+      ]
+    },
+    {
+      "code": "11596",
+      "name": "隐蔽蓄水池",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11596 大秘库地点：淹没限制/进入限制/行动由 locationRule 与 behavior 读点承接"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theGrandVault.test.mjs",
+          "test": "P7 theGrandVault 11596 隐蔽蓄水池：淹没等级不能降低（floodBounds.min + cannotDecreaseFlood 双层约束）"
+        }
+      ]
+    },
+    {
+      "code": "11598",
+      "name": "档案室[tdc_rune_l]",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11598 大秘库地点：符文翻译/异界机械激活费用由 behavior 读点承接（translateGlyph）"
+        }
+      ]
+    },
+    {
+      "code": "11599",
+      "name": "档案室[tdc_rune_m]",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11599 大秘库地点：符文翻译/异界机械激活费用由 behavior 读点承接（translateGlyph）"
+        }
+      ]
+    },
+    {
+      "code": "11600",
+      "name": "异界机械",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11600 大秘库地点：符文翻译/异界机械激活费用由 behavior 读点承接（activationCost）"
+        }
+      ]
+    },
+    {
+      "code": "11601",
+      "name": "异界机械",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11601 大秘库地点：符文翻译/异界机械激活费用由 behavior 读点承接（activationCost）"
+        }
+      ]
+    },
+    {
+      "code": "11602",
+      "name": "异界机械",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11602 大秘库地点：符文翻译/异界机械激活费用由 behavior 读点承接（activationCost）"
+        }
+      ]
+    },
+    {
+      "code": "11603",
+      "name": "异界机械",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11603 大秘库地点：符文翻译/异界机械激活费用由 behavior 读点承接（activationCost）"
+        }
+      ]
+    },
+    {
+      "code": "11604",
+      "name": "碑匾腔室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11604 大秘库地点：淹没限制/进入限制/行动由 locationRule 与 behavior 读点承接"
+        }
+      ]
+    },
+    {
+      "code": "11605",
+      "name": "黑暗中的滑行者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11605 黑暗中的滑行者：生成最近淹没地点/不能进入未淹没/敌军阶段强制（behavior 读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theGrandVault.test.mjs",
+          "test": "P7 theGrandVault 11605 不能进入未淹没地点：enemyRule.enterOnlyFlooded（进入/生成/猎人移动共用读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theGrandVault.test.mjs",
+          "test": "P7 theGrandVault 11605 敌军阶段：攻击连接地点[战斗]最低调查员，否则移动到最近移动平台的淹没地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theGrandVault.test.mjs",
+          "test": "P7 theGrandVault 生成落点：11605 最近的淹没地点、11606 与猎物交战"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：受控剧情资产每轮可忽略首次敌人攻击，且敌人不能进入未淹没地点（11638/11605）"
+        }
+      ]
+    },
+    {
+      "code": "11606",
+      "name": "秘库随从",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11606 秘库随从：猎手+猎物线索最多+猎手移动视为连通所有已激活地点（enemyConnections 读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theGrandVault.test.mjs",
+          "test": "P7 theGrandVault 11606 猎手连接：behavior.enemyConnections 返回全部已激活地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theGrandVault.test.mjs",
+          "test": "P7 theGrandVault 生成落点：11605 最近的淹没地点、11606 与猎物交战"
+        }
+      ]
+    },
+    {
+      "code": "11607",
+      "name": "致命机械",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11607 致命机械：意志(3)失败按幕选择 1/2 项（behavior 事件读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theGrandVault.test.mjs",
+          "test": "P7 theGrandVault 11607 致命机械：失败按当前幕选择（第一幕选 1 项，第二幕改选 2 项）"
+        }
+      ]
+    },
+    {
+      "code": "11608",
+      "name": "古代秘库[tdc_rune_o]",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11608 古代秘库：附属于地点 + [action] 翻译费用（behavior.grandVaultAncientVault / actions 读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11608b 古代秘库背面：记录符文 rune_o 并加入胜利区（翻译流程读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theGrandVault.test.mjs",
+          "test": "P7 theGrandVault 11608/11609/11610 翻译费用：弃支援/受伤害恐惧/弃手牌按印刷支付后翻面并加入胜利区"
+        }
+      ]
+    },
+    {
+      "code": "11608b",
+      "name": "古代秘库[tdc_rune_o]",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11608b 古代秘库背面：记录符文 rune_o 并加入胜利区（翻译流程读点）"
+        }
+      ]
+    },
+    {
+      "code": "11609",
+      "name": "古代秘库[tdc_rune_n]",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11609 古代秘库：附属于地点 + [action] 翻译费用（behavior.grandVaultAncientVault / actions 读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11609b 古代秘库背面：记录符文 rune_n 并加入胜利区（翻译流程读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theGrandVault.test.mjs",
+          "test": "P7 theGrandVault 11608/11609/11610 翻译费用：弃支援/受伤害恐惧/弃手牌按印刷支付后翻面并加入胜利区"
+        }
+      ]
+    },
+    {
+      "code": "11609b",
+      "name": "古代秘库[tdc_rune_n]",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11609b 古代秘库背面：记录符文 rune_n 并加入胜利区（翻译流程读点）"
+        }
+      ]
+    },
+    {
+      "code": "11610",
+      "name": "古代秘库[tdc_rune_p]",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11610 古代秘库：附属于地点 + [action] 翻译费用（behavior.grandVaultAncientVault / actions 读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11610b 古代秘库背面：记录符文 rune_p 并加入胜利区（翻译流程读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theGrandVault.test.mjs",
+          "test": "P7 theGrandVault 11608/11609/11610 翻译费用：弃支援/受伤害恐惧/弃手牌按印刷支付后翻面并加入胜利区"
+        }
+      ]
+    },
+    {
+      "code": "11610b",
+      "name": "古代秘库[tdc_rune_p]",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11610b 古代秘库背面：记录符文 rune_p 并加入胜利区（翻译流程读点）"
+        }
+      ]
+    },
+    {
+      "code": "11611",
+      "name": "潮汐碑匾",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11611 潮汐碑匾：受控剧情资产 [reaction] 淹没提高后移动 + [fast] 升降水位（controlledAsset 读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theGrandVault.test.mjs",
+          "test": "P7 theGrandVault 受控剧情资产 11611 [fast]：legalMoves 出现横置能力并真实结算淹没操作"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theGrandVault.test.mjs",
+          "test": "P7 theGrandVault 受控剧情资产 11611 [reaction]：所在地点淹没等级提高时移动到一处连接地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：受控剧情资产可声明 action/free 能力并进入行动窗口（11550/11581/11582/11611/11612 系列）"
+        }
+      ]
+    },
+    {
+      "code": "11612",
+      "name": "古代议庭",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11612 剧本参考卡：无单卡条目（TDC scenario-reference 约定），标记表在内容层 chaos/definition"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：受控剧情资产可声明 action/free 能力并进入行动窗口（11550/11581/11582/11611/11612 系列）"
+        }
+      ]
+    },
+    {
+      "code": "11613",
+      "name": "废墟档案塔",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11613 古代议庭议程：背面洗回/降低水位/上下相邻视为相连（behavior 读点 shuffleOmenGlyph）"
+        }
+      ]
+    },
+    {
+      "code": "11614",
+      "name": "淹没档案塔",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11614 古代议庭议程：背面洗回/降低水位/上下相邻视为相连（behavior 读点 lowerFloodAll）"
+        }
+      ]
+    },
+    {
+      "code": "11615",
+      "name": "不稳地基",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11615 古代议庭议程：背面洗回/降低水位/上下相邻视为相连（behavior 读点 enemyConnections）"
+        }
+      ]
+    },
+    {
+      "code": "11616",
+      "name": "巨人阶梯",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11616 古代议庭幕：弃遭遇顶抽符文/预兆与撤退目标（behavior 读点 discardCountFor）"
+        }
+      ]
+    },
+    {
+      "code": "11617",
+      "name": "逃离高塔(v.I)",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11617 古代议庭幕：弃遭遇顶抽符文/预兆与撤退目标（behavior 读点 resignAction）"
+        }
+      ]
+    },
+    {
+      "code": "11618",
+      "name": "逃离高塔(v.II)",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard6.test.mjs",
+          "test": "11618 古代议庭幕：弃遭遇顶抽符文/预兆与撤退目标（behavior 读点 resignAction）"
+        }
+      ]
+    }
+  ]
+}

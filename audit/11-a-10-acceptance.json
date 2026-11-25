@@ -1,0 +1,749 @@
+{
+  "schemaVersion": 1,
+  "unit": "11-a-10",
+  "profile": {
+    "id": "tdc-campaign-g-2026-11",
+    "scope": "沉没之城 11 段 tdcc 战役卡（11738–11766）37 条目录记录。36 条通过五维验收；11751 猎物规则无读点暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 37,
+    "verified": 36,
+    "unverified": 1,
+    "unimplemented": 0,
+    "testsPassed": 187
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+      "sha256": "69751ead97844d2d155ed50807382d9894749bddabfefcda249271d0b696f5f2"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+      "sha256": "ac59dc0317e93c7702f5edaca105c378ce49f10a941d92c0fb47b77fd10f68fa"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-p7-shared-encounters.test.mjs",
+      "sha256": "ea62175d890f5e3b5746e13e1c8c4186b39724995d81e06aede3bf126618ac87"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+      "sha256": "e925fd080e322417aa7e5ef9299f6f19a9b1c30c07afc245ad76960d8bb83d09"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-p7-scenario-integrity.test.mjs",
+      "sha256": "e98da7ef14fa3bcec9a7dabec85340e668d11e836a6f53f7a35c08c184dee61e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-rules.test.mjs",
+      "sha256": "541471492f102ef04f00c249498d1f4cd93173e554068f3cf86c1e1c26991e7b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-primitives.test.mjs",
+      "sha256": "c152d8c4f1e738adc1b1f75ac78ddfaa26012a91ed060d4a7132987df99e397b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+      "sha256": "25466d3868f2e9af5f0b6a9846202b4c7c60d1fb54994b4b60dc69611e2b1abf"
+    }
+  ],
+  "entries": [
+    {
+      "code": "11738",
+      "name": "不祥寂静",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-encounters.test.mjs",
+          "test": "11738 不祥寂静：进威胁区；打出额外费用花 1 资源或受 1 恐惧；未淹没时摆脱检定自动成功"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11738 共享遭遇：条目 encounterResolve 与印刷子句读点"
+        }
+      ]
+    },
+    {
+      "code": "11739",
+      "name": "独眼巨人建筑",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11739 共享遭遇：条目 encounterResolve 与印刷子句读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-encounters.test.mjs",
+          "test": "11739 独眼巨人建筑：难度 = 印刷隐藏值；失败每差 1 点弃 1 张手牌（最多 3）"
+        }
+      ]
+    },
+    {
+      "code": "11740",
+      "name": "崩塌砖石",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11740 共享遭遇：条目 encounterResolve 与印刷子句读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-encounters.test.mjs",
+          "test": "11740 崩塌砖石：难度 = 印刷隐藏值；失败受 2 伤害"
+        }
+      ]
+    },
+    {
+      "code": "11741",
+      "name": "“克苏鲁弗坦！”",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-encounters.test.mjs",
+          "test": "11741 克苏鲁弗坦：战斗(3)；失败二选一（2 恐惧 / 同地点调查员 1 直接伤害）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11741 共享遭遇：条目 encounterResolve 与印刷子句读点"
+        }
+      ]
+    },
+    {
+      "code": "11742",
+      "name": "压迫影响",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11742 共享遭遇：条目 encounterResolve 与印刷子句读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-encounters.test.mjs",
+          "test": "11742 压迫影响：意志(印刷隐藏值)；失败受 2 恐惧"
+        }
+      ]
+    },
+    {
+      "code": "11743",
+      "name": "支配",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11743 共享遭遇：条目 encounterResolve 与印刷子句读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-encounters.test.mjs",
+          "test": "11743 支配：三选一（密谋放毁灭 / 每人弃 2 手牌 / 每人失 1 行动）"
+        }
+      ]
+    },
+    {
+      "code": "11744",
+      "name": "穷途异魔",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11744 穷途异魔：猎手/无情 + 生成空连接地点 + 每轮首个 elder_thing 重整并结算猎手（不攻击）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-encounters.test.mjs",
+          "test": "11744 穷途异魔：生成到连接的空地点（enemyRule.spawnLocation）；每轮首次旧神标记重整并猎手移动"
+        }
+      ]
+    },
+    {
+      "code": "11745",
+      "name": "仍在你身后",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-encounters.test.mjs",
+          "test": "11745 仍在你身后：难度随胜利区份数递增；失败时在场敌人逐地点移动并交战"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11745 共享遭遇：条目 encounterResolve 与印刷子句读点"
+        }
+      ]
+    },
+    {
+      "code": "11746",
+      "name": "深潜者奴仆",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-encounters.test.mjs",
+          "test": "11746 深潜者奴仆：与你交战后随机弃 1 张手牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11746 深潜者敌人：交战强制与关键词光环读点（enemyEngaged）"
+        }
+      ]
+    },
+    {
+      "code": "11747",
+      "name": "长老深潜者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11747 深潜者敌人：交战强制与关键词光环读点（enemyEngaged）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-encounters.test.mjs",
+          "test": "11747 长老深潜者：其他深潜者获得无情（条目级关键词光环）；交战后治愈其他深潜者 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "11748",
+      "name": "深潜者伏击",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11748 共享遭遇：条目 encounterResolve 与印刷子句读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-encounters.test.mjs",
+          "test": "11748 深潜者伏击：进威胁区；深潜者交战后该敌人攻击并弃卡"
+        }
+      ]
+    },
+    {
+      "code": "11749",
+      "name": "痛苦幻象",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11749 共享遭遇：条目 encounterResolve 与印刷子句读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-encounters.test.mjs",
+          "test": "11749 痛苦幻象：手牌 ≤3 时难度 +2；失败 1 直接恐惧 + 随机弃 1"
+        }
+      ]
+    },
+    {
+      "code": "11750",
+      "name": "引向黑暗",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11750 共享遭遇：条目 encounterResolve 与印刷子句读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-encounters.test.mjs",
+          "test": "11750 引向黑暗：威胁区手牌上限 -3；回合结束无手牌弃卡"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-encounters.test.mjs",
+          "test": "11750（引擎）：手牌上限 8-3=5；其它修正压到 0 以下时按 threatEffect.handSizeMinimum 钳到 1"
+        }
+      ]
+    },
+    {
+      "code": "11751",
+      "name": "持久构造体",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「猎物 - 最近的控制[[神器]]支援的调查员」无读点：条目 flags.prey=\"artifactController\"，但 TDC card-data 的 preyRules 不含该值（不产出 enemy.prey）、章节 definition 未覆盖、engine enemies/enemy-query 无该猎物读点（全仓 grep 0；仅条目自身声明）。其余两句（猎手、被击败拉回胜利区其他构造体）已接线。"
+    },
+    {
+      "code": "11752",
+      "name": "地狱机械",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11752 共享遭遇：条目 encounterResolve 与印刷子句读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-encounters.test.mjs",
+          "test": "11752 地狱机械：进威胁区；智识/敏捷(4)成功弃卡"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-encounters.test.mjs",
+          "test": "11752（引擎）：带 Glyph/Artifact 特性的卡能力被禁、无特性卡不受影响、移出威胁区恢复"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：威胁区按特性禁止触发卡牌能力，forced 不受影响（11752）"
+        }
+      ]
+    },
+    {
+      "code": "11753a",
+      "name": "没有比家更好的地方",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11753a 任务卡（未完成面）：任务进度/修正/替换面读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11753a 未完成面：揭示/放置地点时移除 1 个发现（cost.uses = 1）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11753b 任务卡（完成面）：任务进度/修正/替换面读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11753b 完成面：额外一次行动（actions +1，仅移动为印刷限制）"
+        }
+      ]
+    },
+    {
+      "code": "11753b",
+      "name": "没有比家更好的地方",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11753b 任务卡（完成面）：任务进度/修正/替换面读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11753b 完成面：额外一次行动（actions +1，仅移动为印刷限制）"
+        }
+      ]
+    },
+    {
+      "code": "11754a",
+      "name": "信仰之行",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11754a 任务卡（未完成面）：任务进度/修正/替换面读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11754a 未完成面：任意地点揭示 elder_sign 后放置 1 个征兆"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11754b 任务卡（完成面）：任务进度/修正/替换面读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11754b 完成面：+1 意志；揭示 elder_sign 后治愈该地点调查员 1 点恐惧"
+        }
+      ]
+    },
+    {
+      "code": "11754b",
+      "name": "信仰之行",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11754b 任务卡（完成面）：任务进度/修正/替换面读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11754b 完成面：+1 意志；揭示 elder_sign 后治愈该地点调查员 1 点恐惧"
+        }
+      ]
+    },
+    {
+      "code": "11755a",
+      "name": "坚守底线",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11755a 任务卡（未完成面）：任务进度/修正/替换面读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11755a 未完成面：受到伤害时在本卡放 1 点伤害（useTokens 计数）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11755b 任务卡（完成面）：任务进度/修正/替换面读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11755b 完成面：+1 战斗、生命上限 +2（修正数值）"
+        }
+      ]
+    },
+    {
+      "code": "11755b",
+      "name": "坚守底线",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11755b 任务卡（完成面）：任务进度/修正/替换面读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11755b 完成面：+1 战斗、生命上限 +2（修正数值）"
+        }
+      ]
+    },
+    {
+      "code": "11756a",
+      "name": "好钱",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11756a 任务卡（未完成面）：任务进度/修正/替换面读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11756a（引擎）：resourcesGained 窗口自动放 1 个资源到卡上（forced），并获得时按卡上资源判定结局进度"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11756b 任务卡（完成面）：任务进度/修正/替换面读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11756b 完成面：开局 +5 资源（条目级 startingResources）"
+        }
+      ]
+    },
+    {
+      "code": "11756b",
+      "name": "好钱",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11756b 任务卡（完成面）：任务进度/修正/替换面读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11756b 完成面：开局 +5 资源（条目级 startingResources）"
+        }
+      ]
+    },
+    {
+      "code": "11757a",
+      "name": "证明你的价值",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11757a 任务卡（未完成面）：任务进度/修正/替换面读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11757a 未完成面：低于难度 2 点失败后移除 1 个机会（失败差值口径）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11757b 任务卡（完成面）：任务进度/修正/替换面读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11757b 完成面：花费 1 个机会取消本次检定的标记（tokenEffectWouldResolve + context.cancelled）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11757b（引擎端到端）：单标记袋取消后不抛错、标记效果不结算、uses 3→2；autofail 不可取消"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11757b（引擎）：tokenEffectWouldResolve 窗口按 criteria/cost 接线（autofail/异地点不可用，执行后花 1 机会并 cancelled）"
+        }
+      ]
+    },
+    {
+      "code": "11757b",
+      "name": "证明你的价值",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11757b 任务卡（完成面）：任务进度/修正/替换面读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11757b 完成面：花费 1 个机会取消本次检定的标记（tokenEffectWouldResolve + context.cancelled）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11757b（引擎端到端）：单标记袋取消后不抛错、标记效果不结算、uses 3→2；autofail 不可取消"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11757b（引擎）：tokenEffectWouldResolve 窗口按 criteria/cost 接线（autofail/异地点不可用，执行后花 1 机会并 cancelled）"
+        }
+      ]
+    },
+    {
+      "code": "11758a",
+      "name": "不伤害他人",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11758a 任务卡（未完成面）：任务进度/修正/替换面读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11758a 未完成面：治愈调查员或盟友支援后移除 1 个义务（盟友特性判定）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11758b 任务卡（完成面）：任务进度/修正/替换面读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11758b 完成面：横置获得 1 资源；失败/无目标时不触发"
+        }
+      ]
+    },
+    {
+      "code": "11758b",
+      "name": "不伤害他人",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11758b 任务卡（完成面）：任务进度/修正/替换面读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11758b 完成面：横置获得 1 资源；失败/无目标时不触发"
+        }
+      ]
+    },
+    {
+      "code": "11759a",
+      "name": "毁灭之梦",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11759a 任务卡（未完成面）：任务进度/修正/替换面读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11759a 未完成面：受到恐惧时在本卡放 1 点恐惧（useTokens 计数）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11759b 任务卡（完成面）：任务进度/修正/替换面读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11759b 完成面：1 个额外法术槽位与理智上限 +2"
+        }
+      ]
+    },
+    {
+      "code": "11759b",
+      "name": "毁灭之梦",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11759b 任务卡（完成面）：任务进度/修正/替换面读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11759b 完成面：1 个额外法术槽位与理智上限 +2"
+        }
+      ]
+    },
+    {
+      "code": "11760a",
+      "name": "探究深渊",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11760a 任务卡（未完成面）：任务进度/修正/替换面读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11760a 未完成面：本地点最后一个线索被发现后移除 1 个痴迷"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11760b 任务卡（完成面）：任务进度/修正/替换面读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11760b 完成面：+1 智力；发现本地点最后一个线索后横置抽 1 张牌"
+        }
+      ]
+    },
+    {
+      "code": "11760b",
+      "name": "探究深渊",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11760b 任务卡（完成面）：任务进度/修正/替换面读点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11760b 完成面：+1 智力；发现本地点最后一个线索后横置抽 1 张牌"
+        }
+      ]
+    },
+    {
+      "code": "11761",
+      "name": "远征装备",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11761 远征物资：使用补给治疗/取消诡计（useTokens + 内容读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11761 远征装备：花费 1 补给治愈同地点 1 点伤害；移出游戏移动非精英敌人一次"
+        }
+      ]
+    },
+    {
+      "code": "11762",
+      "name": "鸦片酊",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11762 远征物资：使用补给治疗/取消诡计（useTokens + 内容读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11762 鸦片酊：花费 1 补给治愈 1 点恐惧；取消力量/恐怖诡计的显现并移出游戏"
+        }
+      ]
+    },
+    {
+      "code": "11763",
+      "name": "外星石板",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11763 外星石板：处于检定期间（test.beforeCommit）时可 +2 待决加值"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11763 外星石板：检定期间 beforeCommit 增加待决加值（duringOwnSkillTest 读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11763（引擎）：检定期间（test.beforeCommit）真实窗口可用，横置+花 1 秘密给本次检定 +2"
+        }
+      ]
+    },
+    {
+      "code": "11764",
+      "name": "潜水服",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11764 潜水服（引擎）：受到伤害时引擎把 1 点改道到潜水服（assetRule 读点），其余照常由调查员承受"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11764 潜水服（引擎）：有效淹没等级上限 1——完全淹没视为部分淹没（无潜水服不生效）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11764 潜水服：伤害改道 1 点 + 完全淹没视同部分淹没（assetRule 引擎读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：完全淹没视为部分淹没（11764）"
+        }
+      ]
+    },
+    {
+      "code": "11765",
+      "name": "露比·斯坦迪什",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11765 露比·斯坦迪什：同地点无重整敌人时横置移动到连接地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11765 露比·斯坦迪什：同地点无重整敌人时横置移动到连接地点（modifiers + 行动读点）"
+        }
+      ]
+    },
+    {
+      "code": "11766",
+      "name": "安迪·范·诺特维克",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11766 安迪·范·诺特维克：本轮首次趁乱攻击可忽略（trackRoundActionHistory 引擎读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
+          "test": "11766 安迪·范·诺特维克：本轮首次趁乱攻击可被忽略（需要按轮记账）"
+        }
+      ]
+    }
+  ]
+}

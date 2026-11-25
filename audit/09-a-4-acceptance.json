@@ -1,0 +1,617 @@
+{
+  "schemaVersion": 1,
+  "unit": "09-a-4",
+  "profile": {
+    "id": "tsk-campaign-a-2026-11",
+    "scope": "绯红密钥 09 段 tskc 战役卡（09501–09542）45 条目录记录。37 条通过五维验收；2 条实例 id/API 用法错误、6 条已披露近似暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 45,
+    "verified": 37,
+    "unverified": 8,
+    "unimplemented": 0,
+    "testsPassed": 183
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+      "sha256": "e1b7260b3736be76d59a71062794efd125523c69327b6df8fb17bd393d22fb2c"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-scenario-riddlesAndRain.test.mjs",
+      "sha256": "c75b3a9f921e0e991dad3da9758a8a1b03221ae836da056a57aacd19636f60c9"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-scenario-deadHeat.test.mjs",
+      "sha256": "73fe1c504016280dd65c4ee299a456d45d5daa80b8ebc062c48b1baa4d1666fe"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-rules.test.mjs",
+      "sha256": "5ae05cfcab8019f5322e8207b5145c1cf024104eeaf00a84312c17f902879ad8"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-customizable.test.mjs",
+      "sha256": "4311237d47f104f0b62635d521dcccf34a0804a9109d07f7f3aa3ff05800743b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-keys-hollow.test.mjs",
+      "sha256": "925b275cb5d75467558ff4fa6f11f5bd01c4500aa5a1b8d1562e9bcb267f2f09"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-state.test.mjs",
+      "sha256": "46ca77b4b6442473ff0bbe6570b437187086df6337c989fb89f9cb4c3decbb18"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-map.test.mjs",
+      "sha256": "a46ed2ac6953edaecec26fe89a8ac494a3a275ba8e2c56ab21a124ca23a7afc2"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-interactions.test.mjs",
+      "sha256": "275c143401aaca1618ba01abe71f3838732d13b73ab5932098e13ff447146233"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-p0-regressions.test.mjs",
+      "sha256": "8d71ccce9008da1a2332f9e4d4381d6c26e096a8c5511eec83bde0e0d40a9e52"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-p1-regressions.test.mjs",
+      "sha256": "892ccba343a9c8a9186957c1a49018ba3fb3375c3298bf46d8bc91211614f8a4"
+    }
+  ],
+  "entries": [
+    {
+      "code": "09501",
+      "name": "谜雨",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09501 谜雨：混乱标记表（skull 随线索数、tablet 隐匿再揭示、elderthing 失败二选一）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-scenario-riddlesAndRain.test.mjs",
+          "test": "P7 riddlesAndRain 谜雨章节清单：playable + 09501 + 8 地点 + 4 幕 4 议程 + gather 组与机制"
+        }
+      ]
+    },
+    {
+      "code": "09502",
+      "name": "偏逢大雨······",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09502 偏逢大雨……：推进时毁灭移到下一个密谋；背面放地点+隐匿+失线索+直接推进议程 2a"
+        }
+      ]
+    },
+    {
+      "code": "09503",
+      "name": "雾中身影",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09503 雾中身影：背面记 1 时间、场外放一边、放塔桥/伦敦塔、洗两组、失线索、直接推进幕 3a"
+        }
+      ]
+    },
+    {
+      "code": "09504",
+      "name": "其中关联",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09504 其中关联：背面队长二选一（拉结社特工 / 全员 1 伤害 1 恐惧）"
+        }
+      ]
+    },
+    {
+      "code": "09505",
+      "name": "阴谋阴郁",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09505 阴谋阴郁：幕 4 → 结局 3；幕 1–3 → 结局 4"
+        }
+      ]
+    },
+    {
+      "code": "09506",
+      "name": "纵横之谜",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09506 纵横之谜：共同花费线索推进；背面放三处地点 + 隐匿 + 直接推进议程 2a"
+        }
+      ]
+    },
+    {
+      "code": "09507",
+      "name": "游戏开始！",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09507 游戏开始！：与戴红手套的男子交战后推进；背面放塔桥/伦敦塔并直接推进议程 3a"
+        }
+      ]
+    },
+    {
+      "code": "09508",
+      "name": "塔上黑眼",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09508 塔上黑眼：背面放塔楼牢房、渡鸦之眼附属、迷你卡移到牢房、红手套男子隐匿入场"
+        }
+      ]
+    },
+    {
+      "code": "09509",
+      "name": "当场抓获",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09509 当场抓获：被击败 → 结局 1；1/调查员资源 → 结局 2；谈判 action 只在幕 4 出现"
+        }
+      ]
+    },
+    {
+      "code": "09510",
+      "name": "伦敦雨街",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「强制 - 如果伦敦雨街没有线索：在上面增加线索，直到其有 1[每调查员]个线索」未生效：behavior.refillRainyLondonStreets 用 `locationOf(state, RAW.rainyLondonStreets)`（RAW 是卡号 '09510'）查地点，而地点实例 id 是 'rainyLondonStreets' → 永远返回 0；locationRevealed/cluesRemoved/locationEntered 三个钩子都因此空转。实测把线索置 0 后 refill 返回 0、线索仍 0（缺陷复现于 acceptance-09-a-shard4 09510 用例）。"
+    },
+    {
+      "code": "09511",
+      "name": "大本钟",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09511 大本钟：快速能力检定敏捷(2) 查看迷你卡已揭示面"
+        }
+      ]
+    },
+    {
+      "code": "09512",
+      "name": "威斯敏斯特修道院",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09512 威斯敏斯特修道院：谈判检定意志(1) 每超 1 点查看 1 张迷你卡（团队每场一次）"
+        }
+      ]
+    },
+    {
+      "code": "09513",
+      "name": "肯辛顿花园",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09513 肯辛顿花园：揭露诱饵治愈 1 恐惧；揭露敌人受到 1 恐惧"
+        }
+      ]
+    },
+    {
+      "code": "09514",
+      "name": "塔桥",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09514 塔桥：检定意志/智力(5) 成功放置叛徒之门"
+        }
+      ]
+    },
+    {
+      "code": "09515",
+      "name": "叛徒之门",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09515 叛徒之门：检定战斗/敏捷(5) 成功揭示伦敦塔，失败受 1 伤害"
+        }
+      ]
+    },
+    {
+      "code": "09516",
+      "name": "伦敦塔",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09516 伦敦塔：结束回合必须失去 2 资源，或被阴影中的敌人攻击；塔桥进入费 2/人线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-p1-regressions.test.mjs",
+          "test": "P1-11c riddles 09516 伦敦塔进入费用与 09517 迷你卡落点重定向"
+        }
+      ]
+    },
+    {
+      "code": "09517",
+      "name": "塔楼牢房",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09517 塔楼牢房：检定中花费 1 线索 +2 技能值；非牢房的隐匿迷你卡改为在牢房入场"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-p1-regressions.test.mjs",
+          "test": "P1-11c riddles 09516 伦敦塔进入费用与 09517 迷你卡落点重定向"
+        }
+      ]
+    },
+    {
+      "code": "09518",
+      "name": "戴红手套的男子",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "幕 4 谈判行动 `api.test(inv.seat, skill, 5, { source, resolve })` 第四参传对象，而引擎签名要求第四参为回调函数（src/engine/scenario-runtime.js:859）→ 真实使用抛 TypeError: options.resolve is not a function，盘问无法结算、资源(bounty)无法放置。隐匿 1/调查员、反击、精英/胜利数据本身正确。"
+    },
+    {
+      "code": "09519a",
+      "name": "渡鸦之眼",
+      "type": "key",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09519a 渡鸦之眼稳定面：基础技能值补到 6，检定后翻到动荡面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09519b 渡鸦之眼动荡面：抽遭遇牌库顶 1 张；调查员变换后翻回稳定面，敌人变换不翻回"
+        }
+      ]
+    },
+    {
+      "code": "09519b",
+      "name": "渡鸦之眼",
+      "type": "key",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09519b 渡鸦之眼动荡面：抽遭遇牌库顶 1 张；调查员变换后翻回稳定面，敌人变换不翻回"
+        }
+      ]
+    },
+    {
+      "code": "09520",
+      "name": "死亡酷暑",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09520 死亡酷暑：混乱标记表（skull 按杀害数、cultist/tablet/elderthing 追加效果）"
+        }
+      ]
+    },
+    {
+      "code": "09521",
+      "name": "咬牙切齿",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09521 咬牙切齿：苏生/食尸鬼敌人获得「生成-随机地点」；背面按杀害数生成并二选一"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-p1-regressions.test.mjs",
+          "test": "P1-11b deadHeat 09521/09522 关键词与 09532 支援费用"
+        }
+      ]
+    },
+    {
+      "code": "09522",
+      "name": "空荡荡的街道",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09522 空荡荡的街道：苏生/食尸鬼获得猎手与随机生成；背面全员 1 肉体创伤并按拉辛在场进入结局 1/2"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-p1-regressions.test.mjs",
+          "test": "P1-11b deadHeat 09521/09522 关键词与 09532 支援费用"
+        }
+      ]
+    },
+    {
+      "code": "09523",
+      "name": "找到苋",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09523 找到苋：仪式地共同花费线索推进；背面生成苋+末绽之花+拯救平民+哈立德"
+        }
+      ]
+    },
+    {
+      "code": "09524",
+      "name": "生与死的仪式",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09524 生与死的仪式：苋将要被击败时改为推进幕 1；背面按两种原因结算拉辛/翻面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-p1-regressions.test.mjs",
+          "test": "P1-11a deadHeat 09524：苋被击败改为推进幕 1（enemyCanBeDefeated 不真正击败）"
+        }
+      ]
+    },
+    {
+      "code": "09525",
+      "name": "虚无的女王",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09525 虚无的女王：苋与拉辛都不在场时推进；背面按真名进入结局 3/4"
+        }
+      ]
+    },
+    {
+      "code": "09526",
+      "name": "马拉喀什火车站",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09526 马拉喀什火车站：快速移动（团队每回合一次）；无平民时与废弃版交换"
+        }
+      ]
+    },
+    {
+      "code": "09527",
+      "name": "德吉玛广场",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09527 德吉玛广场：有平民时可翻牌库顶 6 张打出一张支援（每场一次）"
+        }
+      ]
+    },
+    {
+      "code": "09528",
+      "name": "萨阿德王陵",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09528 萨阿德王陵：每个平民 +1 隐藏；非精英敌人进入时横置"
+        }
+      ]
+    },
+    {
+      "code": "09529",
+      "name": "鞣革厂",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09529 鞣革厂：快速选择遭遇弃牌堆苏生敌人与其交战并按其生命放置线索"
+        }
+      ]
+    },
+    {
+      "code": "09530",
+      "name": "巴希尔宫花园",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09530 巴希尔宫花园：解救平民后治愈 1 伤害或恐惧；无平民时交换废弃版"
+        }
+      ]
+    },
+    {
+      "code": "09531",
+      "name": "马拉喀什火车站",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09531 马拉喀什火车站（废弃）：离开需额外 1 资源；[action] 撤退"
+        }
+      ]
+    },
+    {
+      "code": "09532",
+      "name": "德吉玛广场",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09532 德吉玛广场（废弃）：位于此地点时打出每张支援费用 +2"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-p1-regressions.test.mjs",
+          "test": "P1-11b deadHeat 09521/09522 关键词与 09532 支援费用"
+        }
+      ]
+    },
+    {
+      "code": "09533",
+      "name": "萨阿德王陵",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09533 萨阿德王陵（废弃）：非精英敌人进入时治愈其全部伤害"
+        }
+      ]
+    },
+    {
+      "code": "09534",
+      "name": "鞣革厂",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09534 鞣革厂（废弃）：每个苏生敌人 +1 攻击与 +1 躲避"
+        }
+      ]
+    },
+    {
+      "code": "09535",
+      "name": "巴希尔宫花园",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09535 巴希尔宫花园（废弃）：回合结束受到 1 伤害或 1 恐惧"
+        }
+      ]
+    },
+    {
+      "code": "09536",
+      "name": "拯救平民",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09536 拯救平民：花费 1 线索解救平民；游戏结束时翻面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09536b 后果：获救 > 被杀 +2/+4 经验，被杀 > 获救 1/2 点精神创伤"
+        }
+      ]
+    },
+    {
+      "code": "09536b",
+      "name": "后果",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09536b 后果：获救 > 被杀 +2/+4 经验，被杀 > 获救 1/2 点精神创伤"
+        }
+      ]
+    },
+    {
+      "code": "09537",
+      "name": "苋",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 「伤害/恐惧分配给支援时击败该支援并变换每把附属密钥」以「攻击前后支援 damage/horror 快照」近似（条目 note 已披露），未走引擎支援伤害/击败入口；属近似实现，需裁决是否等价。"
+    },
+    {
+      "code": "09537b",
+      "name": "苋",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 「攻击时变换每把附属密钥」近似为每次攻击统一 Shift 一次（note 披露，primitive-requests/09544a.json 口径），未区分调查员/敌人触发的翻面差异。"
+    },
+    {
+      "code": "09538",
+      "name": "拉辛·法瑞",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 「任意钥匙变换后重整/即时攻击」只接剧本发起的变换（shiftLastBlossom→razinReactsToKeyShift），P4 玩家发起的 Shift 没有全局 keyShifted 窗口（note 披露，primitive-requests/09538.json）。"
+    },
+    {
+      "code": "09539",
+      "name": "奴仆",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "interaction",
+      "reason": "[pending] 「[fast] 尝试躲避奴仆，本次躲避它获得警戒」走章节行为自建快速行动，失败时由行为补一次攻击；引擎关键字管线未自动处理「本次躲避获得警戒」（note 披露，primitive-requests/09539.json）。"
+    },
+    {
+      "code": "09540",
+      "name": "古代劫掠者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard4.test.mjs",
+          "test": "09540 古代劫掠者：攻击你后你所在地点 1 名平民被杀害"
+        }
+      ]
+    },
+    {
+      "code": "09541",
+      "name": "哈立德",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "interaction",
+      "reason": "[pending] 「尽可能均匀地分配」用固定轮转顺序（相邻地点依次分配），不提供玩家/队长选择（note 披露）。"
+    },
+    {
+      "code": "09542",
+      "name": "饥荒",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[pending] 「你打出每张卡牌的费用提升1点」写在所有在场地点的 playCostIncrease（引擎唯一读点），因此对全桌生效而不是只对「你」生效（note 披露）。轮末弃置读点 treacheryRule.discardAtRoundEnd 已接线。"
+    }
+  ]
+}

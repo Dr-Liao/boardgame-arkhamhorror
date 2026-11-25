@@ -1,0 +1,573 @@
+{
+  "schemaVersion": 1,
+  "unit": "11-a-3",
+  "profile": {
+    "id": "tdc-player-c-2026-11",
+    "scope": "沉没之城 11 段 tdcp 玩家卡（11088–11129）42 条目录记录。40 条通过五维验收；2 条近似/缺口暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 42,
+    "verified": 40,
+    "unverified": 2,
+    "unimplemented": 0,
+    "testsPassed": 175
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+      "sha256": "c91d87a07b11731203bc3fc16236a3781b4a59e957de300deae6ede9e66084d1"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
+      "sha256": "fcb9eb7eed8368236c75dc1f11c40b4cf6e30f4037467ee00aa43550da0c9dab"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-player-seeker.test.mjs",
+      "sha256": "ee09ded2dda84a7c4122ae9981232231b1c879768b22809bb5daafb33b15a074"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+      "sha256": "2ab49d19a48bb5d7cb4b26cacc1de2649ce63d80b34a4f890f47d79c3185cf13"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-investigators.test.mjs",
+      "sha256": "8caeff86348bfb9e398b57cdc2c1c54b648d563be121ca3effcd76358c9340d0"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-rules.test.mjs",
+      "sha256": "541471492f102ef04f00c249498d1f4cd93173e554068f3cf86c1e1c26991e7b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-primitives.test.mjs",
+      "sha256": "c152d8c4f1e738adc1b1f75ac78ddfaa26012a91ed060d4a7132987df99e397b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+      "sha256": "25466d3868f2e9af5f0b6a9846202b4c7c60d1fb54994b4b60dc69611e2b1abf"
+    }
+  ],
+  "entries": [
+    {
+      "code": "11088",
+      "name": "苦思冥想",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11088 允许连接地点的单张牌投入，额外线索交给检定者"
+        }
+      ]
+    },
+    {
+      "code": "11089",
+      "name": "丰厚的补给品",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11089 弃手牌后横置增加一个补给，弃掉自身将补给转为资源"
+        }
+      ]
+    },
+    {
+      "code": "11090",
+      "name": "希望微光",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11090 只能从弃牌堆打出并收回包括不同等级在内的所有同名牌"
+        }
+      ]
+    },
+    {
+      "code": "11091",
+      "name": "好天气",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11091 在阶段开始时快速打出，团队共享一种技能加值且下次阶段开始弃掉"
+        }
+      ]
+    },
+    {
+      "code": "11092",
+      "name": "临时武器",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11092 从弃牌堆攻击后先洗回再抽牌，空牌库时抽到自身"
+        }
+      ]
+    },
+    {
+      "code": "11093",
+      "name": "殊死一搏",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11093 独立投入，每张剩余手牌减一个百搭，成功抽两张"
+        }
+      ]
+    },
+    {
+      "code": "11094",
+      "name": "诺登斯的馈礼",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11094 从弃牌堆投入所选技能，付出手牌并把投入牌放到牌库底"
+        }
+      ]
+    },
+    {
+      "code": "11095",
+      "name": "清苦度日",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+          "test": "11095 手动构筑提供 10 点起始 XP，之后禁止获取 XP 和再购买"
+        }
+      ]
+    },
+    {
+      "code": "11096",
+      "name": "短休",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
+          "test": "11096 同地点另一调查员在自己的回合之外照付费用，连续打出小憩"
+        }
+      ]
+    },
+    {
+      "code": "11097",
+      "name": "信心",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+          "test": "11097 每多揭示一枚标记就增加一个投入图标，最多加三枚"
+        }
+      ]
+    },
+    {
+      "code": "11098",
+      "name": "灵魂治愈",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+          "test": "11098 购买时选择一种创伤，取消草稿可撤销，确认后同步战役创伤"
+        }
+      ]
+    },
+    {
+      "code": "11099",
+      "name": "借书证",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
+          "test": "11099 满手槽时仍可令手牌书籍实际入场，回合结束放在牌库底"
+        }
+      ]
+    },
+    {
+      "code": "11100",
+      "name": "陶土之梦",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+          "test": "11100 在诡计检定成功后留在游戏区域，再移出游戏取消非险境诡计显现"
+        }
+      ]
+    },
+    {
+      "code": "11101",
+      "name": "好奇善问",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+          "test": "11101 可调整成功差值并把新差值交给实际检定结果"
+        }
+      ]
+    },
+    {
+      "code": "11102",
+      "name": "奔赴地平线",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11102 横置并弃手牌，免费移动到连接地点"
+        }
+      ]
+    },
+    {
+      "code": "11103",
+      "name": "禁忌箴言",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11103 法术事件检定的技能加值与自选额外揭示都生效"
+        }
+      ]
+    },
+    {
+      "code": "11104",
+      "name": "沃尔特·菲茨帕特里克",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11104 提高谈判检定值，成功后才可横置获得资源"
+        }
+      ]
+    },
+    {
+      "code": "11105",
+      "name": "开个价吧",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11105 对非精英与精英谈判分别造成 10 与 5 伤害，并将事件移出游戏"
+        }
+      ]
+    },
+    {
+      "code": "11106",
+      "name": "纯粹觉醒",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11106 按选择顺序结算两种不同效果，并在第二次选择隐藏已用效果"
+        }
+      ]
+    },
+    {
+      "code": "11107",
+      "name": "翻倍下注",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11107 每次仅投入一张，并按花费的资源每枚增加两枚百搭"
+        }
+      ]
+    },
+    {
+      "code": "11108",
+      "name": "勾魂演绎",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11108 连续三种行动后奖励未用类型的额外行动，不扣普通行动"
+        }
+      ]
+    },
+    {
+      "code": "11109",
+      "name": "赛克麦特的斗篷",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
+          "test": "11109 进入后阻止与非精英交战，并且只阻止发动者本轮造成的伤害"
+        }
+      ]
+    },
+    {
+      "code": "11110",
+      "name": "达科塔·加罗伐洛",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11110 横置盟友移动并交战，在生物所在地点获得两项技能值"
+        }
+      ]
+    },
+    {
+      "code": "11111",
+      "name": "埋头苦干",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11111 登记失败补偿后，即使自身先离场也仍结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11111 的工具检定失败补回刚刚花费的补给"
+        }
+      ]
+    },
+    {
+      "code": "11112",
+      "name": "可靠支援",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11112 可以承受同地点队友的伤害和恐惧，并于持有者回合开始治疗其一"
+        }
+      ]
+    },
+    {
+      "code": "11113",
+      "name": "战壕护甲",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11113 统计护甲入场前的趁乱攻击，并取消下一轮的首次攻击"
+        }
+      ]
+    },
+    {
+      "code": "11114",
+      "name": "昆阳之血",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11114 通过空手部槽位加值，并只将用此攻击击败的非精英和事件附属放入胜利区"
+        }
+      ]
+    },
+    {
+      "code": "11115",
+      "name": "风暴御主",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「本次攻击揭示的每个符号各造成 1 点伤害（至多 3 点）」被实现为「先选一名敌人，再把 min(3, 符号数) 点伤害一次打给它」：印刷允许每个符号独立选择本地点敌人（可分摊到多个敌人），实现只能单一目标 → 少了合法的分摊目标选择。入口 `src/cards/entries/11115.js` 的 resolve 只调用一次 api.damageEnemy。"
+    },
+    {
+      "code": "11116",
+      "name": "励志演讲",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11116 让同地点队友免费打出盟友，换槽后还能忽略弃置费用触发能力"
+        }
+      ]
+    },
+    {
+      "code": "11117",
+      "name": "阿奇巴德·迈克维赫",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11117 能用另一件受控支援的秘密支付洞察事件，不能支付非洞察牌"
+        }
+      ]
+    },
+    {
+      "code": "11118",
+      "name": "借书证",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11118 满手部槽位可附属书籍，回合末将它放到牌库底"
+        }
+      ]
+    },
+    {
+      "code": "11119",
+      "name": "毛瑟M1918式反坦克步枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+          "test": "11119 按调查员印刷特性筛选，并以炮弹和横置约束攻击、装填"
+        }
+      ]
+    },
+    {
+      "code": "11120",
+      "name": "穷追不舍",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+          "test": "11120 进入有敌人的地点可支付线索标记并横置造成伤害"
+        }
+      ]
+    },
+    {
+      "code": "11121",
+      "name": "神圣誓言",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+          "test": "11121 11122 11123 三种誓约共用一个秘法槽，按各自特质取消诡计"
+        }
+      ]
+    },
+    {
+      "code": "11122",
+      "name": "神圣誓言",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+          "test": "11121 11122 11123 三种誓约共用一个秘法槽，按各自特质取消诡计"
+        }
+      ]
+    },
+    {
+      "code": "11123",
+      "name": "神圣誓言",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+          "test": "11121 11122 11123 三种誓约共用一个秘法槽，按各自特质取消诡计"
+        }
+      ]
+    },
+    {
+      "code": "11124",
+      "name": "次元旋涡",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+          "test": "11124 调查阶段起始只将所选地点的非精英敌人放到一旁"
+        }
+      ]
+    },
+    {
+      "code": "11125",
+      "name": "彼生记忆",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面末句「At the end of the game, return that card to your collection」未实现：`chooseCollectionPlay` 只负责从收藏检索并免费打出（api 见 src/engine/engine.js:1502），全仓无「收藏卡在游戏结束归还」的战役账目/读点（grep collection 仅 engine.js/api-test.js 两处），战役层不会记录被带出的收藏卡，因此结局阶段无法归还。"
+    },
+    {
+      "code": "11126",
+      "name": "穷困潦倒",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+          "test": "11027 可加入手动牌组，11126–11129 只作为基础弱点候选"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+          "test": "11126 允许同地点调查员清除，四张基础弱点保留各自要求"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+          "test": "11126 未执行要求的行动时，恐惧与回洗各只结算一次"
+        }
+      ]
+    },
+    {
+      "code": "11127",
+      "name": "病态的好奇心",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+          "test": "11127 识别本轮成功的 investigate 检定并保留威胁区卡牌"
+        }
+      ]
+    },
+    {
+      "code": "11128",
+      "name": "骚灵为祸",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+          "test": "11128 识别本轮成功的 evade 检定并保留威胁区卡牌"
+        }
+      ]
+    },
+    {
+      "code": "11129",
+      "name": "发狂",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+          "test": "11027 可加入手动牌组，11126–11129 只作为基础弱点候选"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+          "test": "11129 识别本轮成功的 fight 检定并保留威胁区卡牌"
+        }
+      ]
+    }
+  ]
+}

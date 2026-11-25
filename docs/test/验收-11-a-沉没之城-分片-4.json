@@ -1,0 +1,212 @@
+{
+  "unit": "11-a-4",
+  "generatedAt": "2026-11-25",
+  "scope": {
+    "cards": 43,
+    "selector": "11501-11538（pack=tdcc 战役内容）&& effectStatus=unverified（含 11504b/11505b/11531b/11532b/11537b）",
+    "baseline": "cards-data 复算 43 张全部 unverified；40 张有单卡条目，11501/11517/11536 为提示卡（scenarioReference，无条目，行为在章节 chaos/definition/behavior）"
+  },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "11501",
+    "11502",
+    "11503",
+    "11504b",
+    "11505b",
+    "11506",
+    "11507",
+    "11508",
+    "11509",
+    "11510",
+    "11511",
+    "11512",
+    "11513",
+    "11514",
+    "11515",
+    "11516",
+    "11517",
+    "11518",
+    "11519",
+    "11520",
+    "11521",
+    "11522",
+    "11523",
+    "11524",
+    "11525",
+    "11526",
+    "11529",
+    "11530",
+    "11531",
+    "11533",
+    "11534",
+    "11535",
+    "11536",
+    "11537",
+    "11537b",
+    "11538"
+  ],
+  "failedCodes": [
+    {
+      "code": "11504",
+      "dimension": "primitives",
+      "reason": "[pending] 声明即接线缺口：flags.parley.clueOnAct = 1 在全仓库没有读点（behavior.parleyAction 直接硬编码「幕上 +1 线索」）；效果可用但声明字段未被读取，改数值不会改变行为。",
+      "evidence": "src/cards/encounter-entries/theDrownedCity/oneLastJob/11504.js:18; content/campaigns/theDrownedCity/scenarios/oneLastJob/behavior.js parleyAction"
+    },
+    {
+      "code": "11505",
+      "dimension": "primitives",
+      "reason": "[pending] 同 11504：flags.parley.clueOnAct = 1 无读点，behavior.parleyAction 硬编码 +1 线索。",
+      "evidence": "src/cards/encounter-entries/theDrownedCity/oneLastJob/11505.js:18"
+    },
+    {
+      "code": "11527",
+      "dimension": "primitives",
+      "reason": "[pending] 声明即接线缺口：flags.deepOneMovingConnectsFlooded 无读点；behavior.enemyConnections 直接按 Deep One 特性 + 完全淹没硬编码实现（功能正确、声明死字段）。",
+      "evidence": "src/cards/encounter-entries/theDrownedCity/theWesternWall/11527.js; behavior.enemyConnections"
+    },
+    {
+      "code": "11528",
+      "dimension": "primitives",
+      "reason": "[pending] 声明即接线缺口：glyphAction.requiresNotFlooded 无读点；behavior.locationGlyphAction 用 waterLevel > 0 硬编码判断。符文 V 翻译记录功能正确。",
+      "evidence": "src/cards/encounter-entries/theDrownedCity/theWesternWall/11528.js:16; behavior.locationGlyphAction"
+    },
+    {
+      "code": "11531b",
+      "dimension": "primitives",
+      "reason": "[pending] 声明即接线缺口：flags.storyOf 无读点（故事面与正面的关联由 behavior.friezeFlipAction 用固定 11531b 硬编码）；符文 W 翻译/加入胜利区的效果本身已实现。",
+      "evidence": "src/cards/encounter-entries/theDrownedCity/theWesternWall/11531b.js; behavior.friezeFlipAction"
+    },
+    {
+      "code": "11532",
+      "dimension": "primitives",
+      "reason": "[pending] 声明即接线缺口：flags.cannotFlipAgain 无读点——引擎 locations.js:192 读的是地点实例 loc.cannotFlipAgain，behavior.vaultFlipAction 只写 here.flipped 与 twwVaultFlipped，从不写 loc.cannotFlipAgain；实际防重翻由 twwVaultFlipped 承担。",
+      "evidence": "src/cards/encounter-entries/theDrownedCity/theWesternWall/11532.js:12; src/engine/locations.js:192; behavior.vaultFlipAction"
+    },
+    {
+      "code": "11532b",
+      "dimension": "primitives",
+      "reason": "[pending] 声明即接线缺口：flags.storyOf 无读点（同 11531b）；翻回地点面由 behavior.vaultFlipAction 写 here.flipped + twwVaultFlipped 实现。",
+      "evidence": "src/cards/encounter-entries/theDrownedCity/theWesternWall/11532b.js"
+    }
+  ],
+  "pendingCodes": [
+    "11504",
+    "11505",
+    "11527",
+    "11528",
+    "11531b",
+    "11532",
+    "11532b"
+  ],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "pass",
+    "primitives": "fail",
+    "interaction": "pass",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/acceptance-11-a-shard4.test.mjs",
+      "test": "43 例逐卡真实执行（标题含卡号）：三章 behavior/definition/chaos 真实函数 + 单卡条目注册，章节 setupScenario 夹具；本地 43/43 通过",
+      "codes": [
+        "11501",
+        "11502",
+        "11503",
+        "11504",
+        "11504b",
+        "11505",
+        "11505b",
+        "11506",
+        "11507",
+        "11508",
+        "11509",
+        "11510",
+        "11511",
+        "11512",
+        "11513",
+        "11514",
+        "11515",
+        "11516",
+        "11517",
+        "11518",
+        "11519",
+        "11520",
+        "11521",
+        "11522",
+        "11523",
+        "11524",
+        "11525",
+        "11526",
+        "11527",
+        "11528",
+        "11529",
+        "11530",
+        "11531",
+        "11531b",
+        "11532",
+        "11532b",
+        "11533",
+        "11534",
+        "11535",
+        "11536",
+        "11537",
+        "11537b",
+        "11538"
+      ]
+    },
+    {
+      "file": "tests/tdc-scenario-oneLastJob.test.mjs / theWesternWall / theDrownedQuarter",
+      "test": "既有章节测试 82/82 通过（真实 engine 合成注册口径），覆盖 setup/幕议程背面/混乱标记/地点行动/结局",
+      "codes": [
+        "11501",
+        "11502",
+        "11504",
+        "11506",
+        "11508",
+        "11510",
+        "11517",
+        "11518",
+        "11519",
+        "11521",
+        "11525",
+        "11531",
+        "11532",
+        "11533",
+        "11535",
+        "11536",
+        "11537",
+        "11537b",
+        "11538"
+      ]
+    },
+    {
+      "file": "artifacts/acceptance/11-a-4/scan-wiring.mjs + scan-wiring2.mjs",
+      "test": "逐卡 flags 读点扫描：确认 clueOnAct / deepOneMovingConnectsFlooded / requiresNotFlooded / storyOf / cannotFlipAgain 无读点（7 张 pending 的证据）；拒绝直接采信 p7/literal 账本的「100% implemented」"
+    }
+  ],
+  "commands": [
+    {
+      "command": "node --test tests/acceptance-11-a-shard4.test.mjs",
+      "result": "tests 43 / pass 43 / fail 0（新增）"
+    },
+    {
+      "command": "node --test tests/tdc-scenario-oneLastJob.test.mjs tests/tdc-scenario-theWesternWall.test.mjs tests/tdc-scenario-theDrownedQuarter.test.mjs",
+      "result": "tests 82 / pass 82 / fail 0（既有证据）"
+    },
+    {
+      "command": "npm run cards:check",
+      "result": "10/10 pass；条目合规审计通过（无基线外新增违规）"
+    },
+    {
+      "command": "npm run cards:encounter-check",
+      "result": "7/7 pass；条目合规审计通过（无基线外新增违规）"
+    },
+    {
+      "command": "npm run audit:entries",
+      "result": "通过；directStateWrite 112（存量基线）"
+    }
+  ],
+  "notes": "1) 43 张：通过 36 / 失败 0 / pending 7。2) 本轮未发现功能性缺失：三章幕/议程/地点/敌人/诡计/剧情面的印刷子句均能在 behavior/definition/entry 中找到读点，43 条新增用例与既有 82 条章节用例全绿。3) 前两类问题均为「声明即接线」债务（非功能缺口）：①11504/11505 flags.parley.clueOnAct 无读点（behavior 硬编码 +1 线索）；②11527/11528/11531b/11532/11532b 的 deepOneMovingConnectsFlooded / requiresNotFlooded / storyOf / cannotFlipAgain 无读点（功能用固定判断/其它 flag 实现）。按 AGENTS.md「声明了没人读按未实现计」，这 7 张记 pending 待裁决（补读点或删声明）。4) 11501/11517/11536 为提示卡（scenarioReference）：无单卡条目属预期，本轮用章节 chaos 函数（skull/tablet/elder_thing 四档）验证，均通过。5) 大厅根 artifacts/migration/tdc/p7/literal/*.json 声称三章 100% implemented / 0 approximation；本轮独立复核发现 7 处声明死字段，说明该账本不能直接采信。6) 新增测试未登记 tests/suites.mjs（分片边界不允许），主进程合并时须登记 fast/slow tier。7) 未改 src/content/audit/web/tools/既有 tests/package.json，未重签 TDC 账本，未碰 web/campaign-presentation.js。8) 通过 36 张可切 verified；7 张 pending 补读点或删声明后重跑 acceptance-11-a-shard4 即可。"
+}

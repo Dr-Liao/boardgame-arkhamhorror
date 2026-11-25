@@ -1,0 +1,873 @@
+{
+  "schemaVersion": 1,
+  "unit": "07-a-5",
+  "profile": {
+    "id": "tic-horror-in-high-gear-2026-11",
+    "scope": "印斯茅斯暗潮 07 段 Horror in High Gear（hhg，07189–07219）42 条目录记录。41 条通过五维验收；07189 附魔护甲伤害分配被写死为护甲所有者暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 42,
+    "verified": 41,
+    "unverified": 1,
+    "unimplemented": 0,
+    "testsPassed": 385
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-07-a-shard5.test.mjs",
+      "sha256": "a142280a957c7ac5dc8035953410f6a5f9026c4d16251c21c4bdc31bcb1bf6a7"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+      "sha256": "226cd7eb964248780d3416bcf1016004644abc248c9a2cbd10b89e1974a38183"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+      "sha256": "a050b7d56ddf46230278f6d30b5a21a7811898857976f0eb7c0ce9954f5693de"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-hybrid-assassin.test.mjs",
+      "sha256": "a58c6de2e4a6f8e8494f1a732ef5bd77c171dfbcba1db08ac92845a3e7d94f4a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-catching-up.test.mjs",
+      "sha256": "0847c104953c49844295859233a3821842b23751916c8e19427071e5db840eb0"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-chase-vehicles.test.mjs",
+      "sha256": "a1055dc8ef21c65fe9b8757a8fd30484a724772a2294e413c34cf7b14a4c7f5e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-car-faces.test.mjs",
+      "sha256": "89d2e93fb6968d19bdb4c539cf5ae63a84a83122585e53b553b109c16fe14195"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-vehicle-restrictions.test.mjs",
+      "sha256": "07216b9b94b821412a4172dfe862eafee66c22ff5d89968e0b12d9d803e6b4d4"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-capture.test.mjs",
+      "sha256": "710a9e2a33381da333e1394f2cf2b949931a2a9c5b45f53931b677f541dfacbc"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-enemy-flow.test.mjs",
+      "sha256": "c1f31e7fb3ae2d47bcc9cbc1850206c2ad0c3069582f7ba55df8262bdaca6b9e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-enemy-movement.test.mjs",
+      "sha256": "4aba20208ccfa1ca23e479483ef4d2e1ad2ae2e26ba009be0cf554acf0b62060"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-enemy-outcomes.test.mjs",
+      "sha256": "e052c99b022bd077b89799b47effb6c29a9ccf2bc4ce532f1a9b6dd51dfb9463"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-interactions.test.mjs",
+      "sha256": "64e5dde4e149d1da6c052fd7f8ddedca48037b9a7fb987baae599a5c089f5224"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-rules.test.mjs",
+      "sha256": "24972f73c0ee5c468034308b7bc51c7742bccc191406960dfc268169940a574a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-primitives.test.mjs",
+      "sha256": "2234fa4bbb8925066932c1ba1211d4349b1c7f19934ef2c6f023ce0131e92770"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+      "sha256": "231d6d9ce438e87b3ca6b4d70c918fbf549fc8907225264a173b68fad6db98be"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+      "sha256": "b4ecaedb1a2445d494b757be42e5133ef92a1091249e32565e2ad8b135756fd1"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+      "sha256": "3580319103f889db41d6871ecd68189d802ef3fe6d3339ee9997b46d27959044"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+      "sha256": "c2c69dc2fb3fe002419897d86711bcdcb9434dd22519dec707d50a2171afc3aa"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-primitives.test.mjs",
+      "sha256": "8453001755501ca236be74abc05e428b5270c32b28ac29b4d74e91b07777bbbb"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-walking-surcharge.test.mjs",
+      "sha256": "5e2a883b2c40bebb79d35fc2ca25b8aec6d70ad04bf1c788859174572bc8d041"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
+      "sha256": "88c8e7f725ed3c4ae41c00491aa8adbb719cd08182152982c76ef003e1afecd6"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-physical-faces.test.mjs",
+      "sha256": "7c937c15ada78130cbe55bd5b0b8a61dbc3521be15dd25207d8fbdb6543243e6"
+    }
+  ],
+  "entries": [
+    {
+      "code": "07189",
+      "name": "附魔护甲",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面「如果检定失败，弃掉附魔护甲并将刚刚放置在上面的伤害和/或恐惧分配到别处」被写死为回到护甲所有者：`api.playerTools.testAssignedHarm` 失败分支固定 `api().harm(owner, …)`，没有提供任何承受者/目标选择；伤害由同地点其他调查员放到护甲上时（多人数常见），会被错误地转给所有者而不是由原分配者另选目标。现有用例 `tests/tic-player-guardian-seeker.test.mjs:134-137` 正是按「回到 owner」写期望，属把错误行为固化成期望。"
+    },
+    {
+      "code": "07190",
+      "name": "伊西斯的祝福",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07190 Blessing of Isis treats the second physical bless as the performing investigator elder sign"
+        }
+      ]
+    },
+    {
+      "code": "07191",
+      "name": "神秘魔法书",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07191 Cryptic Grimoire gains secrets for each resolved curse then makes Insight fast"
+        }
+      ]
+    },
+    {
+      "code": "07192",
+      "name": "神秘魔法书",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07192 Cryptic Grimoire replaces actual encounter top draw with player deck draw"
+        }
+      ]
+    },
+    {
+      "code": "07193",
+      "name": "狂怒畸变",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07193 only actually added curses grant skill and damage"
+        }
+      ]
+    },
+    {
+      "code": "07194",
+      "name": "崔斯丹·波特雷",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07194 Tristan picks two distinct skills until that investigator next turn"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07194 Tristan plays from hand free after three actual special tokens"
+        }
+      ]
+    },
+    {
+      "code": "07195",
+      "name": "万古诅咒",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07195 second curse can become skull and optionally retain its physical token"
+        }
+      ]
+    },
+    {
+      "code": "07196",
+      "name": "不屈不挠",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07196 Unrelenting actual seal selection draws only for three good faces, releases even after late withdrawal"
+        }
+      ]
+    },
+    {
+      "code": "07197",
+      "name": "十字圣号",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07197 Signum Crucis uses base skill excluding passive bonuses and cannot help others"
+        }
+      ]
+    },
+    {
+      "code": "07198",
+      "name": "全速恐惧",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+          "test": "horrorInHighGear 混乱标记：07198 skull 按道路牌堆剩余张数、cultist/tablet 按失败差值丢失乘客资源/线索"
+        }
+      ]
+    },
+    {
+      "code": "07199",
+      "name": "追逐开始！(版本一)",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07199 轮末道路清理：后方空地点移出游戏；停机列保留；被敌人占用的地点保留"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07199/07200/07201：三张同文议程共用工厂（步行 +2 行动、轮末清理、背面 onReveal）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-chase-vehicles.test.mjs",
+          "test": "07199b 魔鬼礁石的骇物：将要被击败时改为移除伤害并横置，本轮剩余时间不能重整"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07199：背面在最后方地点生成「魔鬼礁石的骇物」07199b，且不与调查员交战"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+          "test": "horrorInHighGear 幕/议程：07202 声明每个敌人获得猎手与调查阶段末载具移动；推进 07199 背面在最后方生成 07199b"
+        }
+      ]
+    },
+    {
+      "code": "07199b",
+      "name": "魔鬼礁石的骇物",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-chase-vehicles.test.mjs",
+          "test": "07199b 魔鬼礁石的骇物：将要被击败时改为移除伤害并横置，本轮剩余时间不能重整"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07199：背面在最后方地点生成「魔鬼礁石的骇物」07199b，且不与调查员交战"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+          "test": "horrorInHighGear 幕/议程：07202 声明每个敌人获得猎手与调查阶段末载具移动；推进 07199 背面在最后方生成 07199b"
+        }
+      ]
+    },
+    {
+      "code": "07200",
+      "name": "追逐开始！(版本二)",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07199/07200/07201：三张同文议程共用工厂（步行 +2 行动、轮末清理、背面 onReveal）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07200：2 人局不执行「弃到载具敌人/机械故障」分支"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07200：3 人局弃遭遇牌库顶直到[[载具]]敌人或机械故障诡计，队长抽取该卡"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07200：背面翻转载具为停止面，并把遭遇弃牌堆混洗回遭遇牌库"
+        }
+      ]
+    },
+    {
+      "code": "07201",
+      "name": "热力追踪",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07199/07200/07201：三张同文议程共用工厂（步行 +2 行动、轮末清理、背面 onReveal）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07201：背面「燃料耗尽」击败所有调查员并各承受 1 点肉体创伤"
+        }
+      ]
+    },
+    {
+      "code": "07202",
+      "name": "油门踩死",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07202：「尽快开到猎鹰岬」是剧情指示型目标——objective 恒 false，不自动推进幕"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07202：停止的载具在调查阶段结束时不会移动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07202：全局猎手读点让未印猎手的敌人在敌人阶段获得猎手行为"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07202：声明「每个敌人获得猎手」「调查阶段末载具移动」「剧情指示型目标」与背面结局1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07202：调查阶段结束时每辆运行中的载具由司机选择移动到连接的[[道路]]地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+          "test": "horrorInHighGear 幕 07202：调查阶段结束时每辆运行中的载具由司机选择移动到连接的[[道路]]地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+          "test": "horrorInHighGear 幕/议程：07202 声明每个敌人获得猎手与调查阶段末载具移动；推进 07199 背面在最后方生成 07199b"
+        }
+      ]
+    },
+    {
+      "code": "07203",
+      "name": "猎鹰岬通路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07203: actual last investigator movement advances current chase act exactly once, despite enemies at Approach"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07203: an absent undefeated investigator prevents objective; actual defeat removes that requirement"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07203: unrevealed location, wrong act and empty undefeated group never advance"
+        }
+      ]
+    },
+    {
+      "code": "07204a",
+      "name": "昏暗道路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard5.test.mjs",
+          "test": "07-a5 07204a 昏暗道路：每差 1 线索一位乘客受 2 点恐惧，且每载具每场一次"
+        }
+      ]
+    },
+    {
+      "code": "07204b",
+      "name": "昏暗道路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
+          "test": "07204b 昏暗道路：每差额 1 点恐惧"
+        }
+      ]
+    },
+    {
+      "code": "07204c",
+      "name": "昏暗道路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
+          "test": "07204c 昏暗道路：付不出线索时，差额每位让一位乘客受 2 点恐惧（每载具每场一次）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
+          "test": "07204c：乘客仍算在出发地，可以用自己的线索共同付费（审计 H3 回归）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
+          "test": "07204c：留在原地的人线索够时先付线索，乘客不受伤"
+        }
+      ]
+    },
+    {
+      "code": "07205a",
+      "name": "崖边道路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
+          "test": "07205a 崖边道路：司机检定失败则移除载具、每位乘客受 10 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "07205b",
+      "name": "崖边道路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard5.test.mjs",
+          "test": "07-a5 07205b 崖边道路：司机检定失败则移除载具、每位乘客 10 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "07206a",
+      "name": "歧路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard5.test.mjs",
+          "test": "07-a5 07206a 歧路：团队每人 1 线索查看前方已揭示面（道路 2 数据）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07206a: actual front-road reveal creates Road 2 physical choices, conserves pool and never extends twice"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07206a: real free look pays only local group, includes far and revealed future targets, no action or opportunity attack"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07206a: remote clues cannot fund this local look ability"
+        }
+      ]
+    },
+    {
+      "code": "07206b",
+      "name": "歧路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard5.test.mjs",
+          "test": "07-a5 07206b 歧路：团队每人 1 线索查看前方已揭示面（道路 2 数据）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07206b: actual front-road reveal creates Road 2 physical choices, conserves pool and never extends twice"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07206b: real free look pays only local group, includes far and revealed future targets, no action or opportunity attack"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07206b: remote clues cannot fund this local look ability"
+        }
+      ]
+    },
+    {
+      "code": "07207a",
+      "name": "交岔路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard5.test.mjs",
+          "test": "07-a5 07207a 交岔路：团队每人 1 线索查看前方已揭示面（道路 3 数据）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07207a: actual front-road reveal creates Road 3 physical choices, conserves pool and never extends twice"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07207a: real free look pays only local group, includes far and revealed future targets, no action or opportunity attack"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07207a: remote clues cannot fund this local look ability"
+        }
+      ]
+    },
+    {
+      "code": "07207b",
+      "name": "交岔路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard5.test.mjs",
+          "test": "07-a5 07207b 交岔路：团队每人 1 线索查看前方已揭示面（道路 3 数据）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07207b: actual front-road reveal creates Road 3 physical choices, conserves pool and never extends twice"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07207b: real free look pays only local group, includes far and revealed future targets, no action or opportunity attack"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07207b: remote clues cannot fund this local look ability"
+        }
+      ]
+    },
+    {
+      "code": "07208a",
+      "name": "急转弯",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
+          "test": "07208a 急转弯：付不出线索时改为伤害"
+        }
+      ]
+    },
+    {
+      "code": "07208b",
+      "name": "急转弯",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard5.test.mjs",
+          "test": "07-a5 07208b 急转弯：每差 1 线索一位乘客受 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "07208c",
+      "name": "急转弯",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard5.test.mjs",
+          "test": "07-a5 07208c 急转弯：每差 1 线索一位乘客受 2 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "07209a",
+      "name": "荒凉道路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
+          "test": "07209a 荒凉道路：付不齐时弃遭遇牌直到[[载具]]敌人并生成在此"
+        }
+      ]
+    },
+    {
+      "code": "07209b",
+      "name": "荒凉道路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard5.test.mjs",
+          "test": "07-a5 07209b 荒凉道路：付不齐时弃遭遇牌直到[[载具]]敌人并生成在此"
+        }
+      ]
+    },
+    {
+      "code": "07210",
+      "name": "蜿蜒长路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-road-hazards.test.mjs",
+          "test": "07210 蜿蜒长路：载具进入后毁灭 +1，并且直到下一轮结束都不能离开"
+        }
+      ]
+    },
+    {
+      "code": "07211a",
+      "name": "托马斯·道森的车",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-car-faces.test.mjs",
+          "test": "07211a 行驶：抽一张遭遇牌，然后把车开到一个连接的[[道路]]地点（每轮一次）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-car-faces.test.mjs",
+          "test": "07211a 运行面：司机看得到两个行动，非司机看不到"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-car-faces.test.mjs",
+          "test": "07211a 运行面：调查员不能进入或离开本载具；翻到熄火面后解除"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-car-faces.test.mjs",
+          "test": "07211b 熄火面：司机启动车子翻回运行面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+          "test": "horrorInHighGear 载具正反面与司机：07211a 运行面禁止进出、翻到 07211b 熄火面解除、司机再启动"
+        }
+      ]
+    },
+    {
+      "code": "07211b",
+      "name": "托马斯·道森的车",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-car-faces.test.mjs",
+          "test": "07211b 熄火面：司机启动车子翻回运行面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+          "test": "horrorInHighGear 载具正反面与司机：07211a 运行面禁止进出、翻到 07211b 熄火面解除、司机再启动"
+        }
+      ]
+    },
+    {
+      "code": "07212a",
+      "name": "艾莲娜·哈珀的车",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard5.test.mjs",
+          "test": "07-a5 07212a 艾莲娜·哈珀的车：运行面禁止进出，司机行驶/停车"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard5.test.mjs",
+          "test": "07-a5 07212b 艾莲娜·哈珀的车：熄火面不锁定进出，司机启动后翻回运行面"
+        }
+      ]
+    },
+    {
+      "code": "07212b",
+      "name": "艾莲娜·哈珀的车",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard5.test.mjs",
+          "test": "07-a5 07212b 艾莲娜·哈珀的车：熄火面不锁定进出，司机启动后翻回运行面"
+        }
+      ]
+    },
+    {
+      "code": "07213",
+      "name": "追击快车",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-chase-vehicles.test.mjs",
+          "test": "07213 追击快车：同样生成在最后方"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-chase-vehicles.test.mjs",
+          "test": "07213：目标不在载具上时攻击 +2 伤害，在载具上则不加"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-catching-up.test.mjs",
+          "test": "07219 no actual move finds first Vehicle 07213 at physical rearmost location"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+          "test": "horrorInHighGear 敌人/遭遇：07213/07214 从最后方道路地点生成且不自动交战，不在载具上时攻击 +2 伤害"
+        }
+      ]
+    },
+    {
+      "code": "07214",
+      "name": "一车打手",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-chase-vehicles.test.mjs",
+          "test": "07214 一车打手：从遭遇牌库抽到时生成在最后方的地点，且不与抽牌者交战"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-catching-up.test.mjs",
+          "test": "07219 no actual move finds first Vehicle 07214 at physical rearmost location"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-horrorInHighGear.test.mjs",
+          "test": "horrorInHighGear 敌人/遭遇：07213/07214 从最后方道路地点生成且不自动交战，不在载具上时攻击 +2 伤害"
+        }
+      ]
+    },
+    {
+      "code": "07215",
+      "name": "混血刺客",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-hybrid-assassin.test.mjs",
+          "test": "07215 actual Hunter first step triggers one extra step, no third and JSON retains once/round"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-hybrid-assassin.test.mjs",
+          "test": "07215 effect move does not consume limit; subsequent Hunter move still triggers extra"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-hybrid-assassin.test.mjs",
+          "test": "07215 engaging after first step does not consume limit; later unengaged move may trigger"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-hybrid-assassin.test.mjs",
+          "test": "07215 two physical copies each retain their own printed once-per-round limit"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-hybrid-assassin.test.mjs",
+          "test": "07215 zero-displacement/exhausted attempts do not consume once-per-round limit"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-catching-up.test.mjs",
+          "test": "07219 no actual move finds first Vehicle 07215 at physical rearmost location"
+        }
+      ]
+    },
+    {
+      "code": "07216",
+      "name": "颠簸前行",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard5.test.mjs",
+          "test": "07-a5 07216 颠簸前行：不在车上自检，车上司机检定失败后全车承受 2 点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07216: drawer outside every vehicle tests difficulty five and receives fixed three harm on failure"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07216: passenger draw tests the actual driver and harms only this vehicle on failure after JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07216: successful driver test uses driver's skill rather than drawer skill and causes no passenger harm"
+        }
+      ]
+    },
+    {
+      "code": "07217",
+      "name": "“我看不见了！”",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard5.test.mjs",
+          "test": "07-a5 07217 “我看不见了！”：不在车上自检，车上司机检定失败后全车承受 2 点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07217: drawer outside every vehicle tests difficulty five and receives fixed three harm on failure"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07217: passenger draw tests the actual driver and harms only this vehicle on failure after JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07217: successful driver test uses driver's skill rather than drawer skill and causes no passenger harm"
+        }
+      ]
+    },
+    {
+      "code": "07218",
+      "name": "林中之眼",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07218: forced available asset branch discards only chosen controlled asset; success discards neither branch"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07218: one actual drawer test makes each same-car passenger discard failure-margin hand cards; others unaffected"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+          "test": "07218: without a vehicle only drawer is affected; hidden cards and permanent assets cannot satisfy discard"
+        }
+      ]
+    },
+    {
+      "code": "07219",
+      "name": "“他们追上来了！”",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-catching-up.test.mjs",
+          "test": "07219 actual Hunter displacement later reversed by another effect still suppresses fallback"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-catching-up.test.mjs",
+          "test": "07219 actual successful Hunter movement prevents fallback search and never attacks/exhausts"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-catching-up.test.mjs",
+          "test": "07219 exhausted Hunter does not count as moving; fallback does not move/exhaust it"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-catching-up.test.mjs",
+          "test": "07219 missing matching Vehicle terminates on empty deck without fabricated enemy"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-catching-up.test.mjs",
+          "test": "07219 no actual move finds first Vehicle 07213 at physical rearmost location"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-catching-up.test.mjs",
+          "test": "07219 no actual move finds first Vehicle 07214 at physical rearmost location"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-catching-up.test.mjs",
+          "test": "07219 no actual move finds first Vehicle 07215 at physical rearmost location"
+        }
+      ]
+    }
+  ]
+}

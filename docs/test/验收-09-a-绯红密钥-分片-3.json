@@ -1,0 +1,280 @@
+{
+  "unit": "09-a-3",
+  "generatedAt": "2026-11-25",
+  "scope": {
+    "cards": 42,
+    "selector": "pack==='tskp' && 09087<=code<=09128 && effectStatus==='unverified'",
+    "packs": {
+      "tskp": 42
+    }
+  },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "09089",
+    "09093",
+    "09094",
+    "09095",
+    "09096",
+    "09097",
+    "09098",
+    "09101",
+    "09102",
+    "09103",
+    "09104",
+    "09108",
+    "09112",
+    "09114",
+    "09116",
+    "09117",
+    "09121",
+    "09122",
+    "09124"
+  ],
+  "failedCodes": [
+    {
+      "code": "09087",
+      "dimension": "implementation",
+      "reason": "「打出前弃掉 X 个法术槽」在 X 选择之后结算，且槽位容量按固定 2 计（无槽位容量读点）——费用/容量与印刷不等价（primitive-request/09087）。",
+      "evidence": "src/cards/entries/09087.js（条目 simplified/note 自述；primitive-request/09087.json 或对应近似注释）"
+    },
+    {
+      "code": "09088",
+      "dimension": "implementation",
+      "reason": "「敌方本轮不能受到伤害」未实现（缺持续实体规则读点，primitive-request/09088）。",
+      "evidence": "src/cards/entries/09088.js（条目 simplified/note 自述；primitive-request/09088.json 或对应近似注释）"
+    },
+    {
+      "code": "09090",
+      "dimension": "implementation",
+      "reason": "第二选项在投入窗口立即结算，未等待检定成功（primitive-request/09090）。",
+      "evidence": "src/cards/entries/09090.js（条目 simplified/note 自述；primitive-request/09090.json 或对应近似注释）"
+    },
+    {
+      "code": "09091",
+      "dimension": "implementation",
+      "reason": "「额外行动只能用于打出手部槽位支援」用「每回合一次免行动打出」近似（无行动预算读点，primitive-request/09091）。",
+      "evidence": "src/cards/entries/09091.js（条目 simplified/note 自述；primitive-request/09091.json 或对应近似注释）"
+    },
+    {
+      "code": "09092",
+      "dimension": "implementation",
+      "reason": "「附属支援上的 1 个毁灭不计入密谋阈值」未实现；且宿主仅支持 1 个附属支援（印刷为最多 2 个，primitive-request/09092）。",
+      "evidence": "src/cards/entries/09092.js（条目 simplified/note 自述；primitive-request/09092.json 或对应近似注释）"
+    },
+    {
+      "code": "09099",
+      "dimension": "implementation",
+      "reason": "Detachable 跨座位使用与 Spring-Loaded 的失败时点改写未实现（其余勾选项已实现，primitive-request/09099）。",
+      "evidence": "src/cards/entries/09099.js（条目 simplified/note 自述；primitive-request/09099.json 或对应近似注释）"
+    },
+    {
+      "code": "09100",
+      "dimension": "implementation",
+      "reason": "地点附属敌方修正 / 远程布置 / 束网 / 静态快速均未实现；陷阱按「随你移动的场上卡」近似（primitive-request/09100）。",
+      "evidence": "src/cards/entries/09100.js（条目 simplified/note 自述；primitive-request/09100.json 或对应近似注释）"
+    },
+    {
+      "code": "09105",
+      "dimension": "implementation",
+      "reason": "自动成功之后本次攻击/躲避的通常效果仍会结算（缺「取代检定通常效果」写点），精英分支可能多结算一次伤害。",
+      "evidence": "src/cards/entries/09105.js（条目 simplified/note 自述；primitive-request/09105.json 或对应近似注释）"
+    },
+    {
+      "code": "09106",
+      "dimension": "implementation",
+      "reason": "「每轮最多 2 张[[抉择]]」是特质作用域上限，只按本卡每轮 2 次近似。",
+      "evidence": "src/cards/entries/09106.js（条目 simplified/note 自述；primitive-request/09106.json 或对应近似注释）"
+    },
+    {
+      "code": "09107",
+      "dimension": "implementation",
+      "reason": "「每轮最多 2 张[[抉择]]」按本卡近似；平局的最短/最远分支按地点 id 排序取第一个（应为玩家选择）。",
+      "evidence": "src/cards/entries/09107.js（条目 simplified/note 自述；primitive-request/09107.json 或对应近似注释）"
+    },
+    {
+      "code": "09109",
+      "dimension": "implementation",
+      "reason": "「下个回合失去 1 个行动」改为立刻失去 1 个行动；「每轮最多 2 张抉择」按本卡近似。",
+      "evidence": "src/cards/entries/09109.js（条目 simplified/note 自述；primitive-request/09109.json 或对应近似注释）"
+    },
+    {
+      "code": "09110",
+      "dimension": "implementation",
+      "reason": "X（本回合失败检定次数）按 1 结算；印刷时机「回合将要结束」近似为自己回合内快速打出。",
+      "evidence": "src/cards/entries/09110.js（条目 simplified/note 自述；primitive-request/09110.json 或对应近似注释）"
+    },
+    {
+      "code": "09111",
+      "dimension": "implementation",
+      "reason": "「每轮最多 2 张抉择」按本卡近似；重复卡号按「同码任一实体」处理。",
+      "evidence": "src/cards/entries/09111.js（条目 simplified/note 自述；primitive-request/09111.json 或对应近似注释）"
+    },
+    {
+      "code": "09113",
+      "dimension": "implementation",
+      "reason": "返回/弃置的选择在伤害结算前完成（印刷为攻击后），失败时不提供该选择。",
+      "evidence": "src/cards/entries/09113.js（条目 simplified/note 自述；primitive-request/09113.json 或对应近似注释）"
+    },
+    {
+      "code": "09115",
+      "dimension": "implementation",
+      "reason": "「每轮最多 2 张抉择」按本卡近似；移出游戏记入 exiled 账本。",
+      "evidence": "src/cards/entries/09115.js（条目 simplified/note 自述；primitive-request/09115.json 或对应近似注释）"
+    },
+    {
+      "code": "09118",
+      "dimension": "implementation",
+      "reason": "「每轮最多 2 张抉择」按本卡每轮 2 次近似（缺特质作用域上限）。",
+      "evidence": "src/cards/entries/09118.js（条目 simplified/note 自述；primitive-request/09118.json 或对应近似注释）"
+    },
+    {
+      "code": "09119",
+      "dimension": "implementation",
+      "reason": "「当前形态」用 untilLeavesPlay 持续效果记账（缺实例级形态字段）；定位变换的位移在躲避检定后结算；注能只加在具象检定的技能值上。",
+      "evidence": "src/cards/entries/09119.js（条目 simplified/note 自述；primitive-request/09119.json 或对应近似注释）"
+    },
+    {
+      "code": "09120",
+      "dimension": "implementation",
+      "reason": "「附属支援文本框视为空白」与「解除附属」均未实现（缺宿主级空白读点与 detach 写点）。",
+      "evidence": "src/cards/entries/09120.js（条目 simplified/note 自述；primitive-request/09120.json 或对应近似注释）"
+    },
+    {
+      "code": "09123",
+      "dimension": "implementation",
+      "reason": "「超量治愈 → 放置贡品」缺治疗溢出读点，未实现；「花费 1 贡品 +2 技能值」已实现。",
+      "evidence": "src/cards/entries/09123.js（条目 simplified/note 自述；primitive-request/09123.json 或对应近似注释）"
+    },
+    {
+      "code": "09125",
+      "dimension": "implementation",
+      "reason": "「弃掉 4 张其它手牌」在结算时支付而非支付前（playCondition 只按手牌 ≥5 预检）。",
+      "evidence": "src/cards/entries/09125.js（条目 simplified/note 自述；primitive-request/09125.json 或对应近似注释）"
+    },
+    {
+      "code": "09126",
+      "dimension": "implementation",
+      "reason": "「花费任意数量额外行动」简化为「用满可用档位」（最多 2 个额外行动）并在打出后扣除。",
+      "evidence": "src/cards/entries/09126.js（条目 simplified/note 自述；primitive-request/09126.json 或对应近似注释）"
+    },
+    {
+      "code": "09127",
+      "dimension": "implementation",
+      "reason": "空法术槽按「基础 1 槽 - 占用数」近似（缺容量读点，额外法术槽不计）。",
+      "evidence": "src/cards/entries/09127.js（条目 simplified/note 自述；primitive-request/09127.json 或对应近似注释）"
+    },
+    {
+      "code": "09128",
+      "dimension": "implementation",
+      "reason": "「在手牌中使投入卡图标 -1」缺手牌来源的全局投入图标削减读点，未实现；打出条件与弃掉已实现。",
+      "evidence": "src/cards/entries/09128.js（条目 simplified/note 自述；primitive-request/09128.json 或对应近似注释）"
+    }
+  ],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "fail",
+    "primitives": "fail",
+    "interaction": "pass",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/tsk-player-m2-3.test.mjs + tsk-player-m2-4.test.mjs + tsk-p0-regressions.test.mjs + tsk-p1-regressions.test.mjs + tsk-p8-customization.test.mjs",
+      "test": "42 张卡均有标题含卡号的真实用例（P6 <code> …），本轮重跑",
+      "codes": [
+        "09087",
+        "09088",
+        "09089",
+        "09090",
+        "09091",
+        "09092",
+        "09093",
+        "09094",
+        "09095",
+        "09096",
+        "09097",
+        "09098",
+        "09099",
+        "09100",
+        "09101",
+        "09102",
+        "09103",
+        "09104",
+        "09105",
+        "09106",
+        "09107",
+        "09108",
+        "09109",
+        "09110",
+        "09111",
+        "09112",
+        "09113",
+        "09114",
+        "09115",
+        "09116",
+        "09117",
+        "09118",
+        "09119",
+        "09120",
+        "09121",
+        "09122",
+        "09123",
+        "09124",
+        "09125",
+        "09126",
+        "09127",
+        "09128"
+      ],
+      "result": "tests 121 / pass 121 / fail 0"
+    },
+    {
+      "file": "audit/tsk-player-acceptance.json（复核，不采信结论）",
+      "test": "42 条 status=verified，其中 27 条 simplified=true；primitiveBacklog 含本分片 17 个卡号；账本同时 verified+simplified 与 ACCEPTANCE-ORDER §0.6 冲突",
+      "codes": [
+        "09087",
+        "09088",
+        "09090",
+        "09091",
+        "09092",
+        "09099",
+        "09100",
+        "09105",
+        "09106",
+        "09107",
+        "09109",
+        "09110",
+        "09111",
+        "09113",
+        "09115",
+        "09118",
+        "09119",
+        "09120",
+        "09123",
+        "09125",
+        "09126",
+        "09127",
+        "09128"
+      ]
+    },
+    {
+      "file": "audit/tsk-player-browser.json（未重跑）",
+      "test": "P6 浏览器双视口 10/10 证据在库；本分片无新增面板（玩家卡），未重跑以免写 audit/artifacts 范围外文件"
+    }
+  ],
+  "commands": [
+    {
+      "command": "node --test tests/tsk-player-m2-3.test.mjs tests/tsk-player-m2-4.test.mjs tests/tsk-p0-regressions.test.mjs tests/tsk-p1-regressions.test.mjs tests/tsk-p8-customization.test.mjs",
+      "result": "tests 121 / pass 121 / fail 0"
+    },
+    {
+      "command": "npm run cards:check / cards:encounter-check / audit:entries",
+      "result": "通过（本分片 R1/R2/R3 0 条）"
+    },
+    {
+      "command": "npm run docs:check",
+      "result": "通过"
+    }
+  ],
+  "notes": "五维：实现完整性 fail（23 张为条目自述的近似/缺口：09087/09088/09090/09091/09092/09099/09100/09105/09106/09107/09109/09110/09111/09113/09115/09118/09119/09120/09123/09125/09126/09127/09128；其中 17 张在账本 primitiveBacklog 内）；原语 fail（本分片 17 个 primitive request 仍 deferred，缺槽位容量/特质作用域上限/持续实体规则/治疗溢出/下回合行动/取代检定通常效果/宿主文本空白/detach 等读点）；交互 pass（玩家卡，无新增面板，P6 定制面板既有浏览器证据在库）；证据 pass（42/42 标题真实执行，本轮重跑）；合规 pass。分片 verdict=partial：19 张可切 verified（15 张非 simplified + 09103/09108/09114/09124 四条「披露过时/等价」），23 张保持 unverified。线索复核：audit/tsk-player-acceptance.json 同时标 verified=108 与 simplified=59，正是「不得混进 verified」的冲突；本分片按 ACCEPTANCE-ORDER §0.6 判 simplified 中有真实行为差异者失败，并对 09103/09124 的过时披露、09108/09114 的等价时机近似判 pass（附注）。新增测试未新增（42/42 已有标题用例），无需登记。"
+}

@@ -1,0 +1,509 @@
+{
+  "schemaVersion": 1,
+  "unit": "08-a-8",
+  "profile": {
+    "id": "eote-campaign-e-2026-11",
+    "scope": "地球边缘 08 段 eoec 战役卡（08653–08697）45 条目录记录。20 条通过五维验收；24 条规则声明无读点/结算缺失、1 条待 FAQ 裁决暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 45,
+    "verified": 20,
+    "unverified": 25,
+    "unimplemented": 0,
+    "testsPassed": 173
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-08-a-shard8.test.mjs",
+      "sha256": "d6719e6cf5b9dc9f3aa450151682af030697f75725ba20448cd5f6d31ed701af"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-scenario-iceAndDeathPart1.test.mjs",
+      "sha256": "f68edb2e1c6ccade06eb9b87e62a7f50cf814c341cec4b4e173168168103725a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-scenario-iceAndDeathPart2.test.mjs",
+      "sha256": "e9a90ead7dd290572388e9203e290fbecff68bc03ed0ea1dcda90997bfc8a21f"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-scenario-shared.test.mjs",
+      "sha256": "dffe598c635f887e2c14c4a73e1d8c4574524342277b592ff1ecffa190f68cea"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-all-cards.test.mjs",
+      "sha256": "fe9bd752dd3444a13d4f0aa0e9b25bb7a6860856b9db8bf7792068bb997be516"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-rules.test.mjs",
+      "sha256": "21761e92e64ab38d14ded302954fddcf765e29ca215c5e2ca1c6216ed5c1d36d"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-primitives-frost.test.mjs",
+      "sha256": "29a200cd215f5ffd3654610c67b5c1415041a6886c0c3e16be27cde7dd5644bf"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-primitives-travel.test.mjs",
+      "sha256": "0faec6c9ae96e6432ce3e0179fd0b24a93890f1f999a2579c1b62dd47f904d16"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-primitives-geo.test.mjs",
+      "sha256": "0ef76e75a39d4a5e09b326280a3c197ec2b75e4a99e7f1801ea132da13f01efc"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-primitives-campaign.test.mjs",
+      "sha256": "7182c4a750b5e3e56c17544ab4bd66bcb62324d03669c74b89792a162ddae8ea"
+    }
+  ],
+  "entries": [
+    {
+      "code": "08653",
+      "name": "原生质池",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard8.test.mjs",
+          "test": "08653 原生质池：[action] 控制封印 D → agility(3)，成功后团队线索激活并伤害所有敌人"
+        }
+      ]
+    },
+    {
+      "code": "08654",
+      "name": "无光之海大厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard8.test.mjs",
+          "test": "08654 无光之海大厅：控制封印 E → 团队线索 + 弃手牌 → 激活封印 E"
+        }
+      ]
+    },
+    {
+      "code": "08655",
+      "name": "水下扩张区",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard8.test.mjs",
+          "test": "08655 水下扩张区：每次检定的第一个 [frost] 修正视为 -3（每轮一次）"
+        }
+      ]
+    },
+    {
+      "code": "08656",
+      "name": "拱形走廊",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard8.test.mjs",
+          "test": "08656 拱形走廊：[fast] 选另一拱形走廊，敏捷(X) 成功后移动（每轮一次）"
+        }
+      ]
+    },
+    {
+      "code": "08657",
+      "name": "原始恐怖",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard8.test.mjs",
+          "test": "08657 原始恐怖：意志(2)+离伊夸之门距离，失败 2 恐惧"
+        }
+      ]
+    },
+    {
+      "code": "08658",
+      "name": "地球根源",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard8.test.mjs",
+          "test": "08658 地球根源：敏捷(2)+距离，失败 2 伤害"
+        }
+      ]
+    },
+    {
+      "code": "08659",
+      "name": "跳动的心脏",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard8.test.mjs",
+          "test": "08659 跳动的心脏：同地点 2 枚激活封印 → R3，背面幕间「最后一根稻草」可读"
+        }
+      ]
+    },
+    {
+      "code": "08660",
+      "name": "瘴气的召唤",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "背面 D 应为「失去 1 行动（激活 2）」、E 应为「失去 3 资源（激活 6）」，实现成 gainClues/gainResources（方向错误）；无失去行动/资源结算。"
+    },
+    {
+      "code": "08661",
+      "name": "疯狂的召唤",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "背面「被击败并选择 1 精神创伤 或 洗入忒咳哩-哩牌库顶 3 张」：实现自动 addTrauma，无 api.choice、无忒咳哩-哩选项。"
+    },
+    {
+      "code": "08662",
+      "name": "蛰伏",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "背面按刚放上封印的 A–E 治疗/抽牌/额外行动/资源结算全部缺失，只写 info 日志。"
+    },
+    {
+      "code": "08663",
+      "name": "巨大封印",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard8.test.mjs",
+          "test": "08663 巨大封印：五枚激活封印放上伊夸之门 → 大封印完成（R1）"
+        }
+      ]
+    },
+    {
+      "code": "08664",
+      "name": "冰川岩洞",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard8.test.mjs",
+          "test": "08664 冰川石窟：揭示放封印 A + [action] combat(2) 团队线索取得控制权"
+        }
+      ]
+    },
+    {
+      "code": "08665",
+      "name": "雕画密室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard8.test.mjs",
+          "test": "08665 雕塑墓室：揭示放封印 B + [action] intellect(2) 团队线索取得控制权"
+        }
+      ]
+    },
+    {
+      "code": "08666",
+      "name": "地城祭坛",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard8.test.mjs",
+          "test": "08666 地底祭坛：揭示放封印 C + [action] willpower(2) 团队线索取得控制权"
+        }
+      ]
+    },
+    {
+      "code": "08667",
+      "name": "脓水隧道",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard8.test.mjs",
+          "test": "08667 脓液隧道：揭示放封印 D + [action] agility(2) 团队线索取得控制权"
+        }
+      ]
+    },
+    {
+      "code": "08668",
+      "name": "灰岩洞穴",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard8.test.mjs",
+          "test": "08668 灰岩洞穴：团队线索 1×人数 + 资源 3×人数取得封印控制权（无检定）"
+        }
+      ]
+    },
+    {
+      "code": "08669",
+      "name": "原生质团",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "Prey「最近持封印调查员」与 Spawn「外环离你最远地点」声明在 flags.prey/spawnFarthestOuterRing，但引擎/definition 无读点；「敌人阶段结束再重整并再次结算敌人阶段」仅为已披露近似。"
+    },
+    {
+      "code": "08670",
+      "name": "静电释放",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「与封印同地点」是否包含调查员持有的封印未有规则裁决；实现只统计地点附属封印（locationSeals）。需按官方 FAQ/参考实现裁决后定 pass/fail。"
+    },
+    {
+      "code": "08671",
+      "name": "封印减弱",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "背面第二段「若幻景真相未明：每名调查员搜牌库逐张抽出忒咳哩-哩并洗回」缺失（behavior.agendaLeftPlay 只实现 spawn 一段）。"
+    },
+    {
+      "code": "08672",
+      "name": "无名存在",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "目标「回合末 15 份无名的疯狂在场且并非所有高塔坍塌→推进」无实现；「1+ 毁灭改为生成无名的疯狂」无读点；背面（每坍塌高塔旁置 3 份/失线索/移除地点/移除幕牌库进入最终幻景）未实现，仅复用 rampSequence 近似且份数公式不符。"
+    },
+    {
+      "code": "08673",
+      "name": "摧毁高塔",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "[reaction]「在迷雾高塔发现 1+ 线索时花掉它们造成等量伤害」= actRule.clueReactionDamage 无读点，behavior.afterTest 无线索→damageTower 结算；高塔可攻击/坍塌与目标已接通。"
+    },
+    {
+      "code": "08674",
+      "name": "迷雾高塔",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "背面「进入迷雾高塔的额外费用：本地团队花 1×人数线索」= locationRule.enterCostCluePerInvestigator 无读点（definition 槽位无 enterCost，movement 无该费用分支）；[fast] A 的力量（对高塔伤害 +1）已接线。"
+    },
+    {
+      "code": "08675",
+      "name": "迷雾高塔",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "入场额外费用无读点；[fast] B「每座迷雾高塔帷幕 -2」持续修正无读点（pylonPowers 只写不读）。"
+    },
+    {
+      "code": "08676",
+      "name": "迷雾高塔",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "入场额外费用无读点；[fast] C「高塔上调查员四项技能 +1」持续修正无读点。"
+    },
+    {
+      "code": "08677",
+      "name": "迷雾高塔",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "入场额外费用无读点；[fast] D「高塔上受伤/恐惧取消 1 点」持续修正无读点。"
+    },
+    {
+      "code": "08678",
+      "name": "迷雾高塔",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "入场额外费用无读点；[fast] E「高塔上敌人 fight/evade -2」持续修正无读点。"
+    },
+    {
+      "code": "08679",
+      "name": "无名疯狂",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「不能受到伤害」只写 flags.cannotTakeDamage，引擎读 enemyRule.cannotBeDamaged（可被伤害）；「成功差值每 1 点横置最近已重整副本」实现为把已横置副本重置（方向相反）。"
+    },
+    {
+      "code": "08680",
+      "name": "解开封印的幻影",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "Spawn「最近未坍塌迷雾高塔（没有则你的地点）」、持续「已重整且在高塔时该高塔不能受伤」、强制「敌阶段末向最近未坍塌高塔移动一次」均无读点（definition 无 spawn/prey，behavior 只按槽位顺序移动一格）。"
+    },
+    {
+      "code": "08681",
+      "name": "最终幻景",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「无名的疯狂获得 hunter」= actRule.namelessGainsHunter 无读点（definition 08679 无 hunter）；「1+ 毁灭改为生成无名的疯狂」无实现（仅列为近似）；目标/结局分流已接线。"
+    },
+    {
+      "code": "08682",
+      "name": "巨大坡道",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "离开检定（agility 4）已接线；「失败则取消移动」无 locationLeaveFailed/取消语义、「花 1 线索自动成功」spendClueAutoSucceed 无引擎读点。"
+    },
+    {
+      "code": "08683",
+      "name": "巨大坡道",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同上（agility 3）。"
+    },
+    {
+      "code": "08684",
+      "name": "巨大坡道",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同上（agility 2）。"
+    },
+    {
+      "code": "08685",
+      "name": "巨大坡道",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同上（agility 1）。"
+    },
+    {
+      "code": "08686",
+      "name": "隐秘隧道",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard8.test.mjs",
+          "test": "08686 隐秘隧道：每名未击败调查员都在隐藏隧道 → 幕目标结算（Run）"
+        }
+      ]
+    },
+    {
+      "code": "08687",
+      "name": "原初恶魔",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard8.test.mjs",
+          "test": "08687 原初恶魔：造成伤害后洗入 1 张忒咳哩-哩；不能洗入时它攻击你"
+        }
+      ]
+    },
+    {
+      "code": "08688",
+      "name": "潜藏的疯狂",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard8.test.mjs",
+          "test": "08688 潜藏的疯狂：意志(4)，失败每点洗入 1 张，无法洗入每张 1 恐惧"
+        }
+      ]
+    },
+    {
+      "code": "08689",
+      "name": "实体疯狂",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard8.test.mjs",
+          "test": "08689 实体疯狂：攻击后洗入 2 张，每张不能洗入则该次攻击 +1 伤害/+1 恐惧"
+        }
+      ]
+    },
+    {
+      "code": "08690",
+      "name": "冰川幻影",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard8.test.mjs",
+          "test": "08690 冰川幻影：敌军阶段末向人最多地点移动，相邻调查员各洗入 1 张（不能则 1 恐惧）"
+        }
+      ]
+    },
+    {
+      "code": "08691",
+      "name": "同源迷雾",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "显现附属已接线；「在附属地点时忒咳哩-哩洗入改为抽到牌库底」与「轮末弃掉」= flags.replacesTekeliShuffleAtLocation/discardAtRoundEnd 无读点（条目自述 primitive-requests/p7-08691.json，本机无该队列）。"
+    },
+    {
+      "code": "08692",
+      "name": "南极寒风",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "显现附属已接线；「附属地点调查员不能打牌/抽牌」+「轮末弃掉」无读点（primitive request 未关闭）。"
+    },
+    {
+      "code": "08693",
+      "name": "雪盲危机",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "显现附属已接线；「附属地点调查员四项技能 -1」+「轮末弃掉」无读点。"
+    },
+    {
+      "code": "08694",
+      "name": "极地旋涡",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "显现附属已接线；「回合末在附属地点：控制的每张有生命值卡（含调查员）受 1 直接伤害」+「轮末弃掉」无读点。"
+    },
+    {
+      "code": "08695",
+      "name": "古老者清道夫",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard8.test.mjs",
+          "test": "08695 古老者清道夫：攻击后弃牌库顶 3 张并抽取其中的弱点"
+        }
+      ]
+    },
+    {
+      "code": "08696",
+      "name": "古老者守卫",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard8.test.mjs",
+          "test": "08696 古老者守卫：每 1 点伤害弃牌库顶 1 张并抽取弱点"
+        }
+      ]
+    },
+    {
+      "code": "08697",
+      "name": "古老者崛起",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "检索/生成/交战已接线；「当前与你交战的每个古老者 +1 攻击/+1 躲避直到轮末」无引擎临时属性修正读点（条目自述 p7-08697.json）。"
+    }
+  ]
+}

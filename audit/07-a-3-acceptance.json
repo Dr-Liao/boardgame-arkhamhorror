@@ -1,0 +1,957 @@
+{
+  "schemaVersion": 1,
+  "unit": "07-a-3",
+  "profile": {
+    "id": "tic-in-too-deep-2026-11",
+    "scope": "印斯茅斯暗潮 07 段 In Too Deep（itd，07108–07151）44 条目录记录。32 条通过五维验收；12 条（07129–07138、07140、07141）因「谈判移除屏障」同句模板逐卡手写暂不切换（复审更新）。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 44,
+    "verified": 32,
+    "unverified": 12,
+    "unimplemented": 0,
+    "testsPassed": 832
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+      "sha256": "3557bf72e1ed8d2aad6e2bfc213a46a695d1052b6eec0ca85552955dcc25d8e8"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+      "sha256": "7e776eb6970b754d96fc77e663932e5f3b2cd814e6f05be88473d5ff5f613c4e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
+      "sha256": "b026fd4314c7ca646ad79879e8e96e6b7cd77a4b69446e730015ff3f863fc694"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-capture.test.mjs",
+      "sha256": "710a9e2a33381da333e1394f2cf2b949931a2a9c5b45f53931b677f541dfacbc"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
+      "sha256": "b9e22f0e3a022736b955102561ca95934630b4d2367477308bda1435bcac5da0"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-flashbacks.test.mjs",
+      "sha256": "cf40ce2d84ef77409b0f8a747580bf42781d165582387c3976a31eb2e859fecd"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-rules.test.mjs",
+      "sha256": "24972f73c0ee5c468034308b7bc51c7742bccc191406960dfc268169940a574a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-primitives.test.mjs",
+      "sha256": "2234fa4bbb8925066932c1ba1211d4349b1c7f19934ef2c6f023ce0131e92770"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-interactions.test.mjs",
+      "sha256": "64e5dde4e149d1da6c052fd7f8ddedca48037b9a7fb987baae599a5c089f5224"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenarios-middle.test.mjs",
+      "sha256": "231d6d9ce438e87b3ca6b4d70c918fbf549fc8907225264a173b68fad6db98be"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenarios-middle-setup.test.mjs",
+      "sha256": "9b3a7d4f86a42fe64e03296a4a79a9b3bdf671742511558f84faa3187fe7cede"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenario-reference.test.mjs",
+      "sha256": "b637b38abc3c10647ca4451ea1a148d315d2badd80e2ed8233d5a34c5dfe6f66"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+      "sha256": "4d3cffa3d1848bf3b2accc6c0c9f2cb3f3622750975bdc5f0e46083ee8e999b1"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenario-reference-moving.test.mjs",
+      "sha256": "e9889a14cb1aff56ad4d125348b7ce6e7ea72758f6be3b37689c4a2bd6d809e9"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+      "sha256": "be5a9dd3de708930e9cb9fa6daa07540912a64482f9b56ca9827935d581cbca0"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-enemy-outcomes.test.mjs",
+      "sha256": "e052c99b022bd077b89799b47effb6c29a9ccf2bc4ce532f1a9b6dd51dfb9463"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+      "sha256": "b4ecaedb1a2445d494b757be42e5133ef92a1091249e32565e2ad8b135756fd1"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+      "sha256": "3580319103f889db41d6871ecd68189d802ef3fe6d3339ee9997b46d27959044"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+      "sha256": "c2c69dc2fb3fe002419897d86711bcdcb9434dd22519dec707d50a2171afc3aa"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-primitives.test.mjs",
+      "sha256": "8453001755501ca236be74abc05e428b5270c32b28ac29b4d74e91b07777bbbb"
+    }
+  ],
+  "entries": [
+    {
+      "code": "07108",
+      "name": "警哨",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07108 Riot Whistle grants exactly one real engage action after ordinary actions run out"
+        }
+      ]
+    },
+    {
+      "code": "07109",
+      "name": "正义猎杀",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07109 Righteous Hunt traverses each location and engages the selected distant enemy"
+        }
+      ]
+    },
+    {
+      "code": "07110",
+      "name": "庄严圣约",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07110 Sacred Covenant immediately returns chosen bless and ignores that modifier"
+        }
+      ]
+    },
+    {
+      "code": "07111",
+      "name": "惊悚贤人",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07111 Eldritch Sophist moves a secret to colocated asset without uses"
+        }
+      ]
+    },
+    {
+      "code": "07112",
+      "name": "掀起麻烦",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07112 Stirring Up Trouble pays actual shroud in curses and discovers two clues"
+        }
+      ]
+    },
+    {
+      "code": "07113",
+      "name": "亵渎圣约",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07113 Blasphemous Covenant changes only one local curse modifier and retains token"
+        }
+      ]
+    },
+    {
+      "code": "07114",
+      "name": "破门而入",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07114 succeeds by two to optionally evade an unengaged enemy; lower margin cannot"
+        }
+      ]
+    },
+    {
+      "code": "07115",
+      "name": "无神论者",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07115 Skeptic changes each physical bless and curse modifier to plus one"
+        }
+      ]
+    },
+    {
+      "code": "07116",
+      "name": "虚假圣约",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07116 False Covenant exhausts to cancel a physical curse and redraw"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07116 False Covenant returns the canceled curse to pool before the next reveal"
+        }
+      ]
+    },
+    {
+      "code": "07117",
+      "name": "哈米吉多顿",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07117 哈米吉多顿：花 1 充能用意志攻击并造成 +1 伤害；揭示诅咒可补 1 充能"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07117 curse reward occurs even on failure; base once and upgrade each curse"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07117 uses willpower, printed bonus and exact charge cost"
+        }
+      ]
+    },
+    {
+      "code": "07118",
+      "name": "混乱之眼",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07118 混乱之眼：花 1 充能用意志调查并额外发现 1 线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07118 curse reward occurs even on failure; base once and upgrade each curse"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07118 uses willpower, printed bonus and exact charge cost"
+        }
+      ]
+    },
+    {
+      "code": "07119",
+      "name": "暗影遁形",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07119 暗影遁形：花 1 充能用意志躲避；成功后可移动非精英敌人"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07119 curse reward occurs even on failure; base once and upgrade each curse"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07119 uses willpower, printed bonus and exact charge cost"
+        }
+      ]
+    },
+    {
+      "code": "07120",
+      "name": "矛盾圣约",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07120 Paradoxical Covenant accepts both revealed faces and rejects one-face tests"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07120 真实检定揭示祝福+诅咒后自动成功（审计 H10 回归）"
+        }
+      ]
+    },
+    {
+      "code": "07121",
+      "name": "水手的罗盘",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07121 Mariners Compass bonus clue depends on resources at success, boosts are limited to three"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07121 罗盘加智力的上限是「每次调查 3 次」而不是「每回合 3 次」（审计 M32 perTest 键回归）"
+        }
+      ]
+    },
+    {
+      "code": "07122",
+      "name": "古代圣约",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07122 Ancient Covenant stops local bless while keeping +2, excludes remote tests and exhausted source"
+        }
+      ]
+    },
+    {
+      "code": "07123",
+      "name": "深陷危局",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 easy Coastline prevents the only otherwise empty edge from receiving a barrier"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 easy barrier ignore retains independent cannot-leave restriction"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 easy canceled cultist has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 easy canceled elderthing has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 easy canceled skull has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 easy canceled tablet has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 easy cultist failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 easy cultist success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 easy elderthing failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 easy elderthing success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 easy no east location and no payable barrier candidates terminate without choice"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 easy skull counts real east cells across a gap and isolated origin counts zero"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 easy skull failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 easy skull success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 easy tablet failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 easy tablet success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 expert Coastline prevents the only otherwise empty edge from receiving a barrier"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 expert barrier ignore retains independent cannot-leave restriction"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 expert canceled cultist has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 expert canceled elderthing has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 expert canceled skull has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 expert canceled tablet has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 expert cultist failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 expert cultist success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 expert elderthing failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 expert elderthing success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 expert no east location and no payable barrier candidates terminate without choice"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 expert skull counts real east cells across a gap and isolated origin counts zero"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 expert skull failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 expert skull success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 expert tablet failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 expert tablet success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 hard Coastline prevents the only otherwise empty edge from receiving a barrier"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 hard barrier ignore retains independent cannot-leave restriction"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 hard canceled cultist has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 hard canceled elderthing has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 hard canceled skull has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 hard canceled tablet has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 hard cultist failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 hard cultist success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 hard elderthing failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 hard elderthing success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 hard no east location and no payable barrier candidates terminate without choice"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 hard skull counts real east cells across a gap and isolated origin counts zero"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 hard skull failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 hard skull success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 hard tablet failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 hard tablet success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 standard Coastline prevents the only otherwise empty edge from receiving a barrier"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 standard barrier ignore retains independent cannot-leave restriction"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 standard canceled cultist has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 standard canceled elderthing has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 standard canceled skull has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 standard canceled tablet has neither modifier nor scenario side effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 standard cultist failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 standard cultist success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 standard elderthing failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 standard elderthing success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 standard no east location and no payable barrier candidates terminate without choice"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 standard skull counts real east cells across a gap and isolated origin counts zero"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 standard skull failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 standard skull success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 standard tablet failure actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-final.test.mjs",
+          "test": "07123 standard tablet success actual printed value/effect and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07123 深陷危局：skull 按东面地点数减值；tablet 失败在无屏障连接边放 1 个屏障"
+        }
+      ]
+    },
+    {
+      "code": "07124",
+      "name": "路障重重",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
+          "test": "07124 路障重重：[[嫌犯]]敌人不能与之谈判（合法行动与提交校验同一读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
+          "test": "07124 路障重重：只有[[嫌犯]]敌人失去冷漠，其他人保持冷漠"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
+          "test": "07124：完全淹没地点的回合结束受到 1 点伤害，部分淹没不触发"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
+          "test": "P7 深陷危局 议程 07124–07127 正面持续规则登记（背面 onReveal 为已知缺口）"
+        }
+      ]
+    },
+    {
+      "code": "07125",
+      "name": "无情浪潮",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
+          "test": "07125 无情浪潮背面：愤怒暴民生成在印斯茅斯广场 07139 并携带 1 把未揭示钥匙（审计 H8 回归）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
+          "test": "07125–07127：伤害/恐惧逐张递增，随机弃牌数量按印刷"
+        }
+      ]
+    },
+    {
+      "code": "07126",
+      "name": "水漫街道",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07126 水漫街道：完全淹没地点回合结束受到 1 伤 1 恐并随机弃 1 张手牌"
+        }
+      ]
+    },
+    {
+      "code": "07127",
+      "name": "深海之怒",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
+          "test": "07125–07127：伤害/恐惧逐张递增，随机弃牌数量按印刷"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
+          "test": "P7 深陷危局 议程 07124–07127 正面持续规则登记（背面 onReveal 为已知缺口）"
+        }
+      ]
+    },
+    {
+      "code": "07128",
+      "name": "穿越迷宫",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07128 insufficient or eliminated remote clue payer and absent barriers reject before payment"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07128 real act free ability charges global group clues and removes actor-local barrier without actions"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
+          "test": "P7 深陷危局 幕 07128 全员撤退：真实撤退动作驱动幕推进并记录安全抵达载具（审计 H7 回归）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
+          "test": "P7 深陷危局 幕 07128 正面：团队线索免费行动移除本地点屏障且不耗行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
+          "test": "P7 深陷危局 幕 07128 背面：推进结算记录 TheInvestigatorsMadeItSafelyToTheirVehicles 并交接到 devilReef"
+        }
+      ]
+    },
+    {
+      "code": "07129",
+      "name": "达贡密教",
+      "type": "location",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。"
+    },
+    {
+      "code": "07130",
+      "name": "锯骨巷",
+      "type": "location",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。"
+    },
+    {
+      "code": "07131",
+      "name": "朝岸贫民窟",
+      "type": "location",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。"
+    },
+    {
+      "code": "07132",
+      "name": "水街老屋",
+      "type": "location",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。"
+    },
+    {
+      "code": "07133",
+      "name": "印斯茅斯监狱",
+      "type": "location",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。"
+    },
+    {
+      "code": "07134",
+      "name": "新格林教堂",
+      "type": "location",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。"
+    },
+    {
+      "code": "07135",
+      "name": "小利透书店",
+      "type": "location",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。"
+    },
+    {
+      "code": "07136",
+      "name": "鱼街旧桥",
+      "type": "location",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。"
+    },
+    {
+      "code": "07137",
+      "name": "国立第一杂货铺",
+      "type": "location",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。"
+    },
+    {
+      "code": "07138",
+      "name": "印斯茅斯港口",
+      "type": "location",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。"
+    },
+    {
+      "code": "07139",
+      "name": "印斯茅斯广场",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-flooded-agendas.test.mjs",
+          "test": "07125 无情浪潮背面：愤怒暴民生成在印斯茅斯广场 07139 并携带 1 把未揭示钥匙（审计 H8 回归）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07139 actual flashback activation checks actor/group keys and shared limit across JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07139 actual reveal consumes physical set-aside Shoggoth once and spawns it already exhausted"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07139 moves a physical barrier to a different edge through a real pending choice and JSON"
+        }
+      ]
+    },
+    {
+      "code": "07140",
+      "name": "吉尔曼旅社",
+      "type": "location",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。"
+    },
+    {
+      "code": "07141",
+      "name": "马什精炼厂",
+      "type": "location",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。"
+    },
+    {
+      "code": "07142",
+      "name": "火车站",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07142 entry test occurs only when flooded and applies exactly one damage on failure"
+        }
+      ]
+    },
+    {
+      "code": "07143",
+      "name": "荒芜海岸",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07143 forbids card placement on either endpoint, permits setup and later removal"
+        }
+      ]
+    },
+    {
+      "code": "07144",
+      "name": "印斯茅斯修格斯",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
+          "test": "P7 深陷危局 遭遇敌人 07144 印斯茅斯修格斯：真实显现生成与生命值随人数缩放"
+        }
+      ]
+    },
+    {
+      "code": "07145",
+      "name": "深海劫掠者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07145 actual engagement combat test adds only west-edge barrier on failure and resumes after JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07145 fight and evade follow the actual enemy location water level, not a remote investigator"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07145 missing west connection or Coastline prevention cannot create an illegal barrier"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
+          "test": "P7 深陷危局 淹没规则：07145 袭击者的战斗值随所在地点水位提高"
+        }
+      ]
+    },
+    {
+      "code": "07146",
+      "name": "突现的深潜者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07146 actual encounter draw applies exhaustion before spawn listeners and full-flood engagement attacks"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07146 engaging an already exhausted copy still attacks when flooded, while dry engagement is safe"
+        }
+      ]
+    },
+    {
+      "code": "07147",
+      "name": "深潜者入侵",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07147 a finite deck with only non-Hunter Deep Ones cannot spawn them or reshuffle forever"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07147 shuffles actual discard and spawns Hunter Deep Ones at each eastern same-row location"
+        }
+      ]
+    },
+    {
+      "code": "07148",
+      "name": "拽回原处",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07148 拽回原处：意志(3)失败后向东移动（忽略屏障），然后把控制的钥匙放到所在地点"
+        }
+      ]
+    },
+    {
+      "code": "07149",
+      "name": "泛滥",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07149 places only missing edges and surges when Coastline prevents every placement"
+        }
+      ]
+    },
+    {
+      "code": "07150",
+      "name": "乔·萨金特",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07150 actually leaves play on controller elimination and is removed instead of discarded"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07150 returning Joe to hand removes him instead without a duplicate hand copy"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07150 tickets pay for free legal moves and fully flooded destination is rejected before payment"
+        }
+      ]
+    },
+    {
+      "code": "07151",
+      "name": "密教教义",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07151 three campaign options preserve sealed curses, dry only nonSanctum, and defeat only eligible nonElite"
+        }
+      ]
+    }
+  ]
+}

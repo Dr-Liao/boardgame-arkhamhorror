@@ -3,6 +3,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { applyLocalActionDelta } from '../../../public/online-delta.js'
+import { campaignPresentation } from '../web/campaign-presentation.js'
 const output = fileURLToPath(new URL('../../../artifacts/arkham-polish', import.meta.url))
 
 async function fixture(page, { playerCount = 2, moveDelay = 0 } = {}) {
@@ -46,11 +47,11 @@ test('Noir 桌面与窄屏素材、布局、透明度和声音加载', async ({ 
   const errors = []; page.on('pageerror', e => errors.push(e.message))
   await fixture(page)
   await page.setViewportSize({ width: 1524, height: 900 })
-  const campaignSurface = await page.locator('.ah-table-shell').evaluate(async shell => {
-    const root = shell.closest('.ah-table')
+  const tableImage = campaignPresentation('nightOfTheZealot').assets.tableOverlay
+  const campaignSurface = await page.locator('.ah-table-shell').evaluate(async (shell, tableImage) => {
     const before = getComputedStyle(shell, '::before')
     const image = new Image()
-    image.src = '/mods/arkhamhorror/img/campaigns/nightOfTheZealot/table/investigation-map.webp'
+    image.src = tableImage
     await image.decode()
     const rect = selector => shell.querySelector(selector).getBoundingClientRect().toJSON()
     const label = shell.querySelector('.ah-chaos-bag span').getBoundingClientRect().toJSON()
@@ -63,9 +64,9 @@ test('Noir 桌面与窄屏素材、布局、透明度和声音加载', async ({ 
       roster: rect('.ah-command-roster'), advance: rect('.ah-act-advance'),
       bagLabel: label, bagWritingMode: getComputedStyle(shell.querySelector('.ah-chaos-bag span')).writingMode,
     }
-  })
+  }, tableImage)
   expect(campaignSurface.image).toEqual([1536, 1024])
-  expect(campaignSurface.backgroundImage).toContain('campaigns/nightOfTheZealot/table/investigation-map.webp')
+  expect(campaignSurface.backgroundImage).toContain(tableImage)
   expect(campaignSurface.backgroundLayer).toBe('0')
   expect(campaignSurface.contentLayer).toBe('1')
   expect(campaignSurface.story.right).toBeLessThanOrEqual(campaignSurface.reference.left)

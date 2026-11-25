@@ -1,0 +1,1417 @@
+{
+  "schemaVersion": 1,
+  "unit": "01-a",
+  "profile": {
+    "id": "revised-core-2026-11",
+    "scope": "2021 修订核心（Revised Core）116 条目录记录（01501–01616）。这些卡是原核心 01xxx 卡片的再版印刷号，行为由 canonical 条目经 _reprint-aliases.js 提供，不单独实现。",
+    "basis": "逐卡核对：duplicateOfCode → canonical 已验收、别名映射覆盖、文本一致、无第二份行为实现；证据为 tests/acceptance-01-a-rcore.test.mjs 的真实断言。114/116 通过；01685/01689 的 canonical（60227/51007）所属入门包/重返单元尚未逐卡验收，暂不计入 verified。未声称穷举所有卡牌组合。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "重印号只保留 canonical 实现，015xx 不进入构筑池（availability 保持 catalog-only）",
+      "目录状态与别名表由同一份账本锁定，别名解析不到即视为未验收"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 116,
+    "verified": 114,
+    "unverified": 2,
+    "unimplemented": 0,
+    "testsPassed": 126
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+      "sha256": "0b29c4ead3d96a31a1aa5ae5f4ee84b8e32958a0a389a1b298637cca4d9f4036"
+    }
+  ],
+  "entries": [
+    {
+      "code": "01501",
+      "name": "罗兰·班克斯",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01501 Roland Banks：修订核心重印号指向已验收 canonical 01001"
+        }
+      ]
+    },
+    {
+      "code": "01502",
+      "name": "黛西·沃克",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01502 Daisy Walker：修订核心重印号指向已验收 canonical 01002"
+        }
+      ]
+    },
+    {
+      "code": "01503",
+      "name": "“倒霉蛋”奥图尔",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01503 \"Skids\" O'Toole：修订核心重印号指向已验收 canonical 01003"
+        }
+      ]
+    },
+    {
+      "code": "01504",
+      "name": "艾格尼丝·贝克",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01504 Agnes Baker：修订核心重印号指向已验收 canonical 01004"
+        }
+      ]
+    },
+    {
+      "code": "01505",
+      "name": "温蒂·亚当斯",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01505 Wendy Adams：修订核心重印号指向已验收 canonical 01005"
+        }
+      ]
+    },
+    {
+      "code": "01506",
+      "name": "罗兰 的.38特制手枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01506 Roland's .38 Special：修订核心重印号指向已验收 canonical 01006"
+        }
+      ]
+    },
+    {
+      "code": "01507",
+      "name": "掩盖罪证",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01507 Cover Up：修订核心重印号指向已验收 canonical 01007"
+        }
+      ]
+    },
+    {
+      "code": "01508",
+      "name": "黛西的手提包",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01508 Daisy's Tote Bag：修订核心重印号指向已验收 canonical 01008"
+        }
+      ]
+    },
+    {
+      "code": "01509",
+      "name": "死灵之书",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01509 The Necronomicon：修订核心重印号指向已验收 canonical 01009"
+        }
+      ]
+    },
+    {
+      "code": "01510",
+      "name": "在逃中",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01510 On the Lam：修订核心重印号指向已验收 canonical 01010"
+        }
+      ]
+    },
+    {
+      "code": "01511",
+      "name": "医院债务",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01511 Hospital Debts：修订核心重印号指向已验收 canonical 01011"
+        }
+      ]
+    },
+    {
+      "code": "01512",
+      "name": "希波利尔传家宝",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01512 Heirloom of Hyperborea：修订核心重印号指向已验收 canonical 01012"
+        }
+      ]
+    },
+    {
+      "code": "01513",
+      "name": "黑暗回忆",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01513 Dark Memory：修订核心重印号指向已验收 canonical 01013"
+        }
+      ]
+    },
+    {
+      "code": "01514",
+      "name": "温蒂的护身符",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01514 Wendy's Amulet：修订核心重印号指向已验收 canonical 01014"
+        }
+      ]
+    },
+    {
+      "code": "01515",
+      "name": "被抛弃的孤单",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01515 Abandoned and Alone：修订核心重印号指向已验收 canonical 01015"
+        }
+      ]
+    },
+    {
+      "code": "01516",
+      "name": ".45自动手枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01516 .45 Automatic：修订核心重印号指向已验收 canonical 01016"
+        }
+      ]
+    },
+    {
+      "code": "01517",
+      "name": "体能训练",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01517 Physical Training：修订核心重印号指向已验收 canonical 01017"
+        }
+      ]
+    },
+    {
+      "code": "01518",
+      "name": "巡警",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01518 Beat Cop：修订核心重印号指向已验收 canonical 01018"
+        }
+      ]
+    },
+    {
+      "code": "01519",
+      "name": "急救",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01519 First Aid：修订核心重印号指向已验收 canonical 01019"
+        }
+      ]
+    },
+    {
+      "code": "01520",
+      "name": "大砍刀",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01520 Machete：修订核心重印号指向已验收 canonical 01020"
+        }
+      ]
+    },
+    {
+      "code": "01521",
+      "name": "看门狗",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01521 Guard Dog：修订核心重印号指向已验收 canonical 01021"
+        }
+      ]
+    },
+    {
+      "code": "01522",
+      "name": "证据！",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01522 Evidence!：修订核心重印号指向已验收 canonical 01022"
+        }
+      ]
+    },
+    {
+      "code": "01523",
+      "name": "闪躲",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01523 Dodge：修订核心重印号指向已验收 canonical 01023"
+        }
+      ]
+    },
+    {
+      "code": "01524",
+      "name": "炸药爆破",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01524 Dynamite Blast：修订核心重印号指向已验收 canonical 01024"
+        }
+      ]
+    },
+    {
+      "code": "01525",
+      "name": "致命打击",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01525 Vicious Blow：修订核心重印号指向已验收 canonical 01025"
+        }
+      ]
+    },
+    {
+      "code": "01526",
+      "name": "多余的弹药",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01526 Extra Ammunition：修订核心重印号指向已验收 canonical 01026"
+        }
+      ]
+    },
+    {
+      "code": "01527",
+      "name": "警徽",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01527 Police Badge：修订核心重印号指向已验收 canonical 01027"
+        }
+      ]
+    },
+    {
+      "code": "01528",
+      "name": "巡警",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01528 Beat Cop：修订核心重印号指向已验收 canonical 01028"
+        }
+      ]
+    },
+    {
+      "code": "01529",
+      "name": "霰弹枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01529 Shotgun：修订核心重印号指向已验收 canonical 01029"
+        }
+      ]
+    },
+    {
+      "code": "01530",
+      "name": "放大镜",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01530 Magnifying Glass：修订核心重印号指向已验收 canonical 01030"
+        }
+      ]
+    },
+    {
+      "code": "01531",
+      "name": "智慧古书",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01531 Old Book of Lore：修订核心重印号指向已验收 canonical 01031"
+        }
+      ]
+    },
+    {
+      "code": "01532",
+      "name": "研究馆员",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01532 Research Librarian：修订核心重印号指向已验收 canonical 01032"
+        }
+      ]
+    },
+    {
+      "code": "01533",
+      "name": "米兰·克里斯托弗博士",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01533 Dr. Milan Christopher：修订核心重印号指向已验收 canonical 01033"
+        }
+      ]
+    },
+    {
+      "code": "01534",
+      "name": "超感知",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01534 Hyperawareness：修订核心重印号指向已验收 canonical 01034"
+        }
+      ]
+    },
+    {
+      "code": "01535",
+      "name": "医学教科书",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01535 Medical Texts：修订核心重印号指向已验收 canonical 01035"
+        }
+      ]
+    },
+    {
+      "code": "01536",
+      "name": "心胜于物",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01536 Mind over Matter：修订核心重印号指向已验收 canonical 01036"
+        }
+      ]
+    },
+    {
+      "code": "01537",
+      "name": "专业的直觉",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01537 Working a Hunch：修订核心重印号指向已验收 canonical 01037"
+        }
+      ]
+    },
+    {
+      "code": "01538",
+      "name": "屏障",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01538 Barricade：修订核心重印号指向已验收 canonical 01038"
+        }
+      ]
+    },
+    {
+      "code": "01539",
+      "name": "推理",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01539 Deduction：修订核心重印号指向已验收 canonical 01039"
+        }
+      ]
+    },
+    {
+      "code": "01540",
+      "name": "放大镜",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01540 Magnifying Glass：修订核心重印号指向已验收 canonical 01040"
+        }
+      ]
+    },
+    {
+      "code": "01541",
+      "name": "伊察姆纳圆盘",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01541 Disc of Itzamna：修订核心重印号指向已验收 canonical 01041"
+        }
+      ]
+    },
+    {
+      "code": "01542",
+      "name": "百科全书",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01542 Encyclopedia：修订核心重印号指向已验收 canonical 01042"
+        }
+      ]
+    },
+    {
+      "code": "01543",
+      "name": "隐秘的研究",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01543 Cryptic Research：修订核心重印号指向已验收 canonical 01043"
+        }
+      ]
+    },
+    {
+      "code": "01544",
+      "name": "弹簧刀",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01544 Switchblade：修订核心重印号指向已验收 canonical 01044"
+        }
+      ]
+    },
+    {
+      "code": "01545",
+      "name": "夜盗",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01545 Burglary：修订核心重印号指向已验收 canonical 01045"
+        }
+      ]
+    },
+    {
+      "code": "01546",
+      "name": "扒窃",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01546 Pickpocketing：修订核心重印号指向已验收 canonical 01046"
+        }
+      ]
+    },
+    {
+      "code": "01547",
+      "name": ".41短口手枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01547 .41 Derringer：修订核心重印号指向已验收 canonical 01047"
+        }
+      ]
+    },
+    {
+      "code": "01548",
+      "name": "里奥·德·卢卡",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01548 Leo De Luca：修订核心重印号指向已验收 canonical 01048"
+        }
+      ]
+    },
+    {
+      "code": "01549",
+      "name": "沉重打击",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01549 Hard Knocks：修订核心重印号指向已验收 canonical 01049"
+        }
+      ]
+    },
+    {
+      "code": "01550",
+      "name": "逃避隐藏",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01550 Elusive：修订核心重印号指向已验收 canonical 01050"
+        }
+      ]
+    },
+    {
+      "code": "01551",
+      "name": "背刺",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01551 Backstab：修订核心重印号指向已验收 canonical 01051"
+        }
+      ]
+    },
+    {
+      "code": "01552",
+      "name": "偷袭",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01552 Sneak Attack：修订核心重印号指向已验收 canonical 01052"
+        }
+      ]
+    },
+    {
+      "code": "01553",
+      "name": "机会主义者",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01553 Opportunist：修订核心重印号指向已验收 canonical 01053"
+        }
+      ]
+    },
+    {
+      "code": "01554",
+      "name": "里奥·德·卢卡",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01554 Leo De Luca：修订核心重印号指向已验收 canonical 01054"
+        }
+      ]
+    },
+    {
+      "code": "01555",
+      "name": "飞贼",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01555 Cat Burglar：修订核心重印号指向已验收 canonical 01055"
+        }
+      ]
+    },
+    {
+      "code": "01556",
+      "name": "老千手法",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01556 Sure Gamble：修订核心重印号指向已验收 canonical 01056"
+        }
+      ]
+    },
+    {
+      "code": "01557",
+      "name": "百战百胜",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01557 Hot Streak：修订核心重印号指向已验收 canonical 01057"
+        }
+      ]
+    },
+    {
+      "code": "01558",
+      "name": "禁忌知识",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01558 Forbidden Knowledge：修订核心重印号指向已验收 canonical 01058"
+        }
+      ]
+    },
+    {
+      "code": "01559",
+      "name": "圣玫瑰珠",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01559 Holy Rosary：修订核心重印号指向已验收 canonical 01059"
+        }
+      ]
+    },
+    {
+      "code": "01560",
+      "name": "皱缩术",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01560 Shrivelling：修订核心重印号指向已验收 canonical 01060"
+        }
+      ]
+    },
+    {
+      "code": "01561",
+      "name": "探知术",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01561 Scrying：修订核心重印号指向已验收 canonical 01061"
+        }
+      ]
+    },
+    {
+      "code": "01562",
+      "name": "神秘研究",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01562 Arcane Studies：修订核心重印号指向已验收 canonical 01062"
+        }
+      ]
+    },
+    {
+      "code": "01563",
+      "name": "新晋术士",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01563 Arcane Initiate：修订核心重印号指向已验收 canonical 01063"
+        }
+      ]
+    },
+    {
+      "code": "01564",
+      "name": "飞蛾扑火",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01564 Drawn to the Flame：修订核心重印号指向已验收 canonical 01064"
+        }
+      ]
+    },
+    {
+      "code": "01565",
+      "name": "守护结界",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01565 Ward of Protection：修订核心重印号指向已验收 canonical 01065"
+        }
+      ]
+    },
+    {
+      "code": "01566",
+      "name": "眩光一闪",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01566 Blinding Light：修订核心重印号指向已验收 canonical 01066"
+        }
+      ]
+    },
+    {
+      "code": "01567",
+      "name": "无所畏惧",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01567 Fearless：修订核心重印号指向已验收 canonical 01067"
+        }
+      ]
+    },
+    {
+      "code": "01568",
+      "name": "记忆抹消",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01568 Mind Wipe：修订核心重印号指向已验收 canonical 01068"
+        }
+      ]
+    },
+    {
+      "code": "01569",
+      "name": "眩光一闪",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01569 Blinding Light：修订核心重印号指向已验收 canonical 01069"
+        }
+      ]
+    },
+    {
+      "code": "01570",
+      "name": "影之书",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01570 Book of Shadows：修订核心重印号指向已验收 canonical 01070"
+        }
+      ]
+    },
+    {
+      "code": "01571",
+      "name": "诡秘石像",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01571 Grotesque Statue：修订核心重印号指向已验收 canonical 01071"
+        }
+      ]
+    },
+    {
+      "code": "01572",
+      "name": "皮大衣",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01572 Leather Coat：修订核心重印号指向已验收 canonical 01072"
+        }
+      ]
+    },
+    {
+      "code": "01573",
+      "name": "拾荒",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01573 Scavenging：修订核心重印号指向已验收 canonical 01073"
+        }
+      ]
+    },
+    {
+      "code": "01574",
+      "name": "球棒",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01574 Baseball Bat：修订核心重印号指向已验收 canonical 01074"
+        }
+      ]
+    },
+    {
+      "code": "01575",
+      "name": "幸运兔脚",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01575 Rabbit's Foot：修订核心重印号指向已验收 canonical 01075"
+        }
+      ]
+    },
+    {
+      "code": "01576",
+      "name": "野猫",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01576 Stray Cat：修订核心重印号指向已验收 canonical 01076"
+        }
+      ]
+    },
+    {
+      "code": "01577",
+      "name": "深挖",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01577 Dig Deep：修订核心重印号指向已验收 canonical 01077"
+        }
+      ]
+    },
+    {
+      "code": "01578",
+      "name": "调虎离山",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01578 Cunning Distraction：修订核心重印号指向已验收 canonical 01078"
+        }
+      ]
+    },
+    {
+      "code": "01579",
+      "name": "“看看我发现了什么！”",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01579 \"Look what I found!\"：修订核心重印号指向已验收 canonical 01079"
+        }
+      ]
+    },
+    {
+      "code": "01580",
+      "name": "运气好！",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01580 Lucky!：修订核心重印号指向已验收 canonical 01080"
+        }
+      ]
+    },
+    {
+      "code": "01581",
+      "name": "求生本能",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01581 Survival Instinct：修订核心重印号指向已验收 canonical 01081"
+        }
+      ]
+    },
+    {
+      "code": "01582",
+      "name": "安奎娜",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01582 Aquinnah：修订核心重印号指向已验收 canonical 01082"
+        }
+      ]
+    },
+    {
+      "code": "01583",
+      "name": "千钧一发",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01583 Close Call：修订核心重印号指向已验收 canonical 01083"
+        }
+      ]
+    },
+    {
+      "code": "01584",
+      "name": "运气好！",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01584 Lucky!：修订核心重印号指向已验收 canonical 01084"
+        }
+      ]
+    },
+    {
+      "code": "01585",
+      "name": "生存意志",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01585 Will to Survive：修订核心重印号指向已验收 canonical 01085"
+        }
+      ]
+    },
+    {
+      "code": "01586",
+      "name": "刀子",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01586 Knife：修订核心重印号指向已验收 canonical 01086"
+        }
+      ]
+    },
+    {
+      "code": "01587",
+      "name": "手电筒",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01587 Flashlight：修订核心重印号指向已验收 canonical 01087"
+        }
+      ]
+    },
+    {
+      "code": "01588",
+      "name": "应急物品",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01588 Emergency Cache：修订核心重印号指向已验收 canonical 01088"
+        }
+      ]
+    },
+    {
+      "code": "01589",
+      "name": "胆识",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01589 Guts：修订核心重印号指向已验收 canonical 01089"
+        }
+      ]
+    },
+    {
+      "code": "01590",
+      "name": "洞察力",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01590 Perception：修订核心重印号指向已验收 canonical 01090"
+        }
+      ]
+    },
+    {
+      "code": "01591",
+      "name": "压制",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01591 Overpower：修订核心重印号指向已验收 canonical 01091"
+        }
+      ]
+    },
+    {
+      "code": "01592",
+      "name": "心灵手巧",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01592 Manual Dexterity：修订核心重印号指向已验收 canonical 01092"
+        }
+      ]
+    },
+    {
+      "code": "01593",
+      "name": "绝处逢生",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01593 Unexpected Courage：修订核心重印号指向已验收 canonical 01093"
+        }
+      ]
+    },
+    {
+      "code": "01594",
+      "name": "防弹衣",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01594 Bulletproof Vest：修订核心重印号指向已验收 canonical 01094"
+        }
+      ]
+    },
+    {
+      "code": "01595",
+      "name": "远古印记护身符",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01595 Elder Sign Amulet：修订核心重印号指向已验收 canonical 01095"
+        }
+      ]
+    },
+    {
+      "code": "01596",
+      "name": "失忆",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01596 Amnesia：修订核心重印号指向已验收 canonical 01096"
+        }
+      ]
+    },
+    {
+      "code": "01597",
+      "name": "妄想症",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01597 Paranoia：修订核心重印号指向已验收 canonical 01097"
+        }
+      ]
+    },
+    {
+      "code": "01598",
+      "name": "恶灵附身",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01598 Haunted：修订核心重印号指向已验收 canonical 01098"
+        }
+      ]
+    },
+    {
+      "code": "01599",
+      "name": "神经紊乱",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01599 Psychosis：修订核心重印号指向已验收 canonical 01099"
+        }
+      ]
+    },
+    {
+      "code": "01600",
+      "name": "忧郁症",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01600 Hypochondria：修订核心重印号指向已验收 canonical 01100"
+        }
+      ]
+    },
+    {
+      "code": "01601",
+      "name": "黑帮打手",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01601 Mob Enforcer：修订核心重印号指向已验收 canonical 01101"
+        }
+      ]
+    },
+    {
+      "code": "01602",
+      "name": "银暮秘社僧侣",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01602 Silver Twilight Acolyte：修订核心重印号指向已验收 canonical 01102"
+        }
+      ]
+    },
+    {
+      "code": "01603",
+      "name": "固执的侦探",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01603 Stubborn Detective：修订核心重印号指向已验收 canonical 01103"
+        }
+      ]
+    },
+    {
+      "code": "01683",
+      "name": "急救",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01683 First Aid：修订核心重印号指向已验收 canonical 03230"
+        }
+      ]
+    },
+    {
+      "code": "01684",
+      "name": "“我见过更糟的……”",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01684 \"I've had worse…\"：修订核心重印号指向已验收 canonical 02261"
+        }
+      ]
+    },
+    {
+      "code": "01685",
+      "name": "寻找答案",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "canonical 60227（Seeking Answers）尚无逐卡验收结论（入门包账本只到批次 open 层），本卡行为依赖该 canonical，不能先于它声明 verified。"
+    },
+    {
+      "code": "01686",
+      "name": "智慧古书",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01686 Old Book of Lore：修订核心重印号指向已验收 canonical 06279"
+        }
+      ]
+    },
+    {
+      "code": "01687",
+      "name": "撬锁工具",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01687 Lockpicks：修订核心重印号指向已验收 canonical 03031"
+        }
+      ]
+    },
+    {
+      "code": "01688",
+      "name": ".41短口手枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01688 .41 Derringer：修订核心重印号指向已验收 canonical 03234"
+        }
+      ]
+    },
+    {
+      "code": "01689",
+      "name": "礼寻术",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "canonical 51007（Rite of Seeking）尚无逐卡验收结论（重返敦威治批次账本只到 open 层），本卡行为依赖该 canonical，不能先于它声明 verified。"
+    },
+    {
+      "code": "01690",
+      "name": "探知术",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01690 Scrying：修订核心重印号指向已验收 canonical 03236"
+        }
+      ]
+    },
+    {
+      "code": "01691",
+      "name": "安奎娜",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01691 Aquinnah：修订核心重印号指向已验收 canonical 02308"
+        }
+      ]
+    },
+    {
+      "code": "01692",
+      "name": "美满结局",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01692 Eucatastrophe：修订核心重印号指向已验收 canonical 05324"
+        }
+      ]
+    },
+    {
+      "code": "01693",
+      "name": "应急物品",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01693 Emergency Cache：修订核心重印号指向已验收 canonical 02194"
+        }
+      ]
+    },
+    {
+      "code": "01694",
+      "name": "魅力超凡",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01694 Charisma：修订核心重印号指向已验收 canonical 02158"
+        }
+      ]
+    },
+    {
+      "code": "01695",
+      "name": "宝物猎人",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-01-a-rcore.test.mjs",
+          "test": "RCore 01695 Relic Hunter：修订核心重印号指向已验收 canonical 02157"
+        }
+      ]
+    }
+  ]
+}

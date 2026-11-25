@@ -1,0 +1,148 @@
+{
+  "unit": "05-a-7",
+  "generatedAt": "2026-11-24",
+  "scope": {
+    "cards": 42,
+    "selector": "pack=icc (In the Clutches of Chaos, 05273-05312) && effectStatus=unverified",
+    "baseline": "cards-data 复算：pack=icc 共 42 张，全部 unverified；unimplemented 0"
+  },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "05273", "05274", "05276", "05277", "05278", "05280", "05281", "05282", "05283",
+    "05284", "05285", "05286b", "05287", "05288b", "05289",
+    "05290", "05291", "05292", "05293", "05296", "05297", "05298", "05299", "05300",
+    "05302", "05305", "05306", "05307", "05308", "05309", "05310", "05311", "05312"
+  ],
+  "failedCodes": [
+    {
+      "code": "05275",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：played 结算里写 `state.investigators[inv.seat].defeatCause = 'card'`（src/cards/entries/05275.js:57）。这是引擎「保留预设 defeatCause」的内部字段，条目应通过 api 表达（如 lethalSelfDamage 的 cause 选项/专用 api），不应直写 inv 实例。审计工具漏检索引式写入（docs/campaign/theCircleUndone/full-scan.md:241 已记录该盲区），因此 `npm run audit:entries` 显示 TCU R1=0，但按 ACCEPTANCE-ORDER 维度 2 该卡不得 verified。",
+      "evidence": "src/cards/entries/05275.js:57; docs/campaign/theCircleUndone/full-scan.md:241; tests/tcu-player-m2-4.test.mjs「TCU 05275 … 发现 3 线索后自我击败并受 1 点精神创伤」"
+    },
+    {
+      "code": "05279",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：free 能力 resolve 里写 `source.attachments ||= []`（src/cards/entries/05279.js:49），source 是场上支援实例；条目应只读状态、附着走 `api.moveCard({to:'attached'})`（后续 api 调用已做，该行是多余直写）。同样属审计工具漏检的 `source.*` 盲区（full-scan.md:241）。按维度 2 不得 verified。",
+      "evidence": "src/cards/entries/05279.js:49; docs/campaign/theCircleUndone/full-scan.md:241; tests/tcu-player-m2-4.test.mjs / tests/play-channels.test.mjs 的 05279 用例"
+    },
+    {
+      "code": "05286a",
+      "dimension": "implementation",
+      "reason": "[pending] 印刷 `[fast]`（英文 text：\"[fast] Remove 3 breaches from this act…\"）的时序被近似为「0 行动的 scenarioAction」：`behavior.actions` 推入 `actions: 0` 的普通场景行动（content/…/inTheClutchesOfChaos/behavior.js:827-832），没有走引擎已登记的 `behavior.fastActions` [fast] 窗口读点（src/engine/encounter.js:680-682、gap-actions.js），因此不能在任意玩家窗口发动；章节 `migrationHistory` 未披露该近似。另 cards-data 中文 textZh 把本卡写作 `[free]`（与英文 `[fast]` 不一致，属翻译数据缺陷）。因为中文卡面写 [free]、英文写 [fast]，实现与哪一个口径等价无法单方定论，按规程记 pending（按未通过计），待主进程裁决口径后修复。",
+      "evidence": "content/campaigns/theCircleUndone/scenarios/inTheClutchesOfChaos/behavior.js:827-832; src/engine/encounter.js:680-682; src/engine/gap-actions.js:24-36; tests/acceptance-05-a-shard7.test.mjs「05286a …」"
+    },
+    {
+      "code": "05288a",
+      "dimension": "implementation",
+      "reason": "[pending] 与 05286a 同文同数据：印刷 [fast] / 中文 textZh [free] 不一致，行为以 0 行动 scenarioAction 近似，未走 `behavior.fastActions` [fast] 窗口；口径待裁决。",
+      "evidence": "content/campaigns/theCircleUndone/scenarios/inTheClutchesOfChaos/behavior.js:827-832; src/engine/encounter.js:680-682; tests/acceptance-05-a-shard7.test.mjs「05288a …」"
+    },
+    {
+      "code": "05294",
+      "dimension": "implementation",
+      "reason": "[pending] 地点条目以 `actions: 0, fast: true` 声明 [fast] 行动（src/cards/encounter-entries/theCircleUndone/inTheClutchesOfChaos/05294.js），但 locationRule.actions 产出的行动只进普通 scenarioAction 列表，`fast:true` 标志没有被引擎消费；引擎唯一 [fast] 窗口读点是 behavior.fastActions（encounter.js:680-682）。英文 text 为 [fast]，中文 textZh 为 [free]，口径不一致且迁移记录未披露——记 pending。",
+      "evidence": "src/cards/encounter-entries/theCircleUndone/inTheClutchesOfChaos/05294.js:15-18; content/campaigns/theCircleUndone/scenarios/inTheClutchesOfChaos/behavior.js:824-845; src/engine/encounter.js:680-682"
+    },
+    {
+      "code": "05295",
+      "dimension": "implementation",
+      "reason": "[pending] 同 05294：英文 [fast] / 中文 [free] 不一致，地点 [fast] 行动只以 0 行动 scenarioAction 近似，未接 `behavior.fastActions` 窗口。",
+      "evidence": "src/cards/encounter-entries/theCircleUndone/inTheClutchesOfChaos/05295.js:13-17; src/engine/encounter.js:680-682"
+    },
+    {
+      "code": "05301",
+      "dimension": "implementation",
+      "reason": "[pending] 同 05294：`[fast] Spend 2 resources…` 以 0 行动 scenarioAction 近似，中文 textZh 写作 [free]，未走 [fast] 窗口读点。",
+      "evidence": "src/cards/encounter-entries/theCircleUndone/inTheClutchesOfChaos/05301.js:13-17; src/engine/encounter.js:680-682"
+    },
+    {
+      "code": "05303",
+      "dimension": "implementation",
+      "reason": "[pending] 同 05294：`[fast] Take 1 horror…` 以 0 行动 scenarioAction 近似，中文 textZh 写作 [free]，未走 [fast] 窗口读点。",
+      "evidence": "src/cards/encounter-entries/theCircleUndone/inTheClutchesOfChaos/05303.js:11-15; src/engine/encounter.js:680-682"
+    },
+    {
+      "code": "05304",
+      "dimension": "implementation",
+      "reason": "[pending] 同 05294：`[fast] Take 1 damage…` 以 0 行动 scenarioAction 近似，中文 textZh 写作 [free]，未走 [fast] 窗口读点。",
+      "evidence": "src/cards/encounter-entries/theCircleUndone/inTheClutchesOfChaos/05304.js:11-15; src/engine/encounter.js:680-682"
+    }
+  ],
+  "pendingCodes": ["05286a", "05288a", "05294", "05295", "05301", "05303", "05304"],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "fail",
+    "primitives": "fail",
+    "interaction": "pass",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/acceptance-05-a-shard7.test.mjs",
+      "test": "17 个逐卡用例（标题含卡号，本轮新增，node --test 全绿）",
+      "codes": [
+        "05286a", "05286b", "05287", "05288a", "05288b", "05289", "05291", "05293", "05295",
+        "05296", "05297", "05298", "05301", "05302", "05303", "05304", "05305"
+      ]
+    },
+    {
+      "file": "tests/tcu-player-m2-3.test.mjs",
+      "test": "TCU 05273 MK1手榴弹 命中后对所在地点每个敌人造成 2 点伤害，补给耗尽后弃置 / TCU 05274 特工支援 两条[快速]能力、替同地点其他调查员承伤",
+      "codes": ["05273", "05274"]
+    },
+    {
+      "file": "tests/tcu-player-m2-4.test.mjs",
+      "test": "TCU 05275/05276/05277/05278/05279/05280/05281/05282/05283 行为用例（含永久卡开局、宿主附属事件、否定存在六窗口、偷梁换柱两分支、安娜塔罗槽）",
+      "codes": ["05275", "05276", "05277", "05278", "05279", "05280", "05281", "05282", "05283"]
+    },
+    {
+      "file": "tests/play-channels.test.mjs",
+      "test": "宿主附属（05279）里的快速事件（否决存在）进入快速事件候选，并支付宿主附加费",
+      "codes": ["05279"]
+    },
+    {
+      "file": "tests/tcu-investigators.test.mjs",
+      "test": "R7 05004 黛安娜：05280 忽略伤害走 api.noteCancelled，触发 cardCancelled",
+      "codes": ["05280"]
+    },
+    {
+      "file": "tests/tcu-clutches-chaos.test.mjs",
+      "test": "混沌魔掌章节钩子用例：05284 异教徒标记/骷髅值/石板古神、05285 毁灭替换/顺序、05290 弃手牌图标、05292 检定版、05294 南区、05299 弃支援、05300 商人区、05306–05310/05312 诡计与生成位置",
+      "codes": ["05284", "05285", "05290", "05292", "05294", "05299", "05300", "05306", "05307", "05308", "05309", "05310", "05312"]
+    },
+    {
+      "file": "tests/tcu-p1-regressions.test.mjs",
+      "test": "P1 05284 幕上裂口真实 viewState 可观察 / P1 05311 breachOnEnter 进入地点后真实放置 1 裂口",
+      "codes": ["05284", "05311"]
+    }
+  ],
+  "commands": [
+    {
+      "command": "node --test tests/acceptance-05-a-shard7.test.mjs",
+      "result": "tests 17 / pass 17 / fail 0"
+    },
+    {
+      "command": "node --test tests/tcu-clutches-chaos.test.mjs tests/tcu-p1-regressions.test.mjs tests/tcu-location-api.test.mjs",
+      "result": "tests 60 / pass 60 / fail 0"
+    },
+    {
+      "command": "node --test tests/tcu-player-m2-3.test.mjs tests/tcu-player-m2-4.test.mjs tests/play-channels.test.mjs tests/card-entries.test.mjs",
+      "result": "tests 113 / pass 113 / fail 0"
+    },
+    {
+      "command": "npm run cards:check",
+      "result": "tests 10 / pass 10；条目合规审计通过（无基线外新增违规）"
+    },
+    {
+      "command": "npm run cards:encounter-check",
+      "result": "tests 7 / pass 7；条目合规审计通过（无基线外新增违规）"
+    },
+    {
+      "command": "npm run audit:entries",
+      "result": "通过；directStateWrite 112 / reprintDuplicate 0 / playConditionGap 0（均存量基线）"
+    }
+  ],
+  "notes": "1) 42 张：通过 33 / 失败 2（05275、05279，存量工具盲区的 R1）/ pending 7（[fast] 时序近似 + 中英文卡面 [fast]/[free] 不一致，按未通过计）。2) 新增测试 tests/acceptance-05-a-shard7.test.mjs 未登记进 tests/suites.mjs（本分片边界不允许改既有 tests/），主进程合并时必须登记到 fast tier，否则 suite-manifest 守卫会让 test:fast 变红。3) 全 42 张均有标题含卡号的真实测试并重跑通过（见 evidence）。4) 未改 src/content/audit/web/tools/既有 tests/package.json，未重签 TCU 账本，未触碰 web/campaign-presentation.js。5) 专项发现：05286b/05288b 的强制/生命修正与 05285 的两条替换仍写在章节 behavior.js（内容层命令式规律，含字面卡号判断），属 card-model §6 的后续回迁债务；05285 的「多个毁灭一次放置」乘积语义为本地不可达的潜在近似；05300 牌库不足 5 张时的弃牌上限语义为可接受近似；05274 第二条能力的 1 点恐惧写在 resolve 而非 cost（结果等价但口径不一致）。6) 05284 幕上裂口投影已由 P1 回归验证，未新增 UI 面板。"
+}

@@ -11,9 +11,8 @@ import { queryCatalogView, getCatalogCardView, getLinkedCatalogCardView, getCata
 import { CARD_ABILITY_ENTRIES } from '../cards/card-abilities.js'
 import { ALL_ENEMIES } from '../engine/card-lookup.js'
 import { ALL_CARDS, META } from '../cards/cards-data.js'
-import { describeArkhamDbDeck, fetchArkhamDbDeck, resolveArkhamDbDeck } from './arkhamdb.js'
-import { findArkhamDbRecommendation } from './arkhamdb-recommendation.js'
-import recommendedDecks from './recommended-decks.json' with { type: 'json' }
+import { fetchArkhamDbDeck, resolveArkhamDbDeck } from './arkhamdb.js'
+import { loadArkhamDbRecommendation } from './arkhamdb-recommendation.js'
 import { scenarioImageManifest } from './scenario-images.js'
 import { customizationPresentation } from './customization-presentation.js'
 
@@ -69,16 +68,14 @@ function catalogMeta() {
 }
 
 async function recommendedDeck(code) {
-  let raw
+  let deck
   try {
-    raw = Object.hasOwn(recommendedDecks, code)
-      ? recommendedDecks[code]
-      : await findArkhamDbRecommendation(code)
+    deck = await loadArkhamDbRecommendation(code)
   } catch {
     return { status: 502, error: '暂时无法从 ArkhamDB 读取推荐卡组，请稍后重试' }
   }
-  if (!raw) return { status: 404, error: '没有找到符合该调查员循环的 0 XP 推荐卡组' }
-  return { body: { deck: describeArkhamDbDeck(raw, { kind: 'decklist' }) } }
+  if (!deck) return { status: 404, error: '没有找到符合该调查员循环的 0 XP 推荐卡组' }
+  return { body: { deck } }
 }
 
 function filterOptions(searchParams) {

@@ -1,0 +1,797 @@
+{
+  "schemaVersion": 1,
+  "unit": "10-a-1",
+  "profile": {
+    "id": "fhv-player-a-2026-11",
+    "scope": "铁杉谷盛宴 10 段 fhvp 调查员与玩家卡（10001–10033）35 条目录记录。33 条通过五维验收；10016a/b 反应缺 per-window limit（P1-12）暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 35,
+    "verified": 33,
+    "unverified": 2,
+    "unimplemented": 0,
+    "testsPassed": 237
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-10-a-shard1.test.mjs",
+      "sha256": "400ad90511d85c741e4a3c98e92938ab7d4fb8212f24172dad9ae6530d006e80"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-1.test.mjs",
+      "sha256": "0133ea21562f6da12f3881db64e5453fa4b13b36d5f0bda45c706ac8ff24aa6e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-2.test.mjs",
+      "sha256": "4f3dd2780e3c00cae1c549d711d11a89ec2740df43e8f1826e58b643081b1ea4"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-3.test.mjs",
+      "sha256": "087e3c842cdbec4acafec77595994bf7855cfdd9a880ce35ae7b55d0666be046"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
+      "sha256": "4f3832d8757b6538ddf9347a908d364504970331c542d295eef7af8af8441038"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-5.test.mjs",
+      "sha256": "e3c9544d66843da656e9432545760e4a04b5072dd1298a6e202490bae3e2e503"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-6.test.mjs",
+      "sha256": "f24cc9ffb9570160ed5d46758ea2ae4f93933b06862dc11096ee689b72715229"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-7.test.mjs",
+      "sha256": "bf1d854922604bb474b2ed8abd35b67a93ad1ee22fd229e609283ae4ace98884"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-8.test.mjs",
+      "sha256": "4b0bcbb5cdcc074b09956b8168feae189061bad71ee43bd450500cd9ae8886ca"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-9.test.mjs",
+      "sha256": "730e1a91984e081d8bcd42f0e86144270f66f4ece326575016d5102f195e6d6d"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-10.test.mjs",
+      "sha256": "267e84e4201af115822f08a61de0fa7171a07bf5cae859dd6addf2b3cb085e07"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-11.test.mjs",
+      "sha256": "033cd720e63298017c47fdb287740848865002dbf3f2ce69e2263a98e2f55829"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-m2-12.test.mjs",
+      "sha256": "589e3b22ec381e53429b3c209c85fba2aac55f19d4e21ba4cc5c8c145819aee2"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-rules.test.mjs",
+      "sha256": "0923adf4ff0b6d5b8e50ddf8bae63071dcae1f05ad9421ff0760e02715e615b7"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-player-primitives.test.mjs",
+      "sha256": "afc355d82436df1d0c2e58d43ac1e982d1efb0d068edad72b0c74da5d8a89412"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-investigator-10001.test.mjs",
+      "sha256": "0980a3ffb136e57cc42b369d7fd1727bce544d8d150f57b49c96b8bfcaa03526"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-investigator-10004.test.mjs",
+      "sha256": "39b44697645f0bace9739ac5554f1bdaddff50d95f21e101e682c6817573be28"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-investigator-10009.test.mjs",
+      "sha256": "1dc7e43c493b7e8c56bd738df7e754a0cabf030b457f2e0a85d3ad9b3147a6d6"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-investigator-10012.test.mjs",
+      "sha256": "0132547d7f71987c0ffa1ea4639d2516627219bedec5f80e9a2a8109efaa7baf"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-investigator-10015.test.mjs",
+      "sha256": "7f797ffb5d58a0b3f5003838ec7c921fd865793182399406a6b6f7725dcc36d2"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-investigator-signatures.test.mjs",
+      "sha256": "c778ecb63528b6ea68cf26764f4cb9704b79980c6d76dc296e0cfcdf6936f1d6"
+    },
+    {
+      "file": "games/arkhamhorror/tests/fhv-interactions.test.mjs",
+      "sha256": "ec0fbb583bc1bb4240c8f184d861ed9761e33ec930a985c4e902e465041d693a"
+    }
+  ],
+  "entries": [
+    {
+      "code": "10001",
+      "name": "威尔森·理查德",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard1.test.mjs",
+          "test": "10-a-1 范围：10001–10033 fhvp 卡恰好 35 张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10001.test.mjs",
+          "test": "P5 10001 [[工具]]支援上的技能检定 +1，非[[工具]]检定不加值"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10001.test.mjs",
+          "test": "P5 10001 仓促修补：显现进威胁区、触发支援能力时基础技能值 0、两行动弃掉"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10001.test.mjs",
+          "test": "P5 10001 存档往返：附属的应急手段与威胁区弱点、注册表与调查员规则都随 JSON 保存"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10001.test.mjs",
+          "test": "P5 10001 应急手段：手里没有[[工具]]/[[武器]]时不询问；有卡但没有[action]能力时只横置不弃牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10001.test.mjs",
+          "test": "P5 10001 应急手段：打出附属到[[工具]]，反应弃手牌[[工具]]/[[武器]]并忽略费用结算其能力"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10001.test.mjs",
+          "test": "P5 10001 应急手段：没有控制的[[工具]]/[[武器]]时不能打出，[[武器]]宿主同样合法"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10001.test.mjs",
+          "test": "P5 10001 旧印 +0：可与手牌[[工具]]互换（费用相等或更低），费用更高时不换"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10001.test.mjs",
+          "test": "P5 10001 条目注册：调查员旧印/首张支援折扣、应急手段 played+reaction、仓促修补威胁弱点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10001.test.mjs",
+          "test": "P5 10001 构筑：印刷牌组要求、合法 30 张零错误、非法卡报错"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10001.test.mjs",
+          "test": "P5 10001 每轮第一张[[工具]]支援 -1：同轮第二张原价、下一轮重置、[[工具]]事件不消耗"
+        }
+      ]
+    },
+    {
+      "code": "10002",
+      "name": "应急手段",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard1.test.mjs",
+          "test": "FHV 10002 Ad Hoc：附属到受控工具/武器；横置弃手牌工具以忽略费用结算其行动"
+        }
+      ]
+    },
+    {
+      "code": "10003",
+      "name": "仓促修补",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard1.test.mjs",
+          "test": "FHV 10003 Hasty Repairs：本人支援行动期间四项基础技能值降为 0"
+        }
+      ]
+    },
+    {
+      "code": "10004",
+      "name": "凯特·温斯罗普",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10004.test.mjs",
+          "test": "P5 10004 [fast]：线索搬移到无线索的[[科学]]/[[工具]]支援；已带线索目标与原语容量拒绝"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10004.test.mjs",
+          "test": "P5 10004 以太电流（攻击）：智识代替战斗、搬回支援线索、横置移动非精英、抽牌并翻回"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10004.test.mjs",
+          "test": "P5 10004 以太电流（躲避）：智识代替敏捷、搬回线索、非精英洗回遭遇牌库并翻回"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10004.test.mjs",
+          "test": "P5 10004 以太电流：精英敌人不受「横置并移动」与「洗回遭遇牌库」影响"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10004.test.mjs",
+          "test": "P5 10004 失败的实验：难度随带线索支援增加，按失败点数分配恐惧或线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10004.test.mjs",
+          "test": "P5 10004 存档往返：翻面支援、绑定池与牌库保持，恢复后开启面反应仍生效"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10004.test.mjs",
+          "test": "P5 10004 开启面反应：放置线索后本阶段下一次技能检定 +2（只用一次即到期）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10004.test.mjs",
+          "test": "P5 10004 开局：磁通量稳定器（关闭）面朝上在场"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10004.test.mjs",
+          "test": "P5 10004 强制离场归还：带线索支援离场时线索放到所在地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10004.test.mjs",
+          "test": "P5 10004 强制翻面：线索放到稳定器后检索以太电流洗入牌库，翻至开启面并保留标记/附属"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10004.test.mjs",
+          "test": "P5 10004 旧印：+0 且把 1 个线索从支援移回凯特"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10004.test.mjs",
+          "test": "P5 10004 条目注册与依赖形状"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10004.test.mjs",
+          "test": "P5 10004 构筑：30 张 + 签名 10005/10008，规则校验零错误，非法卡报错"
+        }
+      ]
+    },
+    {
+      "code": "10005",
+      "name": "磁通量稳定器",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard1.test.mjs",
+          "test": "FHV 10005b Flux Stabilizer（开启面）：放置线索到受控支援后下一检定 +2（每窗口一次）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10004.test.mjs",
+          "test": "P5 10004 构筑：30 张 + 签名 10005/10008，规则校验零错误，非法卡报错"
+        }
+      ]
+    },
+    {
+      "code": "10005b",
+      "name": "磁通量稳定器",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard1.test.mjs",
+          "test": "FHV 10005b Flux Stabilizer（开启面）：放置线索到受控支援后下一检定 +2（每窗口一次）"
+        }
+      ]
+    },
+    {
+      "code": "10006",
+      "name": "以太电流",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard1.test.mjs",
+          "test": "FHV 10006 Aetheric Current（尤格斯星）：攻击搬运支援线索；成功后横置移动非精英敌人并翻回稳定器"
+        }
+      ]
+    },
+    {
+      "code": "10007",
+      "name": "以太电流",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard1.test.mjs",
+          "test": "FHV 10007 Aetheric Current（幽嘶）：躲避搬运支援线索；成功后非精英敌人洗回遭遇牌库并翻回稳定器"
+        }
+      ]
+    },
+    {
+      "code": "10008",
+      "name": "失败的实验",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10004.test.mjs",
+          "test": "P5 10004 构筑：30 张 + 签名 10005/10008，规则校验零错误，非法卡报错"
+        }
+      ]
+    },
+    {
+      "code": "10009",
+      "name": "亚历山德拉·佐兹",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10009.test.mjs",
+          "test": "P5 10009 / 10010 哄骗：只能在自回合附属到同地点非精英敌人（合法/非法）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10009.test.mjs",
+          "test": "P5 10009 / 10010 哄骗：在其地点调查/躲避；技能检定失败则弃掉"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10009.test.mjs",
+          "test": "P5 10009 / 10010 哄骗：谈判移动模式（只到已揭示连接地点）与任意地点激活"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10009.test.mjs",
+          "test": "P5 10009 / 10011 萨马科纳：每轮第一次谈判放 1 毁灭，第二次不触发，下一轮再触发"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10009.test.mjs",
+          "test": "P5 10009 / 10011 萨马科纳：生成在最近的无人地点，逃逸，且不能与之谈判"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10009.test.mjs",
+          "test": "P5 10009 回合开始：获得 1 个只能用于谈判的额外行动，普通行动不受影响"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10009.test.mjs",
+          "test": "P5 10009 存档往返：附属、受限行动额度与毁灭标记都能继续读档"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10009.test.mjs",
+          "test": "P5 10009 旧印：+2，成功后自动躲避所在地点或已揭示连接地点的非精英敌人"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10009.test.mjs",
+          "test": "P5 10009 条目形状：调查员/事件/敌人弱点三条注册与读点声明"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10009.test.mjs",
+          "test": "P5 10009 构筑：buildDeck 30 张 + 3 张哄骗 + 萨马科纳，且非法牌组报错"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10009.test.mjs",
+          "test": "P5 10009 谈判行动：只消费谈判额度，且不引发借机攻击"
+        }
+      ]
+    },
+    {
+      "code": "10010",
+      "name": "哄骗",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10009.test.mjs",
+          "test": "P5 10009 / 10010 哄骗：只能在自回合附属到同地点非精英敌人（合法/非法）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10009.test.mjs",
+          "test": "P5 10009 / 10010 哄骗：在其地点调查/躲避；技能检定失败则弃掉"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10009.test.mjs",
+          "test": "P5 10009 / 10010 哄骗：谈判移动模式（只到已揭示连接地点）与任意地点激活"
+        }
+      ]
+    },
+    {
+      "code": "10011",
+      "name": "萨马科纳",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10009.test.mjs",
+          "test": "P5 10009 / 10011 萨马科纳：每轮第一次谈判放 1 毁灭，第二次不触发，下一轮再触发"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10009.test.mjs",
+          "test": "P5 10009 / 10011 萨马科纳：生成在最近的无人地点，逃逸，且不能与之谈判"
+        }
+      ]
+    },
+    {
+      "code": "10012",
+      "name": "鸣神琥珀",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10012.test.mjs",
+          "test": "P5 10012 回合开始：2 祝福 + 2 诅咒换 1 个额外行动，标记不足时该模式不可用"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10012.test.mjs",
+          "test": "P5 10012 回合开始：加入数量较少者；祝福与诅咒并列时由玩家选择"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10012.test.mjs",
+          "test": "P5 10012 回合开始：可以放弃反应，混乱袋与行动点不变"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10012.test.mjs",
+          "test": "P5 10012 存档往返：回合开始效果、额外行动与怨魂战斗状态可恢复"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10012.test.mjs",
+          "test": "P5 10012 旧印：+2 并在混乱袋中加入 1 祝福与 1 诅咒"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10012.test.mjs",
+          "test": "P5 10012 条目与专属依赖：注册形状、关键词窗口与旧印数值"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10012.test.mjs",
+          "test": "P5 10012 构筑：30 张玩家卡、签名 10013/10014、[[密教]]0 级与潜修者 0–3 边界"
+        }
+      ]
+    },
+    {
+      "code": "10013",
+      "name": "真幻记述",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10012.test.mjs",
+          "test": "P5 10012 构筑：30 张玩家卡、签名 10013/10014、[[密教]]0 级与潜修者 0–3 边界"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10012.test.mjs",
+          "test": "P5 10013 真幻记述：同地点另一名调查员的检定也可以改为结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10012.test.mjs",
+          "test": "P5 10013 真幻记述：并列由玩家选择；袋内没有祝福/诅咒时不可用"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10012.test.mjs",
+          "test": "P5 10013 真幻记述：按袋内多数把将揭示的标记改为祝福/诅咒（当前袋与战役袋同步消耗）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10012.test.mjs",
+          "test": "P5 10013 真幻记述：横置后同一回合的第二次检定不再提供该反应"
+        }
+      ]
+    },
+    {
+      "code": "10014",
+      "name": "恸哭怨魂",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10012.test.mjs",
+          "test": "P5 10012 构筑：30 张玩家卡、签名 10013/10014、[[密教]]0 级与潜修者 0–3 边界"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10012.test.mjs",
+          "test": "P5 10014 恸哭怨魂：同地点真实检定揭示祝福/诅咒后强制攻击该调查员，随后逃逸横置"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10012.test.mjs",
+          "test": "P5 10014 恸哭怨魂：数字标记、已横置、不在同地点、非技能检定都不触发攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10012.test.mjs",
+          "test": "P5 10014 恸哭怨魂：每次检定仅攻击一次，下一次检定可再次触发"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10012.test.mjs",
+          "test": "P5 10014 恸哭怨魂：真实弱点揭示生成、数值/冷漠/猎手/猎物/逃逸关键词"
+        }
+      ]
+    },
+    {
+      "code": "10015",
+      "name": "汉克‧萨姆森",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10015.test.mjs",
+          "test": "P5 10015 同地点调查员的盟友受到的伤害/恐惧可以分配给汉克（读档后仍可）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10015.test.mjs",
+          "test": "P5 10015 坚毅·助理面：恐惧放置后抽 1 张；旧印把 1 点恐惧移到支援"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10015.test.mjs",
+          "test": "P5 10015 坚毅·监守面：伤害放置后获得 2 资源；旧印把 1 点伤害移到支援"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10015.test.mjs",
+          "test": "P5 10015 条目注册与卡面形状：调查员、伤恐承接 flag、旧印与绑定坚毅面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10015.test.mjs",
+          "test": "P5 10015 构筑：35 张玩家卡合法、越出选项/特性限额的牌组被拒绝"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10015.test.mjs",
+          "test": "P5 10015 构筑：buildDeck 产出 35 张玩家卡并强制带入 10017/10018"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10015.test.mjs",
+          "test": "P5 10015 濒败替换只发生一次：坚毅面再次致命时正常败退"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10015.test.mjs",
+          "test": "P5 10015 濒败替换只在仍然致命时结算：被快速卡救回后不换面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10015.test.mjs",
+          "test": "P5 10015 濒败替换：可选 10016b 面，数值按印刷坚毅·监守面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10015.test.mjs",
+          "test": "P5 10015 濒败替换：清空伤恐、换成 10016a、禁止治疗；读档后保持、restore 后恢复治疗"
+        }
+      ]
+    },
+    {
+      "code": "10016a",
+      "name": "汉克‧萨姆森",
+      "type": "investigator",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "P1-12（2026-11-18 独立扫描 high/D2，当前 HEAD 未修）：汉克坚毅·助理面的 `[reaction] 恐惧放置到你身上后：抽 1 张卡` 没有 limit/cost 字段，引擎反应窗口循环（ability-exec.js guard<12）会在同一 horrorPlaced 窗口重复提供并结算该反应；真实引擎探针同一窗口重复提供 12 次（full-scan 探针记录实际抽 12 张）。违反「每张卡每窗口/每回合限制」口径（R3 类）。修法：给该反应补 `limit: { scope: \"perWindow\", owner: \"instance\" }`（与 10005b 同口径），补真实引擎回归后重验。"
+    },
+    {
+      "code": "10016b",
+      "name": "汉克‧萨姆森",
+      "type": "investigator",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "P1-12（同因，当前 HEAD 未修）：汉克坚毅·监守面的 `[reaction] 伤害放置到你身上后：获得 2 资源` 没有 limit/cost，同一 harmAssigned 窗口被反应循环重复提供 12 次（full-scan 探针记录资源 5→29，即 +24）。违反窗口限制口径（R3 类）。修法同上：补 `limit: { scope: \"perWindow\", owner: \"instance\" }` 并补回归。"
+    },
+    {
+      "code": "10017",
+      "name": "一身是胆",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10015.test.mjs",
+          "test": "P5 10015 构筑：buildDeck 产出 35 张玩家卡并强制带入 10017/10018"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10015.test.mjs",
+          "test": "P5 10017 一身是胆：只能在与非精英敌人交战时打出，按 2 点上限分配伤/恐并作为伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10015.test.mjs",
+          "test": "P5 10017 一身是胆：可移动总量受敌人剩余生命限制，不会超过 2 点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10015.test.mjs",
+          "test": "P5 10017 一身是胆：坚毅面的「不能被治愈」不妨碍把伤/恐移动给敌人"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10015.test.mjs",
+          "test": "P5 10017 一身是胆：普通行动/未交战/精英敌人都不提供快速窗口"
+        }
+      ]
+    },
+    {
+      "code": "10018",
+      "name": "“爹爹在哪儿？”",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10015.test.mjs",
+          "test": "P5 10015 构筑：buildDeck 产出 35 张玩家卡并强制带入 10017/10018"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10015.test.mjs",
+          "test": "P5 10018 “爹爹在哪儿？”：从遭遇牌库顶弃到敌人，附属、生成在连接地点并获得逃逸"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10015.test.mjs",
+          "test": "P5 10018 “爹爹在哪儿？”：没有连接地点时生成在当前地点；遭遇牌库无敌人时进弃牌堆"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-investigator-10015.test.mjs",
+          "test": "P5 10018 “爹爹在哪儿？”：轮末汉克受到 1 点直接恐惧；所附属敌人不在场时不结算"
+        }
+      ]
+    },
+    {
+      "code": "10019",
+      "name": "御守",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-1.test.mjs",
+          "test": "P6 10019 御守 击败敌人后横置，按印刷生命加入祝福标记（上限 5）"
+        }
+      ]
+    },
+    {
+      "code": "10020",
+      "name": "清理工具套装",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-1.test.mjs",
+          "test": "P6 10020 清理工具套装 3 补给可当作自己支援的子弹支付"
+        }
+      ]
+    },
+    {
+      "code": "10021",
+      "name": "武士刀",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-1.test.mjs",
+          "test": "P6 10021 武士刀 攻击 +2[combat]；正好成功 2 点时可横置 +2 伤害；[fast] 改用敏捷"
+        }
+      ]
+    },
+    {
+      "code": "10022",
+      "name": "御札",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-1.test.mjs",
+          "test": "P6 10022 御札 地点首次揭示祝福补满充能（每轮一次）；非精英敌人失去四关键词"
+        }
+      ]
+    },
+    {
+      "code": "10023",
+      "name": "狼面具",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-1.test.mjs",
+          "test": "P6 10023 狼面具 每个人限 1 张[[面具]]；交战后补满贡品；花贡品使战斗检定 +2"
+        }
+      ]
+    },
+    {
+      "code": "10024",
+      "name": "赦免",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-1.test.mjs",
+          "test": "P6 10024 赦免 X 费揭示 3+X 个标记：非符号标记转祝福；祝福治愈恐惧"
+        }
+      ]
+    },
+    {
+      "code": "10025",
+      "name": "信仰指引",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-1.test.mjs",
+          "test": "P6 10025 信仰指引 意志代替智力调查；揭示前 +2 祝福；揭示祝福额外 1 线索"
+        }
+      ]
+    },
+    {
+      "code": "10026",
+      "name": "举起手来",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-1.test.mjs",
+          "test": "P6 10026 举起手来 谈判攻击不造成伤害；成功以 -成功点数费用打出手牌[[道具]]支援"
+        }
+      ]
+    },
+    {
+      "code": "10027",
+      "name": "特遣队",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-1.test.mjs",
+          "test": "P6 10027 特遣队 Double 额外花 1 行动；同地点调查员免行动费结算[action]能力、发现线索、移动"
+        }
+      ]
+    },
+    {
+      "code": "10028",
+      "name": "修修补补",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-1.test.mjs",
+          "test": "P6 10028 修修补补 快速附属于[[工具]]支援，宿主少占 1 个饰品槽位"
+        }
+      ]
+    },
+    {
+      "code": "10029",
+      "name": "净化",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-2.test.mjs",
+          "test": "P6 10029 净化：可投入任意检定，成功后按超出难度点数加入祝福标记（每次检定最多 1 张）"
+        }
+      ]
+    },
+    {
+      "code": "10030",
+      "name": "手眼协调",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-2.test.mjs",
+          "test": "P6 10030 手眼协调：不支付[action]费用结算[[工具]]支援上的[action]能力"
+        }
+      ]
+    },
+    {
+      "code": "10031",
+      "name": "膂力过人",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-2.test.mjs",
+          "test": "P6 10031 膂力过人：投入近战支援的攻击 +1 伤害；揭示后受伤可取消标记并重抽"
+        }
+      ]
+    },
+    {
+      "code": "10032",
+      "name": "恢复元气",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-2.test.mjs",
+          "test": "P6 10032 恢复元气：第一个行动才可打出，本轮抽到诡计则改为治愈 3 点"
+        }
+      ]
+    },
+    {
+      "code": "10033",
+      "name": "清理工具套装",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard1.test.mjs",
+          "test": "10-a-1 范围：10001–10033 fhvp 卡恰好 35 张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-2.test.mjs",
+          "test": "P6 10033 清理工具套装：补给可代付弹药，花费时横置使本次检定 +2 技能值"
+        }
+      ]
+    }
+  ]
+}

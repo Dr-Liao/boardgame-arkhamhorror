@@ -1,0 +1,813 @@
+{
+  "schemaVersion": 1,
+  "unit": "05-a-2",
+  "profile": {
+    "id": "tcu-deluxe-b-2026-11",
+    "scope": "万象无终 05 段 tcu 豪华包后半（05055b–05108）55 条目录记录。54 条通过五维验收；1 条（05055b）因 R1 直写 setAside 暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 55,
+    "verified": 54,
+    "unverified": 1,
+    "unimplemented": 0,
+    "testsPassed": 177
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+      "sha256": "c66479bfe45fe5133bf89bc373f982281e156d92ee6044a98c46c3ff2b81d4ab"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-witching-hour.test.mjs",
+      "sha256": "25632efd14a00f2f3ed99e63b42945b240109c24946c7335fee042257067fa00"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-deaths-doorstep.test.mjs",
+      "sha256": "267d4bb6da1ab3398b98e8a43aacc63d8d06c4e035a2400c52f2656aeb50b49c"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+      "sha256": "f09155b4dc4fe709cfa640d0d1a2e7850c4f873faafc34a00e59460b75b2138d"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-p0-regressions.test.mjs",
+      "sha256": "032a3ef79e495e8fa5dbef2f10ce18ab76473a1fe056ff23ca65aa864d86978a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-p1-regressions.test.mjs",
+      "sha256": "1003ff31f4f3c4f908e7b508f18d212435ccdb3021411ebf93d7b9e608a28455"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tcu-primitives-location-state.test.mjs",
+      "sha256": "99f6478368305dbc0222f30eae2ef109d095081207bdaa5a7572fbbfc5bc4f3c"
+    }
+  ],
+  "entries": [
+    {
+      "code": "05055b",
+      "name": "女巫圆环",
+      "type": "location",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：locationRule.onReveal 内 `const list = state.scenarioZones?.setAside || []` 后 `list.splice(index, 1)` 原地改写 state.scenarioZones.setAside（未走 api.takeFromSetAside）；该写法不在 audit/card-entry-compliance.json 基线内（工具的正则不追别名，属未记录的 R1），按规程 §3 维度 2 判失败。行为本身正确（已另有用例覆盖，spawn 05057 到圆环）。"
+    },
+    {
+      "code": "05056",
+      "name": "未毁之环",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05056 未毁之环：结局分支由剧本结果决定，圆环无线索/安妮特被击败推进幕"
+        }
+      ]
+    },
+    {
+      "code": "05057",
+      "name": "安妮特·梅森",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05057 安妮特·梅森：敌军阶段开始弃遭遇牌顶 3 张，弃出女巫则生成，否则重整"
+        }
+      ]
+    },
+    {
+      "code": "05058",
+      "name": "女巫作祟之林",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05058 废弃矿山：3–10 资源不能调查；[free] 与另一处森林调查员互移最多 3 资源（团队每轮一次）"
+        }
+      ]
+    },
+    {
+      "code": "05059",
+      "name": "女巫作祟之林",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05059 巨石堆：每次发现线索后本地调查员失去等量资源"
+        }
+      ]
+    },
+    {
+      "code": "05060",
+      "name": "女巫作祟之林",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05060 独木：3–5 张手牌不能调查；[free] 交换 1 张手牌（每轮一次）"
+        }
+      ]
+    },
+    {
+      "code": "05061",
+      "name": "女巫作祟之林",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05061 孩童的树屋：最后一个线索被发现时把遭遇弃牌堆顶敌人（或弃牌直到敌人）生成在此"
+        }
+      ]
+    },
+    {
+      "code": "05062",
+      "name": "女巫作祟之林",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-witching-hour.test.mjs",
+          "test": "05062 被污染的井：仅「本地点↔其他森林」双向可跨地点投入（其他森林之间/非森林/不在场不可）"
+        }
+      ]
+    },
+    {
+      "code": "05063",
+      "name": "女巫作祟之林",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05063 隐士之家：每次发现线索后本地调查员随机弃等量手牌"
+        }
+      ]
+    },
+    {
+      "code": "05064",
+      "name": "女巫作祟之林",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05064 杂草丛生的谷仓：敌人将生成在另一处森林时改为生成在谷仓并立即攻击本地每位调查员"
+        }
+      ]
+    },
+    {
+      "code": "05065",
+      "name": "死亡门前",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05065 死亡门前：混乱标记数值与闹鬼/幽灵敌人后果"
+        }
+      ]
+    },
+    {
+      "code": "05066",
+      "name": "正义·XI",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05066 正义·XI：银暮秘社敌人不能受伤/被击败；抽到怪物放一边并放毁灭；背面结算线索与约瑟夫"
+        }
+      ]
+    },
+    {
+      "code": "05067",
+      "name": "横跨界限",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05067 横跨界限：银暮秘社敌人胜利 0 进胜利区；猎手移动后幽灵伤害类人；背面按幕结算结局"
+        }
+      ]
+    },
+    {
+      "code": "05068",
+      "name": "秘密阴谋",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05068 秘密阴谋：背面把 7 个地点换成幽灵面、生成看守人并把两组剩余卡洗回"
+        }
+      ]
+    },
+    {
+      "code": "05069",
+      "name": "幽灵国度",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05069 幽灵国度：背面揭示入口大厅、解除迷雾封锁并把弃牌堆洗回"
+        }
+      ]
+    },
+    {
+      "code": "05070",
+      "name": "逃出牢笼",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05070 逃出牢笼：轮末银暮秘社敌人逃进入口大厅底下、冷漠敌人向大厅移动；背面进入结局 1"
+        }
+      ]
+    },
+    {
+      "code": "05071",
+      "name": "入口大厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05071 入口大厅：提供撤退行动并提交 resign"
+        }
+      ]
+    },
+    {
+      "code": "05072",
+      "name": "维多利亚式宴会厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-deaths-doorstep.test.mjs",
+          "test": "05072 维多利亚式宴会厅：【action】弃到银暮秘社敌人后从遭遇弃牌堆取回生成（不重复实体）"
+        }
+      ]
+    },
+    {
+      "code": "05073",
+      "name": "纪念品陈列室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05073 纪念品陈列室：每轮一次，获得 2 资源或花 2 资源换 1 线索"
+        }
+      ]
+    },
+    {
+      "code": "05074",
+      "name": "台球室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05074 台球室：每轮一次敏捷(3)，成功从供应堆获得 1 线索"
+        }
+      ]
+    },
+    {
+      "code": "05075",
+      "name": "主卧",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05075 主卧：轮末有调查员时在最近的银暮秘社敌人上放 1 毁灭"
+        }
+      ]
+    },
+    {
+      "code": "05076",
+      "name": "露台",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05076 露台：弃掉合计至少 3 智识图标的手牌谈判，团队每场一次获得 2 线索；不足不消耗次数"
+        }
+      ]
+    },
+    {
+      "code": "05077",
+      "name": "办公室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05077 办公室：位于办公室的银暮秘社敌人失去冷漠；调查揭示负面符号时最近银暮秘社敌人 +1 毁灭"
+        }
+      ]
+    },
+    {
+      "code": "05078",
+      "name": "入口大厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05078 入口大厅（幽灵面）：封印/未揭示时不能进入、银暮秘社敌人不能生成、提供幽灵面撤退"
+        }
+      ]
+    },
+    {
+      "code": "05079",
+      "name": "维多利亚式宴会厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05079 维多利亚式宴会厅（幽灵面）：翻面后获得「闹鬼 - 失去 1 个行动」"
+        }
+      ]
+    },
+    {
+      "code": "05080",
+      "name": "纪念品陈列室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05080 纪念品陈列室（幽灵面）：翻面获得「闹鬼-失去 2 资源，无法失去的改为 1 恐惧」，幽灵面 1 线索/人"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-deaths-doorstep.test.mjs",
+          "test": "幕 1b：翻到幽灵面后按幽灵面印刷线索值重算（05080/81/83/84 与正面的差异），携带线索保留"
+        }
+      ]
+    },
+    {
+      "code": "05081",
+      "name": "台球室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05081 台球室（幽灵面）：翻面写入胜利 1 与「闹鬼-弃支援或受 1 伤害」二选一，幽灵面 1 线索/人"
+        }
+      ]
+    },
+    {
+      "code": "05082",
+      "name": "主卧",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05082 主卧（幽灵面）：翻面后获得「闹鬼 - 将你的 1 个线索放到主卧」"
+        }
+      ]
+    },
+    {
+      "code": "05083",
+      "name": "露台",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05083 露台（幽灵面）：翻面获得「闹鬼-你每张带生命值的卡牌受 1 直接伤害」，幽灵面 1 线索/人"
+        }
+      ]
+    },
+    {
+      "code": "05084",
+      "name": "办公室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05084 办公室（幽灵面）：翻面写入胜利 2 与「闹鬼-选择并弃掉 1 张手牌」，幽灵面 2 线索/人"
+        }
+      ]
+    },
+    {
+      "code": "05085",
+      "name": "约瑟夫·梅吉尔",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05085 约瑟夫·梅吉尔：其他银暮秘社敌人无毁灭时可谈判；成功翻面结算 05085b"
+        }
+      ]
+    },
+    {
+      "code": "05085b",
+      "name": "约瑟夫的计划",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05085 约瑟夫·梅吉尔：其他银暮秘社敌人无毁灭时可谈判；成功翻面结算 05085b"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-deaths-doorstep.test.mjs",
+          "test": "05085b 背面：本局毁灭不能放在银暮秘社敌人上；约瑟夫获得冷漠"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-p1-regressions.test.mjs",
+          "test": "P1 05095 入场毁灭不能绕过 05085b 的「毁灭不能放在银暮秘社敌人上」"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-deaths-doorstep.test.mjs",
+          "test": "约瑟夫·梅吉尔谈判：成功翻面结算 05085b 并记录本局限制，失败他攻击你"
+        }
+      ]
+    },
+    {
+      "code": "05086",
+      "name": "幽灵看守人",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05086 幽灵看守人：被击败时改为治疗/横置/不重整并留在场上"
+        }
+      ]
+    },
+    {
+      "code": "05087",
+      "name": "看守人的攫噬",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05087 看守人的攫噬：所在地点已有调查员时跳过猎手移动，仍交战并攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05087 看守人的攫噬：治愈 3、重整、按敌军阶段移动/交战/攻击"
+        }
+      ]
+    },
+    {
+      "code": "05088",
+      "name": "阿撒托斯的吹笛手",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05088 吹笛手：敌军阶段结束攻击同地点未交战调查员"
+        }
+      ]
+    },
+    {
+      "code": "05089",
+      "name": "魔鬼的笛声",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05089 魔鬼的笛声：三张集齐弃掉并生成与猎物交战的吹笛手"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05089 魔鬼的笛声：吹笛手在场时对地点与连接地点造成恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05089 魔鬼的笛声：猎物按印刷神智−恐惧，不再叠加支援神智轨道"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05089 魔鬼的笛声：猎物走引擎 preyTarget（getMaxSanity 修正生效，不再只读印刷神智）"
+        }
+      ]
+    },
+    {
+      "code": "05090",
+      "name": "女巫集会学徒",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05090 女巫集会学徒：效果生成不结算显现，只有本效果弃空牌库才继续"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05090 女巫集会学徒：显现弃 2 张，耗尽时抽取弃牌堆巫术卡"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05090 弃空遭遇牌库 → 经共享 enemySpawned 通知，05091 立即重整并攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05090：从幽灵遭遇牌库抽到时，弃牌与巫术卡抽取都走幽灵牌堆"
+        }
+      ]
+    },
+    {
+      "code": "05091",
+      "name": "女巫集会的女祭司",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05090 弃空遭遇牌库 → 经共享 enemySpawned 通知，05091 立即重整并攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05091 女祭司：弃牌堆女巫敌人提供攻击/躲避加成（上限 3）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05091 女祭司：抽到牌库最后一张时立即触发强制（不等下一次抽牌）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05091 女祭司：遭遇牌库耗尽时重整并攻击"
+        }
+      ]
+    },
+    {
+      "code": "05092",
+      "name": "恶魔之音",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05092 恶魔之音：失败弃手牌，弃不掉的张数二选一"
+        }
+      ]
+    },
+    {
+      "code": "05093",
+      "name": "崩毁离析",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05093 崩毁离析：每轮第一次技能检定 -1，横置女巫时摆脱检定自动成功"
+        }
+      ]
+    },
+    {
+      "code": "05094",
+      "name": "苦痛折磨",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05094 苦痛折磨：进威胁区并列出摆脱行动"
+        }
+      ]
+    },
+    {
+      "code": "05095",
+      "name": "秘社新信徒",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05095 秘社新信徒：任意无人地点生成、入场毁灭与谈判清空"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-p1-regressions.test.mjs",
+          "test": "P1 05095 入场毁灭不能绕过 05085b 的「毁灭不能放在银暮秘社敌人上」"
+        }
+      ]
+    },
+    {
+      "code": "05096",
+      "name": "守密人",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05096 守密人：神话阶段结束放置毁灭，谈判用智识(3)"
+        }
+      ]
+    },
+    {
+      "code": "05097",
+      "name": "秘社玄仪",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05097 秘社玄仪：最近异教徒放置毁灭并获得 +2 难度；不能放毁灭的敌人被跳过/涌动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "parleyDifficultyBonus：05097 的谈判 +2 只在本轮有效"
+        }
+      ]
+    },
+    {
+      "code": "05098",
+      "name": "邪恶往昔",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05098 邪恶往昔：首张进威胁区，重复时涌动；遭遇牌库耗尽强制"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05099 弃空遭遇牌库 → 经共享 resolveEncounter 通知，05098 结算 2 恐惧与意志检定"
+        }
+      ]
+    },
+    {
+      "code": "05099",
+      "name": "百年秘事",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05099 弃空遭遇牌库 → 经共享 resolveEncounter 通知，05098 结算 2 恐惧与意志检定"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05099 百年秘事：失败按差额弃遭遇牌；弃到诅咒诡计造成直接伤害"
+        }
+      ]
+    },
+    {
+      "code": "05100",
+      "name": "冥府之雾",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05100 冥府之雾：为所在地点授予闹鬼并随移动迁移"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "enemyMoved：共享钩子以 enemy.location 为新地点、第三参只作旧地点（05100）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "enemyPhaseStart：共享钩子派发条目 onEnemyPhaseStart 并刷新 05100 猎物"
+        }
+      ]
+    },
+    {
+      "code": "05101",
+      "name": "暗影猎犬",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05101 暗影猎犬：攻击后结算所在地点闹鬼"
+        }
+      ]
+    },
+    {
+      "code": "05102",
+      "name": "黑暗中的低语",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05102 黑暗中的低语：放置牌库旁、每个地点获得闹鬼；轮末弃掉并撤销授予"
+        }
+      ]
+    },
+    {
+      "code": "05103",
+      "name": "怨灵",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05103 怨灵：两只怨灵各自附属并获得独立闹鬼能力；对象来源识别法术"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05103 怨灵：法术/遗物伤害或非伤害击败时正常弃掉"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05103 怨灵：非法术/遗物伤害击败改为附属地点并授予闹鬼"
+        }
+      ]
+    },
+    {
+      "code": "05104",
+      "name": "被困的灵魂",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05104 被困的灵魂：检定失败按差额受到伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05104 被困的灵魂：闹鬼地点的检定在首次投入前结算该地点每个闹鬼能力（每 owner 每次一次）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-p1-regressions.test.mjs",
+          "test": "P1 05104 投入卡牌的额外费用只在真正投入后结算（投入 0 张/放弃不结算）"
+        }
+      ]
+    },
+    {
+      "code": "05105",
+      "name": "苦痛之地",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05105 苦痛之地：威胁区 + 回合开始结算闹鬼 + 回合结束检定弃掉"
+        }
+      ]
+    },
+    {
+      "code": "05106",
+      "name": "雾中身形",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05106 雾中身形：显现结算所在地点每个闹鬼能力"
+        }
+      ]
+    },
+    {
+      "code": "05107",
+      "name": "恐怖夜色",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05107 恐怖夜色：从幽灵遭遇牌堆抽到时，牌库旁的 2 张弃回幽灵弃牌堆"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05107 恐怖夜色：失败放到密谋牌库旁，第三张触发全体 3 点恐惧"
+        }
+      ]
+    },
+    {
+      "code": "05108",
+      "name": "愚人的命运",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-shared-encounters.test.mjs",
+          "test": "05108 愚人的命运：无复制品进威胁区；有复制品时选择直接伤害/毁灭"
+        }
+      ]
+    }
+  ]
+}

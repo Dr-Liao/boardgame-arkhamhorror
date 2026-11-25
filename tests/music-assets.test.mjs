@@ -5,7 +5,7 @@ import { createHash } from 'node:crypto'
 import { MUSIC_TRACKS, MUSIC_PLAYLISTS, musicTracksForPlaylist } from '../web/music-player.js'
 import { contentRegistry } from '../content/registered.js'
 import { SCENARIO_MUSIC } from '../web/scenario-music.js'
-import { campaignPlaylistId, campaignPresentation } from '../web/campaign-presentation.js'
+import { CAMPAIGN_IMAGE_ROOT, campaignPlaylistId, campaignPresentation } from '../web/campaign-presentation.js'
 
 test('每个已配置关卡都有两到三首独立 BGM，所有音乐均参与关卡分配', () => {
   const used = new Set()
@@ -41,7 +41,8 @@ test('支线与重返系列每关三首，支线共用战役插画与既有牌�
     const { hubHero, tableOverlay } = campaignPresentation(id).assets
     assert.equal(campaignPlaylistId({ campaign: { id }, uiState: 'campaignHub' }), id)
     if (sideStory) {
-      const file = hubHero.replace('/mods/arkhamhorror/', '../web/')
+      assert.ok(hubHero.startsWith(CAMPAIGN_IMAGE_ROOT), id)
+      const file = hubHero.replace(CAMPAIGN_IMAGE_ROOT, '../web/img/campaigns/')
       const data = readFileSync(new URL(file, import.meta.url))
       assert.equal(data.subarray(8, 12).toString(), 'WEBP', id)
       const hash = createHash('sha256').update(data).digest('hex')
@@ -144,7 +145,7 @@ function assertScenarioArt(campaignId) {
     assert.equal(data.length, asset.bytes)
     assert.equal(createHash('sha256').update(data).digest('hex'), asset.sha256)
     assert.deepEqual([asset.width, asset.height], [1536, 1024])
-    assert.equal(expected.get(asset.id), '/mods/arkhamhorror/img/campaigns/' + campaignId + '/' + asset.file)
+    assert.equal(expected.get(asset.id), CAMPAIGN_IMAGE_ROOT + campaignId + '/' + asset.file)
   }
   assert.equal(new Set(manifest.assets.map(asset => asset.sha256)).size, manifest.assets.length)
 }

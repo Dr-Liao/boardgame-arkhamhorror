@@ -1,0 +1,665 @@
+{
+  "schemaVersion": 1,
+  "unit": "04-a-3",
+  "profile": {
+    "id": "tfa-depth-of-yoth-heart-of-the-elders-2026-11",
+    "scope": "失落时代 04 段 The Depths of Yoth（tdoy，27 条）+ Heart of the Elders（hote，26 条）共 53 条目录记录。40 条通过逐卡实现/原语/交互/证据/合规五维验收；13 条因存量 R1 直写、同句双实现、近似未披露或未用登记原语暂不切换 verified。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为 tests/acceptance-04-a-shard3.test.mjs 及 tfa-*.test.mjs 的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 53,
+    "verified": 40,
+    "unverified": 13,
+    "unimplemented": 0,
+    "testsPassed": 152
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-04-a-shard3.test.mjs",
+      "sha256": "0081c44d9b60b7a6acd5bcc955a190201edcec73409394fa954d4db121f47d77"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tfa-depths-of-yoth.test.mjs",
+      "sha256": "8657d203c6a01fdba6d431288c21c47588690dd689197a8b327199ba7e4fc9d4"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tfa-depths-of-yoth-ending.test.mjs",
+      "sha256": "04a1102e9ac2d7a71b8394b9b2549933d652b9da4d3c504dff4c4c1f3f02855d"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tfa-heart-of-the-elders-part1.test.mjs",
+      "sha256": "eb7ab962b3a937356df73ae1d08ac170ca26844bf7f820d9aa8ea3bdb9333e0c"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tfa-heart-of-the-elders-part2.test.mjs",
+      "sha256": "460313f5da33a721ac0cb3f483eff8a2e0a64285eac71aea111dd652d5732118"
+    }
+  ],
+  "entries": [
+    {
+      "code": "04205",
+      "name": "久远腹地",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-heart-of-the-elders-part1.test.mjs",
+          "test": "混乱标记表沿用 04205 印刷值（含洞穴加成与中毒自动失败）"
+        }
+      ]
+    },
+    {
+      "code": "04206",
+      "name": "昆扬之口",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-heart-of-the-elders-part2.test.mjs",
+          "test": "地点符号按印刷连线（昆扬之口使用 04206 的背面「深藏其下」）"
+        }
+      ]
+    },
+    {
+      "code": "04206b",
+      "name": "昆扬之口",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard3.test.mjs",
+          "test": "04206b 昆扬之口（深藏其下）：带地图查看探索牌库顶 2 张，弃掉诡计并混洗探索牌库"
+        }
+      ]
+    },
+    {
+      "code": "04207",
+      "name": "丛林之心",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard3.test.mjs",
+          "test": "04207 丛林之心：没有双筒望远镜的瞭望员弃牌直到敌人并生成在其所在地点"
+        }
+      ]
+    },
+    {
+      "code": "04208",
+      "name": "夕阳",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard3.test.mjs",
+          "test": "04208 夕阳：背面让每位幸存调查员立即撤退"
+        }
+      ]
+    },
+    {
+      "code": "04209",
+      "name": "研究图案",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-heart-of-the-elders-part1.test.mjs",
+          "test": "印刷遭遇牌分區：04102 与 04209b 不进遭遇牌库"
+        }
+      ]
+    },
+    {
+      "code": "04209b",
+      "name": "羽翼蛇族",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-heart-of-the-elders-part1.test.mjs",
+          "test": "印刷遭遇牌分區：04102 与 04209b 不进遭遇牌库"
+        }
+      ]
+    },
+    {
+      "code": "04210",
+      "name": "张开巨口",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard3.test.mjs",
+          "test": "04210 张开巨口：共同花费 1×人数线索放置石柱标记，第 6 个后推进到结局 1"
+        }
+      ]
+    },
+    {
+      "code": "04211",
+      "name": "孤独的洞穴群",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard3.test.mjs",
+          "test": "04211 孤独的洞穴群：推进时不移除地点毁灭，背面让预示者带伤出现在最远地点"
+        }
+      ]
+    },
+    {
+      "code": "04212",
+      "name": "黑暗中的眼睛",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-heart-of-the-elders-part2.test.mjs",
+          "test": "04212 黑暗中的眼睛：所在地点没有线索时可以探索"
+        }
+      ]
+    },
+    {
+      "code": "04213",
+      "name": "失落时代的洞穴",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard3.test.mjs",
+          "test": "04213 失落时代的洞穴（背面）：没带粉笔时每个地点 +1 线索，并把侦查员所在地点洗回探索牌库"
+        }
+      ]
+    },
+    {
+      "code": "04214",
+      "name": "降入黑暗",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-heart-of-the-elders-part2.test.mjs",
+          "test": "04214 降入黑暗：满足条件时先询问是否推进，选「再等等」本轮不再问"
+        }
+      ]
+    },
+    {
+      "code": "04215",
+      "name": "落入陷阱",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "同一张印刷卡被上下两章各写一份实现（heartOfTheEldersPart1/behavior.js#resolveEncounter vs Part2#resolvePitfall），且失败差值口径不一致（Math.max(0,…) vs Math.max(1,…)），违反「同句规则只写一次」与「口径冲突先裁决」。"
+    },
+    {
+      "code": "04216",
+      "name": "有毒孢子",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "同一轮末规则被 Part1 behavior.js#roundEnded 与 Part2#resolvePoisonousSporesEnd 各写一份，条目 04216.js 只有 flags.spores，没有唯一实现。"
+    },
+    {
+      "code": "04217",
+      "name": "错时林地",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard3.test.mjs",
+          "test": "04217 错时林地：花 2 个行动把胜利区带复仇的非精英卡放进遭遇弃牌堆（每场游戏一次）"
+        }
+      ]
+    },
+    {
+      "code": "04218",
+      "name": "石板祭坛",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-heart-of-the-elders-part1.test.mjs",
+          "test": "04218 石板祭坛：日志用中文标记名，不暴露内部 id"
+        }
+      ]
+    },
+    {
+      "code": "04219",
+      "name": "绝命噬藤",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard3.test.mjs",
+          "test": "04219 绝命噬藤：借机攻击后没有折叠小刀就失去所有行动并结束回合"
+        }
+      ]
+    },
+    {
+      "code": "04220",
+      "name": "蛇怪",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "近似未披露：实现额外要求「场上有蛇怪」，卡面没有该前置条件，且 audit/tfa-migration.json 的 remaining 未登记。"
+    },
+    {
+      "code": "04221",
+      "name": "蚁群缠身",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard3.test.mjs",
+          "test": "04221 蚁群缠身：敏捷(4)失败每低于难度 1 点随机弃手牌或选择弃游戏区卡牌"
+        }
+      ]
+    },
+    {
+      "code": "04222",
+      "name": "宽阔步道",
+      "type": "location",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：locationRule.beforeExplore 内 `inv.actionsLeft -= 1`（存量基线）。"
+    },
+    {
+      "code": "04223",
+      "name": "崇拜礼堂",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard3.test.mjs",
+          "test": "04223 崇拜礼堂：探索成功入场后按「伊格之怒」勾数抽 0／1／2 张遭遇"
+        }
+      ]
+    },
+    {
+      "code": "04224",
+      "name": "漆黑洞窟",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-heart-of-the-elders-part2.test.mjs",
+          "test": "04224 漆黑洞窟由卡牌直接放置时也触发入场强制效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-heart-of-the-elders-part2.test.mjs",
+          "test": "04224 漆黑洞窟：全队没地图才加线索，每次入场重新结算"
+        }
+      ]
+    },
+    {
+      "code": "04225",
+      "name": "危险峡谷",
+      "type": "location",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：locationRule.afterTest 内写 `location.doom`（存量基线）。"
+    },
+    {
+      "code": "04226",
+      "name": "晶体柱群",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard3.test.mjs",
+          "test": "04226 晶体柱群：进入后检定意志(1+胜利区复仇)，失败受到 1 伤害和 1 恐惧"
+        }
+      ]
+    },
+    {
+      "code": "04227",
+      "name": "深入幽嘶",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-heart-of-the-elders-part2.test.mjs",
+          "test": "04227 深入幽嘶由卡牌直接放置时要求调查员选择毁灭或抽牌"
+        }
+      ]
+    },
+    {
+      "code": "04228",
+      "name": "无路可退",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard3.test.mjs",
+          "test": "04228 无路可退：附属地点不能进出，检定战斗(3)或带鹤嘴锄可弃掉"
+        }
+      ]
+    },
+    {
+      "code": "04277",
+      "name": "幽嘶深渊",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-depths-of-yoth.test.mjs",
+          "test": "04277 深度 2：每位幸存调查员获得一张基础伤势弱点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-depths-of-yoth.test.mjs",
+          "test": "04277 结局 1 深度 1：调查员在战役记录里阵亡，战役结束"
+        }
+      ]
+    },
+    {
+      "code": "04278",
+      "name": "开始下降",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard3.test.mjs",
+          "test": "04278 开始下降：密谋推进时把躲避值最高的追击敌人放到本层起点"
+        }
+      ]
+    },
+    {
+      "code": "04279",
+      "name": "恐惧渐生",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：agendaRule.onReveal 写 `state.scenarioFlags.collectedAStrangeLiquid`（存量基线）。"
+    },
+    {
+      "code": "04280",
+      "name": "无尽洞窟",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-depths-of-yoth.test.mjs",
+          "test": "04284 目标是「每位调查员被击败」；04280 侦查员自己选战斗或敏捷"
+        }
+      ]
+    },
+    {
+      "code": "04281",
+      "name": "血色城市",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：agendaRule.onReveal 写 `zones.pursuit` / 删除 `zones.harbingerAside`（存量基线）。"
+    },
+    {
+      "code": "04282",
+      "name": "撼地之怒",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：agendaRule 写 `zones.setAside` 与 `flags.furyDoom*`（存量基线）。"
+    },
+    {
+      "code": "04283",
+      "name": "赤红深渊",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：agendaRule.onReveal 写 `state.scenarioFlags.redDepthsOngoing` 与 `state.scenarioZones.pursuitReminders`（存量基线）。"
+    },
+    {
+      "code": "04284",
+      "name": "复仇",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-depths-of-yoth.test.mjs",
+          "test": "04284 复仇：神话「检查毁灭阈值」后按场上毁灭数追加遭遇"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-depths-of-yoth.test.mjs",
+          "test": "04284 目标是「每位调查员被击败」；04280 侦查员自己选战斗或敏捷"
+        }
+      ]
+    },
+    {
+      "code": "04285",
+      "name": "前往联结点",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-depths-of-yoth.test.mjs",
+          "test": "04285 探索只能放置与当前地点相连的地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-depths-of-yoth.test.mjs",
+          "test": "04285 背面：深度 +1，留下没跟上的人，敌人进追击区，换一层楼继续下降"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-depths-of-yoth.test.mjs",
+          "test": "探索限制：所在地点还有线索时不能探索（04285 的行动）"
+        }
+      ]
+    },
+    {
+      "code": "04286",
+      "name": "幽嘶的阶梯",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-depths-of-yoth.test.mjs",
+          "test": "04286 幽嘶的阶梯：可选反应，划不掉绳索就不加深度"
+        }
+      ]
+    },
+    {
+      "code": "04287",
+      "name": "万蛇之城",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-depths-of-yoth.test.mjs",
+          "test": "04287/04288 视同胜利区：计入 04292 帷幕与旧神标记"
+        }
+      ]
+    },
+    {
+      "code": "04288",
+      "name": "异端教堂",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-depths-of-yoth.test.mjs",
+          "test": "04287/04288 视同胜利区：计入 04292 帷幕与旧神标记"
+        }
+      ]
+    },
+    {
+      "code": "04289",
+      "name": "岌岌可危的悬崖",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-depths-of-yoth.test.mjs",
+          "test": "04289 岌岌可危的悬崖：三次失败 = 阵亡并写进战役记录"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-depths-of-yoth.test.mjs",
+          "test": "04289 真实引擎：三次失败 → 坠崖身亡且不放置地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-depths-of-yoth.test.mjs",
+          "test": "04289 真实引擎：检定通过 → 同一次探索继续，行动只付一次"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tfa-depths-of-yoth.test.mjs",
+          "test": "04289 真实引擎：首项失败 → 继续第二项，成功后恢复探索"
+        }
+      ]
+    },
+    {
+      "code": "04290",
+      "name": "幽嘶洞群",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard3.test.mjs",
+          "test": "04290 幽嘶洞群：入场后按当前深度等级放置线索"
+        }
+      ]
+    },
+    {
+      "code": "04291",
+      "name": "分岔路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard3.test.mjs",
+          "test": "04291 分岔路：带地图探索时继续抽到两处连接地点并选择移动"
+        }
+      ]
+    },
+    {
+      "code": "04292",
+      "name": "横跨恩凯之桥",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-depths-of-yoth.test.mjs",
+          "test": "04287/04288 视同胜利区：计入 04292 帷幕与旧神标记"
+        }
+      ]
+    },
+    {
+      "code": "04293",
+      "name": "坍塌的通道",
+      "type": "location",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：locationRule.beforeExplore 写 `location.doom`（存量基线）。"
+    },
+    {
+      "code": "04294",
+      "name": "被遗弃的仪式场所",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-depths-of-yoth.test.mjs",
+          "test": "04295 光耀峡谷：没有双筒望远镜不显示行动；04294 帷幕按深度显示"
+        }
+      ]
+    },
+    {
+      "code": "04295",
+      "name": "光耀峡谷",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-depths-of-yoth.test.mjs",
+          "test": "04295 光耀峡谷：没有双筒望远镜不显示行动；04294 帷幕按深度显示"
+        }
+      ]
+    },
+    {
+      "code": "04296",
+      "name": "伊格",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-depths-of-yoth.test.mjs",
+          "test": "04296 伊格光环：其他蛇族获得警戒/反击，离开后还原"
+        }
+      ]
+    },
+    {
+      "code": "04297",
+      "name": "深坑守卫",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard3.test.mjs",
+          "test": "04297 深坑守卫：伊格在场时生成在伊格所在地点，否则放入追击区域"
+        }
+      ]
+    },
+    {
+      "code": "04298",
+      "name": "深渊吞噬者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard3.test.mjs",
+          "test": "04298 深渊吞噬者：随机一处放在一边的地点入场并在那里生成，躲避值按深度"
+        }
+      ]
+    },
+    {
+      "code": "04299",
+      "name": "瓦卢西亚之子",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "未使用已登记原语：应在密谋牌库旁使用 `state.agendaAside` / api.putNextToAgenda，实现自造 `state.scenarioZones.childrenOfValusia` 卡号数组，卡牌无实体实例、无法进入既有密谋旁卡堆 UI。"
+    },
+    {
+      "code": "04300",
+      "name": "无光之影",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard3.test.mjs",
+          "test": "04300 无光之影：显现检定敏捷(1+深度)，失败受到 2 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "04301",
+      "name": "深渊恐惧症",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard3.test.mjs",
+          "test": "04301 深渊恐惧症：显现检定意志(1+深度)，失败受到 2 点恐惧"
+        }
+      ]
+    },
+    {
+      "code": "04302",
+      "name": "蛇族的愤怒",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：encounterResolve 写 `zones` / `enemy.damageTaken` / `enemy.engagedSeat` / `inv.engaged`（存量基线）。"
+    },
+    {
+      "code": "04303",
+      "name": "古代遗物",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：free 能力 resolve 写 `state.scenarioFlags.relicOfAgesDoomSucceeded`，并以单卡私有键代替「每场游戏最多一次成功」原语（存量基线）。"
+    }
+  ]
+}

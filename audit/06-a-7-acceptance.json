@@ -1,0 +1,909 @@
+{
+  "schemaVersion": 1,
+  "unit": "06-a-7",
+  "profile": {
+    "id": "tde-point-of-no-return-2026-11",
+    "scope": "食梦者 06 段 Point of No Return（pnr，06234–06275）54 条目录记录。48 条通过五维验收；6 条因伤害状态源未接线、子句未实现或口径收窄暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 54,
+    "verified": 48,
+    "unverified": 6,
+    "unimplemented": 0,
+    "testsPassed": 418
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+      "sha256": "a3d9893ad3d468a91d183e4011f502c8ed08dc0b91ee9b4afbeb32002705505a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-scenario-pointOfNoReturn.test.mjs",
+      "sha256": "0806ef36e8a4fc501ece81b4ac95f0f92ce662bca8b7f8e9a3f00ad4501922eb"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+      "sha256": "2b4836e2e09230101f83d9ef9730aa8c57baf0a36b62b23ff6aecaa79a2b20fb"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+      "sha256": "2cb1f7184ce967e6761df0d7122862fd96d744f5740a005bfbf8766b4383ce45"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+      "sha256": "39bda187c894162c57ab8fc2684e578bdac1dbc1f11e3decfc65782095308400"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-rules.test.mjs",
+      "sha256": "682a74a0627dd5ea36463d3923dd20a4f1fb07c57740ad61d6100fdaba65c797"
+    }
+  ],
+  "entries": [
+    {
+      "code": "06234",
+      "name": "英勇救援",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "test": "TDE 06234 英勇救援 快速：代替另一位调查员承受非精英敌人的攻击，然后对其造成 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "06235",
+      "name": "领导力",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "test": "TDE 06235 领导力 投入到另一位调查员的检定时获得 [willpower][wild]"
+        }
+      ]
+    },
+    {
+      "code": "06236",
+      "name": "梦境日记",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "test": "TDE 06236 梦境日记 回合开始检索绑定卡「梦的本质」入手（研究完成门控）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06236/06237/06238 梦境日记：研究完成门控 + 跨卡条件图标 +2 + 回合开始取回「梦的本质」"
+        }
+      ]
+    },
+    {
+      "code": "06237",
+      "name": "梦境日记",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "test": "TDE 06237 梦境日记 回合开始检索绑定卡「梦的本质」入手（研究完成门控）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06236/06237/06238 梦境日记：研究完成门控 + 跨卡条件图标 +2 + 回合开始取回「梦的本质」"
+        }
+      ]
+    },
+    {
+      "code": "06238",
+      "name": "梦境日记",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "test": "TDE 06238 梦境日记 回合开始检索绑定卡「梦的本质」入手（研究完成门控）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06236/06237/06238 梦境日记：研究完成门控 + 跨卡条件图标 +2 + 回合开始取回「梦的本质」"
+        }
+      ]
+    },
+    {
+      "code": "06239",
+      "name": "快手",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "test": "TDE 06239 快手 每位调查员仅限 1 张"
+        }
+      ]
+    },
+    {
+      "code": "06240",
+      "name": "虎口拔牙",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "test": "TDE 06240 虎口拔牙 作为技能卡的投入图标"
+        }
+      ]
+    },
+    {
+      "code": "06241",
+      "name": "增强自我",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "test": "TDE 06241 增强自我 横置：本次检定 +2 战斗"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06241/06242/06243 增强自我：3 张共占 1 法术槽、属性替代可忽略、[fast] 横置 +2"
+        }
+      ]
+    },
+    {
+      "code": "06242",
+      "name": "增强自我",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "test": "TDE 06242 增强自我 横置：本次检定 +2 敏捷"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06241/06242/06243 增强自我：3 张共占 1 法术槽、属性替代可忽略、[fast] 横置 +2"
+        }
+      ]
+    },
+    {
+      "code": "06243",
+      "name": "增强自我",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "test": "TDE 06243 增强自我 横置：本次检定 +2 智识"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06241/06242/06243 增强自我：3 张共占 1 法术槽、属性替代可忽略、[fast] 横置 +2"
+        }
+      ]
+    },
+    {
+      "code": "06244",
+      "name": "特薇拉·凯瑟琳·普莱斯",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "test": "TDE 06244 特薇拉 作为[[盟友]]支援入场（充能回收反应显式简化）"
+        }
+      ]
+    },
+    {
+      "code": "06245",
+      "name": "希望微光",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "test": "TDE 06245 希望微光 只能从弃牌堆打出：把弃牌堆中其余希望微光加入手牌"
+        }
+      ]
+    },
+    {
+      "code": "06246",
+      "name": "迅速撤退",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "test": "TDE 06246 迅速撤退 投入档案：+2 敏捷条件图标与「每次检定最多投入1张」"
+        }
+      ]
+    },
+    {
+      "code": "06247",
+      "name": "无归之地",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-pointOfNoReturn.test.mjs",
+          "test": "06247 章节清单：playable、参考卡、地点/幕/议程/结局数量"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06247 已验收 · scenario 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06248",
+      "name": "邪恶国度",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06248 已验收 · agenda 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06248/06249 密谋推进：邪恶国度洗回弃牌+参考卡伤害；怪物围困选择/翻回/≥5 进结局 2"
+        }
+      ]
+    },
+    {
+      "code": "06249",
+      "name": "怪物围困",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06249 已验收 · agenda 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06248/06249 密谋推进：邪恶国度洗回弃牌+参考卡伤害；怪物围困选择/翻回/≥5 进结局 2"
+        }
+      ]
+    },
+    {
+      "code": "06250",
+      "name": "进入地下世界(版本一)",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06250 已验收 · act 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06250/06251 进入地下世界 v.I/v.II：山谷地点入场、遭遇组移出/洗入、v.II 交出皮克曼"
+        }
+      ]
+    },
+    {
+      "code": "06251",
+      "name": "进入地下世界(版本二)",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "背面「本局剩余时间，若理查德·厄普顿·皮克曼离场，将其移出游戏」未实现：条目 flags.removeStoryAssetOnLeave 与 definition 同名字段均无读点；behavior 只写无读点的 flags.pickmanRemovedOnLeave；06266 无 removeFromGameOnLeave → 通用支援离场不会移出游戏。其余子句正确。"
+    },
+    {
+      "code": "06252",
+      "name": "深入",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06252 已验收 · act 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06252/06253 深入/无边黑暗：深海地点入场+洗入组；无边黑暗推进→结局 1"
+        }
+      ]
+    },
+    {
+      "code": "06253",
+      "name": "无边黑暗",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06253 已验收 · act 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06252/06253 深入/无边黑暗：深海地点入场+洗入组；无边黑暗推进→结局 1"
+        }
+      ]
+    },
+    {
+      "code": "06254",
+      "name": "辛之墓穴",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06254 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06254b 已验收 · story 关联面 06254"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06254/06254b 辛之墓穴 + 阴森隧道：掩藏翻面后找出[[噩妖]]横置生成并带 1 线索"
+        }
+      ]
+    },
+    {
+      "code": "06254b",
+      "name": "阴森隧道",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06254b 已验收 · story 关联面 06254"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06254/06254b 辛之墓穴 + 阴森隧道：掩藏翻面后找出[[噩妖]]横置生成并带 1 线索"
+        }
+      ]
+    },
+    {
+      "code": "06255",
+      "name": "古革巨人之城",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-pointOfNoReturn.test.mjs",
+          "test": "06255 古革巨人之城：进入后强制翻面（只翻一次）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06255 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06255b 已验收 · story 关联面 06255"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06255/06255b 古革巨人之城 + 岗哨：进入强制翻面；生成哨兵并敏捷(3)决定横置/交战"
+        }
+      ]
+    },
+    {
+      "code": "06255b",
+      "name": "岗哨",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06255b 已验收 · story 关联面 06255"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06255/06255b 古革巨人之城 + 岗哨：进入强制翻面；生成哨兵并敏捷(3)决定横置/交战"
+        }
+      ]
+    },
+    {
+      "code": "06256",
+      "name": "卡斯之塔",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-pointOfNoReturn.test.mjs",
+          "test": "06256 卡斯之塔：战斗(5)检定成功翻面；已翻面只给 used 提示"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06256 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06256b 已验收 · story 关联面 06256"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06256/06256b 卡斯之塔 + 另一条路：战斗(5)翻面，揭示魔幻森林并记录战役日志"
+        }
+      ]
+    },
+    {
+      "code": "06256b",
+      "name": "另一条路",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06256b 已验收 · story 关联面 06256"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06256/06256b 卡斯之塔 + 另一条路：战斗(5)翻面，揭示魔幻森林并记录战役日志"
+        }
+      ]
+    },
+    {
+      "code": "06257",
+      "name": "食尸鬼平原",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06257 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06257b 已验收 · story 关联面 06257"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06257/06257b 食尸鬼平原 + 诡异食尸鬼：古革生成改道/禁入；线索门槛不足翻回、足够推进"
+        }
+      ]
+    },
+    {
+      "code": "06257b",
+      "name": "诡异食尸鬼",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06257b 已验收 · story 关联面 06257"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06257/06257b 食尸鬼平原 + 诡异食尸鬼：古革生成改道/禁入；线索门槛不足翻回、足够推进"
+        }
+      ]
+    },
+    {
+      "code": "06258",
+      "name": "食尸鬼峭壁",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06258 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06258b 已验收 · story 关联面 06258"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06258/06258b 食尸鬼峭壁 + 探查山谷：首张诡计涌动；查看遭遇牌库顶并忽略本地点文本"
+        }
+      ]
+    },
+    {
+      "code": "06258b",
+      "name": "探查山谷",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06258b 已验收 · story 关联面 06258"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06258/06258b 食尸鬼峭壁 + 探查山谷：首张诡计涌动；查看遭遇牌库顶并忽略本地点文本"
+        }
+      ]
+    },
+    {
+      "code": "06259",
+      "name": "骸骨之海",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-pointOfNoReturn.test.mjs",
+          "test": "06259 骸骨之海：发现线索后强制翻面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06259 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06259b 已验收 · story 关联面 06259"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06259/06259b 骸骨之海 + 下方之物：发现线索翻面；附属巨噬蠕虫隧道并拉来巨噬蠕虫"
+        }
+      ]
+    },
+    {
+      "code": "06259b",
+      "name": "下方之物",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06259b 已验收 · story 关联面 06259"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06259/06259b 骸骨之海 + 下方之物：发现线索翻面；附属巨噬蠕虫隧道并拉来巨噬蠕虫"
+        }
+      ]
+    },
+    {
+      "code": "06260",
+      "name": "撒克山峰",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-pointOfNoReturn.test.mjs",
+          "test": "06260 撒克山峰：离开检定敏捷(2)，失败受到 1 点伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06260 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06260b 已验收 · story 关联面 06260"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06260/06260b 撒克山峰 + 山谷住民：攀登翻面、离开检定、生成夜魇/抽牌/放线索"
+        }
+      ]
+    },
+    {
+      "code": "06260b",
+      "name": "山谷住民",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06260b 已验收 · story 关联面 06260"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06260/06260b 撒克山峰 + 山谷住民：攀登翻面、离开检定、生成夜魇/抽牌/放线索"
+        }
+      ]
+    },
+    {
+      "code": "06261",
+      "name": "潘斯山谷",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06261 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06261b 已验收 · story 关联面 06261"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06261/06261b 潘斯山谷 + 逃生之路：仍有线索时禁止打出/投入；团队线索门槛后推进"
+        }
+      ]
+    },
+    {
+      "code": "06261b",
+      "name": "逃生之路",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06261b 已验收 · story 关联面 06261"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06261/06261b 潘斯山谷 + 逃生之路：仍有线索时禁止打出/投入；团队线索门槛后推进"
+        }
+      ]
+    },
+    {
+      "code": "06262",
+      "name": "漆黑之海",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06262 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06262b 已验收 · story 关联面 06262"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06262/06262b 漆黑之海 + 蛛群之海：帷幕 = 参考卡伤害；弃到蜘蛛生成并带线索"
+        }
+      ]
+    },
+    {
+      "code": "06262b",
+      "name": "蛛群之海",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06262b 已验收 · story 关联面 06262"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06262/06262b 漆黑之海 + 蛛群之海：帷幕 = 参考卡伤害；弃到蜘蛛生成并带线索"
+        }
+      ]
+    },
+    {
+      "code": "06263",
+      "name": "漆黑之海",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06263 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06263b 已验收 · story 关联面 06263"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06263/06263b 漆黑之海 + 平静海面：帷幕 X；查看另一张漆黑之海的背面"
+        }
+      ]
+    },
+    {
+      "code": "06263b",
+      "name": "平静海面",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06263b 已验收 · story 关联面 06263"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06263/06263b 漆黑之海 + 平静海面：帷幕 X；查看另一张漆黑之海的背面"
+        }
+      ]
+    },
+    {
+      "code": "06264",
+      "name": "漆黑之海",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06264 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06264b 已验收 · story 关联面 06264"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06264/06264b 漆黑之海 + 起伏的漩涡：线索原样收回再平均分配、位置重洗、可再翻面"
+        }
+      ]
+    },
+    {
+      "code": "06264b",
+      "name": "起伏的漩涡",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06264b 已验收 · story 关联面 06264"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06264/06264b 漆黑之海 + 起伏的漩涡：线索原样收回再平均分配、位置重洗、可再翻面"
+        }
+      ]
+    },
+    {
+      "code": "06265",
+      "name": "漆黑之海",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06265 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06265b 已验收 · story 关联面 06265"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06265/06265b 漆黑之海 + 大海中央：团队线索门槛；足够时共同花费并推进"
+        }
+      ]
+    },
+    {
+      "code": "06265b",
+      "name": "大海中央",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06265b 已验收 · story 关联面 06265"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06265/06265b 漆黑之海 + 大海中央：团队线索门槛；足够时共同花费并推进"
+        }
+      ]
+    },
+    {
+      "code": "06266",
+      "name": "理查德·厄普顿·皮克曼",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-pointOfNoReturn.test.mjs",
+          "test": "06266 皮克曼 / 剧情支援：附属食尸鬼与基础战斗 5 的规则数据"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-pointOfNoReturn.test.mjs",
+          "test": "06266 皮克曼：章节行为提供 [fast] 附属食尸鬼与 [action] 基础战斗攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06266 已验收 · asset 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06267",
+      "name": "古革哨兵",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-pointOfNoReturn.test.mjs",
+          "test": "06267 古革哨兵：横置后重整 → 所在地点每位调查员 1 点恐惧；healthPerPlayerBonus 声明"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06267 已验收 · enemy 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06268",
+      "name": "鲜血的滋味",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「把 1 个你的线索放到最近的敌人上」被收窄：nearestEnemy 只查同地点/直接相邻，最近敌人 ≥2 条连接时该选项被错误过滤（未披露近似）。"
+    },
+    {
+      "code": "06269",
+      "name": "夺命猛火",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-pointOfNoReturn.test.mjs",
+          "test": "06269 夺命猛火：每人失 1 资源；山谷/深海弃牌；深海再失 1 行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06269 已验收 · treachery 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06270",
+      "name": "意外伏击",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「失败时最近的敌人重整、逐地点移动直到你的地点并交战」只在敌人同地点/相邻时结算，≥2 条连接时整段静默不执行（未披露近似）。"
+    },
+    {
+      "code": "06271",
+      "name": "滑行的巨噬蠕虫",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06271 已验收 · enemy 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06271 滑行的巨噬蠕虫：生成点=最近隧道地点、失败洗回+涌动、移动时隧道地点互相连接"
+        }
+      ]
+    },
+    {
+      "code": "06272",
+      "name": "巨噬蠕虫隧道",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「附属到与最近的巨噬蠕虫隧道之间连接次数至少为 2 的地点（否则附属到你所在地点）」；实现按「离调查员所在地点 ≥2」筛选，距离口径错误 → 可能选到紧邻最近隧道的地点或错误退回调查员所在地点。"
+    },
+    {
+      "code": "06273",
+      "name": "漆黑蜘蛛",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「蜂拥 X。X 为冒险参考卡牌上的伤害数量」未接线：swarmingXFromState('scenarioDamage') 读 state.scenarioFlags.referenceDamage，而本章权威计数在 state.markerCounts.reference（chaos.js#referenceDamage），全仓无 scenarioFlags.referenceDamage 写点 → 实际 X 恒 0（不放置蜂拥卡）。其余子句（生成点、伤害/恐惧二选一）正确。"
+    },
+    {
+      "code": "06274",
+      "name": "阿特拉克·纳克亚之影",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷「本剧本参考卡上每有 1 点伤害，本次检定难度 +1」未接线：条目读无写点的 state.scenarioFlags.referenceDamage，实际难度恒为 2；本章权威计数为 markerCounts.reference。失败惩罚（1 伤害 + 1 恐惧）正确。"
+    },
+    {
+      "code": "06275",
+      "name": "卡达斯",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-pointOfNoReturn.test.mjs",
+          "test": "06275 卡达斯：弱点标记（任意技能 2+人数难度、成功移出游戏）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06275 已验收 · treachery 卡文与关卡定义"
+        }
+      ]
+    }
+  ]
+}

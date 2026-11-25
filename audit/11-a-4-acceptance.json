@@ -1,0 +1,645 @@
+{
+  "schemaVersion": 1,
+  "unit": "11-a-4",
+  "profile": {
+    "id": "tdc-campaign-a-2026-11",
+    "scope": "沉没之城 11 段 tdcc 战役卡（11501–11538）43 条目录记录。36 条通过五维验收；7 条声明字段无读点（声明即接线债务）暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 43,
+    "verified": 36,
+    "unverified": 7,
+    "unimplemented": 0,
+    "testsPassed": 185
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+      "sha256": "cb7257b317b1787466a28344d3766a7a2f776087b73bc09cec85fbd96e4ebdfb"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-scenario-oneLastJob.test.mjs",
+      "sha256": "00ebbda3a8d3d11bda7ec04ffcd8aeb5f1a47afc8f6970c175b60a7fedf323e4"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-scenario-theWesternWall.test.mjs",
+      "sha256": "1432e911ecc0cf2e63dbdf2a3b37ab5e0ceb25508811ec2597f93c15d6c45ad9"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-scenario-theDrownedQuarter.test.mjs",
+      "sha256": "f7d7fc9606975f6d2eb1acbc54224c669e1bdec16dc8fd20638bd9f3fb6b4af7"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-p7-scenario-integrity.test.mjs",
+      "sha256": "e98da7ef14fa3bcec9a7dabec85340e668d11e836a6f53f7a35c08c184dee61e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-p7-scenario-lifecycle.test.mjs",
+      "sha256": "127798e3b82c2a94dd6c5141e5b8a2f50f806aacdecfe0b29e89ae3c49fa2afb"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-p7-campaign-registration.test.mjs",
+      "sha256": "0f17e8840f4830a9e459203aba9801a8985a57419bb5e77811671a9303873ada"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-rules.test.mjs",
+      "sha256": "541471492f102ef04f00c249498d1f4cd93173e554068f3cf86c1e1c26991e7b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-primitives.test.mjs",
+      "sha256": "c152d8c4f1e738adc1b1f75ac78ddfaa26012a91ed060d4a7132987df99e397b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+      "sha256": "25466d3868f2e9af5f0b6a9846202b4c7c60d1fb54994b4b60dc69611e2b1abf"
+    }
+  ],
+  "entries": [
+    {
+      "code": "11501",
+      "name": "金盆洗手",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11501 金盆洗手提示卡：skull 按场上罪犯数（困难 +1）、tablet 同地点罪犯 -4、elder_thing 失败弃 3 张"
+        }
+      ]
+    },
+    {
+      "code": "11502",
+      "name": "阿卡姆夜生活",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11502 阿卡姆夜生活：最后线索后弃遭遇顶 3 张并把罪犯敌人放到最近空地点"
+        }
+      ]
+    },
+    {
+      "code": "11503",
+      "name": "漫漫长夜",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11503 漫漫长夜：同模板反应（仅最后线索触发）且背面由 agendaReveal 结算"
+        }
+      ]
+    },
+    {
+      "code": "11504",
+      "name": "盘问帮派",
+      "type": "act",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "[pending] 声明即接线缺口：flags.parley.clueOnAct = 1 在全仓库没有读点（behavior.parleyAction 直接硬编码「幕上 +1 线索」）；效果可用但声明字段未被读取，改数值不会改变行为。"
+    },
+    {
+      "code": "11504b",
+      "name": "希布的路边酒馆",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11504b 希布的路边酒馆：显现入场、生成萨迪并把幕 2a/3a 加入幕牌库后推进"
+        }
+      ]
+    },
+    {
+      "code": "11505",
+      "name": "盘问帮派",
+      "type": "act",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "[pending] 同 11504：flags.parley.clueOnAct = 1 无读点，behavior.parleyAction 硬编码 +1 线索。"
+    },
+    {
+      "code": "11505b",
+      "name": "美月酒廊",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11505b 美月酒廊：显现入场、生成内奥米并把幕 2a/3a 加入幕牌库后推进"
+        }
+      ]
+    },
+    {
+      "code": "11506",
+      "name": "谢尔顿帮",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11506 谢尔顿帮：幕 2 头目谈判目标推进；背面生成欧巴尼恩帮+执行者并把线索移给非精英罪犯"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-oneLastJob.test.mjs",
+          "test": "P7 oneLastJob 11506/11507 冷漠同步：phaseBegan/enemySpawned 按线索有无续期"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-oneLastJob.test.mjs",
+          "test": "P7 oneLastJob 11506/11507 幕 2 背面：转移至多 2 个线索到非精英敌人 + 有线索罪犯敌人冷漠同步"
+        }
+      ]
+    },
+    {
+      "code": "11507",
+      "name": "欧巴尼恩帮",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11507 欧巴尼恩帮：幕 2 同构（内奥米线）背面生成谢尔顿帮并同步冷漠"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-oneLastJob.test.mjs",
+          "test": "P7 oneLastJob 11506/11507 冷漠同步：phaseBegan/enemySpawned 按线索有无续期"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-oneLastJob.test.mjs",
+          "test": "P7 oneLastJob 11506/11507 幕 2 背面：转移至多 2 个线索到非精英敌人 + 有线索罪犯敌人冷漠同步"
+        }
+      ]
+    },
+    {
+      "code": "11508",
+      "name": "面对后果",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11508 面对后果：幕 3 目标（胜利区精英）推进；有线索罪犯敌人获得冷漠"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-oneLastJob.test.mjs",
+          "test": "P7 oneLastJob 11508 面对后果：谈判移除线索让该敌人把伤害值造成给同地点另一敌人"
+        }
+      ]
+    },
+    {
+      "code": "11509",
+      "name": "蒂林哈斯特密所",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11509 蒂林哈斯特密所：起始地点与外星语言团队行动（花费 1/人线索记录到剧本日志）"
+        }
+      ]
+    },
+    {
+      "code": "11510",
+      "name": "萨迪·谢尔顿",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11510 萨迪·谢尔顿：+1 生命/人、每点伤害 +1 战斗（最多 +3）、反击且不能移动"
+        }
+      ]
+    },
+    {
+      "code": "11511",
+      "name": "内奥米·欧巴尼恩",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11511 内奥米·欧巴尼恩：每轮首次被成功躲避后重整；同地点调查员可受 1 伤害取消"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-oneLastJob.test.mjs",
+          "test": "P7 oneLastJob 第二轮接线：11511 首次被躲避后重整，同地点调查员可受 1 伤害取消"
+        }
+      ]
+    },
+    {
+      "code": "11512",
+      "name": "帮派士兵",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11512 帮派士兵：印刷战斗 2/躲避 2/生命 2/伤害 1，特性 Criminal/Syndicate"
+        }
+      ]
+    },
+    {
+      "code": "11513",
+      "name": "帮派执行者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11513 帮派执行者：猎手/猎物=线索最多；同地点攻击另一罪犯后重整并攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-oneLastJob.test.mjs",
+          "test": "P7 oneLastJob 第二轮接线：11513 执行者每轮强制、11514 线人生成与发现线索代价、头目 immobile/retaliate/alert"
+        }
+      ]
+    },
+    {
+      "code": "11514",
+      "name": "帮派线人",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11514 帮派线人：发现线索后必须花 3 资源或放 1 毁灭"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-oneLastJob.test.mjs",
+          "test": "P7 oneLastJob 11514 帮派线人生成：无图距离原语时本地 BFS 仍取最近的有线索[[阿卡姆]]地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-oneLastJob.test.mjs",
+          "test": "P7 oneLastJob 第二轮接线：11513 执行者每轮强制、11514 线人生成与发现线索代价、头目 immobile/retaliate/alert"
+        }
+      ]
+    },
+    {
+      "code": "11515",
+      "name": "卷入交火",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11515 卷入交火：罪犯敌人受伤时强制检定，失败伤害 -1 并受 1 直接伤害后弃卡"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-oneLastJob.test.mjs",
+          "test": "P7 oneLastJob 11515 卷入交火：失败减 1 伤害 + 1 直接伤害 + 弃卡；成功不减"
+        }
+      ]
+    },
+    {
+      "code": "11516",
+      "name": "谈判破裂",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11516 谈判破裂：显现附属到最近罪犯敌人（无目标涌动）；谈判后附属敌人攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-oneLastJob.test.mjs",
+          "test": "P7 oneLastJob 11516 谈判破裂：附属最近罪犯敌人 / 无目标涌动 / 谈判后攻击 / 意志行动弃卡"
+        }
+      ]
+    },
+    {
+      "code": "11517",
+      "name": "西墙",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11517 西墙提示卡：skull = 层级（困难 +2）、cultist 完全淹没受伤、elder_thing 完全淹没 -5"
+        }
+      ]
+    },
+    {
+      "code": "11518",
+      "name": "淹没的道路",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11518 淹没的道路：毁灭阈值 13、盖住的空气规则（5 直接伤害）、背面全员被击败+1 精神创伤"
+        }
+      ]
+    },
+    {
+      "code": "11519",
+      "name": "下潜深渊",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11519 下潜深渊：行动降低淹没；目标全员到黑曜石地基后可推进"
+        }
+      ]
+    },
+    {
+      "code": "11520",
+      "name": "攀上高墙",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11520 攀上高墙：同构行动；目标全员到西墙后可推进"
+        }
+      ]
+    },
+    {
+      "code": "11521",
+      "name": "险恶道路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11521 险恶道路 Slick Steps：从上方进入受 1 伤害、从下方进入受 1 恐惧；有线索不能进入"
+        }
+      ]
+    },
+    {
+      "code": "11522",
+      "name": "险恶道路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11522 险恶道路 Eroded Shelf：进入时敏捷(层级) 失败受 1 伤害并提高淹没"
+        }
+      ]
+    },
+    {
+      "code": "11523",
+      "name": "险恶道路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11523 险恶道路 Precarious Climb：失败受 1 恐惧并提高淹没"
+        }
+      ]
+    },
+    {
+      "code": "11524",
+      "name": "险恶道路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11524 险恶道路 Deadly Pass：失败提高淹没；不能再提高时选择弃掉自己控制的一张盟友"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theWesternWall.test.mjs",
+          "test": "P7 theWesternWall 11524 致命通道：淹没无法提高时由玩家选择弃掉自己控制的[[盟友]]支援"
+        }
+      ]
+    },
+    {
+      "code": "11525",
+      "name": "险恶道路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11525 险恶道路 Shallow Den：揭示后生成横置珊瑚星之眷族，下个补给阶段不重整"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theWesternWall.test.mjs",
+          "test": "P7 theWesternWall 第二轮阶段2：11525 珊瑚星之眷族调用 preventEnemyReadyNextUpkeep，11535 敌军阶段末用 placeDoomOnCard"
+        }
+      ]
+    },
+    {
+      "code": "11526",
+      "name": "沉没阶梯",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11526 沉没阶梯：揭示后把水下秘库放进上/下一行"
+        }
+      ]
+    },
+    {
+      "code": "11527",
+      "name": "淹没棚屋",
+      "type": "location",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "[pending] 声明即接线缺口：flags.deepOneMovingConnectsFlooded 无读点；behavior.enemyConnections 直接按 Deep One 特性 + 完全淹没硬编码实现（功能正确、声明死字段）。"
+    },
+    {
+      "code": "11528",
+      "name": "破碎遗迹[tdc_rune_v]",
+      "type": "location",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "[pending] 声明即接线缺口：glyphAction.requiresNotFlooded 无读点；behavior.locationGlyphAction 用 waterLevel > 0 硬编码判断。符文 V 翻译记录功能正确。"
+    },
+    {
+      "code": "11529",
+      "name": "黑曜石地基",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11529 黑曜石地基：智力(3) 成功抽取放在一边的海底壁画"
+        }
+      ]
+    },
+    {
+      "code": "11530",
+      "name": "西墙",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11530 西墙：[action][action] 抽 3 张（每场游戏限一次）"
+        }
+      ]
+    },
+    {
+      "code": "11531",
+      "name": "海底壁画[tdc_rune_w]",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11531 海底壁画：显现附属地点且不能取消/不能离场；行动两次检定成功翻面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11531b 海底壁画剧情面：符文 W（寄生虫）翻译并加入胜利区"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theWesternWall.test.mjs",
+          "test": "P7 theWesternWall 11531 海底壁画不能离场：条目声明 cannotLeavePlay、背面 11531b 不声明"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：弱点敌人不能进入开阔天空、遭遇附属不能离场、额外巡逻与放一边接管（11641/11531/11706/11549）"
+        }
+      ]
+    },
+    {
+      "code": "11531b",
+      "name": "海底壁画[tdc_rune_w]",
+      "type": "story",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "[pending] 声明即接线缺口：flags.storyOf 无读点（故事面与正面的关联由 behavior.friezeFlipAction 用固定 11531b 硬编码）；符文 W 翻译/加入胜利区的效果本身已实现。"
+    },
+    {
+      "code": "11532",
+      "name": "水下秘库[tdc_rune_z]",
+      "type": "location",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "[pending] 声明即接线缺口：flags.cannotFlipAgain 无读点——引擎 locations.js:192 读的是地点实例 loc.cannotFlipAgain，behavior.vaultFlipAction 只写 here.flipped 与 twwVaultFlipped，从不写 loc.cannotFlipAgain；实际防重翻由 twwVaultFlipped 承担。"
+    },
+    {
+      "code": "11532b",
+      "name": "水下秘库[tdc_rune_z]",
+      "type": "story",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "[pending] 声明即接线缺口：flags.storyOf 无读点（同 11531b）；翻回地点面由 behavior.vaultFlipAction 写 here.flipped + twwVaultFlipped 实现。"
+    },
+    {
+      "code": "11533",
+      "name": "深潜者主母",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11533 深潜者主母：猎手；进场搜索遭遇牌库/弃牌堆生成一名深潜者"
+        }
+      ]
+    },
+    {
+      "code": "11534",
+      "name": "“小心！”",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11534 “小心！”：显现检定失败入威胁区；每轮首次进入淹没地点受 1 恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theWesternWall.test.mjs",
+          "test": "P7 theWesternWall 第二轮接线：11535 敌军阶段末放毁灭弃自身、11534 失败入威胁区并按轮恐惧"
+        }
+      ]
+    },
+    {
+      "code": "11535",
+      "name": "猎食寄生虫",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11535 猎食寄生虫：敌军阶段结束时领队在一张玩家卡上放 1 毁灭后弃掉自身"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theWesternWall.test.mjs",
+          "test": "P7 theWesternWall 11535 猎食寄生虫：敌军阶段末由领队选择所在地点的一张玩家卡放毁灭"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theWesternWall.test.mjs",
+          "test": "P7 theWesternWall 第二轮接线：11535 敌军阶段末放毁灭弃自身、11534 失败入威胁区并按轮恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theWesternWall.test.mjs",
+          "test": "P7 theWesternWall 第二轮阶段2：11525 珊瑚星之眷族调用 preventEnemyReadyNextUpkeep，11535 敌军阶段末用 placeDoomOnCard"
+        }
+      ]
+    },
+    {
+      "code": "11536",
+      "name": "淹没城区",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11536 淹没城区提示卡：skull = 已揭示地点一半（困难全数）、cultist 完全淹没受伤"
+        }
+      ]
+    },
+    {
+      "code": "11537",
+      "name": "沉没遗迹",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11537 沉没遗迹：挣扎呼吸空气规则（5 直接伤害）由剧本机制读点承接"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11537b 海底利维坦：+3 生命/人、生成于屏障核心、敌军阶段开始若重整提高淹没"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11538 崩塌圆顶：挣扎呼吸空气同 11537；背面全员被击败+1 肉体创伤并进入无结局"
+        }
+      ]
+    },
+    {
+      "code": "11537b",
+      "name": "海底利维坦",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11537b 海底利维坦：+3 生命/人、生成于屏障核心、敌军阶段开始若重整提高淹没"
+        }
+      ]
+    },
+    {
+      "code": "11538",
+      "name": "崩塌圆顶",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11538 崩塌圆顶：挣扎呼吸空气同 11537；背面全员被击败+1 肉体创伤并进入无结局"
+        }
+      ]
+    }
+  ]
+}

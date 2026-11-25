@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { chapters } from '../content/campaigns/theScarletKeys/shared.js'
-import { campaignPlaylistId, campaignPresentation } from '../web/campaign-presentation.js'
+import { CAMPAIGN_IMAGE_ROOT, campaignPlaylistId, campaignPresentation } from '../web/campaign-presentation.js'
 import { musicTracksForPlaylist } from '../web/music-player.js'
 import { SCENARIO_MUSIC, SIDE_STORY_MUSIC } from '../web/scenario-music.js'
 
@@ -42,6 +42,6 @@ test('绯红密钥大厅、牌桌和十关插画的路径及文件校验值一�
     assert.equal(data.length, asset.bytes)
     assert.equal(createHash('sha256').update(data).digest('hex'), asset.sha256)
     assert.deepEqual([asset.width, asset.height], [1536, 1024])
-    assert.equal(expected.get(asset.id), '/mods/arkhamhorror/img/campaigns/theScarletKeys/' + asset.file)
+    assert.equal(expected.get(asset.id), CAMPAIGN_IMAGE_ROOT + 'theScarletKeys/' + asset.file)
   }
 })

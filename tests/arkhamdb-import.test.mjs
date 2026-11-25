@@ -7,6 +7,7 @@ import { handleApi } from '../src/integration/web-api.js'
 import { buildDeck, buildDeckFromList, deckBuilderData } from '../src/deck/deckbuilding.js'
 import { ALL_CARDS, INVESTIGATORS } from '../src/cards/cards-data.js'
 import { PLAYER_CARD_CODES, isCardAvailable } from '../src/deck/availability.js'
+import recommendedDeckGuides from '../src/ai/recommended-deck-guides.json' with { type: 'json' }
 import { cardCycle, factionSelectErrors } from '../web/deck-rules.js'
 import { TDC_INVESTIGATOR_CODES } from '../content/packs/tdcInvestigators/manifest.js'
 import { starterInvestigators } from '../src/deck/starter-packs.js'
@@ -128,6 +129,12 @@ test('预置推荐卡组可离线读取，且为所属循环内的合法 ArkhamD
     assert.deepEqual(buildDeckFromList(INVESTIGATORS[code], importPlan.codes, { playerPool: data.cardPool }).errors, [])
   }
   assert.equal(fetch.mock.callCount(), 0)
+  assert.equal(Object.keys(recommendedDeckGuides).length, Object.keys(recommendedDecks).length)
+  for (const [code, { id }] of Object.entries(recommendedDecks)) {
+    const guide = recommendedDeckGuides[id]
+    assert.equal(guide?.investigatorCode, code)
+    assert.match(guide.strategy, /^[^。\n]{1,299}。$/u)
+  }
 })
 
 test('在线推荐按调查员的循环搜索并跳过升级牌组和越界卡牌', async () => {

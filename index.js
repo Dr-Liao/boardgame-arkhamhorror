@@ -37,6 +37,7 @@ import {
 // 见 tests/architecture-guard.test.mjs 的「服务端模块如需复用，应由 Node 侧 import web/」）。
 import { reactionSkipPlan } from './web/reaction-preferences.js'
 import { handleApi, resourceVersion } from './src/integration/web-api.js'
+import { loadArkhamDbRecommendation, planArkhamDbRecommendation } from './src/integration/arkhamdb-recommendation.js'
 import { handleDeckLibrary } from './src/integration/deck-library.js'
 import { handleMusicLibrary } from './src/integration/music-library.js'
 import { cacheWebAsset as cacheImageAsset } from './src/integration/image-cache.js'
@@ -59,7 +60,7 @@ import {
 const LOCALIZED_CAMPAIGN_OPTIONS = {}
 
 const MOVE_FORMAT = [
-  '局外：选择调查员 hubSelectInvestigator(code)；选人先看【决策资料】的 teamSummary，优先补齐尚未覆盖的职责，不要与队友重复同一职业定位；构筑 {"action":"hubSetDeck","codes":["卡号", "卡号", ...]}，按规定尺寸提交完整清单。随后 hubConfirmDeck 抽取基础弱点并锁定牌组，最后 hubDoneSeat 确认准备。',
+  '局外：用 hubSelectInvestigator(code) 选择调查员，参考【决策资料】的 teamSummary 补齐队伍职责。起始牌组自动配好后，用 hubConfirmDeck 抽取基础弱点并锁定牌组，再用 hubDoneSeat 确认准备。打牌时可参考【决策资料】的 deckStrategy，并按实际手牌和局势调整。',
   '升级：hubPurchase(added,removed) 可以连续暂存；hubConfirmUpgrades 确认、hubCancelUpgrades 撤销；hubDoneSeat 完成。其余局外操作照抄合法列表。',
   '{"action":"<行动>"}，行动类型如下（具体可用行动见【可执行行动】列表，照抄其中的 JSON 即可）：',
   '- 回答待决选择：{"action":"choose","choiceId":"<当前选择 id>","optionId":"<合法选项 id>"}',
@@ -272,11 +273,31 @@ export default {
     return [source.uiState, source.scenario?.id, source.round, source.phase, current, seat].join(':')
   },
   validateAgentMove(state, seat, move) {
-    return ['hubAutoDeck', 'hubAutoUpgrade'].includes(move.action) ? '模型需自主提交 hubSetDeck 的 codes 或选择 hubPurchase；自动策略只作失败兜底。' : null
+    if (['hubSetDeck', 'hubAutoDeck'].includes(move.action)) return 'AI 的起始牌组由系统配置，请按当前流程确认牌组或准备席位。'
+    return move.action === 'hubAutoUpgrade' ? '请选择 hubPurchase 或保留经验；自动升级用于失败兜底。' : null
+  },
+  async agentPreferredMove(state, seat) {
+    const lane = laneClock(state, seat)
+    if (!lane.hubFlow || !['scenarioSetup', 'interlude'].includes(lane.uiState)) return null
+    const automatic = hostedLegalMoves(state, seat).find(move => move.action === 'hubAutoDeck')
+    if (!automatic) return null
+    const code = lane.investigators[laneSeatOfRoom(lane, seat)]?.code
+    if (!code) return automatic
+    try {
+      const deck = await loadArkhamDbRecommendation(code)
+      if (deck?.id) {
+        const plan = planArkhamDbRecommendation(deck, code)
+        const move = { action: 'hubSetDeck', codes: plan.codes, arkhamDbDecklistId: deck.id }
+        if (plan.ready && !plan.mismatch && !plan.errors.length && !hostedValidateMove(state, seat, move)) return move
+      }
+    } catch {
+      // ArkhamDB availability must not block game setup.
+    }
+    return automatic
   },
   agentFallback: (state, seat) => autoHubMove(state, seat, true),
   aiSlotLabel: 'AI 队友',
-  aiSlotDescription: '由 AI 扮演的调查员队友（AI 会自动分配调查员并构筑卡组）',
+  aiSlotDescription: '由 AI 扮演的调查员队友，选人后优先使用推荐卡组',
   cover: 'linear-gradient(180deg, rgba(5, 13, 18, .02), rgba(4, 9, 13, .42)), url("/mods/arkhamhorror/img/cover/hall-cover.webp") center / cover no-repeat',
   coverEmoji: '\u00a0',
   description: '克苏鲁神话合作卡牌桌游：扮演调查员，构筑卡组，与 AI 队友一起调查诡异事件、对抗古老邪神。',
@@ -294,7 +315,7 @@ export default {
         description: 'A cooperative Lovecraftian card game: play investigators, build decks, and join AI teammates to investigate strange cases and confront ancient evils.',
         tags: ['Cards', 'Cooperative', 'Cthulhu', 'Strategy'],
         aiSlotLabel: 'AI teammate',
-        aiSlotDescription: 'An AI-controlled investigator teammate (the AI assigns an investigator and builds the deck automatically)',
+        aiSlotDescription: 'An AI-controlled investigator teammate who uses a recommended starting deck when available',
         settings: {
           playerCount: {
             label: 'Number of players',

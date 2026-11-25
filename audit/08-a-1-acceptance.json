@@ -1,0 +1,809 @@
+{
+  "schemaVersion": 1,
+  "unit": "08-a-1",
+  "profile": {
+    "id": "eote-player-a-2026-11",
+    "scope": "地球边缘 08 段 eoep 调查员与玩家卡（08001–08042）46 条目录记录。45 条通过五维验收；08008 因 R1 直写暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 46,
+    "verified": 45,
+    "unverified": 1,
+    "unimplemented": 0,
+    "testsPassed": 306
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-08-a-shard1.test.mjs",
+      "sha256": "3cb5502805838f91f99f2b1c4c7444a36668b49385889957a590e29f956e7fc4"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+      "sha256": "6997bc787f0a7ccf662e8e5e4eee59613c2af8489e202bf53361ce6783b978e3"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-player-m2-2.test.mjs",
+      "sha256": "9c86eb6b3afeec8520f8c33a57fd84393cacf4e9f1be36cdf5b1e8f3b78d87db"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+      "sha256": "92735ec413693dde58e2dfbd82ebd42dc6ee4be98f1e552ba3952ddf7e153270"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+      "sha256": "736dbcbbb09fdf0d94c452ace100338257a0ee6d917f013c566c0ee92cb67ce3"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-investigator-daniela.test.mjs",
+      "sha256": "f836dde0c0eaeedf496fe307897b777c1cbb1b8597bb9b6f8cd83be233954113"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-investigator-norman.test.mjs",
+      "sha256": "b276907cb9faec2aba7c763d7e1bdfc264e38cb3dc489844e2998f2ff5eb2211"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-investigator-lily.test.mjs",
+      "sha256": "f620d1c27b8e3c21e3692a50541669de48ab161d89ab03c389fad65896e9bb91"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-investigator-monterey.test.mjs",
+      "sha256": "e3120ed45e1b036051d1e52dfd0531499301c7b46f5abc1c445a9d359e00e1ba"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-investigator-bob.test.mjs",
+      "sha256": "d98315326c1493702454e024be693110ed6372ab34882b9c23a4ed78a1ba710b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-rules.test.mjs",
+      "sha256": "21761e92e64ab38d14ded302954fddcf765e29ca215c5e2ca1c6216ed5c1d36d"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-primitives-frost.test.mjs",
+      "sha256": "29a200cd215f5ffd3654610c67b5c1415041a6886c0c3e16be27cde7dd5644bf"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-primitives-travel.test.mjs",
+      "sha256": "0faec6c9ae96e6432ce3e0179fd0b24a93890f1f999a2579c1b62dd47f904d16"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-primitives-geo.test.mjs",
+      "sha256": "0ef76e75a39d4a5e09b326280a3c197ec2b75e4a99e7f1801ea132da13f01efc"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-primitives-investigator.test.mjs",
+      "sha256": "ffa1d6ea01c2435b4421d491b82069ef7400785081e4ed6f109660c49ffd6d60"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-primitives-campaign.test.mjs",
+      "sha256": "7182c4a750b5e3e56c17544ab4bd66bcb62324d03669c74b89792a162ddae8ea"
+    },
+    {
+      "file": "games/arkhamhorror/tests/eote-primitives-flow.test.mjs",
+      "sha256": "35f33420613c354d172b23e846e442a570bd30dac3aba6410585e5a762d57be2"
+    }
+  ],
+  "entries": [
+    {
+      "code": "08001",
+      "name": "丹妮拉·雷耶丝",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard1.test.mjs",
+          "test": "08-a-1 范围：08001–08042 eoep 卡恰好 46 张（含 4 组双面演武）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-daniela.test.mjs",
+          "test": "P5 08001 攻击历史：引擎结算记账、回合结束清空"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-daniela.test.mjs",
+          "test": "P5 08001 旧印：+1；本轮被敌人攻击过则改为自动成功"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-daniela.test.mjs",
+          "test": "P5 08001 自动构筑、专属依赖与注册身份"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-daniela.test.mjs",
+          "test": "P5 08001 被攻击后反应：造成伤害或自动躲避；被取消的攻击仍触发；趁乱攻击不触发"
+        }
+      ]
+    },
+    {
+      "code": "08002",
+      "name": "机修工的扳手",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-daniela.test.mjs",
+          "test": "P5 08002 机修工的扳手：fast 强制同地点敌人攻击；动作攻击限被攻击过的敌人 +2 战斗/+1 伤害"
+        }
+      ]
+    },
+    {
+      "code": "08003",
+      "name": "黑帮暴徒",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-daniela.test.mjs",
+          "test": "P5 08003 攻击不能被取消（引擎读点）：普通敌人可取消，黑帮暴徒不可"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-daniela.test.mjs",
+          "test": "P5 08003 黑帮暴徒：弱点生成、猎手/仅丹妮拉猎物、攻击不可取消、伤害恐惧视为直接"
+        }
+      ]
+    },
+    {
+      "code": "08004",
+      "name": "诺曼·威瑟斯",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-norman.test.mjs",
+          "test": "P5 08004 强制：牌库顶揭示弱点后抽取它"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-norman.test.mjs",
+          "test": "P5 08004 旧印：+X（牌库顶费用）；可用手牌交换牌库顶"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-norman.test.mjs",
+          "test": "P5 08004 牌库顶常驻揭示、每轮一次 -1 费打出"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-norman.test.mjs",
+          "test": "P5 08004 牌库顶打出后立即重新揭示新的顶牌（P0-10 #4）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-norman.test.mjs",
+          "test": "P5 08004 自动构筑、专属依赖与注册身份"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-norman.test.mjs",
+          "test": "P5 08004 非本人回合的旧印换牌落在本人座位（P0-10 #4）"
+        }
+      ]
+    },
+    {
+      "code": "08005",
+      "name": "伊波恩之书",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-norman.test.mjs",
+          "test": "P5 08005 伊波恩之书：[fast] 横置换顶；[fast] 横置把牌库顶投入当前检定"
+        }
+      ]
+    },
+    {
+      "code": "08006",
+      "name": "预示者",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-norman.test.mjs",
+          "test": "P5 08006 预示者封锁覆盖检索与搬运，不只抽牌（P0-10 #2）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-norman.test.mjs",
+          "test": "P5 08006 预示者：揭示置于牌库顶、封锁抽牌、两行动弃置"
+        }
+      ]
+    },
+    {
+      "code": "08007",
+      "name": "蒙特雷·杰克",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-monterey.test.mjs",
+          "test": "P5 08007 回合结束：距离 0 不触发、距离 1 二选一、距离 ≥2 两项都做"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-monterey.test.mjs",
+          "test": "P5 08007 旧印：本轮移动过则获得 1 资源或抽 1 张牌；未移动只有 +1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-monterey.test.mjs",
+          "test": "P5 08007 轮初记录起始地点并经 JSON 往返"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-monterey.test.mjs",
+          "test": "P5 08007/08008/08009 专属条目注册与旧印 +1"
+        }
+      ]
+    },
+    {
+      "code": "08008",
+      "name": "可靠的长鞭",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态：条目回调里直接写 `whip.exhausted = true`（未走 ctx.api），同时被合规账本的 directStateWrite 与 singleCardField（whip.exhausted）基线命中，属 2026-11-08 检测范围扩大后登记的存量违规。行为本身（敏捷攻击/成功横置自动躲避或 +1 伤害）已实现且有测试，但按验收五维「无直写运行时状态（R1）」不通过。建议改为 `api.exhaust(whip)` 后重验。"
+    },
+    {
+      "code": "08009",
+      "name": "被埋葬的秘密",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-monterey.test.mjs",
+          "test": "P5 08007/08008/08009 专属条目注册与旧印 +1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-monterey.test.mjs",
+          "test": "P5 08009 被埋葬的秘密：威胁区、可调查地点移动锁、调查成功弃掉"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-monterey.test.mjs",
+          "test": "P5 08009 调查失败：可选 2 恐惧洗回牌库；JSON 往返保留威胁区"
+        }
+      ]
+    },
+    {
+      "code": "08010",
+      "name": "陈丽丽",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-lily.test.mjs",
+          "test": "P5 08010 Broken 面轮末反应：四组条件分别翻回或保持 Broken"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-lily.test.mjs",
+          "test": "P5 08010 存档往返：演武面与演武战役状态随 JSON 保存/读取"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-lily.test.mjs",
+          "test": "P5 08010 开局：演武以 Unbroken 面永久进场，命运重担作为专属弱点在牌组里"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-lily.test.mjs",
+          "test": "P5 08010 旧印：+2，且此次检定结束后翻回一张 Broken 演武"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-lily.test.mjs",
+          "test": "P5 08010 条目注册、双面演武卡面数据与旧印字段"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-lily.test.mjs",
+          "test": "P5 08010 构筑：默认起始演武、命运重担数量与 15 XP 门控"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-lily.test.mjs",
+          "test": "P5 08010 演武 08011a：伤害/恐惧二选一，治疗 3 点后翻至 Broken"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-lily.test.mjs",
+          "test": "P5 08010 演武 08012a：手牌少于 5 张时补到手牌 5 张并翻至 Broken"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-lily.test.mjs",
+          "test": "P5 08010 演武 08013a：+5/翻面只按本人检定结算，别人的检定不消耗（P0-10 #1）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-lily.test.mjs",
+          "test": "P5 08010 演武 08013a：下一次技能检定 +5，检定结束后翻至 Broken"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-lily.test.mjs",
+          "test": "P5 08010 演武 08013a：用完但本回合没做检定 → 轮边界标记作废、不翻面（P0-10 #1 加强）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-lily.test.mjs",
+          "test": "P5 08010 演武 08014a：fightEvade 额度在轮边界清理，不挤占下一轮普通行动（P0-10 #5）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-lily.test.mjs",
+          "test": "P5 08010 演武 08014a：至多 3 次免费战斗/躲避行动，然后翻至 Broken"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-lily.test.mjs",
+          "test": "P5 08010 轮内事件追踪：受伤/手牌 2 张/技能检定/同地点敌人分别写入 roundEvents"
+        }
+      ]
+    },
+    {
+      "code": "08011a",
+      "name": "演武",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-lily.test.mjs",
+          "test": "P5 08010 演武 08011a：伤害/恐惧二选一，治疗 3 点后翻至 Broken"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard1.test.mjs",
+          "test": "TIC·EOTE 08011b 演武·意志 Broken 面：本轮未受伤/恐惧时轮末翻回 Unbroken"
+        }
+      ]
+    },
+    {
+      "code": "08011b",
+      "name": "演武",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard1.test.mjs",
+          "test": "TIC·EOTE 08011b 演武·意志 Broken 面：本轮未受伤/恐惧时轮末翻回 Unbroken"
+        }
+      ]
+    },
+    {
+      "code": "08012a",
+      "name": "演武",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-lily.test.mjs",
+          "test": "P5 08010 演武 08012a：手牌少于 5 张时补到手牌 5 张并翻至 Broken"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard1.test.mjs",
+          "test": "TIC·EOTE 08012b 演武·智识 Broken 面：本轮手牌从未达到 2 张时轮末翻回"
+        }
+      ]
+    },
+    {
+      "code": "08012b",
+      "name": "演武",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard1.test.mjs",
+          "test": "TIC·EOTE 08012b 演武·智识 Broken 面：本轮手牌从未达到 2 张时轮末翻回"
+        }
+      ]
+    },
+    {
+      "code": "08013a",
+      "name": "演武",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-lily.test.mjs",
+          "test": "P5 08010 演武 08013a：+5/翻面只按本人检定结算，别人的检定不消耗（P0-10 #1）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-lily.test.mjs",
+          "test": "P5 08010 演武 08013a：下一次技能检定 +5，检定结束后翻至 Broken"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-lily.test.mjs",
+          "test": "P5 08010 演武 08013a：用完但本回合没做检定 → 轮边界标记作废、不翻面（P0-10 #1 加强）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard1.test.mjs",
+          "test": "TIC·EOTE 08013b 演武·战斗 Broken 面：本轮未执行技能检定时轮末翻回"
+        }
+      ]
+    },
+    {
+      "code": "08013b",
+      "name": "演武",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard1.test.mjs",
+          "test": "TIC·EOTE 08013b 演武·战斗 Broken 面：本轮未执行技能检定时轮末翻回"
+        }
+      ]
+    },
+    {
+      "code": "08014a",
+      "name": "演武",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-lily.test.mjs",
+          "test": "P5 08010 演武 08014a：fightEvade 额度在轮边界清理，不挤占下一轮普通行动（P0-10 #5）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-lily.test.mjs",
+          "test": "P5 08010 演武 08014a：至多 3 次免费战斗/躲避行动，然后翻至 Broken"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard1.test.mjs",
+          "test": "TIC·EOTE 08014b 演武·敏捷 Broken 面：本轮同地点未出现敌人时轮末翻回"
+        }
+      ]
+    },
+    {
+      "code": "08014b",
+      "name": "演武",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard1.test.mjs",
+          "test": "TIC·EOTE 08014b 演武·敏捷 Broken 面：本轮同地点未出现敌人时轮末翻回"
+        }
+      ]
+    },
+    {
+      "code": "08015",
+      "name": "命运重担",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-lily.test.mjs",
+          "test": "P5 08015 命运重担：翻演武并锁定本轮，不能翻回；另一选项 1 伤害 1 恐惧"
+        }
+      ]
+    },
+    {
+      "code": "08016",
+      "name": "鲍勃·詹金斯",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-bob.test.mjs",
+          "test": "P5 08016 JSON 往返：跨座位授权与受限行动记录可恢复"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-bob.test.mjs",
+          "test": "P5 08016 受限额外行动：只能用于代打队友 [[道具]]，普通行动不能用它"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-bob.test.mjs",
+          "test": "P5 08016 揭示授权：同地点队友手牌中的 [[道具]] 支援进入合法行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-bob.test.mjs",
+          "test": "P5 08016 条目注册与旧印：每控制 1 张 [[道具]] 支援 +1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-bob.test.mjs",
+          "test": "P5 08016 跨座位代打：资产归牌主控制，双方按分摊共同支付"
+        }
+      ]
+    },
+    {
+      "code": "08017",
+      "name": "精明的交易",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-bob.test.mjs",
+          "test": "P5 08017 精明的交易：道具费用 -1，且可置于同地点任意调查员控制下"
+        }
+      ]
+    },
+    {
+      "code": "08018",
+      "name": "贪婪",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-bob.test.mjs",
+          "test": "P5 08018 贪婪：按资源阶梯受到 1–4 点恐惧"
+        }
+      ]
+    },
+    {
+      "code": "08019",
+      "name": "全副武装",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08019 全副武装 第一回合开始：从手中打出任意张[[道具]]支援（每张 -1），本回合少 3 个行动"
+        }
+      ]
+    },
+    {
+      "code": "08020",
+      "name": "正面迎击",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08020 正面迎击 敌人先攻击你；本次攻击自动成功并造成 2 点伤害（approximation）"
+        }
+      ]
+    },
+    {
+      "code": "08021",
+      "name": "“到我身后！”",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08021 “到我身后！” 另一位调查员被攻击时改为攻击你并交战，取消 1 点恐惧（approximation）"
+        }
+      ]
+    },
+    {
+      "code": "08022",
+      "name": "成群结队",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08022 成群结队 每控制一张不同职阶的卡牌：攻击 +1[combat] 且 +1 伤害"
+        }
+      ]
+    },
+    {
+      "code": "08023",
+      "name": "扫堂腿",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08023 扫堂腿 攻击加入[agility]、+1 伤害，成功自动躲避该敌人"
+        }
+      ]
+    },
+    {
+      "code": "08024",
+      "name": "防御姿态",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08024 防御姿态 手中/投入时获得等于敏捷的战斗图标、等于战斗的敏捷图标（approximation）"
+        }
+      ]
+    },
+    {
+      "code": "08025",
+      "name": "蝴蝶对剑",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08025 蝴蝶对剑 攻击 +1[combat]；可横置再次攻击（加入[agility]，+1 伤害）"
+        }
+      ]
+    },
+    {
+      "code": "08026",
+      "name": "闪躲",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08026 闪躲 取消敌人攻击；敏捷(1)成功后对该敌人造成 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "08027",
+      "name": "战斗训练",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08027 战斗训练 沉稳：+1[combat] +1[agility]，伤害优先分配给本卡，每次检定可花 1 资源 +1"
+        }
+      ]
+    },
+    {
+      "code": "08028",
+      "name": "追猎行动",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08028 追猎行动 真实神话阶段：替代本次遭遇抽取；生成遭遇敌人并交战；击败后获得 3 资源"
+        }
+      ]
+    },
+    {
+      "code": "08029",
+      "name": "提尔斯哈之牙",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08029 提尔斯哈之牙 攻击已揭示地点敌人：移动至其地点，加入[agility]，+3 伤害"
+        }
+      ]
+    },
+    {
+      "code": "08030",
+      "name": "蝴蝶对剑",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08030 蝴蝶对剑 第一次 +2[combat]；可再次攻击；两次都成功横置使第二次 +1 伤害"
+        }
+      ]
+    },
+    {
+      "code": "08031",
+      "name": "强制学习",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08031 强制学习 牌库 +15；补给阶段抽 2 弃 1（approximation：重整末尾再抽 1 弃 1）"
+        }
+      ]
+    },
+    {
+      "code": "08032",
+      "name": "耶利米·科尔比",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08032 耶利米·科尔比 +1[intellect]；入场后揭示牌库顶 5 张，按费用奇偶抽牌并洗回其余"
+        }
+      ]
+    },
+    {
+      "code": "08033",
+      "name": "通路档案",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08033 通路档案 额外费用在 4 地点放灵脉；调查带灵脉地点后移到本卡，满 4 弃卡得资源（approximation）"
+        }
+      ]
+    },
+    {
+      "code": "08034",
+      "name": "繁星密语",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08034 繁星密语 弃牌库顶：弱点洗回，非弱点本回合每次检定获得其图标（approximation）"
+        }
+      ]
+    },
+    {
+      "code": "08035",
+      "name": "登山靴",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08035 登山靴 +1[agility]；最后一个线索被发现后横置移动到有线索/未揭示的连接地点"
+        }
+      ]
+    },
+    {
+      "code": "08036",
+      "name": "加入马队",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08036 加入马队 每控制一张不同职阶的卡牌费用 -1；快速移动到任意已揭示地点"
+        }
+      ]
+    },
+    {
+      "code": "08037",
+      "name": "地区勘测",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08037 地区勘测 手中/投入时获得等于敏捷的智力图标、等于智力的敏捷图标（approximation）"
+        }
+      ]
+    },
+    {
+      "code": "08038",
+      "name": "医学教科书",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08038 医学教科书 行动：智力(2)成功治愈 1（超 2 点则 2）；失败必须横置或造成 1 伤害"
+        }
+      ]
+    },
+    {
+      "code": "08039",
+      "name": "发掘古物",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08039 发掘古物 选择至多 2 张[seeker]支援；难度=费用和；成功依次入场，遗物支援各抽 1 张"
+        }
+      ]
+    },
+    {
+      "code": "08040",
+      "name": "科学理论",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08040 科学理论 沉稳：+1[intellect] +1[combat]，伤害优先分配给本卡，每次检定可花 1 资源 +1"
+        }
+      ]
+    },
+    {
+      "code": "08041",
+      "name": "通路档案",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08041 通路档案 入场 4 灵脉；免费把 1 灵脉移到非精英敌人（approximation）"
+        }
+      ]
+    },
+    {
+      "code": "08042",
+      "name": "通路档案",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard1.test.mjs",
+          "test": "08-a-1 范围：08001–08042 eoep 卡恰好 46 张（含 4 组双面演武）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
+          "test": "P6 08042 通路档案 入场 4 灵脉；免费把 1 灵脉移到已揭示地点（approximation）"
+        }
+      ]
+    }
+  ]
+}

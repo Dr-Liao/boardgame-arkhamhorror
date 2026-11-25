@@ -1,0 +1,590 @@
+{
+  "unit": "11-a-1",
+  "generatedAt": "2026-11-25",
+  "scope": {
+    "cards": 44,
+    "selector": "11001-11044, effectStatus != verified, pack=tdcp"
+  },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "11001",
+    "11002",
+    "11003",
+    "11004",
+    "11005",
+    "11006",
+    "11007",
+    "11008",
+    "11009",
+    "11011",
+    "11012",
+    "11013",
+    "11014",
+    "11015",
+    "11016",
+    "11017",
+    "11018",
+    "11019",
+    "11020",
+    "11021",
+    "11022",
+    "11023",
+    "11024",
+    "11025",
+    "11026",
+    "11027",
+    "11028",
+    "11029",
+    "11030",
+    "11031",
+    "11032",
+    "11033",
+    "11034",
+    "11035",
+    "11036",
+    "11037",
+    "11038",
+    "11039",
+    "11040",
+    "11041",
+    "11042",
+    "11043",
+    "11044"
+  ],
+  "failedCodes": [
+    {
+      "code": "11010",
+      "dimension": "implementation",
+      "reason": "「虚空一瞥」的 `[action]：将这张弱点洗回牌库` 描述子只有 `kind: action`，缺 `cost: { action: true }`；真实引擎探针（tests/acceptance-11-a-shard1.test.mjs）：legalMoves 会枚举出「将这张弱点洗回牌库」，但执行后行动点不变（20→20）、弱点仍留在威胁区、也没有洗回牌库 → 行动空转、不可用。对照同批弱点 11003（discardHand 费用）/11006（trigger+limit）均有完整 cost/trigger。修法：补 `cost: { action: true }`，并核对实体行动管线是否因缺 cost 跳过结算；补真实引擎回归后重验。",
+      "evidence": "src/cards/entries/11010.js:9-15；tests/acceptance-11-a-shard1.test.mjs 的 11010 真实引擎探针（legalMoves 枚举但 actionsLeft 不变、threat 未移除）"
+    }
+  ],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "fail",
+    "primitives": "pass",
+    "interaction": "pass",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/acceptance-11-a-shard1.test.mjs",
+      "test": "TDC 11001 玛利翁·塔瓦雷斯：手部槽 -1；旧印看 3 选事件；打出事件后抽牌并可再打一张",
+      "codes": [
+        "11001"
+      ]
+    },
+    {
+      "file": "tests/acceptance-11-a-shard1.test.mjs",
+      "test": "TDC 11002 坚定：投入自己事件检定成功后可收回手牌",
+      "codes": [
+        "11002"
+      ]
+    },
+    {
+      "file": "tests/acceptance-11-a-shard1.test.mjs",
+      "test": "TDC 11003 “我自己来”：打出事件受 1 恐惧；弃 3 张事件清除弱点",
+      "codes": [
+        "11003"
+      ]
+    },
+    {
+      "file": "tests/acceptance-11-a-shard1.test.mjs",
+      "test": "TDC 11004 卢修斯·加洛维：旧印按同地点敌人数加值；躲避成功≥2 发现 1 线索",
+      "codes": [
+        "11004"
+      ]
+    },
+    {
+      "file": "tests/acceptance-11-a-shard1.test.mjs",
+      "test": "TDC 11005 诗句集：灵感充能、检定 +1 与刚好成功抽牌",
+      "codes": [
+        "11005"
+      ]
+    },
+    {
+      "file": "tests/acceptance-11-a-shard1.test.mjs",
+      "test": "TDC 11006 洪水的梦：每回合首次发现线索受 1 恐惧并把弱点洗回牌库",
+      "codes": [
+        "11006"
+      ]
+    },
+    {
+      "file": "tests/acceptance-11-a-shard1.test.mjs",
+      "test": "阿加莎 11007 封印、替换并在回合末移除弃牌事件",
+      "codes": [
+        "11007"
+      ]
+    },
+    {
+      "file": "tests/acceptance-11-a-shard1.test.mjs",
+      "test": "阿加莎 11008 封印、替换并在回合末移除弃牌事件",
+      "codes": [
+        "11008"
+      ]
+    },
+    {
+      "file": "tests/acceptance-11-a-shard1.test.mjs",
+      "test": "TDC 11009 眼之秘仪：成功检定结束封印一枚揭示的数字标记（每阶段一次）",
+      "codes": [
+        "11009"
+      ]
+    },
+    {
+      "file": "tests/acceptance-11-a-shard1.test.mjs",
+      "test": "TDC 11010 虚空一瞥：额外揭示 1 标记；[action] 洗回牌库（当前 HEAD 空转，缺口记录）",
+      "codes": [
+        "11010"
+      ]
+    },
+    {
+      "file": "tests/acceptance-11-a-shard1.test.mjs",
+      "test": "TDC 11011 迈克尔·麦克格林：旧印给枪械加 1 弹药；花弹药后得 1 资源",
+      "codes": [
+        "11011"
+      ]
+    },
+    {
+      "file": "tests/acceptance-11-a-shard1.test.mjs",
+      "test": "TDC 11012 “维奥拉”琴盒：手牌枪械不占手槽；入场后从牌库顶 9 张找枪械",
+      "codes": [
+        "11012"
+      ]
+    },
+    {
+      "file": "tests/acceptance-11-a-shard1.test.mjs",
+      "test": "TDC 11013 没收：枪械支援洗回牌库；无枪械则受 1 伤害并洗回弱点",
+      "codes": [
+        "11013"
+      ]
+    },
+    {
+      "file": "tests/acceptance-11-a-shard1.test.mjs",
+      "test": "TDC 11014 歌莉娅·戈德堡：看遭遇牌并处理 1 张非精英；神话顺序可选",
+      "codes": [
+        "11014"
+      ]
+    },
+    {
+      "file": "tests/acceptance-11-a-shard1.test.mjs",
+      "test": "TDC 11015 通灵感应：弃掉两张同名遭遇并抽 1 张",
+      "codes": [
+        "11015"
+      ]
+    },
+    {
+      "file": "tests/acceptance-11-a-shard1.test.mjs",
+      "test": "TDC 11016 结局预言：揭示时强制置底；击败 3 张或 1 精神创伤；显现涌动",
+      "codes": [
+        "11016"
+      ]
+    },
+    {
+      "file": "tests/acceptance-11-a-shard1.test.mjs",
+      "test": "TDC 11017 乔治·巴纳比：手牌上限按暗置牌；弃牌可转入底下并抽 1 张",
+      "codes": [
+        "11017"
+      ]
+    },
+    {
+      "file": "tests/acceptance-11-a-shard1.test.mjs",
+      "test": "TDC 11018 坚毅：检定后交换等量手牌与暗置牌",
+      "codes": [
+        "11018"
+      ]
+    },
+    {
+      "file": "tests/acceptance-11-a-shard1.test.mjs",
+      "test": "TDC 11019 漂流：弃掉所有暗置牌；没有暗置牌则洗回弱点",
+      "codes": [
+        "11019"
+      ]
+    },
+    {
+      "file": "tests/tdc-player-guardian.test.mjs",
+      "test": "11020 回合结束时返还刚弃置的策略事件，保留弃牌堆旧同码副本",
+      "codes": [
+        "11020"
+      ]
+    },
+    {
+      "file": "tests/tdc-player.test.mjs",
+      "test": "11021 通过战斗属性调查，重整后另一能力以战斗加值攻击",
+      "codes": [
+        "11021"
+      ]
+    },
+    {
+      "file": "tests/tdc-player-guardian.test.mjs",
+      "test": "11022 离场时零弹药仍可发动攻击，且离场实体仅弃置一次",
+      "codes": [
+        "11022"
+      ]
+    },
+    {
+      "file": "tests/tdc-player-guardian.test.mjs",
+      "test": "11023 首次行动折扣打出新枪，升级优先落到实际新枪",
+      "codes": [
+        "11023"
+      ]
+    },
+    {
+      "file": "tests/tdc-player.test.mjs",
+      "test": "11024 若当轮已抽到敌人则抽两张牌，随后治疗恐惧",
+      "codes": [
+        "11024"
+      ]
+    },
+    {
+      "file": "tests/tdc-player-guardian.test.mjs",
+      "test": "11025 本轮成功攻击使第二次攻击投入获得两枚额外图标，下一轮清除",
+      "codes": [
+        "11025"
+      ]
+    },
+    {
+      "file": "tests/tdc-player-guardian.test.mjs",
+      "test": "11026 攻击被标记敌人获得战斗加值，另一位调查员可弃标记追加伤害",
+      "codes": [
+        "11026"
+      ]
+    },
+    {
+      "file": "tests/tdc-player-guardian.test.mjs",
+      "test": "11027 当回合第一次调查免于借机攻击，发现线索后的反应可造成伤害",
+      "codes": [
+        "11027"
+      ]
+    },
+    {
+      "file": "tests/tdc-player-guardian.test.mjs",
+      "test": "11028 入场封印，在借机攻击时释放封印取消攻击并重整另一支援，击败敌人后可再封印",
+      "codes": [
+        "11028"
+      ]
+    },
+    {
+      "file": "tests/tdc-player.test.mjs",
+      "test": "11029 成功投入可重整并治疗同地点队友的盟友",
+      "codes": [
+        "11029"
+      ]
+    },
+    {
+      "file": "tests/tdc-player-guardian.test.mjs",
+      "test": "11030 枪械打出时多获得一个弹药，普通支援的使用次数保持原量",
+      "codes": [
+        "11030"
+      ]
+    },
+    {
+      "file": "tests/tdc-player-guardian.test.mjs",
+      "test": "11031 只用抽牌反应免费打出刚抽到的副本并保留原手牌顺序",
+      "codes": [
+        "11031"
+      ]
+    },
+    {
+      "file": "tests/tdc-player-guardian.test.mjs",
+      "test": "11032 入场和离场都可忽略行动与弹药执行攻击",
+      "codes": [
+        "11032"
+      ]
+    },
+    {
+      "file": "tests/tdc-player-seeker.test.mjs",
+      "test": "11033 gains one evidence at exactly three above difficulty and pays the current shroud",
+      "codes": [
+        "11033"
+      ]
+    },
+    {
+      "file": "tests/tdc-player-seeker.test.mjs",
+      "test": "11034 adjusts a revealed test by either one and replenishes by discarding a hand card",
+      "codes": [
+        "11034"
+      ]
+    },
+    {
+      "file": "tests/tdc-player-seeker.test.mjs",
+      "test": "11035 records research on its fourth charge and unlocks 11046, 11047 and 11048 only as its replacement",
+      "codes": [
+        "11035"
+      ]
+    },
+    {
+      "file": "tests/tdc-player-seeker.test.mjs",
+      "test": "11036 investigates with agility and the printed bonus and heals only with an exhausted enemy",
+      "codes": [
+        "11036"
+      ]
+    },
+    {
+      "file": "tests/tdc-player-seeker.test.mjs",
+      "test": "11037 saves a clue reward resource and pays toward either a Spell asset or event",
+      "codes": [
+        "11037"
+      ]
+    },
+    {
+      "file": "tests/tdc-player-seeker.test.mjs",
+      "test": "11038 and 11070 gain evidence from a real seal, then spends it to discover and damage an attacking Geist",
+      "codes": [
+        "11038"
+      ]
+    },
+    {
+      "file": "tests/tdc-player-seeker.test.mjs",
+      "test": "11039 rerolls another investigator’s symbol and awards the asset owner the success draw",
+      "codes": [
+        "11039"
+      ]
+    },
+    {
+      "file": "tests/tdc-player-seeker.test.mjs",
+      "test": "11040 rerolls the first token and adds two charges after succeeding by exactly one",
+      "codes": [
+        "11040"
+      ]
+    },
+    {
+      "file": "tests/tdc-player-seeker.test.mjs",
+      "test": "11041 reveals the chosen parity and lets each investigator draw or pay to play in player order",
+      "codes": [
+        "11041"
+      ]
+    },
+    {
+      "file": "tests/tdc-player-seeker.test.mjs",
+      "test": "11042 gains an icon from each discarded copy and shuffles the other two back",
+      "codes": [
+        "11042"
+      ]
+    },
+    {
+      "file": "tests/tdc-player-seeker.test.mjs",
+      "test": "11043 seals a token on entry and after the final clue, then spends one to cancel and move",
+      "codes": [
+        "11043"
+      ]
+    },
+    {
+      "file": "tests/tdc-player-seeker.test.mjs",
+      "test": "11044 accepts a two-handed Tool beside a two-handed Weapon and restricts a third Weapon",
+      "codes": [
+        "11044"
+      ]
+    },
+    {
+      "file": "tests/acceptance-11-a-shard1.test.mjs",
+      "test": "11-a-1 范围：11001–11044 未验收 tdcp 卡恰好 44 张",
+      "codes": [
+        "11001",
+        "11002",
+        "11003",
+        "11004",
+        "11005",
+        "11006",
+        "11007",
+        "11008",
+        "11009",
+        "11010",
+        "11011",
+        "11012",
+        "11013",
+        "11014",
+        "11015",
+        "11016",
+        "11017",
+        "11018",
+        "11019",
+        "11020",
+        "11021",
+        "11022",
+        "11023",
+        "11024",
+        "11025",
+        "11026",
+        "11027",
+        "11028",
+        "11029",
+        "11030",
+        "11031",
+        "11032",
+        "11033",
+        "11034",
+        "11035",
+        "11036",
+        "11037",
+        "11038",
+        "11039",
+        "11040",
+        "11041",
+        "11042",
+        "11043",
+        "11044"
+      ]
+    },
+    {
+      "file": "tests/acceptance-11-a-shard1.test.mjs",
+      "test": "11-a-1 接线：44 张均有条目；6 位人物/8 个调查员版本可选；阿加莎双版本共用专属",
+      "codes": [
+        "11001",
+        "11002",
+        "11003",
+        "11004",
+        "11005",
+        "11006",
+        "11007",
+        "11008",
+        "11009",
+        "11010",
+        "11011",
+        "11012",
+        "11013",
+        "11014",
+        "11015",
+        "11016",
+        "11017",
+        "11018",
+        "11019",
+        "11020",
+        "11021",
+        "11022",
+        "11023",
+        "11024",
+        "11025",
+        "11026",
+        "11027",
+        "11028",
+        "11029",
+        "11030",
+        "11031",
+        "11032",
+        "11033",
+        "11034",
+        "11035",
+        "11036",
+        "11037",
+        "11038",
+        "11039",
+        "11040",
+        "11041",
+        "11042",
+        "11043",
+        "11044"
+      ]
+    },
+    {
+      "file": "tests/acceptance-11-a-shard1.test.mjs",
+      "test": "11-a-1 合规：R1/R2/R3 基线不含 11 段卡号；TDC 逐卡账本与文档在位",
+      "codes": [
+        "11001",
+        "11002",
+        "11003",
+        "11004",
+        "11005",
+        "11006",
+        "11007",
+        "11008",
+        "11009",
+        "11010",
+        "11011",
+        "11012",
+        "11013",
+        "11014",
+        "11015",
+        "11016",
+        "11017",
+        "11018",
+        "11019",
+        "11020",
+        "11021",
+        "11022",
+        "11023",
+        "11024",
+        "11025",
+        "11026",
+        "11027",
+        "11028",
+        "11029",
+        "11030",
+        "11031",
+        "11032",
+        "11033",
+        "11034",
+        "11035",
+        "11036",
+        "11037",
+        "11038",
+        "11039",
+        "11040",
+        "11041",
+        "11042",
+        "11043",
+        "11044"
+      ]
+    },
+    {
+      "file": "tests/tdc-investigators.test.mjs",
+      "test": "全部调查员及专属依赖经过选人、自动构筑及手动构筑",
+      "codes": [
+        "11001",
+        "11004",
+        "11007",
+        "11008",
+        "11011",
+        "11014",
+        "11017"
+      ]
+    },
+    {
+      "file": "tests/tdc-player.test.mjs",
+      "test": "11021 通过战斗属性调查，重整后另一能力以战斗加值攻击",
+      "codes": [
+        "11020",
+        "11021",
+        "11022",
+        "11023",
+        "11024",
+        "11025",
+        "11026",
+        "11027",
+        "11028",
+        "11029",
+        "11030",
+        "11031",
+        "11032",
+        "11033",
+        "11034",
+        "11035",
+        "11036",
+        "11037",
+        "11038",
+        "11039",
+        "11040",
+        "11041",
+        "11042",
+        "11043",
+        "11044"
+      ]
+    },
+    {
+      "file": "tests/tdc-rules.test.mjs",
+      "test": "TDC Seal requires a matching token, removes one copy, and releases it on leaving play",
+      "codes": []
+    },
+    {
+      "file": "tests/tdc-primitives.test.mjs",
+      "test": "TDC P4 任务候选去重，待决选择和进度按座位投影，取消及恢复保留正确状态",
+      "codes": []
+    },
+    {
+      "file": "docs/test/十循环-沉没之城-审查报告-2026-11-23.md",
+      "test": "## 一、结论摘要",
+      "codes": []
+    }
+  ],
+  "notes": "范围：`effectStatus !== verified` 且 11001–11044、`pack=tdcp` 共 44 条 = 7 个调查员身份（11001/11004/11007/11008/11011/11014/11017，6 位人物）+ 12 张专属依赖（11002/11003/11005/11006/11009/11010/11012/11013/11015/11016/11018/11019）+ 一般玩家卡 25 张（11020–11044，含 11044 科学/工具双槽档案）。\n判定：43 通过 / 1 失败（11010：action 描述子缺 cost.action，legalMoves 枚举但执行空转、弱点无法洗回）。\n证据：本分片新增 tests/acceptance-11-a-shard1.test.mjs（20 例 = 11001–11019 十七张缺口卡真实执行断言 + 11010 真实引擎探针 + 范围/接线/合规 3 条），全绿；既有 TDC 证据重跑：investigators + player-guardian/seeker/survivor/player 136/136、rules + primitives + round2-primitives 39/39。44/44 卡均有标题含卡号的真实测试。\n合规：npm run audit:entries / cards:index:check / cards:encounter-check 全通过（基线外 0 新增）；R1=112 存量基线、R2=0、R3=0；11 段无基线命中。\n循环门禁（G，非卡判定）：`npm run audit:tdc:check` 在当前 HEAD 失败——tools/audit-tdc.mjs:174 的 `scope.codes.every(availability === \"catalog-only\" ...)` 断言与当前 cards-data（调查员/玩家卡已 strict 开放）不一致，属 2026-11-23 独立审查报告的 P0-1（发布门禁与大厅状态不一致）；另 P0-2 证据输入（literal 账本、p7/p8 artifacts）存放在大厅根未入库的 `artifacts/`，本报告按备注中的路径读取，不采信其 verified 结论。\n账本口径：本循环没有 audit/tdc-all-card-acceptance.json；逐卡账本为 audit/tdc-player.json（player 侧 verified）与大厅根 artifacts/migration/tdc/p7/literal/*.json（战役章节）；本报告以真实测试复核，不采信账本 verified。\n近似披露：11001–11044 条目注释中无「近似/未接线/未实现」措辞（独立审查 P1-2 的 25 处位于战役章节条目），本片无近似待披露项。\n交互：本分片不改 UI；调查员/玩家卡用真实引擎 legalMoves/applyMove/performTest/drawCards/trigger 窗口覆盖；淹没/任务/文物/网格港口等战役机制不在本分片范围。\n切换建议：43 张可切 verified；11010 补 `cost: { action: true }` 并补真实引擎回归后重验。"
+}

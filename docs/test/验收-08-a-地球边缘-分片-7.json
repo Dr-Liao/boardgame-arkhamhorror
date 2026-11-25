@@ -1,0 +1,65 @@
+{
+  "unit": "08-a-7",
+  "generatedAt": "2026-11-25",
+  "scope": {
+    "cards": 45,
+    "selector": "pack=eoec && effectStatus=unverified && 08608<=code<=08652",
+    "codeRange": "08608-08652",
+    "products": ["toTheForbiddenPeaks 13", "cityOfTheElderThings 27", "theHeartOfMadness 5"]
+  },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "08608", "08609", "08610", "08611", "08612", "08613", "08614", "08615", "08616", "08617", "08618", "08619", "08620",
+    "08621", "08622", "08623", "08624", "08625", "08626",
+    "08632", "08633", "08635", "08636", "08638", "08639", "08641", "08644", "08645",
+    "08648", "08650"
+  ],
+  "failedCodes": [
+    { "code": "08627", "name": "Pursuit of the Unknown (v. I)", "dimension": "implementation", "reason": "actTwoActions healAll（每位调查员治愈 1 伤害/1 恐惧/1 创伤）未实现：behavior 的 actTwo: 分支只花钥匙+日志。", "evidence": ["content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js:510-518", "tests/acceptance-08-a-shard7.test.mjs"] },
+    { "code": "08628", "name": "Pursuit of the Unknown (v. II)", "dimension": "implementation", "reason": "actTwoActions returnTekeliWeaknesses（查找并洗回忒咳哩-哩弱点）未实现，仅花钥匙+日志。", "evidence": ["cityOfTheElderThings/behavior.js:510-518", "tests/acceptance-08-a-shard7.test.mjs"] },
+    { "code": "08629", "name": "Pursuit of the Unknown (v. III)", "dimension": "implementation", "reason": "actTwoActions removeElderThingTokens（从混乱袋移除所有 elder_thing 标记）未实现，仅花钥匙+日志；forced 击杀古老者已实现。", "evidence": ["cityOfTheElderThings/behavior.js:510-518", "tests/acceptance-08-a-shard7.test.mjs"] },
+    { "code": "08630", "name": "Hidden Tunnel", "dimension": "implementation", "reason": "「隐秘隧道上的线索不能被发现或移动」：locationRule.blocksClueDiscovery 全仓无读点。", "evidence": ["src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08630.js", "tests/acceptance-08-a-shard7.test.mjs"] },
+    { "code": "08631", "name": "Ancient Planetarium", "dimension": "implementation", "reason": "印刷「把花费的『0』钥匙加入混乱袋作为混乱标记」，实现改为 addFrostToken（frost 标记），效果错误。", "evidence": ["cityOfTheElderThings/behavior.js:814-821", "tests/acceptance-08-a-shard7.test.mjs"] },
+    { "code": "08634", "name": "Labyrinthine Chamber", "dimension": "implementation", "reason": "本地钥匙匹配时混乱标记修正翻倍：locationRule.flags.doubleKeyTokenModifier 无读点。", "evidence": ["08634.js", "tests/acceptance-08-a-shard7.test.mjs"] },
+    { "code": "08637", "name": "Ruinous Streets", "dimension": "implementation", "reason": "frostForcedDamage（揭示 frost 受 1 伤害）无读点；[reaction]「发现最后线索后发现连接地点线索」被实现为普通 locationRule.actions（时机/费用错误）。", "evidence": ["08637.js", "cityOfTheElderThings/behavior.js:875-884", "tests/acceptance-08-a-shard7.test.mjs"] },
+    { "code": "08640", "name": "Temple of the Elder Things", "dimension": "implementation", "reason": "frostForcedHorror（揭示 frost 受 1 恐惧）无读点；换钥匙行动已实现。", "evidence": ["08640.js", "tests/acceptance-08-a-shard7.test.mjs"] },
+    { "code": "08642", "name": "Benign Elder Thing", "dimension": "implementation", "reason": "Spawn-Any empty location 写成嵌套 enemyRule.spawn:'anyEmpty'，引擎读扁平 spawnAnyEmpty → 失效；onDefeatDoom（被击败时密谋放 1 毁灭）与 parley 数据均无读点。", "evidence": ["08642.js", "src/engine/encounter.js:248", "tests/acceptance-08-a-shard7.test.mjs"] },
+    { "code": "08643", "name": "Reawakened Elder Thing", "dimension": "implementation", "reason": "takesKeyOnEngage / readiesOnKeyControlled / placesKeyOnLeave 三条子句键全仓无读点（交战夺钥匙、控制钥匙时重整攻击、离场放钥匙均未实现）。", "evidence": ["08643.js", "tests/acceptance-08-a-shard7.test.mjs"] },
+    { "code": "08646", "name": "Frostbitten", "dimension": "implementation", "reason": "「可如同 1 点伤害被治愈」healAsOneDamageApproximation 无读点；揭示 frost 时「受 1 伤害或自动失败（每检定一次）」未在章节 afterTest 结算。", "evidence": ["08646.js", "cityOfTheElderThings/behavior.js:776-785", "tests/acceptance-08-a-shard7.test.mjs"] },
+    { "code": "08647", "name": "Possessed", "dimension": "implementation", "reason": "「可如同 1 点恐惧被治愈」：threatHorrorSink 写在 flags 下，引擎读条目顶层（05008 写法）→ 不生效；frost 强制同上未结算。", "evidence": ["08647.js", "src/engine/harm-threat.js:725", "tests/acceptance-08-a-shard7.test.mjs"] },
+    { "code": "08649", "name": "The Gate of Y'quaa", "dimension": "implementation", "reason": "背面「调查员与敌人不能进入、不能拥有附属」需地点背面进入限制原语（primitive-requests/p7-08649.json 未实现）；账本亦 blocked。", "evidence": ["_shared/the_heart_of_madness/08649.js note", "audit/eote-all-card-acceptance.json blocked"] },
+    { "code": "08651", "name": "Forsaken Temple", "dimension": "implementation", "reason": "「查看同一辐条上所有未揭示地点的已揭示面」行动只写 api.info 日志，无查看/投影读点，信息未交付。", "evidence": ["_shared/the_heart_of_madness/08651.js abilities[0].resolve", "tests/acceptance-08-a-shard7.test.mjs"] },
+    { "code": "08652", "name": "Library of Kós", "dimension": "implementation", "reason": "「查看同一环形上所有未揭示地点的已揭示面」同 08651，仅日志无查看读点。", "evidence": ["_shared/the_heart_of_madness/08652.js abilities[0].resolve", "tests/acceptance-08-a-shard7.test.mjs"] }
+  ],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "fail",
+    "primitives": "pass",
+    "interaction": "pass",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/acceptance-08-a-shard7.test.mjs",
+      "test": "6 例：至禁峰 13 卡真实执行（敌人数值/4 诡计/7 探险支援）、古城 9 卡（参考卡/密谋/幕/星之恐怖/2 诡计）、疯狂之心 2 卡（参考卡混乱标记/地热口行动）、古城 6 地点行动读点、2 组缺陷复现（15 张失败卡）",
+      "codes": ["08608", "08609", "08610", "08611", "08612", "08613", "08614", "08615", "08616", "08617", "08618", "08619", "08620", "08621", "08622", "08623", "08624", "08625", "08626", "08627", "08628", "08629", "08630", "08631", "08632", "08633", "08634", "08635", "08636", "08637", "08638", "08639", "08640", "08641", "08642", "08643", "08644", "08645", "08646", "08647", "08648", "08649", "08650", "08651", "08652"],
+      "command": "node --test tests/acceptance-08-a-shard7.test.mjs",
+      "result": "6/6 pass"
+    },
+    {
+      "file": "tests/eote-scenario-toTheForbiddenPeaks.test.mjs + tests/eote-scenario-cityOfTheElderThings.test.mjs + tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+      "test": "三个章的既有章节流程/钩子证据（不采信为逐卡结论，仅作回归）",
+      "codes": ["*"],
+      "command": "node --test tests/eote-scenario-toTheForbiddenPeaks.test.mjs tests/eote-scenario-cityOfTheElderThings.test.mjs tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
+      "result": "43/43 pass"
+    },
+    {
+      "file": "npm run cards:check / cards:encounter-check / audit:entries",
+      "test": "条目合规与索引只读门禁",
+      "codes": ["*"],
+      "result": "exit 0（本批无 R1/R2/R3 新增）"
+    }
+  ],
+  "notes": "30 通过 / 15 未通过（verdict partial）。失败根因分两类：①数据声明无读点（08630/34/37/40/42/43/46/47 及 08627–29 的 actTwoActions 效果未分派）——EOTE 采用「条目声明 + 章节 behavior 分派」架构，但部分声明键在章节/引擎层没有读点；②待原语/信息未交付（08649 地点背面进入限制 pending primitive、08651/08652 look 仅日志、08631 把花费的「0」钥匙错误近似为 frost）。证据：45/45 张均有标题含卡号的真实执行测试（新增 6/6 全绿，其中 15 张为缺陷复现）；既有三章 43/43 通过作为回归背景。合规三条只读门禁 exit 0；未改 src/content；未跑全量套件（按指示）。账本口径：audit/eote-all-card-acceptance.json 对本 45 张记录 verified 19/no-behavior 1/missing 24/blocked 1，missing 全为 no-test-evidence、未检出本轮 15 张真实实现缺口，建议主报告登记「逐卡账本去假绿 + 声明键读点检测」；本轮不重签账本。"
+}

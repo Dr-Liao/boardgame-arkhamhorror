@@ -1,0 +1,753 @@
+{
+  "schemaVersion": 1,
+  "unit": "06-a-2",
+  "profile": {
+    "id": "tde-beyond-gates-b-2026-11",
+    "scope": "食梦者 06 段 tde 豪华包后半（06057–06109）55 条目录记录。47 条通过五维验收；8 条因声明未接线或收尾/二选一语义未落实暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 55,
+    "verified": 47,
+    "unverified": 8,
+    "unimplemented": 0,
+    "testsPassed": 190
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+      "sha256": "c5dff16a8998d50b37d0ad4244c614fa4fb178ec0e08130c2b89316f95e8a653"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-scenario-beyondTheGatesOfSleep.test.mjs",
+      "sha256": "bf69711989665a9acfed05ccf6a55808aa8a08006c157b9dee612db58312eb07"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-scenario-wakingNightmare.test.mjs",
+      "sha256": "14761e73fea41b30362945be3e0334419e6b32ce9b9c7603c447a95e2ea2d51e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-scenario-runtime-api.test.mjs",
+      "sha256": "ef145c8867eaa2141ba4ab69749e7346eb41beeb03a2c1453fc8c5315a775bdd"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+      "sha256": "59979ee2b83b99b3eaa759b82784795d9f82912fd3047848195c4215e50fee87"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-rules.test.mjs",
+      "sha256": "682a74a0627dd5ea36463d3923dd20a4f1fb07c57740ad61d6100fdaba65c797"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-dual-flow.test.mjs",
+      "sha256": "34e910f39303b62453b9d844200a82cfb085410d727616f4066318f95b76db8a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-dual-runtime.test.mjs",
+      "sha256": "0931b1472bb8bbf30fcc0553b5d6b850bdb7063925b02bfcb986d1bac45ecacb"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-lane-runtime.test.mjs",
+      "sha256": "36f1258fce31c1ca8d3cc49d90697c83482a7268cabff3054e64270eccc62d02"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-modes.test.mjs",
+      "sha256": "2e0b7f3b3a12befe0f9f8d54e4a90ad592d9d8c435d7c98a03d5694dd408b18b"
+    }
+  ],
+  "entries": [
+    {
+      "code": "06057",
+      "name": "卡曼塔",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06057b 卡曼塔的考验：谈判成功翻面、故事面进胜利区、敌人离场"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-beyondTheGatesOfSleep.test.mjs",
+          "test": "卡曼塔（06057）：谈判动作 + 成功翻面结算故事、失败攻击本地每位调查员"
+        }
+      ]
+    },
+    {
+      "code": "06057b",
+      "name": "卡曼塔的考验",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06057b 卡曼塔的考验：谈判成功翻面、故事面进胜利区、敌人离场"
+        }
+      ]
+    },
+    {
+      "code": "06058",
+      "name": "纳什特",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06058b 纳什特的考验：击败后翻面并把故事面加入胜利区"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-beyondTheGatesOfSleep.test.mjs",
+          "test": "纳什特（06058）：谈判失败攻击、击败时结算故事面"
+        }
+      ]
+    },
+    {
+      "code": "06058b",
+      "name": "纳什特的考验",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06058b 纳什特的考验：击败后翻面并把故事面加入胜利区"
+        }
+      ]
+    },
+    {
+      "code": "06059",
+      "name": "伦道夫·卡特",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06059 伦道夫·卡特（梦境门外）：+1 战斗/+1 敏捷，tablet 后抽 2"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-beyondTheGatesOfSleep.test.mjs",
+          "test": "伦道夫·卡特（06059）剧情支援：+1 战斗/+1 敏捷 与 tablet 符号后抽 2 张"
+        }
+      ]
+    },
+    {
+      "code": "06060",
+      "name": "辛劳的古革巨人",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06060 辛劳的古革巨人：不能进入「魔幻小路」数据由章节 behavior 读取"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-beyondTheGatesOfSleep.test.mjs",
+          "test": "辛劳的古革巨人（06060）：不能进入「魔幻小路」→ 猎手移动被接管并绕行，效果移动被移回"
+        }
+      ]
+    },
+    {
+      "code": "06061",
+      "name": "远古祖格鼠",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06061 远古祖格鼠：生成在魔幻森林，敌军阶段给每个蜂拥祖格鼠 +1 卡"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-beyondTheGatesOfSleep.test.mjs",
+          "test": "远古祖格鼠（06061）：生成在未揭示的魔幻森林；敌军阶段为蜂拥祖格鼠加卡"
+        }
+      ]
+    },
+    {
+      "code": "06062",
+      "name": "森林迷途",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06062 森林迷途：涌动；魔幻森林内每人意志(3)，失败失去 1 行动并受 1 恐惧"
+        }
+      ]
+    },
+    {
+      "code": "06063",
+      "name": "清醒噩梦",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-wakingNightmare.test.mjs",
+          "test": "06063 章节清单：playable、原卡、地点/幕/议程/结局数量与参考卡"
+        }
+      ]
+    },
+    {
+      "code": "06064",
+      "name": "圣玛丽医院的走廊",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06064 圣玛丽医院的走廊：背面把蜘蛛组与爆发洗入并抽「蛛群入侵」"
+        }
+      ]
+    },
+    {
+      "code": "06065",
+      "name": "蛛巢蔓延",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06065 蛛巢蔓延：替换可疑护工、清洗牌堆、滋生袋加骷髅与异教徒"
+        }
+      ]
+    },
+    {
+      "code": "06066",
+      "name": "恐怖医院",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面第二句「Each [[Spider]] enemy at an infested location gets +1 fight and +1 evade」没有读点：条目声明 agendaRule.spiderAtInfestedBonus，条目注释称 behavior.enemyStatModifier 读取，但章节 behavior 没有该钩子、共享层 enemyStatModifier 只读 entry.enemyStatRule；全仓库无 spiderAtInfestedBonus 读者（声明即接线缺失）。神话阶段滋生检定与背面的桥梁之阶 +8/结局 4 已实现。"
+    },
+    {
+      "code": "06067",
+      "name": "寻求答案",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06067 寻求答案：团队 4×人数线索；背面放梯井/地下室门并在议程 1 时推进议程"
+        }
+      ]
+    },
+    {
+      "code": "06068",
+      "name": "寻找病人",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06068 寻找病人：控制伦道夫·卡特推进；背面洗回遭遇弃牌堆"
+        }
+      ]
+    },
+    {
+      "code": "06069",
+      "name": "阻止爆发",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06069 阻止爆发：无寄生地点推进；封印裂隙行动与结局 1/2/3 分流"
+        }
+      ]
+    },
+    {
+      "code": "06070",
+      "name": "候诊室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-wakingNightmare.test.mjs",
+          "test": "06070 候诊室：[action] 撤退可用，寄生后不可用"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06070 候诊室：未寄生时可撤退；寄生后不再提供"
+        }
+      ]
+    },
+    {
+      "code": "06071",
+      "name": "急救病房",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06071 急救病房：每次检定难度 + 本次已投入卡牌数"
+        }
+      ]
+    },
+    {
+      "code": "06072",
+      "name": "实验疗法病房",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06072 实验疗法病房：调查开始时受 1 恐惧换本次 -2 帷幕（可选）"
+        }
+      ]
+    },
+    {
+      "code": "06073",
+      "name": "档案室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06073 档案室：未交战时 3 行动做 4 次基础调查；交战时不可用"
+        }
+      ]
+    },
+    {
+      "code": "06074",
+      "name": "梯井",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-wakingNightmare.test.mjs",
+          "test": "06074 梯井：从非地下室进入后移动到地下室并检定敏捷(4)，失败 2 伤害"
+        }
+      ]
+    },
+    {
+      "code": "06075",
+      "name": "太平间",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-wakingNightmare.test.mjs",
+          "test": "06075 太平间：[action] 检定意志(3)：成功发现线索 / 失败受到恐惧"
+        }
+      ]
+    },
+    {
+      "code": "06076",
+      "name": "手术室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-wakingNightmare.test.mjs",
+          "test": "06076 手术室：[action][action] 成功治愈 3 伤害、失败造成 1 伤害"
+        }
+      ]
+    },
+    {
+      "code": "06077",
+      "name": "私人病房",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06077 私人病房：谈判成功并团队支付人数线索后把 06079 交给本地调查员"
+        }
+      ]
+    },
+    {
+      "code": "06078",
+      "name": "蛛群入侵",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-wakingNightmare.test.mjs",
+          "test": "06078 蛛群入侵： flags 声明 7 枚滋生袋与三种 token 效果"
+        }
+      ]
+    },
+    {
+      "code": "06079",
+      "name": "伦道夫·卡特",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06077 私人病房：谈判成功并团队支付人数线索后把 06079 交给本地调查员"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06079 伦道夫·卡特：+1 意志/+1 智识，elder_thing 后横置抽 2"
+        }
+      ]
+    },
+    {
+      "code": "06080",
+      "name": "席瓦妮·马斯沃伦医生",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06080 席瓦妮医生：横置快速自动躲避交战的护工；滋生标记取消数据已接线"
+        }
+      ]
+    },
+    {
+      "code": "06081",
+      "name": "可疑的护工",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面核心（不能攻击、不能被攻击、不能被造成伤害、不能被击败）未实现：条目把这 4 条写成 flags.cannotAttack/cannotBeAttacked/cannotBeDamaged/cannotBeDefeated，但引擎读的是敌人规则（enemyRule.cannotX 并入 definition / entityRule cannot:*），TDE 共享层与觉醒噩梦章节均未读取这些 flags；全仓库无读者。仅「与你交战时不能调查」（blocksInvestigationWhileEngaged）有读点并可用。"
+    },
+    {
+      "code": "06082",
+      "name": "堕落的护工",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-wakingNightmare.test.mjs",
+          "test": "06082 堕落的护工：在寄生地点受到伤害时取消其中 1 点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06082 堕落的护工：寄生地点受到伤害时取消 1 点"
+        }
+      ]
+    },
+    {
+      "code": "06083",
+      "name": "爆发",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-wakingNightmare.test.mjs",
+          "test": "Outbreak（06083）：在寄生地点把 tablet 当 skull 结算"
+        }
+      ]
+    },
+    {
+      "code": "06084",
+      "name": "灰织蛛",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-runtime-api.test.mjs",
+          "test": "encounter-rules：共享组的行动/投入限制与属性修正（06084 / 06085 / 06090）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "共享组条目：06084 猎物覆盖、06102 躲避值 = 地点蛛群数、06272 附属地点或推进巨噬蠕虫"
+        }
+      ]
+    },
+    {
+      "code": "06085",
+      "name": "蛛后的意志",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-runtime-api.test.mjs",
+          "test": "encounter-rules：共享组的行动/投入限制与属性修正（06084 / 06085 / 06090）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-runtime-api.test.mjs",
+          "test": "encounter-rules：检定失败限制与「失败后看牌库顶」的数据分派（06085 / 06098）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "共享组条目：06085 失败后本轮不能攻击/调查（共享 restrictionActive 读 scenarioFlags.failRestricts）"
+        }
+      ]
+    },
+    {
+      "code": "06086",
+      "name": "蠕行之雾",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "共享组条目：06086 攻击/躲避难度按手牌遭遇卡数（enemyStatRule 数据契约）"
+        }
+      ]
+    },
+    {
+      "code": "06087",
+      "name": "伊吉若斯之理",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "隐藏牌核心限制未实现：卡面「你不能打出费用为奇数的卡牌；你不能触发费用为奇数的能力；[action] 弃一张费用为偶数的玩家卡：从手牌弃掉本卡」全部只声明在 hiddenRule（cannotPlayOddCost/cannotTriggerOddCost/discardEvenCostAction），引擎 hidden-rules 仅支持 cannotPlayTypes/cannotTriggerFree/cannotFightTraits/maxMovesPerTurn，全仓库无这些 key 的读取或对应行动。隐藏入手上牌由引擎自动完成，但这三条限制与摆脱行动没有行为。"
+    },
+    {
+      "code": "06088",
+      "name": "伊吉若斯之理",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "隐藏牌核心限制未实现：「不能对技能检定投入技能图标总数为奇数的卡牌；[action] 弃技能图标数为偶数的玩家卡以弃掉本卡」只声明 hiddenRule（cannotCommitOddSkillIcons/discardEvenSkillIconsAction），引擎 hidden-rules 无对应读点与行动；提交区只支持 cannotPlayTypes/maxCommitsPerRound 等既有能力。"
+    },
+    {
+      "code": "06089",
+      "name": "伊吉若斯之理",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "隐藏牌核心限制未实现：「不能打出/投入卡牌名称为奇数个词的卡牌；[action] 弃名称为偶数个词的玩家卡以弃掉本卡」只声明 hiddenRule（cannotPlayOddWordsInTitle/cannotCommitOddWordsInTitle/discardEvenWordsAction），引擎无词数统计读点与摆脱行动。"
+    },
+    {
+      "code": "06090",
+      "name": "修普诺斯的低语",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-runtime-api.test.mjs",
+          "test": "encounter-rules：共享组的行动/投入限制与属性修正（06084 / 06085 / 06090）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "共享组条目：06090 本轮所选技能 -2（共享 statModifier 读 scenarioFlags）"
+        }
+      ]
+    },
+    {
+      "code": "06091",
+      "name": "追猎噩妖",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06091 追猎噩妖：进入有古革巨人的地点→重整它们并对自己 1 伤害；猎物伤害最多"
+        }
+      ]
+    },
+    {
+      "code": "06092",
+      "name": "笨拙的古革巨人",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06092 笨拙的古革巨人：攻击后/被躲避横置→下一补给阶段不重整"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-runtime-api.test.mjs",
+          "test": "runtime api：preventEnemyReady 写入引擎读点（06092 下一个补给阶段不重整）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "共享组条目：06092 横置后下一个补给阶段不再重整（api.preventEnemyReady）"
+        }
+      ]
+    },
+    {
+      "code": "06093",
+      "name": "入梦者的诅咒",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06093 入梦者的诅咒：意志(5) 失败每点 1 伤害上限 3；图标权重 2/1"
+        }
+      ]
+    },
+    {
+      "code": "06094",
+      "name": "睡眠恐惧症",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06094 睡眠恐惧症：意志(5) 失败每点 1 恐惧上限 3；图标权重 2/1"
+        }
+      ]
+    },
+    {
+      "code": "06095",
+      "name": "沉眠",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06095 沉眠：手牌上限 -3、抽牌后立即检查、双行动弃掉"
+        }
+      ]
+    },
+    {
+      "code": "06096",
+      "name": "幻梦境月食",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06096 幻梦境月食：调查开始时二选一（1 恐惧或 +2 帷幕），轮末弃置"
+        }
+      ]
+    },
+    {
+      "code": "06097",
+      "name": "棱镜光华",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06097 棱镜光华：每轮首次抽/资源/打出多花 1 行动；成功调查改为弃置"
+        }
+      ]
+    },
+    {
+      "code": "06098",
+      "name": "黑夜恐怖",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "威胁区行动的收尾与卡面不符：卡面「[action] 意志(4)。本次检定结束后弃掉黑夜恐怖（即使失败）」，实现在共享 performEncounterAction 中只在检定成功时 api.removeThreat；失败则本卡永远留在威胁区，与「即使失败」冲突。失败后的牌库顶 3 张强制（flags.afterFailTest）已由 TDE encounter-rules.afterTest 实现。"
+    },
+    {
+      "code": "06099",
+      "name": "窥看地下世界",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面「当你将受到伤害和/或恐惧时：受到 1 点额外伤害或恐惧」语义是二选一；引擎 harmInterceptor 读点（enemies.js:1057-1060）在同时有伤害与恐惧时给两者各 +1（等价于「和」），没有选择。放置威胁区与 [fast] 弃掉后受 1 伤 1 恐（flags.fastDiscardFollowUp）已实现。"
+    },
+    {
+      "code": "06100",
+      "name": "现实之线",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06100 现实之线：附属印刷费用最高的支援；无支援则涌动"
+        }
+      ]
+    },
+    {
+      "code": "06101",
+      "name": "冷原蜘蛛",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06101 冷原蜘蛛：敌军阶段结束给每个蛛群加 1 蜂拥卡；无蛛群则找并生成"
+        }
+      ]
+    },
+    {
+      "code": "06102",
+      "name": "蛛群",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "共享组条目：06084 猎物覆盖、06102 躲避值 = 地点蛛群数、06272 附属地点或推进巨噬蠕虫"
+        }
+      ]
+    },
+    {
+      "code": "06103",
+      "name": "恶心蛛网",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "共享组条目：06103 恶心蛛网的蜘蛛关键词/移动封锁/摆脱行动（章节 behavior 接线）"
+        }
+      ]
+    },
+    {
+      "code": "06104",
+      "name": "海盗追猎",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06104 海盗追猎：附属当前幕；幕推进时每人 2 伤害；幕获得摆脱行动"
+        }
+      ]
+    },
+    {
+      "code": "06105",
+      "name": "冷原海盗",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06105 冷原海盗：最近城市/月面地点生成；警戒攻击后本阶段躲避 -3"
+        }
+      ]
+    },
+    {
+      "code": "06106",
+      "name": "鬼祟的祖格鼠",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06106 鬼祟的祖格鼠：与本地点战斗最低者交战；猎物战斗最低；反击+Swarming 1"
+        }
+      ]
+    },
+    {
+      "code": "06107",
+      "name": "潜行的祖格鼠",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06107 潜行的祖格鼠：与本地点敏捷最低者交战；猎物敏捷最低；警戒+Swarming 1"
+        }
+      ]
+    },
+    {
+      "code": "06108",
+      "name": "隐蔽的祖格鼠",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "被击败强制只实现了一部分：卡面「隐蔽的祖格鼠被击败时：取消所有超出伤害，并把其余的蜂拥/头领卡牌移动到一个连接地点，呈横置状态」。enemyScript.onSwarmDefeated 只在「本敌人作为蜂拥卡被击败」时触发，且只移动头领（未把其余蜂拥卡一并移动）；作为头领被击败的分支没有对应处理。取消超出伤害（cancelExcessDamage）已接引擎 enemies.js:916。"
+    },
+    {
+      "code": "06109",
+      "name": "祖格鼠的地穴",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06109 祖格鼠的地穴：敏捷(3) 失败每点给最近蜂拥祖格鼠加 1 蜂拥卡"
+        }
+      ]
+    }
+  ]
+}

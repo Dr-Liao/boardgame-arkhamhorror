@@ -7,17 +7,18 @@ import { SCENARIO_MUSIC, SIDE_STORY_MUSIC, scenarioPlaylistId, sideStoryCampaign
 // 组件 CSS 只消费 --ah-theme-* 与 --ah-material-*，不要另写死主题色。
 
 const ROOT = '/mods/arkhamhorror'
-const CARCOSA = `${ROOT}/img/campaigns/thePathToCarcosa`
-const FORGOTTEN_AGE = `${ROOT}/img/campaigns/theForgottenAge`
-const DUNWICH = `${ROOT}/img/campaigns/theDunwichLegacy`
-const NOTZ = `${ROOT}/img/campaigns/nightOfTheZealot`
-const CIRCLE = `${ROOT}/img/campaigns/theCircleUndone`
-const DREAM_EATERS = `${ROOT}/img/campaigns/theDreamEaters`
-const INNSMOUTH = `${ROOT}/img/campaigns/theInnsmouthConspiracy`
-const EARTH_EDGE = `${ROOT}/img/campaigns/edgeOfTheEarth`
-const SCARLET_KEYS = `${ROOT}/img/campaigns/theScarletKeys`
-const HEMLOCK_VALE = `${ROOT}/img/campaigns/theFeastOfHemlockVale`
-const DROWNED_CITY = `${ROOT}/img/campaigns/theDrownedCity`
+export const CAMPAIGN_IMAGE_ROOT = 'https://drliao1.com/arkhamhorror/campaigns/'
+const CARCOSA = CAMPAIGN_IMAGE_ROOT + 'thePathToCarcosa'
+const FORGOTTEN_AGE = CAMPAIGN_IMAGE_ROOT + 'theForgottenAge'
+const DUNWICH = CAMPAIGN_IMAGE_ROOT + 'theDunwichLegacy'
+const NOTZ = CAMPAIGN_IMAGE_ROOT + 'nightOfTheZealot'
+const CIRCLE = CAMPAIGN_IMAGE_ROOT + 'theCircleUndone'
+const DREAM_EATERS = CAMPAIGN_IMAGE_ROOT + 'theDreamEaters'
+const INNSMOUTH = CAMPAIGN_IMAGE_ROOT + 'theInnsmouthConspiracy'
+const EARTH_EDGE = CAMPAIGN_IMAGE_ROOT + 'edgeOfTheEarth'
+const SCARLET_KEYS = CAMPAIGN_IMAGE_ROOT + 'theScarletKeys'
+const HEMLOCK_VALE = CAMPAIGN_IMAGE_ROOT + 'theFeastOfHemlockVale'
+const DROWNED_CITY = CAMPAIGN_IMAGE_ROOT + 'theDrownedCity'
 
 const COMMON = Object.freeze({
   id: 'common',
@@ -255,7 +256,7 @@ const CAMPAIGNS = Object.freeze({
     }) })]))),
   }),
   ...Object.fromEntries(Object.keys(SIDE_STORY_MUSIC).map(id => {
-    const cover = `${ROOT}/img/campaigns/side-stories/${id}.webp`
+    const cover = `${CAMPAIGN_IMAGE_ROOT}side-stories/${id}.webp`
     return [id, Object.freeze({
       id,
       assets: Object.freeze({ hubHero: cover, casefile: cover, storyDefault: cover }),

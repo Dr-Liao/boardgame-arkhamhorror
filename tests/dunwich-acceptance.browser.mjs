@@ -22,6 +22,6 @@ test('敦威治333张逐卡验收状态在 API 与真实图鉴一致', async ({ 
     await modal.getByLabel('卡号或名称').fill(code)
     await modal.getByRole('button', { name: '检索', exact: true }).click()
     await expect(modal.locator('.ah-catalog-card')).toHaveCount(1)
-    await expect(modal.locator('.ah-catalog-card')).toContainText('已验收')
+    await expect(modal.locator('.ah-catalog-card')).toContainText('已校验')
   }
 })

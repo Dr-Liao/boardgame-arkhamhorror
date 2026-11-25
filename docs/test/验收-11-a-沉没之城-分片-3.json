@@ -1,0 +1,209 @@
+{
+  "unit": "11-a-3",
+  "generatedAt": "2026-11-25",
+  "scope": {
+    "cards": 42,
+    "selector": "pack==='tdcp' && 11088<=code<=11129 && effectStatus==='unverified'",
+    "packs": {
+      "tdcp": 42
+    }
+  },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "11088",
+    "11089",
+    "11090",
+    "11091",
+    "11092",
+    "11093",
+    "11094",
+    "11095",
+    "11096",
+    "11097",
+    "11098",
+    "11099",
+    "11100",
+    "11101",
+    "11102",
+    "11103",
+    "11104",
+    "11105",
+    "11106",
+    "11107",
+    "11108",
+    "11109",
+    "11110",
+    "11111",
+    "11112",
+    "11113",
+    "11114",
+    "11116",
+    "11117",
+    "11118",
+    "11119",
+    "11120",
+    "11121",
+    "11122",
+    "11123",
+    "11124",
+    "11126",
+    "11127",
+    "11128",
+    "11129"
+  ],
+  "failedCodes": [
+    {
+      "code": "11115",
+      "dimension": "implementation",
+      "reason": "「本次攻击揭示的每个符号各造成 1 点伤害（至多 3 点）」被实现为「先选一名敌人，再把 min(3, 符号数) 点伤害一次打给它」：印刷允许每个符号独立选择本地点敌人（可分摊到多个敌人），实现只能单一目标 → 少了合法的分摊目标选择。入口 `src/cards/entries/11115.js` 的 resolve 只调用一次 api.damageEnemy。",
+      "evidence": "src/cards/entries/11115.js"
+    },
+    {
+      "code": "11125",
+      "dimension": "implementation",
+      "reason": "卡面末句「At the end of the game, return that card to your collection」未实现：`chooseCollectionPlay` 只负责从收藏检索并免费打出（api 见 src/engine/engine.js:1502），全仓无「收藏卡在游戏结束归还」的战役账目/读点（grep collection 仅 engine.js/api-test.js 两处），战役层不会记录被带出的收藏卡，因此结局阶段无法归还。",
+      "evidence": "src/cards/entries/11125.js"
+    }
+  ],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "fail",
+    "primitives": "pass",
+    "interaction": "pass",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/tdc-player.test.mjs + tdc-player-survivor.test.mjs + tdc-player-guardian.test.mjs",
+      "test": "40 张卡已有标题含卡号的真实用例；本轮重跑",
+      "codes": [
+        "11088",
+        "11089",
+        "11090",
+        "11091",
+        "11092",
+        "11093",
+        "11094",
+        "11095",
+        "11096",
+        "11097",
+        "11098",
+        "11099",
+        "11100",
+        "11101",
+        "11102",
+        "11103",
+        "11104",
+        "11105",
+        "11106",
+        "11107",
+        "11108",
+        "11109",
+        "11110",
+        "11111",
+        "11112",
+        "11113",
+        "11114",
+        "11116",
+        "11117",
+        "11118",
+        "11119",
+        "11120",
+        "11121",
+        "11122",
+        "11123",
+        "11124",
+        "11126",
+        "11127",
+        "11128",
+        "11129"
+      ],
+      "result": "tests 86 / pass 86 / fail 0"
+    },
+    {
+      "file": "tests/acceptance-11-a-shard3.test.mjs（新增）",
+      "test": "11127 病态好奇、11128 骚灵为祸各补一条标题含卡号的真实执行（fixture + legalMoves/move/settle，含成功/失败两分支），补齐本分片 42/42 逐卡证据",
+      "codes": [
+        "11127",
+        "11128"
+      ],
+      "result": "tests 2 / pass 2 / fail 0"
+    },
+    {
+      "file": "audit/tdc-player.json（复核，不采信结论）",
+      "test": "scope 42 条全部 status=verified、无 simplified 披露；ledger requests 66 项全部 verified，含本分片 21 个卡号的 primitive-request（11088/11091/11092/11094/11095/11097/11098/11099/11100/11101/11103/11104/11108/11109/11111/11114/11116/11117/11118/11125/11126）",
+      "codes": [
+        "11088",
+        "11089",
+        "11090",
+        "11091",
+        "11092",
+        "11093",
+        "11094",
+        "11095",
+        "11096",
+        "11097",
+        "11098",
+        "11099",
+        "11100",
+        "11101",
+        "11102",
+        "11103",
+        "11104",
+        "11105",
+        "11106",
+        "11107",
+        "11108",
+        "11109",
+        "11110",
+        "11111",
+        "11112",
+        "11113",
+        "11114",
+        "11115",
+        "11116",
+        "11117",
+        "11118",
+        "11119",
+        "11120",
+        "11121",
+        "11122",
+        "11123",
+        "11124",
+        "11125",
+        "11126",
+        "11127",
+        "11128",
+        "11129"
+      ]
+    },
+    {
+      "file": "G:/boardgame-hall-ai/artifacts/migration/tdc/p7/literal/*.json（证据线索）",
+      "test": "逐章节 literal 账本不含本分片玩家卡号（本分片全是 11xxx 玩家卡/基础弱点），故仅作交叉检查；未采信"
+    },
+    {
+      "file": "docs/campaign/theDrownedCity/{primitives,player-cards,rulebook}.md",
+      "test": "原语文档的「未落地」清单均为 115xx 战役侧卡号，不覆盖本分片；P7 第二轮读点与本次抽查一致"
+    }
+  ],
+  "commands": [
+    {
+      "command": "node --test tests/tdc-player.test.mjs tests/tdc-player-survivor.test.mjs tests/tdc-player-guardian.test.mjs",
+      "result": "tests 86 / pass 86 / fail 0"
+    },
+    {
+      "command": "node --test tests/acceptance-11-a-shard3.test.mjs",
+      "result": "tests 2 / pass 2 / fail 0"
+    },
+    {
+      "command": "npm run cards:check / cards:encounter-check / audit:entries",
+      "result": "通过（本分片 R1/R2/R3 0 条）"
+    },
+    {
+      "command": "npm run docs:check",
+      "result": "通过"
+    }
+  ],
+  "notes": "五维：实现完整性 fail（2 张：11115 符号伤害只能单目标、11125 游戏结束不归还收藏卡；其余 40 张逐卡核验实现与卡面一致）；原语设计 pass（本分片 21 个 primitive-request 全部 verified，抽查 playCostUses/emptyAssetSlots/chooseCollectionPlay/per-symbol 伤害等读点均在引擎存在；未新增未登记原语）；玩家交互性 pass（玩家卡无新增面板；11119/11120 的 usesType=shell/lead 无专用 marker 文案，回落通用 uses 文案——文案级附注，非行为缺失）；证据 pass（40 张既有标题用例重跑 86/86 + 新增 11127/11128 两例 2/2，42/42 覆盖）；合规 pass。分片 verdict=partial：40 张可切 verified，11115/11125 保持 unverified。附注（不判失败但建议主进程处理）：11126「Either spend 3 resources or discard 3 cards」被拆成两个独立 action 能力（行为等价、UI 多一个按钮，建议合成一个带成本的模态选择）；11119 装填能力加了 uses<1 的 criteria（满弹时印刷能力可空放，属合法但无收益的抑制）；11115 修复需按符号循环选择目标后多次 damageEnemy（同一敌人可重复选）。新增测试未登记 tests/suites.mjs / tests/node-suite.mjs（审计角色不改既有 tests/），主进程合并时必须登记，否则 suite-manifest 红。"
+}

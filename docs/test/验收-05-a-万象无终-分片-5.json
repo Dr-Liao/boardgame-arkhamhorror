@@ -1,0 +1,220 @@
+{
+  "unit": "05-a-5",
+  "generatedAt": "2026-11-24",
+  "status": "complete",
+  "scope": {
+    "cards": 44,
+    "selector": "code =~ /^05/ && pack === 'fgg' && effectStatus != 'verified'",
+    "packs": {
+      "fgg": 44
+    },
+    "types": {
+      "asset": 13,
+      "scenario": 1,
+      "agenda": 2,
+      "act": 4,
+      "location": 13,
+      "enemy": 7,
+      "treachery": 4
+    }
+  },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "05186",
+    "05187",
+    "05190",
+    "05191",
+    "05192",
+    "05193",
+    "05197",
+    "05198",
+    "05199",
+    "05200",
+    "05201",
+    "05202",
+    "05203",
+    "05204",
+    "05205",
+    "05206",
+    "05207",
+    "05208",
+    "05209",
+    "05210",
+    "05211",
+    "05212",
+    "05213",
+    "05214",
+    "05215",
+    "05216",
+    "05217",
+    "05217b",
+    "05218",
+    "05219",
+    "05220",
+    "05221",
+    "05222",
+    "05224",
+    "05225",
+    "05226",
+    "05227",
+    "05228"
+  ],
+  "failedCodes": [
+    {
+      "code": "05188",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态（别名写入，审计基线未检出）：把 state 的牌库数组取为 `zone.pile` 后直接 `splice/unshift/push`（调查员牌库 / 遭遇牌库）；同文件其它去向已走 api.putInHand/putInDiscard/discardEncounterCards，说明区域原语存在却未统一使用。行为正确（tcu-player-m2-3 用例通过）。",
+      "evidence": "src/cards/entries/05188.js:50,101-102",
+      "repro": "grep `zone.pile` src/cards/entries/05188.js → 50,101,102 行直接改写牌库数组；node tools/audit-card-entry-compliance.mjs 未报告（基线 TCU=0）。"
+    },
+    {
+      "code": "05189",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态（别名写入，审计基线未检出）：`zone.pile.splice`、`discardPileOf(...).push`、`state.investigators[zone.seat].hand.push`、牌库 unshift/push 均直接改区域数组；应使用 putOnTopOfDeck/putOnDeckBottom/takeDeckBottom/putInDiscard/putInHand。行为正确（tcu-player-m2-3 用例通过）。",
+      "evidence": "src/cards/entries/05189.js:67,72,77,82,87",
+      "repro": "grep 上述行；audit/card-entry-compliance.json 基线未含 05189。"
+    },
+    {
+      "code": "05194",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态 + 单卡新造字段：对 state.skillTest.committed 的条目直接 `committed.extraIcons = [...]`（未走 ctx.api，`extraIcons` 为单卡私有字段）；「额外图标」以 +1 检定加值近似，已在条目注释披露（近似本身可接受），写入方式违规。",
+      "evidence": "src/cards/entries/05194.js:63",
+      "repro": "grep `extraIcons` src/cards/entries/05194.js:63；audit 基线未含 05194。"
+    },
+    {
+      "code": "05195",
+      "dimension": "primitives",
+      "reason": "R1 直写运行时状态 + 单卡新造字段：在支援实例上直接写/删 `source.grislyReturn` 传递「本次投入卡」，并在失败窗口直接 `committed.splice` 改 state.skillTest.committed；应走提交区/窗口原语。行为正确（tcu-player-m2-3 用例通过）。",
+      "evidence": "src/cards/entries/05195.js:67,79,84",
+      "repro": "grep `grislyReturn` / `committed.splice` src/cards/entries/05195.js；audit 基线未含 05195。"
+    },
+    {
+      "code": "05196",
+      "dimension": "primitives",
+      "reason": "R1 直写资产字段：entersPlay resolve 直接 `source.uses = ...` / `source.usesType = ...`（同卡行动分支已用 api.setAssetUses，存在正确原语却未统一）。其余子句（1×人数锁头、双行动任意技能(5)、锁头清零后全队免费打出并放逐、同地点队友可激活）有真实读点与用例。",
+      "evidence": "src/cards/entries/05196.js:36-37",
+      "repro": "grep `source.uses` src/cards/entries/05196.js:36-37；audit 基线未含 05196。"
+    },
+    {
+      "code": "05223",
+      "dimension": "implementation",
+      "reason": "卡面「spawn them in the **empty** location with the most remaining clues」与「If no Cultist enemies are spawned by this effect, Call to Order gains surge」两处未忠实实现：behavior.js:1344 在没有任何空地点时回退到 `state.locations`（含被调查员/敌人占据的地点），实测会在调查员所在位置生成；且生成被拒绝（秘社大门禁生成）时不会获得涌动。正常有空地点路径由 tcu-greater-good 用例覆盖且正确。",
+      "evidence": "content/campaigns/theCircleUndone/scenarios/forTheGreaterGood/behavior.js:1340-1349",
+      "repro": "node artifacts/acceptance/05-a-5/repro-05223.mjs → 空地点数量 0，实际生成 2 个敌人于 lodgeGatesMembers（调查员所在地点）、drawEncounter=0；期望不生成并获得涌动（exit 1）。"
+    }
+  ],
+  "pendingCodes": [],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "fail",
+    "primitives": "fail",
+    "interaction": "pass",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/tcu-player-m2-3.test.mjs",
+      "test": "05186–05196 逐卡行为用例（标题含卡号）",
+      "codes": [
+        "05186",
+        "05187",
+        "05188",
+        "05189",
+        "05190",
+        "05191",
+        "05192",
+        "05193",
+        "05194",
+        "05195",
+        "05196"
+      ],
+      "command": "node --test tests/tcu-player-m2-3.test.mjs",
+      "result": "与下列 4 个文件同批重跑：tests 133 / pass 133 / fail 0"
+    },
+    {
+      "file": "tests/tcu-greater-good.test.mjs",
+      "test": "05197–05228 章节/关卡用例（标题含卡号）",
+      "codes": [
+        "05197",
+        "05198",
+        "05199",
+        "05201",
+        "05204",
+        "05205",
+        "05208",
+        "05210",
+        "05213",
+        "05215",
+        "05217",
+        "05218",
+        "05219",
+        "05220",
+        "05221",
+        "05222",
+        "05223",
+        "05224",
+        "05225",
+        "05226",
+        "05227",
+        "05228"
+      ],
+      "command": "node --test tests/tcu-greater-good.test.mjs tests/tcu-p0-regressions.test.mjs tests/tcu-p1-regressions.test.mjs",
+      "result": "tests 119 / pass 119 / fail 0（与 tcu-player-m2-3 + 新增 14 合并跑为 133/133）"
+    },
+    {
+      "file": "tests/tcu-p0-regressions.test.mjs",
+      "test": "P0-4 05201 1a 正面反应从开局起生效",
+      "codes": [
+        "05201"
+      ],
+      "command": "同上批重跑",
+      "result": "pass"
+    },
+    {
+      "file": "tests/tcu-p1-regressions.test.mjs",
+      "test": "P1 05203 四把钥匙 / 05284 幕上裂口 真实 viewState 可观察",
+      "codes": [
+        "05203"
+      ],
+      "command": "同上批重跑",
+      "result": "pass"
+    },
+    {
+      "file": "tests/acceptance-05-a-shard5.test.mjs",
+      "test": "补缺证据的 11 张卡 + 05197 困难面/无目标分支（14 用例，标题含卡号）",
+      "codes": [
+        "05197",
+        "05200",
+        "05202",
+        "05206",
+        "05207",
+        "05209",
+        "05211",
+        "05212",
+        "05214",
+        "05216",
+        "05217b",
+        "05227"
+      ],
+      "command": "node --test tests/acceptance-05-a-shard5.test.mjs",
+      "result": "tests 14 / pass 14 / fail 0"
+    },
+    {
+      "file": "artifacts/acceptance/05-a-5/repro-05223.mjs",
+      "test": "05223 缺陷复现（期望不生成并涌动；实际在非空地点生成、不涌动）",
+      "codes": [
+        "05223"
+      ],
+      "command": "node artifacts/acceptance/05-a-5/repro-05223.mjs",
+      "result": "exit 1：FAIL 05223"
+    }
+  ],
+  "gates": {
+    "cardsCheck": "npm run cards:check → exit 0（含条目合规审计 R1 112 / R2 0 / R3 0，无基线外新增；TCU 条目 R1 基线 0）",
+    "encounterCheck": "npm run cards:encounter-check → exit 0",
+    "auditEntries": "npm run audit:entries → exit 0",
+    "replay": "未改行为代码，无 replay 基线变更；按任务要求未跑全量 fast/slow/assets。"
+  },
+  "notes": "通过 38 / 失败 6（5 张玩家卡原语违规 + 1 张 05223 实现缺陷）。四把钥匙、机关盒、南森双面、圣堂 aloof 等 TCU 结构性近似均已在 content/.../forTheGreaterGood/notes.js 披露；P2 结构性迁移（地点规则条目化、set-aside 账本）仍未完成，本报告如实登记但不作为本分片逐卡失败依据（除 05223 的印刷子句缺口外）。"
+}

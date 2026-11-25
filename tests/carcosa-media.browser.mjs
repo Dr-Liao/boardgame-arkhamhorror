@@ -1,6 +1,7 @@
 import { selectCampaign } from './playwright/campaign-picker.mjs'
 import { test, expect } from '@playwright/test'
 import { mkdirSync } from 'node:fs'
+import { CAMPAIGN_IMAGE_ROOT } from '../web/campaign-presentation.js'
 
 test('卡尔克萨八章图片可解码，整轮歌单与六首专属音乐正确播放及切换', async ({ page, request }) => {
   await page.route('**/carcosa-media-fixture', route => route.fulfill({ contentType: 'text/html', body: '<main></main>' }))
@@ -53,8 +54,8 @@ test('卡尔克萨八章图片可解码，整轮歌单与六首专属音乐正�
     expect(partial.headers()['content-type']).toBe('audio/mpeg')
   }
   await page.evaluate(() => window.player.render(true, 'nightOfTheZealot'))
+  await expect.poll(() => page.evaluate(() => window.musicAudio.src)).toContain('/common/darkest-child.mp3')
   await expect.poll(() => page.evaluate(() => window.musicAudio.currentTime)).toBeGreaterThan(.1)
-  expect(await page.evaluate(() => window.musicAudio.src)).toContain('/common/darkest-child.mp3')
   await page.locator('.ah-music-mini').click()
   await page.evaluate(() => window.player.render(true, 'thePathToCarcosa'))
   expect(await page.evaluate(() => window.musicAudio.paused)).toBe(true)
@@ -76,23 +77,26 @@ test('卡尔克萨可从大厅启动并使用专属主视觉与歌单', async ({
   await selectCampaign(page, setup, 'thePathToCarcosa')
   await setup.getByRole('button', { name: '开始新游戏' }).click()
   await expect(page.locator('.ah-hub')).toHaveAttribute('data-presentation-theme', 'thePathToCarcosa')
-  const hero = page.locator('img[src$="thePathToCarcosa/hub/theatre.webp"]').first()
-  await expect(hero).toBeAttached()
-  await expect.poll(() => hero.evaluate(image => image.naturalWidth)).toBeGreaterThan(1500)
+  const hero = page.locator('.ah-hub .ah-office-hero img.ah-office-decor')
+  await expect(hero).toHaveAttribute('src', CAMPAIGN_IMAGE_ROOT + 'thePathToCarcosa/hub/theatre.webp')
+  expect(await hero.evaluate(async image => {
+    await image.decode()
+    return image.naturalWidth
+  })).toBeGreaterThan(1500)
   await page.getByRole('button', { name: '关卡选择', exact: true }).click()
   const cases = page.locator('.ah-office-case')
   await expect(cases).toHaveCount(8)
-  const caseArt = await cases.locator('.ah-office-case-art').evaluateAll(images => images.map(image => new URL(image.src).pathname))
+  const caseArt = await cases.locator('.ah-office-case-art').evaluateAll(images => images.map(image => image.src))
   expect(caseArt).toEqual([
-    '/mods/arkhamhorror/img/campaigns/thePathToCarcosa/hub/theatre.webp',
-    '/mods/arkhamhorror/img/campaigns/thePathToCarcosa/scenarios/theLastKing/scene.webp',
-    '/mods/arkhamhorror/img/campaigns/thePathToCarcosa/scenarios/echoesOfThePast/scene.webp',
-    '/mods/arkhamhorror/img/campaigns/thePathToCarcosa/scenarios/theUnspeakableOath/scene.webp',
-    '/mods/arkhamhorror/img/campaigns/thePathToCarcosa/scenarios/aPhantomOfTruth/scene.webp',
-    '/mods/arkhamhorror/img/campaigns/thePathToCarcosa/scenarios/thePallidMask/scene.webp',
-    '/mods/arkhamhorror/img/campaigns/thePathToCarcosa/scenarios/blackStarsRise/scene.webp',
-    '/mods/arkhamhorror/img/campaigns/thePathToCarcosa/scenarios/dimCarcosa/scene.webp',
-  ])
+    'hub/theatre.webp',
+    'scenarios/theLastKing/scene.webp',
+    'scenarios/echoesOfThePast/scene.webp',
+    'scenarios/theUnspeakableOath/scene.webp',
+    'scenarios/aPhantomOfTruth/scene.webp',
+    'scenarios/thePallidMask/scene.webp',
+    'scenarios/blackStarsRise/scene.webp',
+    'scenarios/dimCarcosa/scene.webp',
+  ].map(file => CAMPAIGN_IMAGE_ROOT + 'thePathToCarcosa/' + file))
   const firstRowCopyTops = await cases.locator('.ah-office-case-copy').evaluateAll(copies =>
     copies.slice(0, 3).map(copy => copy.getBoundingClientRect().top))
   expect(new Set(firstRowCopyTops).size).toBe(1)

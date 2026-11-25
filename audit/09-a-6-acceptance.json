@@ -1,0 +1,617 @@
+{
+  "schemaVersion": 1,
+  "unit": "09-a-6",
+  "profile": {
+    "id": "tsk-campaign-c-2026-11",
+    "scope": "绯红密钥 09 段 tskc 战役卡（09584–09622）45 条目录记录。38 条通过五维验收；7 条子句无读点暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 45,
+    "verified": 38,
+    "unverified": 7,
+    "unimplemented": 0,
+    "testsPassed": 184
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+      "sha256": "7a1f0e4766f04c3c886c70cbdbc0c2eef658aa79b2e309c11c50c691b36a84b0"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-scenario-riddlesAndRain.test.mjs",
+      "sha256": "c75b3a9f921e0e991dad3da9758a8a1b03221ae836da056a57aacd19636f60c9"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-scenario-dancingMad.test.mjs",
+      "sha256": "55245f8711f093dc0d50e326d32981d8ce925432acda4aaf23107ba06b1e29dc"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-rules.test.mjs",
+      "sha256": "5ae05cfcab8019f5322e8207b5145c1cf024104eeaf00a84312c17f902879ad8"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-customizable.test.mjs",
+      "sha256": "4311237d47f104f0b62635d521dcccf34a0804a9109d07f7f3aa3ff05800743b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-keys-hollow.test.mjs",
+      "sha256": "925b275cb5d75467558ff4fa6f11f5bd01c4500aa5a1b8d1562e9bcb267f2f09"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-state.test.mjs",
+      "sha256": "46ca77b4b6442473ff0bbe6570b437187086df6337c989fb89f9cb4c3decbb18"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-primitives-map.test.mjs",
+      "sha256": "a46ed2ac6953edaecec26fe89a8ac494a3a275ba8e2c56ab21a124ca23a7afc2"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-interactions.test.mjs",
+      "sha256": "275c143401aaca1618ba01abe71f3838732d13b73ab5932098e13ff447146233"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-p0-regressions.test.mjs",
+      "sha256": "8d71ccce9008da1a2332f9e4d4381d6c26e096a8c5511eec83bde0e0d40a9e52"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tsk-p1-regressions.test.mjs",
+      "sha256": "892ccba343a9c8a9186957c1a49018ba3fb3375c3298bf46d8bc91211614f8a4"
+    }
+  ],
+  "entries": [
+    {
+      "code": "09584",
+      "name": "艾婕·萨辛",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09584 艾婕·萨辛：条目 [free] 放牌能力可执行并把牌记入 eceBeneath；钥匙变换后读点存在"
+        }
+      ]
+    },
+    {
+      "code": "09585",
+      "name": "幽影预示者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09585 幽影预示者：敌人受伤窗口的条目强制能力可执行（最近的[[异教徒]]由章节事件实现）"
+        }
+      ]
+    },
+    {
+      "code": "09586a",
+      "name": "邪恶野心家(A)",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09586a 邪恶野心家：enemyRule.enemyPhaseEndDoomIfReady 由章节 behavior.enemyPhaseEnd 读取"
+        }
+      ]
+    },
+    {
+      "code": "09586b",
+      "name": "邪恶野心家(B)",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09586b 邪恶野心家：enemyRule.enemyPhaseEndDoomIfReady 由章节 behavior.enemyPhaseEnd 读取"
+        }
+      ]
+    },
+    {
+      "code": "09586c",
+      "name": "邪恶野心家(C)",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09586c 邪恶野心家：enemyRule.enemyPhaseEndDoomIfReady 由章节 behavior.enemyPhaseEnd 读取"
+        }
+      ]
+    },
+    {
+      "code": "09587",
+      "name": "阴影笼罩",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09587 最近[[异教徒]]显现：条目 encounterResolve 放毁灭 + 检定 + 失败惩罚"
+        }
+      ]
+    },
+    {
+      "code": "09588",
+      "name": "纠缠不休",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09588 最近[[异教徒]]显现：条目 encounterResolve 放毁灭 + 检定 + 失败惩罚"
+        }
+      ]
+    },
+    {
+      "code": "09589",
+      "name": "虚空幽光",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09589 虚空幽光：显现二选一 + 线索多于教派时再次结算"
+        }
+      ]
+    },
+    {
+      "code": "09590a",
+      "name": "扭曲反棱镜",
+      "type": "key",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09590a 扭曲反棱镜：变换规则由条目 flags.shiftRule 声明并被 shiftTwistedAntiprism 读取"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09590b 扭曲反棱镜：变换规则由条目 flags.shiftRule 声明并被 shiftTwistedAntiprism 读取"
+        }
+      ]
+    },
+    {
+      "code": "09590b",
+      "name": "扭曲反棱镜",
+      "type": "key",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09590b 扭曲反棱镜：变换规则由条目 flags.shiftRule 声明并被 shiftTwistedAntiprism 读取"
+        }
+      ]
+    },
+    {
+      "code": "09591",
+      "name": "疯星乱舞",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09591 疯星乱舞（剧本参考卡）：内容层提供混乱标记表与章节 referenceCode（scenario-reference 类别）"
+        }
+      ]
+    },
+    {
+      "code": "09592",
+      "name": "沉默之声",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09592 议程：正面空洞强制阈值与背面动作由章节数据声明且 behavior 读取"
+        }
+      ]
+    },
+    {
+      "code": "09593",
+      "name": "笼中鸟",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09593 议程：正面空洞强制阈值与背面动作由章节数据声明且 behavior 读取"
+        }
+      ]
+    },
+    {
+      "code": "09594",
+      "name": "眼见为虚",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09594 议程：正面空洞强制阈值与背面动作由章节数据声明且 behavior 读取"
+        }
+      ]
+    },
+    {
+      "code": "09595",
+      "name": "一失足(版本一)",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "幕 1 v.I 正面强制「如果德西德柔·戴佳多·欧瓦瑞兹离场：将他放在一边，每位调查员受到 1 点恐惧」无读点：章节 behavior 没有 storyAssetLeftPlay 等「剧情支援离场」窗口消费方（engine 已有该钩子），条目又是数据型。"
+    },
+    {
+      "code": "09596",
+      "name": "一失色(版本一)",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09596 幕：背面处置由 ACT_BACK_HANDLERS / behavior 行动与目标读点承接"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09596 幕：隐匿 X 的团队付线索改直接交战由 concealEnemy 实现（幕 2 v.I 目标口径）"
+        }
+      ]
+    },
+    {
+      "code": "09597",
+      "name": "一失足(版本二)",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09597 幕：背面处置由 ACT_BACK_HANDLERS / behavior 行动与目标读点承接"
+        }
+      ]
+    },
+    {
+      "code": "09598",
+      "name": "一失色(版本二)",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09598 幕：背面处置由 ACT_BACK_HANDLERS / behavior 行动与目标读点承接"
+        }
+      ]
+    },
+    {
+      "code": "09599",
+      "name": "一失真相",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09599 幕：背面处置由 ACT_BACK_HANDLERS / behavior 行动与目标读点承接"
+        }
+      ]
+    },
+    {
+      "code": "09600a",
+      "name": "月下餐厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09600a 月下餐厅（结社据点面）：无卡面能力，定义数据存在"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09600b 月下餐厅（追忆堡垒面）：域外敌人 -1 帷幕 + 无线索补线索读点"
+        }
+      ]
+    },
+    {
+      "code": "09600b",
+      "name": "月下餐厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09600b 月下餐厅（追忆堡垒面）：域外敌人 -1 帷幕 + 无线索补线索读点"
+        }
+      ]
+    },
+    {
+      "code": "09601",
+      "name": "马赛奥大道",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09601 马赛奥大道：[reaction] 被实现为 [fast] 场景行动，缺少「揭露诱饵后」触发条件"
+        }
+      ]
+    },
+    {
+      "code": "09602",
+      "name": "热带花园",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09602 热带花园：调查成功 3+ 抽回空洞 / 失败 3+ 把非弱点手牌作为空洞（afterInvestigate 读点）"
+        }
+      ]
+    },
+    {
+      "code": "09603",
+      "name": "哈瓦那大剧院",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「隐藏值 -2 直到你的回合结束」未实现到期：behavior.performAction 直接把 location.shroudMod 减 2，且 behavior.roundEnded 不清理；实测回合结束后仍为 -2（永久修正，超出印刷时限）。"
+    },
+    {
+      "code": "09604",
+      "name": "海景游艇俱乐部",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09604 海景游艇俱乐部：调查改为查看迷你卡已揭示面（investigateResult 读点）"
+        }
+      ]
+    },
+    {
+      "code": "09605",
+      "name": "广场酒店",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09605 广场酒店：受到 1 恐惧查看迷你卡已揭示面（fast 行动 + 团队每轮一次）"
+        }
+      ]
+    },
+    {
+      "code": "09606a",
+      "name": "德西德柔·戴佳多·欧瓦瑞兹",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09606a 德西德柔：+2×人数生命值 / 幕 1–2 受伤改自动躲避 / 另一张对其造成 2 伤害"
+        }
+      ]
+    },
+    {
+      "code": "09607a",
+      "name": "德西德柔·戴佳多·欧瓦瑞兹",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09607a 德西德柔：+2×人数生命值 / 幕 1–2 受伤改自动躲避 / 另一张对其造成 2 伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09607b 德西剧情资产：[[怪物]]敌人攻击伤害 -1 且对攻击者造成 1 伤害（enemyAttackModifier 读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-scenario-dancingMad.test.mjs",
+          "test": "P7 dancingMad 剧情资产 09607b：[[怪物]] 攻击伤害 -1、横置他并对攻击者造成 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "09607b",
+      "name": "德西德柔·戴佳多·欧瓦瑞兹",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09607b 德西剧情资产：[[怪物]]敌人攻击伤害 -1 且对攻击者造成 1 伤害（enemyAttackModifier 读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-scenario-dancingMad.test.mjs",
+          "test": "P7 dancingMad 剧情资产 09607b：[[怪物]] 攻击伤害 -1、横置他并对攻击者造成 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "09608",
+      "name": "惨遭夺舍",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09608 惨遭夺舍：显现意志(4)失败把[[盟友]]/[[道具]]作为空洞，无候选改 2 恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-scenario-dancingMad.test.mjs",
+          "test": "P7 dancingMad 遭遇 09608 惨遭夺舍：失败把[[盟友]]变成空洞，无候选改为 2 点恐惧"
+        }
+      ]
+    },
+    {
+      "code": "09609",
+      "name": "如履薄冰",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09609 如履薄冰（剧本参考卡）：内容层提供混乱标记表与章节 referenceCode（scenario-reference 类别）"
+        }
+      ]
+    },
+    {
+      "code": "09610",
+      "name": "失落与遗忘",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "议程 1 正面强制「有至少 5×人数放一边空洞 → 选 3×人数移除并在本密谋放 1 毁灭（可推进）」无读点：onThinIce 的 AGENDAS 未声明 hollowForced，behavior 也没有对应的正面强制窗口（对比 dancingMad 的 checkHollowForcedDoom）。"
+    },
+    {
+      "code": "09611",
+      "name": "虚空之眼",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "议程 2 正面强制「有至少 4×人数放一边空洞 → 选 2×人数移除并放 1 毁灭」无读点：同 09610，onThinIce AGENDAS 无 hollowForced、behavior 无该强制窗口。"
+    },
+    {
+      "code": "09612",
+      "name": "灭绝",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09612 灭绝：议程 3 背面抹除最高费用空洞并进入结局 4"
+        }
+      ]
+    },
+    {
+      "code": "09613",
+      "name": "寻找玄丧之镜",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09613 寻找玄丧之镜：幕 1 目标仅限废弃金矿调查员共同花费 3×人数线索（引擎 objective.type=clues 读点）"
+        }
+      ]
+    },
+    {
+      "code": "09614",
+      "name": "如果它会流血……",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09614 如果它会流血……：幕 2 勘察报告行动 + 任意轮末可推进 + 背面真实形态入场"
+        }
+      ]
+    },
+    {
+      "code": "09615a",
+      "name": "夜魇游荡",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09615a 夜魇游荡：幕 3 目标（真实形态被揭露后推进）+ 背面即域外来客之巢"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09615b 域外来客之巢：显现入场语义由幕 3 背面实现，但「无线索时奇美拉 -1 攻击/躲避」无读点"
+        }
+      ]
+    },
+    {
+      "code": "09615b",
+      "name": "域外来客之巢",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "域外来客之巢第二句「域外来客之巢没有线索时，虚空奇美拉（真实形态）得到 -1 攻击和 -1 躲避」无读点：onThinIce behavior 没有 enemyStatModifier 钩子（第一句显现入场语义由幕 3 背面 enterOutsidersLair 实现）。"
+    },
+    {
+      "code": "09616",
+      "name": "最后一刻",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09616 最后一刻：幕 4 目标（真实形态被击败）+ 背面按索恩版本分流结局"
+        }
+      ]
+    },
+    {
+      "code": "09617",
+      "name": "安克雷奇",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09617 安克雷奇：[action] 空洞回收 + [action] 撤退（地点数据 resign 读点）"
+        }
+      ]
+    },
+    {
+      "code": "09618",
+      "name": "费尔班克斯",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "费尔班克斯 [reaction]「位于此地的调查员抽取[[危险]]诡计时：花费 2 资源取消其效果并弃掉」无任何读点：behavior 无 cancelHazard/cancelTreachery 窗口（encounterDrawn 仅服务索恩换钥匙）。"
+    },
+    {
+      "code": "09619",
+      "name": "山间溪流",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09619 山间溪流：进入检定 + 最后一个线索后放置 3 张界外荒地（locationEntered/cluesRemoved 读点）"
+        }
+      ]
+    },
+    {
+      "code": "09620",
+      "name": "冰封湖面",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09620 冰封湖面：本地调查员检定揭示符号后弃 1 张手牌或受 1 点恐惧（afterTest 读点）"
+        }
+      ]
+    },
+    {
+      "code": "09621",
+      "name": "偏远小路",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "偏远小路「本地点调查员每轮揭示的第一张[[危险]]诡计获得涌动」无读点：onThinIce behavior 没有 firstHazard/gainsSurge 一类的遭遇抽取修正。"
+    },
+    {
+      "code": "09622",
+      "name": "被遗忘的哨站",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09622 被遗忘的哨站：[action] 抽 3 张卡（每场一次）行动读点"
+        }
+      ]
+    }
+  ]
+}

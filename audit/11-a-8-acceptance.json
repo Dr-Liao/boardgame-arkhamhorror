@@ -1,0 +1,785 @@
+{
+  "schemaVersion": 1,
+  "unit": "11-a-8",
+  "profile": {
+    "id": "tdc-campaign-e-2026-11",
+    "scope": "沉没之城 11 段 tdcc 战役卡（11660–11696）43 条目录记录。38 条通过五维验收；5 条废墟地点能力无读点暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 43,
+    "verified": 38,
+    "unverified": 5,
+    "unimplemented": 0,
+    "testsPassed": 176
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+      "sha256": "8372199d957e339189bf2f2963e66b93744b320a4fbd26797f741636c941eef8"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-scenario-sepulchreOfTheSleeper.test.mjs",
+      "sha256": "2bbeb5257fa553761c99dc0f8387adb42adaea00a7006749c7861e76dfcbdad8"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartI.test.mjs",
+      "sha256": "4755863cd789626919d96203a02190f93d879414067c20fc0bd5f44adf1fbbaf"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-p7-scenario-integrity.test.mjs",
+      "sha256": "e98da7ef14fa3bcec9a7dabec85340e668d11e836a6f53f7a35c08c184dee61e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-p7-scenario-lifecycle.test.mjs",
+      "sha256": "127798e3b82c2a94dd6c5141e5b8a2f50f806aacdecfe0b29e89ae3c49fa2afb"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-p7-story.test.mjs",
+      "sha256": "820ec84187e728b1a1bae045bf76d180cf1756e84373ff24a801d54eac357df1"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-rules.test.mjs",
+      "sha256": "541471492f102ef04f00c249498d1f4cd93173e554068f3cf86c1e1c26991e7b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-primitives.test.mjs",
+      "sha256": "c152d8c4f1e738adc1b1f75ac78ddfaa26012a91ed060d4a7132987df99e397b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+      "sha256": "25466d3868f2e9af5f0b6a9846202b4c7c60d1fb54994b4b60dc69611e2b1abf"
+    }
+  ],
+  "entries": [
+    {
+      "code": "11660",
+      "name": "空中瀑布",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11660 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11660 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11661",
+      "name": "磁性尖塔",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11661 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11661 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：磁性尖塔禁用枪械能力、遭遇附属离场去向（11661/11662-64）"
+        }
+      ]
+    },
+    {
+      "code": "11662",
+      "name": "符文星盘仪[tdc_rune_d]",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11662 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11662 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11662b 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11662b 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：磁性尖塔禁用枪械能力、遭遇附属离场去向（11661/11662-64）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：进入地点的声明式费用（11662 entryToll）"
+        }
+      ]
+    },
+    {
+      "code": "11662b",
+      "name": "符文星盘仪[tdc_rune_d]",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11662b 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11662b 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11663",
+      "name": "天空遗物[tdc_rune_f]",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11663 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11663 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11663b 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11663b 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11663b",
+      "name": "天空遗物[tdc_rune_f]",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11663b 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11663b 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11664",
+      "name": "剥蚀壁画[tdc_rune_e]",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11664 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11664 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11664b 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11664b 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11664b",
+      "name": "剥蚀壁画[tdc_rune_e]",
+      "type": "story",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11664b 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11664b 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11665",
+      "name": "圣艾尔摩之火",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11665 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11665 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11666",
+      "name": "恐高症",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11666 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11666 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11667",
+      "name": "恐怖之翼",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11667 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11667 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11669",
+      "name": "迷失云中",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11669 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11669 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11670",
+      "name": "原初恐怖",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11670 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11670 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：地点不能被移动/离场，巡逻最近空特性地点（11648–11652/11670）"
+        }
+      ]
+    },
+    {
+      "code": "11671",
+      "name": "星之吸血鬼",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11671 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11671 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11672a",
+      "name": "黑曜石之爪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11672a 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11672a 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11672b 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11672b 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11672b",
+      "name": "黑曜石之爪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11672b 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11672b 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11673",
+      "name": "沉睡者墓穴",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11673 沉没之城逐卡字面标题证据（剧本参考卡）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11673 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-sepulchreOfTheSleeper.test.mjs",
+          "test": "P8 11673 邪教徒：失败差值达到 3 时仅本次遭遇附加险境与涌动"
+        }
+      ]
+    },
+    {
+      "code": "11674",
+      "name": "城市之下",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11674 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11674 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11674b 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11674b 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11674b",
+      "name": "克苏鲁",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11674b 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11674b 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11675",
+      "name": "克苏鲁苏醒",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11675 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11675 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11676",
+      "name": "梦者安息地",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11676 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11676 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11677",
+      "name": "刻印壁龛",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11677 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11677 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11678",
+      "name": "刻印壁龛",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11678 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11678 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11679",
+      "name": "刻印壁龛",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11679 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11679 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11680",
+      "name": "刻印壁龛",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11680 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11680 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11681",
+      "name": "刻印壁龛",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11681 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11681 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11682",
+      "name": "阿卡姆的毁灭 第一部分",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11682 沉没之城逐卡字面标题证据（剧本参考卡）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11682 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11683",
+      "name": "将临的风暴",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11683 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11683 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11684",
+      "name": "幽灵商店",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11684 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11684 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11685",
+      "name": "蒂林哈斯特密所",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11685 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11685 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11686",
+      "name": "兰道尔·蒂林哈斯特",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11686 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11686 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11687",
+      "name": "约翰·雷蒙德·勒格拉斯",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11687 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11687 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11688",
+      "name": "黏土恐怖",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11688 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11688 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：受控剧情资产改写星之眷族关键词/猎物，并可空白文本直到本轮结束（11688）"
+        }
+      ]
+    },
+    {
+      "code": "11688a",
+      "name": "阿卡姆的毁灭 第二部分",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11688a 沉没之城逐卡字面标题证据（剧本参考卡）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11688a 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11689",
+      "name": "阿卡姆的毁灭",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11689 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11689 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11690",
+      "name": "反击！",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11690 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11690 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：攻击期间支付线索 +1 伤害（11690/11691a 幕牌）"
+        }
+      ]
+    },
+    {
+      "code": "11691a",
+      "name": "放逐他！",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11691a 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11691a 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：攻击期间支付线索 +1 伤害（11690/11691a 幕牌）"
+        }
+      ]
+    },
+    {
+      "code": "11691b",
+      "name": "最终封印",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11691b 沉没之城逐卡字面标题证据（条目/章节接线）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11691b 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        }
+      ]
+    },
+    {
+      "code": "11692",
+      "name": "北区",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "「不能完全淹没」已接线（locationRule.floodBounds max 1 + 引擎 flood.js 读点）；印刷 [action] willpower(3) 查看克苏鲁牌库顶 3 张并弃 1 张无读点：theDoomOfArkhamPartII/behavior.js 的 actions() 只在最终封印议程下放印记，没有北区查看行动/触发器。"
+    },
+    {
+      "code": "11693",
+      "name": "商业区",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "floodBounds 已接线；印刷 [reaction] 星之眷族进入 Downtown 时花 3 资源自动躲避无读点（章节无该反应/触发）。"
+    },
+    {
+      "code": "11694",
+      "name": "东镇",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "floodBounds 已接线；印刷 [action] 弃一个盟支援降本地水位并抽 3 张无读点。"
+    },
+    {
+      "code": "11695",
+      "name": "米斯卡塔尼克大学",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "floodBounds 已接线；印刷 [action] 弃至多 3 张智识图标牌每张治 1 恐惧无读点。"
+    },
+    {
+      "code": "11696",
+      "name": "河岸城",
+      "type": "location",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷 [action] 敏捷/智识(3) 开排水降低本地或相邻水位无读点；本卡印刷无「不能完全淹没」，实现另以 floodBounds max 2 近似（披露）。"
+    }
+  ]
+}

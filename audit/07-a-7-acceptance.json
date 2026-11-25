@@ -1,0 +1,981 @@
+{
+  "schemaVersion": 1,
+  "unit": "07-a-7",
+  "profile": {
+    "id": "tic-lair-of-dagon-2026-11",
+    "scope": "印斯茅斯暗潮 07 段 The Lair of Dagon（lod，07261–07300b）42 条目录记录。37 条通过五维验收；5 条因同句模板三份手写或展示契约未接线暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 42,
+    "verified": 37,
+    "unverified": 5,
+    "unimplemented": 0,
+    "testsPassed": 381
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-07-a-shard7.test.mjs",
+      "sha256": "1801dac291903c47bdc0da7b567114a26a39c8d4b74705dab34fb5852a9b25be"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+      "sha256": "aa166f99112b71c4eec1d13a45bd7f813e817b8049f3fa39512e031d81f10040"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+      "sha256": "1337a2f1cf3b0837f4ad9c2382ab108a6549acfd31b91f59a588db5f1b4b88f9"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+      "sha256": "bdbbd310d7ea827e0c59649fe8a1bb9eb6aa3d67abc57e7c27b95adf7f803dbb"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+      "sha256": "b4ecaedb1a2445d494b757be42e5133ef92a1091249e32565e2ad8b135756fd1"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+      "sha256": "3580319103f889db41d6871ecd68189d802ef3fe6d3339ee9997b46d27959044"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+      "sha256": "c2c69dc2fb3fe002419897d86711bcdcb9434dd22519dec707d50a2171afc3aa"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+      "sha256": "be5a9dd3de708930e9cb9fa6daa07540912a64482f9b56ca9827935d581cbca0"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+      "sha256": "79d5d9a653bd58558944f301335671daf48de4967683119c926469a5eae0ea32"
+    }
+  ],
+  "entries": [
+    {
+      "code": "07261",
+      "name": "附魔武器",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07261 Enchant Weapon adds Relic and arcane slot and uses attachment owner willpower"
+        }
+      ]
+    },
+    {
+      "code": "07262",
+      "name": "奈芙蒂斯",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07262 Nephthys seals only actually consumed bless and can pay three seals for damage"
+        }
+      ]
+    },
+    {
+      "code": "07263",
+      "name": "幽暗之眼",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07263 The Stygian Eye discounts only bag curses and grants all skills through round end"
+        }
+      ]
+    },
+    {
+      "code": "07264",
+      "name": "超感知",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07264 Hyperawareness pays from its asset resources and replenishes at round start"
+        }
+      ]
+    },
+    {
+      "code": "07265",
+      "name": "誓愿",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07265 promises apply only on own turn and discard Geas on the actual forbidden draw"
+        }
+      ]
+    },
+    {
+      "code": "07266",
+      "name": "沉重打击",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07266 separate resource payers and replenish preserves resources above two"
+        }
+      ]
+    },
+    {
+      "code": "07267",
+      "name": "伊恰克",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "interaction",
+      "reason": "新承载区 capturedCards（面朝下放于伊恰克下方的基础弱点）只被 projection 折成 capturedCardCount，web/** 无渲染读点，docs/card-model.md §7.1 未登记 → 玩家看不到下方弱点数量；违反 ARCHITECTURE §3.5「新增承载区 card-defs/observation/web 三处一起改并登记」。行为本身正确。"
+    },
+    {
+      "code": "07268",
+      "name": "外神的长笛",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07268 Flute X resource cost seals up to X and release is required"
+        }
+      ]
+    },
+    {
+      "code": "07269",
+      "name": "警戒和平",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07269 A Watchful Peace pays five bag/sealed bless and skips real multiplayer mythos encounter draws only; four cannot pay"
+        }
+      ]
+    },
+    {
+      "code": "07270",
+      "name": "深挖",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07270 Dig Deep spends its own resources during matching tests and replenishes without losing excess"
+        }
+      ]
+    },
+    {
+      "code": "07271",
+      "name": "月之恩惠",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07271 Favor real fast play seals a physical token, substitutes before bag reveal, consumes it and discards empty source"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard7.test.mjs",
+          "test": "验收 07271 月之恩惠：快速封印至多3诅咒；无封印即弃；将揭示时改为揭示封印诅咒并获1资源"
+        }
+      ]
+    },
+    {
+      "code": "07272",
+      "name": "日之恩惠",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07272 Favor real fast play seals a physical token, substitutes before bag reveal, consumes it and discards empty source"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard7.test.mjs",
+          "test": "验收 07272 日之恩惠：快速封印至多3祝福；将揭示时改为揭示封印祝福（不获得资源）"
+        }
+      ]
+    },
+    {
+      "code": "07273",
+      "name": "净化腐败",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "interaction",
+      "reason": "新使用标记类型 usesType:'corruption' 未登记 web/table-components.js#USE_TOKEN_DISPLAY，也未补中英词典（AGENTS 要求新增使用标记类型同轮补展示登记 + 词典）→ 卡面腐化计数回退显示原始 id。行为本身正确。"
+    },
+    {
+      "code": "07274",
+      "name": "达贡巢穴",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual easy cultist failure numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual easy cultist success numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual easy elderthing failure numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual easy elderthing success numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual easy skull failure numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual easy skull success numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual easy tablet failure numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual easy tablet success numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual expert cultist failure numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual expert cultist success numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual expert elderthing failure numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual expert elderthing success numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual expert skull failure numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual expert skull success numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual expert tablet failure numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual expert tablet success numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual hard cultist failure numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual hard cultist success numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual hard elderthing failure numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual hard elderthing success numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual hard skull failure numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual hard skull success numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual hard tablet failure numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual hard tablet success numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual standard cultist failure numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual standard cultist success numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual standard elderthing failure numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual standard elderthing success numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual standard skull failure numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual standard skull success numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual standard tablet failure numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 actual standard tablet success numeric+printed effect with JSON continuation"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 easy actual cultist->curse->0 autoFail even against difficulty0"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 easy actual curse->cultist->0 autoFail even against difficulty0"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 easy canceled cultist excludes required rider component"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 easy canceled curse excludes required rider component"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 expert actual cultist->curse->0 autoFail even against difficulty0"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 expert actual curse->cultist->0 autoFail even against difficulty0"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 expert canceled cultist excludes required rider component"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 expert canceled curse excludes required rider component"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 hard actual cultist->curse->0 autoFail even against difficulty0"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 hard actual curse->cultist->0 autoFail even against difficulty0"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 hard canceled cultist excludes required rider component"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 hard canceled curse excludes required rider component"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 modifier0 curse remains revealed and must still automatically fail Lair cultist"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 standard actual cultist->curse->0 autoFail even against difficulty0"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 standard actual curse->cultist->0 autoFail even against difficulty0"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 standard canceled cultist excludes required rider component"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-reference-printed.test.mjs",
+          "test": "07274 standard canceled curse excludes required rider component"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "提示卡 07274：skull/cultist/tablet/elderthing 的混乱标记修正与效果"
+        }
+      ]
+    },
+    {
+      "code": "07275",
+      "name": "入教(版本一)",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "议程变体 07275/07277：恢复记忆时的正面诅咒与背面加诅咒"
+        }
+      ]
+    },
+    {
+      "code": "07276",
+      "name": "入教(版本二)",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07276: no jailbreak does not spawn a Suspect; zero curse supply does not create tokens"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07276: removes bag curses; jailbreak Suspect spawns exhausted at Grand Entryway without blue key"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07276: removes bag curses; jailbreak Suspect spawns exhausted at Third Floor without blue key"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "议程 07276：移除混乱袋诅咒并让越狱嫌犯横置于三楼（无蓝钥匙）"
+        }
+      ]
+    },
+    {
+      "code": "07277",
+      "name": "下藏何物(版本一)",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07277: actual memory-selected v.I agenda back adds four capped curses with 0 existing"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07277: actual memory-selected v.I agenda back adds four capped curses with 9 existing"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "议程变体 07275/07277：恢复记忆时的正面诅咒与背面加诅咒"
+        }
+      ]
+    },
+    {
+      "code": "07278",
+      "name": "下藏何物(版本二)",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "议程 07278：移除混乱袋诅咒并给出不占盟友槽位的托马斯·道森"
+        }
+      ]
+    },
+    {
+      "code": "07279",
+      "name": "仪式推进",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07279: real final agenda back defeats non-resigned investigators, adds exactly printed mental trauma and records awakening once"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "议程 07279 背面：击败未撤退调查员、记录达贡已苏醒并进入结局 1"
+        }
+      ]
+    },
+    {
+      "code": "07280",
+      "name": "第一誓约",
+      "type": "act",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "三张达贡幕正面同句模板（嫌犯三行 modifiers + [fast] 花蓝/红/白/黄钥匙清屏障）三份手写声明之一；p8-release §7 的维护项 w5-07280-oath-shared-rules（共用正面模板工厂）明确未完成。行为正确，仅复用债务。"
+    },
+    {
+      "code": "07281",
+      "name": "第二誓约",
+      "type": "act",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "同句模板三份手写声明之一（与 07280/07282 逐字重复），共享工厂重构未完成。行为正确。"
+    },
+    {
+      "code": "07282",
+      "name": "第三誓约",
+      "type": "act",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "同句模板三份手写声明之一（与 07280/07281 逐字重复），共享工厂重构未完成。行为正确。"
+    },
+    {
+      "code": "07283",
+      "name": "宏伟入口",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07283: actual resign descriptor resigns only acting investigator"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07283: newly placed Cave gains real bidirectional Grand Entryway connection, while local team pays purple key and 3n clues"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "地点 07283 宏伟入口：与[[洞穴]]地点双向连接，可真实移动"
+        }
+      ]
+    },
+    {
+      "code": "07284",
+      "name": "鲜血厅堂",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07284: reveal red key; failed investigation at this physical hall causes exactly one horror"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "地点 07284/07285：红钥匙揭示、调查失败恐惧与用红钥匙取得雕像资产"
+        }
+      ]
+    },
+    {
+      "code": "07285",
+      "name": "深海厅堂",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07285: actual reveal increases water; actor spends red key once and controls physical cursed Statue from set-aside"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "地点 07284/07285：红钥匙揭示、调查失败恐惧与用红钥匙取得雕像资产"
+        }
+      ]
+    },
+    {
+      "code": "07286",
+      "name": "邪秽走廊",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07286: real black-key action remembers global third-floor unlock, opens unrevealed Hall of Silence for teammate and survives JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "地点 07286/07289：黑钥匙解锁三楼，寂静厅堂放紫钥匙且本地检定失败加诅咒"
+        }
+      ]
+    },
+    {
+      "code": "07287",
+      "name": "笃忠厅堂",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07287: bless pool cap and all-gain/draw restrictions leave only actual legal distinct effects"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07287: printed fast ability chooses three distinct effects, heals damage with no horror and pays exactly one chosen key"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "地点 07287/07288：钥匙恩赐与揭示实际抽取旁置的达贡宣教士"
+        }
+      ]
+    },
+    {
+      "code": "07288",
+      "name": "重生厅堂",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07288: actor who actually reveals Hall of Rebirth draws the physical set-aside Apostle once"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "地点 07287/07288：钥匙恩赐与揭示实际抽取旁置的达贡宣教士"
+        }
+      ]
+    },
+    {
+      "code": "07289",
+      "name": "寂静厅堂",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07289: actual unrevealed lock reads shared remembered token, reveal places purple; local failure adds one curse"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "地点 07286/07289：黑钥匙解锁三楼，寂静厅堂放紫钥匙且本地检定失败加诅咒"
+        }
+      ]
+    },
+    {
+      "code": "07290",
+      "name": "深渊门扉",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07290: actual revealer chooses only tied maximum-clue locations for green key"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07290: local teammate green key and distributed six-clue cost unlock final depths; remote key rejects whole crafted cost"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "地点 07290/07291：绿钥匙放到线索最多地点、解锁最终深处与达贡巢穴行动"
+        }
+      ]
+    },
+    {
+      "code": "07291",
+      "name": "达贡巢穴",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07291: actual entry tests one of tied lowest modified skills and applies horror on failure"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07291: real action moves own clues (0 available), optional key only when another clue exists"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07291: real action moves own clues (1 available), optional key only when another clue exists"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07291: real action moves own clues (2 available), optional key only when another clue exists"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "地点 07290/07291：绿钥匙放到线索最多地点、解锁最终深处与达贡巢穴行动"
+        }
+      ]
+    },
+    {
+      "code": "07292a",
+      "name": "达贡",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07292a 沉睡达贡：本地点的调查员检定失败后上资源，达到 1[per_investigator]+2 才翻面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07292a 沉睡达贡：花1把钥匙移除1资源，资源为0时该行动不出现"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07292a 沉睡达贡：远处地点的检定失败不放置资源"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "敌人 07292a/b 沉睡达贡：失败叠资源翻面，苏醒面生命与本地失败后重整攻击"
+        }
+      ]
+    },
+    {
+      "code": "07292b",
+      "name": "达贡",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07292a 沉睡达贡：本地点的调查员检定失败后上资源，达到 1[per_investigator]+2 才翻面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07292a 沉睡达贡：花1把钥匙移除1资源，资源为0时该行动不出现"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07292a 沉睡达贡：远处地点的检定失败不放置资源"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
+          "test": "07292b 觉醒达贡：6 点生命值加每名调查员 6 点，本地检定失败后重整并攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07292b: actual 0 failure readies Dagon and attacks only performer once, with real teammate commitment"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07292b: actual autofail failure readies Dagon and attacks only performer once, with real teammate commitment"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07292b: success and remote failure do not ready or attack"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "敌人 07292a/b 沉睡达贡：失败叠资源翻面，苏醒面生命与本地失败后重整攻击"
+        }
+      ]
+    },
+    {
+      "code": "07293",
+      "name": "达贡宣教士",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "敌人 07293 达贡宣教士：+1[每调查员]生命、入场黑钥匙、受伤加诅咒"
+        }
+      ]
+    },
+    {
+      "code": "07294",
+      "name": "瑟瑞尼连海深潜者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07294: real Hunter move engages lowest-willpower prey and adds two physically capped curses"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "敌人 07294 与诡计 07296/07298：交战后加诅咒、显现失败的毁灭/诅咒"
+        }
+      ]
+    },
+    {
+      "code": "07295",
+      "name": "践行誓约",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07295: act1 makes 1 distinct consecutive tests and failed damage"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07295: act2 makes 2 distinct consecutive tests and failed damage"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07295: act3 makes 3 distinct consecutive tests and failed damage"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07295: successful tests cause no damage"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "敌人与诡计 07295：按幕序号连续检定并造成失败伤害"
+        }
+      ]
+    },
+    {
+      "code": "07296",
+      "name": "秘密集会",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07296: failed real test with curse places Cultist doom and exact horror"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07296: failed real test without curse places Cultist doom and exact horror"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07296: successful test adds the printed curse but no Cultist doom or horror"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "敌人 07294 与诡计 07296/07298：交战后加诅咒、显现失败的毁灭/诅咒"
+        }
+      ]
+    },
+    {
+      "code": "07297",
+      "name": "玄密仪式",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "诡计 07297 玄密仪式：失败二选一，揭示诅咒标记时两者都执行"
+        }
+      ]
+    },
+    {
+      "code": "07298",
+      "name": "深海兆使",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07298: actual water 0 sets difficulty and adds failed-by curses"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07298: actual water 1 sets difficulty and adds failed-by curses"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07298: actual water 2 sets difficulty and adds failed-by curses"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07298: insufficient physical curse supply adds only remaining tokens and surges once"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "敌人 07294 与诡计 07296/07298：交战后加诅咒、显现失败的毁灭/诅咒"
+        }
+      ]
+    },
+    {
+      "code": "07299",
+      "name": "石障",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07280 [fast]：花费蓝/红/白/黄钥匙弃掉你所在地点的[[屏障]]（07299）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07299 显现：附属到最近且没有石障的地点，不弃牌；第二张落到下一个最近地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07299 显现：附属地点已淹没时获得涌动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07299 注册为 treachery：地点附属行动 + 重整时封锁移动声明"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07299 行动：检定敏捷(1)/战力(2)/智力(3)，失败不横置、成功横置；重整时不能离开，补给阶段重整"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "诡计 07299 石障：附属最近地点、重整时封锁移动、成功检定横置"
+        }
+      ]
+    },
+    {
+      "code": "07300",
+      "name": "伊哈·恩斯雷雕塑",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07300: exact two-curse additional cost preflight preserves exhaustion and target when physical supply short"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07300: real [action] spends blue/white/red/yellow key, readies and flips to the 07300b face (审计 H11 回归)"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07300: real owned statue free ability filters Humanoid/damageable targets and pays exhaust/token cost"
+        }
+      ]
+    },
+    {
+      "code": "07300b",
+      "name": "伊哈·恩斯雷雕塑",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07300: exact two-curse additional cost preflight preserves exhaustion and target when physical supply short"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07300: real [action] spends blue/white/red/yellow key, readies and flips to the 07300b face (审计 H11 回归)"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07300: real owned statue free ability filters Humanoid/damageable targets and pays exhaust/token cost"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07300b: only sealed curses cannot fund the bag-removal effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07300b: real owned statue free ability filters Humanoid/damageable targets and pays exhaust/token cost"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07300b: removes two bag curses even with bless pool at 0, finite replacement and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07300b: removes two bag curses even with bless pool at 10, finite replacement and JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
+          "test": "TIC 07300b: removes two bag curses even with bless pool at 9, finite replacement and JSON"
+        }
+      ]
+    }
+  ]
+}

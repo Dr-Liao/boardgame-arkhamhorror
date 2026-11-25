@@ -1,0 +1,497 @@
+{
+  "schemaVersion": 1,
+  "unit": "06-a-9",
+  "profile": {
+    "id": "tde-weaver-of-the-cosmos-2026-11",
+    "scope": "食梦者 06 段 Weaver of the Cosmos（woc，06323–06354）32 条目录记录。25 条通过五维验收；7 条因冗余/未接线死声明或 actRule 被行为卡号分支绕过暂不切换。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 32,
+    "verified": 25,
+    "unverified": 7,
+    "unimplemented": 0,
+    "testsPassed": 379
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-06-a-shard9.test.mjs",
+      "sha256": "71473b5aedbddc874b3d37755ceae16bec2cf6e156f71be9a9d21573eeaef6e2"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+      "sha256": "59979ee2b83b99b3eaa759b82784795d9f82912fd3047848195c4215e50fee87"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+      "sha256": "2cb1f7184ce967e6761df0d7122862fd96d744f5740a005bfbf8766b4383ce45"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-rules.test.mjs",
+      "sha256": "682a74a0627dd5ea36463d3923dd20a4f1fb07c57740ad61d6100fdaba65c797"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+      "sha256": "39bda187c894162c57ab8fc2684e578bdac1dbc1f11e3decfc65782095308400"
+    }
+  ],
+  "entries": [
+    {
+      "code": "06323",
+      "name": "摒绝杂念",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "test": "TDE 06323 摒绝杂念 弃掉手中一张同名卡，治愈本拷贝全部伤害与恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "test": "TDE 06323 摒绝杂念 手中没有同名卡时能力不可用"
+        }
+      ]
+    },
+    {
+      "code": "06324",
+      "name": "阿比盖尔·福尔曼",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "test": "TDE 06324 阿比盖尔·福尔曼 附属一张书籍支援后不占手部槽位"
+        }
+      ]
+    },
+    {
+      "code": "06325",
+      "name": "真理之眼",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "test": "TDE 06325 真理之眼 投入时提供 4 个万能图标（主效果显式简化）"
+        }
+      ]
+    },
+    {
+      "code": "06326",
+      "name": "乔伊“老鼠”弗吉尔",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "test": "TDE 06326 乔伊“老鼠”弗吉尔 弃掉场上一个道具支援获得2资源"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "test": "TDE 06326 乔伊“老鼠”弗吉尔 花1资源打出手中道具支援"
+        }
+      ]
+    },
+    {
+      "code": "06327",
+      "name": "短管霰弹枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "test": "TDE 06327 短管霰弹枪 按成功差值造成伤害（不造成标准伤害）"
+        }
+      ]
+    },
+    {
+      "code": "06328",
+      "name": "神识之眼",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "test": "TDE 06328 神识之眼 弃掉手中一张同名卡放置2秘密"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "test": "TDE 06328 神识之眼 检定开始花1秘密把本次检定改为按意志值结算"
+        }
+      ]
+    },
+    {
+      "code": "06329",
+      "name": "闪耀的偏方三八面体",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "test": "TDE 06329 闪耀的偏方三八面体 意志(X)检定成功则法术费用视为已支付"
+        }
+      ]
+    },
+    {
+      "code": "06330",
+      "name": "噩梦球",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "test": "TDE 06330 噩梦球 入场取出3张梦境寄生物，揭示自动失败时取消标记并洗回1张"
+        }
+      ]
+    },
+    {
+      "code": "06331",
+      "name": "梦境寄生物",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "test": "TDE 06331 梦境寄生物 下一次检定强制投入，扣除图标并在失败时造成伤害与恐惧"
+        }
+      ]
+    },
+    {
+      "code": "06332",
+      "name": "拾荒",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "test": "TDE 06332 拾荒 成功差值只有1点时不能触发"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "test": "TDE 06332 拾荒 成功调查超过难度2点后横置，从弃牌堆取回道具"
+        }
+      ]
+    },
+    {
+      "code": "06333",
+      "name": "编织宇宙",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard9.test.mjs",
+          "test": "06-a9 06333 编织宇宙：混乱标记数值（最高/总毁灭、tablet、elderthing）与后果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "06333 章节清单：playable、原卡、地点/幕/议程/结局数量"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06333 已验收 · scenario 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06334",
+      "name": "蛛网桥梁",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "legacy doomPerInvestigator/doomPerInvestigatorAmount 在 TDE 运行时无消费方（本章只读 flags.doomThresholdPerInvestigator，behavior.afterChaosBagSetup）；同一规则两条声明路径。"
+    },
+    {
+      "code": "06335",
+      "name": "曲折道路",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 06334：legacy doom 字段无 TDE 运行时读点（读点是 flags.doomThresholdPerInvestigator）。"
+    },
+    {
+      "code": "06336",
+      "name": "现实交织",
+      "type": "agenda",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "同 06334：legacy doom 字段无 TDE 运行时读点（读点是 flags.doomThresholdPerInvestigator）。"
+    },
+    {
+      "code": "06337",
+      "name": "穿过桥梁",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "actRule.verticalChain / objective / advance.* 均无运行时读点：behavior.checkObjectives/actLeftPlay 按 ACT_CODES 卡号硬编码（其它 TDE 章节会读 objective.kind）。"
+    },
+    {
+      "code": "06338",
+      "name": "编织宇宙",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "actRule.objective（legsInVictory）与 actRule.advance（flipAtlachNacha）无运行时读点：behavior 按 ACT_CODES 卡号分支，仅 actions/mythosSpin 被读。"
+    },
+    {
+      "code": "06339",
+      "name": "阴谋破灭",
+      "type": "act",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "actRule.objective（enemyDefeatedFlag）与 actRule.advance（finish）无运行时读点：behavior 按 ACT_CODES 卡号分支，仅 actions/mythosSpin 被读。"
+    },
+    {
+      "code": "06340",
+      "name": "巨网",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06340 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "地点条目：06340 揭示放毁灭、06342 调查阶段末放毁灭、06344 正对面移动"
+        }
+      ]
+    },
+    {
+      "code": "06341",
+      "name": "巨网",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06341 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "地点条目：06341/06343 进入检定失败后二选一（放毁灭 / 弃牌 / 失去行动）"
+        }
+      ]
+    },
+    {
+      "code": "06342",
+      "name": "巨网",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06342 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "地点条目：06340 揭示放毁灭、06342 调查阶段末放毁灭、06344 正对面移动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "调查阶段结束（神话开始时）06342 缠结之网：有调查员的巨网各放 1 毁灭"
+        }
+      ]
+    },
+    {
+      "code": "06343",
+      "name": "巨网",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06343 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "地点条目：06341/06343 进入检定失败后二选一（放毁灭 / 弃牌 / 失去行动）"
+        }
+      ]
+    },
+    {
+      "code": "06344",
+      "name": "巨网",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06344 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "地点条目：06340 揭示放毁灭、06342 调查阶段末放毁灭、06344 正对面移动"
+        }
+      ]
+    },
+    {
+      "code": "06345",
+      "name": "巨网",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard9.test.mjs",
+          "test": "06-a9 06345 巨网·网编浮岛：调查额外费用二选一（行动/毁灭）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06345 已验收 · location 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06346",
+      "name": "阿特拉克·纳克亚",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06346 已验收 · enemy 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "敌人条目：06346 离开地点时（无调查员）放毁灭；06347 修正 = 地点遮蔽值且不能借机攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "敌人条目：06346 躲避替代 = 不横置 + 本轮不攻击；06351 轮末重整则放毁灭"
+        }
+      ]
+    },
+    {
+      "code": "06347",
+      "name": "阿特拉克·纳克亚之腿",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06347 已验收 · enemy 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "敌人条目：06346 离开地点时（无调查员）放毁灭；06347 修正 = 地点遮蔽值且不能借机攻击"
+        }
+      ]
+    },
+    {
+      "code": "06348",
+      "name": "阿特拉克·纳克亚之腿",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard9.test.mjs",
+          "test": "06-a9 06348 阿特拉克·纳克亚之腿：战斗值=地点隐藏值、不能借机攻击、躲避替代保护"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06348 已验收 · enemy 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06349",
+      "name": "阿特拉克·纳克亚之腿",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard9.test.mjs",
+          "test": "06-a9 06349 阿特拉克·纳克亚之腿：战斗值=地点隐藏值、不能借机攻击、躲避替代保护"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06349 已验收 · enemy 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06350",
+      "name": "阿特拉克·纳克亚之腿",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard9.test.mjs",
+          "test": "06-a9 06350 阿特拉克·纳克亚之腿：战斗值=地点隐藏值、不能借机攻击、躲避替代保护"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06350 已验收 · enemy 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06351",
+      "name": "织网者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06351 已验收 · enemy 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "spawnLocation：06351 织网者生成在任意无人地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "敌人条目：06346 躲避替代 = 不横置 + 本轮不攻击；06351 轮末重整则放毁灭"
+        }
+      ]
+    },
+    {
+      "code": "06352",
+      "name": "黑暗中的织网者",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard9.test.mjs",
+          "test": "06-a9 06352 黑暗中的织网者：附属最近[[古神]]敌人 +1 伤害/恐惧，可检定摆脱"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06352 已验收 · treachery 卡文与关卡定义"
+        }
+      ]
+    },
+    {
+      "code": "06353",
+      "name": "陷入网中",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "treacheryRule.threatArea 是死声明：TDE 内容层/引擎无 .threatArea 读取，威胁区入位由 encounterResolve→api.threat 完成（与分片 5 的 06191/06192/06193 同一系统性问题）。"
+    },
+    {
+      "code": "06354",
+      "name": "无休织作",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06354 已验收 · treachery 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "诡计条目：06353 进威胁区 + 敏捷修正；06354 场上无蜘蛛时从牌库生成一张"
+        }
+      ]
+    }
+  ]
+}

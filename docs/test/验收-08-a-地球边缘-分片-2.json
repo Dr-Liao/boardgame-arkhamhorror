@@ -1,0 +1,205 @@
+{
+  "unit": "08-a-2",
+  "generatedAt": "2026-11-25",
+  "status": "complete",
+  "scope": {
+    "cards": 46,
+    "selector": "code =~ /^08/ && 08043 <= code <= 08088 && pack === 'eoep' && effectStatus != 'verified'",
+    "packs": {
+      "eoep": 46
+    },
+    "types": {
+      "asset": 24,
+      "event": 18,
+      "skill": 4
+    }
+  },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "08045",
+    "08047",
+    "08048",
+    "08050",
+    "08053",
+    "08054",
+    "08058",
+    "08059",
+    "08060",
+    "08061",
+    "08063",
+    "08067",
+    "08068",
+    "08070",
+    "08071",
+    "08072",
+    "08073",
+    "08074",
+    "08075",
+    "08076",
+    "08077",
+    "08080",
+    "08082",
+    "08083",
+    "08086"
+  ],
+  "failedCodes": [
+    {
+      "code": "08043",
+      "dimension": "implementation",
+      "reason": "「灵脉」核心状态未建模：卡面要求把灵脉放在非精英敌人上，后续行动只能选「与**带有灵脉**的敌人交战」的调查员；实现只扣减支援 uses、不记录灵脉归属，于是选择条件退化为任意交战敌人。且「解除交战并移动」用 api.autoEvadeEnemy 实现（会把敌人横置/躲避免费），而卡面只是解除交战。带灵脉选择与解除交战语义均与卡面不一致。",
+      "evidence": "src/cards/entries/08043.js:13-15,28-42,49-88",
+      "repro": "node artifacts/acceptance/08-a-2/repro-08043-08088.mjs → 08043：放灵脉只减 uses，敌人实例无灵脉状态；解除交战走 autoEvadeEnemy。"
+    },
+    {
+      "code": "08044",
+      "dimension": "implementation",
+      "reason": "同 08043 的灵脉状态缺失：卡面 [action] 只能选择「**带有灵脉**的调查员」，实现退化为任意存活调查员；[fast] 放灵脉也只扣 uses 不记录归属，抽 1/治愈 1 的加成条件因此永远无法按卡面校验。",
+      "evidence": "src/cards/entries/08044.js:106-107,118-133,136-171",
+      "repro": "node artifacts/acceptance/08-a-2/repro-08043-08088.mjs → 08044：灵脉只存在于 uses，无调查员标记。"
+    },
+    {
+      "code": "08046",
+      "dimension": "implementation",
+      "reason": "卡面核心限制「你的牌库中每张非弱点、非署名卡最多 1 张（按卡名）」未实现：条目只声明 deckConstruction.sizeBonus（牌库 −5，web/deck-rules.js:43-46 有读点），按卡名唯一的构筑限制没有读点；构筑校验仍允许同名多张。",
+      "evidence": "src/cards/entries/08046.js:279-288；web/deck-rules.js:43-46,316",
+      "repro": "node artifacts/acceptance/08-a-2/repro-08043-08088.mjs → 08046：entry 只有 sizeBonus，无 unique-by-title 规则；deck 校验无该限制。"
+    },
+    {
+      "code": "08049",
+      "dimension": "implementation",
+      "reason": "卡面第二个升级「[reaction] 打出时加 2 费：把『你』改为『任意调查员』」只记录 playUpgrades.anyInvestigator 并加费，没有任何跨座位触发效果（取消/改抽仍只发生在自己遭遇窗口），等于玩家付费后无收益。引擎快速事件候选只枚举抽牌者自己的窗口（条目已承认请求 m2-2-08049.json 未接线）。",
+      "evidence": "src/cards/entries/08049.js:430-463；entry 注释 433-434",
+      "repro": "node artifacts/acceptance/08-a-2/repro-08043-08088.mjs → 08049：anyInvestigator 升级只写 context 标记，无行为分支读取。"
+    },
+    {
+      "code": "08051",
+      "dimension": "implementation",
+      "reason": "卡面「另一位调查员可以**作为其手牌打出**该支援」未实现：条目用 putIntoPlay(自己) + giveAsset 直接免费移交，既没有由该调查员支付打出费用，也没有走其手牌的打出通道/打出窗口；「决定是否打出」由打出者代替目标玩家询问（条目自认近似）。主效果的方向（谁付费、算谁的打出）与卡面不符。",
+      "evidence": "src/cards/entries/08051.js:541-543,581-599",
+      "repro": "node artifacts/acceptance/08-a-2/repro-08043-08088.mjs → 08051：资产由打出者免费置入后转交，目标调查员不付费。"
+    },
+    {
+      "code": "08052",
+      "dimension": "implementation",
+      "reason": "卡面「获得等于你最低技能值（除正在检定的技能外）的 [wild] 图标」应读**当前有效**技能值；commit 的 iconBonus 读取 cards-data 印刷技能值（printedSkill），任何属性修正（支援 +1、伤害/恐惧、临时修正）都不会计入，图标数会与实际技能值不符。条目已登记 primitive request 但未接线，属公式取错源。",
+      "evidence": "src/cards/entries/08052.js:607-639（printedSkill 在 621，iconBonus 在 630-635）",
+      "repro": "node artifacts/acceptance/08-a-2/repro-08043-08088.mjs → 08052：给调查员 +1 属性后 iconBonus 仍按印刷值计算。"
+    },
+    {
+      "code": "08055",
+      "dimension": "implementation",
+      "reason": "卡面的「放在一边（out of play）」与「放一边期间任意调查员可以将其打出，如同自己手牌」以及「下个调查阶段开始时仍未打出的洗回其所有者牌库」均未实现：实现改为「揭示 5 张直接移入原所有者弃牌堆 + 所有者可立即从弃牌堆打出一次」，未打出的牌留在弃牌堆且不再洗回。放一边的跨阶段状态与任意调查员可打是卡面核心。",
+      "evidence": "src/cards/entries/08055.js:761-765,774-806",
+      "repro": "node artifacts/acceptance/08-a-2/repro-08043-08088.mjs → 08055：被揭示牌进入弃牌堆，没有 set-aside 记账与下阶段洗回。"
+    },
+    {
+      "code": "08056",
+      "dimension": "implementation",
+      "reason": "卡面「非直接伤害/恐惧必须先分配给刚毅果敢」的**伤害**侧未实现：条目只声明 composure（引擎仅对非直接恐惧强制先分配），伤害侧用 assetRule.redirectOneDamageToSelf 每次只转移 1 点，玩家仍可把其余非直接伤害分给其它支援/调查员。引擎已支持条目 flags.composureDamage:true 的完整读点（harm-threat.js:207-214），本卡未声明。",
+      "evidence": "src/cards/entries/08056.js:823-841；src/engine/harm-threat.js:206-214",
+      "repro": "node artifacts/acceptance/08-a-2/repro-08043-08088.mjs → 08056：flags.composureDamage 缺失，伤害分配不被强制到本卡。"
+    },
+    {
+      "code": "08057",
+      "dimension": "implementation",
+      "reason": "卡面「10+ 资源：+1 生命与 +1 神智」是资源条件加值，实现用 passive.healthBonus/passive.sanityBonus 无条件常驻，导致 0 资源时也获得 +1/+1（数值方向错误）；条件读点（modifiers resourcesAtLeast）只用于 20+ 资源的技能 +1。",
+      "evidence": "src/cards/entries/08057.js:855-863；src/engine/stats.js:201-212",
+      "repro": "node artifacts/acceptance/08-a-2/repro-08043-08088.mjs → 08057：资源 <10 时 passive 仍加 +1 生命/神智。"
+    },
+    {
+      "code": "08062",
+      "dimension": "implementation",
+      "reason": "卡面第三句「该行动期间执行的每次技能检定中，你可以改为使用 [willpower]」完全没有实现：free 能力只调用 api.beginImmediateAction 执行基础行动，没有对本次立即行动绑定技能替代效果；条目注释自认「缺少 ctx.api 级 substituteSkill 绑定时长，暂未接线」。",
+      "evidence": "src/cards/entries/08062.js:1071-1115（注释 1074、resolve 1107-1115）",
+      "repro": "node artifacts/acceptance/08-a-2/repro-08043-08088.mjs → 08062：执行基础行动时未注册任何技能替代效果。"
+    },
+    {
+      "code": "08064",
+      "dimension": "implementation",
+      "reason": "时机与目标与卡面相反：卡面是「在将要从牌库/遭遇牌库抽牌**时**打出，先指定一张牌名；若抽到的就是它……」。实现挂在 cardDrawn/encounterDrawn（抽牌**后**）并按刚抽到的卡 + 手牌/牌库组成候选，于是玩家可以先把刚抽到的牌命名为指定牌，任意一次抽牌都能被取消或以 -2 费打出（远超「猜中」的概率），且「抽牌前指定」的公开信息/顺序被绕过。",
+      "evidence": "src/cards/entries/08064.js:1184-1239（trigger 1194，候选含 drawnCode 1202-1207）",
+      "repro": "node artifacts/acceptance/08-a-2/repro-08043-08088.mjs → 08064：trigger 为 cardDrawn（抽牌后），候选包含刚抽到的卡。"
+    },
+    {
+      "code": "08065",
+      "dimension": "implementation",
+      "reason": "卡面「其获得等于你 [intellect] 的 [willpower] 图标、等于你 [willpower] 的 [intellect] 图标」应读当前有效属性；commit 的 iconBonus 读 cards-data 印刷值（printed()），任何属性修正都不计入。与 08052/08078 同一根因。",
+      "evidence": "src/cards/entries/08065.js:1253-1278（printed 在 1258，iconBonus 1267-1273）",
+      "repro": "node artifacts/acceptance/08-a-2/repro-08043-08088.mjs → 08065：有效意志被改成 99 仍返回印刷意志 3。"
+    },
+    {
+      "code": "08066",
+      "dimension": "implementation",
+      "reason": "卡面「查看 6 张后可以**以任何顺序**放回该牌库顶」在引擎的 lookAt 任意排列只支持 ≤4 张；对 6 张请求 arrange 时无法枚举/应用任意顺序（条目注释自认「6 张时按放回顶部处理」并登记 primitive request m2-2-08066.json），卡面的核心选择缺失。",
+      "evidence": "src/cards/entries/08066.js:1288-1329（注释 1289-1290）；src/engine/look.js:15,324（arrange 支路）",
+      "repro": "条目注释与引擎 look.js 的排列上限；实测 lookAt({count:6, arrange:true}) 无法产生任意顺序，条目退化为按原顺序放回。"
+    },
+    {
+      "code": "08069",
+      "dimension": "implementation",
+      "reason": "「非直接伤害/恐惧必须先分配给情绪稳定」的伤害侧未实现：条目只声明 composure（引擎仅对非直接恐惧强制先分配），没有声明引擎已支持的 flags.composureDamage:true（harm-threat.js:206-214）；法术检定 +1 与资源换 +1 已实现。",
+      "evidence": "src/cards/entries/08069.js:1494-1526（注释 1506）；src/engine/harm-threat.js:206-214",
+      "repro": "node artifacts/acceptance/08-a-2/repro-08043-08088.mjs → 08069：flags.composureDamage 缺失。"
+    },
+    {
+      "code": "08078",
+      "dimension": "implementation",
+      "reason": "同 08065：卡面图标数应等于你**当前有效**的 [combat]/[willpower] 值，实现读 cards-data 印刷技能值；属性修正（支援、临时效果等）都不计入，图标数会与实际技能值不符。",
+      "evidence": "src/cards/entries/08078.js:1871-1902（printed 1882，iconBonus 1890-1897）",
+      "repro": "node artifacts/acceptance/08-a-2/repro-08043-08088.mjs → 08078：有效属性修改后仍返回印刷值。"
+    },
+    {
+      "code": "08079",
+      "dimension": "implementation",
+      "reason": "卡面「该攻击造成的伤害/恐惧不能分配给[[盟友]]支援」完全没有实现：条目只结算「每受到 1 点伤害/恐惧抽 1 张牌」，没有对本次攻击的分配策略做盟友限制（条目注释自认请求 m2-3-08079 未接线）。",
+      "evidence": "src/cards/entries/08079.js:1905-1930（注释 1911-1912）",
+      "repro": "node artifacts/acceptance/08-a-2/repro-08043-08088.mjs → 08079：只有抽牌结算，没有任何盟友分配限制的声明/读点。"
+    },
+    {
+      "code": "08081",
+      "dimension": "implementation",
+      "reason": "「非直接伤害/恐惧必须先分配给有胆有识」的伤害侧未实现：仅声明 composure（非直接恐惧），未声明引擎已支持的 flags.composureDamage:true；条目注释自认「目前只有恐惧侧生效」。",
+      "evidence": "src/cards/entries/08081.js:1971-2000（注释 1979-1981）",
+      "repro": "node artifacts/acceptance/08-a-2/repro-08043-08088.mjs → 08081：flags.composureDamage 缺失。"
+    },
+    {
+      "code": "08084",
+      "dimension": "implementation",
+      "reason": "卡面「选择你所在地点以外任意地点的一个敌人」不排除精英；实现 targets 过滤 `!enemy.elite`（08085 同），场上只有精英敌人时该事件直接不可用/无目标，目标可用性与卡面不符。",
+      "evidence": "src/cards/entries/08084.js:2131-2163（过滤 2134-2135）",
+      "repro": "node artifacts/acceptance/08-a-2/repro-08043-08088.mjs → 08084：只有精英敌人时无法选择目标。"
+    },
+    {
+      "code": "08085",
+      "dimension": "implementation",
+      "reason": "同 08084：目标过滤排除精英敌人（卡面「任意地点的一个敌人」不排除精英）；其余（移动 2 次并在进入的地点各发现 1 线索）已实现。",
+      "evidence": "src/cards/entries/08085.js:2193-2214（过滤 2198-2199）",
+      "repro": "node artifacts/acceptance/08-a-2/repro-08043-08088.mjs → 08085：只有精英敌人时无法选择目标。"
+    },
+    {
+      "code": "08087",
+      "dimension": "implementation",
+      "reason": "两处与卡面不符：① 作用域被放宽为「本回合余下的所有检定」，卡面只限「下一个使用[[远程]]或[[枪械]]支援的攻击行动」；② 「本行动不会触发趁乱攻击」没有实现（条目注释自认没有延迟 noOpportunityAttack 读点，请求 m2-3-08087 未接线）。",
+      "evidence": "src/cards/entries/08087.js:2258-2291（注释 2267-2270；addEffect duration endOfTurn 2280）",
+      "repro": "node artifacts/acceptance/08-a-2/repro-08043-08088.mjs → 08087：effect.duration=endOfTurn 且无 noOpportunityAttack。"
+    },
+    {
+      "code": "08088",
+      "dimension": "implementation",
+      "reason": "「打出一张事件卡牌时，将老旧的霰弹枪的使用值视为 2」被实现成 eventPlayed 反应里 api.setAssetUses(source, 2)：事件结算结束后 uses 仍是 2，等于给枪永久装 2 发子弹（可反复攻击），而卡面只是在**打出事件期间**把 uses 视图视为 2（用于该事件里引用 uses 的费用/条件）。机制与时机均不符。",
+      "evidence": "src/cards/entries/08088.js:2294-2321（eventPlayed 反应 2316-2318）",
+      "repro": "node artifacts/acceptance/08-a-2/repro-08043-08088.mjs → 08088：eventPlayed 后 setAssetUses(2) 永久生效。"
+    }
+  ],
+  "pendingCodes": [],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "fail",
+    "primitives": "pass",
+    "interaction": "pass",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [],
+  "notes": "通过 25 / 失败 21 / 进行中 0。失败前两类原因：① 动态数值/条件读取错误（08052/08065/08078 读印刷技能值；08057 条件加值常驻；08056/08069/08081 未声明引擎已支持的 composure 伤害读点）—代表卡 08052、08057、08056；② 印刷子句完全未实现或以近似冒充（灵脉/放一边/同名唯一/任意调查员升级/抽牌前指定/任意排序/盟友限制/精英目标/借机攻击/事件期间 uses）—代表卡 08043、08064、08087、08088。注意 audit/eote-player-acceptance.json 的自述与实现不符，建议修复后按本报告 failedCodes 重签。"
+}

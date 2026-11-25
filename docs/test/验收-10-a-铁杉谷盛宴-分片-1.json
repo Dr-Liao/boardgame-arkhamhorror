@@ -1,0 +1,487 @@
+{
+  "unit": "10-a-1",
+  "generatedAt": "2026-11-25",
+  "scope": {
+    "cards": 35,
+    "selector": "10001-10033, effectStatus != verified, pack=fhvp"
+  },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "10001",
+    "10002",
+    "10003",
+    "10004",
+    "10005",
+    "10005b",
+    "10006",
+    "10007",
+    "10008",
+    "10009",
+    "10010",
+    "10011",
+    "10012",
+    "10013",
+    "10014",
+    "10015",
+    "10017",
+    "10018",
+    "10019",
+    "10020",
+    "10021",
+    "10022",
+    "10023",
+    "10024",
+    "10025",
+    "10026",
+    "10027",
+    "10028",
+    "10029",
+    "10030",
+    "10031",
+    "10032",
+    "10033"
+  ],
+  "failedCodes": [
+    {
+      "code": "10016a",
+      "dimension": "primitives",
+      "reason": "P1-12（2026-11-18 独立扫描 high/D2，当前 HEAD 未修）：汉克坚毅·助理面的 `[reaction] 恐惧放置到你身上后：抽 1 张卡` 没有 limit/cost 字段，引擎反应窗口循环（ability-exec.js guard<12）会在同一 horrorPlaced 窗口重复提供并结算该反应；真实引擎探针同一窗口重复提供 12 次（full-scan 探针记录实际抽 12 张）。违反「每张卡每窗口/每回合限制」口径（R3 类）。修法：给该反应补 `limit: { scope: \"perWindow\", owner: \"instance\" }`（与 10005b 同口径），补真实引擎回归后重验。",
+      "evidence": "src/cards/entries/10016a.js:68-72；docs/campaign/theFeastOfHemlockVale/full-scan.md §P1-12 / fix-plan.md P1-12；tests/acceptance-10-a-shard1.test.mjs 的 10016a 反应重复探针"
+    },
+    {
+      "code": "10016b",
+      "dimension": "primitives",
+      "reason": "P1-12（同因，当前 HEAD 未修）：汉克坚毅·监守面的 `[reaction] 伤害放置到你身上后：获得 2 资源` 没有 limit/cost，同一 harmAssigned 窗口被反应循环重复提供 12 次（full-scan 探针记录资源 5→29，即 +24）。违反窗口限制口径（R3 类）。修法同上：补 `limit: { scope: \"perWindow\", owner: \"instance\" }` 并补回归。",
+      "evidence": "src/cards/entries/10016b.js:67-73；full-scan.md §P1-12 / fix-plan.md P1-12；tests/acceptance-10-a-shard1.test.mjs 的 10016b 反应重复探针"
+    }
+  ],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "pass",
+    "primitives": "fail",
+    "interaction": "pass",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/fhv-investigator-10001.test.mjs",
+      "test": "P5 10001 条目注册：调查员旧印/首张支援折扣、应急手段 played+reaction、仓促修补威胁弱点",
+      "codes": [
+        "10001"
+      ]
+    },
+    {
+      "file": "tests/acceptance-10-a-shard1.test.mjs",
+      "test": "FHV 10002 Ad Hoc：附属到受控工具/武器；横置弃手牌工具以忽略费用结算其行动",
+      "codes": [
+        "10002"
+      ]
+    },
+    {
+      "file": "tests/acceptance-10-a-shard1.test.mjs",
+      "test": "FHV 10003 Hasty Repairs：本人支援行动期间四项基础技能值降为 0",
+      "codes": [
+        "10003"
+      ]
+    },
+    {
+      "file": "tests/fhv-investigator-10004.test.mjs",
+      "test": "P5 10004 条目注册与依赖形状",
+      "codes": [
+        "10004"
+      ]
+    },
+    {
+      "file": "tests/acceptance-10-a-shard1.test.mjs",
+      "test": "FHV 10005b Flux Stabilizer（开启面）：放置线索到受控支援后下一检定 +2（每窗口一次）",
+      "codes": [
+        "10005"
+      ]
+    },
+    {
+      "file": "tests/acceptance-10-a-shard1.test.mjs",
+      "test": "FHV 10005b Flux Stabilizer（开启面）：放置线索到受控支援后下一检定 +2（每窗口一次）",
+      "codes": [
+        "10005b"
+      ]
+    },
+    {
+      "file": "tests/acceptance-10-a-shard1.test.mjs",
+      "test": "FHV 10006 Aetheric Current（尤格斯星）：攻击搬运支援线索；成功后横置移动非精英敌人并翻回稳定器",
+      "codes": [
+        "10006"
+      ]
+    },
+    {
+      "file": "tests/acceptance-10-a-shard1.test.mjs",
+      "test": "FHV 10007 Aetheric Current（幽嘶）：躲避搬运支援线索；成功后非精英敌人洗回遭遇牌库并翻回稳定器",
+      "codes": [
+        "10007"
+      ]
+    },
+    {
+      "file": "tests/fhv-investigator-signatures.test.mjs",
+      "test": "P5 10004 构筑：30 张 + 签名 10005/10008，规则校验零错误，非法卡报错",
+      "codes": [
+        "10008"
+      ]
+    },
+    {
+      "file": "tests/fhv-investigator-10009.test.mjs",
+      "test": "P5 10009 条目形状：调查员/事件/敌人弱点三条注册与读点声明",
+      "codes": [
+        "10009"
+      ]
+    },
+    {
+      "file": "tests/fhv-investigator-signatures.test.mjs",
+      "test": "P5 10009 / 10010 哄骗：只能在自回合附属到同地点非精英敌人（合法/非法）",
+      "codes": [
+        "10010"
+      ]
+    },
+    {
+      "file": "tests/fhv-investigator-signatures.test.mjs",
+      "test": "P5 10009 / 10011 萨马科纳：生成在最近的无人地点，逃逸，且不能与之谈判",
+      "codes": [
+        "10011"
+      ]
+    },
+    {
+      "file": "tests/fhv-investigator-10012.test.mjs",
+      "test": "P5 10012 条目与专属依赖：注册形状、关键词窗口与旧印数值",
+      "codes": [
+        "10012"
+      ]
+    },
+    {
+      "file": "tests/fhv-investigator-signatures.test.mjs",
+      "test": "P5 10012 构筑：30 张玩家卡、签名 10013/10014、[[密教]]0 级与潜修者 0–3 边界",
+      "codes": [
+        "10013"
+      ]
+    },
+    {
+      "file": "tests/fhv-investigator-signatures.test.mjs",
+      "test": "P5 10012 构筑：30 张玩家卡、签名 10013/10014、[[密教]]0 级与潜修者 0–3 边界",
+      "codes": [
+        "10014"
+      ]
+    },
+    {
+      "file": "tests/fhv-investigator-10015.test.mjs",
+      "test": "P5 10015 条目注册与卡面形状：调查员、伤恐承接 flag、旧印与绑定坚毅面",
+      "codes": [
+        "10015"
+      ]
+    },
+    {
+      "file": "tests/acceptance-10-a-shard1.test.mjs",
+      "test": "FHV 10016a 汉克坚毅面：恐惧放置后抽 1 —— 已知 P1-12 反应无 per-window limit，窗口重复提供 12 次",
+      "codes": [
+        "10016a"
+      ]
+    },
+    {
+      "file": "tests/acceptance-10-a-shard1.test.mjs",
+      "test": "FHV 10016b 汉克坚毅面：伤害放置后得 2 资源 —— 已知 P1-12 反应无 per-window limit，窗口重复提供 12 次",
+      "codes": [
+        "10016b"
+      ]
+    },
+    {
+      "file": "tests/fhv-investigator-10015.test.mjs",
+      "test": "P5 10015 构筑：buildDeck 产出 35 张玩家卡并强制带入 10017/10018",
+      "codes": [
+        "10017"
+      ]
+    },
+    {
+      "file": "tests/fhv-investigator-10015.test.mjs",
+      "test": "P5 10015 构筑：buildDeck 产出 35 张玩家卡并强制带入 10017/10018",
+      "codes": [
+        "10018"
+      ]
+    },
+    {
+      "file": "tests/fhv-player-m2-1.test.mjs",
+      "test": "P6 10019 御守 击败敌人后横置，按印刷生命加入祝福标记（上限 5）",
+      "codes": [
+        "10019"
+      ]
+    },
+    {
+      "file": "tests/fhv-player-m2-1.test.mjs",
+      "test": "P6 10020 清理工具套装 3 补给可当作自己支援的子弹支付",
+      "codes": [
+        "10020"
+      ]
+    },
+    {
+      "file": "tests/fhv-player-m2-1.test.mjs",
+      "test": "P6 10021 武士刀 攻击 +2[combat]；正好成功 2 点时可横置 +2 伤害；[fast] 改用敏捷",
+      "codes": [
+        "10021"
+      ]
+    },
+    {
+      "file": "tests/fhv-player-m2-1.test.mjs",
+      "test": "P6 10022 御札 地点首次揭示祝福补满充能（每轮一次）；非精英敌人失去四关键词",
+      "codes": [
+        "10022"
+      ]
+    },
+    {
+      "file": "tests/fhv-player-m2-1.test.mjs",
+      "test": "P6 10023 狼面具 每个人限 1 张[[面具]]；交战后补满贡品；花贡品使战斗检定 +2",
+      "codes": [
+        "10023"
+      ]
+    },
+    {
+      "file": "tests/fhv-player-m2-1.test.mjs",
+      "test": "P6 10024 赦免 X 费揭示 3+X 个标记：非符号标记转祝福；祝福治愈恐惧",
+      "codes": [
+        "10024"
+      ]
+    },
+    {
+      "file": "tests/fhv-player-m2-1.test.mjs",
+      "test": "P6 10025 信仰指引 意志代替智力调查；揭示前 +2 祝福；揭示祝福额外 1 线索",
+      "codes": [
+        "10025"
+      ]
+    },
+    {
+      "file": "tests/fhv-player-m2-1.test.mjs",
+      "test": "P6 10026 举起手来 谈判攻击不造成伤害；成功以 -成功点数费用打出手牌[[道具]]支援",
+      "codes": [
+        "10026"
+      ]
+    },
+    {
+      "file": "tests/fhv-player-m2-1.test.mjs",
+      "test": "P6 10027 特遣队 Double 额外花 1 行动；同地点调查员免行动费结算[action]能力、发现线索、移动",
+      "codes": [
+        "10027"
+      ]
+    },
+    {
+      "file": "tests/fhv-player-m2-1.test.mjs",
+      "test": "P6 10028 修修补补 快速附属于[[工具]]支援，宿主少占 1 个饰品槽位",
+      "codes": [
+        "10028"
+      ]
+    },
+    {
+      "file": "tests/fhv-player-m2-2.test.mjs",
+      "test": "P6 10029 净化：可投入任意检定，成功后按超出难度点数加入祝福标记（每次检定最多 1 张）",
+      "codes": [
+        "10029"
+      ]
+    },
+    {
+      "file": "tests/fhv-player-m2-2.test.mjs",
+      "test": "P6 10030 手眼协调：不支付[action]费用结算[[工具]]支援上的[action]能力",
+      "codes": [
+        "10030"
+      ]
+    },
+    {
+      "file": "tests/fhv-player-m2-2.test.mjs",
+      "test": "P6 10031 膂力过人：投入近战支援的攻击 +1 伤害；揭示后受伤可取消标记并重抽",
+      "codes": [
+        "10031"
+      ]
+    },
+    {
+      "file": "tests/fhv-player-m2-2.test.mjs",
+      "test": "P6 10032 恢复元气：第一个行动才可打出，本轮抽到诡计则改为治愈 3 点",
+      "codes": [
+        "10032"
+      ]
+    },
+    {
+      "file": "tests/fhv-player-m2-2.test.mjs",
+      "test": "P6 10033 清理工具套装：补给可代付弹药，花费时横置使本次检定 +2 技能值",
+      "codes": [
+        "10033"
+      ]
+    },
+    {
+      "file": "tests/acceptance-10-a-shard1.test.mjs",
+      "test": "10-a-1 范围：10001–10033 未验收 fhvp 卡恰好 35 张",
+      "codes": [
+        "10001",
+        "10002",
+        "10003",
+        "10004",
+        "10005",
+        "10005b",
+        "10006",
+        "10007",
+        "10008",
+        "10009",
+        "10010",
+        "10011",
+        "10012",
+        "10013",
+        "10014",
+        "10015",
+        "10016a",
+        "10016b",
+        "10017",
+        "10018",
+        "10019",
+        "10020",
+        "10021",
+        "10022",
+        "10023",
+        "10024",
+        "10025",
+        "10026",
+        "10027",
+        "10028",
+        "10029",
+        "10030",
+        "10031",
+        "10032",
+        "10033"
+      ]
+    },
+    {
+      "file": "tests/acceptance-10-a-shard1.test.mjs",
+      "test": "10-a-1 接线：35 张均有条目；5 位调查员可选；汉克三面与磁通量稳定器双面关系登记",
+      "codes": [
+        "10001",
+        "10002",
+        "10003",
+        "10004",
+        "10005",
+        "10005b",
+        "10006",
+        "10007",
+        "10008",
+        "10009",
+        "10010",
+        "10011",
+        "10012",
+        "10013",
+        "10014",
+        "10015",
+        "10016a",
+        "10016b",
+        "10017",
+        "10018",
+        "10019",
+        "10020",
+        "10021",
+        "10022",
+        "10023",
+        "10024",
+        "10025",
+        "10026",
+        "10027",
+        "10028",
+        "10029",
+        "10030",
+        "10031",
+        "10032",
+        "10033"
+      ]
+    },
+    {
+      "file": "tests/acceptance-10-a-shard1.test.mjs",
+      "test": "10-a-1 合规：R1/R2/R3 基线不含 10 段卡号；FHV 规则/原语证据在位",
+      "codes": [
+        "10001",
+        "10002",
+        "10003",
+        "10004",
+        "10005",
+        "10005b",
+        "10006",
+        "10007",
+        "10008",
+        "10009",
+        "10010",
+        "10011",
+        "10012",
+        "10013",
+        "10014",
+        "10015",
+        "10016a",
+        "10016b",
+        "10017",
+        "10018",
+        "10019",
+        "10020",
+        "10021",
+        "10022",
+        "10023",
+        "10024",
+        "10025",
+        "10026",
+        "10027",
+        "10028",
+        "10029",
+        "10030",
+        "10031",
+        "10032",
+        "10033"
+      ]
+    },
+    {
+      "file": "tests/fhv-investigator-signatures.test.mjs",
+      "test": "P5 专属/绑定依赖：20 个卡号全部注册且 dependencyOnly、不可构筑",
+      "codes": [
+        "10002",
+        "10003",
+        "10005",
+        "10005b",
+        "10006",
+        "10007",
+        "10008",
+        "10010",
+        "10011",
+        "10013",
+        "10014",
+        "10017",
+        "10018"
+      ]
+    },
+    {
+      "file": "tests/fhv-player-m2-1.test.mjs",
+      "test": "P6 10019 御守 击败敌人后横置，按印刷生命加入祝福标记（上限 5）",
+      "codes": [
+        "10019",
+        "10020",
+        "10021",
+        "10022",
+        "10023",
+        "10024",
+        "10025",
+        "10026",
+        "10027",
+        "10028",
+        "10029",
+        "10030",
+        "10031",
+        "10032",
+        "10033"
+      ]
+    },
+    {
+      "file": "tests/fhv-player-primitives.test.mjs",
+      "test": "P6 Double 特质 11 张全部以 played.cost.action=1 声明额外行动费用",
+      "codes": []
+    },
+    {
+      "file": "tests/fhv-rules.test.mjs",
+      "test": "P3 关键词清单：6 项身份与 P1 机制扫描逐条一致，原语全部在 P2 交付",
+      "codes": []
+    }
+  ],
+  "notes": "范围：`effectStatus !== verified` 且 10001–10033、`pack=fhvp` 共 35 条 = 调查员 5 张（10001/10004/10009/10012/10015）+ 汉克坚毅双面 2 张（10016a/10016b）+ 专属/签名/绑定依赖 13 张（10002/10003/10005/10005b/10006/10007/10008/10010/10011/10013/10014/10017/10018）+ 一般玩家卡 15 张（10019–10033）。\n判定：33 通过 / 2 失败（10016a、10016b：P1-12 反应无 per-window limit，同一窗口重复结算 12 次；full-scan/fix-plan 已登记，当前 HEAD 未修）。\n证据：本分片新增 tests/acceptance-10-a-shard1.test.mjs（10 例 = 10002/10003/10005b/10006/10007 五张缺口卡真实断言 + 10016a/10016b 反应重复探针 + 范围/接线/合规 3 条），全绿；既有 FHV 证据重跑：player-m2-1..12 + rules + player-primitives 148/148、investigator×5 + signatures 71/71。35/35 卡均有标题含卡号的真实测试。\n合规：npm run audit:entries / cards:index:check / cards:encounter-check 全通过（基线外 0 新增）；R1=112 存量基线、R2=0、R3=0；10 段无基线命中。\n账本口径：`audit/fhv-all-card-acceptance.json` 自报 player 120 verified + 53 simplified、strictComplete=false；README 仍标 pending、2026-11-18 独立扫描发现 6 个 P0（均在本分片范围外的战役侧）。本报告以真实测试复核，不采信账本 verified。\n近似披露（通过，不判失败）：10002（reaction 在无可结算工具/武器时仍询问一次）、10003（用按技能 -印刷基础值 等价「基础技能值降为 0」，statOverrides 未覆盖）均在条目 note 显式披露；10006/10007 的「移动对当前位置」等 UI 冗余选择也已 note。\n其他提示（不判失败）：10023 Wolf Mask 的 `enemyEngaged` 反应无 limit，但每次补贡品有上限（满则 gain<=0 无效果），重复提供只是冗余提示、不改变结算；建议与 10016a/b 一并评估窗口限制口径。\n交互：本分片不改 UI；调查员/玩家卡用真实引擎 legalMoves/applyMove/performTest/triggerReaction 覆盖；FHV 昼夜/法典/居民/疲惫混乱袋等战役机制不在本分片范围。\n切换建议：33 张可切 verified；10016a/10016b 补 per-window limit 并补真实回归后重验（fix-plan P1-12）。"
+}

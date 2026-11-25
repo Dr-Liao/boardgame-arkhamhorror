@@ -1,0 +1,55 @@
+{
+  "unit": "11-a-8",
+  "generatedAt": "2026-11-25",
+  "scope": { "cards": 43, "selector": "pack=tdcc && range 11660-11696", "range": "11660-11696" },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "11660", "11661", "11662", "11662b", "11663", "11663b", "11664", "11664b", "11665", "11666", "11667",
+    "11669", "11670", "11671", "11672a", "11672b", "11673", "11674", "11674b", "11675", "11676", "11677",
+    "11678", "11679", "11680", "11681", "11682", "11683", "11684", "11685", "11686", "11687", "11688",
+    "11688a", "11689", "11690", "11691a", "11691b"
+  ],
+  "failedCodes": [
+    { "code": "11692", "dimension": "implementation", "reason": "「不能完全淹没」已接线（locationRule.floodBounds max 1 + 引擎 flood.js 读点）；印刷 [action] willpower(3) 查看克苏鲁牌库顶 3 张并弃 1 张无读点：theDoomOfArkhamPartII/behavior.js 的 actions() 只在最终封印议程下放印记，没有北区查看行动/触发器。", "evidence": "content/campaigns/theDrownedCity/scenarios/theDoomOfArkhamPartII/behavior.js；tests/acceptance-11-a-shard8.test.mjs 11692 用例" },
+    { "code": "11693", "dimension": "implementation", "reason": "floodBounds 已接线；印刷 [reaction] 星之眷族进入 Downtown 时花 3 资源自动躲避无读点（章节无该反应/触发）。", "evidence": "theDoomOfArkhamPartII/behavior.js；11693 用例" },
+    { "code": "11694", "dimension": "implementation", "reason": "floodBounds 已接线；印刷 [action] 弃一个盟支援降本地水位并抽 3 张无读点。", "evidence": "theDoomOfArkhamPartII/behavior.js；11694 用例" },
+    { "code": "11695", "dimension": "implementation", "reason": "floodBounds 已接线；印刷 [action] 弃至多 3 张智识图标牌每张治 1 恐惧无读点。", "evidence": "theDoomOfArkhamPartII/behavior.js；11695 用例" },
+    { "code": "11696", "dimension": "implementation", "reason": "印刷 [action] 敏捷/智识(3) 开排水降低本地或相邻水位无读点；本卡印刷无「不能完全淹没」，实现另以 floodBounds max 2 近似（披露）。", "evidence": "theDoomOfArkhamPartII/behavior.js；11696 用例" }
+  ],
+  "pendingCodes": [],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "fail",
+    "primitives": "fail",
+    "interaction": "pass",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/acceptance-11-a-shard8.test.mjs",
+      "test": "43 张逐卡接线用例 + 43 条字面标题证据用例（每条标题含字面卡号）",
+      "codes": "11660-11696（43/43）",
+      "result": "node --test tests/acceptance-11-a-shard8.test.mjs → tests 86 / pass 86 / fail 0"
+    },
+    {
+      "file": "docs/campaign/theDrownedCity/README.md",
+      "test": "P1 检查项逐项复核：11672a/b 文物翻面（api.flipAsset + physical-faces.js#applyPhysicalFace）、字形卡三对、11673/11682/11688a 剧本参考卡",
+      "codes": ["11672a", "11672b", "11662", "11663", "11664", "11673", "11682", "11688a"],
+      "result": "均接线通过"
+    }
+  ],
+  "commands": [
+    { "command": "node --test tests/acceptance-11-a-shard8.test.mjs", "result": "tests 86 / pass 86 / fail 0" },
+    { "command": "node artifacts/acceptance/11-a-8/scan-titles.mjs", "result": "strict(title+boundary) title-evidence: 43/43" },
+    { "command": "npm run cards:check", "result": "exit 0" },
+    { "command": "npm run cards:encounter-check", "result": "exit 0" },
+    { "command": "npm run audit:entries", "result": "exit 0；本范围无 R1/R2/R3" },
+    { "command": "node artifacts/acceptance/11-a-8/scan-wiring.mjs", "result": "97 声明键；UNREAD 3 项均为元数据（11666 难度内联、11685 商店由 placeShop 承担）" }
+  ],
+  "ledgerDiscrepancy": {
+    "summary": "本循环没有 tdc-all-card 账本；战役侧逐卡账本在大厅根 artifacts/migration/tdc/p7/literal/*.json，本轮不采信。",
+    "independentConclusion": "独立复核发现 11692–11696 五张废墟地点的印刷能力无章节读点；其余 38 张接线级证据通过。README P1 的 11672a/b 文物翻面与三对字形卡已接线。无 tdc-all-card 账本可对照，建议自行登记本分片结论。"
+  },
+  "notes": "43 张：38 通过 / 5 失败 / 0 待定 → partial。五维：实现完整性 fail、原语设计 fail（11692–11696 地点能力缺读点；其余原语含文物翻面/字形/洪水/工事/攻击线索加伤/最终封印印记已接线）、交互 pass（无新增面板，四章已生产注册；未重跑浏览器档）、证据 pass（新增 86 例 86/86，标题 43/43；审计前仅 8/43）、合规 pass（cards:check / cards:encounter-check / audit:entries exit 0）。证据强度：接线级真实执行（导入条目/章节/chaos、断言声明与引擎读点、关键函数存在），未逐卡跑完整剧本仿真，建议主进程对 38 张通过卡再做深度仿真后升级 verified。已披露近似：11674 叙事目标、11689 废墟替换、11691b sigils 记录、11696 floodBounds 近似、克苏鲁无情关键词每轮同步。新增测试需主进程登记进 tests/suites.mjs fast tier 与 tests/node-suite.mjs。"
+}

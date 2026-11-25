@@ -1,0 +1,252 @@
+{
+  "unit": "10-a-3",
+  "generatedAt": "2026-11-25",
+  "scope": {
+    "cards": 35,
+    "selector": "pack==='fhvp' && 10069<=code<=10103 && effectStatus==='unverified'",
+    "packs": {
+      "fhvp": 35
+    }
+  },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "10069",
+    "10071",
+    "10073",
+    "10074",
+    "10076",
+    "10077",
+    "10078",
+    "10080",
+    "10081",
+    "10083",
+    "10084",
+    "10091",
+    "10095",
+    "10097",
+    "10102"
+  ],
+  "failedCodes": [
+    {
+      "code": "10070",
+      "dimension": "implementation",
+      "reason": "「用该武器以[敏捷]攻击」走通用 api.fight(assetId, skill:agility, noSpend)，不激活武器自身的攻击能力：不花费弹药/充能、不复刻武器能力写死的伤害/技能修正；缺「以替代技能激活支援能力」入口（primitive-request/10070.json）。",
+      "evidence": "src/cards/entries/10070.js（simplified/note 自述）"
+    },
+    {
+      "code": "10072",
+      "dimension": "implementation",
+      "reason": "「移动资源」用 loseResources+gainResources 两步合成（失去资源的替代/防止会生效）；而引擎已有 transferResources 原语（api-misc.js:507）未被采用 → 披露过时且行为与原语不等价。",
+      "evidence": "src/cards/entries/10072.js（simplified/note 自述）"
+    },
+    {
+      "code": "10075",
+      "dimension": "implementation",
+      "reason": "诅咒揭示后才投入的卡没有 ST.3 图标读点；用 endOfTest 效果 + context.testBonus 事后补 3 个万能图标的价值（印刷的 1 万能由 commit 计入）；时点/可用窗口偏差（primitive-request/10075.json）。",
+      "evidence": "src/cards/entries/10075.js（simplified/note 自述）"
+    },
+    {
+      "code": "10079",
+      "dimension": "implementation",
+      "reason": "附属牌存 host.attachments（引擎无「正面朝下压在支援下」独立区域，界面可见且被当作能力来源）；第二模式用 topDeckCodes+moveCard 代替 searchTop（缺同名/卡号筛选参数），未开查找窗口。",
+      "evidence": "src/cards/entries/10079.js（simplified/note 自述）"
+    },
+    {
+      "code": "10082",
+      "dimension": "implementation",
+      "reason": "「疑点」（印刷为卡上资源）暂存在卡实例 uses 上（counter.card 只白名单 bounty/evidence/hollow，无「支援上放资源」能力面 API）；难度计算与放置/读取都走 api.addUses（primitive-request/10082.json）。",
+      "evidence": "src/cards/entries/10082.js（simplified/note 自述）"
+    },
+    {
+      "code": "10085",
+      "dimension": "implementation",
+      "reason": "[[腐烂]]三条被动力挂在杖的 ROT_RULES；「不能攻击」只覆盖杖控制者被攻击窗口；「离场放一边」只结算被击败路径；绑定集合已有副本时取副本会洗一次牌库；且 level-0 的 10089/10090 规则在 ROT_RULES 中只有名字（10089 的轮末伤害/10090 的不动未接）。",
+      "evidence": "src/cards/entries/10085.js（simplified/note 自述）"
+    },
+    {
+      "code": "10086",
+      "dimension": "implementation",
+      "reason": "「所附属敌人不能攻击」由 10085 ROT_RULES 代算（玩家卡附敌不是窗口来源，无实例级 cannot:attack 写入口）；「离场放一边」只覆盖被击败路径；杖离场后被动失效。",
+      "evidence": "src/cards/entries/10086.js（simplified/note 自述）"
+    },
+    {
+      "code": "10087",
+      "dimension": "implementation",
+      "reason": "「附敌被击败获得资源（印刷生命值，≤5）」由 10085 代算，「离场放一边」只覆盖被击败路径；数值取 min(5, enemy.health)。",
+      "evidence": "src/cards/entries/10087.js（simplified/note 自述）"
+    },
+    {
+      "code": "10088",
+      "dimension": "implementation",
+      "reason": "「-1 攻击/-1 躲避」由 10085 在附属时写 api.addEnemyStatModifier（持久修正，不随附属移除撤销）；「离场放一边」只在被击败路径结算。",
+      "evidence": "src/cards/entries/10088.js（simplified/note 自述）"
+    },
+    {
+      "code": "10089",
+      "dimension": "implementation",
+      "reason": "「轮末 1 点伤害」挂在持杖者（10098/10085）上；10085 的 ROT_RULES 未含该字段（仅 10098 有）；「离场放一边」只覆盖被击败路径；披露称「本分片只接到 10098，level 0 需主进程补」——当前 HEAD 10085 仍未补。",
+      "evidence": "src/cards/entries/10089.js（simplified/note 自述）"
+    },
+    {
+      "code": "10090",
+      "dimension": "implementation",
+      "reason": "「所附属敌人不能移动」尚未接线（引擎移动拦截只有 enemy.immobile，enemy.attachments 不是实体规则来源）；「离场放一边」仅被击败路径（primitive-request/10090.json）。",
+      "evidence": "src/cards/entries/10090.js（simplified/note 自述）"
+    },
+    {
+      "code": "10092",
+      "dimension": "implementation",
+      "reason": "「击败敌人」用剩余生命 ≤ 本次攻击伤害（1+damageBonus）预估，不含后续窗口追加伤害；补满固定 +1 且不校验支援印刷上限（无最大 uses 读点）。",
+      "evidence": "src/cards/entries/10092.js（simplified/note 自述）"
+    },
+    {
+      "code": "10093",
+      "dimension": "implementation",
+      "reason": "「其余卡牌以任意顺序放回遭遇牌库顶」按原顺序放回（未提供任意排序选择）；其余（额外行动费、逐张加诅咒换放底、顶/底搬运）已实现。",
+      "evidence": "src/cards/entries/10093.js（simplified/note 自述）"
+    },
+    {
+      "code": "10094",
+      "dimension": "implementation",
+      "reason": "「移动伤害到敌人」用 api.scenario.healDamage（原始扣减）+ api.damageEnemy 两步合成，非原子转移：敌人免疫/来源限制会让第二步无效而第一步已扣（primitive-request/10094.json）。",
+      "evidence": "src/cards/entries/10094.js（simplified/note 自述）"
+    },
+    {
+      "code": "10096",
+      "dimension": "implementation",
+      "reason": "「本次检定期间可忽略所有关键词与地点效果」无读点（location-effect-scope 只服务 investigate 的 mayIgnoreLocationEffects，ignore:* 是常驻修正）；当前只有「投入提供意志/万能图标」一条真实行为（primitive-request/10096.json）。",
+      "evidence": "src/cards/entries/10096.js（simplified/note 自述）"
+    },
+    {
+      "code": "10098",
+      "dimension": "implementation",
+      "reason": "[[腐烂]]被动/强制与 10089 轮末伤害挂在「杖」条目上（玩家卡附敌不是窗口来源）；杖离场后效果失效；「离场放到一边」只覆盖被击败路径；从场外绑定集合取副本会洗一次牌库。",
+      "evidence": "src/cards/entries/10098.js（simplified/note 自述）"
+    },
+    {
+      "code": "10099",
+      "dimension": "implementation",
+      "reason": "①「补满所有充能/秘密」只认条目级印刷上限（registeredEntry(code).uses），未迁移支援读不到上限时只提示不补满；②打出条件只要求控制带使用（充能/秘密）的支援，没有「未满或有可结算能力」判定（primitive-request/10099.json）。",
+      "evidence": "src/cards/entries/10099.js（simplified/note 自述）"
+    },
+    {
+      "code": "10100",
+      "dimension": "implementation",
+      "reason": "「回合结束时返回手牌」按「结算后立即返回手牌」近似；但当前 HEAD 已有 api.returnPlayedEventAtEndOfTurn（api-misc.js:226，10102 已使用）→ 披露过时且行为仍偏差（primitive-request/10100.json）。",
+      "evidence": "src/cards/entries/10100.js（simplified/note 自述）"
+    },
+    {
+      "code": "10101",
+      "dimension": "implementation",
+      "reason": "同 10100：应立即返回改为结算后立即返回；引擎已有 returnPlayedEventAtEndOfTurn 未被采用 → 披露过时且行为仍偏差。",
+      "evidence": "src/cards/entries/10101.js（simplified/note 自述）"
+    },
+    {
+      "code": "10103",
+      "dimension": "implementation",
+      "reason": "「结算这些事件时技能值 +2」用「下一次技能检定 +N」（inv.testBonus）近似，没有只作用于所结算事件的作用域读点；事件不发起检定时 +2 会留到下一次检定（primitive-request/10103.json）。",
+      "evidence": "src/cards/entries/10103.js（simplified/note 自述）"
+    }
+  ],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "fail",
+    "primitives": "fail",
+    "interaction": "pass",
+    "evidence": "pass",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/fhv-player-m2-6..m2-9.test.mjs",
+      "test": "35 张卡均有标题含卡号的真实用例（P6 <code> …），本轮重跑",
+      "codes": [
+        "10069",
+        "10070",
+        "10071",
+        "10072",
+        "10073",
+        "10074",
+        "10075",
+        "10076",
+        "10077",
+        "10078",
+        "10079",
+        "10080",
+        "10081",
+        "10082",
+        "10083",
+        "10084",
+        "10085",
+        "10086",
+        "10087",
+        "10088",
+        "10089",
+        "10090",
+        "10091",
+        "10092",
+        "10093",
+        "10094",
+        "10095",
+        "10096",
+        "10097",
+        "10098",
+        "10099",
+        "10100",
+        "10101",
+        "10102",
+        "10103"
+      ],
+      "result": "tests 49 / pass 49 / fail 0"
+    },
+    {
+      "file": "audit/fhv-player-acceptance.json（复核，不采信结论）",
+      "test": "35 条 status=verified，其中 20 条 simplified=true；primitiveBacklog（45 项）含本分片 20 个卡号；summary 120 verified / 53 simplified / 45 deferredRequests 与本分片独立核验冲突（§0.6）",
+      "codes": [
+        "10070",
+        "10072",
+        "10075",
+        "10079",
+        "10082",
+        "10085",
+        "10086",
+        "10087",
+        "10088",
+        "10089",
+        "10090",
+        "10092",
+        "10093",
+        "10094",
+        "10096",
+        "10098",
+        "10099",
+        "10100",
+        "10101",
+        "10103"
+      ]
+    },
+    {
+      "file": "audit/fhv-all-card-acceptance.json（复核，不采信结论）",
+      "test": "summary gateComplete=true 但 strictComplete=false；campaign 54 simplified；与本分片 20 张失败一致——账本已声明「不严格完整」"
+    },
+    {
+      "file": "docs/campaign/theFeastOfHemlockVale/{full-scan,fix-plan}.md（仅参考，未采信）",
+      "test": "README 仍 pending；P0 修复记录与本分片卡号无直接冲突；本结论独立于这两份文档"
+    }
+  ],
+  "commands": [
+    {
+      "command": "node --test tests/fhv-player-m2-6.test.mjs tests/fhv-player-m2-7.test.mjs tests/fhv-player-m2-8.test.mjs tests/fhv-player-m2-9.test.mjs",
+      "result": "tests 49 / pass 49 / fail 0"
+    },
+    {
+      "command": "npm run cards:check / cards:encounter-check / audit:entries",
+      "result": "通过（本分片 R1/R2/R3 0 条）"
+    },
+    {
+      "command": "npm run docs:check",
+      "result": "通过"
+    }
+  ],
+  "notes": "五维：实现完整性 fail（20 张：10070/10072/10075/10079/10082/10085/10086/10087/10088/10089/10090/10092/10093/10094/10096/10098/10099/10100/10101/10103，均为条目自述 simplified/近似且经独立复核存在真实行为差异）；原语 fail（本分片 primitive-request 全部 deferred；其中 10100/10101 所需 api.returnPlayedEventAtEndOfTurn、10072 所需 transferResources、10102 已用的同类原语在当前 HEAD 已存在 → 披露过时但条目未接线，仍按未实现计）；交互 pass（玩家卡无新增面板；FHV P6 浏览器证据在库未重跑）；证据 pass（35/35 标题真实执行，4 个分片文件重跑 49/49）；合规 pass。分片 verdict=partial：15 张可切 verified（10069/10071/10073/10074/10076/10077/10078/10080/10081/10083/10084/10091/10095/10097/10102），20 张保持 unverified。附注：10102 在 primitiveBacklog 中但已使用 returnPlayedEventAtEndOfTurn 完整实现，属账本 backlog 过时，判 pass。线索复核：audit/fhv-all-card-acceptance.json 标 gateComplete=true 但 strictComplete=false；README 标 pending，二者与本次 20 张失败一致，说明 FHV「完整」为门禁口径而非严格等价。"
+}

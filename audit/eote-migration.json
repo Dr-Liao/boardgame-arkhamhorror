@@ -3603,7 +3603,7 @@
       "audit/eote-primitive-plan.json": "3d03ffcf7cdb25c64cbbb7a09afe81dc6b232a4aef0d5eb81aa332af13939f74",
       "audit/eote-primitive-requests.json": "8699aeb37738f0c0ed6c6e4bf786e7f3fd70a3ae0f9c947164e8c5c615a2b18b",
       "audit/eote-regression.json": "36a01fdd2b44bc72f8470e97df4844025e51e486addf8c6edb27ec9a3b1e557d",
-      "audit/eote-release-acceptance.json": "23e61fe83fca49267a4b39356f6e87d08e5fbb27363659be1f966dc1833645ac",
+      "audit/eote-release-acceptance.json": "5133cd4cba55cb88f4745bbda8ea7312fc9bcd3acbc0f0c2b1091fb706574900",
       "audit/eote-release-browser.json": "ad85bfa1bc19e2bdc111941e815be8d3ed190fd021ef88f3707e389d63b259d3",
       "audit/eote-rules.json": "f5e37c79003f9f1bbaca78ec3379063d40451507411c763134fa03faa309085b",
       "audit/eote-scenario-acceptance.json": "f7341108405fa7144e8f4c6776e628f9bac2a81932e042b5de0b6f3166158de2",
@@ -3704,7 +3704,7 @@
     },
     {
       "path": "audit/eote-release-acceptance.json",
-      "sha256": "23e61fe83fca49267a4b39356f6e87d08e5fbb27363659be1f966dc1833645ac"
+      "sha256": "5133cd4cba55cb88f4745bbda8ea7312fc9bcd3acbc0f0c2b1091fb706574900"
     },
     {
       "path": "content/packs/eoteCampaign/manifest.js",
@@ -3720,7 +3720,7 @@
     },
     {
       "path": "src/cards/cards-data.js",
-      "sha256": "e82ac62eb62e6c6c410a960055db9549cce336433e2003852af559dedea6f9bc"
+      "sha256": "417637a8f8d9e5f3c3fc51b1b18969deb6cbef4088f47b08bceb226c266779c5"
     },
     {
       "path": "tools/audit-eote.mjs",
