@@ -1,0 +1,2415 @@
+{
+  "unit": "60-a",
+  "generatedAt": "2026-11-25",
+  "scope": {
+    "cards": 324,
+    "selector": "^60[1-5][0-9]{2}$",
+    "packs": [
+      "nat",
+      "tom",
+      "har",
+      "car",
+      "win",
+      "and",
+      "jac",
+      "mar",
+      "ste",
+      "mig"
+    ]
+  },
+  "verdict": "partial",
+  "verifiedCodes": [
+    "60118",
+    "60119",
+    "60176",
+    "60206",
+    "60216",
+    "60218",
+    "60219",
+    "60226",
+    "60263",
+    "60267",
+    "60275",
+    "60416",
+    "60457"
+  ],
+  "failedCodes": [
+    {
+      "code": "60101",
+      "dimension": "evidence",
+      "reason": "大厅及构筑覆盖可选状态。待逐卡验证印刷的调查员能力、旧印及构筑约束。 卡面起句为 [reaction] When you deal damage to an enemy by an event or a fight ability on an event: Deal 1 additional damage. (Limit once per phase.) [elder_sign] effect: +",
+      "evidence": "src/cards/entries/60101.js",
+      "reproduce": "从大厅构筑并开局，触发印刷能力和旧印，验证正反面限制及多席相关窗口。"
+    },
+    {
+      "code": "60102",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Nathaniel Cho deck only. [reaction] After Randall Cho enters play: Heal 3 damage or search your deck and discard pile for a [[Weapon]] asset, play it (paying it",
+      "evidence": "src/cards/entries/60102.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60103",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Prey - Nathaniel Cho only. Hunter. Forced - When Tommy Malloy would take any amount of damage: Reduce that amount to 1.",
+      "evidence": "src/cards/entries/60103.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60104",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness、forced），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - Put Self-Destructive into play in your threat area. Forced - When you deal 1 or more damage to an enemy: Take 1 damage. [action] [action]: Discard ",
+      "evidence": "src/cards/entries/60104.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60105",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You get +1 [combat] while fighting. [reaction] After you defeat an enemy, exhaust Boxing Gloves: Search the top 6 cards of your deck for a [[Spirit]] event and ",
+      "evidence": "src/cards/entries/60105.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60106",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 charges). [reaction] When you are dealt damage and/or horror from an enemy attack, exhaust Flesh Ward and spend 1 charge: Cancel 1 damage or horror just",
+      "evidence": "src/cards/entries/60106.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60107",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You get +1 [combat]. [reaction] After you defeat an enemy, exhaust Grete Wagner and deal 1 damage to her: Discover 1 clue at your location.",
+      "evidence": "src/cards/entries/60107.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60108",
+      "dimension": "evidence",
+      "reason": "印刷归并至 01017，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 [fast] Spend 1 resource: You get +1 [willpower] for this skill test. [fast] Spend 1 resource: You get +1 [combat] for this skill test.",
+      "evidence": "src/cards/entries/01017.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60109",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction、free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [reaction] When you deal excess damage to an enemy, exhaust Relentless: Place that excess damage on Relentless. [fast] Discard Relentless: Gain resources equal ",
+      "evidence": "src/cards/entries/60109.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60110",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [reaction] After another investigator moves from your location to a connecting location, exhaust Safeguard: Move to that location.",
+      "evidence": "src/cards/entries/60110.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60111",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fight. When this action begins, gain 2 resources.",
+      "evidence": "src/cards/entries/60111.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60112",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play after an enemy attacks you, even if that attack was canceled. Fight. This attack targets the attacking enemy.",
+      "evidence": "src/cards/entries/60112.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60113",
+      "dimension": "evidence",
+      "reason": "印刷归并至 01023，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Fast. Play when an enemy attacks an investigator at your location. Cancel that attack.",
+      "evidence": "src/cards/entries/01023.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60114",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Engage. Fight. Choose a non-[[Elite]] enemy at your location or a connecting location. Move that enemy to your location, engage it, and attack it.",
+      "evidence": "src/cards/entries/60114.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60115",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play after you defeat an enemy. Draw 2 cards.",
+      "evidence": "src/cards/entries/60115.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60116",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fight. This attack deals +1 damage.",
+      "evidence": "src/cards/entries/60116.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60117",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fight. You get +1 [combat] for this attack. If you succeed, you may fight that enemy again. You get +2 [combat] and deal +1 damage for that attack.",
+      "evidence": "src/cards/entries/60117.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60120",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play after you defeat an enemy. Discover 1 clue at your location (2 clues instead if you defeated enemies with a combined total of at least 4 printed heal",
+      "evidence": "src/cards/entries/60120.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60121",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play only during your turn. Ready a [guardian] asset you control. You may take an additional action during your turn, which can only be used to fight.",
+      "evidence": "src/cards/entries/60121.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60122",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play when an enemy attacks you (before resolving that attack). Fight. This attack targets the attacking enemy. You get +2 [combat] and deal +1 damage for ",
+      "evidence": "src/cards/entries/60122.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60123",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play during any [fast] window. Engage. Fight. Choose a non-[[Elite]] enemy up to 2 locations away. Move that enemy to your location, engage it, and attack",
+      "evidence": "src/cards/entries/60123.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60124",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play after you take damage from an enemy attack. Discover 2 clues at your location.",
+      "evidence": "src/cards/entries/60124.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60125",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Play only as your first action. Deal 2 damage to an enemy engaged with you. This action does not provoke attacks of opportunity.",
+      "evidence": "src/cards/entries/60125.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60126",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Max 1 committed per skill test. If this test is successful, draw 1 card (2 cards instead if it succeeds by 2 or more).",
+      "evidence": "src/cards/entries/60126.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60127",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You get +2 [combat] while fighting. [reaction] After you defeat an enemy, exhaust Boxing Gloves: Search the top 9 cards of your deck for a [[Spirit]] event and ",
+      "evidence": "src/cards/entries/60127.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60128",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You get +1 [combat] and +1 [intellect]. [reaction] After you defeat an enemy, exhaust Grete Wagner and deal 1 damage to her: Discover 1 clue at your location or",
+      "evidence": "src/cards/entries/60128.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60129",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play during any [fast] window. Choose either your location or a connecting location. Deal 3 damage to each enemy and investigator at the chosen location.",
+      "evidence": "src/cards/entries/60129.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60130",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play during any [fast] window. Engage any number of enemies at your location. For each enemy engaged this way, deal it 1 damage and draw 1 card.",
+      "evidence": "src/cards/entries/60130.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60131",
+      "dimension": "evidence",
+      "reason": "已定位条目（forced、free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (2 resources). Replenish these resources at the start of each round. [fast] Spend 1 resource from your resource pool or from Physical Training: You get +1 ",
+      "evidence": "src/cards/entries/60131.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60132",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fight. You automatically succeed and deal +1 damage for this attack. You may fight again. You get +3 [combat] and deal +2 damage for that attack.",
+      "evidence": "src/cards/entries/60132.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60151",
+      "dimension": "evidence",
+      "reason": "大厅及构筑覆盖可选状态。待逐卡验证印刷的调查员能力、旧印及构筑约束。 卡面起句为 [action] Spend 1 resource, or discard a [[Firearm]] asset you control from play: Play a [[Firearm]] asset from your hand, paying its cost. It enters play with 2",
+      "evidence": "src/cards/entries/60151.js",
+      "reproduce": "从大厅构筑并开局，触发印刷能力和旧印，验证正反面限制及多席相关窗口。"
+    },
+    {
+      "code": "60152",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Tommy Muldoon deck only. Uses (2 ammo). [action] Spend 1 ammo: Fight ([combat]). You get +2 [combat] and deal +1 damage for this attack. [reaction] When you tri",
+      "evidence": "src/cards/entries/60152.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60153",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - You must either discard each [[Firearm]] asset you control or lose 5 resources.",
+      "evidence": "src/cards/entries/60153.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60154",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness、forced），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - Put Overconfident into play in your threat area. Forced - After you fail a skill test: Take 1 damage. [action] [action]: Discard Overconfident.",
+      "evidence": "src/cards/entries/60154.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60155",
+      "dimension": "evidence",
+      "reason": "印刷归并至 12019，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Uses (4 ammo). [action] Spend 1 ammo: Fight ([combat]). You get +1 [combat] and deal +1 damage for this attack.",
+      "evidence": "src/cards/entries/12019.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60156",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [fast] During an attack or investigation at your location, exhaust Police Dog: The performing investigator gets +1 skill value for this test.",
+      "evidence": "src/cards/entries/60156.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60157",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Rookie Cop may be assigned damage and/or horror dealt to other investigators at your location. [reaction] When Rookie Cop is defeated: Discover 1 clue at your l",
+      "evidence": "src/cards/entries/60157.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60158",
+      "dimension": "evidence",
+      "reason": "已定位条目（action、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 ammo). [reaction] After an enemy attacks you, spend 1 ammo: Fight ([combat]). This attack targets that enemy. You get +1 [combat] and deal +1 damage for",
+      "evidence": "src/cards/entries/60158.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60159",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [reaction] After you play Protective Vest: Search the top 6 cards of your deck for a [[Firearm]] or [[Upgrade]] card and add it to your hand. Shuffle your deck.",
+      "evidence": "src/cards/entries/60159.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60160",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Parley. Choose an enemy at your location and test [combat] (X), where X is that enemy's remaining health. If you succeed, automatically evade that enemy and dis",
+      "evidence": "src/cards/entries/60160.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60161",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play after an enemy at your location is defeated. Investigators at your location gain a total of X resources, distributed as your wish. X is that enemy's ",
+      "evidence": "src/cards/entries/60161.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60162",
+      "dimension": "evidence",
+      "reason": "已定位条目（played、free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play only during your turn. Attach to a [[Firearm]] asset you control. [fast] During your turn, except during an action, discard Custom Grip: Return attac",
+      "evidence": "src/cards/entries/60162.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60163",
+      "dimension": "implementation",
+      "reason": "准星的 +3 写入全局下一次检定。结果可以被不用附属枪械的检定提前消费。",
+      "evidence": "src/cards/entries/60163.js",
+      "reproduce": "把机械瞄具附属到枪械并横置，先调查或用另一把枪攻击，检查哪次检定消耗加成。"
+    },
+    {
+      "code": "60164",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Move. After this move, heal 2 damage.",
+      "evidence": "src/cards/entries/60164.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60165",
+      "dimension": "evidence",
+      "reason": "已定位条目（played、forced），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play after a non-[[Elite]] enemy attacks you. Automatically evade that enemy and attach Restrained to it. Attached enemy cannot ready. Forced - When the r",
+      "evidence": "src/cards/entries/60165.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60166",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Investigate ([intellect]). You get +2 [intellect] for this investigation. If you succeed, heal 1 horror.",
+      "evidence": "src/cards/entries/60166.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60167",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Commit only to a skill test during an attack or evasion. The performing investigator ignores the alert and retaliate keywords during this test.",
+      "evidence": "src/cards/entries/60167.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60168",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 While it is committed to a skill test on an [[Item]] asset you control, Armed to the Teeth gains [wild] [wild].",
+      "evidence": "src/cards/entries/60168.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60169",
+      "dimension": "implementation",
+      "reason": "目录指向 12025，导入可继续归并至 01025。60169 自身未注册重印条目，按原印刷号读取运行时行为时取不到条目。",
+      "evidence": "src/cards/entries/_reprint-aliases.js",
+      "reproduce": "比较 canonicalCode(60169) 和 registeredEntry(60169)，再检查重印别名表。"
+    },
+    {
+      "code": "60170",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [fast] During an attack or investigation at your location, exhaust Police Dog: The performing investigator gets +2 skill value for this test.",
+      "evidence": "src/cards/entries/60170.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60171",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 ammo). [action] Spend 1 ammo: Fight ([combat]). You get +2 [combat] and deal +1 damage for this attack. Ignore the retaliate keyword for this attack.",
+      "evidence": "src/cards/entries/60171.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60172",
+      "dimension": "implementation",
+      "reason": "印刷为使用附属枪械攻击时常驻 +1。实现经反应窗口请求触发，且将加成排入待结算检定。",
+      "evidence": "src/cards/entries/60172.js",
+      "reproduce": "关闭自动反应后，用附着加长枪管的枪械攻击，跳过反应并核对本次技能值。"
+    },
+    {
+      "code": "60173",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play when your turn begins. Until the end of your turn, you get +3 skill value while investigating or parleying.",
+      "evidence": "src/cards/entries/60173.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60174",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Move. After this move, heal 3 damage.",
+      "evidence": "src/cards/entries/60174.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60175",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Place 5 ammo, divided as you choose, among [[Firearm]] assets you control.",
+      "evidence": "src/cards/entries/60175.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60177",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You get +1 [combat]. Detective Sherman may be assigned damage and/or horror dealt to other investigators at your location. [reaction] After damage is placed on ",
+      "evidence": "src/cards/entries/60177.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60178",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Starting. (You may begin the game with 1 copy of a starting card in your opening hand.) [fast] Spend 1 resource: You get +1 [combat] for this skill test (+2 [co",
+      "evidence": "src/cards/entries/60178.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60179",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Investigate ([intellect]). You get +3 [intellect] for this investigation. If you succeed, discover 1 additional clue at your location and heal 2 horror.",
+      "evidence": "src/cards/entries/60179.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60180",
+      "dimension": "implementation",
+      "reason": "使用当前同地调查员的 attackedSinceTurnEnd 推断地点历史，分不清本轮在其他地点被攻击后走来的调查员。奖励也走另一次反应。",
+      "evidence": "src/cards/entries/60180.js",
+      "reproduce": "让队友在邻地受攻击后移动到此处，在本地点发起检定并投入本卡，观察额外图标条件。"
+    },
+    {
+      "code": "60181",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You have 1 additional hand slot, which may only be used to hold a [[Firearm]] asset. [reaction] After you play Protective Vest: Search the top 9 cards of your d",
+      "evidence": "src/cards/entries/60181.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60182",
+      "dimension": "evidence",
+      "reason": "已定位条目（action、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (6 ammo). [action] Spend 1 ammo: Fight ([combat]). You get +3 [combat] and deal +1 damage for this attack. [reaction] After you resolve the above [action] ",
+      "evidence": "src/cards/entries/60182.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60201",
+      "dimension": "evidence",
+      "reason": "大厅及构筑覆盖可选状态。待逐卡验证印刷的调查员能力、旧印及构筑约束。 卡面起句为 [reaction] After an investigator at your location draws 1 or more cards from their deck during the investigation phase: That investigator draws 1 card. (Limit o",
+      "evidence": "src/cards/entries/60201.js",
+      "reproduce": "从大厅构筑并开局，触发印刷能力和旧印，验证正反面限制及多席相关窗口。"
+    },
+    {
+      "code": "60202",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Harvey Walters deck only. Your maximum hand size is increased by 2. [reaction] After you successfully investigate, exhaust Vault of Knowledge and choose an inve",
+      "evidence": "src/cards/entries/60202.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60203",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - For every 3 cards in your hand: Take 1 damage.",
+      "evidence": "src/cards/entries/60203.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60204",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness、forced），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - Put Obsessive into play in your threat area. Forced - When your turn begins: Discard 1 non-weakness card at random from your hand. [action] [action",
+      "evidence": "src/cards/entries/60204.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60205",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Your maximum hand size is increased by 1. You have 1 additional hand slot, which can only be used to hold a [[Tome]] asset.",
+      "evidence": "src/cards/entries/60205.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60207",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [reaction] When a non-[[Elite]] enemy spawns at your location, discard Disc of Itzamna: Automatically evade that enemy or deal it 2 damage.",
+      "evidence": "src/cards/entries/60207.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60208",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (5 secrets). [action] Exhaust Encyclopedia and spend 1 secret: Choose an investigator at your location. That investigator gets +2 to a skill of your choice",
+      "evidence": "src/cards/entries/60208.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60209",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 secrets). [action] Exhaust Feed the Mind and spend 1 secret: Test [intellect] (1). For each point you succeed by (to a maximum of 3), draw 1 card.",
+      "evidence": "src/cards/entries/60209.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60210",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (5 secrets). [action] Exhaust Forbidden Tome and spend 1 secret: Draw 1 card. Then, if you have 10 or more cards in your hand and there are no secrets on F",
+      "evidence": "src/cards/entries/60210.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60211",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 While you have 5 or more cards in your hand, Higher Education gains: \"[fast] Spend 1 resource: You get +1 [willpower] for this skill test. [fast] Spend 1 resour",
+      "evidence": "src/cards/entries/60211.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60212",
+      "dimension": "implementation",
+      "reason": "重印沿用原版反应的字面条件 assetCode=02020。实际以 60212 入场时没有抽牌反应，手牌上限的常驻调整仍生效。",
+      "evidence": "src/cards/entries/02020.js",
+      "reproduce": "在真实引擎分别从手牌打出 02020 与 60212，结算入场反应并记录手牌和手牌上限。探针为 artifacts/acceptance/60-a/reproduce.mjs。"
+    },
+    {
+      "code": "60213",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 While you control a [[Tome]] or [[Relic]] asset, you get +1 [intellect]. [reaction] After you reveal a location or put a new location into play, exhaust Whitton",
+      "evidence": "src/cards/entries/60213.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60214",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Investigate. When this action begins, gain 2 resources.",
+      "evidence": "src/cards/entries/60214.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60215",
+      "dimension": "evidence",
+      "reason": "已定位条目（played、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Gain 2 resources. [reaction] After you draw Cryptic Writings during your turn: Play it.",
+      "evidence": "src/cards/entries/60215.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60217",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 As an additional cost to play Occult Invocation, discard up to 2 cards from your hand. Fight. This attack uses [intellect] instead of [combat]. You get +1 [inte",
+      "evidence": "src/cards/entries/60217.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60220",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [reaction] After Library Docent enters play, return a [[Tome]] asset you control to its owner's hand: Play a different [[Tome]] asset (by title) from your hand,",
+      "evidence": "src/cards/entries/60220.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60221",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Draw 1 card. Shuffle any number of non-weakness cards from your hand into your deck. Then, draw that many cards.",
+      "evidence": "src/cards/entries/60221.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60222",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 secrets). [action] Spend 1 secret: Choose a revealed location up to 3 connections away from your location. Move to that location.",
+      "evidence": "src/cards/entries/60222.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60223",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 While you control a [[Tome]] or [[Relic]] asset, you get +1 [willpower] and +1 [intellect]. [reaction] After you reveal a location or put a new location into pl",
+      "evidence": "src/cards/entries/60223.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60224",
+      "dimension": "evidence",
+      "reason": "已定位条目（played、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Gain 3 resources (4 resources instead if you have 10 or more other cards in hand). [reaction] After you draw Cryptic Writings during your turn: Play it.",
+      "evidence": "src/cards/entries/60224.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60225",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fight. This attack uses [intellect] instead of [combat]. You get +2 [intellect] for this test. You deal +1 damage for this attack for each clue you have (max +3",
+      "evidence": "src/cards/entries/60225.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60227",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Investigate. If you succeed, instead of discovering a clue at your location, discover 2 total clues from among your location and connecting locations.",
+      "evidence": "src/cards/entries/60227.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60228",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Max 1 committed per skill test. If this test is successful, draw 1 card (2 cards instead if it succeeds by 2 or more).",
+      "evidence": "src/cards/entries/60228.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60229",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Researched. [action] [action] [action] [action] Exhaust Forbidden Tome: Move 1 damage from a player card at your location to an enemy at your location. Reduce t",
+      "evidence": "src/cards/entries/60229.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60230",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Researched. [action] [action] [action] [action] Exhaust Forbidden Tome: You may move to a connecting location. Discover 1 clue at your location. Reduce this abi",
+      "evidence": "src/cards/entries/60230.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60231",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [fast] During your turn, if you have 8 or more cards in your hand, exhaust Farsight: Play an event from your hand (paying its cost).",
+      "evidence": "src/cards/entries/60231.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60232",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Permanent. Limit 1 per deck. You have 2 additional ally slots, which can only be used to hold [[Miskatonic]] assets. Forced - When you take damage or horror: No",
+      "evidence": "src/cards/entries/60232.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60233",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (6 secrets). Limit 1 per deck. [fast] Spend 1 secret: You get +2 skill value for this skill test. [fast] Spend 2 secrets: Draw 2 cards. [fast] Spend 3 secr",
+      "evidence": "src/cards/entries/60233.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60251",
+      "dimension": "evidence",
+      "reason": "大厅及构筑覆盖可选状态。待逐卡验证印刷的调查员能力、旧印及构筑约束。 卡面起句为 [reaction] After you heal 1 or more horror from an investigator or [[Ally]] asset: Discover 1 clue at your location. (Limit once per round.) [elder_sign] effect",
+      "evidence": "src/cards/entries/60251.js",
+      "reproduce": "从大厅构筑并开局，触发印刷能力和旧印，验证正反面限制及多席相关窗口。"
+    },
+    {
+      "code": "60252",
+      "dimension": "evidence",
+      "reason": "已定位条目（action、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Carolyn Fern deck only. [action]: Test [intellect] (2). If you succeed, heal 1 horror from an investigator or [[Ally]] asset at your location. [reaction] After ",
+      "evidence": "src/cards/entries/60252.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60253",
+      "dimension": "implementation",
+      "reason": "线索替换已经接线，但每阶段最多一次的限制比印刷更窄。",
+      "evidence": "src/cards/entries/60253.js",
+      "reproduce": "弱点在场时于同一阶段连续发现两次线索，检查第二次是否也可改为给弱点放恐惧。"
+    },
+    {
+      "code": "60254",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - Test [willpower] (4). For each point you fail by, you must either take 1 damage or place 1 of your clues on your location.",
+      "evidence": "src/cards/entries/60254.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60255",
+      "dimension": "evidence",
+      "reason": "已定位条目（action、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 secrets). [action] Spend 1 secret: Investigate ([intellect]). The first card you commit to this investigation gains [wild]. If you succeed, you may take",
+      "evidence": "src/cards/entries/60255.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60256",
+      "dimension": "implementation",
+      "reason": "快速治疗只检查是否存在同地有恐惧的调查员，未检查是否是持有者自己的回合。",
+      "evidence": "src/cards/entries/60256.js",
+      "reproduce": "在同地其他调查员的回合打开快速窗口，检查仍可选本卡。"
+    },
+    {
+      "code": "60257",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Limit 1 per investigator. [reaction] After you heal 1 or more horror, exhaust Private Practice: Gain 1 resource.",
+      "evidence": "src/cards/entries/60257.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60258",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [reaction] After you play Psychology Student: Heal 2 horror from an investigator or [[Ally]] asset at your location.",
+      "evidence": "src/cards/entries/60258.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60259",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 secrets). [action] Spend 1 secret and exhaust Scroll of the Pharaohs: Deal 1 horror to an investigator or [[Ally]] asset at your location. Then, if ther",
+      "evidence": "src/cards/entries/60259.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60260",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You have 1 additional hand slot, which can only be used to hold a [[Tome]] asset. [reaction] After University Archivist enters play: Search the top 6 cards of y",
+      "evidence": "src/cards/entries/60260.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60261",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fight ([intellect]). You get +1 [intellect] for this attack. If you control 2 or more clues, this attack deals +1 damage.",
+      "evidence": "src/cards/entries/60261.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60262",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Evade ([agility]). You get +2 [agility] for this evasion. If you succeed and you control 2 or more clues, heal 1 horror.",
+      "evidence": "src/cards/entries/60262.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60264",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Choose an investigator at your location and reveal the top 3 cards of their deck. That investigator may choose to either draw 1 revealed card and shuffle the re",
+      "evidence": "src/cards/entries/60264.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60265",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Parley. Choose an enemy at your location. Heal horror equal to that enemy's horror value.",
+      "evidence": "src/cards/entries/60265.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60266",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 As an additional cost to play Insidious Truths, you may discard up to 2 cards from hand. Fight ([combat]). For each card discarded as part of this card's cost, ",
+      "evidence": "src/cards/entries/60266.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60268",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 If this skill test is successful, the performing investigator searches the top 6 cards of their deck for an [[Insight]] event, draws it, and shuffles their deck",
+      "evidence": "src/cards/entries/60268.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60269",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 If this skill test is successful, replenish 1 secret on a [[Tome]] asset at your location.",
+      "evidence": "src/cards/entries/60269.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60270",
+      "dimension": "evidence",
+      "reason": "印刷归并至 01040，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Fast. You get +1 [intellect] while investigating. [fast] If there are no clues on your location: Return Magnifying Glass to your hand.",
+      "evidence": "src/cards/entries/01040.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60271",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Evade ([agility]). You get +3 [agility] for this evasion. If you succeed, heal 2 horror from among cards you control.",
+      "evidence": "src/cards/entries/60271.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60272",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 secrets). If there are no secrets on Typewriter, discard it. Secrets on Typewriter may be spent as if they were on [[Tome]] assets you control.",
+      "evidence": "src/cards/entries/60272.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60273",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fight ([intellect]). You get +2 [intellect] and deal +1 damage for this attack. If you succeed and you control 2 or more clues, this attack deals +2 damage inst",
+      "evidence": "src/cards/entries/60273.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60274",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Parley ([intellect]). You get +2 [intellect] for this parley. Choose a non-[[Elite]] enemy at your location. This test's difficulty is equal to that enemy's rem",
+      "evidence": "src/cards/entries/60274.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60276",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [reaction] After an enemy at your location is defeated, exhaust Autopsy Report: Investigate ([intellect]). You get +X [intellect] for this investigation, where ",
+      "evidence": "src/cards/entries/60276.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60277",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Starting. (You may begin the game with 1 copy of a starting card in your opening hand.) [fast] Spend 1 resource: You get +1 [intellect] for this skill test (+2 ",
+      "evidence": "src/cards/entries/60277.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60278",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 One at a time, each investigator at your location reveals the top 3 cards of their deck, draws 1 of those cards, shuffles the remaining cards into their deck, a",
+      "evidence": "src/cards/entries/60278.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60279",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Researched. Uses (4 secrets). [action] Take 1 horror and spend 1 or 2 secrets: For each secret you spent as part of this ability's cost, reveal 3 cards from the",
+      "evidence": "src/cards/entries/60279.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60280",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Researched. Uses (4 secrets). [action] Take 1 horror and spend 1 or 2 secrets: Fight ([intellect]). You get +3 [intellect] for this attack. If you succeed, this",
+      "evidence": "src/cards/entries/60280.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60281",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Researched. Uses (4 secrets). [action] Take 1 horror and spend 1 or 2 secrets: Investigate ([intellect]). You get +3 [intellect] for this investigation. If you ",
+      "evidence": "src/cards/entries/60281.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60282",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 When you play Commune with the Cosmos, you may take up to 3 horror. Investigate ([intellect]). You get +2 [intellect] for this investigation. If you succeed, di",
+      "evidence": "src/cards/entries/60282.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60301",
+      "dimension": "evidence",
+      "reason": "大厅及构筑覆盖可选状态。待逐卡验证印刷的调查员能力、旧印及构筑约束。 卡面起句为 [fast] If 2 different non-weakness cards you control are committed to this skill test: Draw 1 card. (Limit once per test.) [elder_sign] effect: +1. After this t",
+      "evidence": "src/cards/entries/60301.js",
+      "reproduce": "从大厅构筑并开局，触发印刷能力和旧印，验证正反面限制及多席相关窗口。"
+    },
+    {
+      "code": "60302",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Winifred Habbamock deck only. Commit only to a skill test you are performing.",
+      "evidence": "src/cards/entries/60302.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60303",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You must commit Arrogance to each eligible skill test you perform. This skill's icons subtract from your skill value instead of adding to it. If this test succe",
+      "evidence": "src/cards/entries/60303.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60304",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit、forced），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Commit only to a skill test you are performing (of any type) that has no other cards committed to it. Other cards cannot be committed to this skill test. If thi",
+      "evidence": "src/cards/entries/60304.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60305",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [action] Exhaust Lockpicks: Investigate. Add your [agility] value to your skill value for this investigation. If you do not succeed by at least 2, discard Lockp",
+      "evidence": "src/cards/entries/60305.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60306",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (5 ammo). [action] Exhaust Mauser C96 and spend 1 ammo: Fight. You get +1 [combat] and deal +1 damage for this attack. If you succeed by 2 or more, either ",
+      "evidence": "src/cards/entries/60306.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60307",
+      "dimension": "evidence",
+      "reason": "印刷归并至 01044，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Fast. [action]: Fight. If you succeed by 2 or more, this attack deals +1 damage.",
+      "evidence": "src/cards/entries/01044.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60308",
+      "dimension": "evidence",
+      "reason": "印刷归并至 04107，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 [reaction] After you succeed at a skill test by 2 or more, exhaust Lucky Cigarette Case: Draw 1 card.",
+      "evidence": "src/cards/entries/04107.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60309",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You get +1 [combat]. [fast] Exhaust Lonnie Ritter and spend 1 resource: Choose an [[Item]] asset controlled by an investigator at your location. Heal 1 damage f",
+      "evidence": "src/cards/entries/60309.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60310",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast.",
+      "evidence": "src/cards/entries/60310.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60311",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [fast] Spend 2 resources: You get +2 [intellect] for this skill test. [fast] Spend 2 resources: You get +2 [agility] for this skill test.",
+      "evidence": "src/cards/entries/60311.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60312",
+      "dimension": "evidence",
+      "reason": "印刷归并至 03194，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Fight. Add your [agility] value to your skill value for this attack. If you succeed by 2 or more, automatically evade the attacked enemy.",
+      "evidence": "src/cards/entries/03194.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60313",
+      "dimension": "evidence",
+      "reason": "印刷归并至 03030，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Fast. Play when you would succeed at a skill test. You get +2 skill value for this test.",
+      "evidence": "src/cards/entries/03030.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60314",
+      "dimension": "evidence",
+      "reason": "印刷归并至 04232，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Evade. Add your [intellect] to your skill value for this evasion attempt. If you succeed by 2 or more and the evaded enemy is non-[[Elite]], it does not ready d",
+      "evidence": "src/cards/entries/04232.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60315",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Investigate. This investigation uses [agility] instead of [intellect]. If you succeed, discover 2 additional clues at your location.",
+      "evidence": "src/cards/entries/60315.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60316",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Evade. When this action begins, gain 2 resources.",
+      "evidence": "src/cards/entries/60316.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60317",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 For each point this skill test succeeds by, after it resolves, you may immediately move to a connecting location (to a maximum of 3 times).",
+      "evidence": "src/cards/entries/60317.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60318",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 After you commit Daredevil to a skill test, discard cards from the top of your deck until you discard a [rogue] skill you can commit to this test. Commit it. Sh",
+      "evidence": "src/cards/entries/60318.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60319",
+      "dimension": "evidence",
+      "reason": "印刷归并至 01053，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Commit only to a skill test you are performing. If you succeed by 3 or more, return Opportunist to your hand after this test instead of discarding it.",
+      "evidence": "src/cards/entries/01053.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60320",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 supplies). [action] Spend 1 supply: Choose an investigator at your location to heal 1 horror. Then, that investigator tests [willpower] (2). If the test",
+      "evidence": "src/cards/entries/60320.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60321",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (5 ammo). [action] Exhaust Mauser C96 and spend 1 ammo: Fight. You get +2 [combat] and deal +1 damage for this attack. If you succeed by 2 or more, either ",
+      "evidence": "src/cards/entries/60321.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60322",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play when you would succeed at a skill test. You get +3 skill value for this test. Draw 1 card.",
+      "evidence": "src/cards/entries/60322.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60323",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fight. Add your [agility] value to your skill value for this attack. If you succeed by 1 or more, automatically evade the attacked enemy. If you succeed by 3 or",
+      "evidence": "src/cards/entries/60323.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60324",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Evade. Add your [intellect] to your skill value for this evasion attempt. If you succeed by 1 or more and the evaded enemy is non-[[Elite]], it does not ready d",
+      "evidence": "src/cards/entries/60324.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60325",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Max 1 committed per skill test. If this test is successful, draw 1 card (2 cards instead if it succeeds by 2 or more).",
+      "evidence": "src/cards/entries/60325.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60326",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [reaction] After you succeed at a skill test by 1 or more, exhaust Lucky Cigarette Case: Search the top X cards of your deck for a card, draw it, and shuffle th",
+      "evidence": "src/cards/entries/60326.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60327",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [reaction] When you use a fight ability on a [[Firearm]] asset, exhaust Sharpshooter: Choose one, or both - - This attack uses [agility] instead of [combat]. Al",
+      "evidence": "src/cards/entries/60327.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60328",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Investigate. This investigation uses [agility] instead of [intellect]. If you succeed, discover 2 additional clues at your location. If you succeed by 2 or more",
+      "evidence": "src/cards/entries/60328.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60329",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fight. This attack uses [agility] instead of [combat]. This attack deals +2 damage. If you succeed by 2 or more, return Backstab to your hand at the end of your",
+      "evidence": "src/cards/entries/60329.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60330",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 After you commit Copycat to a skill test, search the discard pile of another investigator for a skill you can commit to this test, and commit it. After this tes",
+      "evidence": "src/cards/entries/60330.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60331",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 ammo). [action] Exhaust Beretta M1918 and spend 1 ammo: Fight. You get +4 [combat] and deal +1 damage for this attack. If you succeed by 2 or more, eith",
+      "evidence": "src/cards/entries/60331.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60332",
+      "dimension": "evidence",
+      "reason": "旧批次披露快速授权只覆盖部分出牌来源。需复测特殊出牌区的快速入口和三选二的分支。",
+      "evidence": "src/cards/entries/60332.js",
+      "reproduce": "让支援在场，比较手牌和其他可出牌区域对诡计事件提供的快速、减费和检定选项。"
+    },
+    {
+      "code": "60336",
+      "dimension": "implementation",
+      "reason": "图鉴保留的本地印刷号没有单卡条目、目录重复关系或运行时别名。60233 有同名条目，但该号不能解析过去。",
+      "evidence": "src/cards/entries/60233.js",
+      "reproduce": "分别检查 60336 与 60233 的卡面与 registeredEntry，再核对 canonicalCode(60336)。"
+    },
+    {
+      "code": "60351",
+      "dimension": "evidence",
+      "reason": "大厅及构筑覆盖可选状态。待逐卡验证印刷的调查员能力、旧印及构筑约束。 卡面起句为 [reaction] After you succeed at a skill test by 2 or more during your turn: You may take an additional action this turn. (Limit once per round.) [elder_sign] ef",
+      "evidence": "src/cards/entries/60351.js",
+      "reproduce": "从大厅构筑并开局，触发印刷能力和旧印，验证正反面限制及多席相关窗口。"
+    },
+    {
+      "code": "60352",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 André Patel deck only. While this card is committed to an attack or an evasion, it gains [wild] [wild].",
+      "evidence": "src/cards/entries/60352.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60353",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 André Patel deck only. While this card is committed to a skill test on a scenario card, it gains [wild] [wild].",
+      "evidence": "src/cards/entries/60353.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60354",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 André Patel deck only. While this card is committed to an investigation or parley, it gains [wild] [wild].",
+      "evidence": "src/cards/entries/60354.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60355",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness、forced），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - Put Weight of the World into play in your threat area. Forced - When you fail a skill test while Weight of the World is in play, take 1 horror and ",
+      "evidence": "src/cards/entries/60355.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60356",
+      "dimension": "implementation",
+      "reason": "实现按敌人数量变化判断是否弃置，分支与印刷相反。抽到并生成敌人时保留弱点，抽到不生成敌人的诡计时弃掉。",
+      "evidence": "src/cards/entries/60356.js",
+      "reproduce": "令持有者在自己回合首次检定失败，分别把鼠群或不生成敌人的诡计置顶，观察弱点是否留在威胁区。探针为 artifacts/acceptance/60-a/reproduce.mjs。"
+    },
+    {
+      "code": "60357",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Limit 1 per investigator. Uses (3 renown). If there is no renown on Center Stage, discard it. [fast] During a skill test, spend 1 renown and exhaust Center Stag",
+      "evidence": "src/cards/entries/60357.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60358",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 renown). If there is no renown on Fame, discard it. [action] If there is an enemy at your location, spend 1 renown: Parley. Gain 2 resources.",
+      "evidence": "src/cards/entries/60358.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60359",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 rumors). If there are no rumors on The Grapevine, discard it. [action] Spend 1 rumor and exhaust The Grapevine: Parley. Choose an enemy at a revealed lo",
+      "evidence": "src/cards/entries/60359.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60360",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 renown). [reaction] When you would succeed at a skill test, spend 1 renown and exhaust Extravagant Ring: You get +2 skill value for this test.",
+      "evidence": "src/cards/entries/60360.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60361",
+      "dimension": "evidence",
+      "reason": "印刷归并至 60305，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 [action] Exhaust Lockpicks: Investigate. Add your [agility] value to your skill value for this investigation. If you do not succeed by at least 2, discard Lockp",
+      "evidence": "src/cards/entries/60305.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60362",
+      "dimension": "implementation",
+      "reason": "补给阶段额外资源从常驻收益改为 upkeepEnd 可跳过反应，且提前或延后影响同阶段其他窗口。",
+      "evidence": "src/cards/entries/60362.js",
+      "reproduce": "关闭自动反应后，保留支援推进补给阶段，跳过该反应并检查实际资源收益。"
+    },
+    {
+      "code": "60363",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [action]: Fight ([combat]). Add your [agility] to your [combat] for this attack. If this attack succeeds by 2 or more against a non-[[Elite]] enemy, you may exh",
+      "evidence": "src/cards/entries/60363.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60364",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Investigate ([intellect]). You get +2 [intellect] for this investigation. If you discover the last clue at your location, you may move to a connecting location.",
+      "evidence": "src/cards/entries/60364.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60365",
+      "dimension": "implementation",
+      "reason": "印刷要求敌人剩余生命等于 X。选择过滤用 ≤ X，并在没有合法敌人时仍发现线索。",
+      "evidence": "src/cards/entries/60365.js",
+      "reproduce": "面对有 3 剩余生命的非精英敌人，分别支付 4 或 0，核对目标是否可选和是否得到线索。"
+    },
+    {
+      "code": "60366",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Evade ([agility]). You get +2 [agility] for this evasion. If you succeed by 2 or more and the evaded enemy is non-[[Elite]], that enemy does not ready during th",
+      "evidence": "src/cards/entries/60366.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60367",
+      "dimension": "implementation",
+      "reason": "卡面有攻击行动指示，事件描述子没有攻击归类。敌人交战时普通事件路径可能在攻击前引发借机攻击。",
+      "evidence": "src/cards/entries/60367.js",
+      "reproduce": "与敌人交战后预览和打出本卡，检查是否以攻击行动免除借机攻击。"
+    },
+    {
+      "code": "60368",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play after you successfully evade an enemy. Discover 1 clue at your location (if you succeeded by 2 or more, you may discover 1 clue at a connecting locat",
+      "evidence": "src/cards/entries/60368.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60369",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Commit only to a skill test you are performing. Max 1 committed per skill test. Easy Street gains [wild] for every 3 resources you have (to a maximum of [wild] ",
+      "evidence": "src/cards/entries/60369.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60370",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 After Out the Door is committed to a skill test, the performing investigator gains 2 resources. If this skill test fails, that investigator loses 2 resources.",
+      "evidence": "src/cards/entries/60370.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60371",
+      "dimension": "evidence",
+      "reason": "印刷归并至 03233，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Commit only to a skill test you are performing. As an additional cost to commit \"Watch this!\" to a skill test, spend up to 3 resources. If you succeed by 1 or m",
+      "evidence": "src/cards/entries/03233.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60372",
+      "dimension": "evidence",
+      "reason": "印刷归并至 03031，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Uses (3 supplies). If Lockpicks has no supplies, discard it. [action] Exhaust Lockpicks: Investigate. Add your [agility] value to your skill value for this inve",
+      "evidence": "src/cards/entries/03031.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60373",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 After Out the Door is committed to a skill test, the performing investigator gains 4 resources. If this skill test fails, that investigator loses 4 resources.",
+      "evidence": "src/cards/entries/60373.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60374",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 rumors). If there are no rumors on The Grapevine, discard it. [action] Spend 1 rumor and exhaust The Grapevine: Parley. Choose an enemy at a revealed lo",
+      "evidence": "src/cards/entries/60374.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60375",
+      "dimension": "implementation",
+      "reason": "补给阶段额外资源从常驻收益改为 upkeepEnd 可跳过反应，且提前或延后影响同阶段其他窗口。",
+      "evidence": "src/cards/entries/60375.js",
+      "reproduce": "关闭自动反应后，保留支援推进补给阶段，跳过该反应并检查实际资源收益。"
+    },
+    {
+      "code": "60376",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Investigate ([agility]). Add your [intellect] to your [agility] for this test. After this test resolves, you may move to a connecting location.",
+      "evidence": "src/cards/entries/60376.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60377",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Evade ([agility]). Add your [willpower] to your [agility] for this test. If you succeed and the evaded enemy is non-[[Elite]], that enemy does not ready during ",
+      "evidence": "src/cards/entries/60377.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60378",
+      "dimension": "implementation",
+      "reason": "卡面有攻击行动指示，事件描述子没有攻击归类。敌人交战时普通事件路径可能在攻击前引发借机攻击。",
+      "evidence": "src/cards/entries/60378.js",
+      "reproduce": "与敌人交战后预览和打出本卡，检查是否以攻击行动免除借机攻击。"
+    },
+    {
+      "code": "60379",
+      "dimension": "evidence",
+      "reason": "印刷归并至 08057，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Exceptional. While you have... - ...10+ resources, you get +1 health and +1 sanity. - ...15+ resources, you may take one additional action during your turn. - .",
+      "evidence": "src/cards/entries/08057.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60380",
+      "dimension": "implementation",
+      "reason": "起始关键词在抽起手时固定选牌组顺序第一张，缺少「可以不选」及多个候选时的选择。",
+      "evidence": "src/engine/setup.js#drawOpeningHand",
+      "reproduce": "构造含两张不同起始牌的牌组，起手检查只有按顺序自动纳入。"
+    },
+    {
+      "code": "60381",
+      "dimension": "implementation",
+      "reason": "目录原版 54006 仍缺运行时玩家条目，该印刷号也没有登记行为别名。",
+      "evidence": "src/cards/entries/_reprint-aliases.js",
+      "reproduce": "比较 60381 与 54006 的 registeredEntry，再核对重印别名表。"
+    },
+    {
+      "code": "60382",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play after you successfully evade an enemy. Discover 1 clue at your location (if you succeeded by 2 or more, you may discover 1 clue at a connecting locat",
+      "evidence": "src/cards/entries/60382.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60383",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 While Contingency is committed to a skill test targeting an enemy, after revealing chaos tokens, you may spend 3 resources to cancel a revealed token, return it",
+      "evidence": "src/cards/entries/60383.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60384",
+      "dimension": "evidence",
+      "reason": "印刷归并至 08058，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Exceptional. Uses (0 charges). Forced - After your turn begins: You may take all charges here, as resources. Place 1 charge here. If it has exactly... - 1 charg",
+      "evidence": "src/cards/entries/08058.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60401",
+      "dimension": "evidence",
+      "reason": "大厅及构筑覆盖可选状态。待逐卡验证印刷的调查员能力、旧印及构筑约束。 卡面起句为 [reaction] When an investigator at your location would reveal any number of chaos tokens: Reveal 2 additional tokens. Of the revealed tokens, choose and cancel ",
+      "evidence": "src/cards/entries/60401.js",
+      "reproduce": "从大厅构筑并开局，触发印刷能力和旧印，验证正反面限制及多席相关窗口。"
+    },
+    {
+      "code": "60402",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Jacqueline Fine deck only. [reaction] When you use Jacqueline Fine's [reaction] ability, exhaust Arbiter of Fates: This use of her ability does not count toward",
+      "evidence": "src/cards/entries/60402.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60403",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness、forced），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - Put Dark Future into play in your threat area. You cannot cancel or ignore [elder_sign], [skull], [cultist], [tablet], [elder_thing], and [auto_fai",
+      "evidence": "src/cards/entries/60403.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60404",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness、forced、action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - Put Nihilism into play in your threat area. Forced - After you reveal, cancel, or ignore an [auto_fail] token: Take 1 damage and 1 horror. [action]",
+      "evidence": "src/cards/entries/60404.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60405",
+      "dimension": "evidence",
+      "reason": "印刷归并至 02029，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 [reaction] After a [skull], [cultist], [tablet], or [elder_thing] symbol is revealed during a test you are performing: You get +1 skill value for this test.",
+      "evidence": "src/cards/entries/02029.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60406",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 secrets). [reaction] After a skill test at your location begins, exhaust Scrying Mirror and spend 1 secret: Perform the \"reveal chaos token\" step of the",
+      "evidence": "src/cards/entries/60406.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60407",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 charges). [action] Spend 1 charge: Fight. This attack uses [willpower] instead of [combat] and deals +1 damage. If an [elder_sign], \"+1,\" or \"0\" token i",
+      "evidence": "src/cards/entries/60407.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60408",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 charges). [action] Spend 1 charge: Investigate. Investigate using [willpower] instead of [intellect]. If you succeed, discover 1 additional clue at this",
+      "evidence": "src/cards/entries/60408.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60409",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 charges). [action] Spend 1 charge: Evade. This evasion attempt uses [willpower] instead of [agility]. If you succeed, deal 1 damage to the evaded enemy.",
+      "evidence": "src/cards/entries/60409.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60410",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You have 1 additional arcane slot, which can only be used to hold a [[Spell]] asset.",
+      "evidence": "src/cards/entries/60410.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60411",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You get +1 [willpower]. [reaction] After a skill test at your location begins, exhaust Crystal Pendulum: Name a number. If this test succeeds by that number or ",
+      "evidence": "src/cards/entries/60411.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60412",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [reaction] When you play a [[Spell]] card, exhaust Robes of Endless Night: Reduce the cost of that card by 1.",
+      "evidence": "src/cards/entries/60412.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60413",
+      "dimension": "evidence",
+      "reason": "印刷归并至 03034，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Move. Move to any revealed location and reveal a random token from the chaos bag. If you reveal a [skull], [cultist], [tablet], [elder_thing], or [auto_fail] sy",
+      "evidence": "src/cards/entries/03034.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60414",
+      "dimension": "evidence",
+      "reason": "印刷归并至 02153，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Fast. Play when an enemy attacks an investigator at your location. Cancel that attack. Then, reveal a random token from the chaos bag. If it has a [skull], [cul",
+      "evidence": "src/cards/entries/02153.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60415",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Look at the top 4 cards of the encounter deck. Reveal a random token from the chaos bag. If it has a [skull], [cultist], [tablet], [elder_thing], or [auto_fail]",
+      "evidence": "src/cards/entries/60415.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60417",
+      "dimension": "evidence",
+      "reason": "印刷归并至 04032，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Fast. Play when you would reveal a chaos token. Reveal 5 chaos tokens instead of 1. Choose one of those tokens with a [skull], [cultist], [tablet], [elder_thing",
+      "evidence": "src/cards/entries/04032.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60418",
+      "dimension": "evidence",
+      "reason": "印刷归并至 02190，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Before revealing chaos tokens for this test, choose one of the following symbols: ([skull], [cultist], [tablet], or [elder_thing]). Ignore the effects of the ch",
+      "evidence": "src/cards/entries/02190.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60419",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit、forced），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Max 1 committed per skill test. After you commit Prescient to a skill test, name \"even,\" \"odd,\" or \"symbol.\" After this test ends, if a chaos token of the named",
+      "evidence": "src/cards/entries/60419.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60420",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play when you would resolve an effect on a [mystic] card that triggers \"when,\" \"if,\" or \"after\" a chaos token is revealed. Either cancel that effect, or r",
+      "evidence": "src/cards/entries/60420.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60421",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 charges). If Grotesque Statue has no charges, discard it. [reaction] When you would reveal a chaos token, spend 1 charge: Reveal 2 chaos tokens instead ",
+      "evidence": "src/cards/entries/60421.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60422",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [reaction] When you play a [[Spell]] card, exhaust Robes of Endless Night: Reduce the cost of that card by 1. Playing that card does not provoke attacks of oppo",
+      "evidence": "src/cards/entries/60422.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60423",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play when an enemy attacks an investigator at your location. Cancel that attack. Then, reveal a random token from the chaos bag. If it has a [skull], [cul",
+      "evidence": "src/cards/entries/60423.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60424",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Max 1 committed per skill test. If this test is successful, draw 1 card (2 cards instead if it succeeds by 2 or more).",
+      "evidence": "src/cards/entries/60424.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60425",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 charges). [action] Spend 1 charge: Fight. This attack uses [willpower] instead of [combat]. You get +2 [willpower] and deal +1 damage for this attack. I",
+      "evidence": "src/cards/entries/60425.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60426",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 charges). [action] Spend 1 charge: Investigate. Investigate using [willpower] instead of [intellect]. You get +2 [willpower] for this investigation. If ",
+      "evidence": "src/cards/entries/60426.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60427",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 charges). [action] Spend 1 charge: Evade. This evasion attempt uses [willpower] instead of [agility]. You get +2 [willpower] for this evasion attempt. I",
+      "evidence": "src/cards/entries/60427.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60428",
+      "dimension": "evidence",
+      "reason": "已定位条目（forced、free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (2 resources). Replenish these resources at the start of each round. [fast] Spend 1 resource from your resource pool or from Arcane Studies: You get +1 [wi",
+      "evidence": "src/cards/entries/60428.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60429",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Choose a [[Spell]] or [[Relic]] asset controlled by an investigator at your location and reveal a random chaos token from the chaos bag. If you reveal a [skull]",
+      "evidence": "src/cards/entries/60429.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60430",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 charges). [action] Spend 1 charge: Fight. This attack uses [willpower] instead of [combat]. You get +3 [willpower] and deal +2 damage for this attack. I",
+      "evidence": "src/cards/entries/60430.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60431",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 charges). [action] Spend 1 charge: Investigate. Investigate using [willpower] instead of [intellect]. You get +3 [willpower] for this investigation. If ",
+      "evidence": "src/cards/entries/60431.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60432",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 charges). [action] Spend 1 charge: Evade. This evasion attempt uses [willpower] instead of [agility]. You get +3 [willpower] for this evasion attempt. I",
+      "evidence": "src/cards/entries/60432.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60451",
+      "dimension": "evidence",
+      "reason": "大厅及构筑覆盖可选状态。待逐卡验证印刷的调查员能力、旧印及构筑约束。 卡面起句为 [reaction] After damage is placed on Marie Lambeau: Draw 2 cards and discard 1 of them. (Limit once per phase.) [elder_sign] effect: +0. If you succeed, heal 1 ",
+      "evidence": "src/cards/entries/60451.js",
+      "reproduce": "从大厅构筑并开局，触发印刷能力和旧印，验证正反面限制及多席相关窗口。"
+    },
+    {
+      "code": "60452",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Marie Lambeau deck only. [fast] Take 1 direct damage and exhaust Grand-Mère's Charm: Replenish 1 charge on an asset at your location.",
+      "evidence": "src/cards/entries/60452.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60453",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness、action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - Put Called to Guinée into play in your threat area. You cannot heal damage. [action] Choose and discard 3 cards from your hand: Discard Called to G",
+      "evidence": "src/cards/entries/60453.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60454",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - Put Hemophobia into play in your threat area. Forced - The first time each round an investigator at your location takes damage: Take 1 horror. [act",
+      "evidence": "src/cards/entries/60454.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60455",
+      "dimension": "evidence",
+      "reason": "印刷归并至 01063，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Forced - After Arcane Initiate enters play: Place 1 doom on it. [fast] Exhaust Arcane Initiate: Search the top 3 cards of your deck for a [[Spell]] card and dra",
+      "evidence": "src/cards/entries/01063.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60456",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 offerings). If there are no offerings on Offering Bowl, discard it. [fast] Spend 1 offering and exhaust Offering Bowl: Take 1 damage and gain 2 resource",
+      "evidence": "src/cards/entries/60456.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60458",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 While you have 3 or fewer remaining health, Sacrificial Doll does not take up a hand slot. [reaction] After you reveal a non-[auto_fail] chaos token during a sk",
+      "evidence": "src/cards/entries/60458.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60459",
+      "dimension": "evidence",
+      "reason": "印刷归并至 12059，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Uses (3 charges). [action]: Fight ([willpower]). If you succeed, you may spend 1 charge to deal +1 damage for this attack. If you reveal a [skull] token during ",
+      "evidence": "src/cards/entries/12059.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60460",
+      "dimension": "evidence",
+      "reason": "印刷归并至 12062，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Uses (3 charges). [action]: Investigate ([willpower]). If you succeed, you may spend 1 charge to discover 1 additional clue at your location. If you reveal a [c",
+      "evidence": "src/cards/entries/12062.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60461",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 charges). [action]: Evade ([willpower]). If you succeed, you may spend 1 charge to move to a connecting location. If you reveal a [tablet] token during ",
+      "evidence": "src/cards/entries/60461.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60462",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fight ([willpower]). This attack deals +1 damage. If this attack defeats an enemy, heal 1 damage from an investigator or [[Ally]] asset at your location.",
+      "evidence": "src/cards/entries/60462.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60463",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 As an additional cost to play Favor of Baalshandor, take 1 damage. Play a [[Spell]] or [[Ritual]] asset from your hand, reducing its cost by 3. Playing this car",
+      "evidence": "src/cards/entries/60463.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60464",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Heal 3 damage from among investigators and/or [[Ally]] assets at your location.",
+      "evidence": "src/cards/entries/60464.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60465",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play only during your turn. Choose a [[Spell]] or [[Charm]] asset in your hand and put it into play under your control. When the round ends, shuffle that ",
+      "evidence": "src/cards/entries/60465.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60466",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Parley. Choose a non-[[Elite]] enemy at your location or at a connecting location. Move that enemy to your location, engage it, and gain resources equal to its ",
+      "evidence": "src/cards/entries/60466.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60467",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Max 1 committed per skill test. If this skill test is successful, take 1 direct damage.",
+      "evidence": "src/cards/entries/60467.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60468",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 If this skill test is successful, heal 1 damage from the performing investigator.",
+      "evidence": "src/cards/entries/60468.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60469",
+      "dimension": "evidence",
+      "reason": "印刷归并至 03235，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 As an additional cost to commit Torrent of Power to a skill test, spend up to 3 charges from among assets you control. For each charge spent in this way, Torren",
+      "evidence": "src/cards/entries/03235.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60470",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Reduce the cost of the first [[Spell]] or [[Ritual]] card you play each round by 1.",
+      "evidence": "src/cards/entries/60470.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60471",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Max 1 committed per skill test. If a symbol token is revealed during this test, place up to 2 charges or 2 secrets among assets you control.",
+      "evidence": "src/cards/entries/60471.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60472",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play when a non-[[Elite]] enemy attacks an investigator at your location. Cancel that attack and heal 2 damage from the targeted investigator.",
+      "evidence": "src/cards/entries/60472.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60473",
+      "dimension": "implementation",
+      "reason": "先取消原攻击再直接放入计划伤害与恐惧，遗漏原攻击余效及实际承受值的结算。",
+      "evidence": "src/cards/entries/60473.js",
+      "reproduce": "在攻击后有强制能力的敌人攻击队友时打出，比较攻击后窗口、承受量和反伤计算。"
+    },
+    {
+      "code": "60474",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Exceptional. [action] Place 1 doom on Dread Curse of Azathoth: Fight ([willpower]). You get +2 [willpower] and deal +1 damage for this attack. If this attack de",
+      "evidence": "src/cards/entries/60474.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60475",
+      "dimension": "evidence",
+      "reason": "已定位条目（action、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [action]: Fight ([combat]). Add your [willpower] to your [combat] for this attack. [reaction] After you play a [[Spell]] event, take 1 damage and exhaust Ritual",
+      "evidence": "src/cards/entries/60475.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60476",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Starting. (You may begin the game with 1 copy of a starting card in your opening hand.) [fast] Spend 1 resource: You get +1 [willpower] for this skill test (+2 ",
+      "evidence": "src/cards/entries/60476.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60477",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Max 1 committed per skill test. If this test is successful, deal 1 damage to a card with health at your location.",
+      "evidence": "src/cards/entries/60477.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60478",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Permanent. Limit 1 per deck. You have 1 additional arcane slot.",
+      "evidence": "src/cards/entries/60478.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60479",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You get +1 [willpower]. [reaction] After you take damage and/or horror, exhaust Jim Culver: Draw 1 card and gain 1 resource.",
+      "evidence": "src/cards/entries/60479.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60480",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play when the investigation phase ends. Repeat the investigation phase. At the end of that phase, you are defeated and suffer 1 physical trauma. Max once ",
+      "evidence": "src/cards/entries/60480.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60481",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 charges). [action]: Investigate ([willpower]). You get +2 [willpower] for this investigation. If you succeed, you may spend 1 charge to discover 1 addit",
+      "evidence": "src/cards/entries/60481.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60482",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (5 charges). [action]: Evade ([willpower]). You get +2 [willpower] for this evasion. If you succeed, you may spend 1 charge to move to a location up to 2 c",
+      "evidence": "src/cards/entries/60482.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60483",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fight ([willpower]). You get +3 [willpower] and deal +1 damage for this attack. If you succeed, deal 1 damage to each other enemy at your location. Each enemy d",
+      "evidence": "src/cards/entries/60483.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60501",
+      "dimension": "evidence",
+      "reason": "大厅及构筑覆盖可选状态。待逐卡验证印刷的调查员能力、旧印及构筑约束。 卡面起句为 [reaction] After you fail a skill test: You may take an additional action during your turn this round. (Limit once per round.) [elder_sign] effect: +1. You may ",
+      "evidence": "src/cards/entries/60501.js",
+      "reproduce": "从大厅构筑并开局，触发印刷能力和旧印，验证正反面限制及多席相关窗口。"
+    },
+    {
+      "code": "60502",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Stella Clark deck only. If this skill test fails, cancel all effects of the failed test.",
+      "evidence": "src/cards/entries/60502.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60503",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness、forced、action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - Put Called by the Mists into play in your threat area. Forced - After you initiate a skill test with a difficulty of 4 or higher: Take 1 damage. [a",
+      "evidence": "src/cards/entries/60503.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60504",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness、forced、action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - Put Atychiphobia into play in your threat area. Forced - After you fail a skill test: Take 1 horror. [action] [action]: Discard Atychiphobia.",
+      "evidence": "src/cards/entries/60504.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60505",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (2 ammo). [action] Spend 1 ammo: Fight. You get +2 [combat] and deal +1 damage for this attack. If you fail, place 1 ammo on .18 Derringer.",
+      "evidence": "src/cards/entries/60505.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60506",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 secrets). [reaction] After an investigator at your location fails a skill test by 2 or more, exhaust Grimm's Fairy Tales and spend 1 secret: Heal 1 horr",
+      "evidence": "src/cards/entries/60506.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60507",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (2 keys). If there are no keys on Old Keyring, discard it. [action]: Investigate. Your location gets -2 shroud for this investigation. If you succeed, remo",
+      "evidence": "src/cards/entries/60507.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60508",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You get +1 [willpower]. [reaction] When an investigator at your location would fail a skill test, exhaust Granny Orne: That investigator fails by either 1 less ",
+      "evidence": "src/cards/entries/60508.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60509",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [fast] Discard Mysterious Raven and take 1 horror: Discover 1 clue at your location.",
+      "evidence": "src/cards/entries/60509.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60510",
+      "dimension": "evidence",
+      "reason": "印刷归并至 01075，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 [reaction] After you fail a skill test, exhaust Rabbit's Foot: Draw 1 card.",
+      "evidence": "src/cards/entries/01075.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60511",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [fast] Spend 1 resource: You get +1 [combat] for this skill test. [fast] Spend 1 resource: You get +1 [agility] for this skill test.",
+      "evidence": "src/cards/entries/60511.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60512",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play only during your turn. Do not reveal chaos tokens for the next skill test you perform this turn.",
+      "evidence": "src/cards/entries/60512.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60513",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play when an investigator at your location draws a non-weakness treachery card. Test [willpower] (3). If you succeed, cancel that card's revelation effect",
+      "evidence": "src/cards/entries/60513.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60514",
+      "dimension": "evidence",
+      "reason": "印刷归并至 04034，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Fast. Play after you fail a skill test by 2 or less during an evasion attempt against a non-[[Elite]] enemy. Place that enemy on top of the encounter deck.",
+      "evidence": "src/cards/entries/04034.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60515",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play after you fail a skill test. You get +1 to each of your skills for the remainder of the round.",
+      "evidence": "src/cards/entries/60515.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60516",
+      "dimension": "evidence",
+      "reason": "印刷归并至 04200，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Fast. Play after a skill test you failed ends (after resolving all effects from the failed test). Attempt that test again. You get +2 skill value for this test.",
+      "evidence": "src/cards/entries/04200.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60517",
+      "dimension": "evidence",
+      "reason": "印刷归并至 01079，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Fast. Play after you fail a skill test by 2 or less while investigating. Discover 2 clues in your location.",
+      "evidence": "src/cards/entries/01079.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60518",
+      "dimension": "evidence",
+      "reason": "印刷归并至 02113，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Fast. Play after you fail a skill test by 2 or less while attacking an enemy engaged with you. Deal this attack's damage to a different enemy at your location.",
+      "evidence": "src/cards/entries/02113.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60519",
+      "dimension": "evidence",
+      "reason": "印刷归并至 04201，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Max 1 committed per skill test. You may commit Take Heart to any type of test. If this test fails, the performing investigator draws 2 cards and gains 2 resourc",
+      "evidence": "src/cards/entries/04201.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60520",
+      "dimension": "evidence",
+      "reason": "已定位条目（forced），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Forced - When Cherished Keepsake is defeated by horror: Exile it.",
+      "evidence": "src/cards/entries/60520.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60521",
+      "dimension": "evidence",
+      "reason": "已定位条目（forced），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Forced - When Leather Coat is defeated by damage: Exile it.",
+      "evidence": "src/cards/entries/60521.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60522",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 ammo). [action] Spend 1 ammo: Fight. You get +2 [combat] and deal +1 damage for this attack. If you fail, place 1 ammo on .18 Derringer and the next tim",
+      "evidence": "src/cards/entries/60522.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60523",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play when an investigator at your location draws a non-weakness treachery card. Cancel that card's revelation effect. Then, test [willpower] (3). If you f",
+      "evidence": "src/cards/entries/60523.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60524",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play after you fail a skill test by 3 or less while investigating. Discover 2 total clues from among your location and connecting locations.",
+      "evidence": "src/cards/entries/60524.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60525",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play after you fail a skill test by 3 or less during an evasion attempt against a non-[[Elite]] enemy. Place that enemy on the bottom of the encounter dec",
+      "evidence": "src/cards/entries/60525.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60526",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Max 1 committed per skill test. If this test fails, return Unexpected Courage to your hand.",
+      "evidence": "src/cards/entries/60526.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60527",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You get +1 [willpower] and +1 [intellect]. [reaction] When an investigator at your location would fail a skill test, exhaust Granny Orne: That investigator eith",
+      "evidence": "src/cards/entries/60527.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60528",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play when an investigator at your location would fail a skill test. They get +3 to their skill value for that test. That investigator draws 1 card.",
+      "evidence": "src/cards/entries/60528.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60529",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 supplies). [action] Spend 1 supply: Fight. You get +2 [combat] and deal +2 damage for this attack. If this attack fails, either place 1 supply on Chains",
+      "evidence": "src/cards/entries/60529.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60530",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Permanent. During or before your first action of each of your turns, each skill test you perform gets +1 difficulty. During or after your third action of each o",
+      "evidence": "src/cards/entries/60530.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60531",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Permanent. In between two scenarios of a campaign, reduce the experience cost to repurchase up to 3 cards that you exiled during the last scenario by 1 each.",
+      "evidence": "src/cards/entries/60531.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60551",
+      "dimension": "evidence",
+      "reason": "大厅及构筑覆盖可选状态。待逐卡验证印刷的调查员能力、旧印及构筑约束。 卡面起句为 You may take an additional action during your turn, which may only be used to play an event. [elder_sign] effect: +1. You may add a [[Trick]] or [[Trap]] card i",
+      "evidence": "src/cards/entries/60551.js",
+      "reproduce": "从大厅构筑并开局，触发印刷能力和旧印，验证正反面限制及多席相关窗口。"
+    },
+    {
+      "code": "60552",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Miguel de la Cruz deck only. [reaction] When you play an event, exhaust Miguel's Knapsack: Either play that event at a connecting location as if you were at tha",
+      "evidence": "src/cards/entries/60552.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60553",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Elusive. Hunter. Prey (Miguel de la Cruz only). Feline Hybrid is immune to player card effects.",
+      "evidence": "src/cards/entries/60553.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60554",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Hunter. Retaliate. Forced - After Blood Drinker attacks: Heal 1 damage from it.",
+      "evidence": "src/cards/entries/60554.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60555",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You get +1 [agility]. [reaction] After you fail an attack or evasion, exhaust Daniel Jameson: Attempt that skill test again, with +1 skill value.",
+      "evidence": "src/cards/entries/60555.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60556",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [reaction] When an enemy enters play, exhaust Hunting Dog: Move once toward that enemy's location.",
+      "evidence": "src/cards/entries/60556.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60557",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Limit 1 per investigator. [fast] During your turn, exhaust Loner: Move to an empty connecting location.",
+      "evidence": "src/cards/entries/60557.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60558",
+      "dimension": "evidence",
+      "reason": "已定位条目（action、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [action]: Investigate ([intellect]). Your location gets -1 shroud for this investigation. If you fail, you may exhaust Old Compass to attempt this skill test ag",
+      "evidence": "src/cards/entries/60558.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60559",
+      "dimension": "evidence",
+      "reason": "已定位条目（action、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [action]: Fight ([combat] or [agility]). You get +1 skill value for this test. If this attack defeats an enemy, you may exhaust Pocketknife to gain 1 resource.",
+      "evidence": "src/cards/entries/60559.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60560",
+      "dimension": "evidence",
+      "reason": "印刷归并至 01075，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 [reaction] After you fail a skill test, exhaust Rabbit's Foot: Draw 1 card.",
+      "evidence": "src/cards/entries/01075.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60561",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (5 supplies). If there are no supplies on Same Old Thing, discard it. You may spend supplies on Same Old Thing as resources to pay for events played by any",
+      "evidence": "src/cards/entries/60561.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60562",
+      "dimension": "implementation",
+      "reason": "选择技能后传 addSkill 叠加数值，缺印刷的替换技能与成功后弃卡移动分支。",
+      "evidence": "src/cards/entries/60562.js",
+      "reproduce": "远处有敌人进入已附属地点时触发，选智识并成功，核对检定技能与弃牌移动选项。"
+    },
+    {
+      "code": "60563",
+      "dimension": "implementation",
+      "reason": "调查入口传 addSkill 叠加，缺成功后弃卡额外发现一条线索的选项。",
+      "evidence": "src/cards/entries/60563.js",
+      "reproduce": "让敌人进入附属地点，选敏捷调查并成功，检查技能、加值和额外线索分支。"
+    },
+    {
+      "code": "60564",
+      "dimension": "implementation",
+      "reason": "没有完整实现连接地点目标的视同交战。躲避分支叠加敏捷且 60576 只在攻击分支追加伤害。",
+      "evidence": "src/cards/entries/60564.js",
+      "reproduce": "选择躲避相邻地点的敌人，检查提交目标、检定值及升级牌成功后的额外伤害。"
+    },
+    {
+      "code": "60565",
+      "dimension": "evidence",
+      "reason": "已定位条目（played、reaction、forced），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Attach to your location. Limit 1 per location. [reaction] When the round ends, each investigator at this location may choose one of the following: Draw 1 card, ",
+      "evidence": "src/cards/entries/60565.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60566",
+      "dimension": "evidence",
+      "reason": "已定位条目（played、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Attach to your location. Limit 1 [[Trap]] per location. [reaction] After an enemy enters this location, exhaust Lie in Wait: Fight ([combat] or [agility])",
+      "evidence": "src/cards/entries/60566.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60567",
+      "dimension": "implementation",
+      "reason": "查找遭遇牌库时固定选最近牌库顶的敌人，敌人在其他地点生成后的跟进移动未实现。",
+      "evidence": "src/cards/entries/60567.js",
+      "reproduce": "让牌库顶九张有多个敌人，并安排查到的敌人有异地生成指示，检查选择与移动。"
+    },
+    {
+      "code": "60568",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 If this skill test is successful, choose a [survivor] asset or event in your discard pile and add it to your hand.",
+      "evidence": "src/cards/entries/60568.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60569",
+      "dimension": "primitives",
+      "reason": "已有通用 maxPerTest 原语，但本条目漏掉每次检定最多投入一张的声明。",
+      "evidence": "src/cards/entries/60569.js",
+      "reproduce": "给同一调查员两张悬崖勒马，在一次检定中分别投入并核对第二张仍可选。"
+    },
+    {
+      "code": "60570",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 supplies). If there are no supplies on Extra Rations, discard it. [fast] Spend 1 supply and exhaust Extra Rations: Heal 1 damage from your investigator ",
+      "evidence": "src/cards/entries/60570.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60571",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play after a [[Creature]] or [[Monster]] enemy at your location is defeated. Heal up to 3 damage from among investigators and/or [[Ally]] assets at your l",
+      "evidence": "src/cards/entries/60571.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60572",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 For every 2 damage on you (rounded up), Rough gains [wild].",
+      "evidence": "src/cards/entries/60572.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60573",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 supplies). [fast] Spend 1 supply and exhaust Canteen: Heal 2 horror.",
+      "evidence": "src/cards/entries/60573.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60574",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Limit 1 per investigator. Uses (3 supplies). [reaction] After you engage an enemy, spend 1 supply and exhaust Hunter's Instinct: Add a level 0-2 event in your d",
+      "evidence": "src/cards/entries/60574.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60575",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (2 ammo). [action] Spend 1 ammo: Fight ([combat]). You get +3 [combat] and deal +1 damage for this attack. [action] Discard Winchester Model 52: Fight ([co",
+      "evidence": "src/cards/entries/60575.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60576",
+      "dimension": "implementation",
+      "reason": "没有完整实现连接地点目标的视同交战。躲避分支叠加敏捷且 60576 只在攻击分支追加伤害。",
+      "evidence": "src/cards/entries/60576.js",
+      "reproduce": "选择躲避相邻地点的敌人，检查提交目标、检定值及升级牌成功后的额外伤害。"
+    },
+    {
+      "code": "60577",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Play only if there are no enemies at your location. Choose up to 3 level 0 event and/or skill cards in your discard pile and shuffle them into your deck. Draw 1",
+      "evidence": "src/cards/entries/60577.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60578",
+      "dimension": "evidence",
+      "reason": "已定位条目（played、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Attach to your location. Limit 1 [[Trap]] attached. [reaction] When an enemy enters attached location, exhaust Rope Trap: Deal 1 damage to that enemy. Reveal a ",
+      "evidence": "src/cards/entries/60578.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60579",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Starting. (You may begin the game with 1 copy of a starting card in your opening hand.) [fast] Spend 1 resource: You get +1 [willpower] for this skill test (+2 ",
+      "evidence": "src/cards/entries/60579.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60580",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (1 arrow). [action] Spend 1 arrow: Fight ([agility]). You get +2 [agility] and deal +2 damage for this attack. This attack ignores the aloof keyword. [acti",
+      "evidence": "src/cards/entries/60580.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60581",
+      "dimension": "evidence",
+      "reason": "已定位条目（played、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Attach to your location. Limit 1 [[Trap]] attached. [reaction] After an enemy or investigator enters attached location, discard Makeshift Bomb: Deal 3 damage to",
+      "evidence": "src/cards/entries/60581.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    },
+    {
+      "code": "60582",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Max 1 committed per skill test. You may commit Timely Intervention from your hand after revealing chaos tokens during a skill test you are performing.",
+      "evidence": "src/cards/entries/60582.js",
+      "reproduce": "在真实建局中使本卡入场、显现、投入或打出，逐项核对印刷条件、费用和结果。"
+    }
+  ],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "fail",
+    "primitives": "fail",
+    "interaction": "fail",
+    "evidence": "fail",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/acceptance-60-a.test.mjs",
+      "test": "60118 只向选中的同地另一位调查员和自己各发两资源",
+      "codes": [
+        "60118"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.test.mjs",
+      "test": "60119 重印在真实攻击检定中按成功差值结算追加伤害",
+      "codes": [
+        "60119"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.test.mjs",
+      "test": "60176 重印在真实攻击检定中按成功差值结算追加伤害",
+      "codes": [
+        "60176"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.test.mjs",
+      "test": "60206 打出后按五、十、十五张手牌三个阈值叠加智识和意志",
+      "codes": [
+        "60206"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.test.mjs",
+      "test": "60216 按其他手牌张数减费至零，按规则发现两条线索",
+      "codes": [
+        "60216"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.test.mjs",
+      "test": "60218 重印通过原版行为检查地点线索并真实抽三张牌",
+      "codes": [
+        "60218"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.test.mjs",
+      "test": "60219 重印投入真实调查后，按成功差值发现线索",
+      "codes": [
+        "60219"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.test.mjs",
+      "test": "60226 自己回合不消耗行动，抽牌并以实时智识加成至本轮结束",
+      "codes": [
+        "60226"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.test.mjs",
+      "test": "60263 重印通过原版行为检查地点线索并真实抽三张牌",
+      "codes": [
+        "60263"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.test.mjs",
+      "test": "60267 重印投入真实调查后，按成功差值发现线索",
+      "codes": [
+        "60267"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.test.mjs",
+      "test": "60275 重印投入真实调查后，按成功差值发现线索",
+      "codes": [
+        "60275"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.test.mjs",
+      "test": "60416 获得基础资源，只按印刷列出的混乱符号追加资源",
+      "codes": [
+        "60416"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.test.mjs",
+      "test": "60457 支援入场增加一点意志，横置后仍有效，离场后移除加成",
+      "codes": [
+        "60457"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.browser.mjs",
+      "test": "60216 / 60416 / 60206 / 60457 手牌操作调用真实引擎 (1440)",
+      "codes": [
+        "60216",
+        "60416",
+        "60206",
+        "60457"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.browser.mjs",
+      "test": "60218 / 60263 重印保留原版打出条件与抽牌 (1440)",
+      "codes": [
+        "60218",
+        "60263"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.browser.mjs",
+      "test": "60226 可在行动后快速窗口直接点牌并抽一张 (1440)",
+      "codes": [
+        "60226"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.browser.mjs",
+      "test": "60118 可从两位同地点队友中指定获益对象 (1440)",
+      "codes": [
+        "60118"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.browser.mjs",
+      "test": "60119 重印可从手牌投入真实检定 (1440)",
+      "codes": [
+        "60119",
+        "60176"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.browser.mjs",
+      "test": "60219 重印可从手牌投入真实检定 (1440)",
+      "codes": [
+        "60219",
+        "60267",
+        "60275"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.browser.mjs",
+      "test": "60216 / 60416 / 60206 / 60457 手牌操作调用真实引擎 (390)",
+      "codes": [
+        "60216",
+        "60416",
+        "60206",
+        "60457"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.browser.mjs",
+      "test": "60218 / 60263 重印保留原版打出条件与抽牌 (390)",
+      "codes": [
+        "60218",
+        "60263"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.browser.mjs",
+      "test": "60226 可在行动后快速窗口直接点牌并抽一张 (390)",
+      "codes": [
+        "60226"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.browser.mjs",
+      "test": "60118 可从两位同地点队友中指定获益对象 (390)",
+      "codes": [
+        "60118"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.browser.mjs",
+      "test": "60119 重印可从手牌投入真实检定 (390)",
+      "codes": [
+        "60119",
+        "60176"
+      ]
+    },
+    {
+      "file": "tests/acceptance-60-a.browser.mjs",
+      "test": "60219 重印可从手牌投入真实检定 (390)",
+      "codes": [
+        "60219",
+        "60267",
+        "60275"
+      ]
+    }
+  ],
+  "notes": "覆盖五个原版入门包与五个 2026 入门包。既有批次账本提供定位和复现入口，逐卡通过判定取自本轮行为运行。"
+}

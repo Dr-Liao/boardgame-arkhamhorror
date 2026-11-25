@@ -8,7 +8,7 @@ export const META = {
     "playerCards": 1683,
     "weaknesses": 147
   },
-  "resourceVersion": "af80e91d7bbf56086c9627474e5dbf9ce1c8dc0492d48e45808105f70890766b",
+  "resourceVersion": "3947d63a871ec2c993b985fe9fd92b33bdad1e28e0d7881843bb1501a73f10d5",
   "schemaVersion": 2,
   "source": "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
   "sources": [
@@ -76822,6 +76822,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "60118": {
+    "acceptanceProfile": "starter-investigators-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -76836,7 +76837,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -76878,6 +76879,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "60119": {
+    "acceptanceProfile": "starter-investigators-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -76892,7 +76894,7 @@ export const ALL_CARDS = {
     "deckLimit": 2,
     "doubleSided": false,
     "duplicateOfCode": "01025",
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -79205,6 +79207,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "60176": {
+    "acceptanceProfile": "starter-investigators-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -79219,7 +79222,7 @@ export const ALL_CARDS = {
     "deckLimit": 2,
     "doubleSided": false,
     "duplicateOfCode": "02299",
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -79960,6 +79963,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "60206": {
+    "acceptanceProfile": "starter-investigators-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -79974,7 +79978,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -80568,6 +80572,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "60216": {
+    "acceptanceProfile": "starter-investigators-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -80582,7 +80587,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -80680,6 +80685,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "60218": {
+    "acceptanceProfile": "starter-investigators-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -80695,7 +80701,7 @@ export const ALL_CARDS = {
     "deckLimit": 2,
     "doubleSided": false,
     "duplicateOfCode": "02186",
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -80737,6 +80743,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "60219": {
+    "acceptanceProfile": "starter-investigators-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -80751,7 +80758,7 @@ export const ALL_CARDS = {
     "deckLimit": 2,
     "doubleSided": false,
     "duplicateOfCode": "01039",
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -81156,6 +81163,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "60226": {
+    "acceptanceProfile": "starter-investigators-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -81170,7 +81178,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -82405,6 +82413,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "60263": {
+    "acceptanceProfile": "starter-investigators-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -82420,7 +82429,7 @@ export const ALL_CARDS = {
     "deckLimit": 2,
     "doubleSided": false,
     "duplicateOfCode": "02186",
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -82634,6 +82643,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "60267": {
+    "acceptanceProfile": "starter-investigators-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -82648,7 +82658,7 @@ export const ALL_CARDS = {
     "deckLimit": 2,
     "doubleSided": false,
     "duplicateOfCode": "01039",
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -83093,6 +83103,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "60275": {
+    "acceptanceProfile": "starter-investigators-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -83107,7 +83118,7 @@ export const ALL_CARDS = {
     "deckLimit": 2,
     "doubleSided": false,
     "duplicateOfCode": "02150",
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -88554,6 +88565,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "60416": {
+    "acceptanceProfile": "starter-investigators-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -88568,7 +88580,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -89955,6 +89967,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "60457": {
+    "acceptanceProfile": "starter-investigators-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -89969,7 +89982,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",

@@ -89,6 +89,7 @@ import { CORE2026_SHARD3_ACCEPTANCE_PROFILE, core2026Shard3CardVerified } from '
 import { CORE2026_SHARD4_ACCEPTANCE_PROFILE, core2026Shard4CardVerified } from './12-a-4-acceptance.js'
 import { CORE2026_SHARD5_ACCEPTANCE_PROFILE, core2026Shard5CardVerified } from './12-a-5-acceptance.js'
 import { RETURN_SERIES_ACCEPTANCE_PROFILE, returnSeriesCardVerified } from './50-a-acceptance.js'
+import { STARTER_INVESTIGATORS_ACCEPTANCE_PROFILE, starterInvestigatorPackCardVerified } from './60-a-acceptance.js'
 
 export const CARD_ACCEPTANCE_REGISTRY = Object.freeze([
   { profile: RCORE_ACCEPTANCE_PROFILE, verified: rcoreCardVerified, ledger: 'audit/rcore-acceptance.json' },
@@ -166,4 +167,5 @@ export const CARD_ACCEPTANCE_REGISTRY = Object.freeze([
   { profile: CORE2026_SHARD4_ACCEPTANCE_PROFILE, verified: core2026Shard4CardVerified, ledger: 'audit/12-a-4-acceptance.json' },
   { profile: CORE2026_SHARD5_ACCEPTANCE_PROFILE, verified: core2026Shard5CardVerified, ledger: 'audit/12-a-5-acceptance.json' },
   { profile: RETURN_SERIES_ACCEPTANCE_PROFILE, verified: returnSeriesCardVerified, ledger: 'audit/50-a-acceptance.json' },
+  { profile: STARTER_INVESTIGATORS_ACCEPTANCE_PROFILE, verified: starterInvestigatorPackCardVerified, ledger: 'audit/60-a-acceptance.json' },
 ])

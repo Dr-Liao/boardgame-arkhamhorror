@@ -1,0 +1,2676 @@
+{
+  "schemaVersion": 1,
+  "unit": "60-a",
+  "profile": {
+    "id": "starter-investigators-2026-11",
+    "scope": "60 段 10 个调查员入门包的 324 条目录记录。",
+    "basis": "按印刷文字检验本地引擎行为和相关界面。逐卡依据和待复测项见 60-a 报告。",
+    "houseRules": [
+      "重印共用一份原版行为，按实际印刷号检验运行时入口。"
+    ],
+    "sources": [
+      "src/cards/cards-data.js",
+      "src/deck/starter-packs.js",
+      "docs/test/验收-60-a-调查员入门包.json"
+    ]
+  },
+  "summary": {
+    "total": 324,
+    "verified": 13,
+    "unverified": 311,
+    "unimplemented": 0,
+    "testsPassed": 13
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-60-a.test.mjs",
+      "sha256": "411d9acaf34f9081d7d18e150744fbe952d702870828ef07df9c7ebc442a3097"
+    }
+  ],
+  "entries": [
+    {
+      "code": "60101",
+      "name": "纳撒尼尔·曹",
+      "type": "investigator",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "大厅及构筑覆盖可选状态。待逐卡验证印刷的调查员能力、旧印及构筑约束。 卡面起句为 [reaction] When you deal damage to an enemy by an event or a fight ability on an event: Deal 1 additional damage. (Limit once per phase.) [elder_sign] effect: +"
+    },
+    {
+      "code": "60102",
+      "name": "兰道尔·曹",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Nathaniel Cho deck only. [reaction] After Randall Cho enters play: Heal 3 damage or search your deck and discard pile for a [[Weapon]] asset, play it (paying it"
+    },
+    {
+      "code": "60103",
+      "name": "汤米·马洛伊",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Prey - Nathaniel Cho only. Hunter. Forced - When Tommy Malloy would take any amount of damage: Reduce that amount to 1."
+    },
+    {
+      "code": "60104",
+      "name": "自我毁灭",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness、forced），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - Put Self-Destructive into play in your threat area. Forced - When you deal 1 or more damage to an enemy: Take 1 damage. [action] [action]: Discard "
+    },
+    {
+      "code": "60105",
+      "name": "拳击手套",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You get +1 [combat] while fighting. [reaction] After you defeat an enemy, exhaust Boxing Gloves: Search the top 6 cards of your deck for a [[Spirit]] event and "
+    },
+    {
+      "code": "60106",
+      "name": "血肉结界",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 charges). [reaction] When you are dealt damage and/or horror from an enemy attack, exhaust Flesh Ward and spend 1 charge: Cancel 1 damage or horror just"
+    },
+    {
+      "code": "60107",
+      "name": "格蕾特·瓦格纳",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You get +1 [combat]. [reaction] After you defeat an enemy, exhaust Grete Wagner and deal 1 damage to her: Discover 1 clue at your location."
+    },
+    {
+      "code": "60108",
+      "name": "体能训练",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 01017，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 [fast] Spend 1 resource: You get +1 [willpower] for this skill test. [fast] Spend 1 resource: You get +1 [combat] for this skill test."
+    },
+    {
+      "code": "60109",
+      "name": "无情",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction、free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [reaction] When you deal excess damage to an enemy, exhaust Relentless: Place that excess damage on Relentless. [fast] Discard Relentless: Gain resources equal "
+    },
+    {
+      "code": "60110",
+      "name": "护卫",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [reaction] After another investigator moves from your location to a connecting location, exhaust Safeguard: Move to that location."
+    },
+    {
+      "code": "60111",
+      "name": "洗劫一空",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fight. When this action begins, gain 2 resources."
+    },
+    {
+      "code": "60112",
+      "name": "反击",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play after an enemy attacks you, even if that attack was canceled. Fight. This attack targets the attacking enemy."
+    },
+    {
+      "code": "60113",
+      "name": "闪躲",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 01023，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Fast. Play when an enemy attacks an investigator at your location. Cancel that attack."
+    },
+    {
+      "code": "60114",
+      "name": "\"到这儿来！\"",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Engage. Fight. Choose a non-[[Elite]] enemy at your location or a connecting location. Move that enemy to your location, engage it, and attack it."
+    },
+    {
+      "code": "60115",
+      "name": "荣耀",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play after you defeat an enemy. Draw 2 cards."
+    },
+    {
+      "code": "60116",
+      "name": "怪物杀手",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fight. This attack deals +1 damage."
+    },
+    {
+      "code": "60117",
+      "name": "一二连击",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fight. You get +1 [combat] for this attack. If you succeed, you may fight that enemy again. You get +2 [combat] and deal +1 damage for that attack."
+    },
+    {
+      "code": "60118",
+      "name": "团结一致",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-60-a.test.mjs",
+          "test": "60118 只向选中的同地另一位调查员和自己各发两资源"
+        }
+      ]
+    },
+    {
+      "code": "60119",
+      "name": "致命打击",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-60-a.test.mjs",
+          "test": "60119 重印在真实攻击检定中按成功差值结算追加伤害"
+        }
+      ]
+    },
+    {
+      "code": "60120",
+      "name": "证据！",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play after you defeat an enemy. Discover 1 clue at your location (2 clues instead if you defeated enemies with a combined total of at least 4 printed heal"
+    },
+    {
+      "code": "60121",
+      "name": "激励",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play only during your turn. Ready a [guardian] asset you control. You may take an additional action during your turn, which can only be used to fight."
+    },
+    {
+      "code": "60122",
+      "name": "反击",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play when an enemy attacks you (before resolving that attack). Fight. This attack targets the attacking enemy. You get +2 [combat] and deal +1 damage for "
+    },
+    {
+      "code": "60123",
+      "name": "\"到这儿来！\"",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play during any [fast] window. Engage. Fight. Choose a non-[[Elite]] enemy up to 2 locations away. Move that enemy to your location, engage it, and attack"
+    },
+    {
+      "code": "60124",
+      "name": "吸取教训",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play after you take damage from an enemy attack. Discover 2 clues at your location."
+    },
+    {
+      "code": "60125",
+      "name": "单打独斗",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Play only as your first action. Deal 2 damage to an enemy engaged with you. This action does not provoke attacks of opportunity."
+    },
+    {
+      "code": "60126",
+      "name": "压制",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Max 1 committed per skill test. If this test is successful, draw 1 card (2 cards instead if it succeeds by 2 or more)."
+    },
+    {
+      "code": "60127",
+      "name": "拳击手套",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You get +2 [combat] while fighting. [reaction] After you defeat an enemy, exhaust Boxing Gloves: Search the top 9 cards of your deck for a [[Spirit]] event and "
+    },
+    {
+      "code": "60128",
+      "name": "格蕾特·瓦格纳",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You get +1 [combat] and +1 [intellect]. [reaction] After you defeat an enemy, exhaust Grete Wagner and deal 1 damage to her: Discover 1 clue at your location or"
+    },
+    {
+      "code": "60129",
+      "name": "炸药爆破",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play during any [fast] window. Choose either your location or a connecting location. Deal 3 damage to each enemy and investigator at the chosen location."
+    },
+    {
+      "code": "60130",
+      "name": "嘲讽",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play during any [fast] window. Engage any number of enemies at your location. For each enemy engaged this way, deal it 1 damage and draw 1 card."
+    },
+    {
+      "code": "60131",
+      "name": "体能训练",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（forced、free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (2 resources). Replenish these resources at the start of each round. [fast] Spend 1 resource from your resource pool or from Physical Training: You get +1 "
+    },
+    {
+      "code": "60132",
+      "name": "一二连击",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fight. You automatically succeed and deal +1 damage for this attack. You may fight again. You get +3 [combat] and deal +2 damage for that attack."
+    },
+    {
+      "code": "60151",
+      "name": "托米·马尔登",
+      "type": "investigator",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "大厅及构筑覆盖可选状态。待逐卡验证印刷的调查员能力、旧印及构筑约束。 卡面起句为 [action] Spend 1 resource, or discard a [[Firearm]] asset you control from play: Play a [[Firearm]] asset from your hand, paying its cost. It enters play with 2"
+    },
+    {
+      "code": "60152",
+      "name": "贝基",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Tommy Muldoon deck only. Uses (2 ammo). [action] Spend 1 ammo: Fight ([combat]). You get +2 [combat] and deal +1 damage for this attack. [reaction] When you tri"
+    },
+    {
+      "code": "60153",
+      "name": "我行我素",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - You must either discard each [[Firearm]] asset you control or lose 5 resources."
+    },
+    {
+      "code": "60154",
+      "name": "过度自信",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness、forced），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - Put Overconfident into play in your threat area. Forced - After you fail a skill test: Take 1 damage. [action] [action]: Discard Overconfident."
+    },
+    {
+      "code": "60155",
+      "name": "M1911手枪",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 12019，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Uses (4 ammo). [action] Spend 1 ammo: Fight ([combat]). You get +1 [combat] and deal +1 damage for this attack."
+    },
+    {
+      "code": "60156",
+      "name": "警犬",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [fast] During an attack or investigation at your location, exhaust Police Dog: The performing investigator gets +1 skill value for this test."
+    },
+    {
+      "code": "60157",
+      "name": "新手警察",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Rookie Cop may be assigned damage and/or horror dealt to other investigators at your location. [reaction] When Rookie Cop is defeated: Discover 1 clue at your l"
+    },
+    {
+      "code": "60158",
+      "name": "警用左轮",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 ammo). [reaction] After an enemy attacks you, spend 1 ammo: Fight ([combat]). This attack targets that enemy. You get +1 [combat] and deal +1 damage for"
+    },
+    {
+      "code": "60159",
+      "name": "防护背心",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [reaction] After you play Protective Vest: Search the top 6 cards of your deck for a [[Firearm]] or [[Upgrade]] card and add it to your hand. Shuffle your deck."
+    },
+    {
+      "code": "60160",
+      "name": "“会开口的”",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Parley. Choose an enemy at your location and test [combat] (X), where X is that enemy's remaining health. If you succeed, automatically evade that enemy and dis"
+    },
+    {
+      "code": "60161",
+      "name": "赏金",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play after an enemy at your location is defeated. Investigators at your location gain a total of X resources, distributed as your wish. X is that enemy's "
+    },
+    {
+      "code": "60162",
+      "name": "定制握把",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played、free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play only during your turn. Attach to a [[Firearm]] asset you control. [fast] During your turn, except during an action, discard Custom Grip: Return attac"
+    },
+    {
+      "code": "60163",
+      "name": "机械瞄具",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "准星的 +3 写入全局下一次检定。结果可以被不用附属枪械的检定提前消费。"
+    },
+    {
+      "code": "60164",
+      "name": "身强体健",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Move. After this move, heal 2 damage."
+    },
+    {
+      "code": "60165",
+      "name": "拘留",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played、forced），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play after a non-[[Elite]] enemy attacks you. Automatically evade that enemy and attach Restrained to it. Attached enemy cannot ready. Forced - When the r"
+    },
+    {
+      "code": "60166",
+      "name": "盯梢",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Investigate ([intellect]). You get +2 [intellect] for this investigation. If you succeed, heal 1 horror."
+    },
+    {
+      "code": "60167",
+      "name": "适者生存",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Commit only to a skill test during an attack or evasion. The performing investigator ignores the alert and retaliate keywords during this test."
+    },
+    {
+      "code": "60168",
+      "name": "武装到牙齿",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 While it is committed to a skill test on an [[Item]] asset you control, Armed to the Teeth gains [wild] [wild]."
+    },
+    {
+      "code": "60169",
+      "name": "致命打击",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "目录指向 12025，导入可继续归并至 01025。60169 自身未注册重印条目，按原印刷号读取运行时行为时取不到条目。"
+    },
+    {
+      "code": "60170",
+      "name": "警犬",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [fast] During an attack or investigation at your location, exhaust Police Dog: The performing investigator gets +2 skill value for this test."
+    },
+    {
+      "code": "60171",
+      "name": "M1911手枪",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 ammo). [action] Spend 1 ammo: Fight ([combat]). You get +2 [combat] and deal +1 damage for this attack. Ignore the retaliate keyword for this attack."
+    },
+    {
+      "code": "60172",
+      "name": "加长枪管",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷为使用附属枪械攻击时常驻 +1。实现经反应窗口请求触发，且将加成排入待结算检定。"
+    },
+    {
+      "code": "60173",
+      "name": "执勤",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play when your turn begins. Until the end of your turn, you get +3 skill value while investigating or parleying."
+    },
+    {
+      "code": "60174",
+      "name": "身强体健",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Move. After this move, heal 3 damage."
+    },
+    {
+      "code": "60175",
+      "name": "重新装填",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Place 5 ammo, divided as you choose, among [[Firearm]] assets you control."
+    },
+    {
+      "code": "60176",
+      "name": "致命打击",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-60-a.test.mjs",
+          "test": "60176 重印在真实攻击检定中按成功差值结算追加伤害"
+        }
+      ]
+    },
+    {
+      "code": "60177",
+      "name": "警探谢尔曼",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You get +1 [combat]. Detective Sherman may be assigned damage and/or horror dealt to other investigators at your location. [reaction] After damage is placed on "
+    },
+    {
+      "code": "60178",
+      "name": "耐性",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Starting. (You may begin the game with 1 copy of a starting card in your opening hand.) [fast] Spend 1 resource: You get +1 [combat] for this skill test (+2 [co"
+    },
+    {
+      "code": "60179",
+      "name": "盯梢",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Investigate ([intellect]). You get +3 [intellect] for this investigation. If you succeed, discover 1 additional clue at your location and heal 2 horror."
+    },
+    {
+      "code": "60180",
+      "name": "坚韧不屈",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "使用当前同地调查员的 attackedSinceTurnEnd 推断地点历史，分不清本轮在其他地点被攻击后走来的调查员。奖励也走另一次反应。"
+    },
+    {
+      "code": "60181",
+      "name": "防护背心",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You have 1 additional hand slot, which may only be used to hold a [[Firearm]] asset. [reaction] After you play Protective Vest: Search the top 9 cards of your d"
+    },
+    {
+      "code": "60182",
+      "name": "汤姆逊冲锋枪",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (6 ammo). [action] Spend 1 ammo: Fight ([combat]). You get +3 [combat] and deal +1 damage for this attack. [reaction] After you resolve the above [action] "
+    },
+    {
+      "code": "60201",
+      "name": "哈维·沃尔特斯",
+      "type": "investigator",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "大厅及构筑覆盖可选状态。待逐卡验证印刷的调查员能力、旧印及构筑约束。 卡面起句为 [reaction] After an investigator at your location draws 1 or more cards from their deck during the investigation phase: That investigator draws 1 card. (Limit o"
+    },
+    {
+      "code": "60202",
+      "name": "知识宝库",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Harvey Walters deck only. Your maximum hand size is increased by 2. [reaction] After you successfully investigate, exhaust Vault of Knowledge and choose an inve"
+    },
+    {
+      "code": "60203",
+      "name": "三重诅咒的好奇心",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - For every 3 cards in your hand: Take 1 damage."
+    },
+    {
+      "code": "60204",
+      "name": "过分痴迷",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness、forced），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - Put Obsessive into play in your threat area. Forced - When your turn begins: Discard 1 non-weakness card at random from your hand. [action] [action"
+    },
+    {
+      "code": "60205",
+      "name": "秘术启迪",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Your maximum hand size is increased by 1. You have 1 additional hand slot, which can only be used to hold a [[Tome]] asset."
+    },
+    {
+      "code": "60206",
+      "name": "昴宿星团残章",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-60-a.test.mjs",
+          "test": "60206 打出后按五、十、十五张手牌三个阈值叠加智识和意志"
+        }
+      ]
+    },
+    {
+      "code": "60207",
+      "name": "伊察姆纳圆盘",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [reaction] When a non-[[Elite]] enemy spawns at your location, discard Disc of Itzamna: Automatically evade that enemy or deal it 2 damage."
+    },
+    {
+      "code": "60208",
+      "name": "百科全书",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (5 secrets). [action] Exhaust Encyclopedia and spend 1 secret: Choose an investigator at your location. That investigator gets +2 to a skill of your choice"
+    },
+    {
+      "code": "60209",
+      "name": "养神术",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 secrets). [action] Exhaust Feed the Mind and spend 1 secret: Test [intellect] (1). For each point you succeed by (to a maximum of 3), draw 1 card."
+    },
+    {
+      "code": "60210",
+      "name": "禁忌之书",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (5 secrets). [action] Exhaust Forbidden Tome and spend 1 secret: Draw 1 card. Then, if you have 10 or more cards in your hand and there are no secrets on F"
+    },
+    {
+      "code": "60211",
+      "name": "高等教育",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 While you have 5 or more cards in your hand, Higher Education gains: \"[fast] Spend 1 resource: You get +1 [willpower] for this skill test. [fast] Spend 1 resour"
+    },
+    {
+      "code": "60212",
+      "name": "实验室助理",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "重印沿用原版反应的字面条件 assetCode=02020。实际以 60212 入场时没有抽牌反应，手牌上限的常驻调整仍生效。"
+    },
+    {
+      "code": "60213",
+      "name": "惠顿·格林",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 While you control a [[Tome]] or [[Relic]] asset, you get +1 [intellect]. [reaction] After you reveal a location or put a new location into play, exhaust Whitton"
+    },
+    {
+      "code": "60214",
+      "name": "燃烧午夜油",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Investigate. When this action begins, gain 2 resources."
+    },
+    {
+      "code": "60215",
+      "name": "神秘文字",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Gain 2 resources. [reaction] After you draw Cryptic Writings during your turn: Play it."
+    },
+    {
+      "code": "60216",
+      "name": "广泛研究",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-60-a.test.mjs",
+          "test": "60216 按其他手牌张数减费至零，按规则发现两条线索"
+        }
+      ]
+    },
+    {
+      "code": "60217",
+      "name": "秘术祈求",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 As an additional cost to play Occult Invocation, discard up to 2 cards from your hand. Fight. This attack uses [intellect] instead of [combat]. You get +1 [inte"
+    },
+    {
+      "code": "60218",
+      "name": "荒唐的素描像",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-60-a.test.mjs",
+          "test": "60218 重印通过原版行为检查地点线索并真实抽三张牌"
+        }
+      ]
+    },
+    {
+      "code": "60219",
+      "name": "推理",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-60-a.test.mjs",
+          "test": "60219 重印投入真实调查后，按成功差值发现线索"
+        }
+      ]
+    },
+    {
+      "code": "60220",
+      "name": "图书馆讲解员",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [reaction] After Library Docent enters play, return a [[Tome]] asset you control to its owner's hand: Play a different [[Tome]] asset (by title) from your hand,"
+    },
+    {
+      "code": "60221",
+      "name": "窥看不思议之事",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Draw 1 card. Shuffle any number of non-weakness cards from your hand into your deck. Then, draw that many cards."
+    },
+    {
+      "code": "60222",
+      "name": "绝密地图集",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 secrets). [action] Spend 1 secret: Choose a revealed location up to 3 connections away from your location. Move to that location."
+    },
+    {
+      "code": "60223",
+      "name": "惠顿·格林",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 While you control a [[Tome]] or [[Relic]] asset, you get +1 [willpower] and +1 [intellect]. [reaction] After you reveal a location or put a new location into pl"
+    },
+    {
+      "code": "60224",
+      "name": "神秘文字",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Gain 3 resources (4 resources instead if you have 10 or more other cards in hand). [reaction] After you draw Cryptic Writings during your turn: Play it."
+    },
+    {
+      "code": "60225",
+      "name": "\"我有个计划！\"",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fight. This attack uses [intellect] instead of [combat]. You get +2 [intellect] for this test. You deal +1 damage for this attack for each clue you have (max +3"
+    },
+    {
+      "code": "60226",
+      "name": "心胜于物",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-60-a.test.mjs",
+          "test": "60226 自己回合不消耗行动，抽牌并以实时智识加成至本轮结束"
+        }
+      ]
+    },
+    {
+      "code": "60227",
+      "name": "寻找答案",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Investigate. If you succeed, instead of discovering a clue at your location, discover 2 total clues from among your location and connecting locations."
+    },
+    {
+      "code": "60228",
+      "name": "洞察力",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Max 1 committed per skill test. If this test is successful, draw 1 card (2 cards instead if it succeeds by 2 or more)."
+    },
+    {
+      "code": "60229",
+      "name": "禁忌之书",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Researched. [action] [action] [action] [action] Exhaust Forbidden Tome: Move 1 damage from a player card at your location to an enemy at your location. Reduce t"
+    },
+    {
+      "code": "60230",
+      "name": "禁忌之书",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Researched. [action] [action] [action] [action] Exhaust Forbidden Tome: You may move to a connecting location. Discover 1 clue at your location. Reduce this abi"
+    },
+    {
+      "code": "60231",
+      "name": "远见",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [fast] During your turn, if you have 8 or more cards in your hand, exhaust Farsight: Play an event from your hand (paying its cost)."
+    },
+    {
+      "code": "60232",
+      "name": "密斯卡托尼克考古基金",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Permanent. Limit 1 per deck. You have 2 additional ally slots, which can only be used to hold [[Miskatonic]] assets. Forced - When you take damage or horror: No"
+    },
+    {
+      "code": "60233",
+      "name": "死灵之书",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (6 secrets). Limit 1 per deck. [fast] Spend 1 secret: You get +2 skill value for this skill test. [fast] Spend 2 secrets: Draw 2 cards. [fast] Spend 3 secr"
+    },
+    {
+      "code": "60251",
+      "name": "卡洛琳·弗恩",
+      "type": "investigator",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "大厅及构筑覆盖可选状态。待逐卡验证印刷的调查员能力、旧印及构筑约束。 卡面起句为 [reaction] After you heal 1 or more horror from an investigator or [[Ally]] asset: Discover 1 clue at your location. (Limit once per round.) [elder_sign] effect"
+    },
+    {
+      "code": "60252",
+      "name": "实验心理学",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Carolyn Fern deck only. [action]: Test [intellect] (2). If you succeed, heal 1 horror from an investigator or [[Ally]] asset at your location. [reaction] After "
+    },
+    {
+      "code": "60253",
+      "name": "不灭之网",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "线索替换已经接线，但每阶段最多一次的限制比印刷更窄。"
+    },
+    {
+      "code": "60254",
+      "name": "致命的好奇心",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - Test [willpower] (4). For each point you fail by, you must either take 1 damage or place 1 of your clues on your location."
+    },
+    {
+      "code": "60255",
+      "name": "入梦者编年史",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 secrets). [action] Spend 1 secret: Investigate ([intellect]). The first card you commit to this investigation gains [wild]. If you succeed, you may take"
+    },
+    {
+      "code": "60256",
+      "name": "密教记录",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "快速治疗只检查是否存在同地有恐惧的调查员，未检查是否是持有者自己的回合。"
+    },
+    {
+      "code": "60257",
+      "name": "私家营业",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Limit 1 per investigator. [reaction] After you heal 1 or more horror, exhaust Private Practice: Gain 1 resource."
+    },
+    {
+      "code": "60258",
+      "name": "心理学学生",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [reaction] After you play Psychology Student: Heal 2 horror from an investigator or [[Ally]] asset at your location."
+    },
+    {
+      "code": "60259",
+      "name": "法老卷轴",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 secrets). [action] Spend 1 secret and exhaust Scroll of the Pharaohs: Deal 1 horror to an investigator or [[Ally]] asset at your location. Then, if ther"
+    },
+    {
+      "code": "60260",
+      "name": "大学档案员",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You have 1 additional hand slot, which can only be used to hold a [[Tome]] asset. [reaction] After University Archivist enters play: Search the top 6 cards of y"
+    },
+    {
+      "code": "60261",
+      "name": "腐蚀反应",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fight ([intellect]). You get +1 [intellect] for this attack. If you control 2 or more clues, this attack deals +1 damage."
+    },
+    {
+      "code": "60262",
+      "name": "镇定自若",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Evade ([agility]). You get +2 [agility] for this evasion. If you succeed and you control 2 or more clues, heal 1 horror."
+    },
+    {
+      "code": "60263",
+      "name": "荒唐的素描像",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-60-a.test.mjs",
+          "test": "60263 重印通过原版行为检查地点线索并真实抽三张牌"
+        }
+      ]
+    },
+    {
+      "code": "60264",
+      "name": "精神分析",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Choose an investigator at your location and reveal the top 3 cards of their deck. That investigator may choose to either draw 1 revealed card and shuffle the re"
+    },
+    {
+      "code": "60265",
+      "name": "缓和",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Parley. Choose an enemy at your location. Heal horror equal to that enemy's horror value."
+    },
+    {
+      "code": "60266",
+      "name": "阴险真相",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 As an additional cost to play Insidious Truths, you may discard up to 2 cards from hand. Fight ([combat]). For each card discarded as part of this card's cost, "
+    },
+    {
+      "code": "60267",
+      "name": "推理",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-60-a.test.mjs",
+          "test": "60267 重印投入真实调查后，按成功差值发现线索"
+        }
+      ]
+    },
+    {
+      "code": "60268",
+      "name": "构建动机",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 If this skill test is successful, the performing investigator searches the top 6 cards of their deck for an [[Insight]] event, draws it, and shuffles their deck"
+    },
+    {
+      "code": "60269",
+      "name": "文本分析",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 If this skill test is successful, replenish 1 secret on a [[Tome]] asset at your location."
+    },
+    {
+      "code": "60270",
+      "name": "放大镜",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 01040，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Fast. You get +1 [intellect] while investigating. [fast] If there are no clues on your location: Return Magnifying Glass to your hand."
+    },
+    {
+      "code": "60271",
+      "name": "镇定自若",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Evade ([agility]). You get +3 [agility] for this evasion. If you succeed, heal 2 horror from among cards you control."
+    },
+    {
+      "code": "60272",
+      "name": "打字机",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 secrets). If there are no secrets on Typewriter, discard it. Secrets on Typewriter may be spent as if they were on [[Tome]] assets you control."
+    },
+    {
+      "code": "60273",
+      "name": "腐蚀反应",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fight ([intellect]). You get +2 [intellect] and deal +1 damage for this attack. If you succeed and you control 2 or more clues, this attack deals +2 damage inst"
+    },
+    {
+      "code": "60274",
+      "name": "催眠",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Parley ([intellect]). You get +2 [intellect] for this parley. Choose a non-[[Elite]] enemy at your location. This test's difficulty is equal to that enemy's rem"
+    },
+    {
+      "code": "60275",
+      "name": "推理",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-60-a.test.mjs",
+          "test": "60275 重印投入真实调查后，按成功差值发现线索"
+        }
+      ]
+    },
+    {
+      "code": "60276",
+      "name": "解剖报告",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [reaction] After an enemy at your location is defeated, exhaust Autopsy Report: Investigate ([intellect]). You get +X [intellect] for this investigation, where "
+    },
+    {
+      "code": "60277",
+      "name": "言辞锐利",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Starting. (You may begin the game with 1 copy of a starting card in your opening hand.) [fast] Spend 1 resource: You get +1 [intellect] for this skill test (+2 "
+    },
+    {
+      "code": "60278",
+      "name": "精神分析",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 One at a time, each investigator at your location reveals the top 3 cards of their deck, draws 1 of those cards, shuffles the remaining cards into their deck, a"
+    },
+    {
+      "code": "60279",
+      "name": "法老卷轴",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Researched. Uses (4 secrets). [action] Take 1 horror and spend 1 or 2 secrets: For each secret you spent as part of this ability's cost, reveal 3 cards from the"
+    },
+    {
+      "code": "60280",
+      "name": "法老卷轴",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Researched. Uses (4 secrets). [action] Take 1 horror and spend 1 or 2 secrets: Fight ([intellect]). You get +3 [intellect] for this attack. If you succeed, this"
+    },
+    {
+      "code": "60281",
+      "name": "法老卷轴",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Researched. Uses (4 secrets). [action] Take 1 horror and spend 1 or 2 secrets: Investigate ([intellect]). You get +3 [intellect] for this investigation. If you "
+    },
+    {
+      "code": "60282",
+      "name": "联通宇宙",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 When you play Commune with the Cosmos, you may take up to 3 horror. Investigate ([intellect]). You get +2 [intellect] for this investigation. If you succeed, di"
+    },
+    {
+      "code": "60301",
+      "name": "温妮弗雷德·哈巴默克",
+      "type": "investigator",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "大厅及构筑覆盖可选状态。待逐卡验证印刷的调查员能力、旧印及构筑约束。 卡面起句为 [fast] If 2 different non-weakness cards you control are committed to this skill test: Draw 1 card. (Limit once per test.) [elder_sign] effect: +1. After this t"
+    },
+    {
+      "code": "60302",
+      "name": "你能做得更好",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Winifred Habbamock deck only. Commit only to a skill test you are performing."
+    },
+    {
+      "code": "60303",
+      "name": "嚣张",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You must commit Arrogance to each eligible skill test you perform. This skill's icons subtract from your skill value instead of adding to it. If this test succe"
+    },
+    {
+      "code": "60304",
+      "name": "不顾后果",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit、forced），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Commit only to a skill test you are performing (of any type) that has no other cards committed to it. Other cards cannot be committed to this skill test. If thi"
+    },
+    {
+      "code": "60305",
+      "name": "撬锁工具",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [action] Exhaust Lockpicks: Investigate. Add your [agility] value to your skill value for this investigation. If you do not succeed by at least 2, discard Lockp"
+    },
+    {
+      "code": "60306",
+      "name": "毛瑟C96手枪",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (5 ammo). [action] Exhaust Mauser C96 and spend 1 ammo: Fight. You get +1 [combat] and deal +1 damage for this attack. If you succeed by 2 or more, either "
+    },
+    {
+      "code": "60307",
+      "name": "弹簧刀",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 01044，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Fast. [action]: Fight. If you succeed by 2 or more, this attack deals +1 damage."
+    },
+    {
+      "code": "60308",
+      "name": "幸运烟盒",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 04107，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 [reaction] After you succeed at a skill test by 2 or more, exhaust Lucky Cigarette Case: Draw 1 card."
+    },
+    {
+      "code": "60309",
+      "name": "朗尼·里特纳",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You get +1 [combat]. [fast] Exhaust Lonnie Ritter and spend 1 resource: Choose an [[Item]] asset controlled by an investigator at your location. Heal 1 damage f"
+    },
+    {
+      "code": "60310",
+      "name": "皮夹克",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast."
+    },
+    {
+      "code": "60311",
+      "name": "街头浪子",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [fast] Spend 2 resources: You get +2 [intellect] for this skill test. [fast] Spend 2 resources: You get +2 [agility] for this skill test."
+    },
+    {
+      "code": "60312",
+      "name": "暗中偷袭",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 03194，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Fight. Add your [agility] value to your skill value for this attack. If you succeed by 2 or more, automatically evade the attacked enemy."
+    },
+    {
+      "code": "60313",
+      "name": "艺高胆大",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 03030，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Fast. Play when you would succeed at a skill test. You get +2 skill value for this test."
+    },
+    {
+      "code": "60314",
+      "name": "悄然遁去",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 04232，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Evade. Add your [intellect] to your skill value for this evasion attempt. If you succeed by 2 or more and the evaded enemy is non-[[Elite]], it does not ready d"
+    },
+    {
+      "code": "60315",
+      "name": "小偷小摸",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Investigate. This investigation uses [agility] instead of [intellect]. If you succeed, discover 2 additional clues at your location."
+    },
+    {
+      "code": "60316",
+      "name": "悄然溜过",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Evade. When this action begins, gain 2 resources."
+    },
+    {
+      "code": "60317",
+      "name": "身手矫捷",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 For each point this skill test succeeds by, after it resolves, you may immediately move to a connecting location (to a maximum of 3 times)."
+    },
+    {
+      "code": "60318",
+      "name": "虎口拔牙",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 After you commit Daredevil to a skill test, discard cards from the top of your deck until you discard a [rogue] skill you can commit to this test. Commit it. Sh"
+    },
+    {
+      "code": "60319",
+      "name": "机会主义者",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 01053，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Commit only to a skill test you are performing. If you succeed by 3 or more, return Opportunist to your hand after this test instead of discarding it."
+    },
+    {
+      "code": "60320",
+      "name": "酒胆",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 supplies). [action] Spend 1 supply: Choose an investigator at your location to heal 1 horror. Then, that investigator tests [willpower] (2). If the test"
+    },
+    {
+      "code": "60321",
+      "name": "毛瑟C96手枪",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (5 ammo). [action] Exhaust Mauser C96 and spend 1 ammo: Fight. You get +2 [combat] and deal +1 damage for this attack. If you succeed by 2 or more, either "
+    },
+    {
+      "code": "60322",
+      "name": "艺高胆大",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play when you would succeed at a skill test. You get +3 skill value for this test. Draw 1 card."
+    },
+    {
+      "code": "60323",
+      "name": "暗中偷袭",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fight. Add your [agility] value to your skill value for this attack. If you succeed by 1 or more, automatically evade the attacked enemy. If you succeed by 3 or"
+    },
+    {
+      "code": "60324",
+      "name": "悄然遁去",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Evade. Add your [intellect] to your skill value for this evasion attempt. If you succeed by 1 or more and the evaded enemy is non-[[Elite]], it does not ready d"
+    },
+    {
+      "code": "60325",
+      "name": "心灵手巧",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Max 1 committed per skill test. If this test is successful, draw 1 card (2 cards instead if it succeeds by 2 or more)."
+    },
+    {
+      "code": "60326",
+      "name": "幸运烟盒",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [reaction] After you succeed at a skill test by 1 or more, exhaust Lucky Cigarette Case: Search the top X cards of your deck for a card, draw it, and shuffle th"
+    },
+    {
+      "code": "60327",
+      "name": "神射手",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [reaction] When you use a fight ability on a [[Firearm]] asset, exhaust Sharpshooter: Choose one, or both - - This attack uses [agility] instead of [combat]. Al"
+    },
+    {
+      "code": "60328",
+      "name": "小偷小摸",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Investigate. This investigation uses [agility] instead of [intellect]. If you succeed, discover 2 additional clues at your location. If you succeed by 2 or more"
+    },
+    {
+      "code": "60329",
+      "name": "背刺",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fight. This attack uses [agility] instead of [combat]. This attack deals +2 damage. If you succeed by 2 or more, return Backstab to your hand at the end of your"
+    },
+    {
+      "code": "60330",
+      "name": "学人精",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 After you commit Copycat to a skill test, search the discard pile of another investigator for a skill you can commit to this test, and commit it. After this tes"
+    },
+    {
+      "code": "60331",
+      "name": "贝雷塔M1918冲锋枪",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 ammo). [action] Exhaust Beretta M1918 and spend 1 ammo: Fight. You get +4 [combat] and deal +1 damage for this attack. If you succeed by 2 or more, eith"
+    },
+    {
+      "code": "60332",
+      "name": "查克·费格斯",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "旧批次披露快速授权只覆盖部分出牌来源。需复测特殊出牌区的快速入口和三选二的分支。"
+    },
+    {
+      "code": "60336",
+      "name": "The Necronomicon",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "图鉴保留的本地印刷号没有单卡条目、目录重复关系或运行时别名。60233 有同名条目，但该号不能解析过去。"
+    },
+    {
+      "code": "60351",
+      "name": "安德烈·帕特尔",
+      "type": "investigator",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "大厅及构筑覆盖可选状态。待逐卡验证印刷的调查员能力、旧印及构筑约束。 卡面起句为 [reaction] After you succeed at a skill test by 2 or more during your turn: You may take an additional action this turn. (Limit once per round.) [elder_sign] ef"
+    },
+    {
+      "code": "60352",
+      "name": "退场娴熟",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 André Patel deck only. While this card is committed to an attack or an evasion, it gains [wild] [wild]."
+    },
+    {
+      "code": "60353",
+      "name": "台词娴熟",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 André Patel deck only. While this card is committed to a skill test on a scenario card, it gains [wild] [wild]."
+    },
+    {
+      "code": "60354",
+      "name": "情景娴熟",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 André Patel deck only. While this card is committed to an investigation or parley, it gains [wild] [wild]."
+    },
+    {
+      "code": "60355",
+      "name": "举世之重",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness、forced），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - Put Weight of the World into play in your threat area. Forced - When you fail a skill test while Weight of the World is in play, take 1 horror and "
+    },
+    {
+      "code": "60356",
+      "name": "浑然不觉",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "实现按敌人数量变化判断是否弃置，分支与印刷相反。抽到并生成敌人时保留弱点，抽到不生成敌人的诡计时弃掉。"
+    },
+    {
+      "code": "60357",
+      "name": "舞台中央",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Limit 1 per investigator. Uses (3 renown). If there is no renown on Center Stage, discard it. [fast] During a skill test, spend 1 renown and exhaust Center Stag"
+    },
+    {
+      "code": "60358",
+      "name": "声名",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 renown). If there is no renown on Fame, discard it. [action] If there is an enemy at your location, spend 1 renown: Parley. Gain 2 resources."
+    },
+    {
+      "code": "60359",
+      "name": "小道消息",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 rumors). If there are no rumors on The Grapevine, discard it. [action] Spend 1 rumor and exhaust The Grapevine: Parley. Choose an enemy at a revealed lo"
+    },
+    {
+      "code": "60360",
+      "name": "奢华戒指",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 renown). [reaction] When you would succeed at a skill test, spend 1 renown and exhaust Extravagant Ring: You get +2 skill value for this test."
+    },
+    {
+      "code": "60361",
+      "name": "撬锁工具",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 60305，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 [action] Exhaust Lockpicks: Investigate. Add your [agility] value to your skill value for this investigation. If you do not succeed by at least 2, discard Lockp"
+    },
+    {
+      "code": "60362",
+      "name": "马库斯·森斯塔克",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "补给阶段额外资源从常驻收益改为 upkeepEnd 可跳过反应，且提前或延后影响同阶段其他窗口。"
+    },
+    {
+      "code": "60363",
+      "name": "锃亮的手杖",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [action]: Fight ([combat]). Add your [agility] to your [combat] for this attack. If this attack succeeds by 2 or more against a non-[[Elite]] enemy, you may exh"
+    },
+    {
+      "code": "60364",
+      "name": "一扫而空",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Investigate ([intellect]). You get +2 [intellect] for this investigation. If you discover the last clue at your location, you may move to a connecting location."
+    },
+    {
+      "code": "60365",
+      "name": "有账必付",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "印刷要求敌人剩余生命等于 X。选择过滤用 ≤ X，并在没有合法敌人时仍发现线索。"
+    },
+    {
+      "code": "60366",
+      "name": "速速离去",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Evade ([agility]). You get +2 [agility] for this evasion. If you succeed by 2 or more and the evaded enemy is non-[[Elite]], that enemy does not ready during th"
+    },
+    {
+      "code": "60367",
+      "name": "突然坠落",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面有攻击行动指示，事件描述子没有攻击归类。敌人交战时普通事件路径可能在攻击前引发借机攻击。"
+    },
+    {
+      "code": "60368",
+      "name": "灯下黑",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play after you successfully evade an enemy. Discover 1 clue at your location (if you succeeded by 2 or more, you may discover 1 clue at a connecting locat"
+    },
+    {
+      "code": "60369",
+      "name": "殷实无忧",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Commit only to a skill test you are performing. Max 1 committed per skill test. Easy Street gains [wild] for every 3 resources you have (to a maximum of [wild] "
+    },
+    {
+      "code": "60370",
+      "name": "扫地出门",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 After Out the Door is committed to a skill test, the performing investigator gains 2 resources. If this skill test fails, that investigator loses 2 resources."
+    },
+    {
+      "code": "60371",
+      "name": "“吃我一招”",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 03233，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Commit only to a skill test you are performing. As an additional cost to commit \"Watch this!\" to a skill test, spend up to 3 resources. If you succeed by 1 or m"
+    },
+    {
+      "code": "60372",
+      "name": "撬锁工具",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 03031，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Uses (3 supplies). If Lockpicks has no supplies, discard it. [action] Exhaust Lockpicks: Investigate. Add your [agility] value to your skill value for this inve"
+    },
+    {
+      "code": "60373",
+      "name": "扫地出门",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 After Out the Door is committed to a skill test, the performing investigator gains 4 resources. If this skill test fails, that investigator loses 4 resources."
+    },
+    {
+      "code": "60374",
+      "name": "小道消息",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 rumors). If there are no rumors on The Grapevine, discard it. [action] Spend 1 rumor and exhaust The Grapevine: Parley. Choose an enemy at a revealed lo"
+    },
+    {
+      "code": "60375",
+      "name": "马库斯·森斯塔克",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "补给阶段额外资源从常驻收益改为 upkeepEnd 可跳过反应，且提前或延后影响同阶段其他窗口。"
+    },
+    {
+      "code": "60376",
+      "name": "一扫而空",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Investigate ([agility]). Add your [intellect] to your [agility] for this test. After this test resolves, you may move to a connecting location."
+    },
+    {
+      "code": "60377",
+      "name": "速速离去",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Evade ([agility]). Add your [willpower] to your [agility] for this test. If you succeed and the evaded enemy is non-[[Elite]], that enemy does not ready during "
+    },
+    {
+      "code": "60378",
+      "name": "突然坠落",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "卡面有攻击行动指示，事件描述子没有攻击归类。敌人交战时普通事件路径可能在攻击前引发借机攻击。"
+    },
+    {
+      "code": "60379",
+      "name": "黑色扇子",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 08057，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Exceptional. While you have... - ...10+ resources, you get +1 health and +1 sanity. - ...15+ resources, you may take one additional action during your turn. - ."
+    },
+    {
+      "code": "60380",
+      "name": "三寸之舌",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "起始关键词在抽起手时固定选牌组顺序第一张，缺少「可以不选」及多个候选时的选择。"
+    },
+    {
+      "code": "60381",
+      "name": "良好人脉",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "目录原版 54006 仍缺运行时玩家条目，该印刷号也没有登记行为别名。"
+    },
+    {
+      "code": "60382",
+      "name": "灯下黑",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play after you successfully evade an enemy. Discover 1 clue at your location (if you succeeded by 2 or more, you may discover 1 clue at a connecting locat"
+    },
+    {
+      "code": "60383",
+      "name": "以防万一",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 While Contingency is committed to a skill test targeting an enemy, after revealing chaos tokens, you may spend 3 resources to cancel a revealed token, return it"
+    },
+    {
+      "code": "60384",
+      "name": "红色闹钟",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 08058，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Exceptional. Uses (0 charges). Forced - After your turn begins: You may take all charges here, as resources. Place 1 charge here. If it has exactly... - 1 charg"
+    },
+    {
+      "code": "60401",
+      "name": "杰奎琳·法恩",
+      "type": "investigator",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "大厅及构筑覆盖可选状态。待逐卡验证印刷的调查员能力、旧印及构筑约束。 卡面起句为 [reaction] When an investigator at your location would reveal any number of chaos tokens: Reveal 2 additional tokens. Of the revealed tokens, choose and cancel "
+    },
+    {
+      "code": "60402",
+      "name": "命运决定者",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Jacqueline Fine deck only. [reaction] When you use Jacqueline Fine's [reaction] ability, exhaust Arbiter of Fates: This use of her ability does not count toward"
+    },
+    {
+      "code": "60403",
+      "name": "黑暗未来",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness、forced），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - Put Dark Future into play in your threat area. You cannot cancel or ignore [elder_sign], [skull], [cultist], [tablet], [elder_thing], and [auto_fai"
+    },
+    {
+      "code": "60404",
+      "name": "虚无主义",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness、forced、action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - Put Nihilism into play in your threat area. Forced - After you reveal, cancel, or ignore an [auto_fail] token: Take 1 damage and 1 horror. [action]"
+    },
+    {
+      "code": "60405",
+      "name": "仪式蜡烛",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 02029，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 [reaction] After a [skull], [cultist], [tablet], or [elder_thing] symbol is revealed during a test you are performing: You get +1 skill value for this test."
+    },
+    {
+      "code": "60406",
+      "name": "预见手镜",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 secrets). [reaction] After a skill test at your location begins, exhaust Scrying Mirror and spend 1 secret: Perform the \"reveal chaos token\" step of the"
+    },
+    {
+      "code": "60407",
+      "name": "蓝焰术",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 charges). [action] Spend 1 charge: Fight. This attack uses [willpower] instead of [combat] and deals +1 damage. If an [elder_sign], \"+1,\" or \"0\" token i"
+    },
+    {
+      "code": "60408",
+      "name": "预知术",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 charges). [action] Spend 1 charge: Investigate. Investigate using [willpower] instead of [intellect]. If you succeed, discover 1 additional clue at this"
+    },
+    {
+      "code": "60409",
+      "name": "难述真相",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 charges). [action] Spend 1 charge: Evade. This evasion attempt uses [willpower] instead of [agility]. If you succeed, deal 1 damage to the evaded enemy."
+    },
+    {
+      "code": "60410",
+      "name": "幽灵魔宠",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You have 1 additional arcane slot, which can only be used to hold a [[Spell]] asset."
+    },
+    {
+      "code": "60411",
+      "name": "水晶灵摆",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You get +1 [willpower]. [reaction] After a skill test at your location begins, exhaust Crystal Pendulum: Name a number. If this test succeeds by that number or "
+    },
+    {
+      "code": "60412",
+      "name": "永夜长袍",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [reaction] When you play a [[Spell]] card, exhaust Robes of Endless Night: Reduce the cost of that card by 1."
+    },
+    {
+      "code": "60413",
+      "name": "星界旅行",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 03034，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Move. Move to any revealed location and reveal a random token from the chaos bag. If you reveal a [skull], [cultist], [tablet], [elder_thing], or [auto_fail] sy"
+    },
+    {
+      "code": "60414",
+      "name": "催眠术",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 02153，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Fast. Play when an enemy attacks an investigator at your location. Cancel that attack. Then, reveal a random token from the chaos bag. If it has a [skull], [cul"
+    },
+    {
+      "code": "60415",
+      "name": "平行命运",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Look at the top 4 cards of the encounter deck. Reveal a random token from the chaos bag. If it has a [skull], [cultist], [tablet], [elder_thing], or [auto_fail]"
+    },
+    {
+      "code": "60416",
+      "name": "太阳神之音",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-60-a.test.mjs",
+          "test": "60416 获得基础资源，只按印刷列出的混乱符号追加资源"
+        }
+      ]
+    },
+    {
+      "code": "60417",
+      "name": "黑暗预言",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 04032，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Fast. Play when you would reveal a chaos token. Reveal 5 chaos tokens instead of 1. Choose one of those tokens with a [skull], [cultist], [tablet], [elder_thing"
+    },
+    {
+      "code": "60418",
+      "name": "逆反",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 02190，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Before revealing chaos tokens for this test, choose one of the following symbols: ([skull], [cultist], [tablet], or [elder_thing]). Ignore the effects of the ch"
+    },
+    {
+      "code": "60419",
+      "name": "先见之明",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit、forced），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Max 1 committed per skill test. After you commit Prescient to a skill test, name \"even,\" \"odd,\" or \"symbol.\" After this test ends, if a chaos token of the named"
+    },
+    {
+      "code": "60420",
+      "name": "恐怖灵感",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play when you would resolve an effect on a [mystic] card that triggers \"when,\" \"if,\" or \"after\" a chaos token is revealed. Either cancel that effect, or r"
+    },
+    {
+      "code": "60421",
+      "name": "诡秘石像",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 charges). If Grotesque Statue has no charges, discard it. [reaction] When you would reveal a chaos token, spend 1 charge: Reveal 2 chaos tokens instead "
+    },
+    {
+      "code": "60422",
+      "name": "永夜长袍",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [reaction] When you play a [[Spell]] card, exhaust Robes of Endless Night: Reduce the cost of that card by 1. Playing that card does not provoke attacks of oppo"
+    },
+    {
+      "code": "60423",
+      "name": "催眠术",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play when an enemy attacks an investigator at your location. Cancel that attack. Then, reveal a random token from the chaos bag. If it has a [skull], [cul"
+    },
+    {
+      "code": "60424",
+      "name": "胆识",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Max 1 committed per skill test. If this test is successful, draw 1 card (2 cards instead if it succeeds by 2 or more)."
+    },
+    {
+      "code": "60425",
+      "name": "蓝焰术",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 charges). [action] Spend 1 charge: Fight. This attack uses [willpower] instead of [combat]. You get +2 [willpower] and deal +1 damage for this attack. I"
+    },
+    {
+      "code": "60426",
+      "name": "预知术",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 charges). [action] Spend 1 charge: Investigate. Investigate using [willpower] instead of [intellect]. You get +2 [willpower] for this investigation. If "
+    },
+    {
+      "code": "60427",
+      "name": "难述真相",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 charges). [action] Spend 1 charge: Evade. This evasion attempt uses [willpower] instead of [agility]. You get +2 [willpower] for this evasion attempt. I"
+    },
+    {
+      "code": "60428",
+      "name": "神秘研究",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（forced、free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (2 resources). Replenish these resources at the start of each round. [fast] Spend 1 resource from your resource pool or from Arcane Studies: You get +1 [wi"
+    },
+    {
+      "code": "60429",
+      "name": "重新充能",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Choose a [[Spell]] or [[Relic]] asset controlled by an investigator at your location and reveal a random chaos token from the chaos bag. If you reveal a [skull]"
+    },
+    {
+      "code": "60430",
+      "name": "蓝焰术",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 charges). [action] Spend 1 charge: Fight. This attack uses [willpower] instead of [combat]. You get +3 [willpower] and deal +2 damage for this attack. I"
+    },
+    {
+      "code": "60431",
+      "name": "预知术",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 charges). [action] Spend 1 charge: Investigate. Investigate using [willpower] instead of [intellect]. You get +3 [willpower] for this investigation. If "
+    },
+    {
+      "code": "60432",
+      "name": "难述真相",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 charges). [action] Spend 1 charge: Evade. This evasion attempt uses [willpower] instead of [agility]. You get +3 [willpower] for this evasion attempt. I"
+    },
+    {
+      "code": "60451",
+      "name": "玛丽·朗博",
+      "type": "investigator",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "大厅及构筑覆盖可选状态。待逐卡验证印刷的调查员能力、旧印及构筑约束。 卡面起句为 [reaction] After damage is placed on Marie Lambeau: Draw 2 cards and discard 1 of them. (Limit once per phase.) [elder_sign] effect: +0. If you succeed, heal 1 "
+    },
+    {
+      "code": "60452",
+      "name": "祖母的护符",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Marie Lambeau deck only. [fast] Take 1 direct damage and exhaust Grand-Mère's Charm: Replenish 1 charge on an asset at your location."
+    },
+    {
+      "code": "60453",
+      "name": "故土呼召",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness、action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - Put Called to Guinée into play in your threat area. You cannot heal damage. [action] Choose and discard 3 cards from your hand: Discard Called to G"
+    },
+    {
+      "code": "60454",
+      "name": "晕血",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - Put Hemophobia into play in your threat area. Forced - The first time each round an investigator at your location takes damage: Take 1 horror. [act"
+    },
+    {
+      "code": "60455",
+      "name": "新晋术士",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 01063，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Forced - After Arcane Initiate enters play: Place 1 doom on it. [fast] Exhaust Arcane Initiate: Search the top 3 cards of your deck for a [[Spell]] card and dra"
+    },
+    {
+      "code": "60456",
+      "name": "贡品碗",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 offerings). If there are no offerings on Offering Bowl, discard it. [fast] Spend 1 offering and exhaust Offering Bowl: Take 1 damage and gain 2 resource"
+    },
+    {
+      "code": "60457",
+      "name": "血石",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-60-a.test.mjs",
+          "test": "60457 支援入场增加一点意志，横置后仍有效，离场后移除加成"
+        }
+      ]
+    },
+    {
+      "code": "60458",
+      "name": "献祭人偶",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 While you have 3 or fewer remaining health, Sacrificial Doll does not take up a hand slot. [reaction] After you reveal a non-[auto_fail] chaos token during a sk"
+    },
+    {
+      "code": "60459",
+      "name": "宇宙烈焰",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 12059，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Uses (3 charges). [action]: Fight ([willpower]). If you succeed, you may spend 1 charge to deal +1 damage for this attack. If you reveal a [skull] token during "
+    },
+    {
+      "code": "60460",
+      "name": "通灵视觉",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 12062，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Uses (3 charges). [action]: Investigate ([willpower]). If you succeed, you may spend 1 charge to discover 1 additional clue at your location. If you reveal a [c"
+    },
+    {
+      "code": "60461",
+      "name": "暗影交融",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 charges). [action]: Evade ([willpower]). If you succeed, you may spend 1 charge to move to a connecting location. If you reveal a [tablet] token during "
+    },
+    {
+      "code": "60462",
+      "name": "吞噬生命",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fight ([willpower]). This attack deals +1 damage. If this attack defeats an enemy, heal 1 damage from an investigator or [[Ally]] asset at your location."
+    },
+    {
+      "code": "60463",
+      "name": "巴尔山多的恩宠",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 As an additional cost to play Favor of Baalshandor, take 1 damage. Play a [[Spell]] or [[Ritual]] asset from your hand, reducing its cost by 3. Playing this car"
+    },
+    {
+      "code": "60464",
+      "name": "灌注生命",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Heal 3 damage from among investigators and/or [[Ally]] assets at your location."
+    },
+    {
+      "code": "60465",
+      "name": "镜像形态",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play only during your turn. Choose a [[Spell]] or [[Charm]] asset in your hand and put it into play under your control. When the round ends, shuffle that "
+    },
+    {
+      "code": "60466",
+      "name": "精神魅惑",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Parley. Choose a non-[[Elite]] enemy at your location or at a connecting location. Move that enemy to your location, engage it, and gain resources equal to its "
+    },
+    {
+      "code": "60467",
+      "name": "鲜血诅咒",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Max 1 committed per skill test. If this skill test is successful, take 1 direct damage."
+    },
+    {
+      "code": "60468",
+      "name": "宇宙指引",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 If this skill test is successful, heal 1 damage from the performing investigator."
+    },
+    {
+      "code": "60469",
+      "name": "力量洪流",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 03235，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 As an additional cost to commit Torrent of Power to a skill test, spend up to 3 charges from among assets you control. For each charge spent in this way, Torren"
+    },
+    {
+      "code": "60470",
+      "name": "仪式长袍",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Reduce the cost of the first [[Spell]] or [[Ritual]] card you play each round by 1."
+    },
+    {
+      "code": "60471",
+      "name": "惊悚低语",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Max 1 committed per skill test. If a symbol token is revealed during this test, place up to 2 charges or 2 secrets among assets you control."
+    },
+    {
+      "code": "60472",
+      "name": "鲜血结界",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play when a non-[[Elite]] enemy attacks an investigator at your location. Cancel that attack and heal 2 damage from the targeted investigator."
+    },
+    {
+      "code": "60473",
+      "name": "报应",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "先取消原攻击再直接放入计划伤害与恐惧，遗漏原攻击余效及实际承受值的结算。"
+    },
+    {
+      "code": "60474",
+      "name": "阿撒托斯的惊骇诅咒",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Exceptional. [action] Place 1 doom on Dread Curse of Azathoth: Fight ([willpower]). You get +2 [willpower] and deal +1 damage for this attack. If this attack de"
+    },
+    {
+      "code": "60475",
+      "name": "仪式匕首",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [action]: Fight ([combat]). Add your [willpower] to your [combat] for this attack. [reaction] After you play a [[Spell]] event, take 1 damage and exhaust Ritual"
+    },
+    {
+      "code": "60476",
+      "name": "灵感敏锐",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Starting. (You may begin the game with 1 copy of a starting card in your opening hand.) [fast] Spend 1 resource: You get +1 [willpower] for this skill test (+2 "
+    },
+    {
+      "code": "60477",
+      "name": "鲜血诅咒",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Max 1 committed per skill test. If this test is successful, deal 1 damage to a card with health at your location."
+    },
+    {
+      "code": "60478",
+      "name": "奥术体验",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Permanent. Limit 1 per deck. You have 1 additional arcane slot."
+    },
+    {
+      "code": "60479",
+      "name": "吉姆·卡尔弗",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You get +1 [willpower]. [reaction] After you take damage and/or horror, exhaust Jim Culver: Draw 1 card and gain 1 resource."
+    },
+    {
+      "code": "60480",
+      "name": "究极献祭",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play when the investigation phase ends. Repeat the investigation phase. At the end of that phase, you are defeated and suffer 1 physical trauma. Max once "
+    },
+    {
+      "code": "60481",
+      "name": "通灵视觉",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 charges). [action]: Investigate ([willpower]). You get +2 [willpower] for this investigation. If you succeed, you may spend 1 charge to discover 1 addit"
+    },
+    {
+      "code": "60482",
+      "name": "暗影交融",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (5 charges). [action]: Evade ([willpower]). You get +2 [willpower] for this evasion. If you succeed, you may spend 1 charge to move to a location up to 2 c"
+    },
+    {
+      "code": "60483",
+      "name": "曲血术",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fight ([willpower]). You get +3 [willpower] and deal +1 damage for this attack. If you succeed, deal 1 damage to each other enemy at your location. Each enemy d"
+    },
+    {
+      "code": "60501",
+      "name": "斯特拉·克拉克",
+      "type": "investigator",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "大厅及构筑覆盖可选状态。待逐卡验证印刷的调查员能力、旧印及构筑约束。 卡面起句为 [reaction] After you fail a skill test: You may take an additional action during your turn this round. (Limit once per round.) [elder_sign] effect: +1. You may "
+    },
+    {
+      "code": "60502",
+      "name": "不畏雨雪",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Stella Clark deck only. If this skill test fails, cancel all effects of the failed test."
+    },
+    {
+      "code": "60503",
+      "name": "雾之召唤",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness、forced、action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - Put Called by the Mists into play in your threat area. Forced - After you initiate a skill test with a difficulty of 4 or higher: Take 1 damage. [a"
+    },
+    {
+      "code": "60504",
+      "name": "失败恐惧症",
+      "type": "treachery",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（weakness、forced、action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Revelation - Put Atychiphobia into play in your threat area. Forced - After you fail a skill test: Take 1 horror. [action] [action]: Discard Atychiphobia."
+    },
+    {
+      "code": "60505",
+      "name": ".18大口径短口手枪",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (2 ammo). [action] Spend 1 ammo: Fight. You get +2 [combat] and deal +1 damage for this attack. If you fail, place 1 ammo on .18 Derringer."
+    },
+    {
+      "code": "60506",
+      "name": "格林童话",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 secrets). [reaction] After an investigator at your location fails a skill test by 2 or more, exhaust Grimm's Fairy Tales and spend 1 secret: Heal 1 horr"
+    },
+    {
+      "code": "60507",
+      "name": "陈旧的钥匙圈",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (2 keys). If there are no keys on Old Keyring, discard it. [action]: Investigate. Your location gets -2 shroud for this investigation. If you succeed, remo"
+    },
+    {
+      "code": "60508",
+      "name": "奥恩奶奶",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You get +1 [willpower]. [reaction] When an investigator at your location would fail a skill test, exhaust Granny Orne: That investigator fails by either 1 less "
+    },
+    {
+      "code": "60509",
+      "name": "神秘乌鸦",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（free），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [fast] Discard Mysterious Raven and take 1 horror: Discover 1 clue at your location."
+    },
+    {
+      "code": "60510",
+      "name": "幸运兔脚",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 01075，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 [reaction] After you fail a skill test, exhaust Rabbit's Foot: Draw 1 card."
+    },
+    {
+      "code": "60511",
+      "name": "拳击家",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [fast] Spend 1 resource: You get +1 [combat] for this skill test. [fast] Spend 1 resource: You get +1 [agility] for this skill test."
+    },
+    {
+      "code": "60512",
+      "name": "生存意志",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play only during your turn. Do not reveal chaos tokens for the next skill test you perform this turn."
+    },
+    {
+      "code": "60513",
+      "name": "意志考验",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play when an investigator at your location draws a non-weakness treachery card. Test [willpower] (3). If you succeed, cancel that card's revelation effect"
+    },
+    {
+      "code": "60514",
+      "name": "狗屎运",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 04034，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Fast. Play after you fail a skill test by 2 or less during an evasion attempt against a non-[[Elite]] enemy. Place that enemy on top of the encounter deck."
+    },
+    {
+      "code": "60515",
+      "name": "咬紧牙关",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play after you fail a skill test. You get +1 to each of your skills for the remainder of the round."
+    },
+    {
+      "code": "60516",
+      "name": "学无止境",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 04200，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Fast. Play after a skill test you failed ends (after resolving all effects from the failed test). Attempt that test again. You get +2 skill value for this test."
+    },
+    {
+      "code": "60517",
+      "name": "“看看我发现了什么！”",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 01079，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Fast. Play after you fail a skill test by 2 or less while investigating. Discover 2 clues in your location."
+    },
+    {
+      "code": "60518",
+      "name": "哎呀！",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 02113，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Fast. Play after you fail a skill test by 2 or less while attacking an enemy engaged with you. Deal this attack's damage to a different enemy at your location."
+    },
+    {
+      "code": "60519",
+      "name": "重拾信念",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 04201，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 Max 1 committed per skill test. You may commit Take Heart to any type of test. If this test fails, the performing investigator draws 2 cards and gains 2 resourc"
+    },
+    {
+      "code": "60520",
+      "name": "珍爱纪念",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（forced），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Forced - When Cherished Keepsake is defeated by horror: Exile it."
+    },
+    {
+      "code": "60521",
+      "name": "皮大衣",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（forced），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Forced - When Leather Coat is defeated by damage: Exile it."
+    },
+    {
+      "code": "60522",
+      "name": ".18大口径短口手枪",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 ammo). [action] Spend 1 ammo: Fight. You get +2 [combat] and deal +1 damage for this attack. If you fail, place 1 ammo on .18 Derringer and the next tim"
+    },
+    {
+      "code": "60523",
+      "name": "意志考验",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play when an investigator at your location draws a non-weakness treachery card. Cancel that card's revelation effect. Then, test [willpower] (3). If you f"
+    },
+    {
+      "code": "60524",
+      "name": "\"看看我发现了什么！\"",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play after you fail a skill test by 3 or less while investigating. Discover 2 total clues from among your location and connecting locations."
+    },
+    {
+      "code": "60525",
+      "name": "狗屎运",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play after you fail a skill test by 3 or less during an evasion attempt against a non-[[Elite]] enemy. Place that enemy on the bottom of the encounter dec"
+    },
+    {
+      "code": "60526",
+      "name": "绝处逢生",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Max 1 committed per skill test. If this test fails, return Unexpected Courage to your hand."
+    },
+    {
+      "code": "60527",
+      "name": "奥恩奶奶",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You get +1 [willpower] and +1 [intellect]. [reaction] When an investigator at your location would fail a skill test, exhaust Granny Orne: That investigator eith"
+    },
+    {
+      "code": "60528",
+      "name": "运气好！",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play when an investigator at your location would fail a skill test. They get +3 to their skill value for that test. That investigator draws 1 card."
+    },
+    {
+      "code": "60529",
+      "name": "电锯",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 supplies). [action] Spend 1 supply: Fight. You get +2 [combat] and deal +2 damage for this attack. If this attack fails, either place 1 supply on Chains"
+    },
+    {
+      "code": "60530",
+      "name": "一点就通",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Permanent. During or before your first action of each of your turns, each skill test you perform gets +1 difficulty. During or after your third action of each o"
+    },
+    {
+      "code": "60531",
+      "name": "似曾相识",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Permanent. In between two scenarios of a campaign, reduce the experience cost to repurchase up to 3 cards that you exiled during the last scenario by 1 each."
+    },
+    {
+      "code": "60551",
+      "name": "米格尔·德·拉·克鲁兹",
+      "type": "investigator",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "大厅及构筑覆盖可选状态。待逐卡验证印刷的调查员能力、旧印及构筑约束。 卡面起句为 You may take an additional action during your turn, which may only be used to play an event. [elder_sign] effect: +1. You may add a [[Trick]] or [[Trap]] card i"
+    },
+    {
+      "code": "60552",
+      "name": "米格尔的背包",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Miguel de la Cruz deck only. [reaction] When you play an event, exhaust Miguel's Knapsack: Either play that event at a connecting location as if you were at tha"
+    },
+    {
+      "code": "60553",
+      "name": "猫科混种",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Elusive. Hunter. Prey (Miguel de la Cruz only). Feline Hybrid is immune to player card effects."
+    },
+    {
+      "code": "60554",
+      "name": "饮血者",
+      "type": "enemy",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Hunter. Retaliate. Forced - After Blood Drinker attacks: Heal 1 damage from it."
+    },
+    {
+      "code": "60555",
+      "name": "丹尼尔·詹姆森",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 You get +1 [agility]. [reaction] After you fail an attack or evasion, exhaust Daniel Jameson: Attempt that skill test again, with +1 skill value."
+    },
+    {
+      "code": "60556",
+      "name": "猎犬",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [reaction] When an enemy enters play, exhaust Hunting Dog: Move once toward that enemy's location."
+    },
+    {
+      "code": "60557",
+      "name": "独行",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Limit 1 per investigator. [fast] During your turn, exhaust Loner: Move to an empty connecting location."
+    },
+    {
+      "code": "60558",
+      "name": "旧指南针",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [action]: Investigate ([intellect]). Your location gets -1 shroud for this investigation. If you fail, you may exhaust Old Compass to attempt this skill test ag"
+    },
+    {
+      "code": "60559",
+      "name": "折叠小刀",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 [action]: Fight ([combat] or [agility]). You get +1 skill value for this test. If this attack defeats an enemy, you may exhaust Pocketknife to gain 1 resource."
+    },
+    {
+      "code": "60560",
+      "name": "幸运兔脚",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "印刷归并至 01075，已有注册期别名。缺使用此印刷号执行全部行为的逐卡证据。 卡面起句为 [reaction] After you fail a skill test, exhaust Rabbit's Foot: Draw 1 card."
+    },
+    {
+      "code": "60561",
+      "name": "一如往常",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (5 supplies). If there are no supplies on Same Old Thing, discard it. You may spend supplies on Same Old Thing as resources to pay for events played by any"
+    },
+    {
+      "code": "60562",
+      "name": "诱敌陷阱",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "选择技能后传 addSkill 叠加数值，缺印刷的替换技能与成功后弃卡移动分支。"
+    },
+    {
+      "code": "60563",
+      "name": "远眺",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "调查入口传 addSkill 叠加，缺成功后弃卡额外发现一条线索的选项。"
+    },
+    {
+      "code": "60564",
+      "name": "游击策略",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "没有完整实现连接地点目标的视同交战。躲避分支叠加敏捷且 60576 只在攻击分支追加伤害。"
+    },
+    {
+      "code": "60565",
+      "name": "隐秘藏身处",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played、reaction、forced），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Attach to your location. Limit 1 per location. [reaction] When the round ends, each investigator at this location may choose one of the following: Draw 1 card, "
+    },
+    {
+      "code": "60566",
+      "name": "守株待兔",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Attach to your location. Limit 1 [[Trap]] per location. [reaction] After an enemy enters this location, exhaust Lie in Wait: Fight ([combat] or [agility])"
+    },
+    {
+      "code": "60567",
+      "name": "尾随猎物",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "查找遭遇牌库时固定选最近牌库顶的敌人，敌人在其他地点生成后的跟进移动未实现。"
+    },
+    {
+      "code": "60568",
+      "name": "铤而走险",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 If this skill test is successful, choose a [survivor] asset or event in your discard pile and add it to your hand."
+    },
+    {
+      "code": "60569",
+      "name": "悬崖勒马",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "已有通用 maxPerTest 原语，但本条目漏掉每次检定最多投入一张的声明。"
+    },
+    {
+      "code": "60570",
+      "name": "额外配给",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (4 supplies). If there are no supplies on Extra Rations, discard it. [fast] Spend 1 supply and exhaust Extra Rations: Heal 1 damage from your investigator "
+    },
+    {
+      "code": "60571",
+      "name": "野外处理",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Fast. Play after a [[Creature]] or [[Monster]] enemy at your location is defeated. Heal up to 3 damage from among investigators and/or [[Ally]] assets at your l"
+    },
+    {
+      "code": "60572",
+      "name": "狂野",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目及被动读点，缺覆盖全部印刷子句的独立行为用例。 卡面起句为 For every 2 damage on you (rounded up), Rough gains [wild]."
+    },
+    {
+      "code": "60573",
+      "name": "水壶",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (3 supplies). [fast] Spend 1 supply and exhaust Canteen: Heal 2 horror."
+    },
+    {
+      "code": "60574",
+      "name": "猎人直觉",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Limit 1 per investigator. Uses (3 supplies). [reaction] After you engage an enemy, spend 1 supply and exhaust Hunter's Instinct: Add a level 0-2 event in your d"
+    },
+    {
+      "code": "60575",
+      "name": "温彻斯特52式步枪",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (2 ammo). [action] Spend 1 ammo: Fight ([combat]). You get +3 [combat] and deal +1 damage for this attack. [action] Discard Winchester Model 52: Fight ([co"
+    },
+    {
+      "code": "60576",
+      "name": "游击策略",
+      "type": "event",
+      "status": "pending",
+      "dimension": "implementation",
+      "reason": "没有完整实现连接地点目标的视同交战。躲避分支叠加敏捷且 60576 只在攻击分支追加伤害。"
+    },
+    {
+      "code": "60577",
+      "name": "喘息",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Play only if there are no enemies at your location. Choose up to 3 level 0 event and/or skill cards in your discard pile and shuffle them into your deck. Draw 1"
+    },
+    {
+      "code": "60578",
+      "name": "绳索陷阱",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Attach to your location. Limit 1 [[Trap]] attached. [reaction] When an enemy enters attached location, exhaust Rope Trap: Deal 1 damage to that enemy. Reveal a "
+    },
+    {
+      "code": "60579",
+      "name": "镇静自若",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Starting. (You may begin the game with 1 copy of a starting card in your opening hand.) [fast] Spend 1 resource: You get +1 [willpower] for this skill test (+2 "
+    },
+    {
+      "code": "60580",
+      "name": "长弓",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（action），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Uses (1 arrow). [action] Spend 1 arrow: Fight ([agility]). You get +2 [agility] and deal +2 damage for this attack. This attack ignores the aloof keyword. [acti"
+    },
+    {
+      "code": "60581",
+      "name": "简易炸弹",
+      "type": "event",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（played、reaction），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Attach to your location. Limit 1 [[Trap]] attached. [reaction] After an enemy or investigator enters attached location, discard Makeshift Bomb: Deal 3 damage to"
+    },
+    {
+      "code": "60582",
+      "name": "及时干预",
+      "type": "skill",
+      "status": "pending",
+      "dimension": "evidence",
+      "reason": "已定位条目（commit），缺覆盖全部印刷子句的独立行为用例。 卡面起句为 Max 1 committed per skill test. You may commit Timely Intervention from your hand after revealing chaos tokens during a skill test you are performing."
+    }
+  ]
+}
