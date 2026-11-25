@@ -1,0 +1,68 @@
+{
+  "unit": "99-a",
+  "generatedAt": "2026-11-26",
+  "scope": {
+    "cards": 3,
+    "selector": "^99\\d{3}[a-z]?$",
+    "packs": [
+      "promo"
+    ]
+  },
+  "verdict": "fail",
+  "verifiedCodes": [],
+  "failedCodes": [
+    {
+      "code": "99001",
+      "dimension": "interaction",
+      "reason": "服务端已注册到 05006。大厅在原版可选时合并重印，导入牌组也按 canonical 归并，缺以此印刷号完成普通选人及进局的界面证据。 双宽度大厅确认只显示 05006，直接建局的 99001 旧印与法术额度用例通过。",
+      "evidence": "src/cards/entries/_reprint-aliases.js；web/hub.js；src/integration/arkhamdb.js；tests/acceptance-90-99.browser.mjs",
+      "reproduce": "在原版已装的大厅查找对应印刷号，再用书籍或宣传号导入牌组，对照选人和入局时的 code。"
+    },
+    {
+      "code": "99002",
+      "dimension": "primitives",
+      "reason": "与 05018 的规则正面同文，现通过同文条目展开或改写行为。缺统一 canonical 注册别名。 共享条目还使用流放标记，卡面只要求本局移出。",
+      "evidence": "src/cards/entries/99002.js；src/cards/entries/05018.js；src/cards/entries/_reprint-aliases.js",
+      "reproduce": "比对两个印刷号的卡文和 registeredEntry().reprintOf，再用两个实际印刷执行同一规则。"
+    },
+    {
+      "code": "99003",
+      "dimension": "primitives",
+      "reason": "与 05019 的规则正面同文，现通过同文条目展开或改写行为。缺统一 canonical 注册别名。 副本又按 99003 重写伤害触发和弃置读点。",
+      "evidence": "src/cards/entries/99003.js；src/cards/entries/05019.js；src/cards/entries/_reprint-aliases.js",
+      "reproduce": "比对两个印刷号的卡文和 registeredEntry().reprintOf，再用两个实际印刷执行同一规则。"
+    }
+  ],
+  "excludedCodes": [],
+  "dimensions": {
+    "implementation": "pass",
+    "primitives": "fail",
+    "interaction": "fail",
+    "evidence": "fail",
+    "compliance": "pass"
+  },
+  "evidence": [
+    {
+      "file": "tests/acceptance-99-a.test.mjs",
+      "test": "99001 通用调查行动触发旧印并按控制权选择增加或移除毁灭",
+      "codes": [
+        "99001"
+      ]
+    },
+    {
+      "file": "tests/acceptance-90-99.browser.mjs",
+      "test": "99001 的大厅重印显示路径复核，并检查挑战入口 (1440)",
+      "codes": [
+        "99001"
+      ]
+    },
+    {
+      "file": "tests/acceptance-90-99.browser.mjs",
+      "test": "99001 的大厅重印显示路径复核，并检查挑战入口 (390)",
+      "codes": [
+        "99001"
+      ]
+    }
+  ],
+  "notes": "三个印刷号均有严格可用性。99001 的直接建局复核了法术额度与旧印，真实大厅会合并这张重印。99002、99003 使用各自的条目封装，尚未统一到重印别名。"
+}

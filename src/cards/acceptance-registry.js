@@ -93,6 +93,7 @@ import { STARTER_INVESTIGATORS_ACCEPTANCE_PROFILE, starterInvestigatorPackCardVe
 import { SIDE_STORIES_ACCEPTANCE_PROFILE, sideStoryCardVerified } from './70-a-acceptance.js'
 import { INVESTIGATOR_CHALLENGES_ACCEPTANCE_PROFILE, investigatorChallengeCardVerified } from './90-a-acceptance.js'
 import { BOOK_SIGNATURES_ACCEPTANCE_PROFILE, bookSignatureCardVerified } from './98-a-acceptance.js'
+import { PROMOTIONAL_CARDS_ACCEPTANCE_PROFILE, promotionalCardVerified } from './99-a-acceptance.js'
 
 export const CARD_ACCEPTANCE_REGISTRY = Object.freeze([
   { profile: RCORE_ACCEPTANCE_PROFILE, verified: rcoreCardVerified, ledger: 'audit/rcore-acceptance.json' },
@@ -174,4 +175,5 @@ export const CARD_ACCEPTANCE_REGISTRY = Object.freeze([
   { profile: SIDE_STORIES_ACCEPTANCE_PROFILE, verified: sideStoryCardVerified, ledger: 'audit/70-a-acceptance.json' },
   { profile: INVESTIGATOR_CHALLENGES_ACCEPTANCE_PROFILE, verified: investigatorChallengeCardVerified, ledger: 'audit/90-a-acceptance.json' },
   { profile: BOOK_SIGNATURES_ACCEPTANCE_PROFILE, verified: bookSignatureCardVerified, ledger: 'audit/98-a-acceptance.json' },
+  { profile: PROMOTIONAL_CARDS_ACCEPTANCE_PROFILE, verified: promotionalCardVerified, ledger: 'audit/99-a-acceptance.json' },
 ])

@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "unit": "99-a",
+  "profile": {
+    "id": "promotional-cards-2026-11",
+    "scope": "3 个宣传卡目录卡号，包含独立编号的关联面。",
+    "basis": "按实际印刷号复核卡文、引擎行为及交互。逐卡依据见验收报告。",
+    "sources": [
+      "src/cards/cards-data.js",
+      "src/deck/alternate-investigator-build.js",
+      "docs/test/验收-99-a-宣传卡.json"
+    ]
+  },
+  "summary": {
+    "total": 3,
+    "verified": 0,
+    "unverified": 3,
+    "unimplemented": 0,
+    "testsPassed": 1
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-99-a.test.mjs",
+      "sha256": "62ed3972330012954ab678eccbc0613c97ef269bc126757ece87ae1c69bcffb6"
+    }
+  ],
+  "entries": [
+    {
+      "code": "99001",
+      "name": "玛丽·朗博",
+      "type": "investigator",
+      "status": "pending",
+      "dimension": "interaction",
+      "reason": "服务端已注册到 05006。大厅在原版可选时合并重印，导入牌组也按 canonical 归并，缺以此印刷号完成普通选人及进局的界面证据。 双宽度大厅确认只显示 05006，直接建局的 99001 旧印与法术额度用例通过。"
+    },
+    {
+      "code": "99002",
+      "name": "神秘乐曲",
+      "type": "event",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "与 05018 的规则正面同文，现通过同文条目展开或改写行为。缺统一 canonical 注册别名。 共享条目还使用流放标记，卡面只要求本局移出。"
+    },
+    {
+      "code": "99003",
+      "name": "安息日男爵",
+      "type": "asset",
+      "status": "pending",
+      "dimension": "primitives",
+      "reason": "与 05019 的规则正面同文，现通过同文条目展开或改写行为。缺统一 canonical 注册别名。 副本又按 99003 重写伤害触发和弃置读点。"
+    }
+  ]
+}
